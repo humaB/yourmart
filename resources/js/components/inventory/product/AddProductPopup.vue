@@ -16,13 +16,17 @@
                             <div class="row">
                                 <div class="card-body">
                                     <div class="col-md-12">
-                                        <h5>Product Name <span class="text-danger">*</span></h5>
-                                        <input type="text" class="form-control" placeholder="Add Product Name">
+                                        <h5>Product Title <span class="text-danger">*</span></h5>
+                                        <input type="text" class="form-control" placeholder="Add Product Title"
+                                            v-model="title">
+                                        <code>Length ( {{ titleLength }} / 150 )</code>
                                     </div>
                                     <div class="col-md-12 mt-2">
                                         <h5>Short Description <span class="text-danger">*</span></h5>
                                         <input type="text" class="form-control"
-                                            placeholder="Please enter short description of product">
+                                            placeholder="Please enter short description of product"
+                                            v-model="shortDescription">
+                                        <code>Length ( {{ shortDescriptionLength }} / 150 )</code>
                                     </div>
                                     <div class="col-md-12 mt-2">
                                         <h5>Product Description <span class="text-danger">*</span></h5>
@@ -33,8 +37,8 @@
                                         <div class="card">
                                             <div class="card-header">
                                                 <h4>Product Gallery</h4>
-                                                <a href="#" data-toggle="modal" data-target="#uploadProductImage" @click="addImage('Blank')"
-                                                    class="btn btn-outline-primary"
+                                                <a href="#" data-toggle="modal" data-target="#uploadProductImage"
+                                                    @click="addImage('Blank')" class="btn btn-outline-primary"
                                                     style=" height: 15px; line-height: 1px; padding: 6px; float: right">Add
                                                     New</a>
                                             </div>
@@ -62,8 +66,8 @@
                                         <div class="card">
                                             <div class="card-header">
                                                 <h4>{{ color }} Product Gallery</h4>
-                                                <a href="#" data-toggle="modal" data-target="#uploadProductImage" @click="addImage(color)"
-                                                    class="btn btn-outline-primary"
+                                                <a href="#" data-toggle="modal" data-target="#uploadProductImage"
+                                                    @click="addImage(color)" class="btn btn-outline-primary"
                                                     style="height: 15px; line-height: 1px; padding: 6px; float: right">Add
                                                     New</a>
                                             </div>
@@ -85,13 +89,37 @@
                                     </div>
 
                                     <div class="col-md-12 mt-2">
-                                        <h5>Care Instruction <span class="text-danger">( optional )</span></h5>
+                                        <h5>Product Highlights <span class="text-danger">( optional )</span></h5>
                                         <textarea class="summernote"></textarea>
                                     </div>
 
                                     <div class="col-md-12 mt-2">
                                         <h5>Warranty <span class="text-danger">( optional )</span></h5>
                                         <input type="text" class="form-control">
+                                    </div>
+                                        <div class="col-md-12 row mt-3">
+                                           <div class="col-md-3">
+                                            <h5>Weight (kg)</h5>
+                                        </div>
+                                         <div class="col-md-9">
+                                            <input type="text" class="form-control" v-model="weight">
+                                        </div>
+                                        </div>
+                                         <div class="col-md-12 row">
+                                           <div class="col-md-3">
+                                            <h5>Dimension (cm)</h5>
+                                        </div>
+                                         <div class="col-md-9 d-flex justify-content-between">
+                                            <input type="text" class="form-control" placeholder="length">
+                                            <input type="text" class="form-control" placeholder="width">
+                                            <input type="text" class="form-control" placeholder="height">
+                                        </div>
+                                        </div>
+
+                                       <div class="col-md-12 mt-4">
+                                        <h5>Shipping Class <span class="text-danger">( optional )</span></h5>
+                                        <v-select :options="shippingOptions" v-model="selectedShipping">
+                                        </v-select>
                                     </div>
                                 </div>
                             </div>
@@ -249,24 +277,38 @@
                                         <div class="col-md-12 my-3">
                                             <div class="card card-primary row">
                                                 <div class="col-md-9 mx-auto pt-3">
-                                                    <label for="" v-if="!heroImage.src"><b>Select Product Image</b></label>
-                                                    <img v-else :src="public_url + heroImage.src" style="width: 100%" alt="">
+                                                    <label for="" v-if="!heroImage.src"><b>Select Product
+                                                            Image</b></label>
+                                                    <img v-else :src="public_url + heroImage.src" style="width: 100%"
+                                                        alt="">
                                                 </div>
                                                 <div class="col-md-12 my-2">
-                                                    <button class="btn btn-primary w-100" data-toggle="modal" data-target="#uploadProductImage" @click="addImage('Hero')">Select Product Image</button>
+                                                    <button class="btn btn-primary w-100" data-toggle="modal"
+                                                        data-target="#uploadProductImage"
+                                                        @click="addImage('Hero')">Select Product Image</button>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-12 mt-3">
-                                            <h5>Normal Sale Price <span class="text-danger">*</span></h5>
+                                            <h5>Regular Price <span class="text-danger">*</span></h5>
                                             <input type="text" class="form-control">
                                         </div>
                                         <div class="col-md-12 mt-3">
-                                            <h5>Discount <code>(%)</code></h5>
+                                            <h5>Sale Price</h5>
                                             <input type="text" class="form-control">
-                                            <code>Please add in percentage %</code>
+                                            <code><a href="#" @click="schedule.status = !schedule.status">click to add schedule</a></code>
                                         </div>
-                                        <div class="col-md-12 mt-3">
+                                       <div class="col-md-12 row border p-3" v-if="schedule.status">
+                                        <div class="col-md-6">
+                                            <label for=""><b>Valid From</b></label>
+                                            <input type="date" class="form-control" v-model="schedule.from">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for=""><b>Valid Till</b></label>
+                                            <input type="date" class="form-control"  v-model="schedule.to">
+                                        </div>
+                                        </div>
+                                        <div class="col-md-12 mt-5">
                                             <h5>Discount per Quantity <code>( optional )</code></h5>
                                         </div>
                                         <div class="form-group form-float col-md-12 row"
@@ -301,11 +343,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i> Publish</button>
-                    <button
-                        type="button"
-                        class="btn btn-warning text-dark"
-                    >
+                 <a href="javascript:;" class="btn btn-primary daterange-btn icon-left btn-icon"><i class="fas fa-calendar"></i> Scheduled Publish Date
+                      </a>
+                    <button type="button" class="btn btn-primary"><i class="fa fa-paper-plane" aria-hidden="true"></i>
+                        Publish</button>
+                    <button type="button" class="btn btn-warning text-dark">
                         <i class="fas fa-save"></i>
                         Save in draft
                     </button>
@@ -316,7 +358,6 @@
     </div>
 </template>
 <script>
-
 export default {
     name: 'AddProductPopup',
     props: ["images", "heroImage"],
@@ -327,10 +368,25 @@ export default {
             brand: { code: 0, label: "Select from the following" },
             categories: ["Electronics", "Wireless", "Bluetooth", "Apple", "Modern", "Office", "Unisex", "Black", "Plastic"],
             category: { code: 0, label: "Select from the following" },
+            title: '',
+            shortDescription: '',
             selectOtherAttributes: false,
             selectColor: false,
             selectSize: false,
             selectTag: false,
+            shippingOptions: [
+                "Standard Shipping: Lightweight items with regular packing.",
+                "Fragile Shipping: Delicate items needing extra care.",
+                "Oversized Shipping: Large items requiring special packing.",
+                "Express Shipping: Fast delivery for urgent items.",
+                "Economy Shipping: Cost-effective, slower delivery.",
+                "Perishable Shipping: Items needing temperature control.",
+                "Heavy-Duty Shipping: Very heavy items with special handling.",
+                "Hazardous Shipping: Items requiring specific regulations.",
+                "International Shipping: Overseas shipments with customs.",
+                "Luxury Shipping: High-value items with secure, premium packaging."
+            ],
+            selectedShipping : { code : 0 , label : 'Select from the following'},
             colors: [
                 "Red",
                 "Orange",
@@ -355,6 +411,12 @@ export default {
             discountPerQty: [{ quantity: 0, price: 0 }],
             selectedColors: [], // Tracks selected colors
             colorImages: {}, // Stores images by color
+            schedule : {
+                status :  false,
+                from: new Date().toISOString().substr(0, 10),
+                to: new Date().toISOString().substr(0, 10),
+            },
+            weight : 0
         }
     },
     created() {
@@ -362,6 +424,14 @@ export default {
             checked: false,
             value: ''
         }));
+    },
+    computed: {
+        titleLength() {
+            return this.title.length > 150 ? 150 : this.title.length;
+        },
+        shortDescriptionLength() {
+            return this.shortDescription.length > 150 ? 150 : this.shortDescription.length;
+        }
     },
     methods: {
         addDiscountQuantityOneRow(index) {
@@ -382,7 +452,7 @@ export default {
             this[attribute] = !this[attribute];
         },
         addImage(color) {
-            this.$emit('color', {color})
+            this.$emit('color', { color })
         },
         removeImage(color, index) {
             if (this.images[color]) {
