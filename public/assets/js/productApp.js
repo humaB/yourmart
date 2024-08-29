@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
   name: 'AddAttribute',
   data: function data() {
     return {
-      attributes: ["Dimensions", "Battery", "Display", "Storage"],
+      attributes: ["Battery", "Display", "Storage"],
       attribute: {
         code: 0,
         label: "Select from the following"
@@ -220,7 +220,7 @@ __webpack_require__.r(__webpack_exports__);
       colors: ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet", "Black", "White", "Gray", "Pink", "Brown", "Turquoise", "Silver", "Gold"],
       sizes: ['XL', 'X', 'M', 'S'],
       tags: ['Outdoor', 'Travel', 'Office', 'Workout'],
-      attributes: ["Length", "Width", "Height", "Battery Type", "Battery Capacity", "Battery Life", "Screen Size", "Resolution", "Screen Type"],
+      attributes: ["Battery Type", "Battery Capacity", "Battery Life", "Screen Size", "Resolution", "Screen Type"],
       selectedAttributes: [],
       discountPerQty: [{
         quantity: 0,
@@ -829,7 +829,30 @@ var staticRenderFns = [function () {
     attrs: {
       type: "text"
     }
-  })])]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Pick Your Colour "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])])]), _vm._v(" "), _c("div", {
+    staticClass: "input-group colorpickerinput"
+  }, [_c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "input-group-append"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_c("i", {
+    staticClass: "fas fa-fill-drip"
+  })])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
     staticClass: "btn btn-primary",
@@ -1328,7 +1351,20 @@ var render = function render() {
       id: "panel-body-1",
       "data-parent": "#accordion"
     }
-  }, [_c("ol", {
+  }, [_c("a", {
+    staticClass: "btn btn-outline-primary",
+    staticStyle: {
+      height: "15px",
+      "line-height": "1px",
+      padding: "6px",
+      "float": "right"
+    },
+    attrs: {
+      href: "#",
+      "data-toggle": "modal",
+      "data-target": "#addColor"
+    }
+  }, [_vm._v("Add\n                                                    New")]), _c("br"), _vm._v(" "), _c("ol", {
     staticStyle: {
       height: "200px",
       "overflow-y": "scroll"

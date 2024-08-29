@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="{{ asset('assets/bundles/datatables/datatables.min.css') }}">
   <link rel="stylesheet" href="{{ asset('assets/bundles/datatables/DataTables-1.10.16/css/dataTables.bootstrap4.min.css') }}">
 
+  <link rel="stylesheet" href="{{ asset('assets/bundles/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
+
   <link rel="stylesheet" href="{{ asset('assets/bundles/summernote/summernote-bs4.css')}}">
   <link rel="stylesheet" href="{{ asset('assets/bundles/summernote/summernote-bs4.css')}}">
 @endpush
@@ -27,6 +29,7 @@
     <script src="{{ asset('assets/js/page/gallery1.js') }}"></script>
     <script src="{{ asset('assets/js/page/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/bundles/summernote/summernote-bs4.js') }}"></script>
+    <script src="{{ asset('assets/bundles/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/productApp.js') }}"></script>
 
@@ -39,6 +42,11 @@
                ["para", ["ul", "ol","paragraph"]],
            ]
            });
+
+           $(".colorpickerinput").colorpicker({
+                format: 'hex',
+                component: '.input-group-append',
+            });
    </script>
  @endpush
 

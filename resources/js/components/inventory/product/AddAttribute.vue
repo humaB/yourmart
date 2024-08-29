@@ -35,7 +35,7 @@ export default {
     name: 'AddAttribute',
     data () {
         return {
-            attributes : ["Dimensions","Battery", "Display", "Storage"],
+            attributes : ["Battery", "Display", "Storage"],
             attribute : { code : 0, label : "Select from the following"},
         }
     },

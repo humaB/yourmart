@@ -16,6 +16,19 @@
                         <label for=""><b>Color Name <span class="text-danger">*</span></b></label>
                         <input type="text" class="form-control">
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for=""><b>Pick Your Colour <span class="text-danger">*</span></b></label>
+                            <div class="input-group colorpickerinput">
+                              <input type="text" class="form-control">
+                              <div class="input-group-append">
+                                <div class="input-group-text">
+                                  <i class="fas fa-fill-drip"></i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary">Add New</button>

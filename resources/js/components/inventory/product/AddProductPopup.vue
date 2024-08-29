@@ -174,10 +174,10 @@
                                                 </div>
                                                 <div class="accordion-body collapse" id="panel-body-1"
                                                     data-parent="#accordion" style="">
-                                                    <!-- <a href="#" data-toggle="modal" data-target="#addColor"
+                                                    <a href="#" data-toggle="modal" data-target="#addColor"
                                                         class="btn btn-outline-primary"
                                                         style=" height: 15px; line-height: 1px; padding: 6px; float: right">Add
-                                                        New</a> -->
+                                                        New</a><br>
                                                     <ol style="height:200px; overflow-y:scroll">
                                                         <li v-for="color in colors" :key="color">
                                                             <div class="pretty p-default">
@@ -406,7 +406,7 @@ export default {
             ],
             sizes: ['XL', 'X', 'M', 'S'],
             tags: ['Outdoor', 'Travel', 'Office', 'Workout'],
-            attributes: ["Length", "Width", "Height", "Battery Type", "Battery Capacity", "Battery Life", "Screen Size", "Resolution", "Screen Type"],
+            attributes: ["Battery Type", "Battery Capacity", "Battery Life", "Screen Size", "Resolution", "Screen Type"],
             selectedAttributes: [],
             discountPerQty: [{ quantity: 0, price: 0 }],
             selectedColors: [], // Tracks selected colors
