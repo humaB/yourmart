@@ -37,7 +37,7 @@ __webpack_require__.r(__webpack_exports__);
   components: [_UserAdminForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"]],
   data: function data() {
     return {
-      api_url: window.location.origin + "dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       CNIC: "",
@@ -192,7 +192,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -243,31 +243,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: "dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin"
+      api_url: "/public/api/",
+      public_url: window.location.origin + ""
     };
   },
-  created: function created() {
-    var _this = this;
-    setTimeout(function () {
-      if (localStorage.getItem("_token") === null) {
-        _this.generateToken();
-      } else {
-        axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("_token");
-      }
-    }, 500);
-  },
-  methods: {
-    generateToken: function generateToken() {
-      var _this2 = this;
-      axios.get(window.location.origin + localStorage.getItem("_path") + "/public/generate_token").then(function (response) {
-        localStorage.setItem("_token", response.data.response.access_token);
-        axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("_token");
-      })["catch"](function () {
-        _this2.generateToken();
-      });
-    }
-  }
+  created: function created() {},
+  methods: {}
 });
 
 /***/ }),
@@ -298,7 +279,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",

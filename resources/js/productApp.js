@@ -7,11 +7,6 @@
 window.Vue = require('vue').default;
 window.axios = require('axios');
 
-import vSelect from "vue-select";
-import "vue-select/dist/vue-select.css";
-
-Vue.component("v-select", vSelect);
-
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -24,7 +19,9 @@ Vue.component("v-select", vSelect);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('product-list-page', require('./pages/inventory/product/ProductListPage.vue').default );
-Vue.component('create-product-page', require('./pages/inventory/product/CreateProductPage.vue').default );
+Vue.component('product-minimum-order-quantity-page', require('./pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue').default );
+
+Vue.component('product-shipping-classes-page', require('./pages/inventory/product/setting/ProductShippingClassesPage.vue').default );
 
 const app = new Vue({
     el: '#app',

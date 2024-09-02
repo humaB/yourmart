@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Inventory\ProductController;
+use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
+use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +42,10 @@ Route::group(['prefix' => '/users', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
     Route::group(['prefix' => '/products'], function () {
         Route::get('/', [ProductController::class, 'index'])->name('inventory.products');
+        Route::group(['prefix' => '/settings'], function () {
+            Route::get('/minimum-order-quantity', [ProductMinimumOrderController::class, 'index'])->name('inventory.products.moq');
+            Route::get('/shipping-classes', [ProductShippingClassController::class, 'index'])->name('inventory.products.shipping_classes');
+        });
     });
 });
 
