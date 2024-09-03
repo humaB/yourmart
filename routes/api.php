@@ -27,6 +27,15 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
+Route::get('test', function(){
+    return "Hello";
+});
+
+
+Route::get('test2', function(){
+    return "Hello";
+})->middleware('auth:sanctum');
+
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => 'products'], function(){
         Route::group(['prefix' => 'settings'], function(){
