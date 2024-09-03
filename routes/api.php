@@ -52,3 +52,15 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         });
     });
 });
+
+//Http Exception
+Route::any('{path}', function() {
+    return response()->json([
+        'status'        => 'error',
+        'statusMessage' => 'Route not found',
+        'httpCode'      => '404',
+        'errorCode'     => '9002',
+        'response'      => ''
+    ], 404);
+})->where('path', '.*');
+
