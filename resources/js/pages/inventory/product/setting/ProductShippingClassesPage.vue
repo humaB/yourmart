@@ -211,7 +211,7 @@ import EditShippingClass from "../../../../components/inventory/product/setting/
                     vm.btnLoader = false;
 
                     vm.fetchRecord();
-               
+
                     return swal({
                         title: "Success",
                         text:  'Shipping Classes Updated Successfully',

@@ -74,14 +74,66 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddAttribute',
+  props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      attributes: ["Battery", "Display", "Storage"],
-      attribute: {
+      public_url: window.location.origin + "" + '/',
+      category: {
         code: 0,
-        label: "Select from the following"
-      }
+        label: 'Select from the following'
+      },
+      description: '',
+      name: ''
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("attributeSaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    toggleEdit: function toggleEdit(item) {
+      var vm = this;
+      item.editable = !item.editable;
+      if (!item.editable) {
+        // Check if any changes were made
+        if (item.name !== item.originalData.name || item.description !== item.originalData.description || vm.category.code !== 0 && vm.category.code !== item.originalData.parent_id) {
+          var fd = new FormData();
+          fd.append('id', item.id);
+          fd.append('name', item.name);
+          fd.append('description', item.description);
+          fd.append('parent', vm.category.code);
+          vm.$emit('editAttribute', fd);
+        }
+      }
+    },
+    addNewAttribute: function addNewAttribute() {
+      var vm = this;
+      if (vm.name == '') {
+        return swal({
+          title: "Required",
+          text: "Please add Attribute Name first, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var fd = new FormData();
+      fd.append('name', vm.name);
+      fd.append('description', vm.description);
+      fd.append('parent', vm.category.code);
+      vm.$emit('addNewAttribute', fd);
+    },
+    close: function close() {
+      this.name = '';
+      this.description = '';
+      this.category = {
+        code: 0,
+        label: 'Select form the following'
+      };
+    }
   }
 });
 
@@ -99,7 +151,73 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AddBrand'
+  name: 'AddBrand',
+  props: ['loader', 'brands'],
+  data: function data() {
+    return {
+      public_url: window.location.origin + "" + '/',
+      name: '',
+      image: '',
+      description: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("brandSaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    getImageUrl: function getImageUrl(image) {
+      // Check if the image is null
+      if (!image) {
+        return this.public_url + 'assets/img/blank_image.jpg';
+      }
+      return this.public_url + 'storage/uploads/inventory/brands/' + image;
+    },
+    toggleEdit: function toggleEdit(item) {
+      var vm = this;
+      item.editable = !item.editable;
+      if (!item.editable) {
+        // Check if any changes were made
+        if (item.name !== item.originalData.name || item.description !== item.originalData.description || item.logo !== item.originalData.logo) {
+          var fd = new FormData();
+          fd.append('id', item.id);
+          fd.append('name', item.name);
+          fd.append('description', item.description);
+          fd.append('image', vm.image);
+          vm.$emit('editNewBrand', fd);
+        }
+      }
+    },
+    setLogo: function setLogo(event) {
+      this.image = event.target.files[0];
+    },
+    addNewBrand: function addNewBrand() {
+      var vm = this;
+      if (vm.name == '') {
+        return swal({
+          title: "Required",
+          text: "Please add Brand Name first, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var fd = new FormData();
+      fd.append('name', vm.name);
+      fd.append('description', vm.description);
+      fd.append('image', vm.image);
+      vm.$emit('addNewBrand', fd);
+    },
+    close: function close() {
+      this.image = '';
+      this.name = '';
+      this.description = '';
+      $("input[type=file]").val('');
+    }
+  }
 });
 
 /***/ }),
@@ -117,14 +235,66 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddCategory',
+  props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      categories: ["Electronics", "Wireless", "Bluetooth", "Apple", "Modern", "Office", "Unisex", "Black", "Plastic"],
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
-        label: "Select from the following"
-      }
+        label: 'Select from the following'
+      },
+      description: '',
+      name: ''
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("categorySaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    toggleEdit: function toggleEdit(item) {
+      var vm = this;
+      item.editable = !item.editable;
+      if (!item.editable) {
+        // Check if any changes were made
+        if (item.name !== item.originalData.name || item.description !== item.originalData.description || vm.category.code !== 0 && vm.category.code !== item.originalData.parent_id) {
+          var fd = new FormData();
+          fd.append('id', item.id);
+          fd.append('name', item.name);
+          fd.append('description', item.description);
+          fd.append('parent', vm.category.code);
+          vm.$emit('editCategory', fd);
+        }
+      }
+    },
+    addNewCategory: function addNewCategory() {
+      var vm = this;
+      if (vm.name == '') {
+        return swal({
+          title: "Required",
+          text: "Please add Category Name first, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var fd = new FormData();
+      fd.append('name', vm.name);
+      fd.append('description', vm.description);
+      fd.append('parent', vm.category.code);
+      vm.$emit('addNewCategory', fd);
+    },
+    close: function close() {
+      this.name = '';
+      this.description = '';
+      this.category = {
+        code: 0,
+        label: 'Select form the following'
+      };
+    }
   }
 });
 
@@ -142,7 +312,73 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AddColor'
+  name: 'AddColor',
+  props: ['loader', 'colors'],
+  data: function data() {
+    return {
+      public_url: window.location.origin + "" + '/',
+      name: '',
+      hex: '',
+      image: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("colorSaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    getImageUrl: function getImageUrl(image) {
+      // Check if the image is null
+      if (!image) {
+        return this.public_url + 'assets/img/blank_image.jpg';
+      }
+      return this.public_url + 'storage/uploads/inventory/colors/' + image;
+    },
+    toggleEdit: function toggleEdit(item) {
+      var vm = this;
+      item.editable = !item.editable;
+      if (!item.editable) {
+        // Check if any changes were made
+        if (item.name !== item.originalData.name || item.hex !== item.originalData.hex || item.image !== item.originalData.image) {
+          var fd = new FormData();
+          fd.append('id', item.id);
+          fd.append('name', item.name);
+          fd.append('hex', item.hex);
+          fd.append('image', vm.image);
+          vm.$emit('editColor', fd);
+        }
+      }
+    },
+    setLogo: function setLogo(event) {
+      this.image = event.target.files[0];
+    },
+    addNewColor: function addNewColor() {
+      var vm = this;
+      if (vm.name == '') {
+        return swal({
+          title: "Required",
+          text: "Please add Color Name first, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var fd = new FormData();
+      fd.append('name', vm.name);
+      fd.append('hex', vm.hex);
+      fd.append('image', vm.image);
+      vm.$emit('addNewColor', fd);
+    },
+    close: function close() {
+      this.name = '';
+      this.hex = '';
+      this.image = '';
+      $("input[type=file]").val('');
+    }
+  }
 });
 
 /***/ }),
@@ -163,7 +399,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['selectedColor'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       images: [{
         src: 'assets/img/blog/img08.png',
         alt: 'Image 1'
@@ -252,16 +488,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddProductPopup',
-  props: ["images", "heroImage"],
+  props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      brands: ["Apple", "Nike", "Samsung", "Gucci"],
+      public_url: window.location.origin + "" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
       },
-      categories: ["Electronics", "Wireless", "Bluetooth", "Apple", "Modern", "Office", "Unisex", "Black", "Plastic"],
       category: {
         code: 0,
         label: "Select from the following"
@@ -277,10 +511,7 @@ __webpack_require__.r(__webpack_exports__);
         code: 0,
         label: 'Select from the following'
       },
-      colors: ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet", "Black", "White", "Gray", "Pink", "Brown", "Turquoise", "Silver", "Gold"],
-      sizes: ['XL', 'X', 'M', 'S'],
-      tags: ['Outdoor', 'Travel', 'Office', 'Workout'],
-      attributes: ["Battery Type", "Battery Capacity", "Battery Life", "Screen Size", "Resolution", "Screen Type"],
+      scolors: ["Red", "Orange", "Yellow", "Green", "Blue", "Indigo", "Violet", "Black", "White", "Gray", "Pink", "Brown", "Turquoise", "Silver", "Gold"],
       selectedAttributes: [],
       discountPerQty: [{
         quantity: 0,
@@ -362,7 +593,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AddSize'
+  name: 'AddSize',
+  props: ['loader', 'sizes'],
+  data: function data() {
+    return {
+      name: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("sizeSaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    toggleEdit: function toggleEdit(item) {
+      var vm = this;
+      item.editable = !item.editable;
+      if (!item.editable) {
+        // Check if any changes were made
+        if (item.name !== item.originalData.name) {
+          var fd = new FormData();
+          fd.append('id', item.id);
+          fd.append('name', item.name);
+          vm.$emit('editSize', fd);
+        }
+      }
+    },
+    setLogo: function setLogo(event) {
+      this.image = event.target.files[0];
+    },
+    addNewSize: function addNewSize() {
+      var vm = this;
+      if (vm.name == '') {
+        return swal({
+          title: "Required",
+          text: "Please add Color Name first, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var fd = new FormData();
+      fd.append('name', vm.name);
+      vm.$emit('addNewSize', fd);
+    },
+    close: function close() {
+      this.name = '';
+    }
+  }
 });
 
 /***/ }),
@@ -379,7 +659,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AddTag'
+  name: 'AddTag',
+  props: ['loader', 'tags'],
+  data: function data() {
+    return {
+      name: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("tagSaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    toggleEdit: function toggleEdit(item) {
+      var vm = this;
+      item.editable = !item.editable;
+      if (!item.editable) {
+        // Check if any changes were made
+        if (item.name !== item.originalData.name) {
+          var fd = new FormData();
+          fd.append('id', item.id);
+          fd.append('name', item.name);
+          vm.$emit('editTag', fd);
+        }
+      }
+    },
+    setLogo: function setLogo(event) {
+      this.image = event.target.files[0];
+    },
+    addNewTag: function addNewTag() {
+      var vm = this;
+      if (vm.name == '') {
+        return swal({
+          title: "Required",
+          text: "Please add Tag Name first, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var fd = new FormData();
+      fd.append('name', vm.name);
+      vm.$emit('addNewTag', fd);
+    },
+    close: function close() {
+      this.name = '';
+    }
+  }
 });
 
 /***/ }),
@@ -860,6 +1189,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inventory_product_AddAttribute_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../components/inventory/product/AddAttribute.vue */ "./resources/js/components/inventory/product/AddAttribute.vue");
 /* harmony import */ var _components_inventory_product_AddTag_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../components/inventory/product/AddTag.vue */ "./resources/js/components/inventory/product/AddTag.vue");
 /* harmony import */ var _components_inventory_product_AddProductImage_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../components/inventory/product/AddProductImage.vue */ "./resources/js/components/inventory/product/AddProductImage.vue");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -887,8 +1222,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     AddProductImage: _components_inventory_product_AddProductImage_vue__WEBPACK_IMPORTED_MODULE_11__["default"]
   },
   data: function data() {
-    return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+    return _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -911,8 +1246,23 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       },
       selectedImages: [],
       selectedColor: '',
-      selectedHeroImage: {}
-    };
+      selectedHeroImage: {},
+      btnLoader: false,
+      brands: [],
+      brandsDropDown: [],
+      colors: [],
+      colorsDropDown: [],
+      sizes: [],
+      sizesDropDown: []
+    }, "tags", []), "tagsDropDown", []), "categories", []), "parentCategories", []), "categoriesDropDown", []), "attributes", []), "parentAttributes", []), "attributesDropDown", []);
+  },
+  created: function created() {
+    this.fetchBrands();
+    this.fetchCategories();
+    this.fetchColors();
+    this.fetchSizes();
+    this.fetchTags();
+    this.fetchAttributes();
   },
   methods: {
     addSelectedImages: function addSelectedImages(data) {
@@ -923,6 +1273,380 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     },
     colorGallery: function colorGallery(data) {
       this.selectedColor = data.color;
+    },
+    fetchBrands: function fetchBrands() {
+      var _this = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/brands").then(function (response) {
+        vm.brands = response.data.response.record.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            editable: false,
+            // Add the editable property here,
+            originalData: _objectSpread({}, item) // Keep a copy of the original data
+          });
+        });
+        vm.brandsDropDown = response.data.response.dropdown;
+      })["catch"](function (err) {
+        return _this.fetchBrands();
+      });
+    },
+    addNewBrand: function addNewBrand(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/brands", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchBrands();
+        vm.$emit('brandSaved', true);
+        return swal({
+          title: "Success",
+          text: 'New Brand Added Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    editNewBrand: function editNewBrand(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/brands/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchBrands();
+        vm.$emit('brandSaved', true);
+        return swal({
+          title: "Success",
+          text: 'Brand Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    fetchAttributes: function fetchAttributes() {
+      var _this2 = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/attributes").then(function (response) {
+        vm.attributesDropDown = response.data.response.dropdown;
+        vm.attributes = response.data.response.record.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            editable: false,
+            // Add the editable property here,
+            originalData: _objectSpread({}, item) // Keep a copy of the original data
+          });
+        });
+        vm.parentAttributes = response.data.response.parent;
+      })["catch"](function (err) {
+        return _this2.fetchAttributes();
+      });
+    },
+    addNewAttribute: function addNewAttribute(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/attributes", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchAttributes();
+        vm.$emit('attributeSaved', true);
+        return swal({
+          title: "Success",
+          text: 'New Attribute Added Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    editAttribute: function editAttribute(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/attributes/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchAttributes();
+        vm.$emit('attributeSaved', true);
+        return swal({
+          title: "Success",
+          text: 'Attribute Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    fetchCategories: function fetchCategories() {
+      var _this3 = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/categories").then(function (response) {
+        vm.categoriesDropDown = response.data.response.dropdown;
+        vm.categories = response.data.response.record.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            editable: false,
+            // Add the editable property here,
+            originalData: _objectSpread({}, item) // Keep a copy of the original data
+          });
+        });
+        vm.parentCategories = response.data.response.parent;
+      })["catch"](function (err) {
+        return _this3.fetchCategories();
+      });
+    },
+    addNewCategory: function addNewCategory(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/categories", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchCategories();
+        vm.$emit('categorySaved', true);
+        return swal({
+          title: "Success",
+          text: 'New Category Added Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    editCategory: function editCategory(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/categories/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchCategories();
+        vm.$emit('categorySaved', true);
+        return swal({
+          title: "Success",
+          text: 'Category Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    fetchColors: function fetchColors() {
+      var _this4 = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/colors").then(function (response) {
+        vm.colorsDropDown = response.data.response.dropdown;
+        vm.colors = response.data.response.record.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            editable: false,
+            // Add the editable property here,
+            originalData: _objectSpread({}, item) // Keep a copy of the original data
+          });
+        });
+      })["catch"](function (err) {
+        return _this4.fetchColors();
+      });
+    },
+    addNewColor: function addNewColor(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/colors", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchColors();
+        vm.$emit('colorSaved', true);
+        return swal({
+          title: "Success",
+          text: 'New Color Added Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    editColor: function editColor(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/colors/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchColors();
+        vm.$emit('colorSaved', true);
+        return swal({
+          title: "Success",
+          text: 'Color Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    fetchSizes: function fetchSizes() {
+      var _this5 = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/sizes").then(function (response) {
+        vm.sizesDropDown = response.data.response.dropdown;
+        vm.sizes = response.data.response.record.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            editable: false,
+            // Add the editable property here,
+            originalData: _objectSpread({}, item) // Keep a copy of the original data
+          });
+        });
+      })["catch"](function (err) {
+        return _this5.fetchSizes();
+      });
+    },
+    addNewSize: function addNewSize(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/sizes", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchSizes();
+        vm.$emit('sizeSaved', true);
+        return swal({
+          title: "Success",
+          text: 'New Size Added Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    editSize: function editSize(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/sizes/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchSizes();
+        vm.$emit('sizeSaved', true);
+        return swal({
+          title: "Success",
+          text: 'Size Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    fetchTags: function fetchTags() {
+      var _this6 = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/tags").then(function (response) {
+        vm.tagsDropDown = response.data.response.dropdown;
+        vm.tags = response.data.response.record.map(function (item) {
+          return _objectSpread(_objectSpread({}, item), {}, {
+            editable: false,
+            // Add the editable property here,
+            originalData: _objectSpread({}, item) // Keep a copy of the original data
+          });
+        });
+      })["catch"](function (err) {
+        return _this6.fetchTags();
+      });
+    },
+    addNewTag: function addNewTag(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/tags", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchTags();
+        vm.$emit('tagSaved', true);
+        return swal({
+          title: "Success",
+          text: 'New Tag Added Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    editTag: function editTag(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/tags/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchTags();
+        vm.$emit('tagSaved', true);
+        return swal({
+          title: "Success",
+          text: 'Tag Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
     }
   }
 });
@@ -955,7 +1679,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -1068,7 +1792,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -1218,7 +1942,7 @@ var render = function render() {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
@@ -1230,16 +1954,147 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_vm._m(1), _vm._v(" "), _c("v-select", {
     attrs: {
-      options: _vm.attributes
+      options: _vm.parentAttributes
     },
     model: {
-      value: _vm.attribute,
+      value: _vm.category,
       callback: function callback($$v) {
-        _vm.attribute = $$v;
+        _vm.category = $$v;
       },
-      expression: "attribute"
+      expression: "category"
     }
-  })], 1), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _vm._m(3)])])]);
+  }), _vm._v(" "), _c("small", [_vm._v("Please don't select if you want to add Parent Category")])], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(3), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.description,
+      expression: "description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.description
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.description = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5 text-right"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.addNewAttribute();
+      }
+    }
+  }, [_vm._v("Add New Attribute")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New Attribute")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_vm._m(4), _vm._v(" "), _c("table", {
+    staticClass: "table table-sm"
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.attributes, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.parent ? item.parent.name : "-"))]) : _c("v-select", {
+      attrs: {
+        options: _vm.parentAttributes
+      },
+      model: {
+        value: _vm.category,
+        callback: function callback($$v) {
+          _vm.category = $$v;
+        },
+        expression: "category"
+      }
+    })], 1), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.name,
+        expression: "item.name"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.name
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "name", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.description))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.description,
+        expression: "item.description"
+      }],
+      staticClass: "form-control",
+      domProps: {
+        value: item.description
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "description", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("button", {
+      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
+      attrs: {
+        title: !item.editable ? "edit details" : "update details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleEdit(item);
+        }
+      }
+    }, [!item.editable ? _c("i", {
+      staticClass: "fa fa-edit"
+    }) : _c("i", {
+      staticClass: "fa fa-save"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(6)])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -1270,35 +2125,45 @@ var staticRenderFns = [function () {
     attrs: {
       "for": ""
     }
-  }, [_c("b", [_vm._v("Select Attribute Type")])]);
+  }, [_c("b", [_vm._v("Select Parent Category")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("label", {
+  return _c("label", {
     attrs: {
       "for": ""
     }
   }, [_c("b", [_vm._v("Attribute Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
+  }, [_vm._v("*")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
-      type: "text"
+      "for": ""
     }
-  })]);
+  }, [_c("b", [_vm._v("Description "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Added Attributes")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Belong to")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Description")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Add New")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -1326,11 +2191,6 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -1341,13 +2201,168 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
   }, [_c("div", {
     staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
   }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_vm._m(1), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.description,
+      expression: "description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.description
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.description = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(3), _vm._v(" "), _c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file",
+      accept: "image/png image/jpeg"
+    },
+    on: {
+      change: _vm.setLogo
+    }
+  }), _vm._v(" "), _c("code", [_vm._v("2MB Sized Allowed")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5 text-right"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.addNewBrand();
+      }
+    }
+  }, [_vm._v("Add New Brand")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New Brand")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_vm._m(4), _vm._v(" "), _c("table", {
+    staticClass: "table table-sm"
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.brands, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.name,
+        expression: "item.name"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.name
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "name", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.description))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.description,
+        expression: "item.description"
+      }],
+      staticClass: "form-control",
+      domProps: {
+        value: item.description
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "description", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [!item.editable ? _c("img", {
+      staticClass: "mr-3 rounded-circle",
+      attrs: {
+        src: _vm.getImageUrl(item.logo),
+        width: "30",
+        alt: ""
+      }
+    }) : _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "file"
+      },
+      on: {
+        change: function change($event) {
+          return _vm.setLogo($event);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("button", {
+      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
+      attrs: {
+        title: !item.editable ? "edit details" : "update details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleEdit(item);
+        }
+      }
+    }, [!item.editable ? _c("i", {
+      staticClass: "fa fa-edit"
+    }) : _c("i", {
+      staticClass: "fa fa-save"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(6)])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title",
@@ -1365,35 +2380,61 @@ var staticRenderFns = [function () {
     attrs: {
       "aria-hidden": "true"
     }
-  }, [_vm._v("×")])])]), _vm._v(" "), _c("div", {
-    staticClass: "modal-body row"
-  }, [_c("div", {
-    staticClass: "col-md-12"
-  }, [_c("label", {
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
       "for": ""
     }
   }, [_c("b", [_vm._v("Brand Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
+  }, [_vm._v("*")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
-      type: "text"
+      "for": ""
     }
-  })])]), _vm._v(" "), _c("div", {
+  }, [_c("b", [_vm._v("Description "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Upload Brand Logo "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Added Brands")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Description")]), _vm._v(" "), _c("th", [_vm._v("Logo")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Add New")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("Close")])])])])]);
+  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -1425,7 +2466,7 @@ var render = function render() {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
@@ -1437,7 +2478,7 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_vm._m(1), _vm._v(" "), _c("v-select", {
     attrs: {
-      options: _vm.categories
+      options: _vm.parentCategories
     },
     model: {
       value: _vm.category,
@@ -1446,7 +2487,138 @@ var render = function render() {
       },
       expression: "category"
     }
-  })], 1), _vm._v(" "), _vm._m(2)]), _vm._v(" "), _vm._m(3)])])]);
+  }), _vm._v(" "), _c("small", [_vm._v("Please don't select if you want to add Parent Category")])], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(3), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.description,
+      expression: "description"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.description
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.description = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5 text-right"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.addNewCategory();
+      }
+    }
+  }, [_vm._v("Add New Category")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New Category")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_vm._m(4), _vm._v(" "), _c("table", {
+    staticClass: "table table-sm"
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.categories, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.parent ? item.parent.name : "-"))]) : _c("v-select", {
+      attrs: {
+        options: _vm.parentCategories
+      },
+      model: {
+        value: _vm.category,
+        callback: function callback($$v) {
+          _vm.category = $$v;
+        },
+        expression: "category"
+      }
+    })], 1), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.name,
+        expression: "item.name"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.name
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "name", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.description))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.description,
+        expression: "item.description"
+      }],
+      staticClass: "form-control",
+      domProps: {
+        value: item.description
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "description", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("button", {
+      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
+      attrs: {
+        title: !item.editable ? "edit details" : "update details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleEdit(item);
+        }
+      }
+    }, [!item.editable ? _c("i", {
+      staticClass: "fa fa-edit"
+    }) : _c("i", {
+      staticClass: "fa fa-save"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(6)])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -1481,31 +2653,41 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("label", {
+  return _c("label", {
     attrs: {
       "for": ""
     }
   }, [_c("b", [_vm._v("Category Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
+  }, [_vm._v("*")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
-      type: "text"
+      "for": ""
     }
-  })]);
+  }, [_c("b", [_vm._v("Description "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Added Categories")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Belong to")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Description")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Add New")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -1533,11 +2715,6 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -1548,13 +2725,175 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
   }, [_c("div", {
     staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
   }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_vm._m(1), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "input-group colorpickerinput colorpicker-element"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.hex,
+      expression: "hex"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.hex
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.hex = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _vm._m(3)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_vm._m(4), _vm._v(" "), _c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file",
+      accept: "image/png image/jpeg"
+    },
+    on: {
+      change: _vm.setLogo
+    }
+  }), _vm._v(" "), _c("code", [_vm._v("2MB Sized Allowed")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5 text-right"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.addNewColor();
+      }
+    }
+  }, [_vm._v("Add New\n                        Color")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New\n                        Color")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_vm._m(5), _vm._v(" "), _c("table", {
+    staticClass: "table table-sm"
+  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.colors, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.name,
+        expression: "item.name"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.name
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "name", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.hex))]) : _c("div", {
+      staticClass: "input-group colorpickerinput colorpicker-element"
+    }, [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.hex,
+        expression: "item.hex"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.hex
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "hex", $event.target.value);
+        }
+      }
+    }), _vm._v(" "), _vm._m(7, true)])]), _vm._v(" "), _c("td", [!item.editable ? _c("img", {
+      staticClass: "mr-3 rounded-circle",
+      attrs: {
+        src: _vm.getImageUrl(item.image),
+        width: "30",
+        alt: ""
+      }
+    }) : _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "file"
+      },
+      on: {
+        change: function change($event) {
+          return _vm.setLogo($event);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("button", {
+      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
+      attrs: {
+        title: !item.editable ? "edit details" : "update details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleEdit(item);
+        }
+      }
+    }, [!item.editable ? _c("i", {
+      staticClass: "fa fa-edit"
+    }) : _c("i", {
+      staticClass: "fa fa-save"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(8)])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title",
@@ -1572,58 +2911,77 @@ var staticRenderFns = [function () {
     attrs: {
       "aria-hidden": "true"
     }
-  }, [_vm._v("×")])])]), _vm._v(" "), _c("div", {
-    staticClass: "modal-body row"
-  }, [_c("div", {
-    staticClass: "col-md-12"
-  }, [_c("label", {
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
       "for": ""
     }
   }, [_c("b", [_vm._v("Color Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
-    attrs: {
-      type: "text"
-    }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_c("b", [_vm._v("Pick Your Colour "), _c("span", {
+  }, [_vm._v("*")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", [_c("b", [_vm._v("Pick Your Color "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("div", {
-    staticClass: "input-group colorpickerinput"
-  }, [_c("input", {
-    staticClass: "form-control",
-    attrs: {
-      type: "text"
-    }
-  }), _vm._v(" "), _c("div", {
+  }, [_vm._v("( optional )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "input-group-append"
   }, [_c("div", {
     staticClass: "input-group-text"
   }, [_c("i", {
     staticClass: "fas fa-fill-drip"
-  })])])])])])]), _vm._v(" "), _c("div", {
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Upload Color Image "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_c("b", [_vm._v("Added Colors")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Hex #")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "input-group-append"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_c("i", {
+    staticClass: "fas fa-fill-drip"
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Add New")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("Close")])])])])]);
+  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -2129,7 +3487,7 @@ var render = function render() {
     }
   }, _vm._l(_vm.colors, function (color) {
     return _c("li", {
-      key: color
+      key: color.id
     }, [_c("div", {
       staticClass: "pretty p-default"
     }, [_c("input", {
@@ -2143,8 +3501,8 @@ var render = function render() {
         type: "checkbox"
       },
       domProps: {
-        value: color,
-        checked: Array.isArray(_vm.selectedColors) ? _vm._i(_vm.selectedColors, color) > -1 : _vm.selectedColors
+        value: color.id,
+        checked: Array.isArray(_vm.selectedColors) ? _vm._i(_vm.selectedColors, color.id) > -1 : _vm.selectedColors
       },
       on: {
         change: function change($event) {
@@ -2152,7 +3510,7 @@ var render = function render() {
             $$el = $event.target,
             $$c = $$el.checked ? true : false;
           if (Array.isArray($$a)) {
-            var $$v = color,
+            var $$v = color.id,
               $$i = _vm._i($$a, $$v);
             if ($$el.checked) {
               $$i < 0 && (_vm.selectedColors = $$a.concat([$$v]));
@@ -2164,7 +3522,7 @@ var render = function render() {
           }
         }
       }
-    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(color))])])]);
+    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(color.name))])])]);
   }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "accordion"
   }, [_c("div", {
@@ -2208,14 +3566,14 @@ var render = function render() {
     }
   }, _vm._l(_vm.sizes, function (item) {
     return _c("li", {
-      key: item
+      key: item.id
     }, [_c("div", {
       staticClass: "pretty p-default"
     }, [_c("input", {
       attrs: {
         type: "checkbox"
       }
-    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(item))])])]);
+    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(item.name))])])]);
   }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "accordion"
   }, [_c("div", {
@@ -2259,14 +3617,14 @@ var render = function render() {
     }
   }, _vm._l(_vm.tags, function (item) {
     return _c("li", {
-      key: item
+      key: item.id
     }, [_c("div", {
       staticClass: "pretty p-default"
     }, [_c("input", {
       attrs: {
         type: "checkbox"
       }
-    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(item))])])]);
+    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(item.name))])])]);
   }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "accordion"
   }, [_c("div", {
@@ -2310,62 +3668,14 @@ var render = function render() {
     }
   }, _vm._l(_vm.attributes, function (item, index) {
     return _c("li", {
-      key: item
+      key: item.id
     }, [_c("div", {
       staticClass: "pretty p-default"
     }, [_c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: _vm.selectedAttributes[index].checked,
-        expression: "selectedAttributes[index].checked"
-      }],
       attrs: {
         type: "checkbox"
-      },
-      domProps: {
-        checked: Array.isArray(_vm.selectedAttributes[index].checked) ? _vm._i(_vm.selectedAttributes[index].checked, null) > -1 : _vm.selectedAttributes[index].checked
-      },
-      on: {
-        change: function change($event) {
-          var $$a = _vm.selectedAttributes[index].checked,
-            $$el = $event.target,
-            $$c = $$el.checked ? true : false;
-          if (Array.isArray($$a)) {
-            var $$v = null,
-              $$i = _vm._i($$a, $$v);
-            if ($$el.checked) {
-              $$i < 0 && _vm.$set(_vm.selectedAttributes[index], "checked", $$a.concat([$$v]));
-            } else {
-              $$i > -1 && _vm.$set(_vm.selectedAttributes[index], "checked", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-            }
-          } else {
-            _vm.$set(_vm.selectedAttributes[index], "checked", $$c);
-          }
-        }
       }
-    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(item))])]), _vm._v(" "), _vm.selectedAttributes[index].checked ? _c("div", [_c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: _vm.selectedAttributes[index].value,
-        expression: "selectedAttributes[index].value"
-      }],
-      staticClass: "form-control",
-      attrs: {
-        type: "text",
-        placeholder: "Enter details for " + item
-      },
-      domProps: {
-        value: _vm.selectedAttributes[index].value
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(_vm.selectedAttributes[index], "value", $event.target.value);
-        }
-      }
-    })]) : _vm._e()]);
+    }), _vm._v(" "), _c("label", [_vm._v(_vm._s(item.name))])])]);
   }), 0)])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 my-3"
   }, [_c("div", {
@@ -2777,11 +4087,6 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -2792,13 +4097,101 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
   }, [_c("div", {
     staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
   }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_vm._m(1), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5 text-right"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.addNewSize();
+      }
+    }
+  }, [_vm._v("Add New Size")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New Size")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_vm._m(2), _vm._v(" "), _c("table", {
+    staticClass: "table table-sm"
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.sizes, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.name,
+        expression: "item.name"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.name
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "name", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("button", {
+      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
+      attrs: {
+        title: !item.editable ? "edit details" : "update details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleEdit(item);
+        }
+      }
+    }, [!item.editable ? _c("i", {
+      staticClass: "fa fa-edit"
+    }) : _c("i", {
+      staticClass: "fa fa-save"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(4)])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title",
@@ -2816,35 +4209,41 @@ var staticRenderFns = [function () {
     attrs: {
       "aria-hidden": "true"
     }
-  }, [_vm._v("×")])])]), _vm._v(" "), _c("div", {
-    staticClass: "modal-body row"
-  }, [_c("div", {
-    staticClass: "col-md-12"
-  }, [_c("label", {
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
       "for": ""
     }
   }, [_c("b", [_vm._v("Size Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
+  }, [_vm._v("*")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
-      type: "text"
+      "for": ""
     }
-  })])]), _vm._v(" "), _c("div", {
+  }, [_c("b", [_vm._v("Added Sizes")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Add New")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("Close")])])])])]);
+  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -2866,11 +4265,6 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -2881,13 +4275,101 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-dialog-centered",
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
     attrs: {
       role: "document"
     }
   }, [_c("div", {
     staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
   }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_vm._m(1), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5 text-right"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.addNewTag();
+      }
+    }
+  }, [_vm._v("Add New Tag")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New Tag")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_vm._m(2), _vm._v(" "), _c("table", {
+    staticClass: "table table-sm"
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.tags, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.name,
+        expression: "item.name"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.name
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "name", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("button", {
+      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
+      attrs: {
+        title: !item.editable ? "edit details" : "update details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.toggleEdit(item);
+        }
+      }
+    }, [!item.editable ? _c("i", {
+      staticClass: "fa fa-edit"
+    }) : _c("i", {
+      staticClass: "fa fa-save"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(4)])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-header"
   }, [_c("h5", {
     staticClass: "modal-title",
@@ -2905,35 +4387,41 @@ var staticRenderFns = [function () {
     attrs: {
       "aria-hidden": "true"
     }
-  }, [_vm._v("×")])])]), _vm._v(" "), _c("div", {
-    staticClass: "modal-body row"
-  }, [_c("div", {
-    staticClass: "col-md-12"
-  }, [_c("label", {
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
       "for": ""
     }
   }, [_c("b", [_vm._v("Tag Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
+  }, [_vm._v("*")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     attrs: {
-      type: "text"
+      "for": ""
     }
-  })])]), _vm._v(" "), _c("div", {
+  }, [_c("b", [_vm._v("Added Tags")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
-    staticClass: "btn btn-primary",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Add New")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("Close")])])])])]);
+  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -3897,14 +5385,100 @@ var render = function render() {
   })]), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)])], 1)])]), _vm._v(" "), _c("AddProductPopup", {
     attrs: {
       images: _vm.selectedImages,
-      heroImage: _vm.selectedHeroImage
+      heroImage: _vm.selectedHeroImage,
+      attributes: _vm.attributes,
+      brands: _vm.brandsDropDown,
+      categories: _vm.categoriesDropDown,
+      colors: _vm.colors,
+      sizes: _vm.sizes,
+      tags: _vm.tags
     },
     on: {
       color: function color($event) {
         return _vm.colorGallery($event);
       }
     }
-  }), _vm._v(" "), _c("AddBrand"), _vm._v(" "), _c("AddColor"), _vm._v(" "), _c("AddCategory"), _vm._v(" "), _c("AddSize"), _vm._v(" "), _c("AddAttribute"), _vm._v(" "), _c("AddTag"), _vm._v(" "), _c("AddProductImage", {
+  }), _vm._v(" "), _c("AddBrand", {
+    attrs: {
+      loader: _vm.btnLoader,
+      brands: _vm.brands
+    },
+    on: {
+      addNewBrand: function addNewBrand($event) {
+        return _vm.addNewBrand($event);
+      },
+      editNewBrand: function editNewBrand($event) {
+        return _vm.editNewBrand($event);
+      }
+    }
+  }), _vm._v(" "), _c("AddColor", {
+    attrs: {
+      loader: _vm.btnLoader,
+      colors: _vm.colors
+    },
+    on: {
+      addNewColor: function addNewColor($event) {
+        return _vm.addNewColor($event);
+      },
+      editColor: function editColor($event) {
+        return _vm.editColor($event);
+      }
+    }
+  }), _vm._v(" "), _c("AddCategory", {
+    attrs: {
+      loader: _vm.btnLoader,
+      categories: _vm.categories,
+      parentCategories: _vm.parentCategories
+    },
+    on: {
+      addNewCategory: function addNewCategory($event) {
+        return _vm.addNewCategory($event);
+      },
+      editCategory: function editCategory($event) {
+        return _vm.editCategory($event);
+      }
+    }
+  }), _vm._v(" "), _c("AddSize", {
+    attrs: {
+      loader: _vm.btnLoader,
+      sizes: _vm.sizes
+    },
+    on: {
+      addNewSize: function addNewSize($event) {
+        return _vm.addNewSize($event);
+      },
+      editSize: function editSize($event) {
+        return _vm.editSize($event);
+      }
+    }
+  }), _vm._v(" "), _c("AddAttribute", {
+    attrs: {
+      loader: _vm.btnLoader,
+      attributes: _vm.attributes,
+      parentAttributes: _vm.parentAttributes
+    },
+    on: {
+      addNewAttribute: function addNewAttribute($event) {
+        return _vm.addNewAttribute($event);
+      },
+      editAttribute: function editAttribute($event) {
+        return _vm.editAttribute($event);
+      }
+    }
+  }), _vm._v(" "), _c("AddTag", {
+    attrs: {
+      loader: _vm.btnLoader,
+      tags: _vm.tags
+    },
+    on: {
+      addNewTag: function addNewTag($event) {
+        return _vm.addNewTag($event);
+      },
+      editTag: function editTag($event) {
+        return _vm.editTag($event);
+      }
+    }
+  }), _vm._v(" "), _c("AddProductImage", {
     attrs: {
       selectedColor: _vm.selectedColor
     },

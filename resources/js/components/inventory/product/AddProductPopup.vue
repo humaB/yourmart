@@ -179,10 +179,10 @@
                                                         style=" height: 15px; line-height: 1px; padding: 6px; float: right">Add
                                                         New</a><br>
                                                     <ol style="height:200px; overflow-y:scroll">
-                                                        <li v-for="color in colors" :key="color">
+                                                        <li v-for="color in colors" :key="color.id">
                                                             <div class="pretty p-default">
-                                                                <input type="checkbox" :value="color"
-                                                                    v-model="selectedColors"> <label>{{ color }}</label>
+                                                                <input type="checkbox" :value="color.id"
+                                                                    v-model="selectedColors"> <label>{{ color.name }}</label>
                                                             </div>
                                                         </li>
                                                     </ol>
@@ -205,9 +205,9 @@
                                                         style=" height: 15px; line-height: 1px; padding: 6px; float: right">Add
                                                         New</a><br>
                                                     <ol style="height:200px; overflow-y:scroll">
-                                                        <li v-for="item in sizes" :key="item">
+                                                        <li v-for="item in sizes" :key="item.id">
                                                             <div class="pretty p-default">
-                                                                <input type="checkbox"> <label>{{ item }}</label>
+                                                                <input type="checkbox"> <label>{{ item.name }}</label>
                                                             </div>
                                                         </li>
                                                     </ol>
@@ -230,9 +230,9 @@
                                                         style=" height: 15px; line-height: 1px; padding: 6px; float: right">Add
                                                         New</a><br>
                                                     <ol style="height:200px; overflow-y:scroll">
-                                                        <li v-for="item in tags" :key="item">
+                                                        <li v-for="item in tags" :key="item.id">
                                                             <div class="pretty p-default">
-                                                                <input type="checkbox"> <label>{{ item }}</label>
+                                                                <input type="checkbox"> <label>{{ item.name }}</label>
                                                             </div>
                                                         </li>
                                                     </ol>
@@ -256,19 +256,19 @@
                                                         style=" height: 15px; line-height: 1px; padding: 6px; float: right">Add
                                                         New</a><br>
                                                     <ol style="height:200px; overflow-y:scroll">
-                                                        <li v-for="(item, index) in attributes" :key="item">
+                                                        <li v-for="(item, index) in attributes" :key="item.id">
                                                             <div class="pretty p-default">
-                                                                <input type="checkbox"
-                                                                    v-model="selectedAttributes[index].checked">
-                                                                <label>{{ item }}</label>
+                                                                <input type="checkbox" />
+
+                                                                <label>{{ item.name }}</label>
                                                             </div>
                                                             <!-- Conditionally render input field if checkbox is checked -->
-                                                            <div v-if="selectedAttributes[index].checked">
+                                                            <!-- <div v-if="selectedAttributes[index].checked">
                                                                 <input type="text"
-                                                                    v-model="selectedAttributes[index].value"
+
                                                                     class="form-control"
                                                                     :placeholder="'Enter details for ' + item">
-                                                            </div>
+                                                            </div> -->
                                                         </li>
                                                     </ol>
                                                 </div>
@@ -360,13 +360,11 @@
 <script>
 export default {
     name: 'AddProductPopup',
-    props: ["images", "heroImage"],
+    props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags" , "attributes"],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
-            brands: ["Apple", "Nike", "Samsung", "Gucci"],
             brand: { code: 0, label: "Select from the following" },
-            categories: ["Electronics", "Wireless", "Bluetooth", "Apple", "Modern", "Office", "Unisex", "Black", "Plastic"],
             category: { code: 0, label: "Select from the following" },
             title: '',
             shortDescription: '',
@@ -387,7 +385,7 @@ export default {
                 "Luxury Shipping: High-value items with secure, premium packaging."
             ],
             selectedShipping : { code : 0 , label : 'Select from the following'},
-            colors: [
+            scolors: [
                 "Red",
                 "Orange",
                 "Yellow",
@@ -404,9 +402,6 @@ export default {
                 "Silver",
                 "Gold"
             ],
-            sizes: ['XL', 'X', 'M', 'S'],
-            tags: ['Outdoor', 'Travel', 'Office', 'Workout'],
-            attributes: ["Battery Type", "Battery Capacity", "Battery Life", "Screen Size", "Resolution", "Screen Type"],
             selectedAttributes: [],
             discountPerQty: [{ quantity: 0, price: 0 }],
             selectedColors: [], // Tracks selected colors

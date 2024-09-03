@@ -37,7 +37,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->char('code',4)->uppercase();
-            $table->string('hex');
+            $table->string('hex')->nullable();
+            $table->string('image')->nullable();
             $table->bigInteger('added_by');
             $table->timestamps();
         });
@@ -64,17 +65,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
+            $table->bigInteger('parent_id')->default(0);
             $table->bigInteger('added_by');
             $table->timestamps();
         });
 
-        Schema::create('inventory_product_attribute_options', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('attribute_type_id');
-            $table->string('name');
-            $table->bigInteger('added_by');
-            $table->timestamps();
-        });
     }
 
     /**
@@ -90,6 +85,5 @@ return new class extends Migration
         Schema::dropIfExists('inventory_product_sizes');
         Schema::dropIfExists('inventory_product_tags');
         Schema::dropIfExists('inventory_product_attribute_types');
-        Schema::dropIfExists('inventory_product_attribute_options');
     }
 };

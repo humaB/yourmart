@@ -25,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         JsonResource::withoutWrapping();
+        require_once app_path('Http/Controllers/Helpers/SlugHelper.php');
     }
 }
