@@ -481,7 +481,7 @@
                         <i class="fas fa-save"></i>
                         Save in draft
                     </button>
-                    <button type="button" class="btn btn-secondary" @click="close()" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

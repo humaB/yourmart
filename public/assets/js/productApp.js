@@ -4757,11 +4757,6 @@ var render = function render() {
     attrs: {
       type: "button",
       "data-dismiss": "modal"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.close();
-      }
     }
   }, [_vm._v("Close")])])])])]);
 };
