@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Inventory;
+namespace App\Http\Controllers\Inventory\Attributes;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
@@ -46,7 +46,7 @@ class ColorController extends Controller
 
             $exist = Color::where('name', $request->name)->first();
             if( $exist ){
-                return (new ValidationCollection(['This color name is alread added']))
+                return (new ValidationCollection(['This color name is already added']))
                 ->response()
                 ->setStatusCode(421);
             }

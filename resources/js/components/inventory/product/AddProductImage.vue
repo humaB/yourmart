@@ -12,46 +12,47 @@
                     </button>
                 </div>
                 <div class="modal-body row">
-                    <div class="col-md-8">
-                        <label for=""><b>Upload File</b> <code>If image is not available in gallery</code></label>
-                        <input type="file" class="form-control">
+                    <div class="col-md-5">
+                        <label for=""><b>Upload File</b> <code> ( If image is not available in gallery )</code></label>
+                        <input type="file" class="form-control" @change="setImage($event)">
+                        <code>Maximum upload file size: 25 MB</code>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-5">
+                        <label for=""><b>ALT</b></label>
+                        <input type="text" class="form-control" v-model="alt">
+                        <code>( Attachment information )</code>
+                    </div>
+                    <div class="col-md-2">
                         <label for=""><b>Action</b></label><br>
-                        <button class="btn btn-primary">Upload Attachment</button>
+                        <button type="button" class="btn btn-primary" v-if="!loader" @click="uploadAttachment()">Upload
+                            Attachment</button>
+                        <button type="button" class="btn btn-primary btn-progress disabled" v-else>Upload
+                            Attachment</button>
                     </div>
                     <div class="col-12 col-sm-6 col-lg-12 mt-3">
                         <div class="card">
-                          <div class="card-header">
-                            <h4>Select from Gallery</h4>
-                          </div>
-                          <div class="card-body">
-                            <div class=" gutters-sm row">
-                                <div class="col-3 col-sm-2" v-for="(image, index) in images" :key="index">
-                                    <label class="imagecheck mb-4">
-                                      <input
-                                        v-if="selectedColor != 'Hero'"
-                                        type="checkbox"
-                                        :value="image"
-                                        class="imagecheck-input"
-                                        v-model="selectedImagesByColor[selectedColor]"
-                                      />
-                                      <input
-                                      v-else
-                                        type="radio"
-                                        :value="image"
-                                        class="imagecheck-input"
-                                        v-model="heroImage"
-                                        />
-                                      <span class="imagecheck-figure">
-                                        <img :src="public_url + image.src" :alt="image.alt" class="imagecheck-image" />
-                                      </span>
-                                    </label>
-                                  </div>
+                            <div class="card-header">
+                                <h4>Select from Gallery</h4>
                             </div>
-                          </div>
+                            <div class="card-body">
+                                <div class=" gutters-sm row" id="gallery-scroll">
+                                    <div class="col-3 col-sm-2" v-for="(image, index) in attachments" :key="index">
+                                        <label class="imagecheck mb-4">
+                                            <input v-if="selectedColor != 'Hero'" type="checkbox" :value="image"
+                                                class="imagecheck-input"
+                                                v-model="selectedImagesByColor[selectedColor]" />
+                                            <input v-else type="radio" :value="image" class="imagecheck-input"
+                                                v-model="heroImage" />
+                                            <span class="imagecheck-figure">
+                                                <img :src="public_url + 'storage/uploads/inventory/products/media/'+ image.attachment"
+                                                    :alt="image.alt" class="imagecheck-image" />
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                      </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" @click="addSelectedImages()">Add Selected</button>
@@ -64,55 +65,95 @@
 <script>
 export default {
     name: 'AddProductImage',
-    props : ['selectedColor'],
-    data () {
+    props: ['selectedColor', 'colors', 'loader', 'attachments'],
+    data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
-            images: [
-                { src: 'assets/img/blog/img08.png', alt: 'Image 1' },
-                { src: 'assets/img/blog/img01.png', alt: 'Image 2' }, // Add more images as needed
-                { src: 'assets/img/blog/img02.png', alt: 'Image 3' }, // Add more images as needed
-                { src: 'assets/img/blog/img03.png', alt: 'Image 4' }, // Add more images as needed
-                { src: 'assets/img/blog/img04.png', alt: 'Image 5' }, // Add more images as needed
-                { src: 'assets/img/blog/img05.png', alt: 'Image 6' }, // Add more images as needed
-                { src: 'assets/img/blog/img06.png', alt: 'Image 7' }, // Add more images as needed
-            ],
-            selectedImagesByColor: {
-                Hero : [],
-                Blank: [],
-                Black: [],
-                Blue: [],
-                Brown: [],
-                Gold: [],
-                Gray: [],
-                Green: [],
-                Indigo: [],
-                Orange: [],
-                Pink: [],
-                Red: [],
-                Silver: [],
-                Turquoise: [],
-                Violet: [],
-                White: [],
-                Yellow: [],
-            },
+            selectedImagesByColor: {},
             selectedImages: [],
-            heroImage : {}
+            heroImage: {},
+            image: '',
+            alt: ''
         }
     },
-    methods : {
-        addSelectedImages(){
-            if( this.selectedColor == 'Hero'){
+    updated() {
+        this.$nextTick(() => {
+            $("#gallery-scroll").css({
+                height: 500,
+                overflow: 'auto'
+            });
+        });
+    },
+    mounted() {
+        this.$parent.$on("attachmentSaved", (value) => {
+            if (value) {
+                this.close();
+            }
+        });
+        this.$parent.$on("closeProduct", (value) => {
+            if (value) {
+                this.reset();
+            }
+        });
+    },
+    methods: {
+        setImage(event) {
+            this.image = event.target.files[0];
+        },
+        addSelectedImages() {
+            if (this.selectedColor == 'Hero') {
                 this.$emit('addSelectedHeroImages', this.heroImage);
-            }else{
+            } else {
                 this.$emit('addSelectedImages', this.selectedImagesByColor);
             }
             return swal({
-              title: "Success",
-              text:  "Selected Images added",
-              icon: "success",
-              timer: 3000,
+                title: "Success",
+                text: "Selected Images added",
+                icon: "success",
+                timer: 3000,
             });
+        },
+        uploadAttachment() {
+            let vm = this;
+            const fd = new FormData();
+            if (vm.image == '') {
+                return swal({
+                    title: "Error",
+                    text: "Please select image first, thanks",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+            fd.append('image', vm.image);
+            fd.append('alt', vm.alt);
+
+            vm.$emit('uploadAttachment', fd)
+        },
+        close() {
+            this.image = '';
+            this.alt = '';
+            $("input[type=file]").val('');
+        },
+        reset() {
+            this.selectedImagesByColor= {};
+            this.heroImage= {};
+
+            this.updateSelectedImagesByColor(this.colors);
+        },
+        updateSelectedImagesByColor(newColors) {
+            // Reset the selectedImagesByColor object
+            this.$set(this.selectedImagesByColor, 'Blank', []);
+
+            // Populate selectedImagesByColor based on the new colors
+            newColors.forEach((color) => {
+                this.$set(this.selectedImagesByColor, color.name, []); // Use $set to ensure reactivity
+            });
+        }
+    },
+    watch: {
+        colors(newColors) {
+            // Call the method to handle color updates
+            this.updateSelectedImagesByColor(newColors);
         }
     },
 

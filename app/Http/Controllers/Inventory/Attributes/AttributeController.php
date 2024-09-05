@@ -1,28 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Inventory;
+namespace App\Http\Controllers\Inventory\Attributes;
 
-use App\Helpers\SlugHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ResponseCollection;
-use App\Http\Resources\ValidationCollection;
-use App\Models\Inventory\Product\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use App\Helpers\SlugHelper;
+use App\Http\Resources\ResponseCollection;
+use App\Http\Resources\ValidationCollection;
+use App\Models\Inventory\Product\AttributeType;
 
-class TagController extends Controller
+class AttributeController extends Controller
 {
-    public function fetchTags(){
+    public function fetchAttributes(){
 
-        $record = Tag::orderBy('id', 'desc')->get();
+        $record = AttributeType::with('user', 'parent:id,name')->orderBy('id', 'desc')->get();
+        $parent = AttributeType::with('user', 'parent:id,name')->where('parent_id', '0')->select('id as code', 'name as label')->get();
+        $categories = AttributeType::with('user', 'parent:id,name')->where('parent_id', '!=' ,'0')->select('id as code', 'name as label')->get();
 
         $data = [
-            'dropdown' => $record->map(function ($item) {
-                return [
-                    'code' => $item->id,
-                    'label' => $item->name
-                ];
-            }),
+            'dropdown' => $categories,
+            'parent'   => $parent,
             'record'   => $record
         ];
 
@@ -32,7 +30,7 @@ class TagController extends Controller
     }
 
     public function store( Request $request ){
-        $lock = Cache::lock('add_tag')->block(7, function () use ($request) {
+        $lock = Cache::lock('add_attribute')->block(7, function () use ($request) {
             // Validate request
             $validator = \Validator::make($request->all(), [
                 'name' => 'required',
@@ -43,22 +41,24 @@ class TagController extends Controller
                 return $validation;
             }
 
-            $exist = Tag::where('name', $request->name)->first();
+            $exist = AttributeType::where('name', $request->name)->first();
             if( $exist ){
-                return (new ValidationCollection(['This tag name is alread added']))
+                return (new ValidationCollection(['This category name is already added']))
                 ->response()
                 ->setStatusCode(421);
             }
 
             $userId = auth()->user()->id;
 
-            Tag::create([
+            AttributeType::create([
                 'name'         => $request->name,
                 'slug'         => SlugHelper::generateSlug($request->name),
+                'description'  => $request->description,
+                'parent_id'    => $request->parent ?? 0,
                 'added_by'     => $userId
             ]);
 
-            return response()->json(['message' => 'Tag added successfully'], 201);
+            return response()->json(['message' => 'attribute added successfully'], 201);
         });
 
         return $lock;
@@ -67,7 +67,7 @@ class TagController extends Controller
 
     public function update(Request $request) {
         $id = $request->id;
-        $lock = Cache::lock('update_tag_' . $id)->block(7, function () use ($request, $id) {
+        $lock = Cache::lock('update_attribute_' . $id)->block(7, function () use ($request, $id) {
             // Validate request
             $validator = \Validator::make($request->all(), [
                 'name' => 'required',
@@ -78,16 +78,19 @@ class TagController extends Controller
                 return $validation;
             }
 
-            $exist = Tag::where('name', $request->name)->where('id', '!=', $id)->first();
+            $exist = AttributeType::where('name', $request->name)
+            ->where('parent_id', $request->parent_id) // or wherever you get the parent ID
+            ->where('id', '!=', $id)
+            ->first();
             if ($exist) {
-                return (new ValidationCollection(['This Size name is already added']))
+                return (new ValidationCollection(['This attribute name is already added']))
                     ->response()
                     ->setStatusCode(421);
             }
 
-            $size = Tag::find($id);
-            if (!$size) {
-                return (new ValidationCollection(['Size not found']))
+            $attribute = AttributeType::find($id);
+            if (!$attribute) {
+                return (new ValidationCollection(['Attribute not found']))
                 ->response()
                 ->setStatusCode(404);
             }
@@ -95,14 +98,16 @@ class TagController extends Controller
             $userId = auth()->user()->id;
 
             $data = [
-                'name'     => $request->name,
-                'slug'     => SlugHelper::generateSlug($request->name),
+                'name' => $request->name,
+                'slug' => SlugHelper::generateSlug($request->name),
+                'parent_id' => $request->parent,
+                'description' => $request->description,
                 'added_by' => $userId
             ];
 
-            $size->update($data);
+            $attribute->update($data);
 
-            return response()->json(['message' => 'Size updated successfully'], 200);
+            return response()->json(['message' => 'attribute updated successfully'], 200);
         });
 
         return $lock;

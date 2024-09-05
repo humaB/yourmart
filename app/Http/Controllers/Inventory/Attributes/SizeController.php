@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Inventory;
+namespace App\Http\Controllers\Inventory\Attributes;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
@@ -44,7 +44,7 @@ class SizeController extends Controller
 
             $exist = Size::where('name', $request->name)->first();
             if( $exist ){
-                return (new ValidationCollection(['This color name is alread added']))
+                return (new ValidationCollection(['This color name is already added']))
                 ->response()
                 ->setStatusCode(421);
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Inventory;
+namespace App\Http\Controllers\Inventory\Attributes;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
@@ -54,7 +54,7 @@ class CategoryController extends Controller
 
             $exist = Category::where('name', $request->name)->first();
             if( $exist ){
-                return (new ValidationCollection(['This category name is alread added']))
+                return (new ValidationCollection(['This category name is already added']))
                 ->response()
                 ->setStatusCode(421);
             }

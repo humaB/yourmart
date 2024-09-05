@@ -34,7 +34,7 @@
     <script src="{{ asset('assets/js/productApp.js') }}"></script>
 
     <script>
-        $(".summernote").summernote({
+        $(".productHighlights, .productDescription").summernote({
            dialogsInBody: true,
            minHeight: 200,
            toolbar: [

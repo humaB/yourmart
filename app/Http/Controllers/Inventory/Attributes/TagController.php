@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\Inventory;
+namespace App\Http\Controllers\Inventory\Attributes;
 
 use App\Helpers\SlugHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
-use App\Models\Inventory\Product\Brand;
+use App\Models\Inventory\Product\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class BrandController extends Controller
+class TagController extends Controller
 {
-    public function fetchBrand(){
+    public function fetchTags(){
 
-        $record = Brand::with('user')->orderBy('id', 'desc')->get();
+        $record = Tag::orderBy('id', 'desc')->get();
 
         $data = [
             'dropdown' => $record->map(function ($item) {
@@ -32,11 +32,10 @@ class BrandController extends Controller
     }
 
     public function store( Request $request ){
-        $lock = Cache::lock('add_brand')->block(7, function () use ($request) {
+        $lock = Cache::lock('add_tag')->block(7, function () use ($request) {
             // Validate request
             $validator = \Validator::make($request->all(), [
                 'name' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validates if image is present
             ]);
 
             $validation = $this->validation($validator);
@@ -44,24 +43,22 @@ class BrandController extends Controller
                 return $validation;
             }
 
-            $exist = Brand::where('name', $request->name)->first();
+            $exist = Tag::where('name', $request->name)->first();
             if( $exist ){
-                return (new ValidationCollection(['This brand name is alread added']))
+                return (new ValidationCollection(['This tag name is already added']))
                 ->response()
                 ->setStatusCode(421);
             }
 
             $userId = auth()->user()->id;
 
-            Brand::create([
+            Tag::create([
                 'name'         => $request->name,
                 'slug'         => SlugHelper::generateSlug($request->name),
-                'description'  => $request->description,
-                'logo'         => $request->image ? $this->logo( $request->image) : "",
                 'added_by'     => $userId
             ]);
 
-            return response()->json(['message' => 'Brand added successfully'], 201);
+            return response()->json(['message' => 'Tag added successfully'], 201);
         });
 
         return $lock;
@@ -70,11 +67,10 @@ class BrandController extends Controller
 
     public function update(Request $request) {
         $id = $request->id;
-        $lock = Cache::lock('update_brand_' . $id)->block(7, function () use ($request, $id) {
+        $lock = Cache::lock('update_tag_' . $id)->block(7, function () use ($request, $id) {
             // Validate request
             $validator = \Validator::make($request->all(), [
                 'name' => 'required',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048|required_with:other_field',
             ]);
 
             $validation = $this->validation($validator);
@@ -82,52 +78,34 @@ class BrandController extends Controller
                 return $validation;
             }
 
-            $exist = Brand::where('name', $request->name)->where('id', '!=', $id)->first();
+            $exist = Tag::where('name', $request->name)->where('id', '!=', $id)->first();
             if ($exist) {
-                return (new ValidationCollection(['This brand name is already added']))
+                return (new ValidationCollection(['This Size name is already added']))
                     ->response()
                     ->setStatusCode(421);
             }
 
-            $brand = Brand::find($id);
-            if (!$brand) {
-                return (new ValidationCollection(['Brand not found']))
+            $size = Tag::find($id);
+            if (!$size) {
+                return (new ValidationCollection(['Size not found']))
                 ->response()
                 ->setStatusCode(404);
             }
 
             $userId = auth()->user()->id;
 
-
             $data = [
-                'name' => $request->name,
-                'slug' => SlugHelper::generateSlug($request->name),
-                'description' => $request->description,
+                'name'     => $request->name,
+                'slug'     => SlugHelper::generateSlug($request->name),
                 'added_by' => $userId
             ];
 
-            if ($request->hasFile('image')) {
-                $data['logo'] = $this->logo($request->image);
-            }
+            $size->update($data);
 
-            $brand->update($data);
-
-            return response()->json(['message' => 'Brand updated successfully'], 200);
+            return response()->json(['message' => 'Size updated successfully'], 200);
         });
 
         return $lock;
-    }
-
-    public function logo( $image  ){
-        $filenameWithExt = $image->getClientOriginalName();
-        //get just filename
-        $filename        = pathinfo($filenameWithExt);
-        //get just extension
-        $extension       = $image->extension();
-        $nameToStore     = str_replace(' ', '' ,$filename['filename']) . "_" . time() . "." . $extension;
-        //Move to folder
-        $path            = $image->storeAs('public/uploads/inventory/brands/', $nameToStore);
-        return $nameToStore;
     }
 
     private function validation($validator){

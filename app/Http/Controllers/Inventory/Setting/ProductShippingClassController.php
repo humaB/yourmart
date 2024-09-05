@@ -25,6 +25,14 @@ class ProductShippingClassController extends Controller
             ->setStatusCode(200);
     }
 
+    public function dropDown()
+    {
+        $record = ShippingClass::orderBy('id', 'desc')->select('id as code', 'name as label')->get();
+        return (new ResponseCollection($record))
+            ->response()
+            ->setStatusCode(200);
+    }
+
     public function details(Request $request)
     {
         $record = ShippingClassRate::where('shipping_class_id', $request->id)->get();

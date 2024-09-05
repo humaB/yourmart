@@ -1,15 +1,15 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\UserController;
-use App\Http\Controllers\Inventory\AttributeController;
-use App\Http\Controllers\Inventory\BrandController;
-use App\Http\Controllers\Inventory\CategoryController;
-use App\Http\Controllers\Inventory\ColorController;
+use App\Http\Controllers\Inventory\AttachmentController;
+use App\Http\Controllers\Inventory\Attributes\AttributeController;
+use App\Http\Controllers\Inventory\Attributes\BrandController;
+use App\Http\Controllers\Inventory\Attributes\CategoryController;
+use App\Http\Controllers\Inventory\Attributes\ColorController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
-use App\Http\Controllers\Inventory\SizeController;
-use App\Http\Controllers\Inventory\TagController;
+use App\Http\Controllers\Inventory\Attributes\SizeController;
+use App\Http\Controllers\Inventory\Attributes\TagController;
+use App\Http\Controllers\Inventory\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +34,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => 'products'], function(){
+
+        Route::get('/',  [ ProductController::class , 'fetchProducts']);
+        Route::post('/',  [ ProductController::class , 'store']);
+        Route::post('/details',  [ ProductController::class , 'details']);
+        Route::post('/drop-down',  [ ProductController::class , 'dropDown']);
+
+        Route::group(['prefix' => 'attachments'], function(){
+            Route::get('/',  [ AttachmentController::class , 'fetchAttachments']);
+            Route::post('/',  [ AttachmentController::class , 'store']);
+        });
 
         Route::group(['prefix' => 'brands'], function(){
             Route::get('/',  [ BrandController::class , 'fetchBrand']);
@@ -76,6 +86,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'store']);
 
             Route::get('/shipping-classes',  [ ProductShippingClassController::class , 'fetchRecord']);
+            Route::get('/shipping-classes/drop-down',  [ ProductShippingClassController::class , 'dropDown']);
             Route::post('/shipping-classes',  [ ProductShippingClassController::class , 'store']);
             Route::post('/shipping-classes/edit',  [ ProductShippingClassController::class , 'update']);
             Route::post('/shipping-classes/details',  [ ProductShippingClassController::class , 'details']);

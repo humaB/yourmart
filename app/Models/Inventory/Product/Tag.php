@@ -16,4 +16,5 @@ class Tag extends Model
         'slug',
         'added_by'
     ];
+    
 }
