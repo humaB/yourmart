@@ -9,6 +9,7 @@ use App\Models\Inventory\Product\Setting\ShippingClass;
 use App\Models\Inventory\Product\Setting\ShippingClassRate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ProductShippingClassController extends Controller
 {
@@ -27,7 +28,7 @@ class ProductShippingClassController extends Controller
 
     public function dropDown()
     {
-        $record = ShippingClass::orderBy('id', 'desc')->select('id as code', 'name as label')->get();
+        $record = ShippingClass::orderBy('id', 'desc')->select('id as code', DB::raw("CONCAT(name, ' - ', description) as label"))->get();
         return (new ResponseCollection($record))
             ->response()
             ->setStatusCode(200);

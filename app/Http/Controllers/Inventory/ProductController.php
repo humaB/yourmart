@@ -300,7 +300,7 @@ class ProductController extends Controller
     }
 
     // Helper function to create a product variation
-    function createProductVariation($product, $color, $size, $regularPrice, $salePrice, $userID)
+    private function createProductVariation($product, $color, $size, $regularPrice, $salePrice, $userID)
     {
         $variation = ProductVariation::create([
             'product_id' => $product->id,
@@ -317,6 +317,110 @@ class ProductController extends Controller
         $variation->update([
             'sku' => SlugHelper::generateSku($product, $color, $size, $variation->id),
         ]);
+    }
+
+    public function update( Request $request ){
+        $productId = $request->input('id'); // Assuming you're passing the product ID
+        $lock = Cache::lock('update_product_' . $productId)->block(7, function () use ($request, $productId) {
+            // Get the field and value from the request
+            $field = $request->input('field');
+            $value = $request->input('value');
+
+
+            // Find the product to update
+            $product = Product::findOrFail($productId);
+
+            // If the field is 'title', perform a uniqueness check for another product
+            if ($field === 'title') {
+                $existingProduct = Product::where('title', $value)
+                    ->where('id', '!=', $productId) // Exclude the current product
+                    ->first();
+
+                if ($existingProduct) {
+                    return (new ValidationCollection(['This title is already used by another product']))
+                    ->response()
+                    ->setStatusCode(421);
+                }
+
+                // Update the title and also update the slug
+                $product->title = $value;
+                $product->slug = SlugHelper::generateSlug($value); // Generate a new slug based on the title
+            } else {
+                // Update other fields dynamically
+                $product->{$field} = $value;
+            }
+
+            // Save the updated product
+            $product->save();
+
+            return response()->json([
+                'message' => 'Product updated successfully.',
+                'product' => $product
+            ]);
+        });
+        return $lock;
+    }
+
+    public function variationUpdate( Request $request ){
+        $variationId = $request->details['id']; // The current variation being updated
+
+        // Fetch the existing variation
+        $variation = ProductVariation::find($variationId);
+        if (!$variation) {
+            return response()->json(['status' => 'error', 'message' => 'Product variation not found.'], 404);
+        }
+
+        // Extract the current and new color and size
+        $newColorId = $request->color ?? 0; // New color from the request
+        $newSizeId = $request->size ?? 0; // New size from the request
+        $currentColorId = $variation->color_id; // Existing color in the database
+        $currentSizeId = $variation->size_id; // Existing size in the database
+
+        // Check if color and size have changed
+        if ($newColorId != $currentColorId || $newSizeId != $currentSizeId) {
+            // If color or size is changed, validate the new combination
+            $existingVariation = ProductVariation::where('product_id', $variation->product_id)
+                ->where('color_id', $newColorId)
+                ->where('size_id', $newSizeId)
+                ->where('product_id', $variation->product_id)
+                ->where('id', '!=', $variationId) // Exclude the current variation being updated
+                ->first();
+
+            if ($existingVariation) {
+                return (new ValidationCollection(['This color and size combination already exists for this product.']))
+                ->response()
+                ->setStatusCode(421);
+            }
+        }
+
+        // Lock the update process to avoid race conditions
+        $lock = Cache::lock('update_product_variation_' . $variation->product_id)->block(7, function () use ($request, $variation, $newColorId, $newSizeId) {
+            // Update the variation fields (color, size, regular price, sale price, etc.)
+            $variation->update([
+                'color_id' => $newColorId, // Update only if changed
+                'size_id' => $newSizeId,   // Update only if changed
+                'regular_price' => $request->details['regular_price'],
+                'sale_price' => $request->details['sale_price'],
+            ]);
+
+            // Generate SKU based on available data
+            $product = Product::find($variation->product_id);
+            $variation->update([
+                'sku' => SlugHelper::generateSku($product,$newColorId, $newSizeId, $variation->id),
+            ]);
+        });
+
+        return $lock ? response()->json(['status' => 'success', 'message' => 'Product variation updated successfully.']) : response()->json(['status' => 'error', 'message' => 'Failed to update product variation.']);
+    }
+
+    public function variationChangeStatus(Request $request)
+    {
+
+        ProductVariation::where('id', $request->id)->update([
+            'status' => $request->status
+        ]);
+
+        return response()->json(['message' => 'Shipping class status updated successfully'], 200);
     }
 
     private function validation($validator)

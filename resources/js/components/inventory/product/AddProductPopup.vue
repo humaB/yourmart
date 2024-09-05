@@ -775,8 +775,7 @@ export default {
             this.videoLink = '';
 
             $('.summernote').summernote('code', '');
-            $('.productHighlights').summernote('code');
-
+            
             // If you have any file inputs, clear them here
             this.$emit('close', true) // Adjust the ref name as per your file input field
         }

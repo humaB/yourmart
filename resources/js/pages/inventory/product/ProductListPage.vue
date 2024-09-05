@@ -110,7 +110,27 @@
             @addSelectedImages="addSelectedImages($event)" @addSelectedHeroImages="addSelectedHeroImages($event)"
             @uploadAttachment="uploadAttachment($event)" />
 
-        <ProductDetailView :product="details" />
+        <ProductDetailView
+            :product="details"
+            :attributes="attributes"
+            :brands="brandsDropDown"
+            :categories="categoriesDropDown"
+            :tags="tags"
+            :shippingOptions="shippingOptions"
+            :productNotUpdated="productNotUpdated"
+            @updateProduct="updateProduct( $event )"
+            @editProductVariant="editProductVariantFun($event)"
+        />
+
+        <EditProductVariant
+            :loader="btnLoader"
+            :colors="colorsDropDown"
+            :sizes="sizesDropDown"
+            :details="editProductVariantData"
+            :activeStatus="activeProductVariantStatus"
+            @updateProductVariant="updateProductVariant($event)"
+            @changeProductVariantStatus="changeProductVariantStatus( $event )"
+        />
     </div>
 </template>
 <script>
@@ -130,6 +150,7 @@ import AddAttribute from "../../../components/inventory/product/AddAttribute.vue
 import AddTag from "../../../components/inventory/product/AddTag.vue";
 import AddProductImage from "../../../components/inventory/product/AddProductImage.vue";
 import ProductDetailView from "../../../components/inventory/product/setting/ProductDetailView.vue";
+import EditProductVariant from "../../../components/inventory/product/setting/EditProductVariant.vue";
 
 import moment from "moment";
 export default {
@@ -144,7 +165,8 @@ export default {
         AddAttribute,
         AddTag,
         AddProductImage,
-        ProductDetailView
+        ProductDetailView,
+        EditProductVariant
     },
     data() {
         return {
@@ -213,7 +235,10 @@ export default {
                     }
                     // More variations...
                 ]
-            }
+            },
+            productNotUpdated : false,
+            editProductVariantData : {},
+            activeProductVariantStatus : ''
         };
     },
     created() {
@@ -247,6 +272,45 @@ export default {
         colorGallery(data) {
             this.selectedColor = data.color;
         },
+        editProductVariantFun(data){
+            this.editProductVariantData = data;
+            this.activeProductVariantStatus = data.status;
+            console.log(this.activeProductVariantStatus);
+
+        },
+        updateProductVariant(data){
+            let vm = this;
+            vm.btnLoader = true;
+            vm.clearDataTable();
+            axios
+                .post(this.api_url + "inventory/products/variations/update", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.fetchDetail(data.details.product_id)
+                    return swal({
+                        title: "Success",
+                        text: 'Product Updated Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }).catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        changeProductVariantStatus( data ){
+                let vm = this;
+                axios
+                .post(this.api_url + "inventory/products/variations/change-status", data )
+                .then((response) => {
+                   vm.activeProductVariantStatus = !vm.activeProductVariantStatus;
+                });
+            },
         closeProduct( data ){
             if( data ){
                 this.selectedHeroImage = {}
@@ -300,6 +364,22 @@ export default {
                     });
                 }).catch((err) => {
                     vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        updateProduct(data) {
+            let vm = this;
+            axios
+                .post(this.api_url + "inventory/products/update", data)
+                .then((response) => {
+                    vm.productNotUpdated = false
+                }).catch((err) => {
+                    vm.productNotUpdated = true;
                     return swal({
                         title: "Error",
                         text: err.response.data.response[0],

@@ -22,6 +22,7 @@ class ProductVariation extends Model
         'regular_price',
         'sale_price',
         'stock',
+        'status', // 0 => Active || 1 => In Active
         'added_by',
     ];
 

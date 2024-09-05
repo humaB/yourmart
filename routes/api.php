@@ -37,8 +37,11 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
         Route::get('/',  [ ProductController::class , 'fetchProducts']);
         Route::post('/',  [ ProductController::class , 'store']);
-        Route::post('/details',  [ ProductController::class , 'details']);
-        Route::post('/drop-down',  [ ProductController::class , 'dropDown']);
+        Route::post('/update', [ ProductController::class , 'update']);
+        Route::post('/details', [ ProductController::class , 'details']);
+        Route::post('/drop-down', [ ProductController::class , 'dropDown']);
+        Route::post('/variations/update', [ ProductController::class , 'variationUpdate']);
+        Route::post('/variations/change-status', [ ProductController::class , 'variationChangeStatus']);
 
         Route::group(['prefix' => 'attachments'], function(){
             Route::get('/',  [ AttachmentController::class , 'fetchAttachments']);
