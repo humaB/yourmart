@@ -16,6 +16,8 @@
                         <label for=""><b>Upload File</b> <code> ( If image is not available in gallery )</code></label>
                         <input type="file" class="form-control" @change="setImage($event)">
                         <code>Maximum upload file size: 25 MB</code>
+                        <code>Recommended Size for Size is 800 x 800 </code>
+
                     </div>
                     <div class="col-md-5">
                         <label for=""><b>ALT</b></label>
@@ -65,7 +67,7 @@
 <script>
 export default {
     name: 'AddProductImage',
-    props: ['selectedColor', 'colors', 'loader', 'attachments'],
+    props: ['selectedColor', 'colors', 'loader', 'attachments' ,'type' , 'colorId'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
@@ -102,9 +104,17 @@ export default {
         },
         addSelectedImages() {
             if (this.selectedColor == 'Hero') {
-                this.$emit('addSelectedHeroImages', this.heroImage);
+                if( this.type && this.type == 'edit'){
+                    this.$emit('changeSelectedHeroImage', this.heroImage);
+                }else{
+                    this.$emit('addSelectedHeroImages', this.heroImage);
+                }
             } else {
-                this.$emit('addSelectedImages', this.selectedImagesByColor);
+                if( this.type && this.type == 'colorEdit'){
+                    this.$emit('addMoreSelectedImages', { images : this.selectedImagesByColor, id : this.colorId});
+                }else{
+                    this.$emit('addSelectedImages', this.selectedImagesByColor);
+                }
             }
             return swal({
                 title: "Success",

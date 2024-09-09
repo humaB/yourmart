@@ -13,6 +13,7 @@ class ProductVariationImage extends Model
     protected $table = 'inventory_product_variation_images';
 
     protected $fillable = [
+        'product_id',
         'product_variation_id',
         'image_id',
         'added_by',

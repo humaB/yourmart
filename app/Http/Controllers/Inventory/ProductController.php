@@ -238,6 +238,7 @@ class ProductController extends Controller
                             $attachment = ProductAttachment::where('attachment', $imagePath)->value('id');
                             foreach ($variations as $variation) {
                                 ProductVariationImage::create([
+                                    'product_id' => $product->id,
                                     'product_variation_id' => $variation->id,
                                     'image_id' => $attachment,
                                     'added_by' => $userID,
@@ -266,16 +267,15 @@ class ProductController extends Controller
             if ($request->filled('discountPerQty')) {
                 $discounts = json_decode($request->input('discountPerQty'), true);
                 foreach ($discounts as $discount) {
-                    if( (float)$discount['quantity'] != 0 && (float)$discount['price'] != 0 ){
-                        ProductDiscountPerQty::create([
-                            'product_id' => $product->id,
-                            'quantity' => $discount['quantity'],
-                            'price' => $discount['price'],
-                            'added_by' => $userID,
-                        ]);
-                    }
+                    ProductDiscountPerQty::create([
+                        'product_id' => $product->id,
+                        'quantity' => $discount['quantity'],
+                        'price' => $discount['price'],
+                        'added_by' => $userID,
+                    ]);
                 }
             }
+
             if ($request->filled('dimensions')) {
                 $dimensions = json_decode($request->input('dimensions'), true);
                 if (
@@ -420,7 +420,157 @@ class ProductController extends Controller
             'status' => $request->status
         ]);
 
-        return response()->json(['message' => 'Shipping class status updated successfully'], 200);
+        return response()->json(['message' => 'Variation Status Updated Successfully'], 200);
+    }
+
+    public function discountChanged(Request $request)
+    {
+
+        ProductDiscountPerQty::where('id', $request->discounts['id'])->update([
+            'quantity' => $request->discounts['quantity'],
+            'price'    => $request->discounts['price'],
+        ]);
+
+        return response()->json(['message' => 'Discount values changed successfully'], 200);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        Product::where('id', $request->id)->update([
+            'status' => $request->status == 'publish' ? '0' : '1'
+        ]);
+
+        return response()->json(['message' => 'Status changed successfully'], 200);
+    }
+
+
+    public function updateHeroImage(Request $request)
+    {
+        Product::where('id', $request->id)->update([
+            'hero_image' => $request->attachment
+        ]);
+
+        return response()->json(['message' => 'Hero Image changed successfully'], 200);
+    }
+
+    public function updateColorImages(Request $request)
+    {
+        $images = $request->images;
+        $product = ProductVariation::find($request->id);
+        // Check if $images is an array
+        if (is_array($images)) {
+            foreach ($images as $color => $imageArray) {
+                foreach ($imageArray as $image) {
+                    ProductVariationImage::updateOrCreate(
+                        [
+                            'product_variation_id' => $request->id,
+                            'image_id' => $image['id'],
+                        ],
+                        [
+                            'product_id' => $product->product_id,
+                            'added_by' => $image['added_by'],
+                        ]
+                    );
+                }
+            }
+        }
+
+        return response()->json(['message' => 'Images updated or created successfully'], 200);
+    }
+
+
+    public function updateUpSells(Request $request)
+    {
+
+        $request->validate([
+            'id'       => 'required|integer',
+            'products' => 'required|array',
+            'type'     => 'required|string'
+        ]);
+
+        $productId = $request->id;
+        $type     = $request->type;
+        $products = $request->products;
+
+        if($type == 'upsell'){
+            $type = 'upsell';
+        }else if( $type == 'crossSell' ){
+            $type = 'cross sell';
+        }else{
+            $type = 'bought togethers';
+        }
+        // Loop through each product
+        foreach ($products as $product) {
+            if ($product != 'undefined') {
+
+                // Use updateOrCreate to update if exists or create a new record
+                ProductUpsellCrossSell::updateOrCreate(
+                    [
+                        'product_id' => $productId,
+                        'type'       => strtolower($type),
+                        'reference_product_id' => $product['code'] // assuming 'code' is 'reference_product_id'
+                    ],
+                    [
+                        'added_by' => auth()->user()->id
+                    ]
+                );
+            }
+        }
+
+        return response()->json(['message' => 'Up Sells values changed successfully'], 200);
+    }
+
+    public function updateTags(Request $request)
+    {
+
+        $request->validate([
+            'id'       => 'required|integer',
+            'products' => 'required|array',
+            'type'     => 'required|string'
+        ]);
+
+        $productId = $request->id;
+        $type     = $request->type;
+        $products = $request->products;
+
+        if($type == 'tags'){
+            // Loop through each product
+            foreach ($products as $product) {
+                if ($product != 'undefined') {
+
+                    // Use updateOrCreate to update if exists or create a new record
+                    ProductTag::updateOrCreate(
+                        [
+                            'product_id' => $productId,
+                            'tag_id' => $product['code'] // assuming 'code' is 'reference_product_id'
+                        ],
+                        [
+                            'added_by' => auth()->user()->id
+                        ]
+                    );
+                }
+            }
+        }else{
+                // Loop through each product
+            foreach ($products as $product) {
+                if ($product != 'undefined') {
+
+                    // Use updateOrCreate to update if exists or create a new record
+                    ProductAttribute::updateOrCreate(
+                        [
+                            'product_id' => $productId,
+                            'attribute_id' => $product['code'] // assuming 'code' is 'reference_product_id'
+                        ],
+                        [
+                            'added_by' => auth()->user()->id
+                        ]
+                    );
+                }
+            }
+        }
+
+
+        return response()->json(['message' => 'Tags values changed successfully'], 200);
     }
 
     private function validation($validator)

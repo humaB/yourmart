@@ -110,17 +110,13 @@
                                         <tr>
                                             <th>Hero Image</th>
                                             <td>
-                                                <a v-if="!editingField.hero_image" :href="getImageUrl(product.hero_image)" target="_blank" rel="noopener noreferrer">
+                                                <a  :href="getImageUrl(product.hero_image)" target="_blank" rel="noopener noreferrer">
                                                     <img :src="getImageUrl(product.hero_image)" alt="Hero Image" class="user-img mr-2" width="100" />
                                                 </a>
-                                                <div v-else>
-                                                    <input  type="file" class="form-control">
-                                                </div>
+
                                             </td>
                                             <td>
-                                                <button v-if="!editingField.hero_image" @click="editField('hero_image')" class="btn btn-sm btn-primary">Edit</button>
-                                                <button v-else @click="saveField('hero_image')" class="btn btn-sm btn-success">Save</button>
-                                                <button v-if="editingField.hero_image" @click="cancelEdit('hero_image')" class="btn btn-sm btn-danger">Cancel</button>
+                                                <button  @click="addImage('Hero' , 'edit')" data-toggle="modal" data-target="#uploadProductImage" class="btn btn-sm btn-primary">Edit</button>
                                             </td>
                                         </tr>
 
@@ -236,8 +232,6 @@
                                             <th>Size</th>
                                             <th>Regular Price</th>
                                             <th>Sale Price</th>
-                                            <th>Forecasted Stock</th>
-                                            <th>Pending Order</th>
                                             <th>In Stock</th>
                                             <th>Images</th>
                                             <th>Action</th>
@@ -250,8 +244,6 @@
                                             <td>{{ variation.size ? variation.size.name : '-' }}</td>
                                             <td>{{ variation.regular_price }}</td>
                                             <td>{{ variation.sale_price }}</td>
-                                            <td>{{ variation.stock }}</td>
-                                            <td>{{ variation.stock }}</td>
                                             <td>{{ variation.stock }}</td>
 
                                             <td class="text-truncate">
@@ -269,7 +261,8 @@
                                                 </ul>
                                             </td>
                                             <td>
-                                                <button class="btn btn-primary" @click="editProductVariant(variation)" data-toggle="modal" data-target="#editProductVariant"><i class="fa fa-edit"></i></button>
+                                                <button class="btn btn-primary" data-toggle="modal" data-target="#uploadProductImage" @click="addImage(variation.color.name, 'colorEdit', variation.id)">Add Images</button>
+                                                <button class="btn btn-primary" @click="editProductVariant(variation)" data-toggle="modal" data-target="#editProductVariant"><i class="fa fa-edit"></i> Edit</button>
                                             </td>
 
                                         </tr>
@@ -278,73 +271,49 @@
                             </div>
 
                             <!-- Discounts -->
-                            <div class="col-md-12 mt-4" v-if="product.discounts && product.discounts.length > 0">
+                            <div class="col-md-12 mt-4">
                                 <h5>Discounts Per Quantity</h5>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Quantity</th>
                                             <th>Price</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="discount in product.discounts" :key="discount.id">
-                                            <td>{{ discount.quantity }}</td>
-                                            <td>{{ discount.price }}</td>
+                                        <tr v-for="(discount, index) in product.discounts" :key="discount.id">
+                                            <td>
+                                                <template v-if="editingIndex === index">
+                                                    <input type="text" v-model="discount.quantity" class="form-control" />
+                                                </template>
+                                                <template v-else>
+                                                    {{ discount.quantity }}
+                                                </template>
+                                            </td>
+                                            <td>
+                                                <template v-if="editingIndex === index">
+                                                    <input type="text" @keypress="onlyNumber" v-model="discount.price" :min="0" step="0.01" class="form-control" />
+                                                </template>
+                                                <template v-else>
+                                                    {{ discount.price }}
+                                                </template>
+                                            </td>
+                                            <td>
+                                                <template v-if="editingIndex === index">
+                                                    <button @click="saveDiscount(index)" class="btn btn-success btn-sm">Save</button>
+                                                    <button @click="cancelDiscountEdit(index)" class="btn btn-danger btn-sm ml-2">Cancel</button>
+                                                </template>
+                                                <template v-else>
+                                                    <button @click="editDiscount(index)" class="btn btn-primary btn-sm">Edit</button>
+                                                </template>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
 
-
-
-                            <!-- Sale Schedule -->
-                            <div class="col-md-6 mt-4" v-if="product.sale_schedule">
-                                <h5>Sale Schedule</h5>
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th>From</th>
-                                            <td>{{ product.sale_schedule.from }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>To</th>
-                                            <td>{{ product.sale_schedule.to }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Price</th>
-                                            <td>{{ product.sale_schedule.price }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Dimensions -->
-                            <div class="col-md-6 mt-4" v-if="product.dimensions">
-                                <h5>Dimensions</h5>
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th>Weight</th>
-                                            <td>{{ product.dimensions.weight }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Length</th>
-                                            <td>{{ product.dimensions.length }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Height</th>
-                                            <td>{{ product.dimensions.height }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Width</th>
-                                            <td>{{ product.dimensions.width }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="col-md-12 mt-4" v-if="(product.up_sells && product.up_sells.length > 0) || (product.cross_sells && product.cross_sells.length > 0) || (product.bought_togethers && product.bought_togethers.length > 0)">
+                            <div class="col-md-12 mt-4">
                                 <h5>Related Products</h5>
                                 <table class="table table-bordered">
                                     <thead>
@@ -357,7 +326,19 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <div v-if="product.up_sells.length > 0">
+                                                <div class="p-3 row">
+                                                    <div class="col-md-10 ">
+                                                        <v-select :options="productOptions" v-model="upsell"
+                                                            multiple @search="searchProduct">
+                                                        </v-select>
+                                                        <small>Please Enter 3 or more characters to Search
+                                                            Product</small>
+                                                    </div>
+                                                    <div class="col-md2">
+                                                        <button class="mt-2 btn btn-primary" @click="updateUpSell('upsell')">Add</button>
+                                                    </div>
+                                                </div>
+                                                <div>
                                                     <ul>
                                                         <li v-for="item in product.up_sells" :key="item.id">
                                                             {{ item.product.title }}
@@ -366,7 +347,20 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div v-if="product.cross_sells.length > 0">
+                                                <div class="p-3 row">
+                                                    <div class="col-md-10 ">
+                                                        <v-select :options="productOptions" v-model="crossSell"
+                                                            multiple @search="searchProduct">
+                                                        </v-select>
+                                                        <small>Please Enter 3 or more characters to Search
+                                                            Product</small>
+                                                    </div>
+                                                    <div class="col-md2">
+                                                        <button class="mt-2 btn btn-primary" @click="updateUpSell('crossSell')">Add</button>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+
                                                     <ul>
                                                         <li v-for="item in product.cross_sells" :key="item.id">
                                                             {{ item.product.title }}
@@ -375,7 +369,19 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <div v-if="product.bought_togethers.length > 0">
+                                                <div class="p-3 row">
+                                                    <div class="col-md-10 ">
+                                                        <v-select :options="productOptions" v-model="boughtTogether"
+                                                            multiple @search="searchProduct">
+                                                        </v-select>
+                                                        <small>Please Enter 3 or more characters to Search
+                                                            Product</small>
+                                                    </div>
+                                                    <div class="col-md2">
+                                                        <button class="mt-2 btn btn-primary" @click="updateUpSell('boughtTogether')">Add</button>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
                                                     <ul>
                                                         <li v-for="item in product.bought_togethers" :key="item.id">
                                                             {{ item.product.title }}
@@ -388,9 +394,71 @@
                                 </table>
                             </div>
 
+                            <div class="col-md-12 mt-4">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Tags</th>
+                                            <th>Other Attributes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="p-3 row">
+                                                    <div class="col-md-10 ">
+                                                        <v-select :options="tags" v-model="selectedTags" multiple>
+                                                        </v-select>
+
+                                                    </div>
+                                                    <div class="col-md2">
+                                                        <button class="mt-2 btn btn-primary" @click="updateTags('tags')">Add</button>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <ul>
+                                                        <li v-for="item in product.tags" :key="item.id">
+                                                            {{ item.tag.name }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="p-3 row">
+                                                    <div class="col-md-10 ">
+                                                        <v-select :options="attributes" v-model="selectedAttributes"
+                                                            multiple>
+                                                        </v-select>
+                                                    </div>
+                                                    <div class="col-md2">
+                                                        <button class="mt-2 btn btn-primary" @click="updateTags('attributes')">Add</button>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-3">
+
+                                                    <ul>
+                                                        <li v-for="item in product.attributes" :key="item.id">
+                                                            {{ item.attribute.name }}
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <div class="dropdown">
+                            <a href="#" data-toggle="dropdown" class="btn btn-dark dropdown-toggle">Change Status</a>
+                            <div class="dropdown-menu">
+                              <a href="#" class="dropdown-item has-icon border-bottom" @click="changeStatus('publish')"><i class="fa fa-paper-plane"></i>Publish</a>
+                              <a href="#" class="dropdown-item has-icon border-bottom" @click="changeStatus('save')"><i class="fas fa-save"></i>Save in Draft</a>
+                            </div>
+                          </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -401,13 +469,18 @@
 <script>
 export default {
     name: 'ProductDetailView',
-    props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated"],
+    props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             selectedShipping: { code: 0, label: 'Select from the following' },
             brand: { code: 0, label: "Select from the following" },
             category: { code: 0, label: "Select from the following" },
+            selectedTags: {},
+            selectedAttributes : {},
+            upsell: {},
+            crossSell: {},
+            boughtTogether: {},
             editingField: {
                 title: false,
                 short_description: false,
@@ -430,7 +503,8 @@ export default {
                 warranty: this.product.warranty || '',
                 max_quantity: this.product.max_quantity || 'N/A',
                 quantity_step: this.product.quantity_step || '',
-            }
+            },
+            editingIndex: null // Track which row is being edited
         }
     },
     computed: {
@@ -442,6 +516,45 @@ export default {
         }
     },
     methods: {
+        addImage(image, type, id = null) {
+            this.$emit('changeImage', { image , type, id })
+        },
+        changeStatus( data ){
+            this.$emit('changeStatus', {id : this.product.id , status : data});
+        },
+        updateUpSell( type ){
+            // Access the dynamic property based on the 'type' value
+            const dataToSend = this[type];
+
+            this.$emit('updateUpSell', { id : this.product.id , products : dataToSend, type : type})
+        },
+        updateTags( type ){
+            // Access the dynamic property based on the 'type' value
+            const dataToSend = this[type];
+
+            this.$emit('updateTags', { id : this.product.id , products : dataToSend, type : type})
+        },
+        searchProduct(search) {
+            if (search.length >= 3) {
+                this.$emit('searchProduct', { search })
+            }
+        },
+        editDiscount(index) {
+            this.editingIndex = index; // Set the row index to edit
+        },
+        cancelDiscountEdit(index) {
+            this.editingIndex = null; // Exit edit mode
+        },
+        saveDiscount(index) {
+            this.editingIndex = null
+            const discounts = this.product.discounts[index];
+            const data = {
+                discounts : discounts,
+                product :  this.product.id
+            }
+
+            this.$emit('updateDiscount', data);
+        },
         onlyNumber($event) {
             let keyCode = $event.keyCode ? $event.keyCode : $event.which;
             if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {

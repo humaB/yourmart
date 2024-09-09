@@ -433,33 +433,23 @@
 
 
                                         <div class="col-md-12 mt-5">
-                                            <h5>Discount per Quantity <code>( optional )</code></h5>
+                                            <h5>Discount per Quantity <span class="text-danger">*</span></h5>
                                         </div>
                                         <div class="form-group form-float col-md-12 row"
                                             v-for="(item, index) in discountPerQty" :key="index">
 
-                                            <div class="col-md-5">
+                                            <div class="col-md-6">
                                                 <label for="">Quantity</label>
                                                 <input type="text" class="form-control" v-model="item.quantity">
                                                 <code>Example : 20 - 50</code>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-6">
                                                 <label for="">Price</label>
                                                 <input type="text" class="form-control" v-model="item.price"
                                                     @keypress="onlyNumber">
                                                 <code>1,463</code>
                                             </div>
-                                            <div class="col-md-2 ">
-                                                <label for="">Action</label><br>
-                                                <div class="d-flex align-item-center">
-                                                    <i class="btn btn-primary fa fa-plus" style="height:35px"
-                                                        @click="addDiscountQuantityOneRow(index)"></i>
-                                                    <i class="btn btn-danger fa fa-trash ml-1" style="height:35px"
-                                                        @click="removeDiscountQuantityRow(index)"
-                                                        v-if="discountPerQty.length > 1"></i>
-                                                </div>
 
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -468,19 +458,14 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="javascript:;" class="btn btn-primary daterange-btn icon-left btn-icon"><i
-                            class="fas fa-calendar"></i> Scheduled Publish Date
-                    </a>
+
                     <button type="button" v-if="!loader" class="btn btn-primary" @click="submitProduct()"><i
                             class="fa fa-paper-plane" aria-hidden="true"></i>
-                        Publish</button>
+                         Save</button>
                     <button type="button" v-else class="btn btn-primary btn-progress disabled"><i
                             class="fa fa-paper-plane" aria-hidden="true"></i>
-                        Publish</button>
-                    <button type="button" class="btn btn-warning text-dark">
-                        <i class="fas fa-save"></i>
-                        Save in draft
-                    </button>
+                            Save</button>
+
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -507,7 +492,7 @@ export default {
             crossSell: {},
             boughtTogether: {},
             selectedAttributes: [],
-            discountPerQty: [{ quantity: 0, price: 0 }],
+            discountPerQty: [{ quantity: 0, price: 0 },{ quantity: 0, price: 0 },{ quantity: 0, price: 0 }],
             selectedColors: [], // Tracks selected colors
             selectedTags: [],
             selectedSizes: [],
@@ -634,6 +619,7 @@ export default {
                     timer: 3000,
                 });
             }
+
             // Create a new FormData instance
             let formData = new FormData();
 
@@ -775,7 +761,7 @@ export default {
             this.videoLink = '';
 
             $('.summernote').summernote('code', '');
-            
+
             // If you have any file inputs, clear them here
             this.$emit('close', true) // Adjust the ref name as per your file input field
         }

@@ -53,7 +53,10 @@
                                                             <td>{{ index + 1 }}</td>
                                                             <td>{{ item.title }}</td>
                                                             <td>{{ item.short_description }}</td>
-                                                            <td>-</td>
+                                                            <td>
+                                                                <span class="badge badge-success" v-if="item.status == 0">Published</span>
+                                                                <span class="badge badge-warning" v-if="item.status == 1">Saved in Draft</span>
+                                                            </td>
                                                             <td>{{ item.user.name }}</td>
                                                             <td>{{ formatDate(item.created_at) }}</td>
                                                             <td>
@@ -106,20 +109,25 @@
         <AddAttribute :loader="btnLoader" :attributes="attributes" :parentAttributes="parentAttributes"
             @addNewAttribute="addNewAttribute($event)" @editAttribute="editAttribute($event)" />
         <AddTag :loader="btnLoader" :tags="tags" @addNewTag="addNewTag($event)" @editTag="editTag($event)" />
-        <AddProductImage :loader="btnLoader" :selectedColor="selectedColor" :colors="colors" :attachments="attachments"
-            @addSelectedImages="addSelectedImages($event)" @addSelectedHeroImages="addSelectedHeroImages($event)"
-            @uploadAttachment="uploadAttachment($event)" />
+
 
         <ProductDetailView
             :product="details"
-            :attributes="attributes"
+            :attributes="attributesDropDown"
             :brands="brandsDropDown"
             :categories="categoriesDropDown"
-            :tags="tags"
+            :tags="tagsDropDown"
             :shippingOptions="shippingOptions"
             :productNotUpdated="productNotUpdated"
+            :productOptions="productsDropDown"
             @updateProduct="updateProduct( $event )"
             @editProductVariant="editProductVariantFun($event)"
+            @updateDiscount="updateDiscount( $event )"
+            @searchProduct="searchProduct($event)"
+            @updateUpSell="updateUpSell( $event )"
+            @updateTags="updateTags( $event )"
+            @changeStatus="changeStatus( $event )"
+            @changeImage="changeHeroImage( $event )"
         />
 
         <EditProductVariant
@@ -130,6 +138,14 @@
             :activeStatus="activeProductVariantStatus"
             @updateProductVariant="updateProductVariant($event)"
             @changeProductVariantStatus="changeProductVariantStatus( $event )"
+        />
+
+        <AddProductImage :loader="btnLoader" :colorId="colorId" :type='selectedType' :selectedColor="selectedColor" :colors="colors" :attachments="attachments"
+            @addSelectedImages="addSelectedImages($event)"
+            @addMoreSelectedImages="addMoreSelectedImages($event)"
+            @addSelectedHeroImages="addSelectedHeroImages($event)"
+            @uploadAttachment="uploadAttachment($event)"
+            @changeSelectedHeroImage="changeSelectedHeroImage( $event )"
         />
     </div>
 </template>
@@ -179,7 +195,6 @@ export default {
             th: ["Sr #", "Name", "Email", "Role", "Allowed IP", "Action"],
             table_id: "product_list_table",
             categories: [],
-            tags: [],
             product: '',
             filter: {
                 category: { code: 0, label: "Select from the following" },
@@ -238,7 +253,9 @@ export default {
             },
             productNotUpdated : false,
             editProductVariantData : {},
-            activeProductVariantStatus : ''
+            activeProductVariantStatus : '',
+            selectedType : '',
+            colorId : ''
         };
     },
     created() {
@@ -266,17 +283,146 @@ export default {
         addSelectedImages(data) {
             this.selectedImages = data
         },
+        addMoreSelectedImages(data){
+            let vm = this;
+           if( !data ){
+            return swal({
+                    title: "Required",
+                    text: 'Please select image first',
+                    icon: "Success",
+                    timer: 3000,
+                });
+           }
+           axios
+            .post(this.api_url + "inventory/products/color-images/changed", data )
+            .then((response) => {
+                vm.fetchDetail(this.details.id)
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        changeSelectedHeroImage(data) {
+            let vm = this;
+           if( !data ){
+            return swal({
+                    title: "Required",
+                    text: 'Please select image first',
+                    icon: "Success",
+                    timer: 3000,
+                });
+           }
+
+           const product = {
+                'attachment' : data.attachment,
+                'id'  : this.details.id
+           }
+
+           axios
+            .post(this.api_url + "inventory/products/hero-image/changed", product )
+            .then((response) => {
+                vm.fetchDetail(this.details.id)
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
         addSelectedHeroImages(data) {
             this.selectedHeroImage = data
         },
         colorGallery(data) {
             this.selectedColor = data.color;
         },
+        changeHeroImage(data) {
+            this.selectedColor = data.image;
+            this.selectedType = data.type;
+            this.colorId = data.id;
+        },
         editProductVariantFun(data){
             this.editProductVariantData = data;
             this.activeProductVariantStatus = data.status;
             console.log(this.activeProductVariantStatus);
 
+        },
+        changeStatus( data ){
+            let vm = this;
+             axios
+            .post(this.api_url + "inventory/products/status/changed", data )
+            .then((response) => {
+                vm.fetchProducts();
+                return swal({
+                    title: "Success",
+                    text: 'Status Changed Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updateUpSell( data ){
+            let vm = this;
+             axios
+            .post(this.api_url + "inventory/products/up-sells/changed", data )
+            .then((response) => {
+                vm.fetchDetail(data.id)
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updateTags( data ){
+            let vm = this;
+             axios
+            .post(this.api_url + "inventory/products/tags/changed", data )
+            .then((response) => {
+                vm.fetchDetail(data.id)
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updateDiscount(data){
+            let vm = this;
+             axios
+            .post(this.api_url + "inventory/products/discounts/changed", data )
+            .then((response) => {
+
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
         },
         updateProductVariant(data){
             let vm = this;
@@ -309,6 +455,14 @@ export default {
                 .post(this.api_url + "inventory/products/variations/change-status", data )
                 .then((response) => {
                    vm.activeProductVariantStatus = !vm.activeProductVariantStatus;
+                }).catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: 'Oops, Something went wrong please try again',
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
             },
         closeProduct( data ){
