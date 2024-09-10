@@ -20,8 +20,8 @@
             <td > {{ item.role }}</td>
             <td> {{ item.allowed_ip_address }}</td>
             <td>
-  
-              <a href="#" class="btn btn-icon icon-left btn-primary" data-toggle="modal" :data-target="edit_form" @click="edit( item.id ,item.name, item.email, item.roles )"><i class="far fa-edit"></i> 
+
+              <a href="#" class="btn btn-icon icon-left btn-primary" data-toggle="modal" data-target="#editUser" @click="edit( item.id ,item.name, item.email, item.role )"><i class="far fa-edit"></i>
               </a>
               <a href="#" class="btn btn-icon icon-left btn-danger" data-toggle="modal" data-target="#delete_confirmation" @click="deleteFunc( item.id )"><i class="fas fa-trash-alt"></i>
               </a>
@@ -31,7 +31,7 @@
       </table>
     </div>
   </template>
-  
+
   <script>
   export default {
     name: "UserTable",
@@ -49,10 +49,9 @@
     }
   };
   </script>
-  
+
   <style scoped>
   .cap {
     text-transform: capitalize;
   }
   </style>
-  

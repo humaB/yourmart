@@ -27,6 +27,7 @@
             <select class="form-control" v-model="role">
               <option selected>Select from the followings...</option>
               <option value="admin">Admin</option>
+              <option value="dob">Data Entry Operator</option>
             </select>
           </div>
         </div>
@@ -95,12 +96,13 @@
           </div>
         </div>
 
-        <UserAdminForm />
-
       </div>
     </div>
     <div class="modal-footer bg-whitesmoke br">
-      <button type="button" @click="add()" class="btn btn-primary">
+      <button type="button" @click="add()" class="btn btn-primary" v-if="!loader">
+        Add New User Account
+      </button>
+      <button type="button" class="btn btn-primary btn-progress disabled" v-else>
         Add New User Account
       </button>
       <button
@@ -119,32 +121,25 @@
 </template>
 
 <script>
-import UserAdminForm from './UserAdminForm.vue';
 export default {
   name: "UserPopup",
-  props: ["accounts", "accountChilds", "fields"],
-  components : [
-    UserAdminForm
-  ],
+  props: ["accounts", "accountChilds", "fields", "loader"],
   data() {
     return {
       api_url: window.location.origin + process.env.MIX_API_URL,
       name: "",
       email: "",
-      CNIC: "",
-      cnicMax: 13,
       password: "",
-      employee: [],
       role: "Select from the followings...",
-      error: false,
-      errorText: "",
-      noRecord: false,
-      showCNICinput: false,
-      showLevelForRecovery: false,
-      level: 0,
-      success: false,
     };
   },
+  mounted() {
+        this.$parent.$on("userSaved", (value) => {
+            if (value) {
+                this.close();
+            }
+        });
+    },
   methods: {
     add() {
       let vm = this;
@@ -163,116 +158,21 @@ export default {
       }
 
 
-        if ( typeof vm.employee.id == 'undefined') {
-          return swal({
-                title: "Required",
-                text: "Please enter CNIC number and press enter",
-                icon: "error",
-                timer: 3000,
-        });
-        }
-
-      if (vm.role == "recovery agent" || vm.role == "Recovery Head") {
-        if (typeof vm.employee.id == 'undefined' || vm.level == "") {
-          return swal({
-                title: "Required",
-                text: "Please Select Level for recovery user",
-                icon: "error",
-                timer: 3000,
-        });
-        }
-      }
-
-      vm.error = false;
-
       const data = {
         name: this.name,
-        email: this.email + "@gch.com",
+        email: this.email + "@ecomm.com",
         password: this.password,
         role: this.role,
-        employeeID: this.employee.id ? this.employee.id : 0,
-        level: this.level ? this.level : 0,
       };
 
       vm.$emit("add", data);
 
-      setTimeout(() => {
-        vm.success = false;
-        vm.error = false;
-        vm.errorText = "";
-        vm.name = "";
-        vm.email = "";
-        vm.password = "";
-        vm.noRecord = false;
-        vm.showCNICinput = false;
-        vm.employee = [];
-        vm.employeeID = "";
-        vm.CNIC = "";
-        vm.level = 0;
-        vm.showLevelForRecovery = false;
-        vm.role = "Select from the followings...";
-
-        if (vm.fields.catchError === true) {
-          return swal({
-                title: "Error",
-                text: vm.fields.catchErrorText,
-                icon: "error",
-                timer: 3000,
-        });
-        }
-        return swal({
-                title: "Success",
-                text: "New User Successfully Created",
-                icon: "success",
-                timer: 3000,
-        });
-      }, 500);
-    },
-    showCNIC(event) {
-      this.showCNICinput = true;
-    },
-    onlyNumber($event) {
-      let keyCode = $event.keyCode ? $event.keyCode : $event.which;
-      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
-        // 46 is dot
-        $event.preventDefault();
-      }
-    },
-    onEnter() {
-      if (this.CNIC.length == 13) {
-        let vm = this;
-        axios
-          .get(this.api_url + "users/employees/cnic/" + this.CNIC)
-          .then((response) => {
-            const results = response.data.response;
-            if (results == "[]") {
-              this.noRecord = false;
-              return;
-            }
-            this.noRecord = true;
-            vm.employee = results[0];
-            vm.name = results[0].name;
-          })
-          .catch((err) => console.log(err));
-      } else {
-        return;
-      }
     },
     close() {
       let vm = this;
-      vm.success = false;
-      vm.error = false;
-      vm.errorText = "";
       vm.name = "";
       vm.email = "";
       vm.password = "";
-      vm.noRecord = false;
-      vm.showCNICinput = false;
-      vm.employee = [];
-      vm.employeeID = "";
-      vm.CNIC = "";
-      vm.level = 0;
-      vm.showLevelForRecovery = false;
       vm.role = "Select from the followings...";
     },
   },

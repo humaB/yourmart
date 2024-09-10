@@ -1,9 +1,9 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserAdminForm.vue?vue&type=script&lang=js":
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserEditPopup.vue?vue&type=script&lang=js":
 /*!******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserAdminForm.vue?vue&type=script&lang=js ***!
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserEditPopup.vue?vue&type=script&lang=js ***!
   \******************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -13,7 +13,45 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "UserAdminForm"
+  name: "UserEditPopup",
+  props: ["details", "loader"],
+  data: function data() {
+    return {
+      api_url: window.location.origin + "/public/api/",
+      name: "",
+      email: "",
+      password: "",
+      role: "Select from the followings..."
+    };
+  },
+  methods: {
+    update: function update() {
+      var vm = this;
+      if (vm.name === "" || vm.email === "" || vm.role === "Select from the followings...") {
+        return swal({
+          title: "Required",
+          text: "Please add all the required fields, thanks",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var data = {
+        id: this.details.id,
+        name: this.name,
+        email: this.email + "@ecomm.com",
+        password: this.password,
+        role: this.role
+      };
+      vm.$emit("update", data);
+    }
+  },
+  watch: {
+    details: function details(newDetails) {
+      this.name = newDetails.name || "";
+      this.email = newDetails.email ? newDetails.email.replace("@ecomm.com", "") : "";
+      this.role = newDetails.role || "Select from the followings...";
+    }
+  }
 });
 
 /***/ }),
@@ -29,30 +67,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _UserAdminForm_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserAdminForm.vue */ "./resources/js/components/admin/user/UserAdminForm.vue");
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "UserPopup",
-  props: ["accounts", "accountChilds", "fields"],
-  components: [_UserAdminForm_vue__WEBPACK_IMPORTED_MODULE_0__["default"]],
+  props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
       api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
-      CNIC: "",
-      cnicMax: 13,
       password: "",
-      employee: [],
-      role: "Select from the followings...",
-      error: false,
-      errorText: "",
-      noRecord: false,
-      showCNICinput: false,
-      showLevelForRecovery: false,
-      level: 0,
-      success: false
+      role: "Select from the followings..."
     };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("userSaved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
   },
   methods: {
     add: function add() {
@@ -65,110 +98,19 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       }
-      if (typeof vm.employee.id == 'undefined') {
-        return swal({
-          title: "Required",
-          text: "Please enter CNIC number and press enter",
-          icon: "error",
-          timer: 3000
-        });
-      }
-      if (vm.role == "recovery agent" || vm.role == "Recovery Head") {
-        if (typeof vm.employee.id == 'undefined' || vm.level == "") {
-          return swal({
-            title: "Required",
-            text: "Please Select Level for recovery user",
-            icon: "error",
-            timer: 3000
-          });
-        }
-      }
-      vm.error = false;
       var data = {
         name: this.name,
-        email: this.email + "@gch.com",
+        email: this.email + "@ecomm.com",
         password: this.password,
-        role: this.role,
-        employeeID: this.employee.id ? this.employee.id : 0,
-        level: this.level ? this.level : 0
+        role: this.role
       };
       vm.$emit("add", data);
-      setTimeout(function () {
-        vm.success = false;
-        vm.error = false;
-        vm.errorText = "";
-        vm.name = "";
-        vm.email = "";
-        vm.password = "";
-        vm.noRecord = false;
-        vm.showCNICinput = false;
-        vm.employee = [];
-        vm.employeeID = "";
-        vm.CNIC = "";
-        vm.level = 0;
-        vm.showLevelForRecovery = false;
-        vm.role = "Select from the followings...";
-        if (vm.fields.catchError === true) {
-          return swal({
-            title: "Error",
-            text: vm.fields.catchErrorText,
-            icon: "error",
-            timer: 3000
-          });
-        }
-        return swal({
-          title: "Success",
-          text: "New User Successfully Created",
-          icon: "success",
-          timer: 3000
-        });
-      }, 500);
-    },
-    showCNIC: function showCNIC(event) {
-      this.showCNICinput = true;
-    },
-    onlyNumber: function onlyNumber($event) {
-      var keyCode = $event.keyCode ? $event.keyCode : $event.which;
-      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
-        // 46 is dot
-        $event.preventDefault();
-      }
-    },
-    onEnter: function onEnter() {
-      var _this = this;
-      if (this.CNIC.length == 13) {
-        var vm = this;
-        axios.get(this.api_url + "users/employees/cnic/" + this.CNIC).then(function (response) {
-          var results = response.data.response;
-          if (results == "[]") {
-            _this.noRecord = false;
-            return;
-          }
-          _this.noRecord = true;
-          vm.employee = results[0];
-          vm.name = results[0].name;
-        })["catch"](function (err) {
-          return console.log(err);
-        });
-      } else {
-        return;
-      }
     },
     close: function close() {
       var vm = this;
-      vm.success = false;
-      vm.error = false;
-      vm.errorText = "";
       vm.name = "";
       vm.email = "";
       vm.password = "";
-      vm.noRecord = false;
-      vm.showCNICinput = false;
-      vm.employee = [];
-      vm.employeeID = "";
-      vm.CNIC = "";
-      vm.level = 0;
-      vm.showLevelForRecovery = false;
       vm.role = "Select from the followings...";
     }
   }
@@ -267,6 +209,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
 /* harmony import */ var _components_admin_user_UserTable_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/admin/user/UserTable.vue */ "./resources/js/components/admin/user/UserTable.vue");
 /* harmony import */ var _components_admin_user_UserPopup_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/admin/user/UserPopup.vue */ "./resources/js/components/admin/user/UserPopup.vue");
+/* harmony import */ var _components_admin_user_UserEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/admin/user/UserEditPopup.vue */ "./resources/js/components/admin/user/UserEditPopup.vue");
+
 
 
 
@@ -275,7 +219,8 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     UserTable: _components_admin_user_UserTable_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    UserPopup: _components_admin_user_UserPopup_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    UserPopup: _components_admin_user_UserPopup_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    UserEditPopup: _components_admin_user_UserEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   data: function data() {
     return {
@@ -287,14 +232,16 @@ __webpack_require__.r(__webpack_exports__);
       },
       th: ["Sr #", "Name", "Email", "Role", "Allowed IP", "Action"],
       table_id: "user_list_table",
-      users: []
+      users: [],
+      editDetails: {},
+      btnLoader: false
     };
   },
   created: function created() {
-    axios.defaults.headers.common["Authorization"] = "Bearer " + localStorage.getItem("_token");
     this.fetchUsers();
     setTimeout(function () {
       $("#pwstrength").pwstrength();
+      $("#pwstrength2").pwstrength();
     }, 2000);
   },
   methods: {
@@ -312,15 +259,64 @@ __webpack_require__.r(__webpack_exports__);
     },
     dataTable: function dataTable() {
       $('#user_list_table').DataTable();
+    },
+    add: function add(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "users", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchUsers();
+        vm.$emit('userSaved', true);
+        return swal({
+          title: "Success",
+          text: 'New User Created Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    edit: function edit(data) {
+      var vm = this;
+      vm.editDetails = data;
+    },
+    update: function update(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "users/update", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchUsers();
+        return swal({
+          title: "Success",
+          text: 'User Updated Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserAdminForm.vue?vue&type=template&id=1989fdcf":
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserEditPopup.vue?vue&type=template&id=7c65625e":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserAdminForm.vue?vue&type=template&id=1989fdcf ***!
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserEditPopup.vue?vue&type=template&id=7c65625e ***!
   \*****************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -333,38 +329,255 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
+  return _c("div", [_c("div", {
+    staticClass: "modal fade",
+    staticStyle: {
+      "background-color": "rgba(0, 0, 0, 0.2)"
+    },
+    attrs: {
+      id: "editUser",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "groupForm",
+      "aria-hidden": "true",
+      "data-backdrop": "false"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered modal-xl",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body"
+  }, [_c("div", {
+    staticClass: "form-row"
+  }, [_c("div", {
+    staticClass: "form-group form-float col-md-12"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(1), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.role,
+      expression: "role"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.role = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      selected: "",
+      disabled: ""
+    }
+  }, [_vm._v("Select from the followings...")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "admin"
+    }
+  }, [_vm._v("Admin")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "doe"
+    }
+  }, [_vm._v("Data Entry Operator")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group form-float col-md-12"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.name,
+      expression: "name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      required: ""
+    },
+    domProps: {
+      value: _vm.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.name = $event.target.value;
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group form-float col-md-12"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("div", {
+    staticClass: "input-group mb-2"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.email,
+      expression: "email"
+    }],
+    staticClass: "form-control text-right",
+    attrs: {
+      type: "text",
+      placeholder: "Email Address",
+      autocomplete: "off"
+    },
+    domProps: {
+      value: _vm.email
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.email = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _vm._m(4)])])])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group form-float col-md-12"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "input-group"
+  }, [_vm._m(6), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.password,
+      expression: "password"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "password",
+      id: "pwstrength2",
+      "data-indicator": "pwindicator2"
+    },
+    domProps: {
+      value: _vm.password
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.password = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _vm._m(7), _vm._v(" "), _c("small", {
+    staticClass: "form-text text-muted",
+    attrs: {
+      id: "passwordHelpBlock"
+    }
+  }, [_vm._v("\n                                    Password must be 8-20 characters long, contain letters and\n                                    numbers, and must not contain spaces, special characters, or\n                                    emoji.\n                                ")])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer bg-whitesmoke br"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.update();
+      }
+    }
+  }, [_vm._v("\n                        Update User Account\n                    ")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("\n                        Add New User Account\n                    ")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.close();
+      }
+    }
+  }, [_vm._v("\n                        Close\n                    ")])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", [_c("div", {
-    staticClass: "form-group form-float col-md-4"
-  }, [_c("div", {
-    staticClass: "form-line"
-  }, [_c("label", {
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title"
+  }, [_vm._v("Edit User")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     staticClass: "form-label"
-  }, [_vm._v("Department\n            "), _c("span", {
+  }, [_vm._v("Select Role\n                                    "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
-    attrs: {
-      type: "text"
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group form-float col-md-4"
-  }, [_c("div", {
-    staticClass: "form-line"
-  }, [_c("label", {
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
     staticClass: "form-label"
-  }, [_vm._v("Designation\n            "), _c("span", {
+  }, [_vm._v("Enter Name "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Enter Email\n                                    "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "input-group-append"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_vm._v("@ecomm.com")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Set Password "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "input-group-prepend"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_c("i", {
+    staticClass: "fas fa-lock"
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "pwindicator2",
     attrs: {
-      type: "text"
+      id: "pwindicator2"
     }
-  })])])]);
+  }, [_c("div", {
+    staticClass: "bar"
+  }), _vm._v(" "), _c("div", {
+    staticClass: "label"
+  })]);
 }];
 render._withStripped = true;
 
@@ -441,7 +654,11 @@ var render = function render() {
     attrs: {
       value: "admin"
     }
-  }, [_vm._v("Admin")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Admin")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "dob"
+    }
+  }, [_vm._v("Data Entry Operator")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
   }, [_c("div", {
     staticClass: "form-line"
@@ -529,9 +746,9 @@ var render = function render() {
     attrs: {
       id: "passwordHelpBlock"
     }
-  }, [_vm._v("\n              Password must be 8-20 characters long, contain letters and\n              numbers, and must not contain spaces, special characters, or\n              emoji.\n            ")])])]), _vm._v(" "), _c("UserAdminForm")], 1)]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n              Password must be 8-20 characters long, contain letters and\n              numbers, and must not contain spaces, special characters, or\n              emoji.\n            ")])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer bg-whitesmoke br"
-  }, [_c("button", {
+  }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "button"
@@ -540,6 +757,11 @@ var render = function render() {
       click: function click($event) {
         return _vm.add();
       }
+    }
+  }, [_vm._v("\n        Add New User Account\n      ")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
     }
   }, [_vm._v("\n        Add New User Account\n      ")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
@@ -668,11 +890,11 @@ var render = function render() {
       attrs: {
         href: "#",
         "data-toggle": "modal",
-        "data-target": _vm.edit_form
+        "data-target": "#editUser"
       },
       on: {
         click: function click($event) {
-          return _vm.edit(item.id, item.name, item.email, item.roles);
+          return _vm.edit(item.id, item.name, item.email, item.role);
         }
       }
     }, [_c("i", {
@@ -772,7 +994,26 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", [_c("UserPopup"), _vm._v(" "), _c("div", {
+  return _c("div", [_c("UserPopup", {
+    attrs: {
+      loader: _vm.btnLoader
+    },
+    on: {
+      add: function add($event) {
+        return _vm.add($event);
+      }
+    }
+  }), _vm._v(" "), _c("UserEditPopup", {
+    attrs: {
+      loader: _vm.btnLoader,
+      details: _vm.editDetails
+    },
+    on: {
+      update: function update($event) {
+        return _vm.update($event);
+      }
+    }
+  }), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
@@ -797,6 +1038,11 @@ var render = function render() {
       id: _vm.table_id,
       th: _vm.th,
       tbody: _vm.users
+    },
+    on: {
+      edit: function edit($event) {
+        return _vm.edit($event);
+      }
     }
   })], 1)])])])])], 1)])])], 1);
 };
@@ -3394,9 +3640,9 @@ module.exports = function (list, options) {
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/user/UserAdminForm.vue":
+/***/ "./resources/js/components/admin/user/UserEditPopup.vue":
 /*!**************************************************************!*\
-  !*** ./resources/js/components/admin/user/UserAdminForm.vue ***!
+  !*** ./resources/js/components/admin/user/UserEditPopup.vue ***!
   \**************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3405,8 +3651,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _UserAdminForm_vue_vue_type_template_id_1989fdcf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserAdminForm.vue?vue&type=template&id=1989fdcf */ "./resources/js/components/admin/user/UserAdminForm.vue?vue&type=template&id=1989fdcf");
-/* harmony import */ var _UserAdminForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserAdminForm.vue?vue&type=script&lang=js */ "./resources/js/components/admin/user/UserAdminForm.vue?vue&type=script&lang=js");
+/* harmony import */ var _UserEditPopup_vue_vue_type_template_id_7c65625e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserEditPopup.vue?vue&type=template&id=7c65625e */ "./resources/js/components/admin/user/UserEditPopup.vue?vue&type=template&id=7c65625e");
+/* harmony import */ var _UserEditPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserEditPopup.vue?vue&type=script&lang=js */ "./resources/js/components/admin/user/UserEditPopup.vue?vue&type=script&lang=js");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -3416,9 +3662,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 ;
 var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _UserAdminForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-  _UserAdminForm_vue_vue_type_template_id_1989fdcf__WEBPACK_IMPORTED_MODULE_0__.render,
-  _UserAdminForm_vue_vue_type_template_id_1989fdcf__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _UserEditPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserEditPopup_vue_vue_type_template_id_7c65625e__WEBPACK_IMPORTED_MODULE_0__.render,
+  _UserEditPopup_vue_vue_type_template_id_7c65625e__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
   null,
@@ -3428,7 +3674,7 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/admin/user/UserAdminForm.vue"
+component.options.__file = "resources/js/components/admin/user/UserEditPopup.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -3632,9 +3878,9 @@ component.options.__file = "resources/js/pages/admin/user/UserPage.vue"
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/user/UserAdminForm.vue?vue&type=script&lang=js":
+/***/ "./resources/js/components/admin/user/UserEditPopup.vue?vue&type=script&lang=js":
 /*!**************************************************************************************!*\
-  !*** ./resources/js/components/admin/user/UserAdminForm.vue?vue&type=script&lang=js ***!
+  !*** ./resources/js/components/admin/user/UserEditPopup.vue?vue&type=script&lang=js ***!
   \**************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -3643,8 +3889,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAdminForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserAdminForm.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserAdminForm.vue?vue&type=script&lang=js");
- /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAdminForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserEditPopup.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserEditPopup.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -3728,19 +3974,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/user/UserAdminForm.vue?vue&type=template&id=1989fdcf":
+/***/ "./resources/js/components/admin/user/UserEditPopup.vue?vue&type=template&id=7c65625e":
 /*!********************************************************************************************!*\
-  !*** ./resources/js/components/admin/user/UserAdminForm.vue?vue&type=template&id=1989fdcf ***!
+  !*** ./resources/js/components/admin/user/UserEditPopup.vue?vue&type=template&id=7c65625e ***!
   \********************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAdminForm_vue_vue_type_template_id_1989fdcf__WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAdminForm_vue_vue_type_template_id_1989fdcf__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditPopup_vue_vue_type_template_id_7c65625e__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditPopup_vue_vue_type_template_id_7c65625e__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserAdminForm_vue_vue_type_template_id_1989fdcf__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserAdminForm.vue?vue&type=template&id=1989fdcf */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserAdminForm.vue?vue&type=template&id=1989fdcf");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserEditPopup_vue_vue_type_template_id_7c65625e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserEditPopup.vue?vue&type=template&id=7c65625e */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserEditPopup.vue?vue&type=template&id=7c65625e");
 
 
 /***/ }),

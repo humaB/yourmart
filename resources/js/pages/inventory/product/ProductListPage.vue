@@ -351,8 +351,6 @@ export default {
         editProductVariantFun(data){
             this.editProductVariantData = data;
             this.activeProductVariantStatus = data.status;
-            console.log(this.activeProductVariantStatus);
-
         },
         changeStatus( data ){
             let vm = this;

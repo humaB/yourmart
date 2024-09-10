@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Inventory\AttachmentController;
 use App\Http\Controllers\Inventory\Attributes\AttributeController;
 use App\Http\Controllers\Inventory\Attributes\BrandController;
@@ -32,7 +33,15 @@ use Illuminate\Support\Facades\Route;
 //     Route::post('/',  [ UserController::class , 'userStore']);
 // });
 
+Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
+    Route::get('/',  [ UserController::class , 'getUsers']);
+    Route::post('/',  [ UserController::class , 'store']);
+    Route::post('/update',  [ UserController::class , 'update']);
+});
+
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
+
+
     Route::group(['prefix' => 'products'], function(){
 
         Route::get('/',  [ ProductController::class , 'fetchProducts']);

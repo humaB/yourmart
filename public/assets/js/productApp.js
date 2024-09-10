@@ -1995,7 +1995,6 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     editProductVariantFun: function editProductVariantFun(data) {
       this.editProductVariantData = data;
       this.activeProductVariantStatus = data.status;
-      console.log(this.activeProductVariantStatus);
     },
     changeStatus: function changeStatus(data) {
       var vm = this;
