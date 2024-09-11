@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Models\Inventory\Product\ProductAttachment;
+use App\Models\Inventory\Product\Variation\Product;
+use App\Models\Inventory\Product\Variation\ProductVariationImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class AttachmentController extends Controller
 {
@@ -55,6 +58,42 @@ class AttachmentController extends Controller
             }
 
             return response()->json(['message' => 'Attachment Uploaded successfully'], 201);
+        });
+
+        return $lock;
+    }
+
+    public function update( Request $request ){
+        $lock = Cache::lock('update_attachment')->block(7, function () use ($request) {
+
+            ProductAttachment::where('id', $request->id)->update([
+                'alt'         => $request->alt,
+                'title'       => $request->title,
+                'caption'     => $request->caption,
+                'description' => $request->description,
+            ]);
+
+            return response()->json(['message' => 'Attachment updated successfully'], 200);
+        });
+
+        return $lock;
+    }
+
+    public function delete( Request $request ){
+        $lock = Cache::lock('delete_attachment')->block(7, function () use ($request) {
+
+            $product = Product::where('hero_image', $request->attachment)->first();
+            $variation = ProductVariationImage::where('image_id', $request->id)->first();
+
+            if( $product || $variation ){
+                return (new ValidationCollection(['This image has been used with some product']))
+                ->response()
+                ->setStatusCode(421);
+            }
+
+            ProductAttachment::where('id', $request->id)->delete();
+
+            return response()->json(['message' => 'Attachment updated successfully'], 200);
         });
 
         return $lock;

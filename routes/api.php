@@ -66,6 +66,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::group(['prefix' => 'attachments'], function(){
             Route::get('/',  [ AttachmentController::class , 'fetchAttachments']);
             Route::post('/',  [ AttachmentController::class , 'store']);
+
+            Route::post('/update',  [ AttachmentController::class , 'update']);
+            Route::post('/delete',  [ AttachmentController::class , 'delete']);
         });
 
         Route::group(['prefix' => 'brands'], function(){

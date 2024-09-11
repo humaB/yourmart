@@ -223,6 +223,8 @@
             :colors="colors"
             :attachments="attachments"
             :imageAlt="imageAlt"
+            @updateImageData="updateImageData( $event )"
+            @deleteImage="deleteImage( $event )"
             @addSelectedImages="addSelectedImages($event)"
             @addMoreSelectedImages="addMoreSelectedImages($event)"
             @addSelectedHeroImages="addSelectedHeroImages($event)"
@@ -727,6 +729,58 @@ export default {
                     const results = response.data.response;
                     vm.attachments = results;
                 }).catch((err) => this.fetchAttachments());
+        },
+        updateImageData( data ){
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/attachments/update", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.fetchAttachments();
+                    vm.$emit('attachmentSaved', true);
+                    return swal({
+                        title: "Success",
+                        text: 'Media File Updated',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        deleteImage( data ){
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/attachments/delete", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.fetchAttachments();
+                    vm.$emit('attachmentSaved', true);
+                    return swal({
+                        title: "Success",
+                        text: 'Media File Deleted',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
         },
         uploadAttachment(data) {
             let vm = this;

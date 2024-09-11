@@ -15,6 +15,9 @@ class ProductAttachment extends Model
     protected $fillable = [
         'attachment',
         'alt',
+        'title',
+        'caption',
+        'description',
         'added_by'
     ];
 

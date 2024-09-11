@@ -3,7 +3,7 @@
     <!-- Modal -->
     <div class="modal fade" id="uploadProductImage" tabindex="-1" role="dialog" aria-labelledby="uploadProductImage"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document" style="max-width: 90%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Upload / Select from Gallery </h5>
@@ -17,7 +17,7 @@
                         <input type="file" class="form-control" @change="setImage($event)" multiple>
                         <code>Maximum upload file size: 25 MB</code><br>
                         <code>Recommended dimension for Size is 800 x 800 </code><br>
-                        <code>Recommended Size for Size is 0.5MB </code>
+                        <code>Recommended Size for Image is 0.5MB </code>
 
                     </div>
                     <div class="col-md-5">
@@ -36,22 +36,87 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4>Select from Gallery</h4>
+                                    <!-- Search Form -->
+                                <form class="card-header-form">
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="Search by title or alt"
+                                        v-model="searchQuery"
+                                    />
+                                </form>
                             </div>
-                            <div class="card-body">
-                                <div class=" gutters-sm row" id="gallery-scroll">
-                                    <div class="col-3 col-sm-2" v-for="(image, index) in attachments" :key="index">
-                                        <label class="imagecheck mb-4">
-                                            <input v-if="selectedColor != 'Hero'" type="checkbox" :value="image"
-                                                class="imagecheck-input"
-                                                v-model="selectedImagesByColor[selectedColor]" />
-                                            <input v-else type="radio" :value="image" class="imagecheck-input"
-                                                v-model="heroImage" />
-                                            <span class="imagecheck-figure">
-                                                <img :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
-                                                    :alt="image.alt" class="imagecheck-image" />
-                                            </span>
-                                        </label>
+                            <div class="card-body row">
+                                <div class="col-md-9">
+                                    <div class=" gutters-sm row" id="gallery-scroll">
+                                        <div class="col-3 col-sm-2" v-for="(image, index) in filteredImages" :key="index">
+                                            <label class="imagecheck mb-4">
+                                                <input
+                                                    v-if="selectedColor != 'Hero'"
+                                                    type="checkbox"
+                                                    :value="image"
+                                                    class="imagecheck-input"
+                                                    v-model="selectedImagesByColor[selectedColor]"
+                                                    @change="setSelectedImage(image)"
+                                                />
+                                                <input
+                                                    v-else
+                                                    type="radio"
+                                                    :value="image"
+                                                    class="imagecheck-input"
+                                                    v-model="heroImage"
+                                                    @change="setSelectedImage(image)"
+                                                />
+                                                <span class="imagecheck-figure">
+                                                    <img
+                                                        :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
+                                                        :alt="image.alt"
+                                                        class="imagecheck-image"
+                                                    />
+                                                </span>
+                                            </label>
+                                        </div>
                                     </div>
+                                </div>
+                                <div class="col-md-3 border-1 py-2">
+                                    <h5>Selected Image</h5>
+                                    <p v-if="selectedImage">
+                                        <strong>Image:</strong>
+                                        <img
+                                            :src="public_url + 'storage/uploads/inventory/products/media/' + selectedImage.attachment"
+                                            :alt="selectedImage.alt"
+                                            class="img-thumbnail"
+                                            width="100"
+                                            @load="getImageDimensions"
+                                            ref="selectedImage"
+                                        />
+                                               <!-- Display Image Dimensions -->
+                                    </p>
+                                    <p v-if="imageDimensions"><strong>Dimensions:</strong> {{ imageDimensions.width }} x {{ imageDimensions.height }} pixels</p>
+                                     <!-- Display Image Size -->
+                                    <p v-if="imageSize"><strong>Size:</strong> {{ imageSize }}</p>
+                                    <p v-else>No image selected</p>
+
+                                    <p v-if="selectedImage"><strong>Title:</strong> <input v-if="selectedImage" type="text" name="" id="" v-model="selectedImage.title" class="form-control">
+                                    <p v-if="selectedImage"><strong>ALT:</strong> </p><input v-if="selectedImage" type="text" name="" id="" v-model="selectedImage.alt" class="form-control">
+                                    <p v-if="selectedImage"><strong>Caption:</strong> <textarea v-if="selectedImage"  v-model="selectedImage.caption" class="form-control"></textarea>
+                                    <p v-if="selectedImage"><strong>Description:</strong> </p><textarea v-if="selectedImage"  v-model="selectedImage.description" class="form-control"></textarea>
+
+                                    <!-- Delete Button -->
+                                     <div class="text-right mt-2" v-if="selectedImage">
+                                         <button v-if="!loader" class="btn btn-primary" @click="updateImageData()">
+                                             Update
+                                         </button>
+                                         <button v-else class="btn btn-primary btn-progress disabled">
+                                            Update
+                                        </button>
+                                         <button v-if="!loader" class="btn btn-danger" @click="deleteImage()">
+                                             Delete
+                                         </button>
+                                         <button v-else class="btn btn-danger btn-progress disabled">
+                                            Delete
+                                        </button>
+                                     </div>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +141,11 @@ export default {
             selectedImages: [],
             heroImage: {},
             images: [],
-            alt: ''
+            alt: '',
+            selectedImage: null,
+            imageDimensions: null, // To store the image dimensions
+            imageSize: null, // To store the image size
+            searchQuery: '', // Search input query
         }
     },
     updated() {
@@ -99,7 +168,87 @@ export default {
             }
         });
     },
+    computed: {
+        filteredImages() {
+            if (!this.searchQuery) {
+                // If no search query, return all images
+                return this.attachments;
+            }
+            // Convert search query to lowercase for case-insensitive search
+            const query = this.searchQuery.toLowerCase();
+
+            // Filter images based on alt or attachment (title)
+            return this.attachments.filter(image => {
+                 // Ensure image properties are not null and handle undefined values
+                 const alt = (image.alt || '').toLowerCase();
+                const attachment = (image.attachment || '').toLowerCase();
+
+                return (
+                    alt.includes(query) ||
+                    attachment.includes(query)
+                );
+            });
+        }
+    },
     methods: {
+        updateImageData(){
+            if( !this.selectedImage ){
+                return swal({
+                    title: "Required",
+                    text: "Please select image first",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+            this.$emit('updateImageData', this.selectedImage);
+        },
+        deleteImage(){
+            if( !this.selectedImage ){
+                return swal({
+                    title: "Required",
+                    text: "Please select image first",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+            this.$emit('deleteImage', this.selectedImage);
+        },
+        setSelectedImage(image) {
+            this.selectedImage = image;
+            this.imageDimensions = null; // Reset dimensions when a new image is selected
+            this.imageSize = null; // Reset size when a new image is selected
+            this.getImageSize(); // Fetch image size
+        },
+        getImageDimensions() {
+            const img = this.$refs.selectedImage; // Reference to the image element
+            if (img) {
+                this.imageDimensions = {
+                    width: img.naturalWidth,
+                    height: img.naturalHeight
+                };
+            }
+        },
+        async getImageSize() {
+            const imageUrl = this.public_url + 'storage/uploads/inventory/products/media/' + this.selectedImage.attachment;
+
+            // Fetch image metadata
+            try {
+                const response = await fetch(imageUrl, { method: 'HEAD' });
+                const contentLength = response.headers.get('content-length'); // Get the file size in bytes
+
+                if (contentLength) {
+                    this.imageSize = this.formatBytes(parseInt(contentLength, 10));
+                }
+            } catch (error) {
+                console.error('Error fetching image size:', error);
+            }
+        },
+        formatBytes(bytes) {
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+            if (bytes === 0) return '0 Bytes';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + ' ' + sizes[i];
+        },
         addSelectedImages() {
             if (this.selectedColor == 'Hero') {
                 if (this.type && this.type == 'edit') {

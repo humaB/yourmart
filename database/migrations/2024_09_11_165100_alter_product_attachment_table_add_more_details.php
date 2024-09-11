@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('inventory_product_attachments', function (Blueprint $table) {
+            $table->text('title')->nullable()->after('alt');
+            $table->text('caption')->nullable()->after('title');
+            $table->text('description')->nullable()->after('caption');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('inventory_product_attachments', function (Blueprint $table) {
+            $table->dropColumn('title');
+            $table->dropColumn('caption');
+            $table->dropColumn('description');
+        });
+    }
+};
