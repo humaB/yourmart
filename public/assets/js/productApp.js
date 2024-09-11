@@ -1888,7 +1888,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       sizesDropDown: [],
       tags: [],
       tagsDropDown: []
-    }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "categories", []), "parentCategories", []), "categoriesDropDown", []), "attributes", []), "parentAttributes", []), "attributesDropDown", []), "attachments", []), "shippingOptions", []), "products", []), "productsDropDown", []), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "details", {
+    }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "categories", []), "parentCategories", []), "categoriesDropDown", []), "attributes", []), "parentAttributes", []), "attributesDropDown", []), "attachments", []), "shippingOptions", []), "products", []), "productsDropDown", []), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "details", {
       // Replace this with actual data from your API
       title: null,
       slug: null,
@@ -1934,7 +1934,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       }
       // More variations...
       ]
-    }), "productNotUpdated", false), "editProductVariantData", {}), "activeProductVariantStatus", ''), "selectedType", ''), "colorId", ''), "imageAlt", ''), "selectedProducts", []), "multipleAction", '');
+    }), "productNotUpdated", false), "editProductVariantData", {}), "activeProductVariantStatus", ''), "selectedType", ''), "colorId", ''), "imageAlt", ''), "selectedProducts", []), "multipleAction", ''), "checkedAllProducts", false);
   },
   created: function created() {
     this.fetchBrands();
@@ -1964,6 +1964,17 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     cloneProduct: function cloneProduct(id, title) {
       this.cloneProductData.id = id;
       this.cloneProductData.title = title;
+    },
+    toggleAllProducts: function toggleAllProducts() {
+      if (this.checkedAllProducts) {
+        // If "Check All" is checked, select all products
+        this.selectedProducts = this.products.map(function (product) {
+          return product.id;
+        });
+      } else {
+        // If "Check All" is unchecked, deselect all products
+        this.selectedProducts = [];
+      }
     },
     multipleActionFunc: function multipleActionFunc() {
       var _this = this;
@@ -8083,7 +8094,39 @@ var render = function render() {
     attrs: {
       id: "product_table"
     }
-  }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
+  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("\n                                                            Checked All\n                                                            "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.checkedAllProducts,
+      expression: "checkedAllProducts"
+    }],
+    staticClass: "form-control custom-checkbox",
+    attrs: {
+      type: "checkbox"
+    },
+    domProps: {
+      checked: Array.isArray(_vm.checkedAllProducts) ? _vm._i(_vm.checkedAllProducts, null) > -1 : _vm.checkedAllProducts
+    },
+    on: {
+      change: [function ($event) {
+        var $$a = _vm.checkedAllProducts,
+          $$el = $event.target,
+          $$c = $$el.checked ? true : false;
+        if (Array.isArray($$a)) {
+          var $$v = null,
+            $$i = _vm._i($$a, $$v);
+          if ($$el.checked) {
+            $$i < 0 && (_vm.checkedAllProducts = $$a.concat([$$v]));
+          } else {
+            $$i > -1 && (_vm.checkedAllProducts = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+          }
+        } else {
+          _vm.checkedAllProducts = $$c;
+        }
+      }, _vm.toggleAllProducts]
+    }
+  })]), _vm._v(" "), _c("th", [_vm._v("Product Title")]), _vm._v(" "), _c("th", [_vm._v("Short Description")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Added By")]), _vm._v(" "), _c("th", [_vm._v("Added Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_c("div", {
@@ -8433,10 +8476,6 @@ var staticRenderFns = [function () {
       "for": ""
     }
   }, [_c("b", [_vm._v("Action")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Checked")]), _vm._v(" "), _c("th", [_vm._v("Product Title")]), _vm._v(" "), _c("th", [_vm._v("Short Description")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Added By")]), _vm._v(" "), _c("th", [_vm._v("Added Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

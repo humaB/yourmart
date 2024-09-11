@@ -79,7 +79,15 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Sr #</th>
-                                                            <th>Checked</th>
+                                                            <th>
+                                                                Checked All
+                                                                <input
+                                                                    type="checkbox"
+                                                                    class="form-control custom-checkbox"
+                                                                    v-model="checkedAllProducts"
+                                                                    @change="toggleAllProducts"
+                                                                >
+                                                            </th>
                                                             <th>Product Title</th>
                                                             <th>Short Description</th>
                                                             <th>Status</th>
@@ -338,7 +346,8 @@ export default {
             colorId : '',
             imageAlt : '',
             selectedProducts : [],
-            multipleAction : ''
+            multipleAction : '',
+            checkedAllProducts: false // Boolean to manage "Check All" state
         };
     },
     created() {
@@ -369,6 +378,15 @@ export default {
         cloneProduct( id, title ){
             this.cloneProductData.id = id;
             this.cloneProductData.title = title;
+        },
+        toggleAllProducts() {
+            if (this.checkedAllProducts) {
+                // If "Check All" is checked, select all products
+                this.selectedProducts = this.products.map(product => product.id);
+            } else {
+                // If "Check All" is unchecked, deselect all products
+                this.selectedProducts = [];
+            }
         },
         multipleActionFunc(){
             let vm = this;
@@ -1170,7 +1188,6 @@ export default {
                 });
         }
     },
-
 }
 </script>
 <style scoped>
