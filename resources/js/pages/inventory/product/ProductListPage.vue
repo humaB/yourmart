@@ -1,6 +1,30 @@
 <template>
     <div>
 
+        <div class="modal fade" id="cloneProductConfirmation" tabindex="-1" role="dialog" aria-labelledby="cloneProductConfirmationTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body row">
+                  <div class="col-md-12">
+                    Are you sure you want to clone <b>{{ cloneProductData.title }}</b> ?
+                  </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click="yesClone()" v-if="!btnLoader">Yes, Clone</button>
+                    <button type="button" class="btn btn-primary btn-progress disabled" v-else>Yes, Clone</button>
+
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card card-primary">
@@ -59,13 +83,20 @@
                                                             </td>
                                                             <td>{{ item.user.name }}</td>
                                                             <td>{{ formatDate(item.created_at) }}</td>
-                                                            <td>
+                                                            <td class="d-flex">
                                                                 <button data-toggle="modal"
                                                                     data-target="#productDetailView"
                                                                     class="btn btn-info" @click="fetchDetail(item.id)"
                                                                     title="View Details"><i
                                                                         class="fa fa-eye"></i></button>
+
+                                                                        <button data-toggle="modal"
+                                                                        data-target="#cloneProductConfirmation"
+                                                                        class="btn btn-warning ml-1" @click="cloneProduct(item.id, item.title)"
+                                                                        title="View Details"><i
+                                                                            class="fa fa-clone"></i></button>
                                                             </td>
+
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -140,7 +171,19 @@
             @changeProductVariantStatus="changeProductVariantStatus( $event )"
         />
 
-        <AddProductImage :loader="btnLoader" :colorId="colorId" :type='selectedType' :selectedColor="selectedColor" :colors="colors" :attachments="attachments"
+        <AddShippingClass
+            :loader="btnLoader"
+            @addNewClass="addNewClass( $event )"
+        />
+
+        <AddProductImage
+            :loader="btnLoader"
+            :colorId="colorId"
+            :type='selectedType'
+            :selectedColor="selectedColor"
+            :colors="colors"
+            :attachments="attachments"
+            :imageAlt="imageAlt"
             @addSelectedImages="addSelectedImages($event)"
             @addMoreSelectedImages="addMoreSelectedImages($event)"
             @addSelectedHeroImages="addSelectedHeroImages($event)"
@@ -167,6 +210,7 @@ import AddTag from "../../../components/inventory/product/AddTag.vue";
 import AddProductImage from "../../../components/inventory/product/AddProductImage.vue";
 import ProductDetailView from "../../../components/inventory/product/setting/ProductDetailView.vue";
 import EditProductVariant from "../../../components/inventory/product/setting/EditProductVariant.vue";
+import AddShippingClass from "../../../components/inventory/product/setting/AddShippingClass.vue";
 
 import moment from "moment";
 export default {
@@ -182,7 +226,8 @@ export default {
         AddTag,
         AddProductImage,
         ProductDetailView,
-        EditProductVariant
+        EditProductVariant,
+        AddShippingClass
     },
     data() {
         return {
@@ -199,6 +244,10 @@ export default {
             filter: {
                 category: { code: 0, label: "Select from the following" },
                 tag: { code: 0, label: "Select from the following" }
+            },
+            cloneProductData  : {
+                id : '',
+                title : ''
             },
             selectedImages: [],
             selectedColor: '',
@@ -255,7 +304,8 @@ export default {
             editProductVariantData : {},
             activeProductVariantStatus : '',
             selectedType : '',
-            colorId : ''
+            colorId : '',
+            imageAlt : ''
         };
     },
     created() {
@@ -282,6 +332,34 @@ export default {
         },
         addSelectedImages(data) {
             this.selectedImages = data
+        },
+        cloneProduct( id, title ){
+            this.cloneProductData.id = id;
+            this.cloneProductData.title = title;
+        },
+        yesClone(){
+            let vm = this;
+            vm.btnLoader = true;
+           axios
+            .post(this.api_url + "inventory/products/clone", vm.cloneProductData )
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchProducts()
+                return swal({
+                    title: "Success",
+                    text: 'Product Cloned Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
         },
         addMoreSelectedImages(data){
             let vm = this;
@@ -342,11 +420,13 @@ export default {
         },
         colorGallery(data) {
             this.selectedColor = data.color;
+            this.imageAlt = data.alt;
         },
         changeHeroImage(data) {
             this.selectedColor = data.image;
             this.selectedType = data.type;
             this.colorId = data.id;
+            this.imageAlt = data.title
         },
         editProductVariantFun(data){
             this.editProductVariantData = data;
@@ -656,6 +736,35 @@ export default {
                     vm.parentAttributes = response.data.response.parent;
                 }).catch((err) => this.fetchAttributes());
         },
+        addNewClass( data ){
+                let vm = this;
+                vm.btnLoader = true;
+                axios
+                .post(this.api_url + "inventory/products/settings/shipping-classes", data)
+                .then((response) => {
+
+                    vm.clearDataTable()
+                    vm.btnLoader = false;
+
+                    vm.fetchShippingOptions();
+                    vm.$emit('saved', true);
+                    return swal({
+                        title: "Success",
+                        text:  'Shipping Classes Added Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text:  err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+            },
         addNewAttribute(data) {
             let vm = this;
             vm.btnLoader = true;

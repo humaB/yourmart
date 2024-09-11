@@ -52,6 +52,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/variations/update', [ ProductController::class , 'variationUpdate']);
         Route::post('/variations/change-status', [ ProductController::class , 'variationChangeStatus']);
 
+        Route::post('/clone',  [ ProductController::class , 'cloneProduct']);
+
         Route::post('/discounts/changed', [ ProductController::class , 'discountChanged']);
         Route::post('/up-sells/changed', [ ProductController::class , 'updateUpSells']);
         Route::post('/tags/changed', [ ProductController::class , 'updateTags']);

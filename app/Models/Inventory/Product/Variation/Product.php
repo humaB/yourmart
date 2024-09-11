@@ -86,4 +86,9 @@ class Product extends Model
         return $this->hasMany(ProductUpsellCrossSell::class, 'product_id', 'id')->where('type', 'bought togethers');
     }
 
+    public function images(){
+        return $this->hasMany(ProductVariationImage::class, 'product_id', 'id');
+    }
+
+
 }

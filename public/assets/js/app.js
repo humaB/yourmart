@@ -17,10 +17,11 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "//public/api/",
       name: "",
       email: "",
       password: "",
+      oldPassword: "",
       role: "Select from the followings..."
     };
   },
@@ -40,6 +41,7 @@ __webpack_require__.r(__webpack_exports__);
         name: this.name,
         email: this.email + "@ecomm.com",
         password: this.password,
+        oldPassword: this.oldPassword,
         role: this.role
       };
       vm.$emit("update", data);
@@ -72,7 +74,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "//public/api/",
       name: "",
       email: "",
       password: "",
@@ -134,7 +136,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      public_url: window.location.origin + "/"
     };
   },
   methods: {
@@ -185,8 +187,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: "/public/api/",
-      public_url: window.location.origin + ""
+      api_url: "//public/api/",
+      public_url: window.location.origin + "/"
     };
   },
   created: function created() {},
@@ -224,7 +226,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "//public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -454,6 +456,33 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
+      value: _vm.oldPassword,
+      expression: "oldPassword"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "password",
+      placeholder: "Please Enter your old password"
+    },
+    domProps: {
+      value: _vm.oldPassword
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.oldPassword = $event.target.value;
+      }
+    }
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group form-float col-md-12"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
+    staticClass: "input-group"
+  }, [_vm._m(8), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
       value: _vm.password,
       expression: "password"
     }],
@@ -472,7 +501,7 @@ var render = function render() {
         _vm.password = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm._m(7), _vm._v(" "), _c("small", {
+  })]), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("small", {
     staticClass: "form-text text-muted",
     attrs: {
       id: "passwordHelpBlock"
@@ -547,6 +576,24 @@ var staticRenderFns = [function () {
   }, [_c("div", {
     staticClass: "input-group-text"
   }, [_vm._v("@ecomm.com")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Old Password "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "input-group-prepend"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_c("i", {
+    staticClass: "fas fa-lock"
+  })])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

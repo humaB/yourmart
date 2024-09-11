@@ -14,9 +14,10 @@
                 <div class="modal-body row">
                     <div class="col-md-5">
                         <label for=""><b>Upload File</b> <code> ( If image is not available in gallery )</code></label>
-                        <input type="file" class="form-control" @change="setImage($event)">
-                        <code>Maximum upload file size: 25 MB</code>
-                        <code>Recommended Size for Size is 800 x 800 </code>
+                        <input type="file" class="form-control" @change="setImage($event)" multiple>
+                        <code>Maximum upload file size: 25 MB</code><br>
+                        <code>Recommended dimension for Size is 800 x 800 </code><br>
+                        <code>Recommended Size for Size is 0.5MB </code>
 
                     </div>
                     <div class="col-md-5">
@@ -46,7 +47,7 @@
                                             <input v-else type="radio" :value="image" class="imagecheck-input"
                                                 v-model="heroImage" />
                                             <span class="imagecheck-figure">
-                                                <img :src="public_url + 'storage/uploads/inventory/products/media/'+ image.attachment"
+                                                <img :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
                                                     :alt="image.alt" class="imagecheck-image" />
                                             </span>
                                         </label>
@@ -67,14 +68,14 @@
 <script>
 export default {
     name: 'AddProductImage',
-    props: ['selectedColor', 'colors', 'loader', 'attachments' ,'type' , 'colorId'],
+    props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             selectedImagesByColor: {},
             selectedImages: [],
             heroImage: {},
-            image: '',
+            images: [],
             alt: ''
         }
     },
@@ -99,20 +100,17 @@ export default {
         });
     },
     methods: {
-        setImage(event) {
-            this.image = event.target.files[0];
-        },
         addSelectedImages() {
             if (this.selectedColor == 'Hero') {
-                if( this.type && this.type == 'edit'){
+                if (this.type && this.type == 'edit') {
                     this.$emit('changeSelectedHeroImage', this.heroImage);
-                }else{
+                } else {
                     this.$emit('addSelectedHeroImages', this.heroImage);
                 }
             } else {
-                if( this.type && this.type == 'colorEdit'){
-                    this.$emit('addMoreSelectedImages', { images : this.selectedImagesByColor, id : this.colorId});
-                }else{
+                if (this.type && this.type == 'colorEdit') {
+                    this.$emit('addMoreSelectedImages', { images: this.selectedImagesByColor, id: this.colorId });
+                } else {
                     this.$emit('addSelectedImages', this.selectedImagesByColor);
                 }
             }
@@ -123,10 +121,21 @@ export default {
                 timer: 3000,
             });
         },
+        setImage(event) {
+            // Clear the existing images array to prevent appending on multiple selects
+            this.images = [];
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                this.images.push(files[i]); // Store each selected file in the images array
+            }
+        },
+
         uploadAttachment() {
-            let vm = this;
+            const vm = this;
             const fd = new FormData();
-            if (vm.image == '') {
+
+            // Check if any images are selected
+            if (vm.images.length === 0) {
                 return swal({
                     title: "Error",
                     text: "Please select image first, thanks",
@@ -134,10 +143,17 @@ export default {
                     timer: 3000,
                 });
             }
-            fd.append('image', vm.image);
+
+            // Append each image to FormData as 'images[]'
+            vm.images.forEach((image, index) => {
+                fd.append('images[]', image); // 'images[]' allows multiple files to be sent as an array
+            });
+
+            // Append the alt text to FormData
             fd.append('alt', vm.alt);
 
-            vm.$emit('uploadAttachment', fd)
+            // Emit the FormData to the parent component or handle it with an API request
+            vm.$emit('uploadAttachment', fd);
         },
         close() {
             this.image = '';
@@ -145,8 +161,8 @@ export default {
             $("input[type=file]").val('');
         },
         reset() {
-            this.selectedImagesByColor= {};
-            this.heroImage= {};
+            this.selectedImagesByColor = {};
+            this.heroImage = {};
 
             this.updateSelectedImagesByColor(this.colors);
         },
@@ -162,8 +178,14 @@ export default {
     },
     watch: {
         colors(newColors) {
+            this.alt = this.imageAlt;
+            console.log(this.imageAlt);
+
             // Call the method to handle color updates
             this.updateSelectedImagesByColor(newColors);
+        },
+        imageAlt(newAlt) {
+            this.alt = this.imageAlt;
         }
     },
 

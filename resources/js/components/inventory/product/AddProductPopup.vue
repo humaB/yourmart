@@ -191,12 +191,20 @@
                                                     </div>
                                                     <div class="tab-pane fade row" id="contact4" role="tabpanel"
                                                         aria-labelledby="contact-tab4">
-                                                        <div class="col-md-12 mt-4">
-                                                            <p>Shipping Class <span class="text-danger">( optional
-                                                                    )</span></p>
-                                                            <v-select :options="shippingOptions"
-                                                                v-model="selectedShipping">
-                                                            </v-select>
+                                                        <div class="col-md-12 mt-4 row">
+                                                            <div class="col-md-12 d-flex justify-content-between">
+                                                                <p>Shipping Class <span class="text-danger">( optional
+                                                                        )</span></p>
+                                                                        <a href="#" data-toggle="modal" data-target="#addShippingClass"
+                                                                         class="btn btn-outline-primary"
+                                                                        style="height: 15px; line-height: 1px; padding: 6px; float: right">Add
+                                                                        New</a>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <v-select :options="shippingOptions"
+                                                                    v-model="selectedShipping">
+                                                                </v-select>
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -570,7 +578,7 @@ export default {
             this[attribute] = !this[attribute];
         },
         addImage(color) {
-            this.$emit('color', { color })
+            this.$emit('color', { color, alt : this.title })
         },
         removeImage(color, index) {
             if (this.images[color]) {

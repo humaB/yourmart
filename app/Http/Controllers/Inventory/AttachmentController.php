@@ -34,11 +34,25 @@ class AttachmentController extends Controller
 
             $userId = auth()->user()->id;
 
-            ProductAttachment::create([
-                'alt'          => $request->alt,
-                'attachment'   => $this->image( $request->image),
-                'added_by'     => $userId
-            ]);
+            // Get the uploaded images
+            $images = $request->file('images');
+
+            $uploadedPaths = [];
+            if ($images && is_array($images)) {
+                foreach ($images as $image) {
+                    // Process and store each image
+                    $uploadedPath = $this->image($image);
+
+                    // Save the image information in the database
+                    ProductAttachment::create([
+                        'alt'          => $request->alt,
+                        'attachment'   => $uploadedPath,
+                        'added_by'     => $userId,
+                    ]);
+
+                    $uploadedPaths[] = $uploadedPath;
+                }
+            }
 
             return response()->json(['message' => 'Attachment Uploaded successfully'], 201);
         });

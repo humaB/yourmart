@@ -261,7 +261,7 @@
                                                 </ul>
                                             </td>
                                             <td>
-                                                <button class="btn btn-primary" data-toggle="modal" data-target="#uploadProductImage" @click="addImage(variation.color.name, 'colorEdit', variation.id)">Add Images</button>
+                                                <button class="btn btn-primary" data-toggle="modal" data-target="#uploadProductImage" @click="addImage(variation.color ? variation.color.name : 'Blank', 'colorEdit', variation.id)">Add Images</button>
                                                 <button class="btn btn-primary" @click="editProductVariant(variation)" data-toggle="modal" data-target="#editProductVariant"><i class="fa fa-edit"></i> Edit</button>
                                             </td>
 
@@ -517,7 +517,7 @@ export default {
     },
     methods: {
         addImage(image, type, id = null) {
-            this.$emit('changeImage', { image , type, id })
+            this.$emit('changeImage', { image , type, id, title : this.product.title })
         },
         changeStatus( data ){
             this.$emit('changeStatus', {id : this.product.id , status : data});

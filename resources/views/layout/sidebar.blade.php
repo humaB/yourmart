@@ -18,6 +18,10 @@
             @include('layout.admin_sidebar.admin_sidebar')
         @endif
 
+        @if( auth()->user()->role == 'dob')
+            @include('layout.admin_sidebar.admin_sidebar')
+        @endif
+
     </aside>
     <div style="height: 100px"></div>
 </div>

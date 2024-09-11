@@ -72,6 +72,8 @@ class UserController extends Controller
             'name'  => 'required|max:255',
             'email' => 'required|email',
             'role'  => 'required',
+            'password' => 'nullable|min:4',
+            'oldPassword' => 'required_with:password', // Custom validation for old password
         ]);
 
         $validation = $this->validation($validator);
@@ -91,6 +93,12 @@ class UserController extends Controller
             return (new ValidationCollection(['This email is already registered!']))
             ->response()
             ->setStatusCode(400);
+        }
+
+        if ($request->password && !\Hash::check($request->oldPassword, $user->password)) {
+            return (new ValidationCollection(['Incorrect old password!']))
+                ->response()
+                ->setStatusCode(400);
         }
 
         // Update user data

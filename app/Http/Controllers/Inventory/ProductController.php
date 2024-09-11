@@ -176,7 +176,7 @@ class ProductController extends Controller
                 }
             }
 
-            if ( $request->crossSells && $request->filled('crossSells')) {
+            if ($request->crossSells && $request->filled('crossSells')) {
                 foreach ($request->input('crossSells') as $crossSellProductCode) {
                     if ($crossSellProductCode != 'undefined') {
                         ProductUpsellCrossSell::create([
@@ -189,7 +189,7 @@ class ProductController extends Controller
                 }
             }
 
-            if ( $request->boughtTogethers && $request->filled('boughtTogethers')) {
+            if ($request->boughtTogethers && $request->filled('boughtTogethers')) {
                 foreach ($request->input('boughtTogethers') as $boughtTogetherProductCode) {
                     if ($boughtTogetherProductCode != 'undefined') {
                         ProductUpsellCrossSell::create([
@@ -222,8 +222,7 @@ class ProductController extends Controller
                 foreach ($sizes as $size) {
                     $this->createProductVariation($product, null, $size, $request->input('regularPrice'), $request->input('salePrice'), $userID);
                 }
-            }
-            else {
+            } else {
                 // Case 4: Neither colors nor sizes are available
                 $this->createProductVariation($product, null, null, $request->input('regularPrice'), $request->input('salePrice'), $userID);
             }
@@ -252,7 +251,7 @@ class ProductController extends Controller
             // Handle Sale Schedule
             if ($request->filled('saleSchedule')) {
                 $schedule = json_decode($request->input('saleSchedule'), true);
-                if( $schedule['status'] ){
+                if ($schedule['status']) {
                     ProductSaleSchedule::create([
                         'product_id' => $product->id,
                         'from' => $schedule['from'],
@@ -299,6 +298,143 @@ class ProductController extends Controller
         return $lock;
     }
 
+    public function cloneProduct(Request $request)
+    {
+        $lock = Cache::lock('clone_product')->block(7, function () use ($request) {
+
+            $validator = \Validator::make($request->all(), [
+                'id' => 'required|integer|exists:inventory_products,id', // ID of the product to be cloned
+            ]);
+
+            $validation = $this->validation($validator);
+            if ($validation) {
+                return $validation;
+            }
+
+            $userID = auth()->user()->id;
+
+            // Fetch the existing product
+            $existingProduct = Product::with(['attributes', 'tags', 'up_sells', 'cross_sells', 'bought_togethers', 'variations', 'images', 'saleSchedule', 'discounts', 'dimensions'])
+                ->findOrFail($request->id);
+
+            // Create the new product
+            $product = Product::create([
+                'title' => $existingProduct->title . ' - Clone',
+                'slug' => SlugHelper::generateSlug($existingProduct->title . '-clone'),
+                'short_description'   => $existingProduct->short_description,
+                'brand_id'            => $existingProduct->brand_id,
+                'category_id'         => $existingProduct->category_id,
+                'shipping_method_id'  => $existingProduct->shipping_method_id,
+                'hero_image'          => $existingProduct->hero_image,
+                'video_link'          => $existingProduct->video_link,
+                'product_description' => $existingProduct->product_description,
+                'product_highlight' => $existingProduct->product_highlight,
+                'warranty'      => $existingProduct->warranty,
+                'max_quantity'  => $existingProduct->max_quantity,
+                'quantity_step' => $existingProduct->quantity_step,
+                'status'   => $existingProduct->status,
+                'added_by' => $userID,
+            ]);
+
+            $product->update([
+                'title' => $existingProduct->title . ' - Clone' . $product->id,
+                'slug' => SlugHelper::generateSlug($existingProduct->title . '-clone' . $product->id),
+            ]);
+
+            // Clone attributes
+            foreach ($existingProduct->attributes as $attribute) {
+                ProductAttribute::create([
+                    'product_id' => $product->id,
+                    'attribute_id' => $attribute->attribute_id,
+                    'added_by' => $userID,
+                ]);
+            }
+
+            // Clone tags
+            foreach ($existingProduct->tags as $tag) {
+                ProductTag::create([
+                    'product_id' => $product->id,
+                    'tag_id' => $tag->tag_id,
+                    'added_by' => $userID,
+                ]);
+            }
+
+            // Clone upsells, crossSells, and boughtTogethers
+            foreach (['up_sells', 'cross_sells', 'bought_togethers'] as $relation) {
+                foreach ($existingProduct->$relation as $relatedProduct) {
+                    ProductUpsellCrossSell::create([
+                        'product_id' => $product->id,
+                        'type' => $relatedProduct->type,
+                        'reference_product_id' => $relatedProduct->reference_product_id,
+                        'added_by' => $userID,
+                    ]);
+                }
+            }
+
+            // Clone variations
+            foreach ($existingProduct->variations as $variation) {
+                $newVariation = $this->createProductVariation(
+                    $product,
+                    $variation->color_id,
+                    $variation->size_id,
+                    $variation->regular_price,
+                    $variation->sale_price,
+                    $userID
+                );
+
+                // Clone variation images
+                foreach ($variation->images as $image) {
+                    ProductVariationImage::create([
+                        'product_id' => $product->id,
+                        'product_variation_id' => $newVariation,
+                        'image_id' => $image->image_id,
+                        'added_by' => $userID,
+                    ]);
+                }
+            }
+
+            // Clone sale schedules
+            if ($existingProduct->saleSchedule) {
+                $schedule = $existingProduct->saleSchedule;
+                ProductSaleSchedule::create([
+                    'product_id' => $product->id,
+                    'from' => $schedule->from,
+                    'to' => $schedule->to,
+                    'price' => $schedule->price,
+                    'added_by' => $userID,
+                ]);
+            }
+
+            // Clone discounts per quantity
+            if($existingProduct->discountsPerQty){
+                $discount = $existingProduct->discountsPerQty;
+                ProductDiscountPerQty::create([
+                    'product_id' => $product->id,
+                    'quantity' => $discount->quantity,
+                    'price' => $discount->price,
+                    'added_by' => $userID,
+                ]);
+            }
+         
+            // Clone dimensions
+            if ($existingProduct->dimensions) {
+                ProductDimension::create([
+                    'product_id' => $product->id,
+                    'weight' => $existingProduct->dimensions->weight,
+                    'length' => $existingProduct->dimensions->length,
+                    'height' => $existingProduct->dimensions->height,
+                    'width' => $existingProduct->dimensions->width,
+                    'added_by' => $userID,
+                ]);
+            }
+
+            return response()->json(['message' => 'Product cloned successfully', 'product_id' => $product->id], 201);
+        });
+
+        return $lock;
+    }
+
+
     // Helper function to create a product variation
     private function createProductVariation($product, $color, $size, $regularPrice, $salePrice, $userID)
     {
@@ -317,9 +453,12 @@ class ProductController extends Controller
         $variation->update([
             'sku' => SlugHelper::generateSku($product, $color, $size, $variation->id),
         ]);
+
+        return $variation->id;
     }
 
-    public function update( Request $request ){
+    public function update(Request $request)
+    {
         $productId = $request->input('id'); // Assuming you're passing the product ID
         $lock = Cache::lock('update_product_' . $productId)->block(7, function () use ($request, $productId) {
             // Get the field and value from the request
@@ -338,8 +477,8 @@ class ProductController extends Controller
 
                 if ($existingProduct) {
                     return (new ValidationCollection(['This title is already used by another product']))
-                    ->response()
-                    ->setStatusCode(421);
+                        ->response()
+                        ->setStatusCode(421);
                 }
 
                 // Update the title and also update the slug
@@ -361,7 +500,8 @@ class ProductController extends Controller
         return $lock;
     }
 
-    public function variationUpdate( Request $request ){
+    public function variationUpdate(Request $request)
+    {
         $variationId = $request->details['id']; // The current variation being updated
 
         // Fetch the existing variation
@@ -388,8 +528,8 @@ class ProductController extends Controller
 
             if ($existingVariation) {
                 return (new ValidationCollection(['This color and size combination already exists for this product.']))
-                ->response()
-                ->setStatusCode(421);
+                    ->response()
+                    ->setStatusCode(421);
             }
         }
 
@@ -406,7 +546,7 @@ class ProductController extends Controller
             // Generate SKU based on available data
             $product = Product::find($variation->product_id);
             $variation->update([
-                'sku' => SlugHelper::generateSku($product,$newColorId, $newSizeId, $variation->id),
+                'sku' => SlugHelper::generateSku($product, $newColorId, $newSizeId, $variation->id),
             ]);
         });
 
@@ -492,11 +632,11 @@ class ProductController extends Controller
         $type     = $request->type;
         $products = $request->products;
 
-        if($type == 'upsell'){
+        if ($type == 'upsell') {
             $type = 'upsell';
-        }else if( $type == 'crossSell' ){
+        } else if ($type == 'crossSell') {
             $type = 'cross sell';
-        }else{
+        } else {
             $type = 'bought togethers';
         }
         // Loop through each product
@@ -533,7 +673,7 @@ class ProductController extends Controller
         $type     = $request->type;
         $products = $request->products;
 
-        if($type == 'tags'){
+        if ($type == 'tags') {
             // Loop through each product
             foreach ($products as $product) {
                 if ($product != 'undefined') {
@@ -550,8 +690,8 @@ class ProductController extends Controller
                     );
                 }
             }
-        }else{
-                // Loop through each product
+        } else {
+            // Loop through each product
             foreach ($products as $product) {
                 if ($product != 'undefined') {
 

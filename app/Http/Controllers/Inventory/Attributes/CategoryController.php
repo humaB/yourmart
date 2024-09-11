@@ -18,13 +18,12 @@ class CategoryController extends Controller
         $parent = Category::with('user', 'parent:id,name')->where('parent_id', '0')->select('id as code', 'name as label')->get();
 
         $categories = Category::with('user', 'parent:id,name')
-        ->where('parent_id', '!=', '0')
         ->select('id as code', 'name as label', 'parent_id')
         ->get()
         ->map(function ($category) {
             // Concatenate parent name with label
             if ($category->parent) {
-                $category->label = $category->parent->name . ' - ' . $category->label;
+                $category->label = ($category->parent->name ? $category->parent->name . ' - ' : '') . $category->label;
             }
             return $category;
         });
