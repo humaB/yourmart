@@ -54,6 +54,21 @@
                             <label for=""><b>Action</b></label><br>
                             <button class="btn btn-primary w-100"><i class="fa fa-filter"></i>Filter</button>
                         </div>
+
+                        <div class="col-md-6 mt-2">
+                            <label for=""><b>Multiple Action</b></label>
+                            <select name="" id="" class="form-control" v-model="multipleAction">
+                                <option value="">Choose from following</option>
+                                <option value="Published">Published</option>
+                                <option value="Save in draft">Save in draft</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-2">
+                            <label for=""><b>Action</b></label><br>
+                            <button class="btn btn-primary w-100" @click="multipleActionFunc()" v-if="!btnLoader">Perform Action</button>
+                            <button class="btn btn-primary w-100 btn-progress disabled" v-else>Perform Action</button>
+                        </div>
+
                         <div class="col-md-12 mt-3">
                             <div class="card">
                                 <div class="card-body">
@@ -64,6 +79,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Sr #</th>
+                                                            <th>Checked</th>
                                                             <th>Product Title</th>
                                                             <th>Short Description</th>
                                                             <th>Status</th>
@@ -75,6 +91,21 @@
                                                     <tbody>
                                                         <tr v-for="(item, index) in products" :key="item.id">
                                                             <td>{{ index + 1 }}</td>
+                                                            <td>
+
+                                                                    <div class="pretty p-default p-round p-thick">
+                                                                        <input
+                                                                        type="checkbox"
+                                                                        class="form-control custom-checkbox"
+                                                                        v-model="selectedProducts"
+                                                                        :value="item.id"
+                                                                    >
+                                                                        <div class="state p-primary-o">
+
+                                                                        </div>
+                                                                      </div>
+
+                                                            </td>
                                                             <td>{{ item.title }}</td>
                                                             <td>{{ item.short_description }}</td>
                                                             <td>
@@ -305,7 +336,9 @@ export default {
             activeProductVariantStatus : '',
             selectedType : '',
             colorId : '',
-            imageAlt : ''
+            imageAlt : '',
+            selectedProducts : [],
+            multipleAction : ''
         };
     },
     created() {
@@ -336,6 +369,45 @@ export default {
         cloneProduct( id, title ){
             this.cloneProductData.id = id;
             this.cloneProductData.title = title;
+        },
+        multipleActionFunc(){
+            let vm = this;
+            if( vm.multipleAction == ''){
+                return swal({
+                    title: "Required",
+                    text: 'Please select some action first',
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            const data = {
+                products :  vm.selectedProducts,
+                action   : vm.multipleAction
+            }
+            vm.btnLoader = true;
+           axios
+            .post(this.api_url + "inventory/products/change-statuses", data )
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchProducts()
+                this.selectedProducts = [];
+                vm.multipleAction = "";
+                return swal({
+                    title: "Success",
+                    text: 'Product Status Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
         },
         yesClone(){
             let vm = this;
@@ -651,6 +723,15 @@ export default {
                         title: "Success",
                         text: 'Media File Uploaded',
                         icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
                         timer: 3000,
                     });
                 });
@@ -1092,3 +1173,10 @@ export default {
 
 }
 </script>
+<style scoped>
+.custom-checkbox {
+    width: 16px;  /* Adjust the width as needed */
+    height: 16px; /* Adjust the height as needed */
+    transform: scale(0.8); /* You can also use scale to adjust the size */
+}
+</style>

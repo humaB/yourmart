@@ -136,7 +136,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -188,7 +188,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       api_url: "/public/api/",
-      public_url: window.location.origin + "/"
+      public_url: window.location.origin + ""
     };
   },
   created: function created() {},

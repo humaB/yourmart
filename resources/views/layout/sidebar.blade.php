@@ -19,7 +19,7 @@
         @endif
 
         @if( auth()->user()->role == 'dob')
-            @include('layout.admin_sidebar.admin_sidebar')
+            @include('layout.dob_sidebar.dob_sidebar')
         @endif
 
     </aside>

@@ -36,6 +36,12 @@ class ProductController extends Controller
             ->setStatusCode(200);
     }
 
+    public function changeStatus( Request $request ){
+        Product::whereIn('id', $request->products)->update([
+           'status' => $request->action == 'Published' ? '0' : '1'
+        ]);
+    }
+
     public function dropDown(Request $request)
     {
         $products = Product::orderBy('id', 'desc')
@@ -415,7 +421,7 @@ class ProductController extends Controller
                     'added_by' => $userID,
                 ]);
             }
-         
+
             // Clone dimensions
             if ($existingProduct->dimensions) {
                 ProductDimension::create([
