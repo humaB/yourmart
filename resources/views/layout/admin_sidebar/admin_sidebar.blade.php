@@ -11,6 +11,17 @@
 
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                class="fa fa-bell"></i><span>Request's</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('request.dropshipper') }}">
+                        <i data-feather="file-text"></i>Dropshippers</a></li>
+                    <li><a class="nav-link" href="#">
+                        <i data-feather="file-text"></i>Suppliers</a></li>
+                </ul>
+    </li>
+
+    <li class="dropdown">
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
                 class="fa fa-cog"></i><span>Setting's</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('inventory.products.moq') }}">

@@ -11,6 +11,7 @@ use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
 use App\Http\Controllers\Inventory\ProductController;
+use App\Http\Controllers\User\DropShipperController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -39,8 +40,15 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::post('/update',  [ UserController::class , 'update']);
 });
 
-Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
 
+Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], function(){
+    Route::get('/',  [ DropShipperController::class , 'getRequests']);
+    Route::post('/',  [ DropShipperController::class , 'store']);
+    Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
+    Route::post('/update',  [ DropShipperController::class , 'update']);
+});
+
+Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
 
     Route::group(['prefix' => 'products'], function(){
 

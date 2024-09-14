@@ -180,8 +180,8 @@ export default {
             // Filter images based on alt or attachment (title)
             return this.attachments.filter(image => {
                  // Ensure image properties are not null and handle undefined values
-                 const alt = (image.alt || '').toLowerCase();
-                const attachment = (image.attachment || '').toLowerCase();
+                const alt = (image.alt || '').toLowerCase();
+                const attachment = (image.title || '').toLowerCase();
 
                 return (
                     alt.includes(query) ||

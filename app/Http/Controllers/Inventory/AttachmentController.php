@@ -48,6 +48,7 @@ class AttachmentController extends Controller
 
                     // Save the image information in the database
                     ProductAttachment::create([
+                        'title'        => $uploadedPath,
                         'alt'          => $request->alt,
                         'attachment'   => $uploadedPath,
                         'added_by'     => $userId,

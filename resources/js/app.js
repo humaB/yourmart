@@ -25,6 +25,7 @@ Vue.component("v-select", vSelect);
 
 Vue.component('dashboard-page', require('./pages/DashboardPage.vue').default );
 Vue.component('users-page', require('./pages/admin/user/UserPage.vue').default );
+Vue.component('dropshipper-requests', require('./pages/admin/request/DropShipperRequestPage.vue').default );
 
 const app = new Vue({
     el: '#app',

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
+use App\Http\Controllers\User\DropShipperController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,5 +48,11 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
             Route::get('/shipping-classes', [ProductShippingClassController::class, 'index'])->name('inventory.products.shipping_classes');
         });
     });
+});
+
+Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
+    Route::get('/dropshippers', [DropShipperController::class, 'index'])->name('request.dropshipper');
+    Route::post('/dropshippers/pdf', [DropShipperController::class, 'pdf']);
+    //Route::get('/suppliers', [ProductController::class, 'index']);
 });
 
