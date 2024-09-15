@@ -26,12 +26,6 @@ return new class extends Migration
             $table->string('account_number');
             $table->string('account_title');
 
-            // Optional Fields
-            $table->string('store_name')->nullable();
-            $table->string('store_url')->nullable();
-            $table->string('social_media_profile_link')->nullable();
-            $table->text('business_description')->nullable();
-
             // Image Fields
             $table->string('cnic_front_image')->nullable();
             $table->string('cnic_back_image')->nullable();
@@ -39,8 +33,23 @@ return new class extends Migration
 
             $table->smallInteger('status');
 
+            $table->bigInteger('user_id')->default(0);
+
             $table->timestamps();
         });
+
+        Schema::create('drop_shipper_shops', function (Blueprint $table) {
+            $table->id();
+            $table->bigInteger('dropshipper_id');
+            $table->string('store_name');
+            // Optional Fields
+            $table->string('store_url')->nullable();
+            $table->string('social_media_profile_link')->nullable();
+            $table->text('business_description')->nullable();
+            $table->timestamps();
+        });
+
+
 
         Schema::create('banks', function (Blueprint $table) {
             $table->id();
@@ -65,5 +74,6 @@ return new class extends Migration
         Schema::dropIfExists('banks');
         Schema::dropIfExists('cities');
         Schema::dropIfExists('drop_shippers');
+        Schema::dropIfExists('drop_shipper_shops');
     }
 };

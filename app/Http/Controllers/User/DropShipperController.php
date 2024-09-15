@@ -4,8 +4,10 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
+use App\Models\User;
 use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use TCPDF;
 include(public_path().'/assets/tcpdf/tcpdf.php');
 
@@ -31,6 +33,28 @@ class DropShipperController extends Controller
         return ( new ResponseCollection ( $dropshippers  ) )
         ->response()
         ->setStatusCode( 200 );
+    }
+
+    public function decision( Request $request ){
+
+        $dropshipper = DropShipper::where('id', $request->id)->first();
+
+        if($request->action != 'reject'){
+            $user = User::create([
+                'name'     => $dropshipper->full_name,
+                'email'    => $dropshipper->email,
+                'password' => $dropshipper->password,
+                'role'     => 'dropshipper',
+                'allowed_ip_address' => '*'
+            ]);
+        }
+
+        $dropshipper->update([
+            'user_id' => $user->id ?? 0,
+            'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
+        ]);
+
+        return ['message', 'successfully updated'];
     }
 
     public function pdf(Request $request)

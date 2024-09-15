@@ -22,6 +22,10 @@
             @include('layout.dob_sidebar.dob_sidebar')
         @endif
 
+        @if( auth()->user()->role == 'dailer')
+            @include('layout.other_sidebar.dailer_sidebar')
+        @endif
+
     </aside>
     <div style="height: 100px"></div>
 </div>

@@ -10,6 +10,7 @@ use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
+use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\User\DropShipperController;
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::get('/',  [ DropShipperController::class , 'getRequests']);
     Route::post('/',  [ DropShipperController::class , 'store']);
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
-    Route::post('/update',  [ DropShipperController::class , 'update']);
+    Route::post('/decisions',  [ DropShipperController::class , 'decision']);
 });
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
@@ -113,6 +114,13 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::get('/',  [ TagController::class , 'fetchTags']);
             Route::post('/',  [ TagController::class , 'store']);
             Route::post('/update',  [ TagController::class , 'update']);
+        });
+
+
+        Route::group(['prefix' => 'orders'], function(){
+            Route::get('/',  [ OrderController::class , 'fetchOrders']);
+            Route::post('/details',  [ OrderController::class , 'details']);
+            Route::post('/comments',  [ OrderController::class , 'comment']);
         });
 
         Route::group(['prefix' => 'settings'], function(){

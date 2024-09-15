@@ -17,6 +17,11 @@
                                         <option selected disabled>Select from the followings...</option>
                                         <option value="admin">Admin</option>
                                         <option value="doe">Data Entry Operator</option>
+                                        <option value="dailer">Dailer</option>
+                                        <option value="inventory manager">Inventory Manager</option>
+                                        <option value="q&a">Q & A</option>
+                                        <option value="dispatcher">Dispatcher</option>
+                                        <option value="autidor">Auditor</option>
                                     </select>
                                 </div>
                             </div>

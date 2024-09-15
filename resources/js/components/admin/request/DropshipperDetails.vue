@@ -117,8 +117,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success">Approve</button>
-                    <button type="button" class="btn btn-danger">Reject</button>
+                    <button type="button" class="btn btn-success" @click="decision('approve')" v-if="!loader">Approve</button>
+                    <button type="button" class="btn btn-success btn-progress disabled"  v-else>Approve</button>
+
+
+                    <button type="button" class="btn btn-danger" @click="decision('reject')">Reject</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -129,11 +132,11 @@
 <script>
 export default {
     name: 'DropshipperDetails',
-    props: {
-        details: {
-            type: Object,
-            required: true
-        }
+    props: ['details', 'loader'],
+    methods : {
+      decision(action){
+        this.$emit('decision', { id : this.details.id , action })
+      }
     }
 }
 </script>

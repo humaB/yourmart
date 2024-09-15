@@ -74,10 +74,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperDetails',
-  props: {
-    details: {
-      type: Object,
-      required: true
+  props: ['details', 'loader'],
+  methods: {
+    decision: function decision(action) {
+      this.$emit('decision', {
+        id: this.details.id,
+        action: action
+      });
     }
   }
 });
@@ -342,6 +345,21 @@ __webpack_require__.r(__webpack_exports__);
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
+    decision: function decision(data) {
+      var _this = this;
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "dropshippers/decisions", data).then(function (response) {
+        vm.fetchRecord();
+        _this.btnLoader = false;
+        return swal({
+          title: "Success",
+          text: 'Decision Made Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      });
+    },
     fetchRecord: function fetchRecord() {
       var vm = this;
       vm.loader = false;
@@ -361,81 +379,12 @@ __webpack_require__.r(__webpack_exports__);
         vm.details = response.data.response[0];
       });
     },
-    fetchForEditDetail: function fetchForEditDetail(id) {
-      var vm = this;
-      axios.post(this.api_url + "inventory/products/settings/shipping-classes/edit-details", {
-        id: id
-      }).then(function (response) {
-        vm.editDetails = response.data.response[0];
-      });
-    },
-    changeStatus: function changeStatus(data) {
-      var vm = this;
-      axios.post(this.api_url + "inventory/products/settings/shipping-classes/change-status", data).then(function (response) {
-        vm.fetchRecord();
-        vm.activeStatus = !vm.activeStatus;
-      });
-    },
-    onlyNumber: function onlyNumber($event) {
-      var keyCode = $event.keyCode ? $event.keyCode : $event.which;
-      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
-        // 46 is dot
-        $event.preventDefault();
-      }
-    },
     dataTable: function dataTable() {
       $("#moq_table").DataTable();
     },
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
       table.destroy();
-    },
-    addNewClass: function addNewClass(data) {
-      var vm = this;
-      vm.btnLoader = true;
-      axios.post(this.api_url + "inventory/products/settings/shipping-classes", data).then(function (response) {
-        vm.clearDataTable();
-        vm.btnLoader = false;
-        vm.fetchRecord();
-        vm.$emit('saved', true);
-        return swal({
-          title: "Success",
-          text: 'Shipping Classes Added Successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        vm.btnLoader = false;
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
-          icon: "error",
-          timer: 3000
-        });
-      });
-    },
-    editClass: function editClass(data) {
-      var vm = this;
-      vm.btnLoader = true;
-      axios.post(this.api_url + "inventory/products/settings/shipping-classes/edit", data).then(function (response) {
-        vm.clearDataTable();
-        vm.btnLoader = false;
-        vm.fetchRecord();
-        return swal({
-          title: "Success",
-          text: 'Shipping Classes Updated Successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        vm.btnLoader = false;
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
-          icon: "error",
-          timer: 3000
-        });
-      });
     }
   }
 });
@@ -679,7 +628,40 @@ var render = function render() {
       src: "http://localhost/dropshipping-frontend/public/storeage/uploads/dropshipper/".concat(_vm.details.cnic_back_image),
       alt: "CNIC Back Image"
     }
-  })]) : _vm._e()]), _vm._v(" "), _vm._m(7)])])]);
+  })]) : _vm._e()]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-success",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.decision("approve");
+      }
+    }
+  }, [_vm._v("Approve")]) : _c("button", {
+    staticClass: "btn btn-success btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Approve")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.decision("reject");
+      }
+    }
+  }, [_vm._v("Reject")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -726,28 +708,6 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("p", [_c("strong", [_vm._v("CNIC Back Image:")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-footer"
-  }, [_c("button", {
-    staticClass: "btn btn-success",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Approve")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-danger",
-    attrs: {
-      type: "button"
-    }
-  }, [_vm._v("Reject")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-secondary",
-    attrs: {
-      type: "button",
-      "data-dismiss": "modal"
-    }
-  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -829,7 +789,27 @@ var render = function render() {
     attrs: {
       value: "doe"
     }
-  }, [_vm._v("Data Entry Operator")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Data Entry Operator")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "dailer"
+    }
+  }, [_vm._v("Dailer")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "inventory manager"
+    }
+  }, [_vm._v("Inventory Manager")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "q&a"
+    }
+  }, [_vm._v("Q & A")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "dispatcher"
+    }
+  }, [_vm._v("Dispatcher")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "autidor"
+    }
+  }, [_vm._v("Auditor")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
   }, [_c("div", {
     staticClass: "form-line"
@@ -1143,7 +1123,27 @@ var render = function render() {
     attrs: {
       value: "dob"
     }
-  }, [_vm._v("Data Entry Operator")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Data Entry Operator")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "dailer"
+    }
+  }, [_vm._v("Dailer")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "inventory manager"
+    }
+  }, [_vm._v("Inventory Manager")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "q&a"
+    }
+  }, [_vm._v("Q & A")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "dispatcher"
+    }
+  }, [_vm._v("Dispatcher")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "autidor"
+    }
+  }, [_vm._v("Auditor")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
   }, [_c("div", {
     staticClass: "form-line"
@@ -1523,7 +1523,9 @@ var render = function render() {
       staticClass: "badge badge-warning"
     }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
       staticClass: "badge badge-success"
-    }, [_vm._v("Approved")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_vm._v("Approved")]) : _vm._e(), _vm._v(" "), item.status == 2 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",
@@ -1552,7 +1554,13 @@ var render = function render() {
     })])])]);
   }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
-      details: _vm.details
+      details: _vm.details,
+      loader: _vm.btnLoader
+    },
+    on: {
+      decision: function decision($event) {
+        return _vm.decision($event);
+      }
     }
   }), _vm._v(" "), _c("form", {
     ref: "requestForm",

@@ -29,6 +29,7 @@
                                                 <td>
                                                     <span v-if="item.status == 0" class="badge badge-warning">Pending</span>
                                                     <span v-if="item.status == 1" class="badge badge-success">Approved</span>
+                                                    <span v-if="item.status == 2" class="badge badge-danger">Rejected</span>
                                                 </td>
                                                 <td>{{ formatDate(item.created_at) }}</td>
                                                 <td>
@@ -53,6 +54,8 @@
 
           <DropshipperDetails
             :details="details"
+            :loader="btnLoader"
+            @decision="decision($event)"
           />
 
                 <!-- Summary PRINT -->
@@ -111,6 +114,23 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
             formatDate(date) {
                  return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
             },
+            decision( data ){
+                let vm = this;
+
+                vm.btnLoader = true;
+                axios
+                .post(this.api_url + "dropshippers/decisions",data)
+                .then((response) => {
+                    vm.fetchRecord();
+                    this.btnLoader = false;
+                    return swal({
+                        title: "Success",
+                        text:  'Decision Made Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+            },
             fetchRecord(){
                 let vm = this;
 
@@ -135,31 +155,6 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                     vm.details = response.data.response[0]
                 });
             },
-            fetchForEditDetail( id ){
-                let vm = this;
-
-                axios
-                .post(this.api_url + "inventory/products/settings/shipping-classes/edit-details", { id })
-                .then((response) => {
-                    vm.editDetails = response.data.response[0]
-                });
-            },
-            changeStatus( data ){
-                let vm = this;
-                axios
-                .post(this.api_url + "inventory/products/settings/shipping-classes/change-status", data )
-                .then((response) => {
-                   vm.fetchRecord();
-                   vm.activeStatus = !vm.activeStatus;
-                });
-            },
-            onlyNumber($event) {
-                let keyCode = $event.keyCode ? $event.keyCode : $event.which;
-                if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
-                    // 46 is dot
-                    $event.preventDefault();
-                }
-            },
             dataTable(){
                 $("#moq_table").DataTable();
             },
@@ -167,64 +162,6 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                 const table = $("#moq_table").DataTable();
                 table.destroy();
             },
-            addNewClass( data ){
-                let vm = this;
-                vm.btnLoader = true;
-                axios
-                .post(this.api_url + "inventory/products/settings/shipping-classes", data)
-                .then((response) => {
-
-                    vm.clearDataTable()
-                    vm.btnLoader = false;
-
-                    vm.fetchRecord();
-                    vm.$emit('saved', true);
-                    return swal({
-                        title: "Success",
-                        text:  'Shipping Classes Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text:  err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-            },
-            editClass( data ){
-                let vm = this;
-                vm.btnLoader = true;
-                axios
-                .post(this.api_url + "inventory/products/settings/shipping-classes/edit", data)
-                .then((response) => {
-
-                    vm.clearDataTable()
-                    vm.btnLoader = false;
-
-                    vm.fetchRecord();
-
-                    return swal({
-                        title: "Success",
-                        text:  'Shipping Classes Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text:  err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-            }
         }
     }
 </script>
