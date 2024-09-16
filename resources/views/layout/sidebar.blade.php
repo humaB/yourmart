@@ -22,9 +22,21 @@
             @include('layout.dob_sidebar.dob_sidebar')
         @endif
 
-        @if( auth()->user()->role == 'dailer')
+        @if( auth()->user()->role == 'order collection')
             @include('layout.other_sidebar.dailer_sidebar')
         @endif
+
+    @if( auth()->user()->role == 'inventory issuance')
+        @include('layout.other_sidebar.dailer_sidebar')
+    @endif
+
+    @if( auth()->user()->role == 'qc')
+        @include('layout.other_sidebar.dailer_sidebar')
+    @endif
+
+    @if( auth()->user()->role == 'packing & dispatch')
+        @include('layout.other_sidebar.dailer_sidebar')
+    @endif
 
     </aside>
     <div style="height: 100px"></div>

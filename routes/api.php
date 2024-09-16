@@ -130,6 +130,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::get('/',  [ OrderController::class , 'fetchOrders']);
             Route::post('/details',  [ OrderController::class , 'details']);
             Route::post('/comments',  [ OrderController::class , 'comment']);
+
+            Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
         });
 
         Route::group(['prefix' => 'settings'], function(){

@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       name: '',
       image: '',
       description: ''
@@ -238,7 +238,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -316,7 +316,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       name: '',
       hex: '',
       image: ''
@@ -403,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -642,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1124,7 +1124,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1169,6 +1169,18 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    getImageUrl: function getImageUrl(imageId) {
+      // Check if the image is null
+      if (!imageId) {
+        return this.public_url + '/assets/img/blank_image.jpg';
+      }
+      return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
+    },
+    forward: function forward() {
+      this.$emit('forward', {
+        id: this.details.id
+      });
+    },
     formatDate: function formatDate(date) {
       return date ? moment(date).fromNow() : 'N/A';
     },
@@ -1729,7 +1741,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2092,7 +2104,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3032,7 +3044,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3068,6 +3080,25 @@ __webpack_require__.r(__webpack_exports__);
         id: id
       }).then(function (response) {
         vm.details = response.data.response[0];
+      });
+    },
+    forward: function forward(data) {
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/orders/update-status", data).then(function (response) {
+        vm.fetchOrders();
+        vm.commentLoader = false;
+        vm.$emit('commentAdded', true);
+        setTimeout(function () {
+          $("#ticket").modal('hide');
+        }, 2000);
+        return swal({
+          title: "Success",
+          text: "Forwarded successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.commentLoader = false;
       });
     },
     addComment: function addComment(data) {
@@ -3132,7 +3163,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3245,7 +3276,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -6566,10 +6597,10 @@ var render = function render() {
     staticClass: "modal-content"
   }, [_c("div", {
     staticClass: "modal-header d-flex justify-content-between"
-  }, [_c("div", [_vm._v("\n                  Order # "), _c("b", [_vm._v(_vm._s(_vm.details ? _vm.details.id : ""))])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+  }, [_c("div", [_vm._v("\n                        Order # "), _c("b", [_vm._v(_vm._s(_vm.details ? _vm.details.id : ""))])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
     staticClass: "modal-body row"
   }, [_c("div", {
-    staticClass: "col-md-7"
+    staticClass: "col-md-8"
   }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
@@ -6590,7 +6621,7 @@ var render = function render() {
     staticClass: "card mb-3"
   }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-body"
-  }, [_c("p", [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier_service_id))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Total Bill:")]), _vm._v(" " + _vm._s(_vm.details.total_bill))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Status:")]), _vm._v(" " + _vm._s(_vm.details.status === 0 ? "Pending" : "Completed"))])])]), _vm._v(" "), _c("div", {
+  }, [_c("p", [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier_service_id))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Total Bill:")]), _vm._v(" " + _vm._s(_vm.details.total_bill))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Paid Amount:")]), _vm._v(" " + _vm._s(_vm.details.paid_amount))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Sell Price:")]), _vm._v(" " + _vm._s(_vm.details.selling_price))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Status:")]), _vm._v(" " + _vm._s(_vm.details.status === 0 ? "Pending" : "Completed"))])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
   }, [_vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "card-body"
@@ -6599,7 +6630,31 @@ var render = function render() {
   }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(item.variation.product.title))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price * item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))])]);
+    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price * item.quantity))]), _vm._v(" "), _c("td", {
+      staticClass: "text-truncate"
+    }, [_c("ul", {
+      staticClass: "list-unstyled order-list m-b-0 m-b-0"
+    }, _vm._l(item.variation.images, function (image) {
+      return _c("li", {
+        key: image.id,
+        staticClass: "team-member team-member-sm"
+      }, [_c("a", {
+        attrs: {
+          href: _vm.getImageUrl(image.attachment.attachment),
+          target: "_blank",
+          rel: "noopener noreferrer"
+        }
+      }, [_c("img", {
+        staticClass: "rounded-circle",
+        attrs: {
+          src: _vm.getImageUrl(image.attachment.attachment),
+          alt: "user",
+          "data-toggle": "tooltip",
+          title: "",
+          "data-original-title": ""
+        }
+      })])]);
+    }), 0)])]);
   }), 0)])])])]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
   }, [_c("p", [_c("span", [_c("i", {
@@ -6636,7 +6691,7 @@ var render = function render() {
         href: _vm.setImage(item.attachment),
         target: "_blank"
       }
-    }, [_vm._v(" " + _vm._s(_vm.truncatedAttachmentName(item.attachment)) + "\n                            ")])]);
+    }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(item.attachment)) + "\n                                                ")])]);
   }), 0) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
   }, [_c("div", {
@@ -6662,7 +6717,7 @@ var render = function render() {
     }
   }, [_c("h4", [_c("i", {
     "class": _vm.activityStatus ? "fas fa-chevron-down" : "fas fa-chevron-right"
-  }), _vm._v("\n                              " + _vm._s(_vm.activityStatus ? "Hide" : "Show") + " Activity Log\n                          ")])]), _vm._v(" "), _c("div", {
+  }), _vm._v("\n                                                " + _vm._s(_vm.activityStatus ? "Hide" : "Show") + " Activity Log\n                                            ")])]), _vm._v(" "), _c("div", {
     staticClass: "accordion-body collapse",
     attrs: {
       id: "panel-body-1",
@@ -6672,11 +6727,11 @@ var render = function render() {
     return _c("li", {
       key: item.id,
       staticClass: "mb-0"
-    }, [_vm._v("\n                                  " + _vm._s(_vm.getStatusMessage(item)) + " -  "), _c("small", {
+    }, [_vm._v("\n                                                    " + _vm._s(_vm.getStatusMessage(item)) + " - "), _c("small", {
       staticClass: "text-muted"
     }, [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-5"
+    staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
@@ -6749,7 +6804,7 @@ var render = function render() {
       staticClass: "text-muted"
     }, [_vm._v("Comment by "), _c("span", {
       staticClass: "font-weight-bold font-13"
-    }, [_vm._v(_vm._s(comment.user.name) + " ( " + _vm._s(comment.user.role) + " )")]), _vm._v("\n                          -" + _vm._s(_vm.formatDate(comment.created_at)))])])]);
+    }, [_vm._v(_vm._s(comment.user.name) + " ( " + _vm._s(comment.user.role) + " )")]), _vm._v("\n                                                   -" + _vm._s(_vm.formatDate(comment.created_at)))])])]);
   }), 0), _vm._v(" "), _c("div", {
     staticClass: "card-footer chat-form"
   }, [_c("form", {
@@ -6800,7 +6855,24 @@ var render = function render() {
     staticClass: "btn btn-primary btn-progress disabled"
   }, [_c("i", {
     staticClass: "far fa-paper-plane"
-  })])])])])])])]), _vm._v(" "), _vm._m(5)])])])]);
+  })])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.forward();
+      }
+    }
+  }, [_vm._v("\n                        Forward\n                    ")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled"
+  }, [_vm._v("\n                        Forward\n                    ")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("\n                        Close\n                    ")])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -6840,21 +6912,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product Title")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th", [_vm._v("Sell Price")])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-footer"
-  }, [_c("button", {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("\n                Forward\n            ")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-secondary",
-    attrs: {
-      type: "button",
-      "data-dismiss": "modal"
-    }
-  }, [_vm._v("\n            Close\n          ")])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th", [_vm._v("Images")])])]);
 }];
 render._withStripped = true;
 
@@ -7367,7 +7425,7 @@ var render = function render() {
     on: {
       click: _vm.toggleActivation
     }
-  }, [_vm._v("\r\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\r\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
+  }, [_vm._v("\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "button"
@@ -9425,6 +9483,9 @@ var render = function render() {
     on: {
       addComment: function addComment($event) {
         return _vm.addComment($event);
+      },
+      forward: function forward($event) {
+        return _vm.forward($event);
       }
     }
   })], 1);
@@ -11825,7 +11886,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\r\n    position: absolute;\r\n    top: 3px;\r\n    right: 3px;\r\n    background-color: rgba(255, 255, 255, 0.7);\r\n    border: none;\r\n    cursor: pointer;\r\n    padding: 5px;\r\n    border-radius: 50%;\r\n    font-size: 10px;\r\n    line-height: 1;\r\n    color: #ff0000;\r\n    /* red color for the icon */\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    background-color: rgba(255, 255, 255, 0.7);\n    border: none;\n    cursor: pointer;\n    padding: 5px;\n    border-radius: 50%;\n    font-size: 10px;\n    line-height: 1;\n    color: #ff0000;\n    /* red color for the icon */\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -11849,7 +11910,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\r\n    width: 16px;  /* Adjust the width as needed */\r\n    height: 16px; /* Adjust the height as needed */\r\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\n    width: 16px;  /* Adjust the width as needed */\n    height: 16px; /* Adjust the height as needed */\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

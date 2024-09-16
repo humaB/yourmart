@@ -23,8 +23,10 @@ return new class extends Migration
             $table->bigInteger('courier_service_id')->default(0);
             $table->bigInteger('shop_id')->default(0);
             $table->text('instructions')->nullable();
+            $table->text('order_note')->nullable();
             $table->string('total_bill');
             $table->string('paid_amount');
+            $table->string('selling_price');
             $table->smallInteger('status');
             $table->bigInteger('belongs_to');
             $table->timestamps();
@@ -36,7 +38,6 @@ return new class extends Migration
             $table->bigInteger('product_variation_id');
             $table->string('price');
             $table->string('quantity');
-            $table->string('selling_price');
             $table->bigInteger('belongs_to');
             $table->timestamps();
         });

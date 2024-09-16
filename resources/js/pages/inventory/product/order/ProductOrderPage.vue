@@ -47,7 +47,12 @@
             </div>
         </div>
 
-        <OrderDetailView :details="details" :loader="commentLoader" @addComment="addComment($event)" />
+        <OrderDetailView
+            :details="details"
+            :loader="commentLoader"
+            @addComment="addComment($event)"
+            @forward="forward($event)"
+        />
     </div>
 </template>
 <script>
@@ -107,6 +112,28 @@ export default {
                 .then((response) => {
                     vm.details = response.data.response[0]
                 });
+        },
+        forward( data ){
+            let vm = this;
+            axios.post(this.api_url + "inventory/products/orders/update-status", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.commentLoader = false;
+            vm.$emit('commentAdded', true);
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000)
+            return swal({
+                title: "Success",
+                text: "Forwarded successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.commentLoader = false;
+            });
         },
         addComment(data) {
             let vm = this;
