@@ -60,8 +60,12 @@ Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
     Route::get('/dropshippers', [DropShipperController::class, 'index'])->name('request.dropshipper');
     Route::post('/dropshippers/pdf', [DropShipperController::class, 'pdf']);
 
+    Route::group(['prefix' => '/orders'], function () {
+        Route::get('/', [DropShipperController::class, 'orderIndex'])->name('inventory.products.dropshipper.orders');
+    });
+
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('request.supplier');
     Route::post('/suppliers/pdf', [SupplierController::class, 'pdf']);
-    
+
 });
 

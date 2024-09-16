@@ -46,4 +46,8 @@ class Supplier extends Model
         return $this->hasOne(Bank::class,'id','bank_id');
     }
 
+    public function shops(){
+        return $this->hasMany(SupplierShop::class,'supplier_id','id');
+    }
+
 }

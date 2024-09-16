@@ -15,9 +15,8 @@ class OrderController extends Controller
         return view('inventory.product.order.orders');
     }
 
-    public function fetchOrders()
-
-    {   $userRole  = auth()->user()->role;
+    public function fetchOrders(){
+        $userRole  = auth()->user()->role;
           // Map roles to corresponding statuses
         $statusMap = [
             'order collection' => 0,    // Role for order collection
@@ -27,7 +26,11 @@ class OrderController extends Controller
         ];
 
 
-        $orders = Order::with('user')->where('status', $statusMap[$userRole])->get();
+        if( $userRole != 'admin'){
+            $orders = Order::with('user')->where('status', $statusMap[$userRole])->get();
+        }else{
+            $orders = Order::with('user')->get();
+        }
 
         return (new ResponseCollection($orders))
             ->response()

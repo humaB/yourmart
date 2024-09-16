@@ -25,7 +25,7 @@ class Order extends Model
         'total_bill',
         'paid_amount',
         'selling_price',
-        'status', // 0 => Dailer || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Delivered
+        'status', // 0 => Order Collection || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Delivered
         'belongs_to'
     ];
 

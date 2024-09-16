@@ -25,15 +25,8 @@
                                                     <tr v-for="(item, index) in orders" :key="item.id">
                                                         <td>{{ index + 1 }}</td>
                                                         <td>{{ item.id }}</td>
-                                                        <td>{{ item.user ? item.user.name : '' }}</td>
+                                                        <td>{{ item.total_bill }}</td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
-                                                        <td>
-                                                            <span class="badge badge-warning text-dark" v-if="item.status == 0">Order Collection</span>
-                                                            <span class="badge badge-info text-dark" v-else-if="item.status == 1">Inventory Issuance</span>
-                                                            <span class="badge badge-secondary" v-else-if="item.status == 2">QC</span>
-                                                            <span class="badge badge-success" v-else-if="item.status == 3">Packing/Dispatch</span>
-                                                            <span class="badge badge-sucess" v-else-if="item.status == 4">Delivered</span>
-                                                        </td>
                                                         <td>
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                 data-toggle="modal" data-target="#ticket"
@@ -54,11 +47,10 @@
             </div>
         </div>
 
-        <OrderDetailView
+        <DropshipperOrderDetailView
             :details="details"
             :loader="commentLoader"
             @addComment="addComment($event)"
-            @forward="forward($event)"
         />
     </div>
 </template>
@@ -66,23 +58,23 @@
 
 import { BulletListLoader } from "vue-content-loader";
 import moment from "moment";
-import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
-import OrderDetailView from "../../../../components/inventory/product/order/OrderDetailView.vue";
+import TableHeader from "../../../components/table/TableHeaderComponent.vue";
+import DropshipperOrderDetailView from "../../../components/admin/request/DropshipperOrderDetailView.vue";
 
 export default {
-    name: 'ProductOrderPage',
+    name: 'DropShipperOrderPage',
     components: {
         TableHeader,
         BulletListLoader,
-        OrderDetailView
+        DropshipperOrderDetailView
     },
     data() {
         return {
             api_url: window.location.origin + process.env.MIX_API_URL,
             tableHeader: {
-                heading: "Pending Orders",
+                heading: "Orders",
             },
-            th: ["Sr #", "Order #", "Belongs To", "Added Date", "Status","Action"],
+            th: ["Sr #", "Order #", "Amount", "Added Date", "Action"],
             table_id: "moq_table",
             btnLoader: false,
             orders: [],
@@ -103,7 +95,7 @@ export default {
 
             vm.loader = false;
             axios
-                .get(this.api_url + "inventory/products/orders")
+                .get(this.api_url + "dropshippers/orders")
                 .then((response) => {
                     vm.orders = response.data.response
 

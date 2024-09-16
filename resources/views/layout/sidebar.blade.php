@@ -38,6 +38,10 @@
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 
+    @if( auth()->user()->role == 'dropshipper')
+        @include('layout.other_sidebar.dropshipper_sidebar')
+    @endif
+
     </aside>
     <div style="height: 100px"></div>
 </div>

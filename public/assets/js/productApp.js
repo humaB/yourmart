@@ -3048,7 +3048,7 @@ __webpack_require__.r(__webpack_exports__);
       tableHeader: {
         heading: "Pending Orders"
       },
-      th: ["Sr #", "Order #", "Belongs To", "Added Date", "Action"],
+      th: ["Sr #", "Order #", "Belongs To", "Added Date", "Status", "Action"],
       table_id: "moq_table",
       btnLoader: false,
       orders: [],
@@ -6621,7 +6621,7 @@ var render = function render() {
     staticClass: "card mb-3"
   }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-body"
-  }, [_c("p", [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier_service_id))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Total Bill:")]), _vm._v(" " + _vm._s(_vm.details.total_bill))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Paid Amount:")]), _vm._v(" " + _vm._s(_vm.details.paid_amount))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Sell Price:")]), _vm._v(" " + _vm._s(_vm.details.selling_price))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Status:")]), _vm._v(" " + _vm._s(_vm.details.status === 0 ? "Pending" : "Completed"))])])]), _vm._v(" "), _c("div", {
+  }, [_c("p", [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier_service_id))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Total Bill:")]), _vm._v(" " + _vm._s(_vm.details.total_bill))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Paid Amount:")]), _vm._v(" " + _vm._s(_vm.details.paid_amount))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Sell Price:")]), _vm._v(" " + _vm._s(_vm.details.selling_price))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Order Notes:")]), _vm._v(" " + _vm._s(_vm.details.order_note))])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
   }, [_vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "card-body"
@@ -9460,7 +9460,17 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+      staticClass: "badge badge-warning text-dark"
+    }, [_vm._v("Order Collection")]) : item.status == 1 ? _c("span", {
+      staticClass: "badge badge-info text-dark"
+    }, [_vm._v("Inventory Issuance")]) : item.status == 2 ? _c("span", {
+      staticClass: "badge badge-secondary"
+    }, [_vm._v("QC")]) : item.status == 3 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Packing/Dispatch")]) : item.status == 4 ? _c("span", {
+      staticClass: "badge badge-sucess"
+    }, [_vm._v("Delivered")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",

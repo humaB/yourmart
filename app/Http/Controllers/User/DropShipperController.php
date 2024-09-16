@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
+use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
@@ -17,6 +18,35 @@ class DropShipperController extends Controller
         return view('user.dropshipper');
     }
 
+    public function orderIndex() {
+        return view('user.dropshipper_order');
+    }
+
+    public function orders(){
+        $orders = Order::with('user')->where('belongs_to', auth()->user()->id)->get();
+
+        return (new ResponseCollection($orders))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function orderDetail(Request $request){
+        $orders = Order::with(
+            'city',
+            'shop',
+            'user',
+            'items.variation.product',
+            'comments.user',
+            'items.variation.images.attachment',
+            'items.variation.color',
+            'items.variation.size'
+            )->where('id', $request->id)->get();
+
+        return (new ResponseCollection($orders))
+            ->response()
+            ->setStatusCode(200);
+    }
+
     public function getRequests() {
 
         $dropshippers = DropShipper::orderBy('id', 'desc')->get();
@@ -28,7 +58,7 @@ class DropShipperController extends Controller
 
     public function fetchDetails( Request $request ) {
 
-        $dropshippers = DropShipper::with('bank', 'city')->where('id', $request->id)->get();
+        $dropshippers = DropShipper::with('bank', 'city', 'shops')->where('id', $request->id)->get();
 
         return ( new ResponseCollection ( $dropshippers  ) )
         ->response()
@@ -126,25 +156,7 @@ class DropShipperController extends Controller
                 <td>' . ($details->city ? $details->city->name : 'N/A') . '</td>
             </tr>
         </table>
-        <br><h4>Business Information</h4>
-        <table cellpadding="5" cellspacing="0" border="1">
-            <tr>
-                <td><strong>Store Name</strong></td>
-                <td>' . ($details->store_name ?? 'N/A') . '</td>
-            </tr>
-            <tr>
-                <td><strong>Store URL</strong></td>
-                <td>' . ($details->store_url ?? 'N/A') . '</td>
-            </tr>
-            <tr>
-                <td><strong>Social Media Profile</strong></td>
-                <td>' . ($details->social_media_profile_link ?? 'N/A') . '</td>
-            </tr>
-            <tr>
-                <td><strong>Business Description</strong></td>
-                <td>' . ($details->business_description ?? 'N/A') . '</td>
-            </tr>
-        </table>
+
         <br><h4>Bank Information</h4>
         <table cellpadding="5" cellspacing="0" border="1">
             <tr>
@@ -159,8 +171,41 @@ class DropShipperController extends Controller
                 <td><strong>Account Title</strong></td>
                 <td>' . $details->account_title . '</td>
             </tr>
+            <tr>
+                <td><strong>Account Title</strong></td>
+                <td>' . $details->account_iban . '</td>
+            </tr>
+            <tr>
+                <td><strong>Account Title</strong></td>
+                <td>' . $details->payment_cycle . '</td>
+            </tr>
         </table>
         ';
+
+                // Add shops information in a loop
+if (!empty($details->shops)) {
+    foreach ($details->shops as $index => $shop) {
+        $html .= '<br><h4>Shop ' . ($index + 1) . ' Details</h4>
+        <table cellpadding="5" cellspacing="0" border="1">
+            <tr>
+                <td><strong>Store Name</strong></td>
+                <td>' . ($shop->store_name ?? 'N/A') . '</td>
+            </tr>
+            <tr>
+                <td><strong>Store URL</strong></td>
+                <td>' . ($shop->store_url ?? 'N/A') . '</td>
+            </tr>
+            <tr>
+                <td><strong>Social Media Profile</strong></td>
+                <td>' . ($shop->social_media_profile_link ?? 'N/A') . '</td>
+            </tr>
+            <tr>
+                <td><strong>Business Description</strong></td>
+                <td>' . ($shop->business_description ?? 'N/A') . '</td>
+            </tr>
+        </table>';
+    }
+}
 
         // Output the HTML content to the PDF
         $pdf->writeHTML($html, true, false, true, false, '');

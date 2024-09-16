@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" id="dropShipperDetail" tabindex="-1" role="dialog" aria-labelledby="dropShipperDetailTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="dropShipperDetailTitle">Details of {{ details.full_name }}</h5>
@@ -52,29 +52,35 @@
                             <hr>
                         </div>
 
-                        <div class="col-md-3 col-6">
-                            <strong>Store Name:</strong>
-                            <br>
-                            <p class="text-muted">{{ details.store_name || 'N/A' }}</p>
-                          </div>
-
-                          <div class="col-md-3 col-6">
+                        <div class="col-md-12 row" v-for="(shop, index) in details.shops" :key="shop.id">
+                            <div class="col-md-12">
+                              <h5>Shop {{ index + 1 }} Details</h5>
+                              <hr>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>Store Name:</strong>
+                                <br>
+                                <p class="text-muted">{{ shop.store_name || 'N/A' }}</p>
+                              </div>
+                            <div class="col-md-3 col-6">
                               <strong>Store URL:</strong>
                               <br>
-                              <p class="text-muted">{{ details.store_url || 'N/A' }}</p>
+                              <p class="text-muted">{{ shop.store_url || 'N/A' }}</p>
                             </div>
 
                             <div class="col-md-3 col-6">
                               <strong>Social Media Link:</strong>
                               <br>
-                              <p class="text-muted">{{ details.social_media_profile_link || 'N/A' }}</p>
+                              <p class="text-muted">{{ shop.social_media_profile_link || 'N/A' }}</p>
                             </div>
 
                             <div class="col-md-12 col-12">
-                                <strong>Business Description:</strong>
-                                <br>
-                                <p class="text-muted">{{ details.business_description || 'N/A' }}</p>
-                              </div>
+                              <strong>Business Description:</strong>
+                              <br>
+                              <p class="text-muted">{{ shop.business_description || 'N/A' }}</p>
+                            </div>
+                          </div>
+
 
                               <div class="col-md-12">
                                 <h5>Account Information</h5>
@@ -98,6 +104,16 @@
                                   <br>
                                   <p class="text-muted">{{ details.account_title || 'N/A' }}</p>
                                 </div>
+                                <div class="col-md-3 col-6">
+                                    <strong>Account IBAN</strong>
+                                    <br>
+                                    <p class="text-muted">{{ details.account_iban || 'N/A' }}</p>
+                                  </div>
+                                  <div class="col-md-3 col-6">
+                                    <strong>Payment Cycle</strong>
+                                    <br>
+                                    <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
+                                  </div>
 
                       </div>
 

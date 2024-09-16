@@ -25,7 +25,8 @@ return new class extends Migration
             $table->bigInteger('bank_id');
             $table->string('account_number');
             $table->string('account_title');
-
+            $table->string('account_iban')->nullable();
+            $table->string('payment_cycle');
             // Image Fields
             $table->string('cnic_front_image')->nullable();
             $table->string('cnic_back_image')->nullable();

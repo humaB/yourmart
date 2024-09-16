@@ -44,4 +44,8 @@ class DropShipper extends Model
         return $this->hasOne(Bank::class,'id','bank_id');
     }
 
+    public function shops(){
+        return $this->hasMany(DropShipperShop::class,'dropshipper_id','id');
+    }
+
 }

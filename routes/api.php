@@ -48,6 +48,8 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/',  [ DropShipperController::class , 'store']);
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
+
+    Route::get('/orders',  [ DropShipperController::class , 'orders']);
 });
 
 

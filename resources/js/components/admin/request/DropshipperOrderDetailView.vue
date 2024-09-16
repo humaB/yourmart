@@ -224,12 +224,6 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-primary" @click="forward()" v-if="!loader">
-                            Forward
-                        </button>
-                        <button class="btn btn-primary btn-progress disabled"  v-else>
-                            Forward
-                        </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>
@@ -243,7 +237,7 @@
 <script>
 
 export default {
-    name: "OrderDetailView",
+    name: "DropshipperOrderDetailView",
     props: ["details", "loader", "id", 'role', 'statuses', 'users'],
 
     data() {

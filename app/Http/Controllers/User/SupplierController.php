@@ -29,7 +29,7 @@ class SupplierController extends Controller
 
     public function fetchDetails( Request $request ) {
 
-        $suppliers = Supplier::with('bank', 'city')->where('id', $request->id)->get();
+        $suppliers = Supplier::with('bank', 'city','shops')->where('id', $request->id)->get();
 
         return ( new ResponseCollection ( $suppliers  ) )
         ->response()
@@ -61,7 +61,7 @@ class SupplierController extends Controller
     public function pdf(Request $request)
     {
         // Fetch the DropShipper details with related bank and city data
-        $details = Supplier::with('bank', 'city')->findOrFail($request->id);
+        $details = Supplier::with('bank', 'city', 'shops')->findOrFail($request->id);
 
         // Create new PDF document
         $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -127,25 +127,7 @@ class SupplierController extends Controller
                 <td>' . ($details->city ? $details->city->name : 'N/A') . '</td>
             </tr>
         </table>
-        <br><h4>Business Information</h4>
-        <table cellpadding="5" cellspacing="0" border="1">
-            <tr>
-                <td><strong>Store Name</strong></td>
-                <td>' . ($details->store_name ?? 'N/A') . '</td>
-            </tr>
-            <tr>
-                <td><strong>Store URL</strong></td>
-                <td>' . ($details->store_url ?? 'N/A') . '</td>
-            </tr>
-            <tr>
-                <td><strong>Social Media Profile</strong></td>
-                <td>' . ($details->social_media_profile_link ?? 'N/A') . '</td>
-            </tr>
-            <tr>
-                <td><strong>Business Description</strong></td>
-                <td>' . ($details->business_description ?? 'N/A') . '</td>
-            </tr>
-        </table>
+
         <br><h4>Bank Information</h4>
         <table cellpadding="5" cellspacing="0" border="1">
             <tr>
@@ -160,8 +142,42 @@ class SupplierController extends Controller
                 <td><strong>Account Title</strong></td>
                 <td>' . $details->account_title . '</td>
             </tr>
+              <tr>
+                <td><strong>Account Title</strong></td>
+                <td>' . $details->account_iban . '</td>
+            </tr>
+            <tr>
+                <td><strong>Account Title</strong></td>
+                <td>' . $details->payment_cycle . '</td>
+            </tr>
         </table>
+        <br><h4>Business Information</h4>
         ';
+
+        // Add shops information in a loop
+if (!empty($details->shops)) {
+    foreach ($details->shops as $index => $shop) {
+        $html .= '<br><h4>Shop ' . ($index + 1) . ' Details</h4>
+        <table cellpadding="5" cellspacing="0" border="1">
+            <tr>
+                <td><strong>Store Name</strong></td>
+                <td>' . ($shop->store_name ?? 'N/A') . '</td>
+            </tr>
+            <tr>
+                <td><strong>Store URL</strong></td>
+                <td>' . ($shop->store_url ?? 'N/A') . '</td>
+            </tr>
+            <tr>
+                <td><strong>Social Media Profile</strong></td>
+                <td>' . ($shop->social_media_profile_link ?? 'N/A') . '</td>
+            </tr>
+            <tr>
+                <td><strong>Business Description</strong></td>
+                <td>' . ($shop->business_description ?? 'N/A') . '</td>
+            </tr>
+        </table>';
+    }
+}
 
         // Output the HTML content to the PDF
         $pdf->writeHTML($html, true, false, true, false, '');
