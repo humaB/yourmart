@@ -1,9 +1,9 @@
 <template>
-    <div class="modal fade" id="dropShipperDetail" tabindex="-1" role="dialog" aria-labelledby="dropShipperDetailTitle" aria-hidden="true">
+    <div class="modal fade" id="supplierDetail" tabindex="-1" role="dialog" aria-labelledby="suppliersDetailTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="dropShipperDetailTitle">Details of {{ details.full_name }}</h5>
+                    <h5 class="modal-title" id="suppliersDetailTitle">Details of {{ details.full_name }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -107,28 +107,28 @@
                        <div class="col-md-4">
                         <div v-if="details.profile_image" class="mt-5">
                           <p><strong>Profile Image:</strong></p>
-                          <img :src="`${web_url}public/storage/uploads/dropshipper/${details.profile_image}`" alt="Profile Image" class="img-fluid">
+                          <img :src="`${web_url}public/storage/uploads/supplier/${details.profile_image}`" alt="Profile Image" class="img-fluid">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div v-if="details.cnic_front_image" class="mt-5">
                           <p><strong>CNIC Front Image:</strong></p>
-                          <img :src="`${web_url}public/storage/uploads/dropshipper/${details.cnic_front_image}`" alt="CNIC Front Image" class="img-fluid">
+                          <img :src="`${web_url}public/storage/uploads/supplier/${details.cnic_front_image}`" alt="CNIC Front Image" class="img-fluid">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div v-if="details.cnic_back_image" class="mt-5">
                           <p><strong>CNIC Back Image:</strong></p>
-                          <img :src="`${web_url}public/storage/uploads/dropshipper/${details.cnic_back_image}`" alt="CNIC Back Image" class="img-fluid">
+                          <img :src="`${web_url}public/storage/uploads/supplier/${details.cnic_back_image}`" alt="CNIC Back Image" class="img-fluid">
                         </div>
                       </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button v-if="details.status == 0" type="button" class="btn btn-success" :class="loader ? 'btn-progress disabled' : ''" @click="decision('approve')">Approve</button>
-                    <button v-if="details.status == 0" type="button" class="btn btn-danger" :class="loader ? 'btn-progress disabled' : ''" @click="decision('reject')">Reject</button>
+                  <button v-if="details.status == 0" type="button" class="btn btn-success" :class="loader ? 'btn-progress disabled' : ''" @click="decision('approve')">Approve</button>
+                  <button v-if="details.status == 0" type="button" class="btn btn-danger" :class="loader ? 'btn-progress disabled' : ''" @click="decision('reject')">Reject</button>
 
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -137,7 +137,7 @@
 
 <script>
 export default {
-    name: 'DropshipperDetails',
+    name: 'SupplierDetails',
     props: ['details', 'loader'],
     data() {
           return {

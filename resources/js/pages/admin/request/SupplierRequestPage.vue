@@ -33,7 +33,7 @@
                                                 </td>
                                                 <td>{{ formatDate(item.created_at) }}</td>
                                                 <td>
-                                                    <button class="btn btn-info" @click="fetchDetail( item.id )" data-toggle="modal" data-target="#dropShipperDetail" title="View Details"><i class="fa fa-eye"></i></button>
+                                                    <button class="btn btn-info" @click="fetchDetail( item.id )" data-toggle="modal" data-target="#supplierDetail" title="View Details"><i class="fa fa-eye"></i></button>
                                                     <button class="btn btn-dark" @click="printRequest( item.id )" title="Print"><i class="fa fa-print"></i></button>
 
                                                 </td>
@@ -52,14 +52,14 @@
             </div>
           </div>
 
-          <DropshipperDetails
+          <SupplierDetails
             :details="details"
             :loader="btnLoader"
             @decision="decision($event)"
           />
 
                 <!-- Summary PRINT -->
-        <form method="POST" :action="public_url+'/requests/dropshippers/pdf'" target="_blank" ref="requestForm">
+        <form method="POST" :action="public_url+'/requests/suppliers/pdf'" target="_blank" ref="requestForm">
             <input type="hidden" name="_token" :value="csrf" >
             <input type="hidden" name="id" :value="id" >
         </form>
@@ -70,21 +70,21 @@
 import { BulletListLoader } from "vue-content-loader";
 import moment from "moment";
 import TableHeader from "../../../components/table/TableHeaderComponent.vue";
-import DropshipperDetails from "../../../components/admin/request/DropshipperDetails.vue";
+import SupplierDetails from "../../../components/admin/request/SupplierDetails.vue";
 
     export  default {
-        name : 'DropShipperRequestPage',
+        name : 'SupplierRequestPage',
         components : {
             TableHeader,
             BulletListLoader,
-            DropshipperDetails
+            SupplierDetails
         },
         data() {
             return {
                 public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
                 api_url : window.location.origin + process.env.MIX_API_URL,
                 tableHeader: {
-                    heading: "Dropshipper Request's",
+                    heading: "Supplier Request's",
                 },
                 th: ["Sr #","Name", "email", "Status", "Added Date", "Action"],
                 table_id: "moq_table",
@@ -119,7 +119,7 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
 
                 vm.btnLoader = true;
                 axios
-                .post(this.api_url + "dropshippers/decisions",data)
+                .post(this.api_url + "suppliers/decisions",data)
                 .then((response) => {
                     vm.fetchRecord();
                     $(".modal").click();
@@ -137,7 +137,7 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
 
                 vm.loader = false;
                 axios
-                .get(this.api_url + "dropshippers")
+                .get(this.api_url + "suppliers")
                 .then((response) => {
                     vm.records = response.data.response
 
@@ -151,7 +151,7 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                 vm.activeStatus = status;
 
                 axios
-                .post(this.api_url + "dropshippers/details", { id })
+                .post(this.api_url + "suppliers/details", { id })
                 .then((response) => {
                     vm.details = response.data.response[0]
                 });

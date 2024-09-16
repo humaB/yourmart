@@ -8,6 +8,7 @@ use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\User\DropShipperController;
+use App\Http\Controllers\User\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -58,6 +59,9 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
 Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
     Route::get('/dropshippers', [DropShipperController::class, 'index'])->name('request.dropshipper');
     Route::post('/dropshippers/pdf', [DropShipperController::class, 'pdf']);
-    //Route::get('/suppliers', [ProductController::class, 'index']);
+
+    Route::get('/suppliers', [SupplierController::class, 'index'])->name('request.supplier');
+    Route::post('/suppliers/pdf', [SupplierController::class, 'pdf']);
+    
 });
 

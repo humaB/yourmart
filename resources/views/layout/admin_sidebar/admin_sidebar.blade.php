@@ -15,7 +15,7 @@
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('request.dropshipper') }}">
                         <i data-feather="file-text"></i>Dropshippers</a></li>
-                    <li><a class="nav-link" href="#">
+                    <li><a class="nav-link" href="{{ route('request.supplier') }}">
                         <i data-feather="file-text"></i>Suppliers</a></li>
                 </ul>
     </li>

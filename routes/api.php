@@ -13,6 +13,7 @@ use App\Http\Controllers\Inventory\Attributes\TagController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\User\DropShipperController;
+use App\Http\Controllers\User\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -47,6 +48,14 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/',  [ DropShipperController::class , 'store']);
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
+});
+
+
+Route::group(['prefix' => 'suppliers','middleware' => 'auth:sanctum'], function(){
+    Route::get('/',  [ SupplierController::class , 'getRequests']);
+    Route::post('/',  [ SupplierController::class , 'store']);
+    Route::post('/details',  [ SupplierController::class , 'fetchDetails']);
+    Route::post('/decisions',  [ SupplierController::class , 'decision']);
 });
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
