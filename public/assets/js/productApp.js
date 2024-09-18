@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       image: '',
       description: ''
@@ -238,7 +238,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -316,7 +316,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       hex: '',
       image: ''
@@ -403,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -642,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1130,7 +1130,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/ds",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1747,7 +1747,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2110,7 +2110,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3076,7 +3076,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3195,7 +3195,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3308,7 +3308,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -7460,7 +7460,7 @@ var render = function render() {
     on: {
       click: _vm.toggleActivation
     }
-  }, [_vm._v("\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
+  }, [_vm._v("\r\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\r\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "button"

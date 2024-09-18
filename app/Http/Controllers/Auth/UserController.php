@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -13,6 +15,10 @@ class UserController extends Controller
 {
     public function index()
     {
+    //     Mail::to('malik.rehman7272@gmail.com')->send(new RegMail([
+    //         'name' => 'Demo',
+    //    ]));
+    //     return 'helo';
         $users = User::get();
 
         return view('auth.user.users', [
