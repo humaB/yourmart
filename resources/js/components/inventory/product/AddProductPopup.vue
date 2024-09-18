@@ -425,7 +425,7 @@
                                         </div>
                                         <div class="col-md-12 mt-3">
                                             <h5>Sale Price</h5>
-                                            <input type="text" class="form-control" v-model="salePrice">
+                                            <input type="text" class="form-control" v-model="salePrice" @keyup="discountPerQty[0].price = salePrice;">
                                             <code><a href="#" @click="schedule.status = !schedule.status">click to add schedule</a></code>
                                         </div>
                                         <div class="col-md-12 row border p-3" v-if="schedule.status">
@@ -500,7 +500,7 @@ export default {
             crossSell: {},
             boughtTogether: {},
             selectedAttributes: [],
-            discountPerQty: [{ quantity: 0, price: 0 },{ quantity: 0, price: 0 },{ quantity: 0, price: 0 }],
+            discountPerQty: [{ quantity: "1-20", price: 0 },{ quantity: "21-50", price: 0 },{ quantity: "50+", price: 0 }],
             selectedColors: [], // Tracks selected colors
             selectedTags: [],
             selectedSizes: [],
@@ -743,7 +743,7 @@ export default {
             this.crossSell = {};
             this.boughtTogether = {};
             this.selectedAttributes = [];
-            this.discountPerQty = [{ quantity: 0, price: 0 }];
+            this.discountPerQty = [{ quantity: "1-20", price: 0 },{ quantity: "21-50", price: 0 },{ quantity: "50+", price: 0 }];
             this.selectedColors = [];
             this.selectedTags = [];
             this.selectedSizes = [];

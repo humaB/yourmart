@@ -37,9 +37,42 @@ class ProductController extends Controller
     }
 
     public function changeStatus( Request $request ){
-        Product::whereIn('id', $request->products)->update([
-           'status' => $request->action == 'Published' ? '0' : '1'
-        ]);
+        if($request->action == "delete")
+        {
+            Product::whereIn('id', $request->products)->delete();
+        }
+        else
+        {
+            Product::whereIn('id', $request->products)->update([
+               'status' => $request->action == 'Published' ? '0' : '1'
+            ]);
+        }
+    }
+    
+    public function filterData( Request $request ){
+        
+        $categoryCode = $request->input('category.code'); // Assuming payload is from a request
+        $productName = $request->input('product');
+        $tagCode = $request->input('tag.code');
+
+        $products = Product::with('user:id,name')
+            ->when($categoryCode, function ($query, $categoryCode) {
+                return $query->where('category_id', $categoryCode);
+            })
+            ->when($productName, function ($query, $productName) {
+                return $query->where('title', 'like', "%{$productName}%");
+            })
+            ->when($tagCode, function ($query, $tagCode) {
+                return $query->whereHas('tags', function ($tagQuery) use ($tagCode) {
+                    $tagQuery->where('tag_id', $tagCode);
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return (new ResponseCollection($products))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function dropDown(Request $request)

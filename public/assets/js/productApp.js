@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       image: '',
       description: ''
@@ -238,7 +238,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -316,7 +316,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       hex: '',
       image: ''
@@ -403,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -642,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -666,13 +666,13 @@ __webpack_require__.r(__webpack_exports__);
       boughtTogether: {},
       selectedAttributes: [],
       discountPerQty: [{
-        quantity: 0,
+        quantity: "1-20",
         price: 0
       }, {
-        quantity: 0,
+        quantity: "21-50",
         price: 0
       }, {
-        quantity: 0,
+        quantity: "50+",
         price: 0
       }],
       selectedColors: [],
@@ -940,7 +940,13 @@ __webpack_require__.r(__webpack_exports__);
       this.boughtTogether = {};
       this.selectedAttributes = [];
       this.discountPerQty = [{
-        quantity: 0,
+        quantity: "1-20",
+        price: 0
+      }, {
+        quantity: "21-50",
+        price: 0
+      }, {
+        quantity: "50+",
         price: 0
       }];
       this.selectedColors = [];
@@ -1124,7 +1130,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/ds",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1741,7 +1747,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2104,7 +2110,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -2122,7 +2128,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         tag: {
           code: 0,
           label: "Select from the following"
-        }
+        },
+        product: ""
       },
       cloneProductData: {
         id: '',
@@ -2251,10 +2258,35 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         vm.multipleAction = "";
         return swal({
           title: "Success",
-          text: 'Product Status Updated Successfully',
+          text: 'Action applied successfully',
           icon: "success",
           timer: 3000
         });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: 'Oops, Something went wrong please try again',
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    filterData: function filterData() {
+      var vm = this;
+      if (vm.filter.category.code == 0 && vm.filter.tag.code == 0 && vm.filter.product == "") {
+        return swal({
+          title: "Required",
+          text: 'Please select some filter first',
+          icon: "error",
+          timer: 3000
+        });
+      }
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/filter-data", vm.filter).then(function (response) {
+        vm.btnLoader = false;
+        var results = response.data.response;
+        vm.products = results;
       })["catch"](function (err) {
         vm.btnLoader = false;
         return swal({
@@ -3044,7 +3076,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3163,7 +3195,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3276,7 +3308,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -5761,6 +5793,9 @@ var render = function render() {
       value: _vm.salePrice
     },
     on: {
+      keyup: function keyup($event) {
+        _vm.discountPerQty[0].price = _vm.salePrice;
+      },
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.salePrice = $event.target.value;
@@ -7425,7 +7460,7 @@ var render = function render() {
     on: {
       click: _vm.toggleActivation
     }
-  }, [_vm._v("\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
+  }, [_vm._v("\r\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\r\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "button"
@@ -8902,7 +8937,7 @@ var render = function render() {
     staticClass: "col-md-3"
   }, [_vm._m(1), _vm._v(" "), _c("v-select", {
     attrs: {
-      options: _vm.categories
+      options: _vm.categoriesDropDown
     },
     model: {
       value: _vm.filter.category,
@@ -8915,7 +8950,7 @@ var render = function render() {
     staticClass: "col-md-3"
   }, [_vm._m(2), _vm._v(" "), _c("v-select", {
     attrs: {
-      options: _vm.tags
+      options: _vm.tagsDropDown
     },
     model: {
       value: _vm.filter.tag,
@@ -8930,23 +8965,35 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.product,
-      expression: "product"
+      value: _vm.filter.product,
+      expression: "filter.product"
     }],
     staticClass: "form-control",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.product
+      value: _vm.filter.product
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.product = $event.target.value;
+        _vm.$set(_vm.filter, "product", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _vm._m(4), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_vm._m(4), _c("br"), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary w-100",
+    "class": _vm.btnLoader ? "btn-progress disabled" : "",
+    on: {
+      click: function click($event) {
+        return _vm.filterData();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-filter"
+  }), _vm._v("Filter")])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 mt-2"
   }, [_vm._m(5), _vm._v(" "), _c("select", {
     directives: [{
@@ -8983,7 +9030,12 @@ var render = function render() {
     attrs: {
       value: "Save in draft"
     }
-  }, [_vm._v("Save in draft")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Save in draft")]), _vm._v(" "), _c("option", {
+    staticClass: "text-danger",
+    attrs: {
+      value: "delete"
+    }
+  }, [_vm._v("Move To Trash")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 mt-2"
   }, [_vm._m(6), _c("br"), _vm._v(" "), !_vm.btnLoader ? _c("button", {
     staticClass: "btn btn-primary w-100",
@@ -9372,17 +9424,11 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-3"
-  }, [_c("label", {
+  return _c("label", {
     attrs: {
       "for": ""
     }
-  }, [_c("b", [_vm._v("Action")])]), _c("br"), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary w-100"
-  }, [_c("i", {
-    staticClass: "fa fa-filter"
-  }), _vm._v("Filter")])]);
+  }, [_c("b", [_vm._v("Action")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -11896,7 +11942,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    background-color: rgba(255, 255, 255, 0.7);\n    border: none;\n    cursor: pointer;\n    padding: 5px;\n    border-radius: 50%;\n    font-size: 10px;\n    line-height: 1;\n    color: #ff0000;\n    /* red color for the icon */\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\r\n    position: absolute;\r\n    top: 3px;\r\n    right: 3px;\r\n    background-color: rgba(255, 255, 255, 0.7);\r\n    border: none;\r\n    cursor: pointer;\r\n    padding: 5px;\r\n    border-radius: 50%;\r\n    font-size: 10px;\r\n    line-height: 1;\r\n    color: #ff0000;\r\n    /* red color for the icon */\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -11920,7 +11966,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\n    width: 16px;  /* Adjust the width as needed */\n    height: 16px; /* Adjust the height as needed */\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\r\n    width: 16px;  /* Adjust the width as needed */\r\n    height: 16px; /* Adjust the height as needed */\r\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

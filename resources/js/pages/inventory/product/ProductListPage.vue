@@ -35,24 +35,24 @@
 
                         <div class="col-md-3">
                             <label for=""><b>Filter By Category</b></label>
-                            <v-select :options="categories" v-model="filter.category">
+                            <v-select :options="categoriesDropDown" v-model="filter.category">
 
                             </v-select>
                         </div>
                         <div class="col-md-3">
                             <label for=""><b>Filter By Tag</b></label>
-                            <v-select :options="tags" v-model="filter.tag">
+                            <v-select :options="tagsDropDown" v-model="filter.tag">
 
                             </v-select>
                         </div>
 
                         <div class="col-md-3">
                             <label for=""><b>Search by Name</b></label>
-                            <input type="text" class="form-control" v-model="product">
+                            <input type="text" class="form-control" v-model="filter.product">
                         </div>
                         <div class="col-md-3">
                             <label for=""><b>Action</b></label><br>
-                            <button class="btn btn-primary w-100"><i class="fa fa-filter"></i>Filter</button>
+                            <button class="btn btn-primary w-100" :class="btnLoader ? 'btn-progress disabled' : ''" @click="filterData()"><i class="fa fa-filter"></i>Filter</button>
                         </div>
 
                         <div class="col-md-6 mt-2">
@@ -61,6 +61,7 @@
                                 <option value="">Choose from following</option>
                                 <option value="Published">Published</option>
                                 <option value="Save in draft">Save in draft</option>
+                                <option value="delete" class="text-danger">Move To Trash</option>
                             </select>
                         </div>
                         <div class="col-md-6 mt-2">
@@ -284,7 +285,8 @@ export default {
             product: '',
             filter: {
                 category: { code: 0, label: "Select from the following" },
-                tag: { code: 0, label: "Select from the following" }
+                tag: { code: 0, label: "Select from the following" },
+                product: "",
             },
             cloneProductData  : {
                 id : '',
@@ -415,10 +417,39 @@ export default {
                 vm.multipleAction = "";
                 return swal({
                     title: "Success",
-                    text: 'Product Status Updated Successfully',
+                    text: 'Action applied successfully',
                     icon: "success",
                     timer: 3000,
                 });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        filterData(){
+            let vm = this;
+            if( vm.filter.category.code == 0 && vm.filter.tag.code == 0 && vm.filter.product == ""){
+                return swal({
+                    title: "Required",
+                    text: 'Please select some filter first',
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            
+            vm.btnLoader = true;
+           axios
+            .post(this.api_url + "inventory/products/filter-data", vm.filter )
+            .then((response) => {
+                vm.btnLoader = false;
+                const results = response.data.response;
+                vm.products = results;
             }).catch((err) => {
                 vm.btnLoader = false;
                 return swal({

@@ -69,6 +69,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/update', [ ProductController::class , 'update']);
         Route::post('/details', [ ProductController::class , 'details']);
         Route::post('/change-statuses', [ ProductController::class , 'changeStatus']);
+        Route::post('/filter-data', [ ProductController::class , 'filterData']);
 
         Route::post('/drop-down', [ ProductController::class , 'dropDown']);
         Route::post('/variations/update', [ ProductController::class , 'variationUpdate']);
