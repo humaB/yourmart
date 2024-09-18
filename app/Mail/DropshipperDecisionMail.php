@@ -9,12 +9,14 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegMail extends Mailable
+class DropshipperDecisionMail extends Mailable
 {
     use Queueable, SerializesModels;
     public $mailData;
     /**
      * Create a new message instance.
+     *
+     * @return void
      */
     public function __construct($mailData)
     {
@@ -23,30 +25,34 @@ class RegMail extends Mailable
 
     /**
      * Get the message envelope.
+     *
+     * @return \Illuminate\Mail\Mailables\Envelope
      */
-    public function envelope(): Envelope
+    public function envelope()
     {
         return new Envelope(
-            subject: 'Request Decision',
+            subject: 'Dropshipper Decision Mail',
         );
     }
 
     /**
      * Get the message content definition.
+     *
+     * @return \Illuminate\Mail\Mailables\Content
      */
-    public function content(): Content
+    public function content()
     {
         return new Content(
-            view: 'emails.reg_mail',
+            view: 'emails.dropshipper_decision_mail',
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array
      */
-    public function attachments(): array
+    public function attachments()
     {
         return [];
     }

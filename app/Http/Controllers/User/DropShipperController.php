@@ -4,25 +4,32 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
+use App\Mail\DropshipperDecision;
+use App\Mail\DropshipperDecisionMail;
 use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use TCPDF;
-include(public_path().'/assets/tcpdf/tcpdf.php');
+
+include(public_path() . '/assets/tcpdf/tcpdf.php');
 
 class DropShipperController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return view('user.dropshipper');
     }
 
-    public function orderIndex() {
+    public function orderIndex()
+    {
         return view('user.dropshipper_order');
     }
 
-    public function orders(){
+    public function orders()
+    {
         $orders = Order::with('user')->where('belongs_to', auth()->user()->id)->get();
 
         return (new ResponseCollection($orders))
@@ -30,7 +37,8 @@ class DropShipperController extends Controller
             ->setStatusCode(200);
     }
 
-    public function orderDetail(Request $request){
+    public function orderDetail(Request $request)
+    {
         $orders = Order::with(
             'city',
             'shop',
@@ -40,36 +48,39 @@ class DropShipperController extends Controller
             'items.variation.images.attachment',
             'items.variation.color',
             'items.variation.size'
-            )->where('id', $request->id)->get();
+        )->where('id', $request->id)->get();
 
         return (new ResponseCollection($orders))
             ->response()
             ->setStatusCode(200);
     }
 
-    public function getRequests() {
+    public function getRequests()
+    {
 
         $dropshippers = DropShipper::orderBy('id', 'desc')->get();
 
-        return ( new ResponseCollection ( $dropshippers  ) )
-        ->response()
-        ->setStatusCode( 200 );
+        return (new ResponseCollection($dropshippers))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function fetchDetails( Request $request ) {
+    public function fetchDetails(Request $request)
+    {
 
         $dropshippers = DropShipper::with('bank', 'city', 'shops')->where('id', $request->id)->get();
 
-        return ( new ResponseCollection ( $dropshippers  ) )
-        ->response()
-        ->setStatusCode( 200 );
+        return (new ResponseCollection($dropshippers))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function decision( Request $request ){
+    public function decision(Request $request)
+    {
 
         $dropshipper = DropShipper::where('id', $request->id)->first();
 
-        if($request->action != 'reject'){
+        if ($request->action != 'reject') {
             $user = User::create([
                 'name'     => $dropshipper->full_name,
                 'email'    => $dropshipper->email,
@@ -84,7 +95,18 @@ class DropShipperController extends Controller
             'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
         ]);
 
-        return ['message', 'successfully updated'];
+        // Prepare the data
+        $mailData = [
+            'request'   => $dropshipper->id,
+            'full_name' => $dropshipper->full_name,
+            'whatsapp_number' => $dropshipper->whatsapp_number,
+            'address'         =>  $dropshipper->address,
+            'decision'        => $request->action
+        ];
+
+        Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
+
+        return ['message' => 'successfully updated'];
     }
 
     public function pdf(Request $request)
@@ -182,10 +204,10 @@ class DropShipperController extends Controller
         </table>
         ';
 
-                // Add shops information in a loop
-if (!empty($details->shops)) {
-    foreach ($details->shops as $index => $shop) {
-        $html .= '<br><h4>Shop ' . ($index + 1) . ' Details</h4>
+        // Add shops information in a loop
+        if (!empty($details->shops)) {
+            foreach ($details->shops as $index => $shop) {
+                $html .= '<br><h4>Shop ' . ($index + 1) . ' Details</h4>
         <table cellpadding="5" cellspacing="0" border="1">
             <tr>
                 <td><strong>Store Name</strong></td>
@@ -204,8 +226,8 @@ if (!empty($details->shops)) {
                 <td>' . ($shop->business_description ?? 'N/A') . '</td>
             </tr>
         </table>';
-    }
-}
+            }
+        }
 
         // Output the HTML content to the PDF
         $pdf->writeHTML($html, true, false, true, false, '');
@@ -213,44 +235,40 @@ if (!empty($details->shops)) {
         // Set PDF to display as inline in the browser
         $pdf->Output('dropshipper_form.pdf', 'I');
     }
-
 }
 
 class MYPDF extends TCPDF
+{
+
+    //Page header
+    public function Header()
     {
+        // Logo
+        // $image_file = K_PATH_IMAGES . '';
+        // $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // // Set font
+        $this->SetFont('helvetica', 'B', 14);
+        $this->Ln(5);
+        // Title
+        $this->Cell(0, 15, 'Dropshipper Form', 0, 1, 'L', 0, '', 0, false, 'M', 'M');
+        $this->SetFont('helvetica', '', 12);
 
-      //Page header
-      public function Header()
-      {
-          // Logo
-          // $image_file = K_PATH_IMAGES . '';
-          // $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-          // // Set font
-          $this->SetFont('helvetica', 'B', 14);
-          $this->Ln(5);
-          // Title
-          $this->Cell(0, 15, 'Dropshipper Form', 0, 1, 'L', 0, '', 0, false, 'M', 'M');
-          $this->SetFont('helvetica', '', 12);
+        $this->Cell(0, 0, "", 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
+    }
 
-          $this->Cell(0, 0, "" , 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
-
-      }
-
-      // Page footer
-      public function Footer()
-      {
+    // Page footer
+    public function Footer()
+    {
         $user_name = auth()->user()->name;
         $date_now = date('d-M-Y h:i A', strtotime(now()));
         $this->SetFont('times', '', 9);
         //   Position at 15 mm from bottom
         $this->Ln(-15);
         $this->SetFont('times', '', 8);
-        $this->Cell(0, 0,'"Errors and omissions excepted" (E&OE)', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $this->Cell(0, 0, '"Errors and omissions excepted" (E&OE)', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
         $this->SetFont('times', 'B', 9);
         $this->Cell(0, 0, 'Printed By : ' . $user_name . ' || ' . $date_now, 0, 1, 'C', 0, '', 0, false, 'T', 'M');
         $this->SetFont('times', '', 8);
-        $this->Cell(0, 0,'Developed By SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
-
-      }
+        $this->Cell(0, 0, 'Developed By SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
     }
-
+}
