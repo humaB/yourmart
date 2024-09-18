@@ -48,9 +48,9 @@ class ProductController extends Controller
             ]);
         }
     }
-    
+
     public function filterData( Request $request ){
-        
+
         $categoryCode = $request->input('category.code'); // Assuming payload is from a request
         $productName = $request->input('product');
         $tagCode = $request->input('tag.code');
@@ -681,18 +681,19 @@ class ProductController extends Controller
         // Loop through each product
         foreach ($products as $product) {
             if ($product != 'undefined') {
-
-                // Use updateOrCreate to update if exists or create a new record
-                ProductUpsellCrossSell::updateOrCreate(
-                    [
-                        'product_id' => $productId,
-                        'type'       => strtolower($type),
-                        'reference_product_id' => $product['code'] // assuming 'code' is 'reference_product_id'
-                    ],
-                    [
-                        'added_by' => auth()->user()->id
-                    ]
-                );
+                if( $product ){
+                    // Use updateOrCreate to update if exists or create a new record
+                    ProductUpsellCrossSell::updateOrCreate(
+                        [
+                            'product_id' => $productId,
+                            'type'       => strtolower($type),
+                            'reference_product_id' => $product['code'] // assuming 'code' is 'reference_product_id'
+                        ],
+                        [
+                            'added_by' => auth()->user()->id
+                        ]
+                    );
+                }
             }
         }
 
@@ -716,17 +717,18 @@ class ProductController extends Controller
             // Loop through each product
             foreach ($products as $product) {
                 if ($product != 'undefined') {
-
-                    // Use updateOrCreate to update if exists or create a new record
-                    ProductTag::updateOrCreate(
-                        [
-                            'product_id' => $productId,
-                            'tag_id' => $product['code'] // assuming 'code' is 'reference_product_id'
-                        ],
-                        [
-                            'added_by' => auth()->user()->id
-                        ]
-                    );
+                    if( $product ){
+                        // Use updateOrCreate to update if exists or create a new record
+                        ProductTag::updateOrCreate(
+                            [
+                                'product_id' => $productId,
+                                'tag_id' => $product['code'] // assuming 'code' is 'reference_product_id'
+                            ],
+                            [
+                                'added_by' => auth()->user()->id
+                            ]
+                        );
+                    }
                 }
             }
         } else {

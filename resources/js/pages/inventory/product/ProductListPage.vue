@@ -442,7 +442,7 @@ export default {
                 });
             }
 
-            
+            vm.clearDataTable()
             vm.btnLoader = true;
            axios
             .post(this.api_url + "inventory/products/filter-data", vm.filter )
@@ -450,6 +450,9 @@ export default {
                 vm.btnLoader = false;
                 const results = response.data.response;
                 vm.products = results;
+                setTimeout(() => {
+                    vm.dataTable();
+                }, 300);
             }).catch((err) => {
                 vm.btnLoader = false;
                 return swal({

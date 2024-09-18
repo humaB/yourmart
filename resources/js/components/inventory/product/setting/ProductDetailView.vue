@@ -602,7 +602,7 @@ export default {
             }else if(field == 'brand_id' || field == 'category_id' || field == 'shipping_method_id'){
                 if(field == 'brand_id'){
                     this.editedProduct[field] = this.brand.code;
-                    this.pproduct.brand  = {name : this.brand.label};
+                    this.product.brand  = {name : this.brand.label};
                 }
                 if(field == 'category_id'){
                     this.editedProduct[field] = this.category.code;
