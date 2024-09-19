@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegMail;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,8 +16,21 @@ class UserController extends Controller
     public function index()
     {
 
-        $users = User::get();
+        // $mailData = [
+        //     'id'       =>"helo",
+        //     'name' =>"helo",
+        //     'email' =>"helo",
+        //     'whatsapp_number' =>"helo",
+        //     'address' =>"helo",
+        //     'bank_name' =>"helo",
+        //     'city_name' =>"helo",
+        //     'store_name' =>"helo",
+        //     'store_url' =>"helo",
+        // ];
 
+        // Mail::to("malik.rehman7272@gmail.com")->send(new RegMail($mailData, 'Dropshipping'));
+
+        $users = User::get();
         return view('auth.user.users', [
             'users' => $users
         ]);

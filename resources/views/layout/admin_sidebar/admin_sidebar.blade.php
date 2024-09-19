@@ -35,6 +35,8 @@
                         <i data-feather="file-text"></i>Minimum Order Qty</a></li>
                     <li><a class="nav-link" href="{{ route('inventory.products.shipping_classes') }}">
                         <i data-feather="file-text"></i>Shipping Classes</a></li>
+                    <li><a class="nav-link" href="{{ route('couriers') }}">
+                        <i data-feather="file-text"></i>Couriers</a></li>
                 </ul>
     </li>
 </ul>

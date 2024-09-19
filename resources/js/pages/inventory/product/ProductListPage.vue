@@ -52,7 +52,8 @@
                         </div>
                         <div class="col-md-3">
                             <label for=""><b>Action</b></label><br>
-                            <button class="btn btn-primary w-100" :class="btnLoader ? 'btn-progress disabled' : ''" @click="filterData()"><i class="fa fa-filter"></i>Filter</button>
+                            <button class="btn btn-primary mr-2" :class="btnLoader ? 'btn-progress disabled' : ''" @click="filterData()"><i class="fa fa-filter mr-1"></i>Filter</button>
+                            <button class="btn btn-danger" @click="fetchProducts()"><i class="far fa-window-close mr-1"></i>Reset</button>
                         </div>
 
                         <div class="col-md-6 mt-2">
@@ -367,7 +368,12 @@ export default {
     },
     methods: {
         dataTable() {
-            $("#product_table").DataTable();
+            if ($.fn.DataTable.isDataTable("#product_table")) {
+                $('#product_table').DataTable().destroy();
+            }
+            setTimeout(function () {
+                $("#product_table").DataTable();
+            }, 300);
         },
         clearDataTable() {
             const table = $("#product_table").DataTable();
@@ -450,9 +456,7 @@ export default {
                 vm.btnLoader = false;
                 const results = response.data.response;
                 vm.products = results;
-                setTimeout(() => {
-                    vm.dataTable();
-                }, 300);
+                vm.dataTable();
             }).catch((err) => {
                 vm.btnLoader = false;
                 return swal({
@@ -677,14 +681,18 @@ export default {
         },
         fetchProducts() {
             let vm = this;
+            // reset filter
+            vm.filter = {
+                category: { code: 0, label: "Select from the following" },
+                tag: { code: 0, label: "Select from the following" },
+                product: "",
+            },
             axios
                 .get(this.api_url + "inventory/products")
                 .then((response) => {
                     const results = response.data.response;
                     vm.products = results;
-                    setTimeout(() => {
-                        vm.dataTable();
-                    }, 300);
+                    vm.dataTable();
                 }).catch((err) => this.fetchProducts());
         },
         searchProduct( data ) {

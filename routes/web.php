@@ -7,6 +7,7 @@ use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
+use App\Http\Controllers\Inventory\Setting\CourierController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -66,6 +67,11 @@ Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
 
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('request.supplier');
     Route::post('/suppliers/pdf', [SupplierController::class, 'pdf']);
+
+});
+
+Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
+    Route::get('/', [CourierController::class, 'index'])->name('couriers');
 
 });
 

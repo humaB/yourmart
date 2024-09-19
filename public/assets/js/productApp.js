@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       image: '',
       description: ''
@@ -238,7 +238,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -316,7 +316,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       hex: '',
       image: ''
@@ -403,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -642,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1130,7 +1130,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/ds",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1747,7 +1747,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2110,7 +2110,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -2208,7 +2208,12 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   },
   methods: {
     dataTable: function dataTable() {
-      $("#product_table").DataTable();
+      if ($.fn.DataTable.isDataTable("#product_table")) {
+        $('#product_table').DataTable().destroy();
+      }
+      setTimeout(function () {
+        $("#product_table").DataTable();
+      }, 300);
     },
     clearDataTable: function clearDataTable() {
       var table = $("#product_table").DataTable();
@@ -2288,9 +2293,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         vm.btnLoader = false;
         var results = response.data.response;
         vm.products = results;
-        setTimeout(function () {
-          vm.dataTable();
-        }, 300);
+        vm.dataTable();
       })["catch"](function (err) {
         vm.btnLoader = false;
         return swal({
@@ -2496,12 +2499,21 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     fetchProducts: function fetchProducts() {
       var _this4 = this;
       var vm = this;
-      axios.get(this.api_url + "inventory/products").then(function (response) {
+      // reset filter
+      vm.filter = {
+        category: {
+          code: 0,
+          label: "Select from the following"
+        },
+        tag: {
+          code: 0,
+          label: "Select from the following"
+        },
+        product: ""
+      }, axios.get(this.api_url + "inventory/products").then(function (response) {
         var results = response.data.response;
         vm.products = results;
-        setTimeout(function () {
-          vm.dataTable();
-        }, 300);
+        vm.dataTable();
       })["catch"](function (err) {
         return _this4.fetchProducts();
       });
@@ -3080,7 +3092,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3199,7 +3211,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3312,7 +3324,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -7464,7 +7476,7 @@ var render = function render() {
     on: {
       click: _vm.toggleActivation
     }
-  }, [_vm._v("\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
+  }, [_vm._v("\r\n                " + _vm._s(_vm.activeStatus == 0 ? "Deactivate" : "Activate") + "\r\n            ")]), _vm._v(" "), !_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
     attrs: {
       type: "button"
@@ -8988,7 +9000,7 @@ var render = function render() {
   })]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3"
   }, [_vm._m(4), _c("br"), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-primary w-100",
+    staticClass: "btn btn-primary mr-2",
     "class": _vm.btnLoader ? "btn-progress disabled" : "",
     on: {
       click: function click($event) {
@@ -8996,8 +9008,17 @@ var render = function render() {
       }
     }
   }, [_c("i", {
-    staticClass: "fa fa-filter"
-  }), _vm._v("Filter")])]), _vm._v(" "), _c("div", {
+    staticClass: "fa fa-filter mr-1"
+  }), _vm._v("Filter")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.fetchProducts();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "far fa-window-close mr-1"
+  }), _vm._v("Reset")])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 mt-2"
   }, [_vm._m(5), _vm._v(" "), _c("select", {
     directives: [{
@@ -11970,7 +11991,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\n    width: 16px;  /* Adjust the width as needed */\n    height: 16px; /* Adjust the height as needed */\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\r\n    width: 16px;  /* Adjust the width as needed */\r\n    height: 16px; /* Adjust the height as needed */\r\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

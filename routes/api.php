@@ -8,6 +8,7 @@ use App\Http\Controllers\Inventory\Attributes\CategoryController;
 use App\Http\Controllers\Inventory\Attributes\ColorController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
+use App\Http\Controllers\Inventory\Setting\CourierController;
 use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
 use App\Http\Controllers\Inventory\Order\OrderController;
@@ -58,6 +59,12 @@ Route::group(['prefix' => 'suppliers','middleware' => 'auth:sanctum'], function(
     Route::post('/',  [ SupplierController::class , 'store']);
     Route::post('/details',  [ SupplierController::class , 'fetchDetails']);
     Route::post('/decisions',  [ SupplierController::class , 'decision']);
+});
+
+Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function(){
+    Route::get('/', [CourierController::class, 'couriers']); // Fetch all couriers
+    Route::post('/add', [CourierController::class, 'store']); // Add a new courier
+    Route::post('/update', [CourierController::class, 'update']); // Update an existing courier
 });
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
