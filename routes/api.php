@@ -65,6 +65,9 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::get('/', [CourierController::class, 'couriers']); // Fetch all couriers
     Route::post('/add', [CourierController::class, 'store']); // Add a new courier
     Route::post('/update', [CourierController::class, 'update']); // Update an existing courier
+
+    Route::post('/categories', [CourierController::class, 'addCategory']); // Update an existing courier
+    Route::post('/categories/update', [CourierController::class, 'updateCategory']); // Update an existing courier
 });
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){

@@ -1,127 +1,261 @@
 <template>
-  <div>
-    <div
-      class="modal fade"
-      id="addCourier"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="courierForm"
-      aria-hidden="true"
-      data-backdrop="false"
-      style="background-color: rgba(0, 0, 0, 0.2)"
-    >
-      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add New Courier</h5>
-          </div>
-          <div class="modal-body">
-            <div class="form-row">
+    <div>
+        <!-- Modal -->
+        <div class="modal fade" id="addCourier" tabindex="-1" role="dialog"
+            aria-labelledby="addCourierTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add New Courier Service</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-md-12">
+                            <h5>Courier Service Name <span class="text-danger">*</span></h5>
+                                <input type="text" class="form-control" placeholder="Courier Service Name"
+                                    v-model="courierName">
+                        </div>
 
-              <div class="form-group form-float col-md-12">
-                <div class="form-line">
-                  <label class="form-label">Enter Courier Name <span class="text-danger">*</span></label>
-                  <input type="text" class="form-control" v-model="name" required />
+                        <div class="col-md-12 row mt-5">
+                            <div class="col-md-6">
+                                <h5>Select Category <span class="text-danger">*</span></h5>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="#" data-toggle="modal" data-target="#addCourierCategory" class="btn btn-outline-primary"
+                                style="height: 15px; line-height: 1px; padding: 6px; float: right">Add
+                                New</a>
+                            </div>
+
+                            <div class="col-md-12">
+                                <v-select v-model="categories" :options="methods">
+
+                                </v-select>
+                                <code>Select the method used to calculate the shipping rate. This selection determines how the shipping cost will be calculated for the items in your cart.</code>
+                            </div>
+                        </div>
+
+                        <!-- Conditional Fields Based on Rate Method Code -->
+                        <div v-if="rateMethod.code === 1" class="col-md-12 mt-5">
+                            <h6>Free Shipping Configuration</h6>
+                            <p class="text-muted">Please enter the minimum order amount required for free shipping and
+                                the rate that will be applied.</p>
+                            <input type="text" @keypress="onlyNumber" v-model="minimumOrder" class="form-control"
+                                placeholder="Minimum Order Amount" />
+                            <input type="text" @keypress="onlyNumber" v-model="rate" class="form-control mt-2"
+                                placeholder="Rate" />
+                        </div>
+
+                        <div v-if="rateMethod.code === 2" class="col-md-12 mt-5">
+                            <h6>Flat Rate Configuration</h6>
+                            <p class="text-muted">Enter the flat rate that will be applied regardless of weight or
+                                dimension.</p>
+                            <input type="text" @keypress="onlyNumber" v-model="flatRate" class="form-control"
+                                placeholder="Flat Rate" />
+                        </div>
+
+                        <div v-if="rateMethod.code === 3" class="col-md-12 mt-5">
+                            <h6>Weight-Based Shipping Configuration</h6>
+                            <p class="text-muted">Enter the base rate and the rate per unit of weight. The total cost
+                                will be calculated as: Base Rate + (Rate Per Unit * Weight).</p>
+                            <input type="text" @keypress="onlyNumber" v-model="baseRate" class="form-control"
+                                placeholder="Base Rate" />
+                            <input type="text" @keypress="onlyNumber" v-model="ratePerUnit" class="form-control mt-2"
+                                placeholder="Rate Per Unit (e.g., per kg)" />
+                            <input type="text" @keypress="onlyNumber" v-model="minimumOrder" class="form-control mt-2"
+                                placeholder="Minimum Weight" />
+                        </div>
+
+                        <div v-if="rateMethod.code === 4" class="col-md-12 mt-5">
+                            <h6>Dimension-Based Shipping Configuration</h6>
+                            <p class="text-muted">Enter the base rate and the rate per unit of dimension. The total cost
+                                will be calculated as: Base Rate + (Rate Per Unit * Dimension).</p>
+                            <input type="text" @keypress="onlyNumber" v-model="baseRate" class="form-control"
+                                placeholder="Base Rate" />
+                            <input type="text" @keypress="onlyNumber" v-model="ratePerUnit" class="form-control mt-2"
+                                placeholder="Rate Per Unit (e.g., per cubic meter)" />
+                            <input type="text" @keypress="onlyNumber" v-model="minimumOrder" class="form-control mt-2"
+                                placeholder="Minimum cubic meter" />
+                        </div>
+
+                        <div v-if="rateMethod.code == 3 || rateMethod.code == 4" class="col-md-12 mt-5">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Rate Method</th>
+                                        <th>Base Rate</th>
+                                        <th>Rate Per Unit</th>
+                                        <th v-if="rateMethod.code === 3">Minimum Weight</th>
+                                        <th v-if="rateMethod.code === 4">Minimum Cubic Meter</th>
+                                        <th>Total Cost</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ rateMethod.label }}</td>
+                                        <td v-if="rateMethod.code === 3 || rateMethod.code === 4">{{ baseRate }}</td>
+                                        <td v-if="rateMethod.code === 3 || rateMethod.code === 4">{{ ratePerUnit }}</td>
+                                        <td
+                                            v-if="rateMethod.code === 1 || rateMethod.code === 3 || rateMethod.code === 4">
+                                            {{ minimumOrder }}</td>
+                                        <td v-if="rateMethod.code === 2">{{ flatRate }}</td>
+                                        <td>{{ calculateTotalCost() }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" @click="handleSubmit()" v-if="!loader" class="btn btn-primary">Add
+                            Shipping
+                            Class</button>
+                        <button type="button" v-else class="btn btn-primary btn-progress disabled">Add Shipping
+                            Class</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
-              </div>
-
-              <div class="form-group form-float col-md-12">
-                <div class="form-line">
-                  <label class="form-label">Enter Contact</label>
-                  <input type="text" class="form-control" v-model="contact" />
-                </div>
-              </div>
-
-              <div class="form-group form-float col-md-12">
-                <div class="form-line">
-                  <label class="form-label">Enter Address</label>
-                  <input type="text" class="form-control" v-model="address" />
-                </div>
-              </div>
-
             </div>
-          </div>
-          <div class="modal-footer bg-whitesmoke br">
-            <button type="button" @click="add()" class="btn btn-primary" v-if="!loader">
-              Add New Courier
-            </button>
-            <button type="button" class="btn btn-primary btn-progress disabled" v-else>
-              Adding...
-            </button>
-            <button type="button" @click="close()" class="btn btn-secondary" data-dismiss="modal">
-              Close
-            </button>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>
-
 <script>
 export default {
-  name: "CourierPopup",
-  props: ["loader"],
-  data() {
-    return {
-      name: "",
-      contact: "",
-      address: "",
-    };
-  },
-  mounted() {
-    this.$parent.$on("courierSaved", (value) => {
-      if (value) {
-        this.close();
-      }
-    });
-  },
-  methods: {
-    add() {
-      let vm = this;
-      if (vm.name === "") {
-        return swal({
-          title: "Required",
-          text: "Please enter the courier name, thanks",
-          icon: "error",
-          timer: 3000,
-        });
-      }
-      if (this.contact.length > 0) {
-        // Check if the contact number is non-numeric or not 11 digits
-        if (this.contact.length !== 11 || isNaN(this.contact)) {
-          return swal({
-            title: "Required",
-            text: "Please enter a valid 11-digit contact number.",
-            icon: "error",
-            timer: 3000,
-          });
+    name: 'AddShippingClass',
+    props: ['loader', 'categories'],
+    data() {
+        return {
+            courierName: '',
+            shortDescription: '',
+            rateMethod: { code: 0, label: 'Select from the following' },
+            minimumOrder: null,
+            rate: null,
+            flatRate: null,
+            baseRate: null,
+            ratePerUnit: null,
         }
-      }
-
-      const data = {
-        name: this.name,
-        contact: this.contact,
-        address: this.address,
-      };
-
-      vm.$emit("add", data);
     },
-    close() {
-      this.name = "";
-      this.contact = "";
-      this.address = "";
+    mounted() {
+        this.$parent.$on("saved", (value) => {
+            if (value) {
+                this.close();
+            }
+        });
     },
-  },
-};
+    methods: {
+        onlyNumber($event) {
+            let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+            if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+                // 46 is dot
+                $event.preventDefault();
+            }
+        },
+        calculateTotalCost() {
+            const unitQuantity = 10; // Example quantity of units for calculation
+
+            if (this.rateMethod.code === 1) {
+                return this.minimumOrder ? `Free for orders over ${this.minimumOrder}` : 'N/A';
+            } else if (this.rateMethod.code === 2) {
+                return this.flatRate !== null ? `${this.flatRate}` : 'N/A';
+            } else if (this.rateMethod.code === 3 || this.rateMethod.code === 4) {
+                if (this.baseRate !== null && this.ratePerUnit !== null) {
+                    const totalCost = parseFloat(this.baseRate) + (parseFloat(this.ratePerUnit) * unitQuantity);
+                    return `${totalCost} (Base Rate: ${this.baseRate} + ${this.ratePerUnit} per unit for ${unitQuantity} units)`;
+                }
+                return 'N/A';
+            } else {
+                return 'N/A';
+            }
+        },
+        handleSubmit() {
+            let vm = this;
+            if (vm.className == '') {
+                return swal({
+                    title: "Error",
+                    text: "Please add some class name, thanks.",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            if (vm.shortDescription == '') {
+                return swal({
+                    title: "Error",
+                    text: "Please add some description, thanks.",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+            // Validate the form based on the selected rate method
+            if (vm.rateMethod.code === 1) { // Free Shipping
+                if (vm.minimumOrder === null || vm.rate === null) {
+                    return swal({
+                        title: "Error",
+                        text: "Please fill in both the Minimum Order Amount and Rate for Free Shipping.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            } else if (vm.rateMethod.code === 2) { // Flat Rate
+                if (vm.flatRate === null) {
+                    return swal({
+                        title: "Error",
+                        text: "Please enter the Flat Rate.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            } else if (vm.rateMethod.code === 3) { // Weight-Based
+                if (vm.baseRate === null || vm.ratePerUnit === null) {
+                    return swal({
+                        title: "Error",
+                        text: "Please fill in both the Base Rate and Rate Per Unit for Weight-Based Shipping.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            } else if (vm.rateMethod.code === 4) { // Dimension-Based
+                if (vm.baseRate === null || vm.ratePerUnit === null) {
+                    return swal({
+                        title: "Error",
+                        text: "Please fill in both the Base Rate and Rate Per Unit for Dimension-Based Shipping.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            } else {
+                return swal({
+                    title: "Error",
+                    text: "Please select a valid Rate Method.",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            const data = {
+                name: vm.className,
+                description: vm.shortDescription,
+                rate_type: vm.rateMethod.label, // Use the code of the selected rate method
+                minimum_order: vm.minimumOrder,
+                rate: vm.rate,
+                flat_rate: vm.flatRate,
+                base_rate: vm.baseRate,
+                rate_per_unit: vm.ratePerUnit
+            };
+
+            vm.$emit('addNewClass', data);
+        },
+        close(){
+            this.className = '';
+            this.shortDescription = '';
+            this.rateMethod = { code: 0, label: 'Select from the following' };
+            this.minimumOrder = null;
+            this.rate = null;
+            this.flatRate = null;
+            this.baseRate = null;
+            this.ratePerUnit = null;
+        }
+    }
+}
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-}
-</style>

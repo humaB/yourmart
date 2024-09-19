@@ -5,19 +5,26 @@
         :loader="btnLoader"
         @add="add($event)"
       />
-  
+
       <!-- Edit Courier Popup -->
       <CourierEditPopup
         :loader="btnLoader"
         :details="editDetails"
         @update="update($event)"
       />
-  
+
+      <AddCourierCategory
+        :categories="categories"
+        :loader="btnLoader"
+        @addNewCategory="addNewCategory( $event )"
+        @editCategory="editCategory($event)"
+      />
+
       <div class="row">
         <div class="col-12 col-md-12 col-lg-12">
           <div class="card card-primary">
             <TableHeader :tableHeader="tableHeader" />
-  
+
             <div class="card-body">
               <!-- Table -->
               <div class="row">
@@ -41,20 +48,22 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
   import CourierTable from "../../../../components/inventory/product/courier/CourierTable.vue";
   import CourierAddPopup from "../../../../components/inventory/product/courier/CourierAddPopup.vue";
   import CourierEditPopup from "../../../../components/inventory/product/courier/CourierEditPopup.vue";
-  
+  import AddCourierCategory from "../../../../components/inventory/product/courier/AddCourierCategory.vue";
+
   export default {
     name: "CourierPage",
     components: {
       CourierTable,
       TableHeader,
       CourierAddPopup,
-      CourierEditPopup
+      CourierEditPopup,
+      AddCourierCategory
     },
     data() {
       return {
@@ -68,7 +77,8 @@
         table_id: "courier_list_table",
         couriers: [],
         editDetails: {},
-        btnLoader: false
+        btnLoader: false,
+        categories : []
       };
     },
     created() {
@@ -81,7 +91,7 @@
           .get(this.api_url + "couriers")
           .then((response) => {
             const results = response.data.response;
-  
+
             vm.couriers = results;
             vm.dataTable();
           })
@@ -149,8 +159,61 @@
               timer: 3000
             });
           });
-      }
+      },
+      addNewCategory(data) {
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "couriers/categories", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+
+                    vm.fetchCategories();
+                    vm.$emit('categorySaved', true);
+                    return swal({
+                        title: "Success",
+                        text: 'New Category Added Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        editCategory(data) {
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "couriers/categories/update", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+
+                    vm.fetchCategories();
+                    vm.$emit('categorySaved', true);
+                    return swal({
+                        title: "Success",
+                        text: 'Category Updated Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
     }
   };
   </script>
-  
