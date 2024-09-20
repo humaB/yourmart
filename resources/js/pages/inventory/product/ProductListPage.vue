@@ -75,14 +75,23 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
+                                        <div class="col-md-12 mb-2">
+                                            <nav>
+                                              <ul class="nav">
+                                                <li class="nav-item mr-2" @click="fetchProducts()"><a href="#">All ({{ allProductCount }})</a> </li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="fetchProducts(0)"><a href="#">Published ({{ publishedProductCount }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="fetchProducts(1)"><a href="#">Drafts ({{ draftProductCount }})</a></li> ||
+                                                <li class="nav-item ml-2" @click="fetchProducts(3)"><a href="#">Trash ({{ trashProductCount }})</a></li>
+                                              </ul>
+                                            </nav>
+                                          </div>
                                         <div class="col-md-12">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered" id="product_table">
+                                                <table class="table table-striped" id="product_table">
                                                     <thead>
                                                         <tr>
                                                             <th>Sr #</th>
                                                             <th>
-                                                                Checked All
                                                                 <input
                                                                     type="checkbox"
                                                                     class="form-control custom-checkbox"
@@ -90,10 +99,12 @@
                                                                     @change="toggleAllProducts"
                                                                 >
                                                             </th>
-                                                            <th>Product Title</th>
-                                                            <th>Short Description</th>
-                                                            <th>Status</th>
-                                                            <th>Added By</th>
+                                                            <th class="width:22%">Product Title</th>
+                                                            <th>SKU</th>
+                                                            <th>Stock</th>
+                                                            <th>Price</th>
+                                                            <th>Category</th>
+                                                            <th>Tags</th>
                                                             <th>Added Date</th>
                                                             <th>Action</th>
                                                         </tr>
@@ -116,13 +127,35 @@
                                                                       </div>
 
                                                             </td>
-                                                            <td>{{ item.title }}</td>
-                                                            <td>{{ item.short_description }}</td>
+                                                            <td style="width:22%">
+                                                                <span class="badge badge-sm badge-success" v-if="item.status == 0">Published</span>
+                                                                <span class="badge badge-sm badge-warning" v-if="item.status == 1 && !item.deleted_at">Saved in Draft</span>
+                                                                <span class="badge badge-sm badge-danger" v-if="item.deleted_at">In Trash</span>
+                                                                <br>
+                                                                {{ item.title }}
+                                                            </td>
+                                                            <td>{{ item.variation.sku }}</td>
                                                             <td>
+                                                                <p class="text-success" v-if="item.variation.stock > 0 ">In stock</p>
+                                                                <p class="text-danger" v-if="item.variation.stock == 0 ">Out of stock</p>
+                                                            </td>
+                                                            <td>
+                                                                <del>PKR {{ item.variation.regular_price }}</del><br>
+                                                                PKR {{ item.variation.sale_price }}
+                                                            </td>
+                                                            <td>
+                                                                {{ item.category.name }}
+                                                            </td>
+                                                            <td>
+                                                                <p v-for="tag in item.tags" :key="tag.id">
+                                                                    {{ tag.tag.name }}
+                                                                </p>
+                                                            </td>
+                                                            <!-- <td>
                                                                 <span class="badge badge-success" v-if="item.status == 0">Published</span>
                                                                 <span class="badge badge-warning" v-if="item.status == 1">Saved in Draft</span>
-                                                            </td>
-                                                            <td>{{ item.user.name }}</td>
+                                                            </td> -->
+
                                                             <td>{{ formatDate(item.created_at) }}</td>
                                                             <td class="d-flex">
                                                                 <button data-toggle="modal"
@@ -209,6 +242,7 @@
             :details="editProductVariantData"
             :activeStatus="activeProductVariantStatus"
             @updateProductVariant="updateProductVariant($event)"
+            @removeVariationImage="removeVariationImage($event)"
             @changeProductVariantStatus="changeProductVariantStatus( $event )"
         />
 
@@ -352,7 +386,11 @@ export default {
             imageAlt : '',
             selectedProducts : [],
             multipleAction : '',
-            checkedAllProducts: false // Boolean to manage "Check All" state
+            checkedAllProducts: false, // Boolean to manage "Check All" state
+            allProductCount : 0,
+            publishedProductCount : 0,
+            draftProductCount : 0,
+            trashProductCount : 0
         };
     },
     created() {
@@ -561,6 +599,8 @@ export default {
         editProductVariantFun(data){
             this.editProductVariantData = data;
             this.activeProductVariantStatus = data.status;
+            console.log(this.editProductVariantData);
+
         },
         changeStatus( data ){
             let vm = this;
@@ -657,6 +697,32 @@ export default {
                     });
                 });
         },
+        removeVariationImage(data){
+            let vm = this;
+            vm.btnLoader = true;
+
+            axios
+                .post(this.api_url + "inventory/products/variations/delete-images", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.fetchDetail(data.product)
+
+                    return swal({
+                        title: "Success",
+                        text: 'Image Removed Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }).catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
         changeProductVariantStatus( data ){
                 let vm = this;
                 axios
@@ -679,21 +745,34 @@ export default {
                 this.$emit('closeProduct', true);
             }
         },
-        fetchProducts() {
-            let vm = this;
-            // reset filter
-            vm.filter = {
-                category: { code: 0, label: "Select from the following" },
-                tag: { code: 0, label: "Select from the following" },
-                product: "",
-            },
-            axios
-                .get(this.api_url + "inventory/products")
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.products = results;
-                    vm.dataTable();
-                }).catch((err) => this.fetchProducts());
+        fetchProducts(status = null) {
+        let vm = this;
+        // Reset filter
+        vm.filter = {
+            category: { code: 0, label: "Select from the following" },
+            tag: { code: 0, label: "Select from the following" },
+            product: "",
+        };
+
+        let url = this.api_url + "inventory/products";
+
+        if (status !== null) {
+            url += "?status=" + status;
+        }
+
+        axios
+            .get(url)
+            .then((response) => {
+            const results = response.data.response;
+            vm.products = results.products;
+            vm.allProductCount = results.allProductCount;
+            vm.publishedProductCount = results.publishedProductCount;
+            vm.draftProductCount = results.draftProductCount;
+            vm.trashProductCount = results.trashProductCount;
+
+            vm.dataTable();
+            })
+            .catch((err) => this.fetchProducts());
         },
         searchProduct( data ) {
             let vm = this;

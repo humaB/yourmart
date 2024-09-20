@@ -66,8 +66,11 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::post('/add', [CourierController::class, 'store']); // Add a new courier
     Route::post('/update', [CourierController::class, 'update']); // Update an existing courier
 
-    Route::post('/categories', [CourierController::class, 'addCategory']); // Update an existing courier
-    Route::post('/categories/update', [CourierController::class, 'updateCategory']); // Update an existing courier
+    Route::get('/categories', [CourierController::class, 'fetchCategory']);
+    Route::post('/categories', [CourierController::class, 'addCategory']);
+    Route::post('/categories/update', [CourierController::class, 'updateCategory']);
+
+    Route::post('/categories/ranges', [CourierController::class, 'fetchCategoryRanges']);
 });
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){
@@ -83,6 +86,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
         Route::post('/drop-down', [ ProductController::class , 'dropDown']);
         Route::post('/variations/update', [ ProductController::class , 'variationUpdate']);
+        Route::post('/variations/delete-images', [ ProductController::class , 'variationDeleteImage']);
         Route::post('/variations/change-status', [ ProductController::class , 'variationChangeStatus']);
 
         Route::post('/clone',  [ ProductController::class , 'cloneProduct']);

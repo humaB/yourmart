@@ -15,9 +15,9 @@
       <tbody>
         <tr v-for="(item, index) in tbody" :key="item.id">
           <td>{{ index + 1 }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.contact }}</td>
-          <td>{{ item.address }}</td>
+          <td>{{ item.courier_name }}</td>
+          <td>{{ item.contact_person }}</td>
+          <td>{{ item.contact_person_contact }}</td>
           <td>
             <a href="#" class="btn btn-icon icon-left btn-primary" data-toggle="modal" data-target="#editCourier" @click="edit(item.id, item.name, item.contact, item.address)">
               <i class="far fa-edit"></i>

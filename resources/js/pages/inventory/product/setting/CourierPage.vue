@@ -3,7 +3,10 @@
       <!-- Add Courier Popup -->
       <CourierAddPopup
         :loader="btnLoader"
-        @add="add($event)"
+        :categories="categories"
+        :ranges="ranges"
+        @addNewCourier="add($event)"
+        @fetchRange="fetchRange( $event )"
       />
 
       <!-- Edit Courier Popup -->
@@ -14,7 +17,6 @@
       />
 
       <AddCourierCategory
-        :categories="categories"
         :loader="btnLoader"
         @addNewCategory="addNewCategory( $event )"
         @editCategory="editCategory($event)"
@@ -73,16 +75,18 @@
           link: "#",
           target: "#addCourier"
         },
-        th: ["Sr #", "Name", "Contact", "Address", "Action"],
+        th: ["Sr #", "Courier Name", "Contact Person", "Contact", "Action"],
         table_id: "courier_list_table",
         couriers: [],
         editDetails: {},
         btnLoader: false,
-        categories : []
+        categories : [],
+        ranges : []
       };
     },
     created() {
       this.fetchCouriers();
+      this.fetchCategories();
     },
     methods: {
       fetchCouriers() {
@@ -94,6 +98,38 @@
 
             vm.couriers = results;
             vm.dataTable();
+          })
+          .catch((err) => console.log(err));
+      },
+      fetchCategories() {
+        let vm = this;
+        axios
+          .get(this.api_url + "couriers/categories")
+          .then((response) => {
+            const results = response.data.response;
+
+            vm.categories = results;
+            vm.dataTable();
+          })
+          .catch((err) => console.log(err));
+      },
+      fetchRange( data ){
+        let vm = this;
+        axios
+          .post(this.api_url + "couriers/categories/ranges", data)
+          .then((response) => {
+            const results = response.data.response;
+            const newRanges = {};
+
+            results.forEach((range) => {
+                if (!newRanges[range.category_id]) {
+                newRanges[range.category_id] = [];
+                }
+                newRanges[range.category_id].push(range);
+            });
+
+            // Merge newRanges with existing vm.ranges
+            vm.ranges = { ...vm.ranges, ...newRanges };
           })
           .catch((err) => console.log(err));
       },
@@ -113,6 +149,7 @@
           .then((response) => {
             vm.btnLoader = false;
             vm.fetchCouriers();
+            vm.ranges = [];
             vm.$emit('courierSaved', true);
             return swal({
               title: "Success",

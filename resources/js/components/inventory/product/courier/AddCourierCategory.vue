@@ -19,11 +19,7 @@
                     </div>
                     <div class="col-md-12 mt-3">
                         <label for=""><b>Internal Label <span class="text-danger">*</span></b></label>
-                        <input type="text" class="form-control" v-model="name">
-                    </div>
-                    <div class="col-md-12 mt-3">
-                        <label for=""><b>Description <span class="text-danger">( optional )</span></b></label>
-                        <input type="text" class="form-control" v-model="description">
+                        <input type="text" class="form-control" v-model="internalLabel">
                     </div>
 
                     <!-- Category Ranges -->
@@ -162,7 +158,7 @@ export default {
     props : ['loader', 'categories'],
     data(){
         return {
-            description : '',
+            internalLabel : '',
             name : '',
             ranges: [
                 {
@@ -225,7 +221,17 @@ export default {
 
            const fd = new FormData();
            fd.append('name', vm.name);
-           fd.append('description', vm.description);
+           fd.append('internalLabel', vm.internalLabel);
+           // Loop through the ranges array and append each range to FormData
+            vm.ranges.forEach((range, index) => {
+                fd.append(`ranges[${index}][minimum_quantity]`, range.minimum_quantity);
+                fd.append(`ranges[${index}][maximum_quantity]`, range.maximum_quantity);
+                fd.append(`ranges[${index}][base_rate]`, range.base_rate);
+                fd.append(`ranges[${index}][per_kg]`, range.per_kg);
+                fd.append(`ranges[${index}][per_kg_rate]`, range.per_kg_rate);
+                fd.append(`ranges[${index}][fc]`, range.fc);
+                fd.append(`ranges[${index}][gst]`, range.gst);
+            });
 
            vm.$emit('addNewCategory', fd);
         },
@@ -294,8 +300,18 @@ export default {
         },
         close(){
             this.name = '';
-            this.description = '';
-            this.category = { code : 0 , label : 'Select form the following'};
+            this.internalLabel = '';
+            this. ranges = [
+                {
+                    minimum_quantity: '',
+                    maximum_quantity: '',
+                    base_rate: '',
+                    per_kg: '',
+                    per_kg_rate: '',
+                    fc : '',
+                    gst : ''
+                },
+            ];
         }
     }
 }

@@ -28,22 +28,23 @@ class CreateCouriersTable extends Migration
         Schema::create('courier_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('internal_label');
             $table->string('description')->nullable();
             $table->bigInteger('added_by');
             $table->timestamps();
         });
 
-        Schema::create('courier_categorie_range', function (Blueprint $table) {
+        Schema::create('courier_categories_ranges', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('category_id');
             $table->string('minimum_quantity')->default(0);
             $table->string('maximum_quantity')->default(0);
             $table->string('base_rate')->default(0);
-            $table->string('fc_tax')->default(0);
-            $table->string('gst_tax')->default(0);
-            $table->string('total')->default(0);
             $table->string('per_kg')->default(0);
             $table->string('per_kg_rate')->default(0);
+            $table->string('fac_tax')->default(0);
+            $table->string('gst_tax')->default(0);
+            $table->string('total')->default(0);
             $table->bigInteger('added_by');
             $table->timestamps();
         });
@@ -53,7 +54,7 @@ class CreateCouriersTable extends Migration
     {
         Schema::dropIfExists('couriers');
         Schema::dropIfExists('courier_categories');
-        Schema::dropIfExists('courier_categorie_range');
+        Schema::dropIfExists('courier_categories_range');
         Schema::dropIfExists('courier_added_categories');
     }
 }

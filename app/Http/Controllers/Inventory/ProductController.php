@@ -27,17 +27,37 @@ class ProductController extends Controller
         return view('inventory.product.products');
     }
 
-    public function fetchProducts()
+    public function fetchProducts(Request $request)
     {
-        $products = Product::with('user:id,name')->orderBy('id', 'desc')->get();
+      $status = $request->query('status');
 
-        return (new ResponseCollection($products))
-            ->response()
-            ->setStatusCode(200);
+      $products = Product::with('user:id,name', 'variation', 'category', 'tags.tag');
+
+      if ($status === '0') {
+        $products = $products->where('status', 0);
+      } elseif ($status === '1') {
+        $products = $products->where('status', 1);
+      } elseif ($status === '3') {
+        $products = $products->onlyTrashed();
+      }
+
+      $products = $products->orderBy('id', 'desc')->get();
+
+      $data = [
+        'allProductCount'       => Product::all()->count(),
+        'publishedProductCount' => Product::where('status', 0)->count(),
+        'draftProductCount'     => Product::where('status', 1)->count(),
+        'trashProductCount'     => Product::onlyTrashed()->count(),
+        'products'              => $products
+      ];
+
+      return (new ResponseCollection($data))
+      ->response()
+      ->setStatusCode(200);
     }
 
     public function changeStatus( Request $request ){
-        if($request->action == "delete")
+        if( $request->action == "delete" )
         {
             Product::whereIn('id', $request->products)->delete();
         }
@@ -90,7 +110,8 @@ class ProductController extends Controller
 
     public function details(Request $request)
     {
-        $products = Product::with(
+        $products = Product::withTrashed()
+        ->with(
             'category:id,name',
             'brand:id,name',
             'shipping:id,name',
@@ -175,7 +196,7 @@ class ProductController extends Controller
                 'warranty'      => $request->input('warranty'),
                 'max_quantity'  => $request->input('maximumQuantity') ?? '',
                 'quantity_step' => $request->input('quantityStep') ?? '',
-                'status'   => 0, // If saleSchedule exists, set to Schedule
+                'status'   => 1, // If saleSchedule exists, set to Schedule
                 'added_by' => $userID,
             ]);
 
@@ -592,11 +613,16 @@ class ProductController extends Controller
         return $lock ? response()->json(['status' => 'success', 'message' => 'Product variation updated successfully.']) : response()->json(['status' => 'error', 'message' => 'Failed to update product variation.']);
     }
 
+    public function variationDeleteImage( Request $request ){
+        ProductVariationImage::where('product_variation_id', $request->variation)->where('image_id', $request->attachment)->delete();
+        return response()->json(['message' => 'Variation Image Deleted Successfully'], 200);
+    }
+
     public function variationChangeStatus(Request $request)
     {
 
         ProductVariation::where('id', $request->id)->update([
-            'status' => $request->status
+            'status' => $request->status,
         ]);
 
         return response()->json(['message' => 'Variation Status Updated Successfully'], 200);
@@ -615,9 +641,20 @@ class ProductController extends Controller
 
     public function updateStatus(Request $request)
     {
-        Product::where('id', $request->id)->update([
-            'status' => $request->status == 'publish' ? '0' : '1'
-        ]);
+        $product = Product::withTrashed()->find($request->id);
+
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
+        }
+
+        $product->status = $request->status == 'publish' ? '0' : '1';
+
+        // If product is deleted, restore it
+        if ($product->deleted_at !== null) {
+            $product->restore();
+        }
+
+        $product->save();
 
         return response()->json(['message' => 'Status changed successfully'], 200);
     }

@@ -1,8 +1,8 @@
 <template>
     <div>
         <!-- Modal -->
-        <div class="modal fade" id="addCourier" tabindex="-1" role="dialog"
-            aria-labelledby="addCourierTitle" aria-hidden="true">
+        <div class="modal fade" id="addCourier" tabindex="-1" role="dialog" aria-labelledby="addCourierTitle"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -14,8 +14,21 @@
                     <div class="modal-body row">
                         <div class="col-md-12">
                             <h5>Courier Service Name <span class="text-danger">*</span></h5>
-                                <input type="text" class="form-control" placeholder="Courier Service Name"
-                                    v-model="courierName">
+                            <input type="text" class="form-control" placeholder="Courier Service Name"
+                                v-model="courierName">
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <h5>Courier Contact Person Name <span class="text-danger">*</span></h5>
+                            <input type="text" class="form-control" placeholder="Courier Contact Person Name"
+                                v-model="contactPerson">
+                        </div>
+
+
+                        <div class="col-md-6 mt-3">
+                            <h5>Courier Contact Person Number <span class="text-danger">*</span></h5>
+                            <input type="text" class="form-control" placeholder="Courier Contact Person Number"
+                                v-model="contactPersonNumber">
                         </div>
 
                         <div class="col-md-12 row mt-5">
@@ -23,94 +36,63 @@
                                 <h5>Select Category <span class="text-danger">*</span></h5>
                             </div>
                             <div class="col-md-6">
-                                <a href="#" data-toggle="modal" data-target="#addCourierCategory" class="btn btn-outline-primary"
-                                style="height: 15px; line-height: 1px; padding: 6px; float: right">Add
-                                New</a>
+                                <a href="#" data-toggle="modal" data-target="#addCourierCategory"
+                                    class="btn btn-outline-primary"
+                                    style="height: 17px; line-height: 1px; padding: 8px; float: right">Add
+                                    New Category</a>
                             </div>
-
                             <div class="col-md-12">
-                                <v-select v-model="categories" :options="methods">
-
-                                </v-select>
                                 <code>Select the method used to calculate the shipping rate. This selection determines how the shipping cost will be calculated for the items in your cart.</code>
                             </div>
-                        </div>
 
-                        <!-- Conditional Fields Based on Rate Method Code -->
-                        <div v-if="rateMethod.code === 1" class="col-md-12 mt-5">
-                            <h6>Free Shipping Configuration</h6>
-                            <p class="text-muted">Please enter the minimum order amount required for free shipping and
-                                the rate that will be applied.</p>
-                            <input type="text" @keypress="onlyNumber" v-model="minimumOrder" class="form-control"
-                                placeholder="Minimum Order Amount" />
-                            <input type="text" @keypress="onlyNumber" v-model="rate" class="form-control mt-2"
-                                placeholder="Rate" />
-                        </div>
 
-                        <div v-if="rateMethod.code === 2" class="col-md-12 mt-5">
-                            <h6>Flat Rate Configuration</h6>
-                            <p class="text-muted">Enter the flat rate that will be applied regardless of weight or
-                                dimension.</p>
-                            <input type="text" @keypress="onlyNumber" v-model="flatRate" class="form-control"
-                                placeholder="Flat Rate" />
-                        </div>
+                            <div v-for="(category, index) in categoriesList" :key="index"
+                                class="col-md-12 row mt-3 category-select-wrapper">
+                                <div class="col-md-10">
+                                    <v-select v-model="category.selected" :options="categories"
+                                        @input="fetchRange(category.selected, index)"></v-select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" @click="addCategory"><i
+                                            class="fa fa-plus"></i></button>
+                                    <button class="btn btn-danger " v-if="categoriesList.length > 1"
+                                        @click="removeCategory(index)"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </div>
 
-                        <div v-if="rateMethod.code === 3" class="col-md-12 mt-5">
-                            <h6>Weight-Based Shipping Configuration</h6>
-                            <p class="text-muted">Enter the base rate and the rate per unit of weight. The total cost
-                                will be calculated as: Base Rate + (Rate Per Unit * Weight).</p>
-                            <input type="text" @keypress="onlyNumber" v-model="baseRate" class="form-control"
-                                placeholder="Base Rate" />
-                            <input type="text" @keypress="onlyNumber" v-model="ratePerUnit" class="form-control mt-2"
-                                placeholder="Rate Per Unit (e.g., per kg)" />
-                            <input type="text" @keypress="onlyNumber" v-model="minimumOrder" class="form-control mt-2"
-                                placeholder="Minimum Weight" />
-                        </div>
-
-                        <div v-if="rateMethod.code === 4" class="col-md-12 mt-5">
-                            <h6>Dimension-Based Shipping Configuration</h6>
-                            <p class="text-muted">Enter the base rate and the rate per unit of dimension. The total cost
-                                will be calculated as: Base Rate + (Rate Per Unit * Dimension).</p>
-                            <input type="text" @keypress="onlyNumber" v-model="baseRate" class="form-control"
-                                placeholder="Base Rate" />
-                            <input type="text" @keypress="onlyNumber" v-model="ratePerUnit" class="form-control mt-2"
-                                placeholder="Rate Per Unit (e.g., per cubic meter)" />
-                            <input type="text" @keypress="onlyNumber" v-model="minimumOrder" class="form-control mt-2"
-                                placeholder="Minimum cubic meter" />
-                        </div>
-
-                        <div v-if="rateMethod.code == 3 || rateMethod.code == 4" class="col-md-12 mt-5">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Rate Method</th>
-                                        <th>Base Rate</th>
-                                        <th>Rate Per Unit</th>
-                                        <th v-if="rateMethod.code === 3">Minimum Weight</th>
-                                        <th v-if="rateMethod.code === 4">Minimum Cubic Meter</th>
-                                        <th>Total Cost</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{ rateMethod.label }}</td>
-                                        <td v-if="rateMethod.code === 3 || rateMethod.code === 4">{{ baseRate }}</td>
-                                        <td v-if="rateMethod.code === 3 || rateMethod.code === 4">{{ ratePerUnit }}</td>
-                                        <td
-                                            v-if="rateMethod.code === 1 || rateMethod.code === 3 || rateMethod.code === 4">
-                                            {{ minimumOrder }}</td>
-                                        <td v-if="rateMethod.code === 2">{{ flatRate }}</td>
-                                        <td>{{ calculateTotalCost() }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <!-- Weight Input and Range Calculation -->
+                            <div class="col-md-12 mt-5">
+                                <h6>Test Your Shipping Cost</h6>
+                                <div class="form-group">
+                                    <label for="weight">Enter Weight (kg)</label>
+                                    <input type="text" class="form-control" v-model="testWeight" id="weight"
+                                        @keypress="onlyNumber" placeholder="Enter weight in kg">
+                                </div>
+                                <div v-if="selectedRange">
+                                    <h6>Based on your weight, the range is: {{ selectedRange.minimum_quantity }} - {{
+                                        selectedRange.maximum_quantity }} kg</h6>
+                                    <h6>Total Shipping Cost: {{ calculateTotalCostForWeight(selectedRange) }}</h6>
+                                </div>
+                                <div v-else-if="testWeight">
+                                    <h6>No valid range found for the entered weight.</h6>
+                                </div>
+                                <div v-if="selectedRange">
+                                    Best Offer:
+                                    <ul>
+                                        <li>Category: {{ categories.find(cat => cat.code === selectedRange.category_id).label }}</li>
+                                        <li>Minimum Quantity: {{ selectedRange.minimum_quantity }}</li>
+                                        <li>Maximum Quantity: {{ selectedRange.maximum_quantity }}</li>
+                                        <li>Base Rate: {{ selectedRange.base_rate }}</li>
+                                        <li>Total Cost: {{ calculateTotalCostForWeight(selectedRange) }}</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="handleSubmit()" v-if="!loader" class="btn btn-primary">Add
-                            Shipping
-                            Class</button>
+                            Courier Service</button>
                         <button type="button" v-else class="btn btn-primary btn-progress disabled">Add Shipping
                             Class</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -123,17 +105,52 @@
 <script>
 export default {
     name: 'AddShippingClass',
-    props: ['loader', 'categories'],
+    props: ['loader', 'categories', 'ranges'],
     data() {
         return {
             courierName: '',
-            shortDescription: '',
-            rateMethod: { code: 0, label: 'Select from the following' },
-            minimumOrder: null,
-            rate: null,
-            flatRate: null,
-            baseRate: null,
-            ratePerUnit: null,
+            contactPerson: '',
+            contactPersonNumber: '',
+            selectCategory: { code: 0, label: 'Select from the following' },
+            categoriesList: [
+                { selected: { code: 0, label: 'Select from the following' } },  // Initialize with one empty category selection
+            ],
+            testWeight: ''
+        }
+    },
+    computed: {
+        selectedRange: {
+            get() {
+                // Initialize minimum price and best range
+                let minPrice = Infinity;
+                let bestRange = null;
+                console.log("here");
+
+                // Check if ranges are loaded
+                if (Object.keys(this.ranges).length > 0) {
+
+                    // Iterate over all categories and ranges
+                    Object.values(this.ranges).forEach((categoryRanges) => {
+
+                        categoryRanges.forEach((range) => {
+
+                            // Check if testWeight falls within the range
+                            if (this.testWeight >= parseFloat(range.minimum_quantity) && this.testWeight <= parseFloat(range.maximum_quantity)) {
+                                // Calculate total cost for this range
+                                const totalCost = this.calculateTotalCostForWeight(range);
+
+                                // Update minimum price and best range if necessary
+                                if (parseFloat(totalCost) < minPrice) {
+                                    minPrice = parseFloat(totalCost);
+                                    bestRange = range;
+                                }
+                            }
+                        });
+                    });
+                }
+
+                return bestRange;
+            }
         }
     },
     mounted() {
@@ -144,11 +161,55 @@ export default {
         });
     },
     methods: {
+        calculateTotalCostForWeight(range) {
+            let baseAmount;
+
+            if (this.testWeight > parseFloat(range.minimum_quantity) && range.per_kg_rate > 0) {
+                // Calculate extra weight beyond the minimum quantity
+                const extraWeight = parseFloat((this.testWeight - parseFloat(range.minimum_quantity)).toFixed(2));  // Fix precision to 2 decimal places
+
+                // Check if there is any extra weight (even a small fraction)
+                if (extraWeight > 0) {
+                    // Calculate steps based on per_kg (e.g., 0.5 kg steps)
+                    const steps = Math.floor(extraWeight / parseFloat(range.per_kg)) + 1;  // Start counting from the first extra step
+
+                    // Multiply steps by the per_kg_rate to get the extra cost
+                    const extraCost = steps * parseFloat(range.per_kg_rate);
+
+                    // Total cost is base rate plus extra cost
+                    baseAmount = parseFloat(range.base_rate) + extraCost;
+                }
+
+            } else {
+                baseAmount = parseFloat(range.base_rate);
+            }
+
+
+            const fcTax = (parseFloat(range.fac_tax) / 100) * baseAmount;
+            const gstTax = (parseFloat(range.gst_tax) / 100) * (baseAmount + fcTax);
+            return (baseAmount + fcTax + gstTax).toFixed(2);
+        },
         onlyNumber($event) {
             let keyCode = $event.keyCode ? $event.keyCode : $event.which;
             if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
                 // 46 is dot
                 $event.preventDefault();
+            }
+        },
+        addCategory() {
+            // Add a new category object to the categoriesList array
+            this.categoriesList.push({ selected: { code: 0, label: 'Select from the following' } });
+        },
+        removeCategory(index) {
+            const removedCategoryId = this.categoriesList[index].selected.code;
+            // Remove the category from the categoriesList array
+            this.categoriesList.splice(index, 1);
+            // Remove the corresponding ranges
+            delete this.ranges[removedCategoryId];
+        },
+        fetchRange(selectedCategory, index) {
+            if (selectedCategory.code != 0) {
+                this.$emit('fetchRange', { category: selectedCategory })
             }
         },
         calculateTotalCost() {
@@ -170,7 +231,7 @@ export default {
         },
         handleSubmit() {
             let vm = this;
-            if (vm.className == '') {
+            if (vm.courierName == '') {
                 return swal({
                     title: "Error",
                     text: "Please add some class name, thanks.",
@@ -179,82 +240,51 @@ export default {
                 });
             }
 
-            if (vm.shortDescription == '') {
+            if (vm.contactPerson == '') {
                 return swal({
                     title: "Error",
-                    text: "Please add some description, thanks.",
-                    icon: "error",
-                    timer: 3000,
-                });
-            }
-            // Validate the form based on the selected rate method
-            if (vm.rateMethod.code === 1) { // Free Shipping
-                if (vm.minimumOrder === null || vm.rate === null) {
-                    return swal({
-                        title: "Error",
-                        text: "Please fill in both the Minimum Order Amount and Rate for Free Shipping.",
-                        icon: "error",
-                        timer: 3000,
-                    });
-                }
-            } else if (vm.rateMethod.code === 2) { // Flat Rate
-                if (vm.flatRate === null) {
-                    return swal({
-                        title: "Error",
-                        text: "Please enter the Flat Rate.",
-                        icon: "error",
-                        timer: 3000,
-                    });
-                }
-            } else if (vm.rateMethod.code === 3) { // Weight-Based
-                if (vm.baseRate === null || vm.ratePerUnit === null) {
-                    return swal({
-                        title: "Error",
-                        text: "Please fill in both the Base Rate and Rate Per Unit for Weight-Based Shipping.",
-                        icon: "error",
-                        timer: 3000,
-                    });
-                }
-            } else if (vm.rateMethod.code === 4) { // Dimension-Based
-                if (vm.baseRate === null || vm.ratePerUnit === null) {
-                    return swal({
-                        title: "Error",
-                        text: "Please fill in both the Base Rate and Rate Per Unit for Dimension-Based Shipping.",
-                        icon: "error",
-                        timer: 3000,
-                    });
-                }
-            } else {
-                return swal({
-                    title: "Error",
-                    text: "Please select a valid Rate Method.",
+                    text: "Please add contact person name, thanks.",
                     icon: "error",
                     timer: 3000,
                 });
             }
 
+            if (vm.contactPersonNumber == '') {
+                return swal({
+                    title: "Error",
+                    text: "Please add contact person number, thanks.",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
             const data = {
-                name: vm.className,
-                description: vm.shortDescription,
-                rate_type: vm.rateMethod.label, // Use the code of the selected rate method
-                minimum_order: vm.minimumOrder,
-                rate: vm.rate,
-                flat_rate: vm.flatRate,
-                base_rate: vm.baseRate,
-                rate_per_unit: vm.ratePerUnit
+                name: vm.courierName,
+                contactPerson: vm.contactPerson,
+                contactPersonNumber: vm.contactPersonNumber,
+                categories: vm.categoriesList.map((category) => ({
+                    code: category.selected.code,
+                    label: category.selected.label,
+                })),
             };
 
-            vm.$emit('addNewClass', data);
+            vm.$emit('addNewCourier', data);
         },
-        close(){
-            this.className = '';
-            this.shortDescription = '';
-            this.rateMethod = { code: 0, label: 'Select from the following' };
-            this.minimumOrder = null;
-            this.rate = null;
-            this.flatRate = null;
-            this.baseRate = null;
-            this.ratePerUnit = null;
+        close() {
+            this.courierName = '';
+            this.contactPersonNumber = '';
+            this.contactPerson = '';
+            this.selectCategory = { code: 0, label: 'Select from the following' };
+            this.categoriesList = [
+                { selected: { code: 0, label: 'Select from the following' } },  // Initialize with one empty category selection
+            ];
+            this.testWeight = '';
+
+        }
+    },
+    watch: {
+        ranges(newValue) {
+            // Recompute selectedRange when ranges changes
+            this.selectedRange;
         }
     }
 }

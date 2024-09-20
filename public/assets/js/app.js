@@ -444,7 +444,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories'],
   data: function data() {
     return {
-      description: '',
+      internalLabel: '',
       name: '',
       ranges: [{
         minimum_quantity: '',
@@ -502,7 +502,17 @@ __webpack_require__.r(__webpack_exports__);
       }
       var fd = new FormData();
       fd.append('name', vm.name);
-      fd.append('description', vm.description);
+      fd.append('internalLabel', vm.internalLabel);
+      // Loop through the ranges array and append each range to FormData
+      vm.ranges.forEach(function (range, index) {
+        fd.append("ranges[".concat(index, "][minimum_quantity]"), range.minimum_quantity);
+        fd.append("ranges[".concat(index, "][maximum_quantity]"), range.maximum_quantity);
+        fd.append("ranges[".concat(index, "][base_rate]"), range.base_rate);
+        fd.append("ranges[".concat(index, "][per_kg]"), range.per_kg);
+        fd.append("ranges[".concat(index, "][per_kg_rate]"), range.per_kg_rate);
+        fd.append("ranges[".concat(index, "][fc]"), range.fc);
+        fd.append("ranges[".concat(index, "][gst]"), range.gst);
+      });
       vm.$emit('addNewCategory', fd);
     },
     addRange: function addRange() {
@@ -568,11 +578,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     close: function close() {
       this.name = '';
-      this.description = '';
-      this.category = {
-        code: 0,
-        label: 'Select form the following'
-      };
+      this.internalLabel = '';
+      this.ranges = [{
+        minimum_quantity: '',
+        maximum_quantity: '',
+        base_rate: '',
+        per_kg: '',
+        per_kg_rate: '',
+        fc: '',
+        gst: ''
+      }];
     }
   }
 });
@@ -592,36 +607,119 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddShippingClass',
-  props: ['loader', 'categories'],
+  props: ['loader', 'categories', 'ranges'],
   data: function data() {
     return {
       courierName: '',
-      shortDescription: '',
-      rateMethod: {
+      contactPerson: '',
+      contactPersonNumber: '',
+      selectCategory: {
         code: 0,
         label: 'Select from the following'
       },
-      minimumOrder: null,
-      rate: null,
-      flatRate: null,
-      baseRate: null,
-      ratePerUnit: null
+      categoriesList: [{
+        selected: {
+          code: 0,
+          label: 'Select from the following'
+        }
+      } // Initialize with one empty category selection
+      ],
+      testWeight: ''
     };
   },
+  computed: {
+    selectedRange: {
+      get: function get() {
+        var _this = this;
+        // Initialize minimum price and best range
+        var minPrice = Infinity;
+        var bestRange = null;
+        console.log("here");
+
+        // Check if ranges are loaded
+        if (Object.keys(this.ranges).length > 0) {
+          // Iterate over all categories and ranges
+          Object.values(this.ranges).forEach(function (categoryRanges) {
+            categoryRanges.forEach(function (range) {
+              // Check if testWeight falls within the range
+              if (_this.testWeight >= parseFloat(range.minimum_quantity) && _this.testWeight <= parseFloat(range.maximum_quantity)) {
+                // Calculate total cost for this range
+                var totalCost = _this.calculateTotalCostForWeight(range);
+
+                // Update minimum price and best range if necessary
+                if (parseFloat(totalCost) < minPrice) {
+                  minPrice = parseFloat(totalCost);
+                  bestRange = range;
+                }
+              }
+            });
+          });
+        }
+        return bestRange;
+      }
+    }
+  },
   mounted: function mounted() {
-    var _this = this;
+    var _this2 = this;
     this.$parent.$on("saved", function (value) {
       if (value) {
-        _this.close();
+        _this2.close();
       }
     });
   },
   methods: {
+    calculateTotalCostForWeight: function calculateTotalCostForWeight(range) {
+      var baseAmount;
+      if (this.testWeight > parseFloat(range.minimum_quantity) && range.per_kg_rate > 0) {
+        // Calculate extra weight beyond the minimum quantity
+        var extraWeight = parseFloat((this.testWeight - parseFloat(range.minimum_quantity)).toFixed(2)); // Fix precision to 2 decimal places
+
+        // Check if there is any extra weight (even a small fraction)
+        if (extraWeight > 0) {
+          // Calculate steps based on per_kg (e.g., 0.5 kg steps)
+          var steps = Math.floor(extraWeight / parseFloat(range.per_kg)) + 1; // Start counting from the first extra step
+
+          // Multiply steps by the per_kg_rate to get the extra cost
+          var extraCost = steps * parseFloat(range.per_kg_rate);
+
+          // Total cost is base rate plus extra cost
+          baseAmount = parseFloat(range.base_rate) + extraCost;
+        }
+      } else {
+        baseAmount = parseFloat(range.base_rate);
+      }
+      var fcTax = parseFloat(range.fac_tax) / 100 * baseAmount;
+      var gstTax = parseFloat(range.gst_tax) / 100 * (baseAmount + fcTax);
+      return (baseAmount + fcTax + gstTax).toFixed(2);
+    },
     onlyNumber: function onlyNumber($event) {
       var keyCode = $event.keyCode ? $event.keyCode : $event.which;
       if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
         // 46 is dot
         $event.preventDefault();
+      }
+    },
+    addCategory: function addCategory() {
+      // Add a new category object to the categoriesList array
+      this.categoriesList.push({
+        selected: {
+          code: 0,
+          label: 'Select from the following'
+        }
+      });
+    },
+    removeCategory: function removeCategory(index) {
+      var removedCategoryId = this.categoriesList[index].selected.code;
+      // Remove the category from the categoriesList array
+      this.categoriesList.splice(index, 1);
+      // Remove the corresponding ranges
+      delete this.ranges[removedCategoryId];
+    },
+    fetchRange: function fetchRange(selectedCategory, index) {
+      if (selectedCategory.code != 0) {
+        this.$emit('fetchRange', {
+          category: selectedCategory
+        });
       }
     },
     calculateTotalCost: function calculateTotalCost() {
@@ -643,7 +741,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     handleSubmit: function handleSubmit() {
       var vm = this;
-      if (vm.className == '') {
+      if (vm.courierName == '') {
         return swal({
           title: "Error",
           text: "Please add some class name, thanks.",
@@ -651,88 +749,57 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       }
-      if (vm.shortDescription == '') {
+      if (vm.contactPerson == '') {
         return swal({
           title: "Error",
-          text: "Please add some description, thanks.",
+          text: "Please add contact person name, thanks.",
           icon: "error",
           timer: 3000
         });
       }
-      // Validate the form based on the selected rate method
-      if (vm.rateMethod.code === 1) {
-        // Free Shipping
-        if (vm.minimumOrder === null || vm.rate === null) {
-          return swal({
-            title: "Error",
-            text: "Please fill in both the Minimum Order Amount and Rate for Free Shipping.",
-            icon: "error",
-            timer: 3000
-          });
-        }
-      } else if (vm.rateMethod.code === 2) {
-        // Flat Rate
-        if (vm.flatRate === null) {
-          return swal({
-            title: "Error",
-            text: "Please enter the Flat Rate.",
-            icon: "error",
-            timer: 3000
-          });
-        }
-      } else if (vm.rateMethod.code === 3) {
-        // Weight-Based
-        if (vm.baseRate === null || vm.ratePerUnit === null) {
-          return swal({
-            title: "Error",
-            text: "Please fill in both the Base Rate and Rate Per Unit for Weight-Based Shipping.",
-            icon: "error",
-            timer: 3000
-          });
-        }
-      } else if (vm.rateMethod.code === 4) {
-        // Dimension-Based
-        if (vm.baseRate === null || vm.ratePerUnit === null) {
-          return swal({
-            title: "Error",
-            text: "Please fill in both the Base Rate and Rate Per Unit for Dimension-Based Shipping.",
-            icon: "error",
-            timer: 3000
-          });
-        }
-      } else {
+      if (vm.contactPersonNumber == '') {
         return swal({
           title: "Error",
-          text: "Please select a valid Rate Method.",
+          text: "Please add contact person number, thanks.",
           icon: "error",
           timer: 3000
         });
       }
       var data = {
-        name: vm.className,
-        description: vm.shortDescription,
-        rate_type: vm.rateMethod.label,
-        // Use the code of the selected rate method
-        minimum_order: vm.minimumOrder,
-        rate: vm.rate,
-        flat_rate: vm.flatRate,
-        base_rate: vm.baseRate,
-        rate_per_unit: vm.ratePerUnit
+        name: vm.courierName,
+        contactPerson: vm.contactPerson,
+        contactPersonNumber: vm.contactPersonNumber,
+        categories: vm.categoriesList.map(function (category) {
+          return {
+            code: category.selected.code,
+            label: category.selected.label
+          };
+        })
       };
-      vm.$emit('addNewClass', data);
+      vm.$emit('addNewCourier', data);
     },
     close: function close() {
-      this.className = '';
-      this.shortDescription = '';
-      this.rateMethod = {
+      this.courierName = '';
+      this.contactPersonNumber = '';
+      this.contactPerson = '';
+      this.selectCategory = {
         code: 0,
         label: 'Select from the following'
       };
-      this.minimumOrder = null;
-      this.rate = null;
-      this.flatRate = null;
-      this.baseRate = null;
-      this.ratePerUnit = null;
+      this.categoriesList = [{
+        selected: {
+          code: 0,
+          label: 'Select from the following'
+        }
+      } // Initialize with one empty category selection
+      ];
+      this.testWeight = '';
+    }
+  },
+  watch: {
+    ranges: function ranges(newValue) {
+      // Recompute selectedRange when ranges changes
+      this.selectedRange;
     }
   }
 });
@@ -1355,6 +1422,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inventory_product_courier_CourierAddPopup_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierAddPopup.vue */ "./resources/js/components/inventory/product/courier/CourierAddPopup.vue");
 /* harmony import */ var _components_inventory_product_courier_CourierEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierEditPopup.vue */ "./resources/js/components/inventory/product/courier/CourierEditPopup.vue");
 /* harmony import */ var _components_inventory_product_courier_AddCourierCategory_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/AddCourierCategory.vue */ "./resources/js/components/inventory/product/courier/AddCourierCategory.vue");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -1377,16 +1450,18 @@ __webpack_require__.r(__webpack_exports__);
         link: "#",
         target: "#addCourier"
       },
-      th: ["Sr #", "Name", "Contact", "Address", "Action"],
+      th: ["Sr #", "Courier Name", "Contact Person", "Contact", "Action"],
       table_id: "courier_list_table",
       couriers: [],
       editDetails: {},
       btnLoader: false,
-      categories: []
+      categories: [],
+      ranges: []
     };
   },
   created: function created() {
     this.fetchCouriers();
+    this.fetchCategories();
   },
   methods: {
     fetchCouriers: function fetchCouriers() {
@@ -1395,6 +1470,34 @@ __webpack_require__.r(__webpack_exports__);
         var results = response.data.response;
         vm.couriers = results;
         vm.dataTable();
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    fetchCategories: function fetchCategories() {
+      var vm = this;
+      axios.get(this.api_url + "couriers/categories").then(function (response) {
+        var results = response.data.response;
+        vm.categories = results;
+        vm.dataTable();
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    fetchRange: function fetchRange(data) {
+      var vm = this;
+      axios.post(this.api_url + "couriers/categories/ranges", data).then(function (response) {
+        var results = response.data.response;
+        var newRanges = {};
+        results.forEach(function (range) {
+          if (!newRanges[range.category_id]) {
+            newRanges[range.category_id] = [];
+          }
+          newRanges[range.category_id].push(range);
+        });
+
+        // Merge newRanges with existing vm.ranges
+        vm.ranges = _objectSpread(_objectSpread({}, vm.ranges), newRanges);
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -1413,6 +1516,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(this.api_url + "couriers/add", data).then(function (response) {
         vm.btnLoader = false;
         vm.fetchCouriers();
+        vm.ranges = [];
         vm.$emit('courierSaved', true);
         return swal({
           title: "Success",
@@ -3077,42 +3181,20 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.name,
-      expression: "name"
+      value: _vm.internalLabel,
+      expression: "internalLabel"
     }],
     staticClass: "form-control",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.name
+      value: _vm.internalLabel
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.name = $event.target.value;
-      }
-    }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12 mt-3"
-  }, [_vm._m(3), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.description,
-      expression: "description"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text"
-    },
-    domProps: {
-      value: _vm.description
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.description = $event.target.value;
+        _vm.internalLabel = $event.target.value;
       }
     }
   })]), _vm._v(" "), _vm._l(_vm.ranges, function (range, index) {
@@ -3317,7 +3399,7 @@ var render = function render() {
     staticClass: "col-md-12 mt-5"
   }, [_c("h6", [_vm._v("Impact on Shipping Costs")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.ranges, function (range, index) {
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.ranges, function (range, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v(_vm._s(range.minimum_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(range.maximum_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(range.base_rate))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(range.per_kg))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(range.per_kg_rate))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(range.fc) + " %")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(range.gst) + " %")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.calculateTotalAmount(range)))])]);
@@ -3371,9 +3453,9 @@ var render = function render() {
     }
   }, [_vm._v("Add New Category")])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-5"
-  }, [_vm._m(5), _vm._v(" "), _c("table", {
+  }, [_vm._m(4), _vm._v(" "), _c("table", {
     staticClass: "table table-sm"
-  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.categories, function (item, index) {
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.categories, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
@@ -3428,7 +3510,7 @@ var render = function render() {
     }) : _c("i", {
       staticClass: "fa fa-save"
     })])])]);
-  }), 0)])])], 2), _vm._v(" "), _vm._m(7)])])]);
+  }), 0)])])], 2), _vm._v(" "), _vm._m(6)])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -3472,16 +3554,6 @@ var staticRenderFns = [function () {
   }, [_c("b", [_vm._v("Internal Label "), _c("span", {
     staticClass: "text-danger"
   }, [_vm._v("*")])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_c("b", [_vm._v("Description "), _c("span", {
-    staticClass: "text-danger"
-  }, [_vm._v("( optional )")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -3573,239 +3645,128 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-3"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.contactPerson,
+      expression: "contactPerson"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Courier Contact Person Name"
+    },
+    domProps: {
+      value: _vm.contactPerson
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.contactPerson = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-3"
+  }, [_vm._m(3), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.contactPersonNumber,
+      expression: "contactPersonNumber"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Courier Contact Person Number"
+    },
+    domProps: {
+      value: _vm.contactPersonNumber
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.contactPersonNumber = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 row mt-5"
-  }, [_vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("v-select", {
-    attrs: {
-      options: _vm.methods
-    },
-    model: {
-      value: _vm.categories,
-      callback: function callback($$v) {
-        _vm.categories = $$v;
+  }, [_vm._m(4), _vm._v(" "), _vm._m(5), _vm._v(" "), _vm._m(6), _vm._v(" "), _vm._l(_vm.categoriesList, function (category, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "col-md-12 row mt-3 category-select-wrapper"
+    }, [_c("div", {
+      staticClass: "col-md-10"
+    }, [_c("v-select", {
+      attrs: {
+        options: _vm.categories
       },
-      expression: "categories"
-    }
-  }), _vm._v(" "), _c("code", [_vm._v("Select the method used to calculate the shipping rate. This selection determines how the shipping cost will be calculated for the items in your cart.")])], 1)]), _vm._v(" "), _vm.rateMethod.code === 1 ? _c("div", {
+      on: {
+        input: function input($event) {
+          return _vm.fetchRange(category.selected, index);
+        }
+      },
+      model: {
+        value: category.selected,
+        callback: function callback($$v) {
+          _vm.$set(category, "selected", $$v);
+        },
+        expression: "category.selected"
+      }
+    })], 1), _vm._v(" "), _c("div", {
+      staticClass: "col-md-2"
+    }, [_c("button", {
+      staticClass: "btn btn-primary",
+      on: {
+        click: _vm.addCategory
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-plus"
+    })]), _vm._v(" "), _vm.categoriesList.length > 1 ? _c("button", {
+      staticClass: "btn btn-danger",
+      on: {
+        click: function click($event) {
+          return _vm.removeCategory(index);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
+    })]) : _vm._e()])]);
+  }), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-5"
-  }, [_c("h6", [_vm._v("Free Shipping Configuration")]), _vm._v(" "), _c("p", {
-    staticClass: "text-muted"
-  }, [_vm._v("Please enter the minimum order amount required for free shipping and\n                            the rate that will be applied.")]), _vm._v(" "), _c("input", {
+  }, [_c("h6", [_vm._v("Test Your Shipping Cost")]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "weight"
+    }
+  }, [_vm._v("Enter Weight (kg)")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.minimumOrder,
-      expression: "minimumOrder"
+      value: _vm.testWeight,
+      expression: "testWeight"
     }],
     staticClass: "form-control",
     attrs: {
       type: "text",
-      placeholder: "Minimum Order Amount"
+      id: "weight",
+      placeholder: "Enter weight in kg"
     },
     domProps: {
-      value: _vm.minimumOrder
+      value: _vm.testWeight
     },
     on: {
       keypress: _vm.onlyNumber,
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.minimumOrder = $event.target.value;
+        _vm.testWeight = $event.target.value;
       }
     }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.rate,
-      expression: "rate"
-    }],
-    staticClass: "form-control mt-2",
-    attrs: {
-      type: "text",
-      placeholder: "Rate"
-    },
-    domProps: {
-      value: _vm.rate
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.rate = $event.target.value;
-      }
-    }
-  })]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 2 ? _c("div", {
-    staticClass: "col-md-12 mt-5"
-  }, [_c("h6", [_vm._v("Flat Rate Configuration")]), _vm._v(" "), _c("p", {
-    staticClass: "text-muted"
-  }, [_vm._v("Enter the flat rate that will be applied regardless of weight or\n                            dimension.")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.flatRate,
-      expression: "flatRate"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Flat Rate"
-    },
-    domProps: {
-      value: _vm.flatRate
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.flatRate = $event.target.value;
-      }
-    }
-  })]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 3 ? _c("div", {
-    staticClass: "col-md-12 mt-5"
-  }, [_c("h6", [_vm._v("Weight-Based Shipping Configuration")]), _vm._v(" "), _c("p", {
-    staticClass: "text-muted"
-  }, [_vm._v("Enter the base rate and the rate per unit of weight. The total cost\n                            will be calculated as: Base Rate + (Rate Per Unit * Weight).")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.baseRate,
-      expression: "baseRate"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Base Rate"
-    },
-    domProps: {
-      value: _vm.baseRate
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.baseRate = $event.target.value;
-      }
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.ratePerUnit,
-      expression: "ratePerUnit"
-    }],
-    staticClass: "form-control mt-2",
-    attrs: {
-      type: "text",
-      placeholder: "Rate Per Unit (e.g., per kg)"
-    },
-    domProps: {
-      value: _vm.ratePerUnit
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.ratePerUnit = $event.target.value;
-      }
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.minimumOrder,
-      expression: "minimumOrder"
-    }],
-    staticClass: "form-control mt-2",
-    attrs: {
-      type: "text",
-      placeholder: "Minimum Weight"
-    },
-    domProps: {
-      value: _vm.minimumOrder
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.minimumOrder = $event.target.value;
-      }
-    }
-  })]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 4 ? _c("div", {
-    staticClass: "col-md-12 mt-5"
-  }, [_c("h6", [_vm._v("Dimension-Based Shipping Configuration")]), _vm._v(" "), _c("p", {
-    staticClass: "text-muted"
-  }, [_vm._v("Enter the base rate and the rate per unit of dimension. The total cost\n                            will be calculated as: Base Rate + (Rate Per Unit * Dimension).")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.baseRate,
-      expression: "baseRate"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Base Rate"
-    },
-    domProps: {
-      value: _vm.baseRate
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.baseRate = $event.target.value;
-      }
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.ratePerUnit,
-      expression: "ratePerUnit"
-    }],
-    staticClass: "form-control mt-2",
-    attrs: {
-      type: "text",
-      placeholder: "Rate Per Unit (e.g., per cubic meter)"
-    },
-    domProps: {
-      value: _vm.ratePerUnit
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.ratePerUnit = $event.target.value;
-      }
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.minimumOrder,
-      expression: "minimumOrder"
-    }],
-    staticClass: "form-control mt-2",
-    attrs: {
-      type: "text",
-      placeholder: "Minimum cubic meter"
-    },
-    domProps: {
-      value: _vm.minimumOrder
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.minimumOrder = $event.target.value;
-      }
-    }
-  })]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code == 3 || _vm.rateMethod.code == 4 ? _c("div", {
-    staticClass: "col-md-12 mt-5"
-  }, [_c("table", {
-    staticClass: "table table-bordered"
-  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Rate Method")]), _vm._v(" "), _c("th", [_vm._v("Base Rate")]), _vm._v(" "), _c("th", [_vm._v("Rate Per Unit")]), _vm._v(" "), _vm.rateMethod.code === 3 ? _c("th", [_vm._v("Minimum Weight")]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 4 ? _c("th", [_vm._v("Minimum Cubic Meter")]) : _vm._e(), _vm._v(" "), _c("th", [_vm._v("Total Cost")])])]), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_vm._v(_vm._s(_vm.rateMethod.label))]), _vm._v(" "), _vm.rateMethod.code === 3 || _vm.rateMethod.code === 4 ? _c("td", [_vm._v(_vm._s(_vm.baseRate))]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 3 || _vm.rateMethod.code === 4 ? _c("td", [_vm._v(_vm._s(_vm.ratePerUnit))]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 1 || _vm.rateMethod.code === 3 || _vm.rateMethod.code === 4 ? _c("td", [_vm._v("\n                                        " + _vm._s(_vm.minimumOrder))]) : _vm._e(), _vm._v(" "), _vm.rateMethod.code === 2 ? _c("td", [_vm._v(_vm._s(_vm.flatRate))]) : _vm._e(), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.calculateTotalCost()))])])])])]) : _vm._e()]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Category: " + _vm._s(_vm.categories.find(function (cat) {
+    return cat.code === _vm.selectedRange.category_id;
+  }).label))]), _vm._v(" "), _c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])])]) : _vm._e()])], 2)]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -3817,7 +3778,7 @@ var render = function render() {
         return _vm.handleSubmit();
       }
     }
-  }, [_vm._v("Add\n                        Shipping\n                        Class")]) : _c("button", {
+  }, [_vm._v("Add\n                        Courier Service")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled",
     attrs: {
       type: "button"
@@ -3861,6 +3822,18 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
+  return _c("h5", [_vm._v("Courier Contact Person Name "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("h5", [_vm._v("Courier Contact Person Number "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
   return _c("div", {
     staticClass: "col-md-6"
   }, [_c("h5", [_vm._v("Select Category "), _c("span", {
@@ -3874,9 +3847,9 @@ var staticRenderFns = [function () {
   }, [_c("a", {
     staticClass: "btn btn-outline-primary",
     staticStyle: {
-      height: "15px",
+      height: "17px",
       "line-height": "1px",
-      padding: "6px",
+      padding: "8px",
       "float": "right"
     },
     attrs: {
@@ -3884,7 +3857,13 @@ var staticRenderFns = [function () {
       "data-toggle": "modal",
       "data-target": "#addCourierCategory"
     }
-  }, [_vm._v("Add\n                            New")])]);
+  }, [_vm._v("Add\n                                New Category")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("code", [_vm._v("Select the method used to calculate the shipping rate. This selection determines how the shipping cost will be calculated for the items in your cart.")])]);
 }];
 render._withStripped = true;
 
@@ -4091,7 +4070,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.tbody, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.address))]), _vm._v(" "), _c("td", [_c("a", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person_contact))]), _vm._v(" "), _c("td", [_c("a", {
       staticClass: "btn btn-icon icon-left btn-primary",
       attrs: {
         href: "#",
@@ -4607,11 +4586,16 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("div", [_c("CourierAddPopup", {
     attrs: {
-      loader: _vm.btnLoader
+      loader: _vm.btnLoader,
+      categories: _vm.categories,
+      ranges: _vm.ranges
     },
     on: {
-      add: function add($event) {
+      addNewCourier: function addNewCourier($event) {
         return _vm.add($event);
+      },
+      fetchRange: function fetchRange($event) {
+        return _vm.fetchRange($event);
       }
     }
   }), _vm._v(" "), _c("CourierEditPopup", {
@@ -4626,7 +4610,6 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("AddCourierCategory", {
     attrs: {
-      categories: _vm.categories,
       loader: _vm.btnLoader
     },
     on: {
@@ -6908,7 +6891,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-7a40a33e] {\r\n  text-transform: capitalize;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-7a40a33e] {\n  text-transform: capitalize;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

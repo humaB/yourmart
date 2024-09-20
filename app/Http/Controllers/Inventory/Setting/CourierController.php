@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Inventory\Setting;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
-use App\Models\Inventory\Product\Setting\ShippingClass;
-use App\Models\Inventory\Product\Setting\ShippingClassRate;
-use App\Models\Inventory\Product\Setting\Courier;
+use App\Models\Inventory\Courier\Courier;
+use App\Models\Inventory\Courier\CourierAddedCategory;
+use App\Models\Inventory\Courier\CourierCategory;
+use App\Models\Inventory\Courier\CourierCategoryRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -34,24 +35,53 @@ class CourierController extends Controller
      */
     public function store(Request $request)
     {
-        // Validate the input data
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'contact' => 'nullable|string|max:255',
-            'address' => 'nullable|string|max:500'
-        ]);
+        $lock = Cache::lock('add_courier_category')->block(7, function () use ($request) {
+            // Validate the input data
+            $validatedData = \Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'contactPerson' => 'required|string|max:255',
+                'contactPersonNumber' => 'required|string|max:20',
+                'categories' => 'required|array|min:1',
+                'categories.*.code' => 'required|integer',
+            ]);
 
-        // Create new courier
-        $courier = Courier::create([
-            'name' => $request->name,
-            'contact' => $request->contact,
-            'address' => $request->address
-        ]);
+            $validation = $this->validation($validatedData);
+            if ($validation) {
+                return $validation;
+            }
 
-        return response()->json([
-            'status' => 'success',
-            'response' => $courier
-        ], 201);
+            $exists = Courier::where('courier_name', $request->name)->first();
+            if ($exists) {
+                return (new ValidationCollection(['Courier with this name already exist, please check record']))
+                    ->response()
+                    ->setStatusCode(421);
+            }
+
+            DB::transaction(function () use ($request) {
+                // Create new courier
+                $courier = Courier::create([
+                    'courier_name'           => $request->name,
+                    'contact_person'         => $request->contactPerson,
+                    'contact_person_contact' => $request->contactPersonNumber,
+                    'added_by'             => auth()->user()->id
+                ]);
+
+                // Create courier categories
+                foreach ($request->categories as $category) {
+                    CourierAddedCategory::create([
+                        'courier_id' => $courier->id,
+                        'category_id' => $category['code'],
+                        'added_by' => auth()->user()->id,
+                    ]);
+                }
+            });
+
+            return response()->json([
+                'status' => 'success'
+            ], 201);
+        });
+
+        return $lock;
     }
 
     /**
@@ -81,5 +111,109 @@ class CourierController extends Controller
             'status' => 'success',
             'response' => $courier
         ], 200);
+    }
+
+    public function fetchCategory(){
+        $categories = CourierCategory::select('id as code', 'name as label')->get();
+        return (new ResponseCollection($categories))
+        ->response()
+        ->setStatusCode(200);
+    }
+
+    public function fetchCategoryRanges( Request $request ){
+
+        $categories = CourierCategoryRange::where('category_id', $request->category['code'])->get();
+        return (new ResponseCollection($categories))
+        ->response()
+        ->setStatusCode(200);
+    }
+
+    public function addCategory( Request $request ){
+
+        $lock = Cache::lock('add_courier_category')->block(7, function () use ($request) {
+            $validatedData = \Validator::make($request->all(), [
+                'name'          => 'required|string|max:255',
+                'internalLabel' => 'required|string|max:255',
+                'ranges'        => 'required|array|min:1',
+                'ranges.*.minimum_quantity' => 'required|numeric|min:0',
+                'ranges.*.maximum_quantity' => 'required|numeric|gte:ranges.*.minimum_quantity',
+                'ranges.*.base_rate'        => 'required|numeric|min:0',
+                'ranges.*.per_kg'           => 'nullable|numeric|min:0',  // per_kg can be null
+                'ranges.*.per_kg_rate'      => 'nullable|numeric|min:0',  // per_kg_rate can be null
+                'ranges.*.fc'               => 'required|numeric|between:0,100',  // FC tax as a percentage
+                'ranges.*.gst'              => 'required|numeric|between:0,100',  // GST tax as a percentage
+            ]);
+
+            $validation = $this->validation($validatedData);
+            if ($validation) {
+                return $validation;
+            }
+
+            $exists = CourierCategory::where('name', $request->name)->first();
+            if ($exists) {
+                return (new ValidationCollection(['Courier category with name already exist, please check record']))
+                    ->response()
+                    ->setStatusCode(421);
+            }
+
+            DB::transaction(function () use ($request) {
+                // Create the Courier Category
+                $category = CourierCategory::create([
+                    'name'           => $request->input('name'),
+                    'internal_label' => $request->input('internalLabel'),
+                    'description'    => $request->input('description') ?? '', // Assuming there's a description
+                    'added_by'       => auth()->user()->id,
+                ]);
+
+                // Loop through the ranges and create the related CourierCategoryRange records
+                foreach ($request->input('ranges') as $range) {
+                    CourierCategoryRange::create([
+                        'category_id'      => $category->id,
+                        'minimum_quantity' => $range['minimum_quantity'],
+                        'maximum_quantity' => $range['maximum_quantity'],
+                        'base_rate'        => $range['base_rate'],
+                        'per_kg'           => $range['per_kg'],
+                        'per_kg_rate'      => $range['per_kg_rate'],
+                        'fac_tax'          => $range['fc'], // Assuming 'fc' corresponds to fac_tax
+                        'gst_tax'          => $range['gst'],
+                        'total'            => $this->calculateTotal($range), // Assuming you want to calculate the total
+                        'added_by'         => auth()->user()->id,
+                    ]);
+                }
+            });
+
+            return ['message' => 'Successfully added'];
+        });
+
+        return $lock;
+    }
+
+    private function calculateTotal($range){
+        $baseAmount = (float) $range['base_rate'] + ( (float)$range['per_kg_rate'] ?? 0);
+
+        // Calculate FC and GST tax
+        $fcTax = ($range['fc'] / 100) * $baseAmount;
+        $gstTax = ($range['gst'] / 100) * ($baseAmount + $fcTax);
+
+        // Return the total
+        return round($baseAmount + $fcTax + $gstTax);
+    }
+
+    private function validation($validator)
+    {
+
+        if ($validator->fails()) {
+
+            $validationErrors = [];
+            $errors = $validator->errors()->all();
+
+            foreach ($errors as $error) {
+                array_push($validationErrors, $error);
+            }
+
+            return (new ValidationCollection($validationErrors))
+                ->response()
+                ->setStatusCode(400);
+        }
     }
 }

@@ -32,7 +32,8 @@ class Product extends Model
         'max_quantity',
         'quantity_step',
         'status', // 0 => Published || 1 => Draft || 2 => Schedule
-        'added_by'
+        'added_by',
+        'deleted_at'
     ];
 
     public function user(){
@@ -73,6 +74,10 @@ class Product extends Model
 
     public function variations(){
         return $this->hasMany(ProductVariation::class, 'product_id', 'id');
+    }
+
+    public function variation(){
+        return $this->hasOne(ProductVariation::class, 'product_id', 'id');
     }
 
     public function up_sells(){
