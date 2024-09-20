@@ -85,7 +85,7 @@ class ProductController extends Controller
         $productName = $request->input('product');
         $tagCode = $request->input('tag.code');
 
-        $products = Product::with('user:id,name')
+        $products = Product::with('user:id,name', 'variation', 'category', 'tags.tag')
             ->when($categoryCode, function ($query, $categoryCode) {
                 return $query->where('category_id', $categoryCode);
             })
