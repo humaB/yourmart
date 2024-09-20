@@ -113,7 +113,12 @@
                                                     <tbody>
                                                         <tr v-for="(item, index) in products" :key="item.id">
                                                             <td>{{ index + 1 }}</td>
-                                                            <img :src="getImageUrl(item.hero_image)" class="user-img mr-2" alt="">
+                                                            <td class="text-truncate">
+                                                                <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                                  <li class="team-member team-member-sm"><img class="rounded-circle" :src="getImageUrl(item.hero_image)"></li>
+                                                                </ul>
+                                                              </td>
+
                                                             <td>
 
                                                                     <div class="pretty p-default p-round p-thick">

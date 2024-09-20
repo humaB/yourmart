@@ -9260,13 +9260,18 @@ var render = function render() {
   }, [_vm._v("Product Title")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Stock")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("Tags")]), _vm._v(" "), _c("th", [_vm._v("Added Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("img", {
-      staticClass: "user-img mr-2",
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", {
+      staticClass: "text-truncate"
+    }, [_c("ul", {
+      staticClass: "list-unstyled order-list m-b-0 m-b-0"
+    }, [_c("li", {
+      staticClass: "team-member team-member-sm"
+    }, [_c("img", {
+      staticClass: "rounded-circle",
       attrs: {
-        src: _vm.getImageUrl(item.hero_image),
-        alt: ""
+        src: _vm.getImageUrl(item.hero_image)
       }
-    }), _vm._v(" "), _c("td", [_c("div", {
+    })])])]), _vm._v(" "), _c("td", [_c("div", {
       staticClass: "pretty p-default p-round p-thick"
     }, [_c("input", {
       directives: [{
