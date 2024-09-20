@@ -78,10 +78,10 @@
                                         <div class="col-md-12 mb-2">
                                             <nav>
                                               <ul class="nav">
-                                                <li class="nav-item mr-2" @click="fetchProducts()"><a href="#">All ({{ allProductCount }})</a> </li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="fetchProducts(0)"><a href="#">Published ({{ publishedProductCount }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="fetchProducts(1)"><a href="#">Drafts ({{ draftProductCount }})</a></li> ||
-                                                <li class="nav-item ml-2" @click="fetchProducts(3)"><a href="#">Trash ({{ trashProductCount }})</a></li>
+                                                <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a href="#">All ({{ allProductCount }})</a> </li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(0)"><a href="#">Published ({{ publishedProductCount }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(1)"><a href="#">Drafts ({{ draftProductCount }})</a></li> ||
+                                                <li class="nav-item ml-2" @click="changeProductFetchStatus(3)"><a href="#">Trash ({{ trashProductCount }})</a></li>
                                               </ul>
                                             </nav>
                                           </div>
@@ -139,7 +139,7 @@
 
                                                             </td>
                                                             <td style="width:22%">
-                                                                <span class="badge badge-sm badge-success" v-if="item.status == 0">Published</span>
+                                                                <span class="badge badge-sm badge-success" v-if="item.status == 0 && !item.deleted_at">Published</span>
                                                                 <span class="badge badge-sm badge-warning" v-if="item.status == 1 && !item.deleted_at">Saved in Draft</span>
                                                                 <span class="badge badge-sm badge-danger" v-if="item.deleted_at">In Trash</span>
                                                                 <br>
@@ -183,6 +183,21 @@
                                                         </tr>
                                                     </tbody>
                                                 </table>
+                                                <div class="card-footer text-right">
+                                                    <nav class="d-inline-block">
+                                                      <ul class="pagination mb-0">
+                                                        <li class="page-item" :class="{ disabled: page === 1 }">
+                                                          <a class="page-link" href="#" @click="fetchProducts(status, page - 1)" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                                                        </li>
+                                                        <li class="page-item" v-for="pageNumber in pagination.last_page" :key="pageNumber" :class="{ active: page === pageNumber }">
+                                                          <a class="page-link" href="#" @click="fetchProducts(status, pageNumber)">{{ pageNumber }} <span class="sr-only">(current)</span></a>
+                                                        </li>
+                                                        <li class="page-item" :class="{ disabled: page === pagination.last_page }">
+                                                          <a class="page-link" href="#" @click="fetchProducts(status, page + 1)"><i class="fas fa-chevron-right"></i></a>
+                                                        </li>
+                                                      </ul>
+                                                    </nav>
+                                                  </div>
                                             </div>
                                         </div>
                                     </div>
@@ -373,7 +388,7 @@ export default {
                 warranty: "",
                 max_quantity: "",
                 quantity_step: "",
-                status: 0,
+                status: null,
                 variations: [
                     {
                         id: 0,
@@ -400,7 +415,9 @@ export default {
             allProductCount : 0,
             publishedProductCount : 0,
             draftProductCount : 0,
-            trashProductCount : 0
+            trashProductCount : 0,
+            page: 1,
+            pagination: {},
         };
     },
     created() {
@@ -430,7 +447,15 @@ export default {
                 $('#product_table').DataTable().destroy();
             }
             setTimeout(function () {
-                $("#product_table").DataTable();
+                $("#product_table").DataTable({
+                    "paging": false,
+                    "pageLength": 20,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": true,
+                    "info": false,
+                    "autoWidth": false,
+                });
             }, 300);
         },
         clearDataTable() {
@@ -765,35 +790,46 @@ export default {
                 this.$emit('closeProduct', true);
             }
         },
-        fetchProducts(status = null) {
-        let vm = this;
-        // Reset filter
-        vm.filter = {
-            category: { code: 0, label: "Select from the following" },
-            tag: { code: 0, label: "Select from the following" },
-            product: "",
-        };
-
-        let url = this.api_url + "inventory/products";
-
-        if (status !== null) {
-            url += "?status=" + status;
-        }
-
-        axios
-            .get(url)
-            .then((response) => {
-            const results = response.data.response;
-            vm.products = results.products;
-            vm.allProductCount = results.allProductCount;
-            vm.publishedProductCount = results.publishedProductCount;
-            vm.draftProductCount = results.draftProductCount;
-            vm.trashProductCount = results.trashProductCount;
-
-            vm.dataTable();
-            })
-            .catch((err) => this.fetchProducts());
+        changeProductFetchStatus(newStatus) {
+            this.status = newStatus;
+            this.page = 1; // Reset page to 1
+            this.fetchProducts(this.status);
         },
+        fetchProducts(status = null, page = 1) {
+            let vm = this;
+
+            // Reset filter
+            vm.filter = {
+                category: { code: 0, label: "Select from the following" },
+                tag: { code: 0, label: "Select from the following" },
+                product: "",
+            };
+            vm.page = page;
+            let url = this.api_url + "inventory/products";
+            if (this.status !== null) {
+                url += "?status=" + status;
+            }
+
+            if (page !== 1) {
+                url += "&page=" + page;
+            }
+
+            axios
+                .get(url)
+                .then((response) => {
+                    const results = response.data.response;
+                    vm.products = results.products.data;
+                    vm.allProductCount = results.allProductCount;
+                    vm.publishedProductCount = results.publishedProductCount;
+                    vm.draftProductCount = results.draftProductCount;
+                    vm.trashProductCount = results.trashProductCount;
+                    vm.pagination = results.pagination;
+
+                vm.dataTable();
+                })
+                .catch((err) => console.log(err)
+                );
+            },
         searchProduct( data ) {
             let vm = this;
             axios

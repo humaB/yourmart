@@ -2185,7 +2185,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       warranty: "",
       max_quantity: "",
       quantity_step: "",
-      status: 0,
+      status: null,
       variations: [{
         id: 0,
         sku: "",
@@ -2208,7 +2208,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       }
       // More variations...
       ]
-    }), "productNotUpdated", false), "editProductVariantData", {}), "activeProductVariantStatus", ''), "selectedType", ''), "colorId", ''), "imageAlt", ''), "selectedProducts", []), "multipleAction", ''), "checkedAllProducts", false), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "allProductCount", 0), "publishedProductCount", 0), "draftProductCount", 0), "trashProductCount", 0);
+    }), "productNotUpdated", false), "editProductVariantData", {}), "activeProductVariantStatus", ''), "selectedType", ''), "colorId", ''), "imageAlt", ''), "selectedProducts", []), "multipleAction", ''), "checkedAllProducts", false), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "allProductCount", 0), "publishedProductCount", 0), "draftProductCount", 0), "trashProductCount", 0), "page", 1), "pagination", {});
   },
   created: function created() {
     this.fetchBrands();
@@ -2239,7 +2239,15 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         $('#product_table').DataTable().destroy();
       }
       setTimeout(function () {
-        $("#product_table").DataTable();
+        $("#product_table").DataTable({
+          "paging": false,
+          "pageLength": 20,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": false,
+          "autoWidth": false
+        });
       }, 300);
     },
     clearDataTable: function clearDataTable() {
@@ -2546,10 +2554,16 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         this.$emit('closeProduct', true);
       }
     },
+    changeProductFetchStatus: function changeProductFetchStatus(newStatus) {
+      this.status = newStatus;
+      this.page = 1; // Reset page to 1
+      this.fetchProducts(this.status);
+    },
     fetchProducts: function fetchProducts() {
-      var _this4 = this;
       var status = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var page = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
       var vm = this;
+
       // Reset filter
       vm.filter = {
         category: {
@@ -2562,20 +2576,25 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         },
         product: ""
       };
+      vm.page = page;
       var url = this.api_url + "inventory/products";
-      if (status !== null) {
+      if (this.status !== null) {
         url += "?status=" + status;
+      }
+      if (page !== 1) {
+        url += "&page=" + page;
       }
       axios.get(url).then(function (response) {
         var results = response.data.response;
-        vm.products = results.products;
+        vm.products = results.products.data;
         vm.allProductCount = results.allProductCount;
         vm.publishedProductCount = results.publishedProductCount;
         vm.draftProductCount = results.draftProductCount;
         vm.trashProductCount = results.trashProductCount;
+        vm.pagination = results.pagination;
         vm.dataTable();
       })["catch"](function (err) {
-        return _this4.fetchProducts();
+        return console.log(err);
       });
     },
     searchProduct: function searchProduct(data) {
@@ -2632,23 +2651,23 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchShippingOptions: function fetchShippingOptions() {
-      var _this5 = this;
+      var _this4 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/settings/shipping-classes/drop-down").then(function (response) {
         var results = response.data.response;
         vm.shippingOptions = results;
       })["catch"](function (err) {
-        return _this5.fetchShippingOptions();
+        return _this4.fetchShippingOptions();
       });
     },
     fetchAttachments: function fetchAttachments() {
-      var _this6 = this;
+      var _this5 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/attachments").then(function (response) {
         var results = response.data.response;
         vm.attachments = results;
       })["catch"](function (err) {
-        return _this6.fetchAttachments();
+        return _this5.fetchAttachments();
       });
     },
     updateImageData: function updateImageData(data) {
@@ -2721,7 +2740,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchBrands: function fetchBrands() {
-      var _this7 = this;
+      var _this6 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/brands").then(function (response) {
         vm.brands = response.data.response.record.map(function (item) {
@@ -2733,7 +2752,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         });
         vm.brandsDropDown = response.data.response.dropdown;
       })["catch"](function (err) {
-        return _this7.fetchBrands();
+        return _this6.fetchBrands();
       });
     },
     addNewBrand: function addNewBrand(data) {
@@ -2783,7 +2802,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchAttributes: function fetchAttributes() {
-      var _this8 = this;
+      var _this7 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/attributes").then(function (response) {
         vm.attributesDropDown = response.data.response.dropdown;
@@ -2796,7 +2815,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         });
         vm.parentAttributes = response.data.response.parent;
       })["catch"](function (err) {
-        return _this8.fetchAttributes();
+        return _this7.fetchAttributes();
       });
     },
     addNewClass: function addNewClass(data) {
@@ -2870,7 +2889,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchCategories: function fetchCategories() {
-      var _this9 = this;
+      var _this8 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/categories").then(function (response) {
         vm.categoriesDropDown = response.data.response.dropdown;
@@ -2883,7 +2902,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         });
         vm.parentCategories = response.data.response.parent;
       })["catch"](function (err) {
-        return _this9.fetchCategories();
+        return _this8.fetchCategories();
       });
     },
     addNewCategory: function addNewCategory(data) {
@@ -2933,7 +2952,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchColors: function fetchColors() {
-      var _this10 = this;
+      var _this9 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/colors").then(function (response) {
         vm.colorsDropDown = response.data.response.dropdown;
@@ -2945,7 +2964,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
           });
         });
       })["catch"](function (err) {
-        return _this10.fetchColors();
+        return _this9.fetchColors();
       });
     },
     addNewColor: function addNewColor(data) {
@@ -2995,7 +3014,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchSizes: function fetchSizes() {
-      var _this11 = this;
+      var _this10 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/sizes").then(function (response) {
         vm.sizesDropDown = response.data.response.dropdown;
@@ -3007,7 +3026,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
           });
         });
       })["catch"](function (err) {
-        return _this11.fetchSizes();
+        return _this10.fetchSizes();
       });
     },
     addNewSize: function addNewSize(data) {
@@ -3057,7 +3076,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       });
     },
     fetchTags: function fetchTags() {
-      var _this12 = this;
+      var _this11 = this;
       var vm = this;
       axios.get(this.api_url + "inventory/products/tags").then(function (response) {
         vm.tagsDropDown = response.data.response.dropdown;
@@ -3069,7 +3088,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
           });
         });
       })["catch"](function (err) {
-        return _this12.fetchTags();
+        return _this11.fetchTags();
       });
     },
     addNewTag: function addNewTag(data) {
@@ -9174,7 +9193,7 @@ var render = function render() {
     staticClass: "nav-item mr-2",
     on: {
       click: function click($event) {
-        return _vm.fetchProducts();
+        return _vm.changeProductFetchStatus();
       }
     }
   }, [_c("a", {
@@ -9185,7 +9204,7 @@ var render = function render() {
     staticClass: "nav-item ml-2 mr-2",
     on: {
       click: function click($event) {
-        return _vm.fetchProducts(0);
+        return _vm.changeProductFetchStatus(0);
       }
     }
   }, [_c("a", {
@@ -9196,7 +9215,7 @@ var render = function render() {
     staticClass: "nav-item ml-2 mr-2",
     on: {
       click: function click($event) {
-        return _vm.fetchProducts(1);
+        return _vm.changeProductFetchStatus(1);
       }
     }
   }, [_c("a", {
@@ -9207,7 +9226,7 @@ var render = function render() {
     staticClass: "nav-item ml-2",
     on: {
       click: function click($event) {
-        return _vm.fetchProducts(3);
+        return _vm.changeProductFetchStatus(3);
       }
     }
   }, [_c("a", {
@@ -9317,7 +9336,7 @@ var render = function render() {
       staticStyle: {
         width: "22%"
       }
-    }, [item.status == 0 ? _c("span", {
+    }, [item.status == 0 && !item.deleted_at ? _c("span", {
       staticClass: "badge badge-sm badge-success"
     }, [_vm._v("Published")]) : _vm._e(), _vm._v(" "), item.status == 1 && !item.deleted_at ? _c("span", {
       staticClass: "badge badge-sm badge-warning"
@@ -9358,7 +9377,68 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "fa fa-clone"
     })])])]);
-  }), 0)])])])])])])])])], 1)])]), _vm._v(" "), _c("AddProductPopup", {
+  }), 0)]), _vm._v(" "), _c("div", {
+    staticClass: "card-footer text-right"
+  }, [_c("nav", {
+    staticClass: "d-inline-block"
+  }, [_c("ul", {
+    staticClass: "pagination mb-0"
+  }, [_c("li", {
+    staticClass: "page-item",
+    "class": {
+      disabled: _vm.page === 1
+    }
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#",
+      tabindex: "-1"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.fetchProducts(_vm.status, _vm.page - 1);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-chevron-left"
+  })])]), _vm._v(" "), _vm._l(_vm.pagination.last_page, function (pageNumber) {
+    return _c("li", {
+      key: pageNumber,
+      staticClass: "page-item",
+      "class": {
+        active: _vm.page === pageNumber
+      }
+    }, [_c("a", {
+      staticClass: "page-link",
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchProducts(_vm.status, pageNumber);
+        }
+      }
+    }, [_vm._v(_vm._s(pageNumber) + " "), _c("span", {
+      staticClass: "sr-only"
+    }, [_vm._v("(current)")])])]);
+  }), _vm._v(" "), _c("li", {
+    staticClass: "page-item",
+    "class": {
+      disabled: _vm.page === _vm.pagination.last_page
+    }
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.fetchProducts(_vm.status, _vm.page + 1);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-chevron-right"
+  })])])], 2)])])])])])])])])])], 1)])]), _vm._v(" "), _c("AddProductPopup", {
     attrs: {
       loader: _vm.btnLoader,
       images: _vm.selectedImages,

@@ -29,26 +29,36 @@ class ProductController extends Controller
 
     public function fetchProducts(Request $request)
     {
-      $status = $request->query('status');
+        $status = $request->query('status');
+        $perPage = $request->query('per_page', 20); // Optional, default 10
 
-      $products = Product::with('user:id,name', 'variation', 'category', 'tags.tag');
 
-      if ($status === '0') {
-        $products = $products->where('status', 0);
-      } elseif ($status === '1') {
-        $products = $products->where('status', 1);
-      } elseif ($status === '3') {
-        $products = $products->onlyTrashed();
-      }
+        $products = Product::with('user:id,name', 'variation', 'category', 'tags.tag');
 
-      $products = $products->orderBy('id', 'desc')->get();
+        if ($status === '0') {
+            $products = $products->where('status', 0);
+        } elseif ($status === '1') {
+            $products = $products->where('status', 1);
+        } elseif ($status === '3') {
+            $products = $products->onlyTrashed();
+        }
+
+        $products = $products->orderBy('id', 'desc')->paginate($perPage);
 
       $data = [
         'allProductCount'       => Product::all()->count(),
         'publishedProductCount' => Product::where('status', 0)->count(),
         'draftProductCount'     => Product::where('status', 1)->count(),
         'trashProductCount'     => Product::onlyTrashed()->count(),
-        'products'              => $products
+        'products'              => $products,
+        'pagination'            => [
+            'total'        => $products->total(),
+            'per_page'     => $products->perPage(),
+            'current_page' => $products->currentPage(),
+            'last_page'    => $products->lastPage(),
+            'from'         => $products->firstItem(),
+            'to'           => $products->lastItem(),
+        ],
       ];
 
       return (new ResponseCollection($data))
