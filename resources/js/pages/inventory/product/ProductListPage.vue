@@ -115,7 +115,11 @@
                                                             <td>{{ index + 1 }}</td>
                                                             <td class="text-truncate">
                                                                 <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                                  <li class="team-member team-member-sm"><img class="rounded-circle" :src="getImageUrl(item.hero_image)"></li>
+                                                                  <li class="team-member team-member-sm">
+                                                                    <a :href="getImageUrl(item.hero_image)" target="_blank">
+                                                                      <img class="rounded-circle" :src="getImageUrl(item.hero_image)">
+                                                                    </a>
+                                                                  </li>
                                                                 </ul>
                                                               </td>
 

@@ -9266,12 +9266,17 @@ var render = function render() {
       staticClass: "list-unstyled order-list m-b-0 m-b-0"
     }, [_c("li", {
       staticClass: "team-member team-member-sm"
+    }, [_c("a", {
+      attrs: {
+        href: _vm.getImageUrl(item.hero_image),
+        target: "_blank"
+      }
     }, [_c("img", {
       staticClass: "rounded-circle",
       attrs: {
         src: _vm.getImageUrl(item.hero_image)
       }
-    })])])]), _vm._v(" "), _c("td", [_c("div", {
+    })])])])]), _vm._v(" "), _c("td", [_c("div", {
       staticClass: "pretty p-default p-round p-thick"
     }, [_c("input", {
       directives: [{
