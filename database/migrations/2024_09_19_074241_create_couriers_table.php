@@ -17,16 +17,10 @@ class CreateCouriersTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('courier_added_categories', function (Blueprint $table) {
-            $table->id();
-            $table->bigInteger('courier_id');
-            $table->bigInteger('category_id');
-            $table->bigInteger('added_by');
-            $table->timestamps();
-        });
 
         Schema::create('courier_categories', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('courier_id');
             $table->string('name');
             $table->string('internal_label');
             $table->string('description')->nullable();
@@ -54,7 +48,6 @@ class CreateCouriersTable extends Migration
     {
         Schema::dropIfExists('couriers');
         Schema::dropIfExists('courier_categories');
-        Schema::dropIfExists('courier_categories_range');
-        Schema::dropIfExists('courier_added_categories');
+        Schema::dropIfExists('courier_categories_ranges');
     }
 }

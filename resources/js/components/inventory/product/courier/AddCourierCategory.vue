@@ -109,40 +109,6 @@
                         <button type="button" class="btn btn-primary" v-if="!loader" @click="addNewCategory()">Add New Category</button>
                         <button type="button" class="btn btn-primary btn-progress disabled" v-else>Add New Category</button>
                     </div>
-
-                    <div class="col-md-12 mt-5">
-                        <label for=""><b>Added Categories</b></label>
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Sr #</th>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="(item, index) in categories" :key="item.id">
-                                    <td>{{ index + 1 }}</td>
-                                    <td>
-                                        <span v-if="!item.editable">{{ item.name }}</span>
-                                        <input class="form-control" v-else type="text" v-model="item.name" />
-                                    </td>
-                                    <td>
-                                        <span v-if="!item.editable">{{ item.description }}</span>
-                                        <input class="form-control" v-else v-model="item.description" />
-                                    </td>
-                                    <td>
-                                        <button :title="!item.editable ? 'edit details' : 'update details'" :class="!item.editable ? 'btn btn-primary' : 'btn btn-success'" @click="toggleEdit(item)">
-                                            <i v-if="!item.editable" class="fa fa-edit"></i>
-                                            <i v-else class="fa fa-save"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
                 </div>
                 <div class="modal-footer">
 
@@ -155,7 +121,7 @@
 <script>
 export default {
     name: 'AddCourierCategory',
-    props : ['loader', 'categories'],
+    props : ['loader', 'details'],
     data(){
         return {
             internalLabel : '',
@@ -220,6 +186,7 @@ export default {
             }
 
            const fd = new FormData();
+           fd.append('id', vm.details.id);
            fd.append('name', vm.name);
            fd.append('internalLabel', vm.internalLabel);
            // Loop through the ranges array and append each range to FormData

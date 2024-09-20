@@ -10,10 +10,15 @@ class CourierCategory extends Model
     use HasFactory;
 
     protected $fillable = [
+        'courier_id',
         'name',
         'internal_label',
         'description',
         'added_by'
     ];
+
+    public function ranges(){
+        return $this->hasMany(CourierCategoryRange::class, 'category_id', 'id');
+    }
 
 }

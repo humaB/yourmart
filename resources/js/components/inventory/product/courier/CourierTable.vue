@@ -19,6 +19,9 @@
           <td>{{ item.contact_person }}</td>
           <td>{{ item.contact_person_contact }}</td>
           <td>
+            <a href="#" class="btn btn-icon icon-left btn-info" data-toggle="modal" data-target="#courierDetailPopup" @click="fetchDetails(item.id)">
+                <i class="far fa-eye"></i>
+              </a>
             <a href="#" class="btn btn-icon icon-left btn-primary" data-toggle="modal" data-target="#editCourier" @click="edit(item.id, item.name, item.contact, item.address)">
               <i class="far fa-edit"></i>
             </a>
@@ -42,8 +45,8 @@ export default {
     edit(id, name, contact, address) {
       this.$emit('edit', { id, name, contact, address });
     },
-    deleteFunc(id) {
-      this.$emit('delete', id);
+    fetchDetails( id ){
+        this.$emit('fetchDetails', { id })
     }
   }
 };

@@ -3,8 +3,6 @@
       <!-- Add Courier Popup -->
       <CourierAddPopup
         :loader="btnLoader"
-        :categories="categories"
-        :ranges="ranges"
         @addNewCourier="add($event)"
         @fetchRange="fetchRange( $event )"
       />
@@ -16,12 +14,21 @@
         @update="update($event)"
       />
 
+
+      <CourierDetailPopup
+        :details="courierDetails"
+        :loader="btnLoader"
+        :ranges="ranges"
+        @addNewCourier="add($event)"
+        @fetchRange="fetchRange( $event )"
+      />
+
       <AddCourierCategory
         :loader="btnLoader"
+        :details="courierDetails"
         @addNewCategory="addNewCategory( $event )"
         @editCategory="editCategory($event)"
       />
-
       <div class="row">
         <div class="col-12 col-md-12 col-lg-12">
           <div class="card card-primary">
@@ -38,6 +45,7 @@
                         :th="th"
                         :tbody="couriers"
                         @edit="edit($event)"
+                        @fetchDetails="fetchDetails($event)"
                       />
                     </div>
                   </div>
@@ -57,6 +65,7 @@
   import CourierAddPopup from "../../../../components/inventory/product/courier/CourierAddPopup.vue";
   import CourierEditPopup from "../../../../components/inventory/product/courier/CourierEditPopup.vue";
   import AddCourierCategory from "../../../../components/inventory/product/courier/AddCourierCategory.vue";
+  import CourierDetailPopup from "../../../../components/inventory/product/courier/CourierDetailPopup.vue";
 
   export default {
     name: "CourierPage",
@@ -65,7 +74,8 @@
       TableHeader,
       CourierAddPopup,
       CourierEditPopup,
-      AddCourierCategory
+      AddCourierCategory,
+      CourierDetailPopup
     },
     data() {
       return {
@@ -80,13 +90,12 @@
         couriers: [],
         editDetails: {},
         btnLoader: false,
-        categories : [],
+        courierDetails : {},
         ranges : []
       };
     },
     created() {
       this.fetchCouriers();
-      this.fetchCategories();
     },
     methods: {
       fetchCouriers() {
@@ -101,35 +110,18 @@
           })
           .catch((err) => console.log(err));
       },
-      fetchCategories() {
+
+      fetchDetails( data ){
         let vm = this;
         axios
-          .get(this.api_url + "couriers/categories")
+          .post(this.api_url + "couriers/details", data)
           .then((response) => {
-            const results = response.data.response;
-
-            vm.categories = results;
-            vm.dataTable();
-          })
-          .catch((err) => console.log(err));
-      },
-      fetchRange( data ){
-        let vm = this;
-        axios
-          .post(this.api_url + "couriers/categories/ranges", data)
-          .then((response) => {
-            const results = response.data.response;
-            const newRanges = {};
-
-            results.forEach((range) => {
-                if (!newRanges[range.category_id]) {
-                newRanges[range.category_id] = [];
-                }
-                newRanges[range.category_id].push(range);
+            const results = response.data.response[0];
+            vm.courierDetails = results;
+            // Extract categories and store in data
+            results.categories.forEach(category => {
+                this.ranges[category.id] = category.ranges;
             });
-
-            // Merge newRanges with existing vm.ranges
-            vm.ranges = { ...vm.ranges, ...newRanges };
           })
           .catch((err) => console.log(err));
       },
@@ -205,38 +197,12 @@
                 .then((response) => {
                     vm.btnLoader = false;
 
-                    vm.fetchCategories();
+                    vm.fetchDetails(data);
+
                     vm.$emit('categorySaved', true);
                     return swal({
                         title: "Success",
                         text: 'New Category Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        editCategory(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "couriers/categories/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchCategories();
-                    vm.$emit('categorySaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Category Updated Successfully',
                         icon: "success",
                         timer: 3000,
                     });

@@ -441,7 +441,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddCourierCategory',
-  props: ['loader', 'categories'],
+  props: ['loader', 'details'],
   data: function data() {
     return {
       internalLabel: '',
@@ -501,6 +501,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
       var fd = new FormData();
+      fd.append('id', vm.details.id);
       fd.append('name', vm.name);
       fd.append('internalLabel', vm.internalLabel);
       // Loop through the ranges array and append each range to FormData
@@ -607,7 +608,87 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'AddShippingClass',
-  props: ['loader', 'categories', 'ranges'],
+  props: ['loader'],
+  data: function data() {
+    return {
+      courierName: '',
+      contactPerson: '',
+      contactPersonNumber: ''
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("saved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
+  },
+  methods: {
+    onlyNumber: function onlyNumber($event) {
+      var keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+        // 46 is dot
+        $event.preventDefault();
+      }
+    },
+    handleSubmit: function handleSubmit() {
+      var vm = this;
+      if (vm.courierName == '') {
+        return swal({
+          title: "Error",
+          text: "Please add some class name, thanks.",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      if (vm.contactPerson == '') {
+        return swal({
+          title: "Error",
+          text: "Please add contact person name, thanks.",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      if (vm.contactPersonNumber == '') {
+        return swal({
+          title: "Error",
+          text: "Please add contact person number, thanks.",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      var data = {
+        name: vm.courierName,
+        contactPerson: vm.contactPerson,
+        contactPersonNumber: vm.contactPersonNumber
+      };
+      vm.$emit('addNewCourier', data);
+    },
+    close: function close() {
+      this.courierName = '';
+      this.contactPersonNumber = '';
+      this.contactPerson = '';
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=script&lang=js":
+/*!**************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=script&lang=js ***!
+  \**************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'CourierDetailPopup',
+  props: ['loader', 'details', 'ranges'],
   data: function data() {
     return {
       courierName: '',
@@ -624,73 +705,55 @@ __webpack_require__.r(__webpack_exports__);
         }
       } // Initialize with one empty category selection
       ],
-      testWeight: ''
+      testWeight: '',
+      weights: []
     };
   },
-  computed: {
-    selectedRange: {
-      get: function get() {
-        var _this = this;
-        // Initialize minimum price and best range
-        var minPrice = Infinity;
-        var bestRange = null;
-        console.log("here");
-
-        // Check if ranges are loaded
-        if (Object.keys(this.ranges).length > 0) {
-          // Iterate over all categories and ranges
-          Object.values(this.ranges).forEach(function (categoryRanges) {
-            categoryRanges.forEach(function (range) {
-              // Check if testWeight falls within the range
-              if (_this.testWeight >= parseFloat(range.minimum_quantity) && _this.testWeight <= parseFloat(range.maximum_quantity)) {
-                // Calculate total cost for this range
-                var totalCost = _this.calculateTotalCostForWeight(range);
-
-                // Update minimum price and best range if necessary
-                if (parseFloat(totalCost) < minPrice) {
-                  minPrice = parseFloat(totalCost);
-                  bestRange = range;
-                }
-              }
-            });
-          });
-        }
-        return bestRange;
-      }
+  mounted: function mounted() {
+    for (var i = 0.5; i <= 15; i += 0.5) {
+      this.weights.push(i);
     }
   },
-  mounted: function mounted() {
-    var _this2 = this;
-    this.$parent.$on("saved", function (value) {
-      if (value) {
-        _this2.close();
+  computed: {
+    selectedRange: function selectedRange() {
+      var _this = this;
+      if (!this.ranges || !this.testWeight || this.testWeight === '') return null;
+      var minPrice = Infinity;
+      var bestRange = null;
+      try {
+        Object.values(this.ranges).forEach(function (categoryRanges) {
+          categoryRanges.forEach(function (range) {
+            if (_this.testWeight >= parseFloat(range.minimum_quantity) && _this.testWeight <= parseFloat(range.maximum_quantity)) {
+              var totalCost = _this.calculateTotalCostForWeight(range);
+              if (parseFloat(totalCost) < minPrice) {
+                minPrice = parseFloat(totalCost);
+                bestRange = range;
+              }
+            }
+          });
+        });
+      } catch (error) {
+        console.error('Error calculating selected range:', error);
       }
-    });
+      return bestRange;
+    }
   },
   methods: {
-    calculateTotalCostForWeight: function calculateTotalCostForWeight(range) {
-      var baseAmount;
-      if (this.testWeight > parseFloat(range.minimum_quantity) && range.per_kg_rate > 0) {
-        // Calculate extra weight beyond the minimum quantity
-        var extraWeight = parseFloat((this.testWeight - parseFloat(range.minimum_quantity)).toFixed(2)); // Fix precision to 2 decimal places
-
-        // Check if there is any extra weight (even a small fraction)
-        if (extraWeight > 0) {
-          // Calculate steps based on per_kg (e.g., 0.5 kg steps)
-          var steps = Math.floor(extraWeight / parseFloat(range.per_kg)) + 1; // Start counting from the first extra step
-
-          // Multiply steps by the per_kg_rate to get the extra cost
-          var extraCost = steps * parseFloat(range.per_kg_rate);
-
-          // Total cost is base rate plus extra cost
-          baseAmount = parseFloat(range.base_rate) + extraCost;
-        }
-      } else {
-        baseAmount = parseFloat(range.base_rate);
+    calculateTotalCostForWeight: function calculateTotalCostForWeight(_ref) {
+      var testWeight = _ref.testWeight,
+        range = _ref.range;
+      if (!range) return 0;
+      var baseAmount = parseFloat(range.base_rate);
+      var weightDiff = testWeight - parseFloat(range.minimum_quantity);
+      if (weightDiff > 0 && range.per_kg_rate > 0) {
+        var extraWeight = parseFloat(weightDiff.toFixed(2));
+        var weightSteps = Math.ceil(extraWeight / parseFloat(range.per_kg));
+        var extraCost = weightSteps * parseFloat(range.per_kg_rate);
+        baseAmount += extraCost;
       }
-      var fcTax = parseFloat(range.fac_tax) / 100 * baseAmount;
-      var gstTax = parseFloat(range.gst_tax) / 100 * (baseAmount + fcTax);
-      return (baseAmount + fcTax + gstTax).toFixed(2);
+      var facTax = parseFloat(range.fac_tax) / 100 * baseAmount;
+      var gstTax = parseFloat(range.gst_tax) / 100 * (baseAmount + facTax);
+      return (baseAmount + facTax + gstTax).toFixed(2);
     },
     onlyNumber: function onlyNumber($event) {
       var keyCode = $event.keyCode ? $event.keyCode : $event.which;
@@ -897,8 +960,10 @@ __webpack_require__.r(__webpack_exports__);
         address: address
       });
     },
-    deleteFunc: function deleteFunc(id) {
-      this.$emit('delete', id);
+    fetchDetails: function fetchDetails(id) {
+      this.$emit('fetchDetails', {
+        id: id
+      });
     }
   }
 });
@@ -1422,12 +1487,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inventory_product_courier_CourierAddPopup_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierAddPopup.vue */ "./resources/js/components/inventory/product/courier/CourierAddPopup.vue");
 /* harmony import */ var _components_inventory_product_courier_CourierEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierEditPopup.vue */ "./resources/js/components/inventory/product/courier/CourierEditPopup.vue");
 /* harmony import */ var _components_inventory_product_courier_AddCourierCategory_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/AddCourierCategory.vue */ "./resources/js/components/inventory/product/courier/AddCourierCategory.vue");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/* harmony import */ var _components_inventory_product_courier_CourierDetailPopup_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierDetailPopup.vue */ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue");
+
 
 
 
@@ -1440,7 +1501,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     CourierAddPopup: _components_inventory_product_courier_CourierAddPopup_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     CourierEditPopup: _components_inventory_product_courier_CourierEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
-    AddCourierCategory: _components_inventory_product_courier_AddCourierCategory_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+    AddCourierCategory: _components_inventory_product_courier_AddCourierCategory_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    CourierDetailPopup: _components_inventory_product_courier_CourierDetailPopup_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
@@ -1455,13 +1517,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       couriers: [],
       editDetails: {},
       btnLoader: false,
-      categories: [],
+      courierDetails: {},
       ranges: []
     };
   },
   created: function created() {
     this.fetchCouriers();
-    this.fetchCategories();
   },
   methods: {
     fetchCouriers: function fetchCouriers() {
@@ -1474,30 +1535,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         return console.log(err);
       });
     },
-    fetchCategories: function fetchCategories() {
+    fetchDetails: function fetchDetails(data) {
+      var _this = this;
       var vm = this;
-      axios.get(this.api_url + "couriers/categories").then(function (response) {
-        var results = response.data.response;
-        vm.categories = results;
-        vm.dataTable();
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    },
-    fetchRange: function fetchRange(data) {
-      var vm = this;
-      axios.post(this.api_url + "couriers/categories/ranges", data).then(function (response) {
-        var results = response.data.response;
-        var newRanges = {};
-        results.forEach(function (range) {
-          if (!newRanges[range.category_id]) {
-            newRanges[range.category_id] = [];
-          }
-          newRanges[range.category_id].push(range);
+      axios.post(this.api_url + "couriers/details", data).then(function (response) {
+        var results = response.data.response[0];
+        vm.courierDetails = results;
+        // Extract categories and store in data
+        results.categories.forEach(function (category) {
+          _this.ranges[category.id] = category.ranges;
         });
-
-        // Merge newRanges with existing vm.ranges
-        vm.ranges = _objectSpread(_objectSpread({}, vm.ranges), newRanges);
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -1565,34 +1612,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       vm.btnLoader = true;
       axios.post(this.api_url + "couriers/categories", data).then(function (response) {
         vm.btnLoader = false;
-        vm.fetchCategories();
+        vm.fetchDetails(data);
         vm.$emit('categorySaved', true);
         return swal({
           title: "Success",
           text: 'New Category Added Successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        vm.btnLoader = false;
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
-          icon: "error",
-          timer: 3000
-        });
-      });
-    },
-    editCategory: function editCategory(data) {
-      var vm = this;
-      vm.btnLoader = true;
-      axios.post(this.api_url + "couriers/categories/update", data).then(function (response) {
-        vm.btnLoader = false;
-        vm.fetchCategories();
-        vm.$emit('categorySaved', true);
-        return swal({
-          title: "Success",
-          text: 'Category Updated Successfully',
           icon: "success",
           timer: 3000
         });
@@ -3451,66 +3475,7 @@ var render = function render() {
     attrs: {
       type: "button"
     }
-  }, [_vm._v("Add New Category")])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12 mt-5"
-  }, [_vm._m(4), _vm._v(" "), _c("table", {
-    staticClass: "table table-sm"
-  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.categories, function (item, index) {
-    return _c("tr", {
-      key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.name))]) : _c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: item.name,
-        expression: "item.name"
-      }],
-      staticClass: "form-control",
-      attrs: {
-        type: "text"
-      },
-      domProps: {
-        value: item.name
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(item, "name", $event.target.value);
-        }
-      }
-    })]), _vm._v(" "), _c("td", [!item.editable ? _c("span", [_vm._v(_vm._s(item.description))]) : _c("input", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: item.description,
-        expression: "item.description"
-      }],
-      staticClass: "form-control",
-      domProps: {
-        value: item.description
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(item, "description", $event.target.value);
-        }
-      }
-    })]), _vm._v(" "), _c("td", [_c("button", {
-      "class": !item.editable ? "btn btn-primary" : "btn btn-success",
-      attrs: {
-        title: !item.editable ? "edit details" : "update details"
-      },
-      on: {
-        click: function click($event) {
-          return _vm.toggleEdit(item);
-        }
-      }
-    }, [!item.editable ? _c("i", {
-      staticClass: "fa fa-edit"
-    }) : _c("i", {
-      staticClass: "fa fa-save"
-    })])])]);
-  }), 0)])])], 2), _vm._v(" "), _vm._m(6)])])]);
+  }, [_vm._v("Add New Category")])])], 2), _vm._v(" "), _vm._m(4)])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -3558,18 +3523,6 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Min Quantity")]), _vm._v(" "), _c("th", [_vm._v("Max Quantity")]), _vm._v(" "), _c("th", [_vm._v("Base Rate")]), _vm._v(" "), _c("th", [_vm._v("Charge Per Kg")]), _vm._v(" "), _c("th", [_vm._v("Rate Per Kg")]), _vm._v(" "), _c("th", [_vm._v("FAC TAX")]), _vm._v(" "), _c("th", [_vm._v("GST TAX")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_c("b", [_vm._v("Added Categories")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Description")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -3690,83 +3643,7 @@ var render = function render() {
         _vm.contactPersonNumber = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12 row mt-5"
-  }, [_vm._m(4), _vm._v(" "), _vm._m(5), _vm._v(" "), _vm._m(6), _vm._v(" "), _vm._l(_vm.categoriesList, function (category, index) {
-    return _c("div", {
-      key: index,
-      staticClass: "col-md-12 row mt-3 category-select-wrapper"
-    }, [_c("div", {
-      staticClass: "col-md-10"
-    }, [_c("v-select", {
-      attrs: {
-        options: _vm.categories
-      },
-      on: {
-        input: function input($event) {
-          return _vm.fetchRange(category.selected, index);
-        }
-      },
-      model: {
-        value: category.selected,
-        callback: function callback($$v) {
-          _vm.$set(category, "selected", $$v);
-        },
-        expression: "category.selected"
-      }
-    })], 1), _vm._v(" "), _c("div", {
-      staticClass: "col-md-2"
-    }, [_c("button", {
-      staticClass: "btn btn-primary",
-      on: {
-        click: _vm.addCategory
-      }
-    }, [_c("i", {
-      staticClass: "fa fa-plus"
-    })]), _vm._v(" "), _vm.categoriesList.length > 1 ? _c("button", {
-      staticClass: "btn btn-danger",
-      on: {
-        click: function click($event) {
-          return _vm.removeCategory(index);
-        }
-      }
-    }, [_c("i", {
-      staticClass: "fa fa-trash"
-    })]) : _vm._e()])]);
-  }), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12 mt-5"
-  }, [_c("h6", [_vm._v("Test Your Shipping Cost")]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "weight"
-    }
-  }, [_vm._v("Enter Weight (kg)")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.testWeight,
-      expression: "testWeight"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      id: "weight",
-      placeholder: "Enter weight in kg"
-    },
-    domProps: {
-      value: _vm.testWeight
-    },
-    on: {
-      keypress: _vm.onlyNumber,
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.testWeight = $event.target.value;
-      }
-    }
-  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Category: " + _vm._s(_vm.categories.find(function (cat) {
-    return cat.code === _vm.selectedRange.category_id;
-  }).label))]), _vm._v(" "), _c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])])]) : _vm._e()])], 2)]), _vm._v(" "), _c("div", {
+  })])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -3831,14 +3708,149 @@ var staticRenderFns = [function () {
   return _c("h5", [_vm._v("Courier Contact Person Number "), _c("span", {
     staticClass: "text-danger"
   }, [_vm._v("*")])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=template&id=3da0a2a4":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=template&id=3da0a2a4 ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "courierDetailPopup",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "courierDetailPopup",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered modal-xl",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h6", [_vm._v("Courier Service Name ")]), _vm._v(" "), _c("h5", [_vm._v(_vm._s(_vm.details.courier_name))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-3"
+  }, [_c("h6", [_vm._v("Courier Contact Person Name ")]), _vm._v(" "), _c("h5", [_vm._v(_vm._s(_vm.details.contact_person))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-3"
+  }, [_c("h6", [_vm._v("Courier Contact Person Number ")]), _vm._v(" "), _c("h5", [_vm._v(_vm._s(_vm.details.contact_person_contact))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 row mt-5"
+  }, [_vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("ul", _vm._l(_vm.details.categories, function (category) {
+    return _c("li", {
+      key: category.id
+    }, [_c("b", [_vm._v(_vm._s(category.name))]), _vm._v(" - Internal label "), _c("b", [_vm._v(_vm._s(category.internal_label))]), _vm._v(" "), _c("ul", _vm._l(category.ranges, function (range) {
+      return _c("li", {
+        key: range.id
+      }, [_vm._v("\n                                    Range : " + _vm._s(range.minimum_quantity) + " - " + _vm._s(range.maximum_quantity) + " kg:\n                                    Base Rate: " + _vm._s(range.base_rate) + ",\n                                    Per Kg Rate: " + _vm._s(range.per_kg_rate) + ",\n                                    Total: " + _vm._s(range.total) + "\n                                  ")]);
+    }), 0)]);
+  }), 0)]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-5"
+  }, [_c("h6", [_vm._v("Test Your Shipping Cost")]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "weight"
+    }
+  }, [_vm._v("Enter Weight (kg)")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.testWeight,
+      expression: "testWeight"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      id: "weight",
+      placeholder: "Enter weight in kg"
+    },
+    domProps: {
+      value: _vm.testWeight
+    },
+    on: {
+      keypress: _vm.onlyNumber,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.testWeight = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Category: " + _vm._s(_vm.details.categories.find(function (cat) {
+    return cat.id === _vm.selectedRange.category_id;
+  }).name) + " - Internal Label : " + _vm._s(_vm.details.categories.find(function (cat) {
+    return cat.id === _vm.selectedRange.category_id;
+  }).internal_label))]), _vm._v(" "), _c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])])]) : _vm._e()]), _vm._v(" "), _vm.selectedRange ? _c("div", {
+    staticClass: "col-md-12 mt-2"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Weight (kg)")]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
+    return _c("th", {
+      key: category.id
+    }, [_vm._v(_vm._s(category.name))]);
+  })], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.weights, function (weight, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(weight))]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
+      return _c("td", {
+        key: category.id
+      }, [_vm._v("\n                                      " + _vm._s(_vm.calculateTotalCostForWeight({
+        testWeight: weight,
+        range: category.ranges.find(function (r) {
+          return weight >= parseFloat(r.minimum_quantity) && weight <= parseFloat(r.maximum_quantity);
+        })
+      })) + "\n                                    ")]);
+    })], 2);
+  }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Courier Service Information")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "col-md-6"
-  }, [_c("h5", [_vm._v("Select Category "), _c("span", {
-    staticClass: "text-danger"
-  }, [_vm._v("*")])])]);
+  }, [_c("h5", [_vm._v("Packages")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -3857,13 +3869,19 @@ var staticRenderFns = [function () {
       "data-toggle": "modal",
       "data-target": "#addCourierCategory"
     }
-  }, [_vm._v("Add\n                                New Category")])]);
+  }, [_vm._v("Add\n                                New Package")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("code", [_vm._v("Select the method used to calculate the shipping rate. This selection determines how the shipping cost will be calculated for the items in your cart.")])]);
+    staticClass: "modal-footer"
+  }, [_c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -4071,6 +4089,20 @@ var render = function render() {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person_contact))]), _vm._v(" "), _c("td", [_c("a", {
+      staticClass: "btn btn-icon icon-left btn-info",
+      attrs: {
+        href: "#",
+        "data-toggle": "modal",
+        "data-target": "#courierDetailPopup"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetails(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "far fa-eye"
+    })]), _vm._v(" "), _c("a", {
       staticClass: "btn btn-icon icon-left btn-primary",
       attrs: {
         href: "#",
@@ -4586,9 +4618,7 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("div", [_c("CourierAddPopup", {
     attrs: {
-      loader: _vm.btnLoader,
-      categories: _vm.categories,
-      ranges: _vm.ranges
+      loader: _vm.btnLoader
     },
     on: {
       addNewCourier: function addNewCourier($event) {
@@ -4608,9 +4638,24 @@ var render = function render() {
         return _vm.update($event);
       }
     }
+  }), _vm._v(" "), _c("CourierDetailPopup", {
+    attrs: {
+      details: _vm.courierDetails,
+      loader: _vm.btnLoader,
+      ranges: _vm.ranges
+    },
+    on: {
+      addNewCourier: function addNewCourier($event) {
+        return _vm.add($event);
+      },
+      fetchRange: function fetchRange($event) {
+        return _vm.fetchRange($event);
+      }
+    }
   }), _vm._v(" "), _c("AddCourierCategory", {
     attrs: {
-      loader: _vm.btnLoader
+      loader: _vm.btnLoader,
+      details: _vm.courierDetails
     },
     on: {
       addNewCategory: function addNewCategory($event) {
@@ -4649,6 +4694,9 @@ var render = function render() {
     on: {
       edit: function edit($event) {
         return _vm.edit($event);
+      },
+      fetchDetails: function fetchDetails($event) {
+        return _vm.fetchDetails($event);
       }
     }
   })], 1)])])])])], 1)])])], 1);
@@ -30337,6 +30385,45 @@ component.options.__file = "resources/js/components/inventory/product/courier/Co
 
 /***/ }),
 
+/***/ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/courier/CourierDetailPopup.vue ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CourierDetailPopup_vue_vue_type_template_id_3da0a2a4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CourierDetailPopup.vue?vue&type=template&id=3da0a2a4 */ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=template&id=3da0a2a4");
+/* harmony import */ var _CourierDetailPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CourierDetailPopup.vue?vue&type=script&lang=js */ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CourierDetailPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CourierDetailPopup_vue_vue_type_template_id_3da0a2a4__WEBPACK_IMPORTED_MODULE_0__.render,
+  _CourierDetailPopup_vue_vue_type_template_id_3da0a2a4__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/inventory/product/courier/CourierDetailPopup.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/courier/CourierEditPopup.vue":
 /*!********************************************************************************!*\
   !*** ./resources/js/components/inventory/product/courier/CourierEditPopup.vue ***!
@@ -30820,6 +30907,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=script&lang=js":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=script&lang=js ***!
+  \**********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDetailPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierDetailPopup.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDetailPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=script&lang=js":
 /*!********************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=script&lang=js ***!
@@ -31096,6 +31199,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierAddPopup_vue_vue_type_template_id_39afbcc8__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierAddPopup_vue_vue_type_template_id_39afbcc8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierAddPopup.vue?vue&type=template&id=39afbcc8 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierAddPopup.vue?vue&type=template&id=39afbcc8");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=template&id=3da0a2a4":
+/*!****************************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=template&id=3da0a2a4 ***!
+  \****************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDetailPopup_vue_vue_type_template_id_3da0a2a4__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDetailPopup_vue_vue_type_template_id_3da0a2a4__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDetailPopup_vue_vue_type_template_id_3da0a2a4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierDetailPopup.vue?vue&type=template&id=3da0a2a4 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierDetailPopup.vue?vue&type=template&id=3da0a2a4");
 
 
 /***/ }),

@@ -66,6 +66,8 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::post('/add', [CourierController::class, 'store']); // Add a new courier
     Route::post('/update', [CourierController::class, 'update']); // Update an existing courier
 
+    Route::post('/details', [CourierController::class, 'details']);
+
     Route::get('/categories', [CourierController::class, 'fetchCategory']);
     Route::post('/categories', [CourierController::class, 'addCategory']);
     Route::post('/categories/update', [CourierController::class, 'updateCategory']);

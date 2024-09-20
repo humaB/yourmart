@@ -22,12 +22,19 @@ class CourierController extends Controller
 
     public function couriers()
     {
-        $couriers = Courier::all();  // Get all couriers
+        $couriers = Courier::get();  // Get all couriers
 
         return response()->json([
             'status' => 'success',
             'response' => $couriers
         ], 200);
+    }
+
+    public function details( Request $request ){
+        $courier = Courier::with('categories.ranges')->where('id', $request->id)->get();
+        return (new ResponseCollection($courier))
+        ->response()
+        ->setStatusCode(200);
     }
 
     /**
@@ -40,9 +47,7 @@ class CourierController extends Controller
             $validatedData = \Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'contactPerson' => 'required|string|max:255',
-                'contactPersonNumber' => 'required|string|max:20',
-                'categories' => 'required|array|min:1',
-                'categories.*.code' => 'required|integer',
+                'contactPersonNumber' => 'required|string|max:11',
             ]);
 
             $validation = $this->validation($validatedData);
@@ -65,15 +70,6 @@ class CourierController extends Controller
                     'contact_person_contact' => $request->contactPersonNumber,
                     'added_by'             => auth()->user()->id
                 ]);
-
-                // Create courier categories
-                foreach ($request->categories as $category) {
-                    CourierAddedCategory::create([
-                        'courier_id' => $courier->id,
-                        'category_id' => $category['code'],
-                        'added_by' => auth()->user()->id,
-                    ]);
-                }
             });
 
             return response()->json([
@@ -159,6 +155,7 @@ class CourierController extends Controller
             DB::transaction(function () use ($request) {
                 // Create the Courier Category
                 $category = CourierCategory::create([
+                    'courier_id'     => $request->input('id'),
                     'name'           => $request->input('name'),
                     'internal_label' => $request->input('internalLabel'),
                     'description'    => $request->input('description') ?? '', // Assuming there's a description

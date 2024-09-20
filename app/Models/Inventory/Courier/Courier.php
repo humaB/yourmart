@@ -15,4 +15,8 @@ class Courier extends Model
         'contact_person_contact',
         'added_by'
     ];
+
+    public function categories(){
+        return $this->hasMany(CourierCategory::class, 'courier_id', 'id');
+    }
 }
