@@ -2124,6 +2124,7 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
+      public_url: window.location.origin + "" + '/',
       api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Product List",
@@ -2221,6 +2222,13 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     this.fetchProducts();
   },
   methods: {
+    getImageUrl: function getImageUrl(imageId) {
+      // Check if the image is null
+      if (!imageId) {
+        return this.public_url + 'assets/img/blank_image.jpg';
+      }
+      return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+    },
     formattedTags: function formattedTags(tags) {
       return tags.map(function (tag) {
         return tag.tag.name;
@@ -9215,7 +9223,7 @@ var render = function render() {
     attrs: {
       id: "product_table"
     }
-  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_c("input", {
+  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th"), _vm._v(" "), _c("th", [_c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -9252,7 +9260,13 @@ var render = function render() {
   }, [_vm._v("Product Title")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Stock")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("Tags")]), _vm._v(" "), _c("th", [_vm._v("Added Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_c("div", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("img", {
+      staticClass: "user-img mr-2",
+      attrs: {
+        src: _vm.getImageUrl(item.hero_image),
+        alt: ""
+      }
+    }), _vm._v(" "), _c("td", [_c("div", {
       staticClass: "pretty p-default p-round p-thick"
     }, [_c("input", {
       directives: [{

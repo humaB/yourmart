@@ -91,6 +91,7 @@
                                                     <thead>
                                                         <tr>
                                                             <th>Sr #</th>
+                                                            <th></th>
                                                             <th>
                                                                 <input
                                                                     type="checkbox"
@@ -112,6 +113,7 @@
                                                     <tbody>
                                                         <tr v-for="(item, index) in products" :key="item.id">
                                                             <td>{{ index + 1 }}</td>
+                                                            <img :src="getImageUrl(item.hero_image)" class="user-img mr-2" alt="">
                                                             <td>
 
                                                                     <div class="pretty p-default p-round p-thick">
@@ -306,6 +308,7 @@ export default {
     },
     data() {
         return {
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             api_url: window.location.origin + process.env.MIX_API_URL,
             tableHeader: {
                 heading: "Product List",
@@ -403,6 +406,13 @@ export default {
         this.fetchProducts();
     },
     methods: {
+        getImageUrl(imageId) {
+            // Check if the image is null
+            if (!imageId) {
+                return this.public_url + 'assets/img/blank_image.jpg';
+            }
+            return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+        },
         formattedTags(tags) {
             return tags.map(tag => tag.tag.name).join(', ');
         },
