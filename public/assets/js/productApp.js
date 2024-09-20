@@ -2221,6 +2221,11 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     this.fetchProducts();
   },
   methods: {
+    formattedTags: function formattedTags(tags) {
+      return tags.map(function (tag) {
+        return tag.tag.name;
+      }).join(', ');
+    },
     dataTable: function dataTable() {
       if ($.fn.DataTable.isDataTable("#product_table")) {
         $('#product_table').DataTable().destroy();
@@ -9298,11 +9303,7 @@ var render = function render() {
       staticClass: "text-success"
     }, [_vm._v("In stock")]) : _vm._e(), _vm._v(" "), item.variation.stock == 0 ? _c("p", {
       staticClass: "text-danger"
-    }, [_vm._v("Out of stock")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("del", [_vm._v("PKR " + _vm._s(item.variation.regular_price))]), _c("br"), _vm._v("\n                                                            PKR " + _vm._s(item.variation.sale_price) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(item.category.name) + "\n                                                        ")]), _vm._v(" "), _c("td", _vm._l(item.tags, function (tag) {
-      return _c("p", {
-        key: tag.id
-      }, [_vm._v("\n                                                                " + _vm._s(tag.tag.name) + "\n                                                            ")]);
-    }), 0), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
+    }, [_vm._v("Out of stock")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("del", [_vm._v("PKR " + _vm._s(item.variation.regular_price))]), _c("br"), _vm._v("\n                                                            PKR " + _vm._s(item.variation.sale_price) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(item.category.name) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(_vm.formattedTags(item.tags)) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
       staticClass: "d-flex"
     }, [_c("button", {
       staticClass: "btn btn-info",

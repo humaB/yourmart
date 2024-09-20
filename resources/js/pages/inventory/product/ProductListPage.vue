@@ -147,9 +147,7 @@
                                                                 {{ item.category.name }}
                                                             </td>
                                                             <td>
-                                                                <p v-for="tag in item.tags" :key="tag.id">
-                                                                    {{ tag.tag.name }}
-                                                                </p>
+                                                                {{ formattedTags(item.tags) }}
                                                             </td>
                                                             <!-- <td>
                                                                 <span class="badge badge-success" v-if="item.status == 0">Published</span>
@@ -405,6 +403,9 @@ export default {
         this.fetchProducts();
     },
     methods: {
+        formattedTags(tags) {
+            return tags.map(tag => tag.tag.name).join(', ');
+        },
         dataTable() {
             if ($.fn.DataTable.isDataTable("#product_table")) {
                 $('#product_table').DataTable().destroy();
