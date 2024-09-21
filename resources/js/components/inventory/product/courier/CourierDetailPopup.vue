@@ -74,7 +74,7 @@
                                 <div v-if="selectedRange">
                                     Best Offer:
                                     <ul>
-                                        <li>Category: {{ details.categories.find(cat => cat.id === selectedRange.category_id).name }} - Internal Label : {{ details.categories.find(cat => cat.id === selectedRange.category_id).internal_label }}</li>
+
                                         <li>Minimum Quantity: {{ selectedRange.minimum_quantity }}</li>
                                         <li>Maximum Quantity: {{ selectedRange.maximum_quantity }}</li>
                                         <li>Base Rate: {{ selectedRange.base_rate }}</li>
@@ -88,7 +88,7 @@
                                     <thead>
                                       <tr>
                                         <th>Weight (kg)</th>
-                                        <th v-for="category in details.categories" :key="category.id">{{ category ? category.name : '' }}</th>
+                                        <!-- <th v-for="category in details.categories" :key="category.id">{{ category ? category.name : '' }}</th> -->
                                       </tr>
                                     </thead>
                                     <tbody>
@@ -142,17 +142,17 @@ export default {
             let bestRange = null;
 
             try {
-            Object.values(this.ranges).forEach((categoryRanges) => {
-                categoryRanges.forEach((range) => {
-                if (this.testWeight >= parseFloat(range.minimum_quantity) && this.testWeight <= parseFloat(range.maximum_quantity)) {
-                    const totalCost = this.calculateTotalCostForWeight(range);
-                    if (parseFloat(totalCost) < minPrice) {
-                    minPrice = parseFloat(totalCost);
-                    bestRange = range;
+                Object.values(this.ranges).forEach((categoryRanges) => {
+                    categoryRanges.forEach((range) => {
+                    if (this.testWeight >= parseFloat(range.minimum_quantity) && this.testWeight <= parseFloat(range.maximum_quantity)) {
+                        const totalCost = this.calculateTotalCostForWeight(range);
+                        if (parseFloat(totalCost) < minPrice) {
+                            minPrice = parseFloat(totalCost);
+                            bestRange = range;
+                        }
                     }
-                }
+                    });
                 });
-            });
             } catch (error) {
             console.error('Error calculating selected range:', error);
             }

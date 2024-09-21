@@ -3975,19 +3975,11 @@ var render = function render() {
         _vm.testWeight = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Category: " + _vm._s(_vm.details.categories.find(function (cat) {
-    return cat.id === _vm.selectedRange.category_id;
-  }).name) + " - Internal Label : " + _vm._s(_vm.details.categories.find(function (cat) {
-    return cat.id === _vm.selectedRange.category_id;
-  }).internal_label))]), _vm._v(" "), _c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])])]) : _vm._e()]), _vm._v(" "), _vm.selectedRange && _vm.details.categories ? _c("div", {
+  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])])]) : _vm._e()]), _vm._v(" "), _vm.selectedRange && _vm.details.categories ? _c("div", {
     staticClass: "col-md-12 mt-2"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Weight (kg)")]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
-    return _c("th", {
-      key: category.id
-    }, [_vm._v(_vm._s(category ? category.name : ""))]);
-  })], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.weights, function (weight, index) {
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.weights, function (weight, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v(_vm._s(weight))]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
@@ -4000,7 +3992,7 @@ var render = function render() {
         })
       })) + "\n                                    ")]);
     })], 2);
-  }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])])]);
+  }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(4)])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -4049,6 +4041,10 @@ var staticRenderFns = [function () {
       "data-target": "#addCourierCategory"
     }
   }, [_vm._v("Add\n                                New Package")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Weight (kg)")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
