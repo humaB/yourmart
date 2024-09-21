@@ -1031,7 +1031,7 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     settings: function settings(newSettings) {
       var _this = this;
-      if (newSettings) {
+      if (newSettings.length > 0) {
         var tags = newSettings.filter(function (setting) {
           return setting.type === 'tag';
         }).map(function (setting) {

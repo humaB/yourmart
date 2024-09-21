@@ -112,7 +112,7 @@
         },
         watch: {
             settings(newSettings) {
-                if(newSettings){
+                if(newSettings.length > 0){
                     const tags = newSettings
                     .filter(setting => setting.type === 'tag')
                     .map(setting => {
