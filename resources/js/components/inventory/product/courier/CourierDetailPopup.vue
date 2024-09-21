@@ -74,7 +74,7 @@
                                 <div v-if="selectedRange">
                                     Best Offer:
                                     <ul>
-
+                                        <li>Category: {{ details.categories.find(cat => cat.id === selectedRange.category_id).name }} - Internal Label : {{ details.categories.find(cat => cat.id === selectedRange.category_id).internal_label }}</li>
                                         <li>Minimum Quantity: {{ selectedRange.minimum_quantity }}</li>
                                         <li>Maximum Quantity: {{ selectedRange.maximum_quantity }}</li>
                                         <li>Base Rate: {{ selectedRange.base_rate }}</li>
