@@ -3986,7 +3986,7 @@ var render = function render() {
   }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Weight (kg)")]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
     return _c("th", {
       key: category.id
-    }, [_vm._v(_vm._s(category.name))]);
+    }, [_vm._v(_vm._s(category ? category.name : ""))]);
   })], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.weights, function (weight, index) {
     return _c("tr", {
       key: index

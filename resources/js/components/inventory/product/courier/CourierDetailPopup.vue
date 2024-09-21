@@ -88,7 +88,7 @@
                                     <thead>
                                       <tr>
                                         <th>Weight (kg)</th>
-                                        <th v-for="category in details.categories" :key="category.id">{{ category.name }}</th>
+                                        <th v-for="category in details.categories" :key="category.id">{{ category ? category.name : '' }}</th>
                                       </tr>
                                     </thead>
                                     <tbody>
