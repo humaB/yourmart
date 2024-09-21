@@ -112,22 +112,24 @@
         },
         watch: {
             settings(newSettings) {
-                const tags = newSettings
-                .filter(setting => setting.type === 'tag')
-                .map(setting => {
-                    console.log(setting, this.tags);
+                if(newSettings){
+                    const tags = newSettings
+                    .filter(setting => setting.type === 'tag')
+                    .map(setting => {
+                        console.log(setting, this.tags);
 
-                    const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
-                    return {
-                    link: {
-                        code: setting.tag_id,
-                        label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
-                    },
-                    position: setting.position
-                    };
-                });
+                        const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
+                        return {
+                        link: {
+                            code: setting.tag_id,
+                            label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
+                        },
+                        position: setting.position
+                        };
+                    });
 
-                this.$set(this.form, 'tags', tags);
+                    this.$set(this.form, 'tags', tags);
+                }
             }
         }
     }

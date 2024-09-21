@@ -1031,23 +1031,25 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     settings: function settings(newSettings) {
       var _this = this;
-      var tags = newSettings.filter(function (setting) {
-        return setting.type === 'tag';
-      }).map(function (setting) {
-        var _this$tags$find;
-        console.log(setting, _this.tags);
-        var tagName = (_this$tags$find = _this.tags.find(function (tag) {
-          return tag.code === setting.tag_id;
-        })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
-        return {
-          link: {
-            code: setting.tag_id,
-            label: tagName || "Tag ".concat(setting.tag_id) // Fallback to default label if not found
-          },
-          position: setting.position
-        };
-      });
-      this.$set(this.form, 'tags', tags);
+      if (newSettings) {
+        var tags = newSettings.filter(function (setting) {
+          return setting.type === 'tag';
+        }).map(function (setting) {
+          var _this$tags$find;
+          console.log(setting, _this.tags);
+          var tagName = (_this$tags$find = _this.tags.find(function (tag) {
+            return tag.code === setting.tag_id;
+          })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
+          return {
+            link: {
+              code: setting.tag_id,
+              label: tagName || "Tag ".concat(setting.tag_id) // Fallback to default label if not found
+            },
+            position: setting.position
+          };
+        });
+        this.$set(this.form, 'tags', tags);
+      }
     }
   }
 });
