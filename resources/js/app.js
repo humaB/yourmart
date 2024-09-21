@@ -29,6 +29,8 @@ Vue.component('dropshipper-requests', require('./pages/admin/request/DropShipper
 Vue.component('dropshipper-order-page', require('./pages/admin/user/DropShipperOrderPage.vue').default );
 Vue.component('supplier-requests', require('./pages/admin/request/SupplierRequestPage.vue').default );
 Vue.component('courier-page', require('./pages/inventory/product/setting/CourierPage.vue').default );
+Vue.component('page-setting-page', require('./pages/pages/PageSettingPage.vue').default );
+
 
 const app = new Vue({
     el: '#app',

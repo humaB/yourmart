@@ -1,5 +1,11 @@
 
 <ul class="sidebar-menu">
+
+    <li class="dropdown {{ request()->is('products') ? 'active' : '' }}" >
+        <a href="{{ route('pages') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Pages</span></a>
+    </li>
+
+
     <li class="dropdown {{ request()->is('products') ? 'active' : '' }}" >
         <a href="{{ route('inventory.products') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Products</span></a>
     </li>

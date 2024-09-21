@@ -8,6 +8,7 @@ use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\Inventory\Setting\CourierController;
+use App\Http\Controllers\Pages\PageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,11 @@ Route::group(['prefix' => '/users', 'middleware' => 'auth'], function () {
     Route::get('/', [UserController::class, 'index'])->name('user');
     Route::get('/create', [UserController::class, 'create'])->name('user.add');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
+});
+
+Route::group(['prefix' => '/pages', 'middleware' => 'auth'], function () {
+    Route::get('/', [PageController::class, 'index'])->name('pages');
+
 });
 
 

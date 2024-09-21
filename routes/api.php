@@ -13,6 +13,7 @@ use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
+use App\Http\Controllers\Pages\PageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
 use Illuminate\Http\Request;
@@ -51,6 +52,13 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
 
     Route::get('/orders',  [ DropShipperController::class , 'orders']);
+});
+
+Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
+    Route::group(['prefix' => 'settings'], function(){
+        Route::get('/home-page',  [ PageController::class , 'fectHomePageSettingStore']);
+        Route::post('/home-page',  [ PageController::class , 'homePageSettingStore']);
+    });
 });
 
 

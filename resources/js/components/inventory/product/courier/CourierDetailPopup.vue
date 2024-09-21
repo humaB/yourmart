@@ -39,7 +39,7 @@
                                     New Package</a>
                             </div>
 
-                            <div class="col-md-12">
+                            <div class="col-md-12" v-if="details.categories">
                                 <ul>
                                   <li v-for="category in details.categories" :key="category.id">
                                     <b>{{ category.name }}</b> - Internal label <b>{{ category.internal_label }}</b>
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 mt-2" v-if="selectedRange">
+                            <div class="col-md-12 mt-2" v-if="selectedRange && details.categories">
                                 <table class="table table-striped">
                                     <thead>
                                       <tr>
@@ -271,11 +271,5 @@ export default {
 
         }
     },
-    watch: {
-        ranges(newValue) {
-            // Recompute selectedRange when ranges changes
-            this.selectedRange;
-        }
-    }
 }
 </script>
