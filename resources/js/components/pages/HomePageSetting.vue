@@ -145,7 +145,7 @@
                     .map(setting => {
 
                         const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
-                        console.log(tagName);
+                        console.log(this.tags);
 
                         return {
                             link: {
