@@ -984,10 +984,19 @@ __webpack_require__.r(__webpack_exports__);
         headline: {
           text: ''
         },
-        image: {
+        image: [{
+          index: 1,
           link: '',
           button_link: ''
-        },
+        }, {
+          index: 2,
+          link: '',
+          button_link: ''
+        }, {
+          index: 3,
+          link: '',
+          button_link: ''
+        }],
         tags: [{
           link: {
             code: 0,
@@ -1000,8 +1009,17 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    setImage: function setImage(event) {
-      this.form.image.link = event.target.files[0];
+    setImage: function setImage(event, index) {
+      var file = event.target.files[0]; // Get the uploaded file
+      if (file) {
+        // Update the specific image link in the form
+        this.$set(this.form.image, index, {
+          index: index + 1,
+          link: file,
+          // Set the image link
+          button_link: this.form.image[index].button_link // Keep the existing button link
+        });
+      }
     },
     addTag: function addTag() {
       this.form.tags.push({
@@ -1023,6 +1041,13 @@ __webpack_require__.r(__webpack_exports__);
       formData.append('image_link', this.form.image.link);
       formData.append('button_link', this.form.image.button_link);
       formData.append('head_line', this.form.headline.text);
+
+      // Add image data
+      this.form.image.forEach(function (img, index) {
+        formData.append("image[".concat(index, "][index]"), img.index);
+        formData.append("image[".concat(index, "][link]"), img.link); // Append the image link
+        formData.append("image[".concat(index, "][button_link]"), img.button_link); // Append the button link
+      });
 
       // Add tags data
       this.form.tags.forEach(function (tag, index) {
@@ -4389,49 +4414,57 @@ var render = function render() {
         _vm.$set(_vm.form.headline, "text", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("h3", [_vm._v("Image Settings")]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "image_link"
-    }
-  }, [_vm._v("Upload Image")]), _vm._v(" "), _c("input", {
-    staticClass: "form-control",
-    attrs: {
-      type: "file"
-    },
-    on: {
-      change: _vm.setImage
-    }
-  }), _vm._v(" "), _c("code", [_vm._v("Dimensions 835 x 415")])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "button_link"
-    }
-  }, [_vm._v("Button Link")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.form.image.button_link,
-      expression: "form.image.button_link"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Enter Button Link",
-      required: ""
-    },
-    domProps: {
-      value: _vm.form.image.button_link
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.form.image, "button_link", $event.target.value);
+  })]), _vm._v(" "), _c("h3", [_vm._v("Image Settings")]), _vm._v(" "), _vm._l(_vm.form.image, function (img, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "form-group"
+    }, [_c("label", {
+      attrs: {
+        "for": "image_link_" + index
       }
-    }
-  })]), _vm._v(" "), _c("h3", [_vm._v("Tags Settings")]), _vm._v(" "), _vm._l(_vm.form.tags, function (tag, index) {
+    }, [_vm._v("Upload Image " + _vm._s(index + 1))]), _vm._v(" "), _c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "file"
+      },
+      on: {
+        change: function change($event) {
+          return _vm.setImage($event, index);
+        }
+      }
+    }), _vm._v(" "), _c("code", [_vm._v("Dimensions 835 x 415")])]);
+  }), _vm._v(" "), _vm._l(_vm.form.image, function (img, index) {
+    return _c("div", {
+      key: "link_" + index,
+      staticClass: "form-group"
+    }, [_c("label", {
+      attrs: {
+        "for": "button_link_" + index
+      }
+    }, [_vm._v("Button Link " + _vm._s(index + 1))]), _vm._v(" "), _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: img.button_link,
+        expression: "img.button_link"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text",
+        placeholder: "Enter Button Link",
+        required: ""
+      },
+      domProps: {
+        value: img.button_link
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(img, "button_link", $event.target.value);
+        }
+      }
+    })]);
+  }), _vm._v(" "), _c("h3", [_vm._v("Tags Settings")]), _vm._v(" "), _vm._l(_vm.form.tags, function (tag, index) {
     return _c("div", {
       key: index,
       staticClass: "border p-3 mb-3"

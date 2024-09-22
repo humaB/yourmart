@@ -22,27 +22,30 @@ class PageController extends Controller
     }
 
     public function homePageSettingStore( Request $request ){
+     
+        if ($request->has('image') && !empty($request->image)) {
+            foreach ($request->image as $image) {
+                if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
+                    // Check if an image record exists, update or create new
+                    $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
 
-           // Handle Image Logic (button_link)
-           if ($request->has('image_link') && $request->has('button_link') && !empty($request->button_link)) {
-            // Check if an image record exists, update or create new
-            $homePageSetting = HomePageSetting::where('type', 'image')->first();
-
-            if ($homePageSetting) {
-                // Update existing image settings
-                $homePageSetting->update([
-                    'attachment' => $this->homeBanner( $request->image_link), // Button link as image attachment
-                    'position' => $request->button_link, // Position field used as button link
-                    'added_by' => auth()->user()->id,
-                ]);
-            } else {
-                // Create new image setting
-                HomePageSetting::create([
-                    'type' => 'image',
-                   'attachment' => $this->homeBanner( $request->image_link), // Button link as image attachment
-                    'position' => $request->button_link, // Position field used as button link
-                    'added_by' => auth()->user()->id,
-                ]);
+                    if ($homePageSetting) {
+                        // Update existing image settings
+                        $homePageSetting->update([
+                            'attachment' => $this->homeBanner($image['link']), // Button link as image attachment
+                            'position' => $image['button_link'], // Position field used as button link
+                            'added_by' => auth()->user()->id,
+                        ]);
+                    } else {
+                        // Create new image setting
+                        HomePageSetting::create([
+                            'type' => 'image-' . $image['index'],
+                            'attachment' => $this->homeBanner($image['link']), // Button link as image attachment
+                            'position' => $image['button_link'], // Position field used as button link
+                            'added_by' => auth()->user()->id,
+                        ]);
+                    }
+                }
             }
         }
 

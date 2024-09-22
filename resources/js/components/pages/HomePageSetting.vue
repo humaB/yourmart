@@ -20,15 +20,15 @@
 
                   <!-- Image Section -->
                   <h3>Image Settings</h3>
-                  <div class="form-group">
-                    <label for="image_link">Upload Image</label>
-                    <input type="file"  class="form-control" @change="setImage">
+                  <div class="form-group" v-for="(img, index) in form.image" :key="index">
+                    <label :for="'image_link_' + index">Upload Image {{ index + 1 }}</label>
+                    <input type="file" class="form-control" @change="setImage($event, index)">
                     <code>Dimensions 835 x 415</code>
-                  </div>
-                  <div class="form-group">
-                    <label for="button_link">Button Link</label>
-                    <input type="text" v-model="form.image.button_link" class="form-control" placeholder="Enter Button Link" required>
-                  </div>
+                </div>
+                <div class="form-group" v-for="(img, index) in form.image" :key="'link_' + index">
+                    <label :for="'button_link_' + index">Button Link {{ index + 1 }}</label>
+                    <input type="text" v-model="img.button_link" class="form-control" placeholder="Enter Button Link" required>
+                </div>
 
                   <!-- Tag Section -->
                   <h3>Tags Settings</h3>
@@ -81,10 +81,11 @@
                 headline : {
                     text : ''
                 },
-                image: {
-                    link: '',
-                    button_link: ''
-                },
+                image: [
+                    { index : 1, link: '', button_link: '' },
+                    { index : 2, link: '', button_link: '' },
+                    { index : 3, link: '', button_link: '' }
+                ],
                 tags: [
                     { link: { code : 0 , label : 'Select from the following'}, position: '' } // Default tag
                 ]
@@ -93,8 +94,16 @@
         },
 
         methods: {
-            setImage(event) {
-                this.form.image.link = event.target.files[0];
+            setImage(event, index) {
+                const file = event.target.files[0]; // Get the uploaded file
+                if (file) {
+                        // Update the specific image link in the form
+                        this.$set(this.form.image, index, {
+                            index : index + 1,
+                            link: file, // Set the image link
+                            button_link: this.form.image[index].button_link // Keep the existing button link
+                        });
+                }
             },
             addTag() {
                 this.form.tags.push( { link: { code : 0 , label : 'Select from the following'}, position: '' });
@@ -110,6 +119,13 @@
                 formData.append('image_link', this.form.image.link);
                 formData.append('button_link', this.form.image.button_link);
                 formData.append('head_line', this.form.headline.text);
+
+                // Add image data
+                this.form.image.forEach((img, index) => {
+                    formData.append(`image[${index}][index]`,img.index);
+                    formData.append(`image[${index}][link]`, img.link); // Append the image link
+                    formData.append(`image[${index}][button_link]`, img.button_link); // Append the button link
+                });
 
                 // Add tags data
                 this.form.tags.forEach((tag, index) => {
