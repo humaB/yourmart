@@ -12,6 +12,12 @@
         <div class="modal-body row">
             <div class="container mt-4">
                 <form>
+                    <h3>Headline Settings</h3>
+                  <div class="form-group">
+                    <label for="button_link">Please HeadLine Text</label>
+                    <input type="text" v-model="form.headline.text" class="form-control" placeholder="Enter Headline Text" required>
+                  </div>
+
                   <!-- Image Section -->
                   <h3>Image Settings</h3>
                   <div class="form-group">
@@ -72,6 +78,9 @@
         data() {
             return {
             form: {
+                headline : {
+                    text : ''
+                },
                 image: {
                     link: '',
                     button_link: ''
@@ -100,6 +109,7 @@
                 // Add image data
                 formData.append('image_link', this.form.image.link);
                 formData.append('button_link', this.form.image.button_link);
+                formData.append('head_line', this.form.headline.text);
 
                 // Add tags data
                 this.form.tags.forEach((tag, index) => {
@@ -113,10 +123,20 @@
         watch: {
             settings(newSettings) {
                 if(newSettings.length > 0){
+                    const headLine = newSettings
+                    .filter(setting => setting.type === 'headline')
+                        .map(setting => {
+                            return {
+                                text: setting.position
+                            };
+                        });
+
+                    this.$set(this.form, 'headline', ...headLine);
+                }
+                if(newSettings.length > 0){
                     const tags = newSettings
                     .filter(setting => setting.type === 'tag')
                     .map(setting => {
-                        console.log(setting, this.tags);
 
                         const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
                         return {

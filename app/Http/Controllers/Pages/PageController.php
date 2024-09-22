@@ -14,7 +14,7 @@ class PageController extends Controller
     }
 
     public function fectHomePageSettingStore(){
-        $data = HomePageSetting::where('type', 'tag')->get();
+        $data = HomePageSetting::get();
 
         return (new ResponseCollection( $data ))
             ->response()
@@ -22,6 +22,7 @@ class PageController extends Controller
     }
 
     public function homePageSettingStore( Request $request ){
+
            // Handle Image Logic (button_link)
            if ($request->has('image_link') && $request->has('button_link') && !empty($request->button_link)) {
             // Check if an image record exists, update or create new
@@ -45,10 +46,35 @@ class PageController extends Controller
             }
         }
 
+        if ($request->has('head_line') && !empty($request->head_line)) {
+            // Check if an image record exists, update or create new
+            $homePageSetting = HomePageSetting::where('type', 'headline')->first();
+
+            if ($homePageSetting) {
+                // Update existing image settings
+                $homePageSetting->update([
+                    'attachment' => '', // Button link as image attachment
+                    'position' => $request->head_line, // Position field used as button link
+                    'added_by' => auth()->user()->id,
+                ]);
+            } else {
+                return $request->head_line;
+                // Create new image setting
+                HomePageSetting::create([
+                    'type' => 'headline',
+                    'attachment' => '', // Button link as image attachment
+                    'position' => $request->head_line, // Position field used as button link
+                    'added_by' => auth()->user()->id,
+                ]);
+            }
+        }
+
         // Handle Tags Logic
         if ($request->has('tags') && is_array($request->tags)) {
             foreach ($request->tags as $tag) {
-
+                if($tag['link'] == 0){
+                    continue;
+                }
                 // Check if tag exists, then update or create
                 $homePageSetting = HomePageSetting::where('type', 'tag')->where('tag_id', $tag['link'])->first();
 

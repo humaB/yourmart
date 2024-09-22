@@ -975,12 +975,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'HomePageSetting',
   props: ['tags', 'loader', 'settings'],
   data: function data() {
     return {
       form: {
+        headline: {
+          text: ''
+        },
         image: {
           link: '',
           button_link: ''
@@ -1019,6 +1028,7 @@ __webpack_require__.r(__webpack_exports__);
       // Add image data
       formData.append('image_link', this.form.image.link);
       formData.append('button_link', this.form.image.button_link);
+      formData.append('head_line', this.form.headline.text);
 
       // Add tags data
       this.form.tags.forEach(function (tag, index) {
@@ -1032,11 +1042,20 @@ __webpack_require__.r(__webpack_exports__);
     settings: function settings(newSettings) {
       var _this = this;
       if (newSettings.length > 0) {
+        var headLine = newSettings.filter(function (setting) {
+          return setting.type === 'headline';
+        }).map(function (setting) {
+          return {
+            text: setting.position
+          };
+        });
+        this.$set.apply(this, [this.form, 'headline'].concat(_toConsumableArray(headLine)));
+      }
+      if (newSettings.length > 0) {
         var tags = newSettings.filter(function (setting) {
           return setting.type === 'tag';
         }).map(function (setting) {
           var _this$tags$find;
-          console.log(setting, _this.tags);
           var tagName = (_this$tags$find = _this.tags.find(function (tag) {
             return tag.code === setting.tag_id;
           })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
@@ -4335,7 +4354,35 @@ var render = function render() {
     staticClass: "modal-body row"
   }, [_c("div", {
     staticClass: "container mt-4"
-  }, [_c("form", [_c("h3", [_vm._v("Image Settings")]), _vm._v(" "), _c("div", {
+  }, [_c("form", [_c("h3", [_vm._v("Headline Settings")]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "button_link"
+    }
+  }, [_vm._v("Please HeadLine Text")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.headline.text,
+      expression: "form.headline.text"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Enter Headline Text",
+      required: ""
+    },
+    domProps: {
+      value: _vm.form.headline.text
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form.headline, "text", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("h3", [_vm._v("Image Settings")]), _vm._v(" "), _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
