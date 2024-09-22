@@ -1030,11 +1030,34 @@ __webpack_require__.r(__webpack_exports__);
         formData.append("tags[".concat(index, "][position]"), tag.position);
       });
       this.$emit('updateHomePage', formData);
+    },
+    updateTags: function updateTags(newSettings) {
+      var _this = this;
+      if (newSettings.length > 0) {
+        var tags = newSettings.filter(function (setting) {
+          return setting.type === 'tag';
+        }).map(function (setting) {
+          var _this$tags$find;
+          var tagName = (_this$tags$find = _this.tags.find(function (tag) {
+            return tag.code === setting.tag_id;
+          })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
+          return {
+            link: {
+              code: setting.tag_id,
+              label: tagName || "Tag ".concat(setting.tag_id) // Fallback to default label if not found
+            },
+            position: setting.position
+          };
+        });
+
+        // Update the form's tags
+        this.$set(this.form, 'tags', tags);
+      }
     }
   },
   watch: {
     settings: function settings(newSettings) {
-      var _this = this;
+      this.updateTags(newSettings);
       if (newSettings.length > 0) {
         // Check if there is at least one setting of type 'headline'
         var headLine = newSettings.filter(function (setting) {
@@ -1052,26 +1075,6 @@ __webpack_require__.r(__webpack_exports__);
           // Use this.$set to update the form
           this.$set(this.form, 'headline', mappedHeadlines);
         }
-      }
-      if (newSettings.length > 0) {
-        setTimeout(function () {
-          var tags = newSettings.filter(function (setting) {
-            return setting.type === 'tag';
-          }).map(function (setting) {
-            var _this$tags$find;
-            var tagName = (_this$tags$find = _this.tags.find(function (tag) {
-              return tag.code === setting.tag_id;
-            })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
-            return {
-              link: {
-                code: setting.tag_id,
-                label: tagName || "Tag ".concat(setting.tag_id) // Fallback to default label if not found
-              },
-              position: setting.position
-            };
-          });
-          _this.$set(_this.form, 'tags', tags);
-        }, 300);
       }
     }
   }

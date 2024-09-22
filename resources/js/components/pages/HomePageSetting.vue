@@ -118,10 +118,31 @@
                 });
 
                 this.$emit('updateHomePage' , formData)
-            }
+            },
+            updateTags(newSettings) {
+                if (newSettings.length > 0) {
+                    const tags = newSettings
+                        .filter(setting => setting.type === 'tag')
+                        .map(setting => {
+                            const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
+                            return {
+                                link: {
+                                    code: setting.tag_id,
+                                    label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
+                                },
+                                position: setting.position
+                            };
+                        });
+
+                    // Update the form's tags
+                    this.$set(this.form, 'tags', tags);
+                }
+            },
         },
         watch: {
             settings(newSettings) {
+
+                this.updateTags(newSettings);
                 if (newSettings.length > 0) {
                     // Check if there is at least one setting of type 'headline'
                     const headLine = newSettings
@@ -139,24 +160,7 @@
                         this.$set(this.form, 'headline', mappedHeadlines);
                     }
                 }
-                if(newSettings.length > 0){
-                    setTimeout(() => {
-                    const tags = newSettings
-                    .filter(setting => setting.type === 'tag')
-                    .map(setting => {
-                            const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
-                            return {
-                                link: {
-                                    code: setting.tag_id,
-                                    label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
-                                },
-                                position: setting.position
-                            };
-                        });
 
-                        this.$set(this.form, 'tags', tags);
-                    }, 300);
-                }
             }
         }
     }
