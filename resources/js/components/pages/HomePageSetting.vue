@@ -122,16 +122,22 @@
         },
         watch: {
             settings(newSettings) {
-                if(newSettings.length > 0){
+                if (newSettings.length > 0) {
+                    // Check if there is at least one setting of type 'headline'
                     const headLine = newSettings
-                    .filter(setting => setting.type === 'headline')
-                        .map(setting => {
+                        .filter(setting => setting.type === 'headline');
+
+                    // Proceed only if there are headline settings
+                    if (headLine.length > 0) {
+                        const mappedHeadlines = headLine.map(setting => {
                             return {
                                 text: setting.position
                             };
                         });
 
-                    this.$set(this.form, 'headline', ...headLine);
+                        // Use this.$set to update the form
+                        this.$set(this.form, 'headline', mappedHeadlines);
+                    }
                 }
                 if(newSettings.length > 0){
                     const tags = newSettings
@@ -144,7 +150,7 @@
                             code: setting.tag_id,
                             label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
                         },
-                        position: setting.position
+                         position: setting.position
                         };
                     });
 

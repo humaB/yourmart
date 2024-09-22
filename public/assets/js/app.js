@@ -975,12 +975,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'HomePageSetting',
   props: ['tags', 'loader', 'settings'],
@@ -1042,14 +1036,22 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     settings: function settings(newSettings) {
       var _this = this;
       if (newSettings.length > 0) {
+        // Check if there is at least one setting of type 'headline'
         var headLine = newSettings.filter(function (setting) {
           return setting.type === 'headline';
-        }).map(function (setting) {
-          return {
-            text: setting.position
-          };
         });
-        this.$set.apply(this, [this.form, 'headline'].concat(_toConsumableArray(headLine)));
+
+        // Proceed only if there are headline settings
+        if (headLine.length > 0) {
+          var mappedHeadlines = headLine.map(function (setting) {
+            return {
+              text: setting.position
+            };
+          });
+
+          // Use this.$set to update the form
+          this.$set(this.form, 'headline', mappedHeadlines);
+        }
       }
       if (newSettings.length > 0) {
         var tags = newSettings.filter(function (setting) {
