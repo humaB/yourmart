@@ -46,7 +46,7 @@ class PageController extends Controller
             }
         }
 
-        if ($request->has('head_line') && !empty($request->head_line)) {
+        if ( !empty($request->head_line)) {
             // Check if an image record exists, update or create new
             $homePageSetting = HomePageSetting::where('type', 'headline')->first();
 
@@ -58,7 +58,7 @@ class PageController extends Controller
                     'added_by' => auth()->user()->id,
                 ]);
             } else {
-                return $request->head_line;
+
                 // Create new image setting
                 HomePageSetting::create([
                     'type' => 'headline',
