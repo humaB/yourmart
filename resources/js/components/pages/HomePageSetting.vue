@@ -140,10 +140,10 @@
                     }
                 }
                 if(newSettings.length > 0){
+                    setTimeout(() => {
                     const tags = newSettings
                     .filter(setting => setting.type === 'tag')
                     .map(setting => {
-                        setTimeout(() => {
                             const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
                             return {
                                 link: {
@@ -152,10 +152,10 @@
                                 },
                                 position: setting.position
                             };
-                        }, 300);
-                    });
+                        });
 
-                    this.$set(this.form, 'tags', tags);
+                        this.$set(this.form, 'tags', tags);
+                    }, 300);
                 }
             }
         }

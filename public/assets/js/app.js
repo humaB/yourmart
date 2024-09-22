@@ -1054,10 +1054,10 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
       if (newSettings.length > 0) {
-        var tags = newSettings.filter(function (setting) {
-          return setting.type === 'tag';
-        }).map(function (setting) {
-          setTimeout(function () {
+        setTimeout(function () {
+          var tags = newSettings.filter(function (setting) {
+            return setting.type === 'tag';
+          }).map(function (setting) {
             var _this$tags$find;
             var tagName = (_this$tags$find = _this.tags.find(function (tag) {
               return tag.code === setting.tag_id;
@@ -1069,9 +1069,9 @@ __webpack_require__.r(__webpack_exports__);
               },
               position: setting.position
             };
-          }, 300);
-        });
-        this.$set(this.form, 'tags', tags);
+          });
+          _this.$set(_this.form, 'tags', tags);
+        }, 300);
       }
     }
   }
