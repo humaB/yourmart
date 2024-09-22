@@ -143,17 +143,16 @@
                     const tags = newSettings
                     .filter(setting => setting.type === 'tag')
                     .map(setting => {
-
-                        const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
-                        console.log(this.tags);
-
-                        return {
-                            link: {
-                                code: setting.tag_id,
-                                label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
-                            },
-                            position: setting.position
-                        };
+                        setTimeout(() => {
+                            const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
+                            return {
+                                link: {
+                                    code: setting.tag_id,
+                                    label: tagName || `Tag ${setting.tag_id}` // Fallback to default label if not found
+                                },
+                                position: setting.position
+                            };
+                        }, 300);
                     });
 
                     this.$set(this.form, 'tags', tags);

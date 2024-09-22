@@ -1057,18 +1057,19 @@ __webpack_require__.r(__webpack_exports__);
         var tags = newSettings.filter(function (setting) {
           return setting.type === 'tag';
         }).map(function (setting) {
-          var _this$tags$find;
-          var tagName = (_this$tags$find = _this.tags.find(function (tag) {
-            return tag.code === setting.tag_id;
-          })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
-          console.log(_this.tags);
-          return {
-            link: {
-              code: setting.tag_id,
-              label: tagName || "Tag ".concat(setting.tag_id) // Fallback to default label if not found
-            },
-            position: setting.position
-          };
+          setTimeout(function () {
+            var _this$tags$find;
+            var tagName = (_this$tags$find = _this.tags.find(function (tag) {
+              return tag.code === setting.tag_id;
+            })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
+            return {
+              link: {
+                code: setting.tag_id,
+                label: tagName || "Tag ".concat(setting.tag_id) // Fallback to default label if not found
+              },
+              position: setting.position
+            };
+          }, 300);
         });
         this.$set(this.form, 'tags', tags);
       }
