@@ -1061,6 +1061,7 @@ __webpack_require__.r(__webpack_exports__);
           var tagName = (_this$tags$find = _this.tags.find(function (tag) {
             return tag.code === setting.tag_id;
           })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
+          console.log(tagName);
           return {
             link: {
               code: setting.tag_id,
