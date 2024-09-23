@@ -3,8 +3,11 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UserController;
+use App\Http\Controllers\Inventory\Gate\GateInWardController;
+use App\Http\Controllers\Inventory\Gate\StoreInwardController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
+use App\Http\Controllers\Inventory\PurchaseOrder\InventoryPurchaseOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\Inventory\Setting\CourierController;
@@ -59,6 +62,26 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
 
         Route::group(['prefix' => '/orders'], function () {
             Route::get('/', [OrderController::class, 'index'])->name('inventory.products.orders');
+        });
+
+        Route::group(['prefix' => '/purchase-orders'], function () {
+            Route::get('/', [InventoryPurchaseOrderController::class, 'index'])->name('inventory.products.purchase_orders');
+            Route::post('/pdf', [InventoryPurchaseOrderController::class, 'pdf']);
+            Route::get('/requests', [InventoryPurchaseOrderController::class, 'requests'])->name('inventory.products.purchase_orders.requests');
+        });
+
+        Route::group(['prefix' => '/gate'], function () {
+            Route::get('/purchase-orders', [GateInWardController::class, 'index'])->name('inventory.products.gate.purchase_orders');
+            Route::get('/inward-records', [GateInWardController::class, 'record'])->name('inventory.products.gate.record');
+            Route::post('/inward-record/pdf', [GateInWardController::class, 'pdf']);
+        });
+
+        Route::group(['prefix' => '/store'], function () {
+            Route::get('/purchase-orders', [StoreInwardController::class, 'index'])->name('inventory.products.store.purchase_orders');
+            Route::get('/inward-records', [StoreInwardController::class, 'record'])->name('inventory.products.store.record');
+            Route::post('/inward-record/pdf', [StoreInwardController::class, 'pdf']);
+
+            Route::get('/stock', [StoreInwardController::class, 'stock'])->name('inventory.products.store.stock');
         });
     });
 });

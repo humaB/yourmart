@@ -27,6 +27,15 @@ class SupplierController extends Controller
         ->setStatusCode( 200 );
     }
 
+    public function dropDown() {
+
+        $suppliers = Supplier::select('id as code', 'full_name as label')->where('status', '1')->get();
+
+        return ( new ResponseCollection ( $suppliers  ) )
+        ->response()
+        ->setStatusCode( 200 );
+    }
+
     public function fetchDetails( Request $request ) {
 
         $suppliers = Supplier::with('bank', 'city','shops')->where('id', $request->id)->get();

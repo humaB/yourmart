@@ -1,4 +1,5 @@
 {
     "/assets/js/app.js": "/assets/js/app.js",
-    "/assets/js/productApp.js": "/assets/js/productApp.js"
+    "/assets/js/productApp.js": "/assets/js/productApp.js",
+    "/assets/js/inventoryApp.js": "/assets/js/inventoryApp.js"
 }

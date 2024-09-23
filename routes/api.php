@@ -11,8 +11,11 @@ use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\Inventory\Setting\CourierController;
 use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
+use App\Http\Controllers\Inventory\Gate\GateInWardController;
+use App\Http\Controllers\Inventory\Gate\StoreInwardController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
+use App\Http\Controllers\Inventory\PurchaseOrder\InventoryPurchaseOrderController;
 use App\Http\Controllers\Pages\PageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
@@ -64,6 +67,8 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
 
 Route::group(['prefix' => 'suppliers','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ SupplierController::class , 'getRequests']);
+
+    Route::get('/drop-down',  [ SupplierController::class , 'dropDown']);
     Route::post('/',  [ SupplierController::class , 'store']);
     Route::post('/details',  [ SupplierController::class , 'fetchDetails']);
     Route::post('/decisions',  [ SupplierController::class , 'decision']);
@@ -172,6 +177,28 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/shipping-classes/details',  [ ProductShippingClassController::class , 'details']);
             Route::post('/shipping-classes/edit-details',  [ ProductShippingClassController::class , 'editDetails']);
             Route::post('/shipping-classes/change-status',  [ ProductShippingClassController::class , 'changeStatus']);
+        });
+
+        Route::group(['prefix' => 'purchase-orders'], function(){
+            Route::get('/',  [ InventoryPurchaseOrderController::class , 'fetchRecord']);
+            Route::post('/',  [ InventoryPurchaseOrderController::class , 'store']);
+            Route::post('/decisions',  [ InventoryPurchaseOrderController::class , 'decisions']);
+        });
+
+        Route::group(['prefix' => 'gate'], function(){
+            Route::get('/pending-purchase-orders',  [ GateInWardController::class , 'pendingPO']);
+
+            Route::get('/product-inwards',  [ GateInWardController::class , 'inWardRecord']);
+            Route::post('/product-inward',  [ GateInWardController::class , 'inWard']);
+        });
+
+        Route::group(['prefix' => 'store'], function(){
+            Route::get('/pending-purchase-orders',  [ StoreInwardController::class , 'pendingPO']);
+
+            Route::get('/product-inwards',  [ StoreInwardController::class , 'inWardRecord']);
+            Route::post('/product-inward',  [ StoreInwardController::class , 'inWard']);
+
+            Route::get('/stocks',  [ StoreInwardController::class , 'fetchStock']);
         });
     });
 });

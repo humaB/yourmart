@@ -7,12 +7,12 @@
 
 
     <li class="dropdown {{ request()->is('products') ? 'active' : '' }}" >
-        <a href="{{ route('inventory.products') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Products</span></a>
+        <a href="{{ route('inventory.products') }}" class="nav-link"><i class="fa fa-box" aria-hidden="true"></i><span>Products</span></a>
     </li>
 
     <ul class="sidebar-menu">
         <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}" >
-            <a href="{{ route('inventory.products.orders') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Orders</span></a>
+            <a href="{{ route('inventory.products.orders') }}" class="nav-link"><i class="fa fa-book" aria-hidden="true"></i><span>Orders</span></a>
         </li>
 
     </ul>
@@ -31,6 +31,18 @@
                     <li><a class="nav-link" href="{{ route('request.supplier') }}">
                         <i data-feather="file-text"></i>Suppliers</a></li>
                 </ul>
+    </li>
+
+    <li class="dropdown">
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                class="fa fa-warehouse"></i><span>Inventory</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('inventory.products.purchase_orders.requests') }}">
+                        <i data-feather="file-text"></i>Purchase Order's</a></li>
+                    <li><a class="nav-link" href="{{ route('inventory.products.store.stock') }}">
+                        <i class="fas fa-boxes"></i>Stock</a></li>
+                </ul>
+
     </li>
 
     <li class="dropdown">

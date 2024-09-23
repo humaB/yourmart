@@ -13,4 +13,5 @@ const mix = require('laravel-mix');
 
  mix.js('resources/js/app.js', 'public/assets/js')
  mix.js('resources/js/productApp.js', 'public/assets/js')
+ mix.js('resources/js/inventoryApp.js', 'public/assets/js')
  .vue();

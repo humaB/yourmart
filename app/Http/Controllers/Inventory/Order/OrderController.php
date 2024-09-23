@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderComment;
+use App\Models\Inventory\Product\Variation\Product;
+use App\Models\Inventory\Product\Variation\ProductVariation;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -19,10 +21,10 @@ class OrderController extends Controller
         $userRole  = auth()->user()->role;
           // Map roles to corresponding statuses
         $statusMap = [
-            'order collection' => 0,    // Role for order collection
-            'inventory issuance' => 1,  // Role for inventory issuance
-            'qc' => 2,         // Role for quality control
-            'packing & dispatch' => 3    // Role for packing and dispatch
+            'order collection manager' => 0,    // Role for order collection
+            'inventory manager' => 1,  // Role for inventory issuance
+            'qc manager' => 2,         // Role for quality control
+            'packing & dispatch manager' => 3    // Role for packing and dispatch
         ];
 
 
@@ -49,19 +51,25 @@ class OrderController extends Controller
 
     public function updateStatus( Request $request ){
         $userRole  = auth()->user()->role;
-        $order = Order::find($request->id);
+        $order = Order::with('items')->find($request->id);
 
          // Map roles to corresponding statuses
         $statusMap = [
-            'order collection' => 1,    // Role for order collection
-            'inventory issuance' => 2,  // Role for inventory issuance
-            'qc' => 3,         // Role for quality control
-            'packing & dispatch' => 4    // Role for packing and dispatch
+            'order collection manager' => 1,    // Role for order collection
+            'inventory manager' => 2,  // Role for inventory issuance
+            'qc manager' => 3,         // Role for quality control
+            'packing & dispatch manager' => 4    // Role for packing and dispatch
         ];
 
         if (array_key_exists($userRole, $statusMap)) {
             // Update the order status based on the role
             $order->update(['status' => $statusMap[$userRole]]);
+
+            if($userRole == 'inventory manager'){
+                foreach( $order->items as $product ){
+                    ProductVariation::where('id', $product->product_variation_id)->decrement('stock', $product->quantity);
+                }
+            }
 
             return response()->json(['message' => 'Order status updated successfully.'], 200);
         }

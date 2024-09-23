@@ -28,10 +28,11 @@
               <option selected>Select from the followings...</option>
               <option value="admin">Admin</option>
               <option value="dob">Data Entry Operator</option>
-              <option value="order collection">Order Collection</option>
-              <option value="inventory issuance">Inventory Issuance</option>
-              <option value="qc">QC</option>
-              <option value="packing & dispatch">Packing & Dispatch</option>
+              <option value="gate incharge">Gate Incharge</option>
+              <option value="order collection manager">Order Collection Manager</option>
+              <option value="inventory manager">Inventory Manager</option>
+              <option value="qc manger">QC Manger</option>
+              <option value="packing & dispatch manager">Packing & Dispatch Manager</option>
               <option value="autidor">Auditor</option>
             </select>
           </div>

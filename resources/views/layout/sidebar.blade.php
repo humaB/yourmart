@@ -22,24 +22,25 @@
             @include('layout.dob_sidebar.dob_sidebar')
         @endif
 
-        @if( auth()->user()->role == 'order collection')
+        @if( auth()->user()->role == 'order collection manager')
             @include('layout.other_sidebar.dailer_sidebar')
         @endif
 
-    @if( auth()->user()->role == 'inventory issuance')
+    @if( auth()->user()->role == 'inventory manager')
+        @include('layout.other_sidebar.dailer_sidebar')
+        @include('layout.other_sidebar.inventory_sidebar')
+    @endif
+
+    @if( auth()->user()->role == 'qc manager')
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 
-    @if( auth()->user()->role == 'qc')
+    @if( auth()->user()->role == 'packing & dispatch manager')
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 
-    @if( auth()->user()->role == 'packing & dispatch')
-        @include('layout.other_sidebar.dailer_sidebar')
-    @endif
-
-    @if( auth()->user()->role == 'dropshipper')
-        @include('layout.other_sidebar.dropshipper_sidebar')
+    @if( auth()->user()->role == 'gate incharge')
+        @include('layout.other_sidebar.gate_sidebar')
     @endif
 
     </aside>
