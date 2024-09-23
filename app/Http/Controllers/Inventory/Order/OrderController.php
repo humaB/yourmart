@@ -8,6 +8,8 @@ use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderComment;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
+use App\Models\Inventory\Store\StoreIssuance;
+use App\Models\Inventory\Store\StoreIssuanceDetail;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -66,8 +68,22 @@ class OrderController extends Controller
             $order->update(['status' => $statusMap[$userRole]]);
 
             if($userRole == 'inventory manager'){
+                $issuance = StoreIssuance::create([
+                    'order_id'  => $request->id,
+                    'added_by'  => auth()->user()->id,
+                ]);
                 foreach( $order->items as $product ){
-                    ProductVariation::where('id', $product->product_variation_id)->decrement('stock', $product->quantity);
+                    $variation = ProductVariation::where('id', $product->product_variation_id)->first();
+                    $variation->decrement('stock', $product->quantity);
+
+                    StoreIssuanceDetail::create([
+                        'sin_id'     => $issuance->id,
+                        'product_id' => $variation->product_id,
+                        'quantity'   => $product->quantity,
+                        'price'      => $product->price,
+                        'total'      => (float)$product->quantity * (float)$product->price,
+                        'added_by'  => auth()->user()->id,
+                    ]);
                 }
             }
 

@@ -313,6 +313,67 @@
                                 </table>
                             </div>
 
+                                                    <!-- Dimensions -->
+<div class="col-md-12 mt-4">
+    <h5>Dimensions</h5>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Weight (kg)</th>
+                <th>Length</th>
+                <th>Width</th>
+                <th>Height</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <template v-if="dimensionEditing && product.dimensions">
+                        <input type="text" v-model="product.dimensions.weight" class="form-control" />
+                    </template>
+                    <template v-else>
+                        {{ product.dimensions ? product.dimensions.weight : 0 }}
+                    </template>
+                </td>
+                <td>
+                    <template v-if="dimensionEditing && product.dimensions">
+                        <input type="text" @keypress="onlyNumber" v-model="product.dimensions.length" :min="0" step="0.01" class="form-control" />
+                    </template>
+                    <template v-else>
+                        {{ product.dimensions ? product.dimensions.length : 0 }}
+                    </template>
+                </td>
+                <td>
+                    <template v-if="dimensionEditing && product.dimensions">
+                        <input type="text" @keypress="onlyNumber" v-model="product.dimensions.width" :min="0" step="0.01" class="form-control" />
+                    </template>
+                    <template v-else>
+                        {{ product.dimensions ? product.dimensions.width : 0 }}
+                    </template>
+                </td>
+                <td>
+                    <template v-if="dimensionEditing && product.dimensions">
+                        <input type="text" @keypress="onlyNumber" v-model="product.dimensions.height" :min="0" step="0.01" class="form-control" />
+                    </template>
+                    <template v-else>
+                        {{ product.dimensions ? product.dimensions.height : 0 }}
+                    </template>
+                </td>
+                <td>
+                    <template v-if="dimensionEditing">
+                        <button @click="saveDimension" class="btn btn-success btn-sm">Save</button>
+                        <button @click="cancelDimensionEdit" class="btn btn-danger btn-sm ml-2">Cancel</button>
+                    </template>
+                    <template v-else>
+                        <button @click="editDimension" class="btn btn-primary btn-sm">Edit</button>
+                    </template>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
                             <div class="col-md-12 mt-4">
                                 <h5>Related Products</h5>
                                 <table class="table table-bordered">
@@ -504,7 +565,15 @@ export default {
                 max_quantity: this.product.max_quantity || 'N/A',
                 quantity_step: this.product.quantity_step || '',
             },
-            editingIndex: null // Track which row is being edited
+            editingIndex: null, // Track which row is being edited
+            dimensionEditing: false,
+            dimension: {
+                weight: '',
+                length: '',
+                width: '',
+                height: ''
+            },
+            originalDimension: {}
         }
     },
     computed: {
@@ -516,6 +585,33 @@ export default {
         }
     },
     methods: {
+        editDimension() {
+            if (!this.product.dimensions) {
+                this.product.dimensions = {
+                    weight: 0,
+                    length: 0,
+                    width: 0,
+                    height: 0
+                };
+            }
+            this.dimensionEditing = true;
+        },
+        cancelDimensionEdit() {
+            this.dimensionEditing = false;
+            if (!this.product.dimensions) {
+                this.product.dimensions = null;
+            }
+        },
+        saveDimension() {
+            // API call to save dimension
+            this.dimensionEditing = false;
+            const data = {
+                dimensions : this.product.dimensions,
+                product :  this.product.id
+            }
+
+            this.$emit('updateDimensions', data);
+        },
         addImage(image, type, id = null) {
             this.$emit('changeImage', { image , type, id, title : this.product.title })
         },

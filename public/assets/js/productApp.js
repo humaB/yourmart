@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       name: '',
       image: '',
       description: ''
@@ -238,7 +238,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -316,7 +316,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       name: '',
       hex: '',
       image: ''
@@ -403,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -642,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1130,7 +1130,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1460,7 +1460,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', "colors", "sizes", "loader", "activeStatus"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       color: {
         code: 0,
         label: 'Select from the following'
@@ -1761,7 +1761,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -1802,7 +1802,16 @@ __webpack_require__.r(__webpack_exports__);
         max_quantity: this.product.max_quantity || 'N/A',
         quantity_step: this.product.quantity_step || ''
       },
-      editingIndex: null // Track which row is being edited
+      editingIndex: null,
+      // Track which row is being edited
+      dimensionEditing: false,
+      dimension: {
+        weight: '',
+        length: '',
+        width: '',
+        height: ''
+      },
+      originalDimension: {}
     };
   },
   computed: {
@@ -1814,6 +1823,32 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    editDimension: function editDimension() {
+      if (!this.product.dimensions) {
+        this.product.dimensions = {
+          weight: 0,
+          length: 0,
+          width: 0,
+          height: 0
+        };
+      }
+      this.dimensionEditing = true;
+    },
+    cancelDimensionEdit: function cancelDimensionEdit() {
+      this.dimensionEditing = false;
+      if (!this.product.dimensions) {
+        this.product.dimensions = null;
+      }
+    },
+    saveDimension: function saveDimension() {
+      // API call to save dimension
+      this.dimensionEditing = false;
+      var data = {
+        dimensions: this.product.dimensions,
+        product: this.product.id
+      };
+      this.$emit('updateDimensions', data);
+    },
     addImage: function addImage(image, type) {
       var id = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       this.$emit('changeImage', {
@@ -2124,8 +2159,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      public_url: window.location.origin + "" + '/',
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -2480,6 +2515,18 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
     updateDiscount: function updateDiscount(data) {
       var vm = this;
       axios.post(this.api_url + "inventory/products/discounts/changed", data).then(function (response) {})["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: 'Oops, Something went wrong please try again',
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    updateDimensions: function updateDimensions(data) {
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/dimensions/changed", data).then(function (response) {})["catch"](function (err) {
         vm.btnLoader = false;
         return swal({
           title: "Error",
@@ -3171,7 +3218,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3290,7 +3337,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3403,7 +3450,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -8567,7 +8614,7 @@ var render = function render() {
           _vm.$set(discount, "quantity", $event.target.value);
         }
       }
-    })] : [_vm._v("\n                                                " + _vm._s(discount.quantity) + "\n                                            ")]], 2), _vm._v(" "), _c("td", [_vm.editingIndex === index ? [_c("input", {
+    })] : [_vm._v("\n                                                    " + _vm._s(discount.quantity) + "\n                                                ")]], 2), _vm._v(" "), _c("td", [_vm.editingIndex === index ? [_c("input", {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -8590,7 +8637,7 @@ var render = function render() {
           _vm.$set(discount, "price", $event.target.value);
         }
       }
-    })] : [_vm._v("\n                                                " + _vm._s(discount.price) + "\n                                            ")]], 2), _vm._v(" "), _c("td", [_vm.editingIndex === index ? [_c("button", {
+    })] : [_vm._v("\n                                                    " + _vm._s(discount.price) + "\n                                                ")]], 2), _vm._v(" "), _c("td", [_vm.editingIndex === index ? [_c("button", {
       staticClass: "btn btn-success btn-sm",
       on: {
         click: function click($event) {
@@ -8614,9 +8661,117 @@ var render = function render() {
     }, [_vm._v("Edit")])]], 2)]);
   }), 0)])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-4"
+  }, [_c("h5", [_vm._v("Dimensions")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_vm.dimensionEditing && _vm.product.dimensions ? [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.product.dimensions.weight,
+      expression: "product.dimensions.weight"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.product.dimensions.weight
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.product.dimensions, "weight", $event.target.value);
+      }
+    }
+  })] : [_vm._v("\n                        " + _vm._s(_vm.product.dimensions ? _vm.product.dimensions.weight : 0) + "\n                    ")]], 2), _vm._v(" "), _c("td", [_vm.dimensionEditing && _vm.product.dimensions ? [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.product.dimensions.length,
+      expression: "product.dimensions.length"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      min: 0,
+      step: "0.01"
+    },
+    domProps: {
+      value: _vm.product.dimensions.length
+    },
+    on: {
+      keypress: _vm.onlyNumber,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.product.dimensions, "length", $event.target.value);
+      }
+    }
+  })] : [_vm._v("\n                        " + _vm._s(_vm.product.dimensions ? _vm.product.dimensions.length : 0) + "\n                    ")]], 2), _vm._v(" "), _c("td", [_vm.dimensionEditing && _vm.product.dimensions ? [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.product.dimensions.width,
+      expression: "product.dimensions.width"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      min: 0,
+      step: "0.01"
+    },
+    domProps: {
+      value: _vm.product.dimensions.width
+    },
+    on: {
+      keypress: _vm.onlyNumber,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.product.dimensions, "width", $event.target.value);
+      }
+    }
+  })] : [_vm._v("\n                        " + _vm._s(_vm.product.dimensions ? _vm.product.dimensions.width : 0) + "\n                    ")]], 2), _vm._v(" "), _c("td", [_vm.dimensionEditing && _vm.product.dimensions ? [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.product.dimensions.height,
+      expression: "product.dimensions.height"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      min: 0,
+      step: "0.01"
+    },
+    domProps: {
+      value: _vm.product.dimensions.height
+    },
+    on: {
+      keypress: _vm.onlyNumber,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.product.dimensions, "height", $event.target.value);
+      }
+    }
+  })] : [_vm._v("\n                        " + _vm._s(_vm.product.dimensions ? _vm.product.dimensions.height : 0) + "\n                    ")]], 2), _vm._v(" "), _c("td", [_vm.dimensionEditing ? [_c("button", {
+    staticClass: "btn btn-success btn-sm",
+    on: {
+      click: _vm.saveDimension
+    }
+  }, [_vm._v("Save")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger btn-sm ml-2",
+    on: {
+      click: _vm.cancelDimensionEdit
+    }
+  }, [_vm._v("Cancel")])] : [_c("button", {
+    staticClass: "btn btn-primary btn-sm",
+    on: {
+      click: _vm.editDimension
+    }
+  }, [_vm._v("Edit")])]], 2)])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-4"
   }, [_c("h5", [_vm._v("Related Products")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(3), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
     staticClass: "col-md-10"
@@ -8635,7 +8790,7 @@ var render = function render() {
       },
       expression: "upsell"
     }
-  }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                        Product")])], 1), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                            Product")])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md2"
   }, [_c("button", {
     staticClass: "mt-2 btn btn-primary",
@@ -8647,7 +8802,7 @@ var render = function render() {
   }, [_vm._v("Add")])])]), _vm._v(" "), _c("div", [_c("ul", _vm._l(_vm.product.up_sells, function (item) {
     return _c("li", {
       key: item.id
-    }, [_vm._v("\n                                                        " + _vm._s(item.product.title) + "\n                                                    ")]);
+    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + "\n                                                        ")]);
   }), 0)])]), _vm._v(" "), _c("td", [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
@@ -8667,7 +8822,7 @@ var render = function render() {
       },
       expression: "crossSell"
     }
-  }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                        Product")])], 1), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                            Product")])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md2"
   }, [_c("button", {
     staticClass: "mt-2 btn btn-primary",
@@ -8681,7 +8836,7 @@ var render = function render() {
   }, [_c("ul", _vm._l(_vm.product.cross_sells, function (item) {
     return _c("li", {
       key: item.id
-    }, [_vm._v("\n                                                        " + _vm._s(item.product.title) + "\n                                                    ")]);
+    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + "\n                                                        ")]);
   }), 0)])]), _vm._v(" "), _c("td", [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
@@ -8701,7 +8856,7 @@ var render = function render() {
       },
       expression: "boughtTogether"
     }
-  }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                        Product")])], 1), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                            Product")])], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md2"
   }, [_c("button", {
     staticClass: "mt-2 btn btn-primary",
@@ -8715,12 +8870,12 @@ var render = function render() {
   }, [_c("ul", _vm._l(_vm.product.bought_togethers, function (item) {
     return _c("li", {
       key: item.id
-    }, [_vm._v("\n                                                        " + _vm._s(item.product.title) + "\n                                                    ")]);
+    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + "\n                                                        ")]);
   }), 0)])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-4"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(4), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_c("div", {
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
     staticClass: "col-md-10"
@@ -8748,7 +8903,7 @@ var render = function render() {
   }, [_vm._v("Add")])])]), _vm._v(" "), _c("div", [_c("ul", _vm._l(_vm.product.tags, function (item) {
     return _c("li", {
       key: item.id
-    }, [_vm._v("\n                                                        " + _vm._s(item.tag.name) + "\n                                                    ")]);
+    }, [_vm._v("\n                                                            " + _vm._s(item.tag.name) + "\n                                                        ")]);
   }), 0)])]), _vm._v(" "), _c("td", [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
@@ -8779,7 +8934,7 @@ var render = function render() {
   }, [_c("ul", _vm._l(_vm.product.attributes, function (item) {
     return _c("li", {
       key: item.id
-    }, [_vm._v("\n                                                        " + _vm._s(item.attribute.name) + "\n                                                    ")]);
+    }, [_vm._v("\n                                                            " + _vm._s(item.attribute.name) + "\n                                                        ")]);
   }), 0)])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("div", {
@@ -8854,6 +9009,10 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Actions")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Weight (kg)")]), _vm._v(" "), _c("th", [_vm._v("Length")]), _vm._v(" "), _c("th", [_vm._v("Width")]), _vm._v(" "), _c("th", [_vm._v("Height")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -9563,6 +9722,9 @@ var render = function render() {
       },
       editProductVariant: function editProductVariant($event) {
         return _vm.editProductVariantFun($event);
+      },
+      updateDimensions: function updateDimensions($event) {
+        return _vm.updateDimensions($event);
       },
       updateDiscount: function updateDiscount($event) {
         return _vm.updateDiscount($event);

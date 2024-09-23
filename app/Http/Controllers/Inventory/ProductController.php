@@ -649,6 +649,32 @@ class ProductController extends Controller
         return response()->json(['message' => 'Discount values changed successfully'], 200);
     }
 
+    public function dimensionsChanged(Request $request)
+    {
+
+        $productDimension = ProductDimension::where('product_id', $request->product)->first();
+
+        if ($productDimension) {
+            $productDimension->update([
+                'weight' => $request->dimensions['weight'],
+            'length' => $request->dimensions['length'],
+            'height' => $request->dimensions['height'],
+            'width' => $request->dimensions['width'],
+            ]);
+        } else {
+            ProductDimension::create([
+                'product_id' => $request->product,
+                'weight' => $request->dimensions['weight'],
+                'length' => $request->dimensions['length'],
+                'height' => $request->dimensions['height'],
+                'width' => $request->dimensions['width'],
+                'added_by' => auth()->user()->id,
+            ]);
+        }
+
+        return response()->json(['message' => 'Dimensiopns values changed successfully'], 200);
+    }
+
     public function updateStatus(Request $request)
     {
         $product = Product::withTrashed()->find($request->id);

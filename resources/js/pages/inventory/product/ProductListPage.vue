@@ -251,6 +251,7 @@
             :productOptions="productsDropDown"
             @updateProduct="updateProduct( $event )"
             @editProductVariant="editProductVariantFun($event)"
+            @updateDimensions="updateDimensions($event)"
             @updateDiscount="updateDiscount( $event )"
             @searchProduct="searchProduct($event)"
             @updateUpSell="updateUpSell( $event )"
@@ -705,6 +706,22 @@ export default {
             let vm = this;
              axios
             .post(this.api_url + "inventory/products/discounts/changed", data )
+            .then((response) => {
+
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updateDimensions(data){
+            let vm = this;
+             axios
+            .post(this.api_url + "inventory/products/dimensions/changed", data )
             .then((response) => {
 
             }).catch((err) => {

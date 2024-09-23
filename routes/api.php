@@ -107,6 +107,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/clone',  [ ProductController::class , 'cloneProduct']);
 
         Route::post('/discounts/changed', [ ProductController::class , 'discountChanged']);
+        Route::post('/dimensions/changed', [ ProductController::class , 'dimensionsChanged']);
+
         Route::post('/up-sells/changed', [ ProductController::class , 'updateUpSells']);
         Route::post('/tags/changed', [ ProductController::class , 'updateTags']);
         Route::post('/status/changed', [ ProductController::class , 'updateStatus']);
