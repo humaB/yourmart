@@ -52,12 +52,26 @@
         </div>
 
         <div class="message">
+
+        @if ($mailData['decision'] == 'reject')
+        <p>Dear {{ $mailData['full_name'] }},</p>
+        <p>Thank you for applying to become a dropshipper with YourMart. After carefully reviewing your application, we regret to inform you that it has not been approved at this time.</p>
+        <ul>
+            <li><strong>We encourage you to review our requirements and consider reapplying in the future. If you have any questions or need clarification, please feel free to contact us at 0326 9810000.</strong></li>
+            <li><strong>We appreciate your interest in partnering with us and wish you success in your future endeavors.</strong></li>
+            <li><strong>Best regards,</strong></li>
+            <li><strong>YourMart Team</strong></li>
+        </ul>
+        @else
             <p>Dear {{ $mailData['full_name'] }},</p>
-            <p>Your Application number {{ $mailData['request'] }} has been {{ $mailData['decision'] == 'reject' ? 'Rejected' : 'Approved'}}</p>
+            <p>Congratulations! Your dropshipping application with YourMart has been Approved.</p>
             <ul>
-                <li><strong>Phone:</strong> {{ $mailData['whatsapp_number'] }}</li>
-                <li><strong>Address:</strong> {{ $mailData['address'] }}</li>
+                <li><strong>Please Log in to start managing your orders. For assistance, contact us at 0326 9810000.</strong></li>
+                <li><strong>Welcome aboard!</strong></li>
+                <li><strong>Best regards,</strong></li>
+                <li><strong>YourMart Team</strong></li>
             </ul>
+        @endif
         </div>
 
         <div class="footer">

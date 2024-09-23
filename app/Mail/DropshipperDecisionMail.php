@@ -30,8 +30,9 @@ class DropshipperDecisionMail extends Mailable
      */
     public function envelope()
     {
+        $decision = strtoupper($this->mailData['decision']) == 'REJECT' ? 'NOT APPROVED' : 'APPROVED';
         return new Envelope(
-            subject: 'Dropshipper Decision Mail',
+            subject: 'DROPSHIPPER APPLICATION '.$decision,
         );
     }
 
