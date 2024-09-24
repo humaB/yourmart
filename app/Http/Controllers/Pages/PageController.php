@@ -22,12 +22,12 @@ class PageController extends Controller
     }
 
     public function homePageSettingStore( Request $request ){
-      
+
         if ($request->has('image') && !empty($request->image)) {
             foreach ($request->image as $image) {
                 if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
                     // Check if an image record exists, update or create new
-                    $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
+                    return $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
 
                     if ($homePageSetting) {
 
