@@ -22,7 +22,7 @@ class PageController extends Controller
     }
 
     public function homePageSettingStore( Request $request ){
-     
+        return $request;
         if ($request->has('image') && !empty($request->image)) {
             foreach ($request->image as $image) {
                 if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
@@ -30,18 +30,27 @@ class PageController extends Controller
                     $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
 
                     if ($homePageSetting) {
-                        // Update existing image settings
-                        $homePageSetting->update([
-                            'attachment' => $this->homeBanner($image['link']), // Button link as image attachment
-                            'position' => $image['button_link'], // Position field used as button link
+
+                        $updateData = [
+                            'position' => $image['button_link'], // Button link
+                            'label' => $image['button_label'],   // Button label
                             'added_by' => auth()->user()->id,
-                        ]);
+                        ];
+
+                        // Only update 'attachment' if 'link' is provided
+                        if (!empty($image['link'])) {
+                            $updateData['attachment'] = $this->homeBanner($image['link']); // Attachment as image
+                        }
+
+                        // Perform the update
+                        $homePageSetting->update($updateData);
                     } else {
                         // Create new image setting
                         HomePageSetting::create([
                             'type' => 'image-' . $image['index'],
                             'attachment' => $this->homeBanner($image['link']), // Button link as image attachment
                             'position' => $image['button_link'], // Position field used as button link
+                            'label' => $image['button_label'], // Position field used as button link
                             'added_by' => auth()->user()->id,
                         ]);
                     }

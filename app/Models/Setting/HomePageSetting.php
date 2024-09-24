@@ -14,6 +14,7 @@ class HomePageSetting extends Model
         'tag_id',
         'attachment',
         'position', // In Case of Image this will save Button Link
+        'label', // Button Label
         'added_by',
     ];
 }

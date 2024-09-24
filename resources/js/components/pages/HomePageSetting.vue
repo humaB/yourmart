@@ -19,20 +19,38 @@
                   </div>
 
                   <!-- Image Section -->
-                  <h3>Image Settings</h3>
-                  <div class="form-group" v-for="(img, index) in form.image" :key="index">
-                    <label :for="'image_link_' + index">Upload Image {{ index + 1 }}</label>
-                    <input type="file" class="form-control" @change="setImage($event, index)">
-                    <code>Dimensions 835 x 415</code>
-                </div>
-                <div class="form-group" v-for="(img, index) in form.image" :key="'link_' + index">
-                    <label :for="'button_link_' + index">Button Link {{ index + 1 }}</label>
+                <h3>Image Settings</h3>
+                <div class="form-group" v-for="(img, index) in form.imageSettings" :key="index + 1">
+                    <h4>Image {{ index + 1 }}</h4>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <!-- Image Upload -->
+                            <label :for="'image_' + index">Upload Image {{ index + 1 }}</label>
+                            <input type="file" class="form-control" @change="setImage($event, index)">
+                            <code>Dimensions 835 x 415</code>
+                        </div>
+                        <div class="col-md-6">
+                            <img :src="getImage(img.href)" alt="" width="20%">
+                        </div>
+                    </div>
+
+
+                    <!-- Button Link -->
+                    <label :for="'button_link_' + index">Button Link</label>
                     <input type="text" v-model="img.button_link" class="form-control" placeholder="Enter Button Link" required>
+
+                    <!-- Button Label -->
+                    <label :for="'button_label_' + index">Button Label</label>
+                    <input type="text" v-model="img.button_label" class="form-control" placeholder="Enter Button Label" required>
+
+                    <!-- Divider for clarity -->
+                    <hr>
                 </div>
 
                   <!-- Tag Section -->
                   <h3>Tags Settings</h3>
-                  <div v-for="(tag, index) in form.tags" :key="index" class="border p-3 mb-3">
+                  <div v-for="(tag, index) in form.tags" :key="index + 1" class="border p-3 mb-3">
                     <div class="row">
                       <!-- Tag Select -->
                       <div class="col-md-4">
@@ -77,23 +95,30 @@
         props : ['tags', 'loader', 'settings'],
         data() {
             return {
-            form: {
-                headline : {
-                    text : ''
-                },
-                image: [
-                    { index : 1, link: '', button_link: '' },
-                    { index : 2, link: '', button_link: '' },
-                    { index : 3, link: '', button_link: '' }
-                ],
-                tags: [
-                    { link: { code : 0 , label : 'Select from the following'}, position: '' } // Default tag
-                ]
-            }
+                public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
+                form: {
+                    headline: {
+                        text: ''
+                    },
+                    imageSettings: [
+                        { index: 1, link: '', button_link: '', button_label: '', href : '' },
+                        { index: 2, link: '', button_link: '', button_label: '', href : '' },
+                        { index: 3, link: '', button_link: '', button_label: '', href : '' }
+                    ],
+                    tags: [
+                        { link: { code: 0, label: 'Select from the following' }, position: '' } // Default tag
+                    ]
+                }
             };
         },
-
         methods: {
+            getImage(imageId) {
+            // Check if the image is null
+                if (!imageId) {
+                    return this.public_url + 'assets/img/blank_image.jpg';
+                }
+                return this.public_url + 'public/storage/uploads/pages/home/banners/' + imageId;
+            },
             setImage(event, index) {
                 const file = event.target.files[0]; // Get the uploaded file
                 if (file) {
@@ -101,7 +126,8 @@
                         this.$set(this.form.image, index, {
                             index : index + 1,
                             link: file, // Set the image link
-                            button_link: this.form.image[index].button_link // Keep the existing button link
+                            button_link: this.form.image[index].button_link, // Keep the existing button link
+                            button_label: this.form.image[index].button_label,
                         });
                 }
             },
@@ -116,15 +142,14 @@
                 const formData = new FormData();
 
                 // Add image data
-                formData.append('image_link', this.form.image.link);
-                formData.append('button_link', this.form.image.button_link);
                 formData.append('head_line', this.form.headline.text);
 
                 // Add image data
-                this.form.image.forEach((img, index) => {
+                this.form.imageSettings.forEach((img, index) => {
                     formData.append(`image[${index}][index]`,img.index);
                     formData.append(`image[${index}][link]`, img.link); // Append the image link
                     formData.append(`image[${index}][button_link]`, img.button_link); // Append the button link
+                    formData.append(`image[${index}][button_label]`, img.button_label);
                 });
 
                 // Add tags data
@@ -135,12 +160,38 @@
 
                 this.$emit('updateHomePage' , formData)
             },
+            updateImages(newSettings) {
+                const images = [];
+
+                // Iterate through 3 image types: image-1, image-2, image-3
+                for (let i = 1; i <= 3; i++) {
+                    const imageType = `image-${i}`;
+
+                    // Try to find the corresponding image setting
+                    const imageSetting = newSettings.find(setting => setting.type === imageType);
+
+                    // If an image is found, use its data; otherwise, fill with empty values
+                    images.push({
+                        index : i - 1,
+                        button_link: imageSetting ? imageSetting.position : '', // Button link or empty string
+                        button_label: imageSetting ? imageSetting.label : '', // Button link or empty string
+                        href :  imageSetting ? imageSetting.attachment : ''
+                    });
+                }
+
+                console.log(images);
+
+                // Update the form's images field
+                this.$set(this.form, 'imageSettings', images);
+            },
             updateTags(newSettings) {
+
                 if (newSettings.length > 0) {
                     const tags = newSettings
                         .filter(setting => setting.type === 'tag')
                         .map(setting => {
                             const tagName = this.tags.find(tag => tag.code === setting.tag_id)?.label;
+
                             return {
                                 link: {
                                     code: setting.tag_id,
@@ -151,14 +202,14 @@
                         });
 
                     // Update the form's tags
-                    this.$set(this.form, 'tags', tags);
+                    if(tags.length > 0){
+                        this.$set(this.form, 'tags', tags);
+                    }
                 }
             },
         },
         watch: {
             settings(newSettings) {
-
-                this.updateTags(newSettings);
                 if (newSettings.length > 0) {
                     // Check if there is at least one setting of type 'headline'
                     const headLine = newSettings
@@ -173,9 +224,11 @@
                         });
 
                         // Use this.$set to update the form
-                        this.$set(this.form, 'headline', mappedHeadlines);
+                        this.$set(this.form, 'headline', ...mappedHeadlines);
                     }
                 }
+                this.updateTags(newSettings);
+                this.updateImages(newSettings);
 
             }
         }

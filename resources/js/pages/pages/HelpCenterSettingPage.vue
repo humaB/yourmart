@@ -3,40 +3,36 @@
         <div class="card">
             <div class="card-header justify-content-between">
                 <h4>Help Center Page</h4>
-                <a href="#" class="mr-1 btn btn-primary" data-toggle="modal" data-target="#newCourse">New</a>
+                <a href="#" class="mr-1 btn btn-primary" data-toggle="modal" data-target="#newData">Add New</a>
             </div>
             <div class="card-body">
                 <!-- <div class="table-responsive" v-if="tableLoading">
                     <bullet-list-loader :width="250"> </bullet-list-loader>
                 </div> -->
                 <div class="table-responsive">
-                    <table class="table table-sm" id="course_table">
+                    <table class="table table-bordered" id="course_table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Image</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Description</th>
+                                <th scope="col">Type</th>
                                 <th scope="col">Added By</th>
                                 <th scope="col">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(course, index) in allCourses" :key="index">
+                            <tr v-for="(data, index) in allData" :key="index">
                                 <th scope="row">{{ index + 1 }}</th>
-                                <td>
-                                    <a :href="public_url+'storage/uploads/pages/library/courses/'+course.attachment" target="_blank">
-                                        <img width="80" :src="public_url+'storage/uploads/pages/library/courses/'+course.attachment">
-                                    </a>
-                                </td>
-                                <td>{{course.name}}</td>
-                                <td>{{course.description}}</td>
-                                <td>{{course.added_name.name}}</td>
+                                <td>{{data.name}}</td>
+                                <td>{{data.description}}</td>
+                                <td>{{data.type}}</td>
+                                <td>{{data.added_name.name}}</td>
                                 <td>
                                     <a
                                         href="#"
-                                        class="mr-1 btn-sm btn btn-icon btn-primary"
-                                        @click="editCourse(course)"
+                                        class="btn  btn-primary"
+                                        @click="editPageData(data)"
                                         ><i class="far fa-edit"></i
                                     ></a>
                                     <!-- <a
@@ -55,23 +51,23 @@
         <NewData
             :btnLoading="btnLoading"
             :addData="addData"
-            @add="addPartner"
+            @add="addPageData"
         />
         <!-- update modal -->
         <EditData
             :btnLoading="btnLoading"
             :editData="editData"
-            @update="updateCourse"
+            @update="updatePageData"
         />
     </section>
 </template>
 <script>
 import { BulletListLoader } from "vue-content-loader";
-import NewData from '../../components/pages/help_center/NewComponent.vue';
-import EditData from '../../components/pages/help_center/EditComponent.vue';
+import NewData from '../../components/pages/help_center/AddNewHelpCenter.vue';
+import EditData from '../../components/pages/help_center/EditHelpCenter.vue';
 import axios from 'axios';
 export default {
-    name: "PartnerPage",
+    name: "HelpCenterSettingPage",
     components: {
         NewData,
         EditData,
@@ -82,63 +78,47 @@ export default {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             btnLoading: false,
             tableLoading: false,
-            allCourses: [],
-            editData: { name: '', description: '', video_links: [] },
-            editDataReset: { name: '', description: '', video_links: [] },
+            allData: [],
+            editData: { name: '', description: '', type: "0" },
+            editDataReset: { name: '', description: '', type: "0" },
             addDataReset: {},
             addData: {
                 name: "",
+                type: "0",
                 description: "",
-                image: null, // keep track of the image file
-                video_links: [], // keep track of the image file
             },
         };
     },
     created() {
-        this.courses();
+        this.helpCenter();
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     mounted() {
     },
     methods: {
-        async courses() {
+        async helpCenter() {
             this.tableLoading = true;
-            axios.get(this.api_url + "pages/settings/library-page")
+            axios.get(this.api_url + "pages/settings/help-center-page")
             .then((response) => {
-                this.allCourses = response.data.response;
+                this.allData = response.data.response;
             }).catch((err) => this.fetchTags());
-            
-            // if ($.fn.DataTable.isDataTable("#course_table")) {
-            //     $('#course_table').DataTable().destroy();
-            // }
-            // setTimeout(function () {
-            //     $('#course_table').DataTable();
-            // }, 300);
             this.tableLoading = false;
         },
-        async addPartner(selectedImage) {
-            if (!this.addData.name || !this.addData.description || !selectedImage) {
+        async addPageData() {
+            if (!this.addData.name || this.addData.type==0 || !this.addData.description) {
                 return swal({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Title, Image, Description field are required',
+                    text: 'Title, type, Description field are required',
                 });
             }
 
-            const formData = new FormData();
-            formData.append('data', JSON.stringify(this.addData));
-            formData.append('image', selectedImage); // append the image
-
             this.btnLoading = true;
 
-            axios.post(this.api_url + "pages/settings/library-page/add", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
+            axios.post(this.api_url + "pages/settings/help-center-page/add", this.addData)
             .then((response) => {
                 this.addData = JSON.parse(JSON.stringify(this.addDataReset));
-                this.courses();
+                this.helpCenter();
                 return swal({
                     icon: 'success',
                     title: 'Success',
@@ -148,38 +128,25 @@ export default {
             });
             this.btnLoading = false;
         },
-        async editCourse(course) {
+        async editPageData(course) {
             this.editData = course;
-            $("#editCourse").modal('show');
+            $("#editData").modal('show');
         },
-        async updateCourse(selectedImage) {
-            if (!this.editData.name || !this.editData.description) {
+        async updatePageData() {
+            if (!this.editData.name || this.editData.type==0 || !this.editData.description) {
                 return swal({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Title and Description are required',
+                    text: 'Title,type and Description are required',
                 });
             }
-
-            const formData = new FormData();
-            formData.append('data', JSON.stringify(this.editData));
-
-            // Append the image if it's selected
-            if (selectedImage) {
-                formData.append('image', selectedImage);
-            }
-
             this.btnLoading = true;
 
             try {
-                await axios.post(this.api_url + "pages/settings/library-page/update", formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+                await axios.post(this.api_url + "pages/settings/help-center-page/update", this.editData);
 
                 this.editData = JSON.parse(JSON.stringify(this.editDataReset));
-                this.courses(); // Refresh the course list
+                this.helpCenter(); // Refresh the course list
 
                 return swal({
                     icon: 'success',

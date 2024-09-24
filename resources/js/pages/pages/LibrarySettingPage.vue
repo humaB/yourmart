@@ -3,14 +3,14 @@
         <div class="card">
             <div class="card-header justify-content-between">
                 <h4>Library Page</h4>
-                <a href="#" class="mr-1 btn btn-primary" data-toggle="modal" data-target="#newCourse">New</a>
+                <a href="#" class="mr-1 btn btn-primary" data-toggle="modal" data-target="#newCourse">Add New</a>
             </div>
             <div class="card-body">
                 <!-- <div class="table-responsive" v-if="tableLoading">
                     <bullet-list-loader :width="250"> </bullet-list-loader>
                 </div> -->
                 <div class="table-responsive">
-                    <table class="table table-sm" id="course_table">
+                    <table class="table table-bordered" id="course_table">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
@@ -35,15 +35,11 @@
                                 <td>
                                     <a
                                         href="#"
-                                        class="mr-1 btn-sm btn btn-icon btn-primary"
+                                        class="btn btn-primary"
                                         @click="editCourse(course)"
                                         ><i class="far fa-edit"></i
                                     ></a>
-                                    <!-- <a
-                                        href="#"
-                                        class="mr-1 btn-sm btn btn-icon btn-danger"
-                                        ><i class="fas fa-trash"></i
-                                    ></a> -->
+
                                 </td>
                             </tr>
                         </tbody>
@@ -52,13 +48,13 @@
             </div>
         </div>
         <!-- add modal -->
-        <NewCourse
+        <NewLibraryCourse
             :btnLoading="btnLoading"
             :addData="addData"
             @add="addPartner"
         />
         <!-- update modal -->
-        <EditCourse
+        <EditLibraryCourse
             :btnLoading="btnLoading"
             :editData="editData"
             @update="updateCourse"
@@ -67,14 +63,14 @@
 </template>
 <script>
 import { BulletListLoader } from "vue-content-loader";
-import NewCourse from '../../components/pages/library/NewComponent.vue';
-import EditCourse from '../../components/pages/library/EditComponent.vue';
+import NewLibraryCourse from '../../components/pages/library/NewLibraryCourse.vue';
+import EditLibraryCourse from '../../components/pages/library/EditLibraryCourse.vue';
 import axios from 'axios';
 export default {
     name: "PartnerPage",
     components: {
-        NewCourse,
-        EditCourse,
+        NewLibraryCourse,
+        EditLibraryCourse,
     },
     data() {
         return {
@@ -107,7 +103,7 @@ export default {
             .then((response) => {
                 this.allCourses = response.data.response;
             }).catch((err) => this.fetchTags());
-            
+
             // if ($.fn.DataTable.isDataTable("#course_table")) {
             //     $('#course_table').DataTable().destroy();
             // }
