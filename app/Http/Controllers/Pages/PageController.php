@@ -22,7 +22,7 @@ class PageController extends Controller
     }
 
     public function homePageSettingStore( Request $request ){
-        return $request;
+      
         if ($request->has('image') && !empty($request->image)) {
             foreach ($request->image as $image) {
                 if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
