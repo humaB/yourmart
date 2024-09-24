@@ -2,7 +2,7 @@
     <section>
         <div class="card">
             <div class="card-header justify-content-between">
-                <h4>Library Page</h4>
+                <h4>Help Center Page</h4>
                 <a href="#" class="mr-1 btn btn-primary" data-toggle="modal" data-target="#newCourse">New</a>
             </div>
             <div class="card-body">
@@ -52,13 +52,13 @@
             </div>
         </div>
         <!-- add modal -->
-        <NewCourse
+        <NewData
             :btnLoading="btnLoading"
             :addData="addData"
             @add="addPartner"
         />
         <!-- update modal -->
-        <EditCourse
+        <EditData
             :btnLoading="btnLoading"
             :editData="editData"
             @update="updateCourse"
@@ -67,14 +67,14 @@
 </template>
 <script>
 import { BulletListLoader } from "vue-content-loader";
-import NewCourse from '../../components/pages/library/NewComponent.vue';
-import EditCourse from '../../components/pages/library/EditComponent.vue';
+import NewData from '../../components/pages/help_center/NewComponent.vue';
+import EditData from '../../components/pages/help_center/EditComponent.vue';
 import axios from 'axios';
 export default {
     name: "PartnerPage",
     components: {
-        NewCourse,
-        EditCourse,
+        NewData,
+        EditData,
     },
     data() {
         return {

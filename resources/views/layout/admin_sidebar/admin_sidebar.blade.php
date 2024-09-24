@@ -10,6 +10,9 @@
             <li>
                 <a href="{{ route('library.page') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Library Page</span></a>
             </li>
+            <li>
+                <a href="{{ route('help.center.page') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Help Center Page</span></a>
+            </li>
         </ul>
     </li>
 
