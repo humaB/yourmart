@@ -27,7 +27,7 @@ class PageController extends Controller
             foreach ($request->image as $image) {
                 if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
                     // Check if an image record exists, update or create new
-                    return $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
+                    $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
 
                     if ($homePageSetting) {
 
@@ -38,7 +38,7 @@ class PageController extends Controller
                         ];
 
                         // Only update 'attachment' if 'link' is provided
-                        if (!empty($image['link'])) {
+                        if (!empty($image['link']) || $image['link'] != 'undefined') {
                             $updateData['attachment'] = $this->homeBanner($image['link']); // Attachment as image
                         }
 
