@@ -18,6 +18,12 @@
                     <input type="text" v-model="form.headline.text" class="form-control" placeholder="Enter Headline Text" required>
                   </div>
 
+                  <h3>Shopify Video</h3>
+                  <div class="form-group">
+                    <label for="button_link">Please add embedded Youtube Link </label>
+                    <input type="text" v-model="form.video.text" class="form-control" placeholder="Enter embedded Youtube Link " required>
+                  </div>
+
                   <!-- Image Section -->
                 <h3>Image Settings</h3>
                 <div class="form-group" v-for="(img, index) in form.imageSettings" :key="index + 1">
@@ -100,6 +106,9 @@
                     headline: {
                         text: ''
                     },
+                    video: {
+                        text: ''
+                    },
                     imageSettings: [
                         { index: 1, link: '', button_link: '', button_label: '', href : '' },
                         { index: 2, link: '', button_link: '', button_label: '', href : '' },
@@ -143,6 +152,7 @@
 
                 // Add image data
                 formData.append('head_line', this.form.headline.text);
+                formData.append('video_link', this.form.video.text);
 
                 // Add image data
                 this.form.imageSettings.forEach((img, index) => {
@@ -227,9 +237,25 @@
                         this.$set(this.form, 'headline', ...mappedHeadlines);
                     }
                 }
+                if (newSettings.length > 0) {
+                    // Check if there is at least one setting of type 'headline'
+                    const headLine = newSettings
+                        .filter(setting => setting.type === 'video');
+
+                    // Proceed only if there are headline settings
+                    if (headLine.length > 0) {
+                        const mappedHeadlines = headLine.map(setting => {
+                            return {
+                                text: setting.position
+                            };
+                        });
+
+                        // Use this.$set to update the form
+                        this.$set(this.form, 'video', ...mappedHeadlines);
+                    }
+                }
                 this.updateTags(newSettings);
                 this.updateImages(newSettings);
-
             }
         }
     }

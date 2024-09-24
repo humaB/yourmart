@@ -991,6 +991,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         headline: {
           text: ''
         },
+        video: {
+          text: ''
+        },
         imageSettings: [{
           index: 1,
           link: '',
@@ -1061,6 +1064,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 
       // Add image data
       formData.append('head_line', this.form.headline.text);
+      formData.append('video_link', this.form.video.text);
 
       // Add image data
       this.form.imageSettings.forEach(function (img, index) {
@@ -1151,6 +1155,24 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 
           // Use this.$set to update the form
           this.$set.apply(this, [this.form, 'headline'].concat(_toConsumableArray(mappedHeadlines)));
+        }
+      }
+      if (newSettings.length > 0) {
+        // Check if there is at least one setting of type 'headline'
+        var _headLine = newSettings.filter(function (setting) {
+          return setting.type === 'video';
+        });
+
+        // Proceed only if there are headline settings
+        if (_headLine.length > 0) {
+          var _mappedHeadlines = _headLine.map(function (setting) {
+            return {
+              text: setting.position
+            };
+          });
+
+          // Use this.$set to update the form
+          this.$set.apply(this, [this.form, 'video'].concat(_toConsumableArray(_mappedHeadlines)));
         }
       }
       this.updateTags(newSettings);
@@ -5005,6 +5027,34 @@ var render = function render() {
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.$set(_vm.form.headline, "text", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("h3", [_vm._v("Shopify Video")]), _vm._v(" "), _c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "button_link"
+    }
+  }, [_vm._v("Please add embedded Youtube Link ")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.form.video.text,
+      expression: "form.video.text"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Enter embedded Youtube Link ",
+      required: ""
+    },
+    domProps: {
+      value: _vm.form.video.text
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.form.video, "text", $event.target.value);
       }
     }
   })]), _vm._v(" "), _c("h3", [_vm._v("Image Settings")]), _vm._v(" "), _vm._l(_vm.form.imageSettings, function (img, index) {

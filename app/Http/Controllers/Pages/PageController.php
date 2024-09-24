@@ -81,6 +81,29 @@ class PageController extends Controller
             }
         }
 
+        if ( !empty($request->video_link)) {
+            // Check if an image record exists, update or create new
+            $homePageSetting = HomePageSetting::where('type', 'video')->first();
+
+            if ($homePageSetting) {
+                // Update existing image settings
+                $homePageSetting->update([
+                    'attachment' => '', // Button link as image attachment
+                    'position' => $request->video_link, // Position field used as button link
+                    'added_by' => auth()->user()->id,
+                ]);
+            } else {
+
+                // Create new image setting
+                HomePageSetting::create([
+                    'type' => 'video',
+                    'attachment' => '', // Button link as image attachment
+                    'position' => $request->video_link, // Position field used as button link
+                    'added_by' => auth()->user()->id,
+                ]);
+            }
+        }
+
         // Handle Tags Logic
         if ($request->has('tags') && is_array($request->tags)) {
             foreach ($request->tags as $tag) {
