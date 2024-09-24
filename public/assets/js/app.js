@@ -686,6 +686,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CourierDetailPopup',
   props: ['loader', 'details', 'ranges'],
@@ -724,7 +725,10 @@ __webpack_require__.r(__webpack_exports__);
         Object.values(this.ranges).forEach(function (categoryRanges) {
           categoryRanges.forEach(function (range) {
             if (_this.testWeight >= parseFloat(range.minimum_quantity) && _this.testWeight <= parseFloat(range.maximum_quantity)) {
-              var totalCost = _this.calculateTotalCostForWeight(range);
+              var totalCost = _this.calculateTotalCostForWeight({
+                testWeight: _this.testWeight,
+                range: range
+              });
               if (parseFloat(totalCost) < minPrice) {
                 minPrice = parseFloat(totalCost);
                 bestRange = range;
@@ -4641,7 +4645,13 @@ var render = function render() {
         _vm.testWeight = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight(_vm.selectedRange)))])])]) : _vm._e()]), _vm._v(" "), _vm.selectedRange && _vm.details.categories ? _c("div", {
+  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight({
+    testWeight: _vm.testWeight,
+    selectedRange: _vm.selectedRange
+  })))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight({
+    testWeight: _vm.testWeight,
+    selectedRange: _vm.selectedRange
+  })))])])]) : _vm._e()]), _vm._v(" "), _vm.selectedRange && _vm.details.categories ? _c("div", {
     staticClass: "col-md-12 mt-2"
   }, [_c("table", {
     staticClass: "table table-striped"
@@ -4652,16 +4662,7 @@ var render = function render() {
   })], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.weights, function (weight, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(weight))]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
-      return _c("td", {
-        key: category.id
-      }, [_vm._v("\n                                      " + _vm._s(_vm.calculateTotalCostForWeight({
-        testWeight: weight,
-        range: category.ranges.find(function (r) {
-          return weight >= parseFloat(r.minimum_quantity) && weight <= parseFloat(r.maximum_quantity);
-        })
-      })) + "\n                                    ")]);
-    })], 2);
+    }, [_c("td", [_vm._v(_vm._s(weight))])]);
   }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])])]);
 };
 var staticRenderFns = [function () {

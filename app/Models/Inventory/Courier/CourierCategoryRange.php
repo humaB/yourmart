@@ -2,7 +2,6 @@
 
 namespace App\Models\Inventory\Courier;
 
-use App\Http\Controllers\Inventory\Setting\CourierController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,8 +24,6 @@ class CourierCategoryRange extends Model
         'added_by'
     ];
 
-    public function category(){
-        return $this->belongsTo(CourierController::class, 'category_id', 'id');
-    }
+
 
 }
