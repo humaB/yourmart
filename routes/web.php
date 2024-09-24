@@ -12,6 +12,7 @@ use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
 use App\Http\Controllers\Inventory\Setting\CourierController;
 use App\Http\Controllers\Pages\PageController;
+use App\Http\Controllers\Pages\LibraryPageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,7 @@ Route::group(['prefix' => '/users', 'middleware' => 'auth'], function () {
 
 Route::group(['prefix' => '/pages', 'middleware' => 'auth'], function () {
     Route::get('/', [PageController::class, 'index'])->name('pages');
+    Route::get('/library', [LibraryPageController::class, 'index'])->name('library.page');
 
 });
 

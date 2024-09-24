@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -155,7 +155,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       image: '',
       description: ''
@@ -238,7 +238,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -316,7 +316,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       name: '',
       hex: '',
       image: ''
@@ -403,7 +403,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -642,7 +642,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1130,7 +1130,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/ds",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1460,7 +1460,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', "colors", "sizes", "loader", "activeStatus"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       color: {
         code: 0,
         label: 'Select from the following'
@@ -1761,7 +1761,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/ds" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2159,8 +2159,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      public_url: window.location.origin + "" + '/',
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3218,7 +3218,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3337,7 +3337,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3450,7 +3450,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/ds/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -12399,7 +12399,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\n    width: 16px;  /* Adjust the width as needed */\n    height: 16px; /* Adjust the height as needed */\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\r\n    width: 16px;  /* Adjust the width as needed */\r\n    height: 16px; /* Adjust the height as needed */\r\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

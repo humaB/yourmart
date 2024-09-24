@@ -30,6 +30,8 @@ class UserController extends Controller
 
         // Mail::to("malik.rehman7272@gmail.com")->send(new RegMail($mailData, 'Dropshipping'));
 
+        // return 'helo';
+
         $users = User::get();
         return view('auth.user.users', [
             'users' => $users

@@ -1,9 +1,18 @@
 
 <ul class="sidebar-menu">
 
-    <li class="dropdown {{ request()->is('products') ? 'active' : '' }}" >
-        <a href="{{ route('pages') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Pages</span></a>
+    <li class="dropdown">
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-bell"></i><span>Pages</span></a>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="{{ route('pages') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Home Page</span></a>
+            </li>
+            <li>
+                <a href="{{ route('library.page') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Library Page</span></a>
+            </li>
+        </ul>
     </li>
+
 
 
     <li class="dropdown {{ request()->is('products') ? 'active' : '' }}" >

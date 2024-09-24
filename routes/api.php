@@ -17,6 +17,7 @@ use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\PurchaseOrder\InventoryPurchaseOrderController;
 use App\Http\Controllers\Pages\PageController;
+use App\Http\Controllers\Pages\LibraryPageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
 use Illuminate\Http\Request;
@@ -61,6 +62,12 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => 'settings'], function(){
         Route::get('/home-page',  [ PageController::class , 'fectHomePageSettingStore']);
         Route::post('/home-page',  [ PageController::class , 'homePageSettingStore']);
+
+        Route::group(['prefix' => 'library-page'], function(){
+            Route::get('/',  [ LibraryPageController::class , 'fectLibraryPageSettingStore']);
+            Route::post('/add',  [ LibraryPageController::class , 'libraryPageSettingStore']);
+            Route::post('/update',  [ LibraryPageController::class , 'libraryPageSettingUpdate']);
+        });
     });
 });
 
