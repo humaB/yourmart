@@ -146,7 +146,7 @@
 
                 // Add image data
                 this.form.imageSettings.forEach((img, index) => {
-                    formData.append(`image[${index}][index]`,img.index);
+                    formData.append(`image[${index}][index]`,img.index + 1 );
                     formData.append(`image[${index}][link]`, img.link); // Append the image link
                     formData.append(`image[${index}][button_link]`, img.button_link); // Append the button link
                     formData.append(`image[${index}][button_label]`, img.button_label);

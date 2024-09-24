@@ -1064,7 +1064,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 
       // Add image data
       this.form.imageSettings.forEach(function (img, index) {
-        formData.append("image[".concat(index, "][index]"), img.index);
+        formData.append("image[".concat(index, "][index]"), img.index + 1);
         formData.append("image[".concat(index, "][link]"), img.link); // Append the image link
         formData.append("image[".concat(index, "][button_link]"), img.button_link); // Append the button link
         formData.append("image[".concat(index, "][button_label]"), img.button_label);
