@@ -4,6 +4,7 @@ namespace App\Models\Inventory\Product\Variation;
 
 use App\Models\Inventory\Product\Brand;
 use App\Models\Inventory\Product\Category;
+use App\Models\Inventory\Product\Setting\PackagingClass;
 use App\Models\Inventory\Product\Setting\ShippingClass;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,7 +23,7 @@ class Product extends Model
         'short_description',
         'brand_id',
         'category_id',
-        'shipping_method_id',
+        'shipping_method_id',//this column using package class and there is no module like shipping class from now
         'hero_image',
         'video_link',
         'product_description',
@@ -49,7 +50,7 @@ class Product extends Model
     }
 
     public function shipping(){
-        return $this->hasOne(ShippingClass::class, 'id', 'shipping_method_id');
+        return $this->hasOne(PackagingClass::class, 'id', 'shipping_method_id');
     }
 
     public function attributes(){

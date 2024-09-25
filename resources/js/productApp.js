@@ -22,6 +22,7 @@ Vue.component('product-list-page', require('./pages/inventory/product/ProductLis
 Vue.component('product-minimum-order-quantity-page', require('./pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue').default );
 
 Vue.component('product-shipping-classes-page', require('./pages/inventory/product/setting/ProductShippingClassesPage.vue').default );
+Vue.component('product-packaging-classes-page', require('./pages/inventory/product/setting/ProductPackagingClassesPage.vue').default );
 Vue.component('product-order-page', require('./pages/inventory/product/order/ProductOrderPage.vue').default );
 
 

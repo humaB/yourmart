@@ -94,7 +94,7 @@
                                             <td>
                                                 <div v-if="!editingField.shipping_method_id">{{ product.shipping ? product.shipping.name : 'N/A' }}</div>
                                                 <div v-else>
-                                                    <v-select :options="shippingOptions"
+                                                    <v-select :options="packagingOptions"
                                                     v-model="selectedShipping">
                                                     </v-select>
                                                 </div>
@@ -530,7 +530,7 @@
 <script>
 export default {
     name: 'ProductDetailView',
-    props: ["brands", "categories", "tags", "attributes", "shippingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
+    props: ["brands", "categories", "tags", "attributes", "packagingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',

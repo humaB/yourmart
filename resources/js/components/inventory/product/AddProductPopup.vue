@@ -115,7 +115,7 @@
                                                     <li class="nav-item">
                                                         <a class="nav-link" id="contact-tab4" data-toggle="tab"
                                                             href="#contact4" role="tab" aria-controls="contact"
-                                                            aria-selected="false">Shipping</a>
+                                                            aria-selected="false">Packaging</a>
                                                     </li>
                                                     <li class="nav-item">
                                                         <a class="nav-link" id="linked-product" data-toggle="tab"
@@ -193,7 +193,7 @@
                                                         aria-labelledby="contact-tab4">
                                                         <div class="col-md-12 mt-4 row">
                                                             <div class="col-md-12 d-flex justify-content-between">
-                                                                <p>Shipping Class <span class="text-danger">( optional
+                                                                <p>Packaging Class <span class="text-danger">( optional
                                                                         )</span></p>
                                                                         <a href="#" data-toggle="modal" data-target="#addShippingClass"
                                                                          class="btn btn-outline-primary"
@@ -201,8 +201,8 @@
                                                                         New</a>
                                                             </div>
                                                             <div class="col-md-12">
-                                                                <v-select :options="shippingOptions"
-                                                                    v-model="selectedShipping">
+                                                                <v-select :options="packagingOptions"
+                                                                    v-model="selectedPackaging">
                                                                 </v-select>
                                                             </div>
                                                         </div>
@@ -483,7 +483,7 @@
 <script>
 export default {
     name: 'AddProductPopup',
-    props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "shippingOptions", "loader", "productOptions"],
+    props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "packagingOptions", "loader", "productOptions"],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
@@ -495,7 +495,7 @@ export default {
             selectColor: false,
             selectSize: false,
             selectTag: false,
-            selectedShipping: { code: 0, label: 'Select from the following' },
+            selectedPackaging: { code: 0, label: 'Select from the following' },
             upsell: {},
             crossSell: {},
             boughtTogether: {},
@@ -640,7 +640,7 @@ export default {
             formData.append('weight', this.weight);
             formData.append('brand', this.brand.code);
             formData.append('category', this.category.code);
-            formData.append('selectedShipping', this.selectedShipping.code);
+            formData.append('selectedPackaging', this.selectedPackaging.code);
             formData.append('heroImage', this.heroImage.attachment);
             formData.append('videoLink', this.videoLink);
             formData.append('productDescription', productDescription); // Assuming the textarea has a ref
@@ -738,7 +738,7 @@ export default {
             this.selectColor = false;
             this.selectSize = false;
             this.selectTag = false;
-            this.selectedShipping = { code: 0, label: 'Select from the following' };
+            this.selectedPackaging = { code: 0, label: 'Select from the following' };
             this.upsell = {};
             this.crossSell = {};
             this.boughtTogether = {};
