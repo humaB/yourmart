@@ -478,7 +478,7 @@
                                                 </div>
                                                 <div>
                                                     <ul>
-                                                        <li v-for="item in product.tags" :key="item.id" class="mb-1 border-bottom">
+                                                        <li v-for="item in product.tags" :key="item.id" class=" mb-1 border-bottom">
                                                             {{ item.tag.name }} <button @click="removeTag(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
                                                         </li>
                                                     </ul>
