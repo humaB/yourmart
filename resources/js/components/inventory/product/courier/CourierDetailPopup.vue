@@ -66,7 +66,7 @@
                                 <div v-if="selectedRange">
                                     <h6>Based on your weight, the range is: {{ selectedRange.minimum_quantity }} - {{
                                         selectedRange.maximum_quantity }} kg</h6>
-                                    <h6>Total Shipping Cost: {{ calculateTotalCostForWeight({testWeight ,selectedRange}) }}</h6>
+                                    <h6>Total Shipping Cost: {{ selectedRange.totalCost }}</h6>
                                 </div>
                                 <div v-else-if="testWeight">
                                     <h6>No valid range found for the entered weight.</h6>
@@ -78,12 +78,12 @@
                                         <li>Minimum Quantity: {{ selectedRange.minimum_quantity }}</li>
                                         <li>Maximum Quantity: {{ selectedRange.maximum_quantity }}</li>
                                         <li>Base Rate: {{ selectedRange.base_rate }}</li>
-                                        <li>Total Cost: {{ calculateTotalCostForWeight({testWeight, selectedRange}) }}</li>
+                                        <li>Total Cost: {{ selectedRange.totalCost }}</li>
                                     </ul>
                                 </div>
                             </div>
 
-                            <div class="col-md-12 mt-2" v-if="selectedRange && details.categories">
+                            <div class="col-md-12 mt-2" v-if="details.categories">
                                 <table class="table table-striped">
                                     <thead>
                                       <tr>
@@ -94,9 +94,9 @@
                                     <tbody>
                                       <tr v-for="(weight, index) in weights" :key="index">
                                         <td>{{ weight }}</td>
-                                        <!-- <td v-for="category in details.categories" :key="category.id">
+                                        <td v-for="category in details.categories" :key="category.id">
                                           {{ calculateTotalCostForWeight({ testWeight: weight, range: category.ranges.find(r => weight >= parseFloat(r.minimum_quantity) && weight <= parseFloat(r.maximum_quantity)) }) }}
-                                        </td> -->
+                                        </td>
                                       </tr>
                                     </tbody>
                                   </table>
@@ -113,8 +113,6 @@
     </div>
 </template>
 <script>
-import { watch } from 'vue';
-
 export default {
     name: 'CourierDetailPopup',
     props: ['loader', 'details', 'ranges'],
@@ -147,11 +145,14 @@ export default {
                 Object.values(this.ranges).forEach((categoryRanges) => {
                     categoryRanges.forEach((range) => {
                     if (this.testWeight >= parseFloat(range.minimum_quantity) && this.testWeight <= parseFloat(range.maximum_quantity)) {
-                        const totalCost = this.calculateTotalCostForWeight({testWeight: this.testWeight, range});
+
+
+                        const totalCost = this.calculateTotalCostForWeight({ testWeight: this.testWeight , range});
 
                         if (parseFloat(totalCost) < minPrice) {
                             minPrice = parseFloat(totalCost);
                             bestRange = range;
+                            bestRange.totalCost = totalCost
                         }
                     }
                     });
@@ -161,16 +162,14 @@ export default {
             }
 
             return bestRange;
-            }
+        }
         },
     methods: {
-
         calculateTotalCostForWeight({ testWeight, range }) {
             if (!range) return 0;
 
             let baseAmount = parseFloat(range.base_rate);
-            const weightDiff = testWeight - parseFloat(range.minimum_quantity);
-
+            const weightDiff = parseFloat(testWeight) - parseFloat(range.minimum_quantity);
 
             if (weightDiff > 0 && range.per_kg_rate > 0) {
                 const extraWeight = parseFloat(weightDiff.toFixed(2));
@@ -273,7 +272,8 @@ export default {
                 { selected: { code: 0, label: 'Select from the following' } },  // Initialize with one empty category selection
             ];
             this.testWeight = '';
-        },
+
+        }
     },
 }
 </script>

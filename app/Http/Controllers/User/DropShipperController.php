@@ -97,8 +97,8 @@ class DropShipperController extends Controller
 
         // Prepare the data
         $mailData = [
-            'request'   => $dropshipper->id,
-            'full_name' => $dropshipper->full_name,
+            'request'         => $dropshipper->id,
+            'full_name'       => $dropshipper->full_name,
             'whatsapp_number' => $dropshipper->whatsapp_number,
             'address'         =>  $dropshipper->address,
             'decision'        => $request->action

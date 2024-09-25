@@ -109,7 +109,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -290,7 +290,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       name: "",
       email: "",
       password: "",
@@ -347,7 +347,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       name: "",
       email: "",
       password: "",
@@ -409,7 +409,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -686,7 +686,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'CourierDetailPopup',
   props: ['loader', 'details', 'ranges'],
@@ -732,6 +731,7 @@ __webpack_require__.r(__webpack_exports__);
               if (parseFloat(totalCost) < minPrice) {
                 minPrice = parseFloat(totalCost);
                 bestRange = range;
+                bestRange.totalCost = totalCost;
               }
             }
           });
@@ -748,7 +748,7 @@ __webpack_require__.r(__webpack_exports__);
         range = _ref.range;
       if (!range) return 0;
       var baseAmount = parseFloat(range.base_rate);
-      var weightDiff = testWeight - parseFloat(range.minimum_quantity);
+      var weightDiff = parseFloat(testWeight) - parseFloat(range.minimum_quantity);
       if (weightDiff > 0 && range.per_kg_rate > 0) {
         var extraWeight = parseFloat(weightDiff.toFixed(2));
         var weightSteps = Math.ceil(extraWeight / parseFloat(range.per_kg));
@@ -946,7 +946,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -990,7 +990,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   props: ['tags', 'loader', 'settings'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       form: {
         headline: {
           text: ''
@@ -1359,8 +1359,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: "/public/api/",
-      public_url: window.location.origin + ""
+      api_url: "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   created: function created() {},
@@ -1398,8 +1398,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -1507,8 +1507,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Supplier Request's"
       },
@@ -1616,7 +1616,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Orders"
       },
@@ -1738,7 +1738,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -1863,7 +1863,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Couriers",
         link: "#",
@@ -2022,8 +2022,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -2203,8 +2203,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allCourses: [],
@@ -2413,7 +2413,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Page Setting's"
       },
@@ -4645,13 +4645,7 @@ var render = function render() {
         _vm.testWeight = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.calculateTotalCostForWeight({
-    testWeight: _vm.testWeight,
-    selectedRange: _vm.selectedRange
-  })))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.calculateTotalCostForWeight({
-    testWeight: _vm.testWeight,
-    selectedRange: _vm.selectedRange
-  })))])])]) : _vm._e()]), _vm._v(" "), _vm.selectedRange && _vm.details.categories ? _c("div", {
+  })]), _vm._v(" "), _vm.selectedRange ? _c("div", [_c("h6", [_vm._v("Based on your weight, the range is: " + _vm._s(_vm.selectedRange.minimum_quantity) + " - " + _vm._s(_vm.selectedRange.maximum_quantity) + " kg")]), _vm._v(" "), _c("h6", [_vm._v("Total Shipping Cost: " + _vm._s(_vm.selectedRange.totalCost))])]) : _vm.testWeight ? _c("div", [_c("h6", [_vm._v("No valid range found for the entered weight.")])]) : _vm._e(), _vm._v(" "), _vm.selectedRange ? _c("div", [_vm._v("\n                                Best Offer:\n                                "), _c("ul", [_c("li", [_vm._v("Minimum Quantity: " + _vm._s(_vm.selectedRange.minimum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Maximum Quantity: " + _vm._s(_vm.selectedRange.maximum_quantity))]), _vm._v(" "), _c("li", [_vm._v("Base Rate: " + _vm._s(_vm.selectedRange.base_rate))]), _vm._v(" "), _c("li", [_vm._v("Total Cost: " + _vm._s(_vm.selectedRange.totalCost))])])]) : _vm._e()]), _vm._v(" "), _vm.details.categories ? _c("div", {
     staticClass: "col-md-12 mt-2"
   }, [_c("table", {
     staticClass: "table table-striped"
@@ -4662,7 +4656,16 @@ var render = function render() {
   })], 2)]), _vm._v(" "), _c("tbody", _vm._l(_vm.weights, function (weight, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(weight))])]);
+    }, [_c("td", [_vm._v(_vm._s(weight))]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
+      return _c("td", {
+        key: category.id
+      }, [_vm._v("\n                                      " + _vm._s(_vm.calculateTotalCostForWeight({
+        testWeight: weight,
+        range: category.ranges.find(function (r) {
+          return weight >= parseFloat(r.minimum_quantity) && weight <= parseFloat(r.maximum_quantity);
+        })
+      })) + "\n                                    ")]);
+    })], 2);
   }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])])]);
 };
 var staticRenderFns = [function () {
