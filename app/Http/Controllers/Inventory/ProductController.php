@@ -148,7 +148,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        
+
         $lock = Cache::lock('add_new_product')->block(7, function () use ($request) {
 
             $validator = \Validator::make($request->all(), [
@@ -825,6 +825,12 @@ class ProductController extends Controller
 
 
         return response()->json(['message' => 'Tags values changed successfully'], 200);
+    }
+
+    public function removeTag( Request $request ){
+
+        ProductTag::where('product_id', $request->id)->where('id', $request->tag)->delete();
+        return response()->json(['message' => 'Tags Removed Successfully'], 200);
     }
 
     private function validation($validator)

@@ -42,7 +42,8 @@
                     </div>
                     <div class="row" v-if="loop > 0">
                         <div class="form-group col-md-11">
-                            <label>Video Link</label>
+                            <label>Video Link</label><br>
+                            <b>Please add embedded Youtube Link</b>
                         </div>
                         <div class="form-group col-md-1">
                             <label>Remove</label>
@@ -58,7 +59,7 @@
                     </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
-                    <button type="button" class="btn btn-primary" :class="{ 'disabled btn-progress': btnLoading }" @click=add()>Save</button>
+                    <button type="button" class="btn btn-primary" :class="{ 'disabled btn-progress': btnLoading }" @click=add()>Add New Course</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>

@@ -25,9 +25,9 @@
                   </div>
 
                   <!-- Image Section -->
-                <h3>Image Settings</h3>
-                <div class="form-group" v-for="(img, index) in form.imageSettings" :key="index + 1">
-                    <h4>Image {{ index + 1 }}</h4>
+                <h3>Banner Image Settings</h3>
+                <div class="form-group border border-1 p-2" v-for="(img, index) in form.imageSettings" :key="index + 1">
+                    <h4>Banner Image {{ index + 1 }}</h4>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -49,10 +49,45 @@
                     <!-- Button Label -->
                     <label :for="'button_label_' + index">Button Label</label>
                     <input type="text" v-model="img.button_label" class="form-control" placeholder="Enter Button Label" required>
-
-                    <!-- Divider for clarity -->
-                    <hr>
                 </div>
+
+                <!-- Advertisement Image Section -->
+                <h3>Advertisement Image Settings</h3>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Image</th>
+                            <th>Preview</th>
+                            <th>Category (Shop Now Redirect )</th>
+                            <th>Button Label</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(advertise, index) in form.advertiseImages" :key="'adv-'+advertise.index">
+                            <td>
+                                Image {{ advertise.index }}
+                            </td>
+                            <!-- Image Upload -->
+                            <td>
+                                <input type="file" class="form-control" @change="setAdvertiseImage($event, index)" accept=".png, .jpg, .jpeg">
+                                <code>Dimensions 493 x 316</code>
+                            </td>
+                            <td>
+                                <img :src="getImage(advertise.preview)" alt="" width="20%">
+                            </td>
+                            <!-- Category Dropdown -->
+                            <td>
+                                <v-select :options="categories" v-model="advertise.category">
+
+                                </v-select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" v-model="advertise.label">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
                   <!-- Tag Section -->
                   <h3>Tags Settings</h3>
@@ -98,7 +133,7 @@
 <script>
     export default {
         name :  'HomePageSetting',
-        props : ['tags', 'loader', 'settings'],
+        props : ['tags', 'loader', 'settings', 'categories'],
         data() {
             return {
                 public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
@@ -116,6 +151,14 @@
                     ],
                     tags: [
                         { link: { code: 0, label: 'Select from the following' }, position: '' } // Default tag
+                    ],
+                    advertiseImages: [
+                        { index : 1, image: '', category: { code: 0, label: 'Select from the following' }, label: '', preview : '' },
+                        { index : 2, image: '', category: { code: 0, label: 'Select from the following' }, label: '', preview : '' },
+                        { index : 3, image: '', category: { code: 0, label: 'Select from the following' }, label: '', preview : '' },
+                        { index : 4, image: '', category: { code: 0, label: 'Select from the following' }, label: '', preview : '' },
+                        { index : 5, image: '', category: { code: 0, label: 'Select from the following' }, label: '', preview : '' },
+                        { index : 6, image: '', category: { code: 0, label: 'Select from the following' }, label: '', preview : '' }
                     ]
                 }
             };
@@ -128,15 +171,26 @@
                 }
                 return this.public_url + 'public/storage/uploads/pages/home/banners/' + imageId;
             },
+            setAdvertiseImage(event, index) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.$set(this.form.advertiseImages, index, {
+                        index : this.form.advertiseImages[index].index,
+                        image: file, // Set the image link
+                        category: this.form.advertiseImages[index].category, // Keep the existing button link
+                        label: this.form.advertiseImages[index].label,
+                    });
+                }
+            },
             setImage(event, index) {
                 const file = event.target.files[0]; // Get the uploaded file
                 if (file) {
                         // Update the specific image link in the form
-                        this.$set(this.form.image, index, {
+                        this.$set(this.form.imageSettings, index, {
                             index : index + 1,
                             link: file, // Set the image link
-                            button_link: this.form.image[index].button_link, // Keep the existing button link
-                            button_label: this.form.image[index].button_label,
+                            button_link: this.form.imageSettings[index].button_link, // Keep the existing button link
+                            button_label: this.form.imageSettings[index].button_label,
                         });
                 }
             },
@@ -157,9 +211,18 @@
                 // Add image data
                 this.form.imageSettings.forEach((img, index) => {
                     formData.append(`image[${index}][index]`,img.index + 1 );
-                    formData.append(`image[${index}][link]`, img.link); // Append the image link
+                    formData.append(`image[${index}][link]`, img.image); // Append the image link
                     formData.append(`image[${index}][button_link]`, img.button_link); // Append the button link
                     formData.append(`image[${index}][button_label]`, img.button_label);
+                });
+
+
+                // Add Advertisement  image data
+                this.form.advertiseImages.forEach((img, index) => {
+                    formData.append(`advertiseImage[${index}][index]`,img.index );
+                    formData.append(`advertiseImage[${index}][image]`, img.image); // Append the image link
+                    formData.append(`advertiseImage[${index}][category]`, img.category.code); // Append the button link
+                    formData.append(`advertiseImage[${index}][label]`, img.label); // Append the button link
                 });
 
                 // Add tags data
@@ -189,10 +252,39 @@
                     });
                 }
 
-                console.log(images);
-
                 // Update the form's images field
                 this.$set(this.form, 'imageSettings', images);
+            },
+            updateAdvertismentImages(newSettings) {
+                const images = [];
+
+                // Iterate through 3 image types: image-1, image-2, image-3
+                for (let i = 1; i <= 6; i++) {
+                    const imageType = `adv-image-${i}`;
+
+                    // Try to find the corresponding image setting
+                    const imageSetting = newSettings.find(setting => setting.type === imageType);
+
+                    // Find the corresponding category name by tag_id
+                    const category = this.categories.find(category => category.code === imageSetting?.tag_id) || { code: 0, label: 'Select from the following' };
+
+
+                    // If an image is found, use its data; otherwise, fill with empty values
+                    images.push({
+                        index : i,
+                        image : '',
+                        preview : imageSetting ? imageSetting.attachment : '',
+                        label: imageSetting ? imageSetting.label : '', // Button link or empty string
+                        category: {
+                            code: category.code, // Category code from categories array or 0
+                            label: category.label // Category label from categories array or default
+                        }
+                    });
+                }
+
+
+                // Update the form's images field
+                this.$set(this.form, 'advertiseImages', images);
             },
             updateTags(newSettings) {
 
@@ -256,6 +348,7 @@
                 }
                 this.updateTags(newSettings);
                 this.updateImages(newSettings);
+                this.updateAdvertismentImages(newSettings)
             }
         }
     }

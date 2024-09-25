@@ -256,6 +256,7 @@
             @searchProduct="searchProduct($event)"
             @updateUpSell="updateUpSell( $event )"
             @updateTags="updateTags( $event )"
+            @removeTag="removeTag( $event )"
             @changeStatus="changeStatus( $event )"
             @changeImage="changeHeroImage( $event )"
         />
@@ -704,6 +705,21 @@ export default {
                 vm.fetchDetail(data.id)
             }).catch((err) => {
                 vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        removeTag( data ){
+            let vm = this;
+             axios
+            .post(this.api_url + "inventory/products/tags/removes", data )
+            .then((response) => {
+                vm.fetchDetail(data.id)
+            }).catch((err) => {
                 return swal({
                     title: "Error",
                     text: 'Oops, Something went wrong please try again',

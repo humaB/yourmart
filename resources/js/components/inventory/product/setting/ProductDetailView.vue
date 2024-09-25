@@ -479,7 +479,7 @@
                                                 <div>
                                                     <ul>
                                                         <li v-for="item in product.tags" :key="item.id">
-                                                            {{ item.tag.name }}
+                                                            {{ item.tag.name }} <button @click="removeTag(item.id)" class="btn btn-sm btn-danger ml-5"><i class="fa fa-trash"></i></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -629,6 +629,9 @@ export default {
             const dataToSend = this[type];
 
             this.$emit('updateTags', { id : this.product.id , products : dataToSend, type : type})
+        },
+        removeTag( tag ){
+            this.$emit('removeTag' , { id : this.product.id, tag : tag })
         },
         searchProduct(search) {
             if (search.length >= 3) {
