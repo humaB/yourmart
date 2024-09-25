@@ -1,17 +1,17 @@
 <template>
     <div
         class="modal fade"
-        id="addShippingClass"
+        id="editData"
         tabindex="-1"
         role="dialog"
-        aria-labelledby="myLargeModalLabel"
+        aria-labelledby="editCourseLabel"
         aria-hidden="true"
     >
         <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 960px;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myLargeModalLabel">
-                        Add New Packaging Class
+                    <h5 class="modal-title" id="editCourseLabel">
+                        Edit Course
                     </h5>
                     <button
                         type="button"
@@ -26,21 +26,20 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label>Class Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" v-model="addPackagingData.name"/>
+                            <input type="text" class="form-control" v-model="editData.name"/>
                         </div>
                         <div class="form-group col-md-6">
                             <label>Price <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" v-model="addPackagingData.price"/>
+                            <input type="number" class="form-control" v-model="editData.price"/>
                         </div>
                         <div class="form-group col-md-12">
                             <label>Description</label>
-                            <textarea class="form-control" v-model="addPackagingData.description"></textarea>
+                            <textarea class="form-control" v-model="editData.description"></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
-                    <button type="button" class="btn btn-primary" v-if="!btnLoading" @click="add()">Add New Class</button>
-                    <button type="button" class="btn btn-primary btn-progress disabled" v-else>Add New Class</button>
+                    <button type="button" class="btn btn-primary" :class="{ 'disabled btn-progress': btnLoading }" @click="update">Save Changes</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -50,11 +49,15 @@
 
 <script>
 export default {
-  props: ['btnLoading', 'addPackagingData'],
+  props: ['btnLoading', 'editData'],
+  data() {
+    return {
+    };
+  },
   methods: {
-    add() {
-      this.$emit('add');
+    update() {
+      this.$emit('update');
     },
   },
-}
+};
 </script>

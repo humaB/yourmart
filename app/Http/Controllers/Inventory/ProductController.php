@@ -148,7 +148,7 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-
+        
         $lock = Cache::lock('add_new_product')->block(7, function () use ($request) {
 
             $validator = \Validator::make($request->all(), [
@@ -156,7 +156,7 @@ class ProductController extends Controller
                 'shortDescription' => 'nullable|string',
                 'brand'            => 'nullable|integer',
                 'category'         => 'required|integer',
-                'selectedShipping' => 'nullable|integer',
+                'selectedPackaging' => 'nullable|integer',
                 'heroImage'        => 'string',
                 'productDescription' => 'nullable|string',
                 'regularPrice'       => 'required|numeric|min:0',
@@ -198,7 +198,7 @@ class ProductController extends Controller
                 'short_description'   => $request->input('shortDescription'),
                 'brand_id'            => $request->input('brand'),
                 'category_id'         => $request->input('category'),
-                'shipping_method_id'  => $request->input('selectedShipping'),
+                'shipping_method_id'  => $request->input('selectedPackaging'),//this column using package class and there is no module like shipping class from now
                 'hero_image'          => $request->input('heroImage'),
                 'video_link'          => $request->input('videoLink'),
                 'product_description' => $request->input('productDescription'),

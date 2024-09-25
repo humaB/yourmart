@@ -10,6 +10,7 @@ use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\PurchaseOrder\InventoryPurchaseOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductMinimumOrderController;
 use App\Http\Controllers\Inventory\Setting\ProductShippingClassController;
+use App\Http\Controllers\Inventory\Setting\ProductPackagingClassController;
 use App\Http\Controllers\Inventory\Setting\CourierController;
 use App\Http\Controllers\Pages\PageController;
 use App\Http\Controllers\Pages\LibraryPageController;
@@ -62,6 +63,7 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
         Route::group(['prefix' => '/settings'], function () {
             Route::get('/minimum-order-quantity', [ProductMinimumOrderController::class, 'index'])->name('inventory.products.moq');
             Route::get('/shipping-classes', [ProductShippingClassController::class, 'index'])->name('inventory.products.shipping_classes');
+            Route::get('/packaging-classes', [ProductPackagingClassController::class, 'index'])->name('packaging.class');
         });
 
         Route::group(['prefix' => '/orders'], function () {

@@ -1,7 +1,7 @@
 <template>
     <div
         class="modal fade"
-        id="addShippingClass"
+        id="newData"
         tabindex="-1"
         role="dialog"
         aria-labelledby="myLargeModalLabel"
@@ -26,15 +26,15 @@
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label>Class Name <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" v-model="addPackagingData.name"/>
+                            <input type="text" class="form-control" v-model="addData.name"/>
                         </div>
                         <div class="form-group col-md-6">
                             <label>Price <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control" v-model="addPackagingData.price"/>
+                            <input type="number" class="form-control" v-model="addData.price"/>
                         </div>
                         <div class="form-group col-md-12">
                             <label>Description</label>
-                            <textarea class="form-control" v-model="addPackagingData.description"></textarea>
+                            <textarea class="form-control" v-model="addData.description"></textarea>
                         </div>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
 
 <script>
 export default {
-  props: ['btnLoading', 'addPackagingData'],
+  props: ['btnLoading', 'addData'],
   methods: {
     add() {
       this.$emit('add');

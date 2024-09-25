@@ -12,6 +12,7 @@ use App\Http\Controllers\Inventory\Setting\CourierController;
 use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
 use App\Http\Controllers\Inventory\Gate\GateInWardController;
+use App\Http\Controllers\Inventory\Setting\ProductPackagingClassController;
 use App\Http\Controllers\Inventory\Gate\StoreInwardController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
@@ -184,6 +185,14 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::group(['prefix' => 'settings'], function(){
             Route::get('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'fetchHistory']);
             Route::post('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'store']);
+
+        
+            Route::group(['prefix' => 'packaging-classes'], function(){
+                Route::get('/',  [ ProductPackagingClassController::class , 'fectPackagingClassSetting']);
+                Route::post('/add',  [ ProductPackagingClassController::class , 'packagingClassSettingStore']);
+                Route::post('/update',  [ ProductPackagingClassController::class , 'packagingClassSettingUpdate']);
+                Route::get('/drop-down',  [ ProductPackagingClassController::class , 'dropDown']);
+            });
 
             Route::get('/shipping-classes',  [ ProductShippingClassController::class , 'fetchRecord']);
             Route::get('/shipping-classes/drop-down',  [ ProductShippingClassController::class , 'dropDown']);

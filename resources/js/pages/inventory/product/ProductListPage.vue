@@ -220,7 +220,7 @@
             :colors="colors"
             :sizes="sizes"
             :tags="tags"
-            :shippingOptions="shippingOptions"
+            :packagingOptions="packagingOptions"
             :productOptions="productsDropDown"
             @color="colorGallery($event)"
             @submitProduct="submitProduct($event)"
@@ -246,7 +246,7 @@
             :brands="brandsDropDown"
             :categories="categoriesDropDown"
             :tags="tagsDropDown"
-            :shippingOptions="shippingOptions"
+            :packagingOptions="packagingOptions"
             :productNotUpdated="productNotUpdated"
             :productOptions="productsDropDown"
             @updateProduct="updateProduct( $event )"
@@ -273,7 +273,8 @@
 
         <AddShippingClass
             :loader="btnLoader"
-            @addNewClass="addNewClass( $event )"
+            :addPackagingData="addPackagingData"
+            @add="addNewClass()"
         />
 
         <AddProductImage
@@ -343,6 +344,12 @@ export default {
             th: ["Sr #", "Name", "Email", "Role", "Allowed IP", "Action"],
             table_id: "product_list_table",
             categories: [],
+            addPackagingDataReset: {},
+            addPackagingData: {
+                name: "",
+                price: "",
+                description: "",
+            },
             product: '',
             filter: {
                 category: { code: 0, label: "Select from the following" },
@@ -373,6 +380,7 @@ export default {
             attributesDropDown: [],
             attachments: [],
             shippingOptions: [],
+            packagingOptions: [],
             products: [],
             productsDropDown: [],
             details: {
@@ -430,7 +438,9 @@ export default {
         this.fetchAttributes();
         this.fetchAttachments();
         this.fetchShippingOptions();
+        this.fetchPackagingOptions();
         this.fetchProducts();
+        this.addPackagingDataReset = JSON.parse(JSON.stringify(this.addPackagingData));
     },
     methods: {
         getImageUrl(imageId) {
@@ -915,6 +925,15 @@ export default {
                     vm.shippingOptions = results;
                 }).catch((err) => this.fetchShippingOptions());
         },
+        fetchPackagingOptions() {
+            let vm = this;
+            axios
+                .get(this.api_url + "inventory/products/settings/packaging-classes/drop-down")
+                .then((response) => {
+                    const results = response.data.response;
+                    vm.packagingOptions = results;
+                }).catch((err) => this.fetchPackagingOptions());
+        },
         fetchAttachments() {
             let vm = this;
             axios
@@ -1083,34 +1102,32 @@ export default {
                     vm.parentAttributes = response.data.response.parent;
                 }).catch((err) => this.fetchAttributes());
         },
-        addNewClass( data ){
-                let vm = this;
-                vm.btnLoader = true;
-                axios
-                .post(this.api_url + "inventory/products/settings/shipping-classes", data)
+        addNewClass(){
+            if (!this.addPackagingData.name || !this.addPackagingData.price) {
+                return swal({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Class Name and Price fields are required',
+                });
+            }
+
+            this.btnLoading = true;
+
+            axios.post(this.api_url + "inventory/products/settings/packaging-classes/add", this.addPackagingData)
                 .then((response) => {
-
-                    vm.clearDataTable()
-                    vm.btnLoader = false;
-
-                    vm.fetchShippingOptions();
-                    vm.$emit('saved', true);
+                    this.addPackagingData = JSON.parse(JSON.stringify(this.addPackagingDataReset)); // Reset form data
+                    this.fetchPackagingOptions(); // Method to refresh or reload product list
                     return swal({
-                        title: "Success",
-                        text:  'Shipping Classes Added Successfully',
-                        icon: "success",
-                        timer: 3000,
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully Added',
                     });
                 })
                 .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text:  err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
+                    console.error(err); // Handle errors
                 });
+
+            this.btnLoading = false;
             },
         addNewAttribute(data) {
             let vm = this;
