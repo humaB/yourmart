@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "https://ecompanel.sarzone.com/"
+      web_url: "https://ecomweb.sarzone.com/"
     };
   },
   methods: {
@@ -257,7 +257,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "https://ecompanel.sarzone.com/"
+      web_url: "https://ecomweb.sarzone.com/"
     };
   },
   methods: {
