@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Mail\DropshipperDecision;
 use App\Mail\DropshipperDecisionMail;
+use App\Http\Resources\ValidationCollection;
 use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
@@ -78,9 +79,17 @@ class DropShipperController extends Controller
     public function decision(Request $request)
     {
 
+        
         $dropshipper = DropShipper::where('id', $request->id)->first();
 
         if ($request->action != 'reject') {
+            $checkUser = User::where("email",$dropshipper->email)->first();
+            if($checkUser)
+            {
+                return (new ValidationCollection(["This Email already registered with another account"]))
+                ->response()
+                ->setStatusCode(400);
+            }
             $user = User::create([
                 'name'     => $dropshipper->full_name,
                 'email'    => $dropshipper->email,

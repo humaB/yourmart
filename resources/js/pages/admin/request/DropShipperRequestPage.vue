@@ -130,6 +130,14 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                         icon: "success",
                         timer: 3000,
                     });
+                }).catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
             },
             fetchRecord(){

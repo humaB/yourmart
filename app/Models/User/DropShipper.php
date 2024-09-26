@@ -33,7 +33,8 @@ class DropShipper extends Model
         'cnic_front_image',
         'cnic_back_image',
         'profile_image',
-        'status' // 0 => Pending | 1 => Approved | 2 => Rejected
+        'status', // 0 => Pending | 1 => Approved | 2 => Rejected
+        'user_id'
     ];
 
     public function city(){

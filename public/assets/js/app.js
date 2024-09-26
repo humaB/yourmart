@@ -1561,6 +1561,14 @@ __webpack_require__.r(__webpack_exports__);
           icon: "success",
           timer: 3000
         });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
       });
     },
     fetchRecord: function fetchRecord() {
@@ -5275,7 +5283,7 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.form.advertiseImages, function (advertise, index) {
     return _c("tr", {
       key: "adv-" + advertise.index
-    }, [_c("td", [_vm._v("\n                                Image " + _vm._s(advertise.index) + "\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
+    }, [_c("td", [_vm._v("\r\n                                Image " + _vm._s(advertise.index) + "\r\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
       staticClass: "form-control",
       attrs: {
         type: "file",
