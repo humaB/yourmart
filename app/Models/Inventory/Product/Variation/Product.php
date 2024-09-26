@@ -32,7 +32,7 @@ class Product extends Model
         'warranty',
         'max_quantity',
         'quantity_step',
-        'status', // 0 => Published || 1 => Draft || 2 => Schedule
+        'status', // 0 => Published || 1 => Draft || 2 => Schedule || 3 => Trashed
         'added_by',
         'deleted_at'
     ];

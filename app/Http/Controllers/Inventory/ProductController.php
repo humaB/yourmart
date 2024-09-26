@@ -69,6 +69,9 @@ class ProductController extends Controller
     public function changeStatus( Request $request ){
         if( $request->action == "delete" )
         {
+            Product::whereIn('id', $request->products)->update([
+                  'status' => '3'
+            ]);
             Product::whereIn('id', $request->products)->delete();
         }
         else
