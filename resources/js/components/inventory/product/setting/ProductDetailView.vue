@@ -585,6 +585,16 @@ export default {
         }
     },
     methods: {
+        ensureThreeDiscounts() {
+            // If the discounts array has less than 3 items, add default objects
+            while (this.product.discounts.length < 3) {
+                this.product.discounts.push({
+                    id: null,    // You can set the ID to null or a default value
+                    quantity: 0, // Default quantity
+                    price: 0     // Default price
+                });
+            }
+        },
         editDimension() {
             if (!this.product.dimensions) {
                 this.product.dimensions = {
@@ -751,6 +761,12 @@ export default {
             },
             deep: true, // To watch for changes within nested properties
             immediate: true // To initialize editedProduct on component mount
+        },
+        'product.discounts': {
+            handler() {
+                this.ensureThreeDiscounts(); // Ensure there are always 3 discounts
+            },
+            immediate: true
         }
     }
 }

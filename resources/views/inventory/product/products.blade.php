@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="{{ asset('assets/bundles/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
 
   <link rel="stylesheet" href="{{ asset('assets/bundles/summernote/summernote-bs4.css')}}">
-  <link rel="stylesheet" href="{{ asset('assets/bundles/summernote/summernote-bs4.css')}}">
+
 @endpush
  <!-- Main Content -->
  <div class="main-content">

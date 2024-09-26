@@ -24,10 +24,14 @@
                         <tbody>
                             <tr v-for="(data, index) in allData" :key="index">
                                 <th scope="row">{{ index + 1 }}</th>
-                                <td>{{data.name}}</td>
-                                <td>{{data.description}}</td>
-                                <td>{{data.type}}</td>
-                                <td>{{data.added_name.name}}</td>
+                                <td>{{ data.name }}</td>
+                                <td>
+                                    <div v-html="data.description"></div>
+                                </td>
+                                <td>{{ data.type }}</td>
+                                <td>
+                                    {{ data.added_name.name }}
+                                </td>
                                 <td>
                                     <a
                                         href="#"
@@ -35,11 +39,6 @@
                                         @click="editPageData(data)"
                                         ><i class="far fa-edit"></i
                                     ></a>
-                                    <!-- <a
-                                        href="#"
-                                        class="mr-1 btn-sm btn btn-icon btn-danger"
-                                        ><i class="fas fa-trash"></i
-                                    ></a> -->
                                 </td>
                             </tr>
                         </tbody>
@@ -50,14 +49,13 @@
         <!-- add modal -->
         <NewData
             :btnLoading="btnLoading"
-            :addData="addData"
-            @add="addPageData"
+            @add="add( $event )"
         />
         <!-- update modal -->
         <EditData
             :btnLoading="btnLoading"
             :editData="editData"
-            @update="updatePageData"
+            @update="update($event)"
         />
     </section>
 </template>
@@ -80,18 +78,10 @@ export default {
             tableLoading: false,
             allData: [],
             editData: { name: '', description: '', type: "0" },
-            editDataReset: { name: '', description: '', type: "0" },
-            addDataReset: {},
-            addData: {
-                name: "",
-                type: "0",
-                description: "",
-            },
         };
     },
     created() {
         this.helpCenter();
-        this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     mounted() {
     },
@@ -104,64 +94,51 @@ export default {
             }).catch((err) => this.fetchTags());
             this.tableLoading = false;
         },
-        async addPageData() {
-            if (!this.addData.name || this.addData.type==0 || !this.addData.description) {
-                return swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Title, type, Description field are required',
-                });
-            }
+        async add( data ) {
 
             this.btnLoading = true;
 
-            axios.post(this.api_url + "pages/settings/help-center-page/add", this.addData)
+            axios.post(this.api_url + "pages/settings/help-center-page/add", data)
             .then((response) => {
-                this.addData = JSON.parse(JSON.stringify(this.addDataReset));
+
+                this.$emit('saved', true);
                 this.helpCenter();
+                this.btnLoading = false;
                 return swal({
                     icon: 'success',
                     title: 'Success',
                     text: 'Successfully Added',
                 });
             }).catch((err) => {
+                this.btnLoading = false;
             });
-            this.btnLoading = false;
+
         },
         async editPageData(course) {
             this.editData = course;
             $("#editData").modal('show');
         },
-        async updatePageData() {
-            if (!this.editData.name || this.editData.type==0 || !this.editData.description) {
-                return swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Title,type and Description are required',
-                });
-            }
+        async update( data ) {
+
             this.btnLoading = true;
 
             try {
-                await axios.post(this.api_url + "pages/settings/help-center-page/update", this.editData);
+                await axios.post(this.api_url + "pages/settings/help-center-page/update", data);
 
-                this.editData = JSON.parse(JSON.stringify(this.editDataReset));
                 this.helpCenter(); // Refresh the course list
-
+                this.btnLoading = false;
                 return swal({
                     icon: 'success',
                     title: 'Success',
                     text: 'Successfully Updated',
                 });
             } catch (error) {
-                console.error(error);
+                this.btnLoading = false;
                 return swal({
                     icon: 'error',
                     title: 'Error',
                     text: 'Failed to update the course',
                 });
-            } finally {
-                this.btnLoading = false;
             }
         }
 

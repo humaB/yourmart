@@ -72,12 +72,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperDetails',
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/"
+      web_url: process.env.MIX_WEB_URL
     };
   },
   methods: {
@@ -108,7 +109,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -252,12 +253,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* provided dependency */ var process = __webpack_require__(/*! process/browser.js */ "./node_modules/process/browser.js");
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'SupplierDetails',
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/"
+      web_url: process.env.MIX_WEB_URL
     };
   },
   methods: {
@@ -288,7 +290,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       password: "",
@@ -345,7 +347,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       password: "",
@@ -407,7 +409,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -944,7 +946,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -988,7 +990,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   props: ['tags', 'loader', 'settings', 'categories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       form: {
         headline: {
           text: ''
@@ -1317,11 +1319,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['btnLoading', 'addData'],
   data: function data() {
-    return {};
+    return {
+      name: '',
+      type: '0'
+    };
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("saved", function (value) {
+      if (value) {
+        _this.close();
+      }
+    });
   },
   methods: {
     add: function add() {
-      this.$emit('add');
+      var description = $('.summernote').summernote('code');
+      if (!this.name || this.type == 0 || !description) {
+        return swal({
+          icon: 'error',
+          title: 'Error',
+          text: 'Title, type, Description field are required'
+        });
+      }
+      var data = {
+        name: this.name,
+        type: this.type,
+        description: description
+      };
+      this.$emit('add', data);
+    },
+    close: function close() {
+      this.name = "";
+      this.type = "0";
+      $('.summernote').summernote('code', '');
     }
   }
 });
@@ -1342,11 +1373,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['btnLoading', 'editData'],
   data: function data() {
-    return {};
+    return {
+      name: '',
+      type: '0',
+      description: ''
+    };
   },
   methods: {
     update: function update() {
-      this.$emit('update');
+      var description = $('.descriptionEdit').summernote('code');
+      if (!this.name || this.type == 0 || !description) {
+        return swal({
+          icon: 'error',
+          title: 'Error',
+          text: 'Title, type, Description field are required'
+        });
+      }
+      var data = {
+        id: this.editData.id,
+        name: this.name,
+        type: this.type,
+        description: description
+      };
+      this.$emit('update', data);
+    }
+  },
+  watch: {
+    editData: function editData(data) {
+      this.name = this.editData.name;
+      this.type = this.editData.type;
+      $('.descriptionEdit').summernote('code', this.editData.description);
     }
   }
 });
@@ -1475,8 +1531,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: "/ds/public/api/",
-      public_url: window.location.origin + "/ds"
+      api_url: "/public/api/",
+      public_url: window.location.origin + ""
     };
   },
   created: function created() {},
@@ -1514,8 +1570,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
-      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -1631,8 +1687,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
-      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Supplier Request's"
       },
@@ -1740,7 +1796,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Orders"
       },
@@ -1862,7 +1918,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -1987,7 +2043,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Couriers",
         link: "#",
@@ -2146,8 +2202,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -2155,23 +2211,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         name: '',
         description: '',
         type: "0"
-      },
-      editDataReset: {
-        name: '',
-        description: '',
-        type: "0"
-      },
-      addDataReset: {},
-      addData: {
-        name: "",
-        type: "0",
-        description: ""
       }
     };
   },
   created: function created() {
     this.helpCenter();
-    this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   mounted: function mounted() {},
   methods: {
@@ -2195,34 +2239,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee);
       }))();
     },
-    addPageData: function addPageData() {
+    add: function add(data) {
       var _this2 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              if (!(!_this2.addData.name || _this2.addData.type == 0 || !_this2.addData.description)) {
-                _context2.next = 2;
-                break;
-              }
-              return _context2.abrupt("return", swal({
-                icon: 'error',
-                title: 'Error',
-                text: 'Title, type, Description field are required'
-              }));
-            case 2:
               _this2.btnLoading = true;
-              axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this2.api_url + "pages/settings/help-center-page/add", _this2.addData).then(function (response) {
-                _this2.addData = JSON.parse(JSON.stringify(_this2.addDataReset));
+              axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this2.api_url + "pages/settings/help-center-page/add", data).then(function (response) {
+                _this2.$emit('saved', true);
                 _this2.helpCenter();
+                _this2.btnLoading = false;
                 return swal({
                   icon: 'success',
                   title: 'Success',
                   text: 'Successfully Added'
                 });
-              })["catch"](function (err) {});
-              _this2.btnLoading = false;
-            case 5:
+              })["catch"](function (err) {
+                _this2.btnLoading = false;
+              });
+            case 2:
             case "end":
               return _context2.stop();
           }
@@ -2244,52 +2280,38 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee3);
       }))();
     },
-    updatePageData: function updatePageData() {
+    update: function update(data) {
       var _this4 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              if (!(!_this4.editData.name || _this4.editData.type == 0 || !_this4.editData.description)) {
-                _context4.next = 2;
-                break;
-              }
-              return _context4.abrupt("return", swal({
-                icon: 'error',
-                title: 'Error',
-                text: 'Title,type and Description are required'
-              }));
-            case 2:
               _this4.btnLoading = true;
-              _context4.prev = 3;
-              _context4.next = 6;
-              return axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this4.api_url + "pages/settings/help-center-page/update", _this4.editData);
-            case 6:
-              _this4.editData = JSON.parse(JSON.stringify(_this4.editDataReset));
+              _context4.prev = 1;
+              _context4.next = 4;
+              return axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this4.api_url + "pages/settings/help-center-page/update", data);
+            case 4:
               _this4.helpCenter(); // Refresh the course list
+              _this4.btnLoading = false;
               return _context4.abrupt("return", swal({
                 icon: 'success',
                 title: 'Success',
                 text: 'Successfully Updated'
               }));
-            case 11:
-              _context4.prev = 11;
-              _context4.t0 = _context4["catch"](3);
-              console.error(_context4.t0);
+            case 9:
+              _context4.prev = 9;
+              _context4.t0 = _context4["catch"](1);
+              _this4.btnLoading = false;
               return _context4.abrupt("return", swal({
                 icon: 'error',
                 title: 'Error',
                 text: 'Failed to update the course'
               }));
-            case 15:
-              _context4.prev = 15;
-              _this4.btnLoading = false;
-              return _context4.finish(15);
-            case 18:
+            case 13:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, null, [[3, 11, 15, 18]]);
+        }, _callee4, null, [[1, 9]]);
       }))();
     }
   }
@@ -2327,8 +2349,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allCourses: [],
@@ -2537,7 +2559,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Page Setting's"
       },
@@ -5283,7 +5305,7 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.form.advertiseImages, function (advertise, index) {
     return _c("tr", {
       key: "adv-" + advertise.index
-    }, [_c("td", [_vm._v("\r\n                                Image " + _vm._s(advertise.index) + "\r\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
+    }, [_c("td", [_vm._v("\n                                Image " + _vm._s(advertise.index) + "\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
       staticClass: "form-control",
       attrs: {
         type: "file",
@@ -5510,20 +5532,20 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.addData.name,
-      expression: "addData.name"
+      value: _vm.name,
+      expression: "name"
     }],
     staticClass: "form-control",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.addData.name
+      value: _vm.name
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.addData, "name", $event.target.value);
+        _vm.name = $event.target.value;
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -5532,8 +5554,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.addData.type,
-      expression: "addData.type"
+      value: _vm.type,
+      expression: "type"
     }],
     staticClass: "form-control",
     on: {
@@ -5544,7 +5566,7 @@ var render = function render() {
           var val = "_value" in o ? o._value : o.value;
           return val;
         });
-        _vm.$set(_vm.addData, "type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
       }
     }
   }, [_c("option", {
@@ -5567,26 +5589,7 @@ var render = function render() {
       selected: "",
       value: "policy"
     }
-  }, [_vm._v("Policy")])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-12"
-  }, [_vm._m(3), _vm._v(" "), _c("textarea", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.addData.description,
-      expression: "addData.description"
-    }],
-    staticClass: "form-control",
-    domProps: {
-      value: _vm.addData.description
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.addData, "description", $event.target.value);
-      }
-    }
-  })])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Policy")])])]), _vm._v(" "), _vm._m(3)])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer bg-whitesmoke br"
   }, [!_vm.btnLoading ? _c("button", {
     staticClass: "btn btn-primary",
@@ -5598,12 +5601,12 @@ var render = function render() {
         return _vm.add();
       }
     }
-  }, [_vm._v("Add New " + _vm._s(_vm.addData.type.toUpperCase()))]) : _c("button", {
+  }, [_vm._v("Add New " + _vm._s(_vm.type.toUpperCase()))]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled",
     attrs: {
       type: "button"
     }
-  }, [_vm._v("Add New " + _vm._s(_vm.addData.type.toUpperCase()))]), _vm._v(" "), _c("button", {
+  }, [_vm._v("Add New " + _vm._s(_vm.type.toUpperCase()))]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -5648,9 +5651,13 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("label", [_vm._v("Description "), _c("span", {
+  return _c("div", {
+    staticClass: "form-group col-md-12"
+  }, [_c("label", [_vm._v("Description "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])]);
+  }, [_vm._v("*")])]), _vm._v(" "), _c("textarea", {
+    staticClass: "summernote"
+  })]);
 }];
 render._withStripped = true;
 
@@ -5698,20 +5705,20 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.editData.name,
-      expression: "editData.name"
+      value: _vm.name,
+      expression: "name"
     }],
     staticClass: "form-control",
     attrs: {
       type: "text"
     },
     domProps: {
-      value: _vm.editData.name
+      value: _vm.name
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.editData, "name", $event.target.value);
+        _vm.name = $event.target.value;
       }
     }
   })]), _vm._v(" "), _c("div", {
@@ -5720,8 +5727,8 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.editData.type,
-      expression: "editData.type"
+      value: _vm.type,
+      expression: "type"
     }],
     staticClass: "form-control",
     on: {
@@ -5732,7 +5739,7 @@ var render = function render() {
           var val = "_value" in o ? o._value : o.value;
           return val;
         });
-        _vm.$set(_vm.editData, "type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+        _vm.type = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
       }
     }
   }, [_c("option", {
@@ -5755,39 +5762,24 @@ var render = function render() {
       selected: "",
       value: "policy"
     }
-  }, [_vm._v("Policy")])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-12"
-  }, [_vm._m(3), _vm._v(" "), _c("textarea", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.editData.description,
-      expression: "editData.description"
-    }],
-    staticClass: "form-control",
-    domProps: {
-      value: _vm.editData.description
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.editData, "description", $event.target.value);
-      }
-    }
-  })])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Policy")])])]), _vm._v(" "), _vm._m(3)])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer bg-whitesmoke br"
-  }, [_c("button", {
+  }, [!_vm.btnLoading ? _c("button", {
     staticClass: "btn btn-primary",
-    "class": {
-      "disabled btn-progress": _vm.btnLoading
-    },
     attrs: {
       type: "button"
     },
     on: {
-      click: _vm.update
+      click: function click($event) {
+        return _vm.update();
+      }
     }
-  }, [_vm._v("Save Changes")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("Edit Information " + _vm._s(_vm.type.toUpperCase()))]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Add New " + _vm._s(_vm.type.toUpperCase()))]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -5832,9 +5824,13 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("label", [_vm._v("Description "), _c("span", {
+  return _c("div", {
+    staticClass: "form-group col-md-12"
+  }, [_c("label", [_vm._v("Description "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])]);
+  }, [_vm._v("*")])]), _vm._v(" "), _c("textarea", {
+    staticClass: "summernote descriptionEdit"
+  })]);
 }];
 render._withStripped = true;
 
@@ -6874,7 +6870,11 @@ var render = function render() {
       attrs: {
         scope: "row"
       }
-    }, [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(data.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(data.description))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(data.type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(data.added_name.name))]), _vm._v(" "), _c("td", [_c("a", {
+    }, [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(data.name))]), _vm._v(" "), _c("td", [_c("div", {
+      domProps: {
+        innerHTML: _vm._s(data.description)
+      }
+    })]), _vm._v(" "), _c("td", [_vm._v(_vm._s(data.type))]), _vm._v(" "), _c("td", [_vm._v("\n                                " + _vm._s(data.added_name.name) + "\n                            ")]), _vm._v(" "), _c("td", [_c("a", {
       staticClass: "btn btn-primary",
       attrs: {
         href: "#"
@@ -6889,11 +6889,12 @@ var render = function render() {
     })])])]);
   }), 0)])])])]), _vm._v(" "), _c("NewData", {
     attrs: {
-      btnLoading: _vm.btnLoading,
-      addData: _vm.addData
+      btnLoading: _vm.btnLoading
     },
     on: {
-      add: _vm.addPageData
+      add: function add($event) {
+        return _vm.add($event);
+      }
     }
   }), _vm._v(" "), _c("EditData", {
     attrs: {
@@ -6901,7 +6902,9 @@ var render = function render() {
       editData: _vm.editData
     },
     on: {
-      update: _vm.updatePageData
+      update: function update($event) {
+        return _vm.update($event);
+      }
     }
   })], 1);
 };
@@ -9269,7 +9272,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Add any specific styling for the modal content here */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* Add any specific styling for the modal content here */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -9293,7 +9296,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Add any specific styling for the modal content here */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* Add any specific styling for the modal content here */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -9317,7 +9320,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter-active[data-v-393d2748],\r\n.fade-leave-active[data-v-393d2748] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter[data-v-393d2748], .fade-leave-to[data-v-393d2748] /* .fade-leave-active below version 2.1.8 */ {\r\n  opacity: 0;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter-active[data-v-393d2748],\n.fade-leave-active[data-v-393d2748] {\n  transition: opacity 0.5s;\n}\n.fade-enter[data-v-393d2748], .fade-leave-to[data-v-393d2748] /* .fade-leave-active below version 2.1.8 */ {\n  opacity: 0;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -9389,7 +9392,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-7a40a33e] {\r\n  text-transform: capitalize;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-7a40a33e] {\n  text-transform: capitalize;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -31340,6 +31343,200 @@ webpackContext.id = "./node_modules/moment/locale sync recursive ^\\.\\/.*$";
     return hooks;
 
 })));
+
+
+/***/ }),
+
+/***/ "./node_modules/process/browser.js":
+/*!*****************************************!*\
+  !*** ./node_modules/process/browser.js ***!
+  \*****************************************/
+/***/ ((module) => {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
 
 
 /***/ }),

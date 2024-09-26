@@ -639,14 +639,29 @@ class ProductController extends Controller
     }
 
     public function discountChanged(Request $request)
-    {
-
+{
+    // Check if an ID is present in the request
+    if (isset($request->discounts['id']) && !empty($request->discounts['id'])) {
+        // Update the existing discount if ID is present
         ProductDiscountPerQty::where('id', $request->discounts['id'])->update([
             'quantity' => $request->discounts['quantity'],
             'price'    => $request->discounts['price'],
         ]);
 
-        return response()->json(['message' => 'Discount values changed successfully'], 200);
+        $message = 'Discount values updated successfully';
+    } else {
+        // Create a new discount if no ID is present
+        ProductDiscountPerQty::create([
+            'product_id' => $request->product, // Assuming product_id is provided
+            'quantity'   => $request->discounts['quantity'],
+            'price'      => $request->discounts['price'],
+            'added_by'   => auth()->user()->id
+        ]);
+
+        $message = 'New discount created successfully';
+    }
+
+        return response()->json(['message' => $message], 200);
     }
 
     public function dimensionsChanged(Request $request)
