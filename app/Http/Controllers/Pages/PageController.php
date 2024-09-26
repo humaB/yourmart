@@ -141,6 +141,7 @@ class PageController extends Controller
             }
         }
 
+        HomePageSetting::where('type', 'tag')->delete();
         // Handle Tags Logic
         if ($request->has('tags') && is_array($request->tags)) {
             foreach ($request->tags as $tag) {
