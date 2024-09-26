@@ -58,6 +58,43 @@ class PageController extends Controller
             }
         }
 
+        if ($request->has('advertiseImage') && !empty($request->advertiseImage)) {
+            foreach ($request->advertiseImage as $image) {
+                if (isset($image['category']) && !empty($image['category'])) {
+                    // Check if an image record exists, update or create new
+                    $homePageSetting = HomePageSetting::where('type', 'adv-image-' . $image['index'])->first();
+
+                    if ($homePageSetting) {
+
+                        $updateData = [
+                            'tag_id' => $image['category'], // Button link
+                            'position' => 0,
+                            'label' => $image['label'], // Position field used as button link
+                            'added_by' => auth()->user()->id,
+                        ];
+
+                        // Only update 'attachment' if 'link' is provided
+                        if (!empty($image['image']) && $image['image'] != 'undefined') {
+                            $updateData['attachment'] = $this->homeBanner($image['image']); // Attachment as image
+                        }
+
+                        // Perform the update
+                        $homePageSetting->update($updateData);
+                    } else {
+                        // Create new image setting
+                        HomePageSetting::create([
+                            'type'       => 'adv-image-' . $image['index'] + 1,
+                            'attachment' => $this->homeBanner($image['image']), // Button link as image attachment
+                            'tag_id'     => $image['category'], // Position field used as button link
+                            'position'   => 0,
+                            'label'      => $image['label'], // Position field used as button link
+                            'added_by'   => auth()->user()->id,
+                        ]);
+                    }
+                }
+            }
+        }
+
         if ( !empty($request->head_line)) {
             // Check if an image record exists, update or create new
             $homePageSetting = HomePageSetting::where('type', 'headline')->first();

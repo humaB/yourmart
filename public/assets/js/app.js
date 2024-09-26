@@ -985,7 +985,7 @@ function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'HomePageSetting',
-  props: ['tags', 'loader', 'settings'],
+  props: ['tags', 'loader', 'settings', 'categories'],
   data: function data() {
     return {
       public_url: window.location.origin + "/ds" + '/',
@@ -1022,7 +1022,62 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           },
           position: ''
         } // Default tag
-        ]
+        ],
+        advertiseImages: [{
+          index: 1,
+          image: '',
+          category: {
+            code: 0,
+            label: 'Select from the following'
+          },
+          label: '',
+          preview: ''
+        }, {
+          index: 2,
+          image: '',
+          category: {
+            code: 0,
+            label: 'Select from the following'
+          },
+          label: '',
+          preview: ''
+        }, {
+          index: 3,
+          image: '',
+          category: {
+            code: 0,
+            label: 'Select from the following'
+          },
+          label: '',
+          preview: ''
+        }, {
+          index: 4,
+          image: '',
+          category: {
+            code: 0,
+            label: 'Select from the following'
+          },
+          label: '',
+          preview: ''
+        }, {
+          index: 5,
+          image: '',
+          category: {
+            code: 0,
+            label: 'Select from the following'
+          },
+          label: '',
+          preview: ''
+        }, {
+          index: 6,
+          image: '',
+          category: {
+            code: 0,
+            label: 'Select from the following'
+          },
+          label: '',
+          preview: ''
+        }]
       }
     };
   },
@@ -1034,17 +1089,30 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
       return this.public_url + 'public/storage/uploads/pages/home/banners/' + imageId;
     },
+    setAdvertiseImage: function setAdvertiseImage(event, index) {
+      var file = event.target.files[0];
+      if (file) {
+        this.$set(this.form.advertiseImages, index, {
+          index: this.form.advertiseImages[index].index,
+          image: file,
+          // Set the image link
+          category: this.form.advertiseImages[index].category,
+          // Keep the existing button link
+          label: this.form.advertiseImages[index].label
+        });
+      }
+    },
     setImage: function setImage(event, index) {
       var file = event.target.files[0]; // Get the uploaded file
       if (file) {
         // Update the specific image link in the form
-        this.$set(this.form.image, index, {
+        this.$set(this.form.imageSettings, index, {
           index: index + 1,
           link: file,
           // Set the image link
-          button_link: this.form.image[index].button_link,
+          button_link: this.form.imageSettings[index].button_link,
           // Keep the existing button link
-          button_label: this.form.image[index].button_label
+          button_label: this.form.imageSettings[index].button_label
         });
       }
     },
@@ -1071,9 +1139,17 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       // Add image data
       this.form.imageSettings.forEach(function (img, index) {
         formData.append("image[".concat(index, "][index]"), img.index + 1);
-        formData.append("image[".concat(index, "][link]"), img.link); // Append the image link
+        formData.append("image[".concat(index, "][link]"), img.image); // Append the image link
         formData.append("image[".concat(index, "][button_link]"), img.button_link); // Append the button link
         formData.append("image[".concat(index, "][button_label]"), img.button_label);
+      });
+
+      // Add Advertisement  image data
+      this.form.advertiseImages.forEach(function (img, index) {
+        formData.append("advertiseImage[".concat(index, "][index]"), img.index);
+        formData.append("advertiseImage[".concat(index, "][image]"), img.image); // Append the image link
+        formData.append("advertiseImage[".concat(index, "][category]"), img.category.code); // Append the button link
+        formData.append("advertiseImage[".concat(index, "][label]"), img.label); // Append the button link
       });
 
       // Add tags data
@@ -1108,21 +1184,62 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       for (var i = 1; i <= 3; i++) {
         _loop();
       }
-      console.log(images);
 
       // Update the form's images field
       this.$set(this.form, 'imageSettings', images);
     },
-    updateTags: function updateTags(newSettings) {
+    updateAdvertismentImages: function updateAdvertismentImages(newSettings) {
       var _this = this;
+      var images = [];
+
+      // Iterate through 3 image types: image-1, image-2, image-3
+      var _loop2 = function _loop2() {
+        var imageType = "adv-image-".concat(i);
+
+        // Try to find the corresponding image setting
+        var imageSetting = newSettings.find(function (setting) {
+          return setting.type === imageType;
+        });
+
+        // Find the corresponding category name by tag_id
+        var category = _this.categories.find(function (category) {
+          return category.code === (imageSetting === null || imageSetting === void 0 ? void 0 : imageSetting.tag_id);
+        }) || {
+          code: 0,
+          label: 'Select from the following'
+        };
+
+        // If an image is found, use its data; otherwise, fill with empty values
+        images.push({
+          index: i,
+          image: '',
+          preview: imageSetting ? imageSetting.attachment : '',
+          label: imageSetting ? imageSetting.label : '',
+          // Button link or empty string
+          category: {
+            code: category.code,
+            // Category code from categories array or 0
+            label: category.label // Category label from categories array or default
+          }
+        });
+      };
+      for (var i = 1; i <= 6; i++) {
+        _loop2();
+      }
+
+      // Update the form's images field
+      this.$set(this.form, 'advertiseImages', images);
+    },
+    updateTags: function updateTags(newSettings) {
+      var _this2 = this;
       if (newSettings.length > 0) {
         var tags = newSettings.filter(function (setting) {
           return setting.type === 'tag';
         }).map(function (setting) {
-          var _this$tags$find;
-          var tagName = (_this$tags$find = _this.tags.find(function (tag) {
+          var _this2$tags$find;
+          var tagName = (_this2$tags$find = _this2.tags.find(function (tag) {
             return tag.code === setting.tag_id;
-          })) === null || _this$tags$find === void 0 ? void 0 : _this$tags$find.label;
+          })) === null || _this2$tags$find === void 0 ? void 0 : _this2$tags$find.label;
           return {
             link: {
               code: setting.tag_id,
@@ -1179,6 +1296,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
       this.updateTags(newSettings);
       this.updateImages(newSettings);
+      this.updateAdvertismentImages(newSettings);
     }
   }
 });
@@ -2420,12 +2538,14 @@ __webpack_require__.r(__webpack_exports__);
       tags: [],
       homePageLoader: false,
       loader: false,
-      homePagesSettings: []
+      homePagesSettings: [],
+      categories: []
     };
   },
   created: function created() {
     var _this = this;
     this.fetchTags();
+    this.fetchCategories();
     setTimeout(function () {
       _this.fetchHomePageSetting();
     }, 300);
@@ -2445,6 +2565,14 @@ __webpack_require__.r(__webpack_exports__);
         vm.tags = response.data.response.dropdown;
       })["catch"](function (err) {
         return _this2.fetchTags();
+      });
+    },
+    fetchCategories: function fetchCategories() {
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/categories").then(function (response) {
+        vm.categories = response.data.response.dropdown;
+      })["catch"](function (err) {
+        vm.fetchCategories();
       });
     },
     fetchHomePageSetting: function fetchHomePageSetting() {
@@ -5059,11 +5187,11 @@ var render = function render() {
         _vm.$set(_vm.form.video, "text", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("h3", [_vm._v("Image Settings")]), _vm._v(" "), _vm._l(_vm.form.imageSettings, function (img, index) {
+  })]), _vm._v(" "), _c("h3", [_vm._v("Banner Image Settings")]), _vm._v(" "), _vm._l(_vm.form.imageSettings, function (img, index) {
     return _c("div", {
       key: index + 1,
-      staticClass: "form-group"
-    }, [_c("h4", [_vm._v("Image " + _vm._s(index + 1))]), _vm._v(" "), _c("div", {
+      staticClass: "form-group border border-1 p-2"
+    }, [_c("h4", [_vm._v("Banner Image " + _vm._s(index + 1))]), _vm._v(" "), _c("div", {
       staticClass: "row"
     }, [_c("div", {
       staticClass: "col-md-6"
@@ -5141,8 +5269,62 @@ var render = function render() {
           _vm.$set(img, "button_label", $event.target.value);
         }
       }
-    }), _vm._v(" "), _c("hr")]);
-  }), _vm._v(" "), _c("h3", [_vm._v("Tags Settings")]), _vm._v(" "), _vm._l(_vm.form.tags, function (tag, index) {
+    })]);
+  }), _vm._v(" "), _c("h3", [_vm._v("Advertisement Image Settings")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.form.advertiseImages, function (advertise, index) {
+    return _c("tr", {
+      key: "adv-" + advertise.index
+    }, [_c("td", [_vm._v("\n                                Image " + _vm._s(advertise.index) + "\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
+      staticClass: "form-control",
+      attrs: {
+        type: "file",
+        accept: ".png, .jpg, .jpeg"
+      },
+      on: {
+        change: function change($event) {
+          return _vm.setAdvertiseImage($event, index);
+        }
+      }
+    }), _vm._v(" "), _c("code", [_vm._v("Dimensions 493 x 316")])]), _vm._v(" "), _c("td", [_c("img", {
+      attrs: {
+        src: _vm.getImage(advertise.preview),
+        alt: "",
+        width: "20%"
+      }
+    })]), _vm._v(" "), _c("td", [_c("v-select", {
+      attrs: {
+        options: _vm.categories
+      },
+      model: {
+        value: advertise.category,
+        callback: function callback($$v) {
+          _vm.$set(advertise, "category", $$v);
+        },
+        expression: "advertise.category"
+      }
+    })], 1), _vm._v(" "), _c("td", [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: advertise.label,
+        expression: "advertise.label"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: advertise.label
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(advertise, "label", $event.target.value);
+        }
+      }
+    })])]);
+  }), 0)]), _vm._v(" "), _c("h3", [_vm._v("Tags Settings")]), _vm._v(" "), _vm._l(_vm.form.tags, function (tag, index) {
     return _c("div", {
       key: index + 1,
       staticClass: "border p-3 mb-3"
@@ -5269,6 +5451,10 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Title")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Preview")]), _vm._v(" "), _c("th", [_vm._v("Category (Shop Now Redirect )")]), _vm._v(" "), _c("th", [_vm._v("Button Label")])])]);
 }];
 render._withStripped = true;
 
@@ -5839,7 +6025,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "form-group col-md-11"
-  }, [_c("label", [_vm._v("Video Link")])]);
+  }, [_c("label", [_vm._v("Video Link")]), _c("br"), _vm._v(" "), _c("b", [_vm._v("Please add embedded Youtube Link")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -5999,7 +6185,7 @@ var render = function render() {
         return _vm.add();
       }
     }
-  }, [_vm._v("Save")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("Add New Course")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -6052,7 +6238,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "form-group col-md-11"
-  }, [_c("label", [_vm._v("Video Link")])]);
+  }, [_c("label", [_vm._v("Video Link")]), _c("br"), _vm._v(" "), _c("b", [_vm._v("Please add embedded Youtube Link")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -6934,6 +7120,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _vm._m(0)])])])])])])])], 1)])]), _vm._v(" "), _c("HomePageSetting", {
     attrs: {
       tags: _vm.tags,
+      categories: _vm.categories,
       loader: _vm.homePageLoader,
       settings: _vm.homePagesSettings
     },

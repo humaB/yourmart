@@ -129,6 +129,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/hero-image/changed', [ ProductController::class , 'updateHeroImage']);
         Route::post('/color-images/changed', [ ProductController::class , 'updateColorImages']);
 
+        Route::post('/tags/removes', [ ProductController::class , 'removeTag']);
+
         Route::group(['prefix' => 'attachments'], function(){
             Route::get('/',  [ AttachmentController::class , 'fetchAttachments']);
             Route::post('/',  [ AttachmentController::class , 'store']);
@@ -186,7 +188,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::get('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'fetchHistory']);
             Route::post('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'store']);
 
-        
+
             Route::group(['prefix' => 'packaging-classes'], function(){
                 Route::get('/',  [ ProductPackagingClassController::class , 'fectPackagingClassSetting']);
                 Route::post('/add',  [ ProductPackagingClassController::class , 'packagingClassSettingStore']);
