@@ -4,11 +4,13 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
+use App\Mail\SupplierDecisionMail;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use TCPDF;
 include(public_path().'/assets/tcpdf/tcpdf.php');
 
@@ -63,6 +65,17 @@ class SupplierController extends Controller
             'user_id' => $user->id ?? 0,
             'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
         ]);
+
+               // Prepare the data
+               $mailData = [
+                'request'         => $supplier->id,
+                'full_name'       => $supplier->full_name,
+                'whatsapp_number' => $supplier->whatsapp_number,
+                'address'         => $supplier->address,
+                'decision'        => $request->action
+            ];
+
+            Mail::to($supplier->email)->send(new SupplierDecisionMail($mailData));
 
         return ['message', 'successfully updated'];
     }
