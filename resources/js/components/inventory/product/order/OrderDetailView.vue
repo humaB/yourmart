@@ -6,7 +6,7 @@
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between">
                         <div>
-                            Order # <b>{{ details ? details.id : '' }}</b>
+                            Order # <b>{{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</b>
                         </div> <!-- Empty div to push the content to the right -->
                         <div class="d-flex">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -22,7 +22,7 @@
                                     <div class="inbox-body no-pad">
                                         <div class="mail-heading">
                                             <h4 class="vew-mail-header">
-                                                <h3>Order Details # {{ details ? details.id : '' }}</h3>
+                                                <h3>Order Details # {{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</h3>
                                             </h4>
                                         </div>
                                         <hr />
@@ -50,15 +50,48 @@
                                                     <h5>Order Information</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <p><strong>Courier Service:</strong> {{ details.courier_service_id
-                                                        }}</p>
-                                                    <p><strong>Shop:</strong> {{ details.shop ? details.shop.store_name
-                                                        : 'N/A' }}</p>
-                                                    <p><strong>Instructions:</strong> {{ details.instructions }}</p>
-                                                    <p><strong>Total Bill:</strong> {{ details.total_bill }}</p>
-                                                    <p><strong>Paid Amount:</strong> {{ details.paid_amount }}</p>
-                                                    <p><strong>Sell Price:</strong> {{ details.selling_price }}</p>
-                                                    <p><strong>Order Notes:</strong> {{ details.order_note }}</p>
+                                                    <h5>Order # {{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</h5>
+                                                    <p class="mt-2"><strong>Courier Service:</strong> {{ details.courier ? details.courier.courier_name : 'N/A' }}</p>
+                                                    <p><strong>Selected Package :</strong> {{ details.range ? details.range.category.name : 'N/A' }}</p>
+                                                    <p><strong>Courier Instructions:</strong> {{ details.instructions }}</p>
+                                                    <hr>
+
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p><strong>Shop:</strong> {{ details.shop ? details.shop.store_name: 'N/A' }}</p>
+                                                            <p><strong>Order Notes:</strong> {{ details.order_note }}</p>
+                                                        </div>
+                                                        <div class="col-md-6 text-right">
+                                                            <p><strong>Sub Total:</strong> {{ parseFloat(details.total_bill) - ( parseFloat(details.courier_service_price)  + parseFloat(details.packaging_price) ) }}</p>
+                                                            <p><strong>Courier Charges :</strong> {{ details.courier_service_price }}</p>
+                                                            <p><strong>Packing Charges :</strong> {{ details.packaging_price }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+
+                                                    <div class="row">
+                                                        <div class="col-md-12 text-right row">
+                                                            <div class="col-md-6">
+                                                               <h5> <strong>Total Amount:</strong></h5>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h5>{{ formatPrice(details.total_bill) }}</h5>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <h5> <strong>Paid Amount:</strong></h5>
+                                                             </div>
+                                                             <div class="col-md-6">
+                                                                 <h5>{{ formatPrice(details.paid_amount) }}</h5>
+                                                             </div>
+                                                             <div class="col-md-6">
+                                                                <h5> <strong>Sell Price:</strong></h5>
+                                                             </div>
+                                                             <div class="col-md-6">
+                                                                 <h5>{{  formatPrice(details.selling_price) }}</h5>
+                                                             </div>
+
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -225,9 +258,15 @@
 
                     <div class="modal-footer">
                         <button class="btn btn-primary" @click="forward()" v-if="!loader">
-                            Forward
+                            Forward Order
                         </button>
                         <button class="btn btn-primary btn-progress disabled"  v-else>
+                            Forward
+                        </button>
+                        <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader">
+                           Reject Order
+                        </button>
+                        <button class="btn btn-danger btn-progress disabled"  v-else>
                             Forward
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -244,8 +283,7 @@
 
 export default {
     name: "OrderDetailView",
-    props: ["details", "loader", "id", 'role', 'statuses', 'users'],
-
+    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
@@ -294,6 +332,12 @@ export default {
         }
     },
     methods: {
+        formatPrice: function formatPrice(price) {
+            var string = parseFloat(price).toString();
+            return string
+                .replace(/,/g, "")
+                .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        },
         getImageUrl(imageId) {
             // Check if the image is null
             if (!imageId) {
@@ -303,6 +347,9 @@ export default {
         },
         forward(){
             this.$emit('forward', { id : this.details.id });
+        },
+        reject(){
+            this.$emit('reject', { id : this.details.id });
         },
         formatDate(date) {
             return date ? moment(date).fromNow() : 'N/A';

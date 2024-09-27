@@ -24,6 +24,9 @@ class CourierCategoryRange extends Model
         'added_by'
     ];
 
+    public function category(){
+        return $this->belongsTo(CourierCategory::class, 'category_id', 'id');
+    }
 
 
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory\Order;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
+use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
@@ -44,7 +45,18 @@ class OrderController extends Controller
     public function details(Request $request)
     {
 
-        $orders = Order::with('city', 'shop', 'user', 'items.variation.product', 'comments.user', 'items.variation.images.attachment', 'items.variation.color', 'items.variation.size')->where('id', $request->id)->get();
+        $orders = Order::with(
+            'city',
+            'shop',
+            'user',
+            'courier',
+            'range.category',
+            'items.variation.product',
+            'comments.user',
+            'items.variation.images.attachment',
+            'items.variation.color',
+            'items.variation.size'
+            )->where('id', $request->id)->get();
 
         return (new ResponseCollection($orders))
             ->response()
@@ -52,8 +64,31 @@ class OrderController extends Controller
     }
 
     public function updateStatus( Request $request ){
+
         $userRole  = auth()->user()->role;
+
         $order = Order::with('items')->find($request->id);
+
+        // Map roles to corresponding statuses
+        $activity = [
+            'order collection manager' => ['next' => 'inventory manager'],
+            'inventory manager' => ['next' => 'qc manager'],
+            'qc manager' => ['next' => 'packing & dispatch manager'],
+            'packing & dispatch manager' => ['next' => null]
+        ];
+
+        $nextRole = $activity[$userRole]['next'];
+
+        // Check if next role exists
+        if ($nextRole) {
+            OrderActivity::create([
+                'order_id'  => $request->id,
+                'activity'  => 'Order sent to '.$nextRole,
+                'added_by'  => auth()->user()->id,
+            ]);
+        } else {
+            // Handle case where no next role exists
+        }
 
          // Map roles to corresponding statuses
         $statusMap = [
@@ -89,6 +124,22 @@ class OrderController extends Controller
 
             return response()->json(['message' => 'Order status updated successfully.'], 200);
         }
+    }
+
+    public function reject( Request $request ){
+
+        $order = Order::with('items')->find($request->id);
+
+        $order->update(['status' => '5']);
+
+        OrderActivity::create([
+            'order_id'  => $request->id,
+            'activity'  => 'Order Rejected',
+            'added_by'  => auth()->user()->id,
+        ]);
+
+        return response()->json(['message' => 'Order status updated successfully.'], 200);
+
     }
 
     public function comment(Request $request)

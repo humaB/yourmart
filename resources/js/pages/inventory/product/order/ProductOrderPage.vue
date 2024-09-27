@@ -25,7 +25,7 @@
                                                     <tr v-for="(item, index) in orders" :key="item.id">
                                                         <td>{{ index + 1 }}</td>
                                                         <td>{{ item.id }}</td>
-                                                        <td>{{ item.user ? item.user.name : '' }}</td>
+                                                        <td>{{ item.user ? item.user.name : 'GUEST' }}</td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
                                                         <td>
                                                             <span class="badge badge-warning text-dark" v-if="item.status == 0">Order Collection</span>
@@ -33,6 +33,7 @@
                                                             <span class="badge badge-secondary" v-else-if="item.status == 2">QC</span>
                                                             <span class="badge badge-success" v-else-if="item.status == 3">Packing/Dispatch</span>
                                                             <span class="badge badge-sucess" v-else-if="item.status == 4">Delivered</span>
+                                                            <span class="badge badge-danger" v-else-if="item.status == 5">Rejected</span>
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
@@ -55,10 +56,12 @@
         </div>
 
         <OrderDetailView
+            :rejectLoader="rejectLoader"
             :details="details"
             :loader="commentLoader"
             @addComment="addComment($event)"
             @forward="forward($event)"
+            @reject="reject($event)"
         />
     </div>
 </template>
@@ -88,7 +91,8 @@ export default {
             orders: [],
             loader: true,
             details: {},
-            commentLoader : false
+            commentLoader : false,
+            rejectLoader : false
         };
     },
     created() {
@@ -122,6 +126,7 @@ export default {
         },
         forward( data ){
             let vm = this;
+            vm.commentLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-status", data)
             .then((response) => {
 
@@ -140,6 +145,29 @@ export default {
             })
             .catch((err) => {
                 vm.commentLoader = false;
+            });
+        },
+        reject( data ){
+            let vm = this;
+            vm.rejectLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/reject", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.rejectLoader = false;
+
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000)
+            return swal({
+                title: "Success",
+                text: "Order Rejected Successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.rejectLoader = false;
             });
         },
         addComment(data) {

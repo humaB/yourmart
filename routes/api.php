@@ -182,6 +182,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/comments',  [ OrderController::class , 'comment']);
 
             Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
+            Route::post('/reject',  [ OrderController::class , 'reject']);
         });
 
         Route::group(['prefix' => 'settings'], function(){
