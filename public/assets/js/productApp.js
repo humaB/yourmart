@@ -1203,9 +1203,6 @@ __webpack_require__.r(__webpack_exports__);
       // Ensure tooltips are initialized for dynamically added elements
       $('[data-toggle="tooltip"]').tooltip();
     },
-    getStatusMessage: function getStatusMessage(item) {
-      return "".concat(item.user.name, " ").concat(this.statusMessages[item.status]);
-    },
     changeLabel: function changeLabel() {
       this.activityStatus = !this.activityStatus;
     },
@@ -7077,7 +7074,7 @@ var render = function render() {
     return _c("li", {
       key: item.id,
       staticClass: "mb-0"
-    }, [_vm._v("\n                                                    " + _vm._s(_vm.getStatusMessage(item)) + " - "), _c("small", {
+    }, [_vm._v("\n                                                    " + _vm._s(item.activity) + " by " + _vm._s(item.user ? item.user.name : "") + "  - "), _c("small", {
       staticClass: "text-muted"
     }, [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])])]), _vm._v(" "), _c("div", {

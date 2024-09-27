@@ -50,6 +50,7 @@ class OrderController extends Controller
             'shop',
             'user',
             'courier',
+            'activity.user:id,name',
             'range.category',
             'items.variation.product',
             'comments.user',

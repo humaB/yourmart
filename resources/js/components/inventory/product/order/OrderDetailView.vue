@@ -189,7 +189,7 @@
                                                 data-parent="#accordion" style="">
                                                 <ul>
                                                     <li class="mb-0" v-for="item in details.activity" :key="item.id">
-                                                        {{ getStatusMessage(item) }} - <small class="text-muted">{{
+                                                        {{ item.activity }} by {{ item.user ? item.user.name : '' }}  - <small class="text-muted">{{
                                                             formatDate( item.created_at ) }}</small>
                                                     </li>
                                                 </ul>
@@ -357,9 +357,6 @@ export default {
         initializeTooltips() {
             // Ensure tooltips are initialized for dynamically added elements
             $('[data-toggle="tooltip"]').tooltip();
-        },
-        getStatusMessage(item) {
-            return `${item.user.name} ${this.statusMessages[item.status]}`;
         },
         changeLabel() {
             this.activityStatus = !this.activityStatus;

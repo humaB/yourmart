@@ -47,6 +47,10 @@ class Order extends Model
         return $this->hasOne(CourierCategoryRange::class, 'id', 'range_id');
     }
 
+    public function activity(){
+        return $this->hasMany(OrderActivity::class, 'order_id', 'id');
+    }
+
     public function city(){
         return $this->hasOne(City::class, 'id', 'city_id');
     }
