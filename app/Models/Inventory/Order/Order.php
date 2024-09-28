@@ -27,11 +27,15 @@ class Order extends Model
         'shop_id',
         'instructions',
         'order_note',
+        'additional_information',
         'total_bill',
         'paid_amount',
+        'payment_method',
+        'payment_proof_attachment',
         'selling_price',
         'packaging_price',
         'status', // 0 => Dailer || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Delivered || 5 => Rejected
+        'tracking_number',
         'belongs_to',
     ];
 

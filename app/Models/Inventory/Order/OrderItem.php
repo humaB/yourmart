@@ -15,6 +15,9 @@ class OrderItem extends Model
         'product_variation_id',
         'price',
         'quantity',
+        'sell_price',
+        'packaging_code',
+        'courier_cost',
         'belongs_to'
     ];
 

@@ -6392,7 +6392,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "col-md-4"
-  }, [_c("p", [_vm._v("Dimension(cm)")])]);
+  }, [_c("p", [_vm._v("Dimension(inches)")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -6977,7 +6977,7 @@ var render = function render() {
   }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price * item.quantity))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price * item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price * item.quantity))]), _vm._v(" "), _c("td", {
       staticClass: "text-truncate"
     }, [_c("ul", {
       staticClass: "list-unstyled order-list m-b-0 m-b-0"
@@ -7286,7 +7286,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th", [_vm._v("Images")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Buy Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th", [_vm._v("Sell Price")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")]), _vm._v(" "), _c("th", [_vm._v("Images")])])]);
 }];
 render._withStripped = true;
 
@@ -12807,7 +12807,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_laravel_mix_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\r\n    position: absolute;\r\n    top: 3px;\r\n    right: 3px;\r\n    background-color: rgba(255, 255, 255, 0.7);\r\n    border: none;\r\n    cursor: pointer;\r\n    padding: 5px;\r\n    border-radius: 50%;\r\n    font-size: 10px;\r\n    line-height: 1;\r\n    color: #ff0000;\r\n    /* red color for the icon */\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    background-color: rgba(255, 255, 255, 0.7);\n    border: none;\n    cursor: pointer;\n    padding: 5px;\n    border-radius: 50%;\n    font-size: 10px;\n    line-height: 1;\n    color: #ff0000;\n    /* red color for the icon */\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

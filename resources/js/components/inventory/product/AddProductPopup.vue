@@ -160,7 +160,7 @@
                                                         </div>
                                                         <div class="col-md-12 row">
                                                             <div class="col-md-4">
-                                                                <p>Dimension(cm)</p>
+                                                                <p>Dimension(inches)</p>
                                                             </div>
                                                             <div class="col-md-8 d-flex justify-content-between">
                                                                 <input type="text" class="form-control"

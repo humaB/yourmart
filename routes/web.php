@@ -17,6 +17,7 @@ use App\Http\Controllers\Pages\LibraryPageController;
 use App\Http\Controllers\Pages\HelpCenterPageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -107,6 +108,17 @@ Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
 
 Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
     Route::get('/', [CourierController::class, 'index'])->name('couriers');
-
 });
+
+
+Route::get('/test', function(){
+    $response = Http::post('https://merchantapi.leopardscourier.com/api/getAllCities/format/json/', [
+        'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+        'api_password' => 'Allah@001#',
+    ]);
+
+    // // Get the response content
+    return $buffer = $response->body();
+});
+
 

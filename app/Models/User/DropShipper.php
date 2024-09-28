@@ -24,6 +24,12 @@ class DropShipper extends Model
         'bank_id',
         'account_number',
         'account_title',
+        'account_iban',
+        'payment_cycle',
+
+        'total_payable',
+        'total_paid',
+        'remaining_amount',
         // Optional Fields
         'store_name',
         'store_url',

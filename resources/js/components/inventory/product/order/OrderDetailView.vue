@@ -105,9 +105,11 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Product</th>
-                                                                <th>Price</th>
+                                                                <th>Buy Price</th>
                                                                 <th>Quantity</th>
                                                                 <th>Total</th>
+                                                                <th>Sell Price</th>
+                                                                <th>Total Amount</th>
                                                                 <th>Images</th>
                                                             </tr>
                                                         </thead>
@@ -123,6 +125,8 @@
                                                                 <td>{{ item.price }}</td>
                                                                 <td>{{ item.quantity }}</td>
                                                                 <td>{{ item.price * item.quantity }}</td>
+                                                                <td>{{ item.sell_price }}</td>
+                                                                <td>{{ item.sell_price * item.quantity }}</td>
                                                                 <td class="text-truncate">
                                                                     <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                                         <li class="team-member team-member-sm"
