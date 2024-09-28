@@ -1172,6 +1172,31 @@ __webpack_require__.r(__webpack_exports__);
           return role.toLowerCase().includes(query);
         });
       });
+    },
+    totalPrice: function totalPrice() {
+      return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
+        return total + parseFloat(item.price);
+      }, 0).toFixed(2) : 0;
+    },
+    totalPackagingCost: function totalPackagingCost() {
+      return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
+        return total + parseFloat(item.packaging_cost);
+      }, 0).toFixed(2) : 0;
+    },
+    totalCourierCost: function totalCourierCost() {
+      return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
+        return total + parseFloat(item.courier_cost);
+      }, 0).toFixed(2) : 0;
+    },
+    totalSellPrice: function totalSellPrice() {
+      return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
+        return total + parseFloat(item.sell_price);
+      }, 0).toFixed(2) : 0;
+    },
+    totalNetProfit: function totalNetProfit() {
+      return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
+        return total + (parseFloat(item.sell_price) - parseFloat(item.price));
+      }, 0).toFixed(2) : 0;
     }
   },
   methods: {
@@ -6977,32 +7002,18 @@ var render = function render() {
   }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price * item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price * item.quantity))]), _vm._v(" "), _c("td", {
-      staticClass: "text-truncate"
-    }, [_c("ul", {
-      staticClass: "list-unstyled order-list m-b-0 m-b-0"
-    }, _vm._l(item.variation.images, function (image) {
-      return _c("li", {
-        key: image.id,
-        staticClass: "team-member team-member-sm"
-      }, [_c("a", {
-        attrs: {
-          href: _vm.getImageUrl(image.attachment.attachment),
-          target: "_blank",
-          rel: "noopener noreferrer"
-        }
-      }, [_c("img", {
-        staticClass: "rounded-circle",
-        attrs: {
-          src: _vm.getImageUrl(image.attachment.attachment),
-          alt: "user",
-          "data-toggle": "tooltip",
-          title: "",
-          "data-original-title": ""
-        }
-      })])]);
-    }), 0)])]);
-  }), 0)])])])]), _vm._v(" "), _c("div", {
+    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.sell_price) - parseFloat(item.price)))])]);
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(8), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(_vm._s(_vm.totalPackagingCost))]), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(_vm._s(_vm.totalCourierCost))]), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(_vm._s(_vm.totalSellPrice))]), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(_vm._s(_vm.totalNetProfit))])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
   }, [_c("p", [_c("span", [_c("i", {
     staticClass: "fa fa-paperclip"
@@ -7286,7 +7297,11 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Buy Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th", [_vm._v("Sell Price")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")]), _vm._v(" "), _c("th", [_vm._v("Images")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Packing Price")]), _vm._v(" "), _c("th", [_vm._v("Shipping")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Sell Price")]), _vm._v(" "), _c("th", [_vm._v("Net Profit")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", [_c("b", [_vm._v("Total")])]);
 }];
 render._withStripped = true;
 

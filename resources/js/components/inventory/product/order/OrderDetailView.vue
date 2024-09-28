@@ -105,12 +105,14 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Product</th>
-                                                                <th>Buy Price</th>
                                                                 <th>Quantity</th>
-                                                                <th>Total</th>
+                                                                <th>Price</th>
+                                                                <th>Packing Price</th>
+                                                                <th>Shipping</th>
+                                                                <th>Total Cost</th>
                                                                 <th>Sell Price</th>
-                                                                <th>Total Amount</th>
-                                                                <th>Images</th>
+                                                                <th>Net Profit</th>
+                                                                <!-- <th>Images</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -122,12 +124,14 @@
                                                                     <b>Color : </b>{{ item.variation.color ?item.variation.color.name : '-'  }}<br>
                                                                     <b>Size : </b>{{ item.variation.size ?item.variation.size.name : '-'  }}
                                                                 </td>
-                                                                <td>{{ item.price }}</td>
                                                                 <td>{{ item.quantity }}</td>
-                                                                <td>{{ item.price * item.quantity }}</td>
+                                                                <td>{{ parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) }}</td>
+                                                                <td>{{ item.packaging_cost }}</td>
+                                                                <td>{{ item.courier_cost }}</td>
+                                                                <td>{{ item.price }}</td>
                                                                 <td>{{ item.sell_price }}</td>
-                                                                <td>{{ item.sell_price * item.quantity }}</td>
-                                                                <td class="text-truncate">
+                                                                <td>{{ parseFloat(item.sell_price) - parseFloat(item.price) }}</td>
+                                                                <!-- <td class="text-truncate">
                                                                     <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                                         <li class="team-member team-member-sm"
                                                                             v-for="image in item.variation.images"
@@ -142,9 +146,21 @@
                                                                             </a>
                                                                         </li>
                                                                     </ul>
-                                                                </td>
+                                                                </td> -->
                                                             </tr>
                                                         </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <td><b>Total</b></td>
+                                                                <td><!-- Total quantity (if needed) --></td>
+                                                                <td><!-- Total net cost (calculated below) --></td>
+                                                                <td class="h5">{{ totalPackagingCost }}</td>
+                                                                <td class="h5">{{ totalCourierCost }}</td>
+                                                                <td class="h5">{{ totalPrice }}</td>
+                                                                <td class="h5">{{ totalSellPrice }}</td>
+                                                                <td class="h5">{{ totalNetProfit }}</td>
+                                                            </tr>
+                                                        </tfoot>
                                                     </table>
                                                 </div>
                                             </div>
@@ -333,6 +349,31 @@ export default {
                     roles.some(role => role.toLowerCase().includes(query))
                 );
             });
+        },
+        totalPrice() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + parseFloat(item.price);
+            }, 0).toFixed(2) : 0;
+        },
+        totalPackagingCost() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + parseFloat(item.packaging_cost);
+            }, 0).toFixed(2) : 0;
+        },
+        totalCourierCost() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + parseFloat(item.courier_cost);
+            }, 0).toFixed(2) : 0;
+        },
+        totalSellPrice() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + parseFloat(item.sell_price);
+            }, 0).toFixed(2) : 0;
+        },
+        totalNetProfit() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + (parseFloat(item.sell_price) - parseFloat(item.price));
+            }, 0).toFixed(2) : 0;
         }
     },
     methods: {
