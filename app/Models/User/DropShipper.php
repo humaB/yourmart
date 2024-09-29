@@ -14,6 +14,7 @@ class DropShipper extends Model
     protected $table = 'drop_shippers';
 
     protected $fillable = [
+        'leopard_id', //Defualt Zero
         'full_name',
         'email',
         'password',

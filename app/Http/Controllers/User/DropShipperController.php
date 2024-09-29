@@ -11,7 +11,8 @@ use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use TCPDF;
 
@@ -79,8 +80,31 @@ class DropShipperController extends Controller
     public function decision(Request $request)
     {
 
-        
+        $lock = Cache::lock('add_new_product')->block(7, function () use ($request) {
+
+        });
+
         $dropshipper = DropShipper::where('id', $request->id)->first();
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post('https://merchantapi.leopardscourier.com/api/createShipper/format/json/', [
+            'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+            'api_password' => 'Allah@001#',
+            'shipment_name'  => $dropshipper->full_name,
+            'shipment_email' => $dropshipper->email, // Optional, can be left empty
+            'shipment_phone' => $dropshipper->whatsapp_number,
+            'shipment_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad',
+            'city_id' => '322',
+            'cnic' => $dropshipper->cnic, // Optional, can be left empty
+            'return_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad', // Optional, can be left empty
+        ]);
+
+        $leopard = 0;
+        // Check if the request was successful
+        if ($response->successful()) {
+           $data = $response->json();
+           $leopard = $data['data']['shipment_id'];
+        }
 
         if ($request->action != 'reject') {
             $checkUser = User::where("email",$dropshipper->email)->first();
@@ -100,6 +124,7 @@ class DropShipperController extends Controller
         }
 
         $dropshipper->update([
+            'leopard_id' => $leopard,
             'user_id' => $user->id ?? 0,
             'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
         ]);
@@ -114,6 +139,7 @@ class DropShipperController extends Controller
         ];
 
         Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
+
 
         return ['message' => 'successfully updated'];
     }
