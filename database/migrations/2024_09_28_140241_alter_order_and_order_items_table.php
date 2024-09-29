@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('payment_method')->after('remaining_amount');
             $table->string('payment_proof_attachment')->after('payment_method')->nullable();
             $table->string('tracking_number')->after('status')->nullable();
+            $table->text('slip_link')->after('tracking_number')->nullable();
         });
 
         Schema::table('order_items', function (Blueprint $table) {
@@ -50,6 +51,8 @@ return new class extends Migration
             $table->dropColumn('additional_information');
             $table->dropColumn('payment_method');
             $table->dropColumn('payment_proof_attachment');
+            $table->dropColumn('tracking_number');
+            //$table->dropColumn('slip_link');
         });
 
         Schema::table('order_items', function (Blueprint $table) {
