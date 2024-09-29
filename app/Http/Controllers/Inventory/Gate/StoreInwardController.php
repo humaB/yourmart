@@ -122,7 +122,6 @@ class StoreInwardController extends Controller
                         ProductQrCode::updateOrCreate(
                             [
                                 'product_variation_id' => $data->product_variation_id,
-                                'supplier_id'          => $po->supplier_id,
                             ],
                             [
                                 'barcode' => $product->qrCodeDataUrl,
