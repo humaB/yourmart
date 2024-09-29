@@ -80,68 +80,69 @@ class DropShipperController extends Controller
     public function decision(Request $request)
     {
 
-        $lock = Cache::lock('add_new_product')->block(7, function () use ($request) {
+        $lock = Cache::lock('dropshipper_decision')->block(7, function () use ($request) {
 
+            $dropshipper = DropShipper::where('id', $request->id)->first();
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+            ])->post('https://merchantapi.leopardscourier.com/api/createShipper/format/json/', [
+                'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+                'api_password' => 'Allah@001#',
+                'shipment_name'  => $dropshipper->full_name,
+                'shipment_email' => $dropshipper->email, // Optional, can be left empty
+                'shipment_phone' => $dropshipper->whatsapp_number,
+                'shipment_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad',
+                'city_id' => '322',
+                'cnic' => $dropshipper->cnic, // Optional, can be left empty
+                'return_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad', // Optional, can be left empty
+            ]);
+
+            $leopard = 0;
+            // Check if the request was successful
+            if ($response->successful()) {
+            $data = $response->json();
+            $leopard = $data['data']['shipment_id'];
+            }
+
+            if ($request->action != 'reject') {
+                $checkUser = User::where("email",$dropshipper->email)->first();
+                if($checkUser)
+                {
+                    return (new ValidationCollection(["This Email already registered with another account"]))
+                    ->response()
+                    ->setStatusCode(400);
+                }
+                $user = User::create([
+                    'name'     => $dropshipper->full_name,
+                    'email'    => $dropshipper->email,
+                    'password' => $dropshipper->password,
+                    'role'     => 'dropshipper',
+                    'allowed_ip_address' => '*'
+                ]);
+            }
+
+            $dropshipper->update([
+                'leopard_id' => $leopard,
+                'user_id' => $user->id ?? 0,
+                'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
+            ]);
+
+            // Prepare the data
+            $mailData = [
+                'request'         => $dropshipper->id,
+                'full_name'       => $dropshipper->full_name,
+                'whatsapp_number' => $dropshipper->whatsapp_number,
+                'address'         =>  $dropshipper->address,
+                'decision'        => $request->action
+            ];
+
+            Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
+
+
+            return ['message' => 'successfully updated'];
         });
 
-        $dropshipper = DropShipper::where('id', $request->id)->first();
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post('https://merchantapi.leopardscourier.com/api/createShipper/format/json/', [
-            'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
-            'api_password' => 'Allah@001#',
-            'shipment_name'  => $dropshipper->full_name,
-            'shipment_email' => $dropshipper->email, // Optional, can be left empty
-            'shipment_phone' => $dropshipper->whatsapp_number,
-            'shipment_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad',
-            'city_id' => '322',
-            'cnic' => $dropshipper->cnic, // Optional, can be left empty
-            'return_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad', // Optional, can be left empty
-        ]);
-
-        $leopard = 0;
-        // Check if the request was successful
-        if ($response->successful()) {
-           $data = $response->json();
-           $leopard = $data['data']['shipment_id'];
-        }
-
-        if ($request->action != 'reject') {
-            $checkUser = User::where("email",$dropshipper->email)->first();
-            if($checkUser)
-            {
-                return (new ValidationCollection(["This Email already registered with another account"]))
-                ->response()
-                ->setStatusCode(400);
-            }
-            $user = User::create([
-                'name'     => $dropshipper->full_name,
-                'email'    => $dropshipper->email,
-                'password' => $dropshipper->password,
-                'role'     => 'dropshipper',
-                'allowed_ip_address' => '*'
-            ]);
-        }
-
-        $dropshipper->update([
-            'leopard_id' => $leopard,
-            'user_id' => $user->id ?? 0,
-            'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
-        ]);
-
-        // Prepare the data
-        $mailData = [
-            'request'         => $dropshipper->id,
-            'full_name'       => $dropshipper->full_name,
-            'whatsapp_number' => $dropshipper->whatsapp_number,
-            'address'         =>  $dropshipper->address,
-            'decision'        => $request->action
-        ];
-
-        Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
-
-
-        return ['message' => 'successfully updated'];
+        return $lock;
     }
 
     public function pdf(Request $request)
