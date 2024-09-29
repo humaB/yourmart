@@ -1175,27 +1175,27 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalPrice: function totalPrice() {
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + parseFloat(item.price);
+        return total + parseFloat(item.price) * item.quantity;
       }, 0).toFixed(2) : 0;
     },
     totalPackagingCost: function totalPackagingCost() {
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + parseFloat(item.packaging_cost);
+        return total + parseFloat(item.packaging_cost) * item.quantity;
       }, 0).toFixed(2) : 0;
     },
     totalCourierCost: function totalCourierCost() {
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + parseFloat(item.courier_cost);
+        return total + parseFloat(item.courier_cost) * item.quantity;
       }, 0).toFixed(2) : 0;
     },
     totalSellPrice: function totalSellPrice() {
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + parseFloat(item.sell_price);
+        return total + parseFloat(item.sell_price) * item.quantity;
       }, 0).toFixed(2) : 0;
     },
     totalNetProfit: function totalNetProfit() {
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + (parseFloat(item.sell_price) - parseFloat(item.price));
+        return total + (parseFloat(item.sell_price) - parseFloat(item.price)) * item.quantity;
       }, 0).toFixed(2) : 0;
     }
   },
@@ -6975,7 +6975,12 @@ var render = function render() {
     staticClass: "card mb-3"
   }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-body"
-  }, [_c("h5", [_vm._v("Order # " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name.substring(0, 3) + "-" : "") + _vm._s(_vm.details.order_no))]), _vm._v(" "), _c("p", {
+  }, [_c("h5", [_vm._v("Order # " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name.substring(0, 3) + "-" : "") + _vm._s(_vm.details.order_no))]), _vm._v(" "), _c("h5", [_vm._v("Tracking # " + _vm._s(_vm.details.tracking_number))]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: _vm.details.slip_link,
+      target: "_blank"
+    }
+  }, [_vm._v("Press to Print")]), _vm._v(" "), _c("p", {
     staticClass: "mt-2"
   }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Selected Package :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions))]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -7002,7 +7007,23 @@ var render = function render() {
   }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.sell_price) - parseFloat(item.price)))])]);
+    }, [item.variation ? _c("td", {
+      staticClass: "text-truncate"
+    }, [_c("ul", {
+      staticClass: "list-unstyled order-list m-b-0 m-b-0"
+    }, [_c("li", {
+      staticClass: "team-member team-member-sm"
+    }, [_c("a", {
+      attrs: {
+        href: _vm.getImageUrl(item.variation.images[0].attachment.attachment),
+        target: "_blank"
+      }
+    }, [_c("img", {
+      staticClass: "rounded-circle",
+      attrs: {
+        src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
+      }
+    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * (parseFloat(item.sell_price) - parseFloat(item.price))))])]);
   }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(8), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPackagingCost))]), _vm._v(" "), _c("td", {
@@ -7297,7 +7318,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Packing Price")]), _vm._v(" "), _c("th", [_vm._v("Shipping")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Sell Price")]), _vm._v(" "), _c("th", [_vm._v("Net Profit")])])]);
+  return _c("thead", [_c("tr", [_c("th"), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Packing Price")]), _vm._v(" "), _c("th", [_vm._v("Shipping")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Sell Price")]), _vm._v(" "), _c("th", [_vm._v("Net Profit")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

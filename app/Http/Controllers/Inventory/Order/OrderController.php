@@ -32,9 +32,13 @@ class OrderController extends Controller
 
 
         if( $userRole != 'admin'){
-            $orders = Order::with('user')->where('status', $statusMap[$userRole])->get();
+            $orders = Order::with('user')->where('status', $statusMap[$userRole])
+            ->orderBy('id', 'desc')
+            ->get();
         }else{
-            $orders = Order::with('user')->get();
+            $orders = Order::with('user')
+            ->orderBy('id', 'desc')
+            ->get();
         }
 
         return (new ResponseCollection($orders))

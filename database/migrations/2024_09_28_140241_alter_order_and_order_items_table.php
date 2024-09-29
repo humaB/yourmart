@@ -52,7 +52,7 @@ return new class extends Migration
             $table->dropColumn('payment_method');
             $table->dropColumn('payment_proof_attachment');
             $table->dropColumn('tracking_number');
-            //$table->dropColumn('slip_link');
+            $table->dropColumn('slip_link');
         });
 
         Schema::table('order_items', function (Blueprint $table) {

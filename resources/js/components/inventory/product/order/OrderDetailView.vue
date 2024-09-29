@@ -51,6 +51,8 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <h5>Order # {{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</h5>
+                                                    <h5>Tracking # {{ details.tracking_number }}</h5>
+                                                    <a :href="details.slip_link" target="_blank">Press to Print</a>
                                                     <p class="mt-2"><strong>Courier Service:</strong> {{ details.courier ? details.courier.courier_name : 'N/A' }}</p>
                                                     <p><strong>Selected Package :</strong> {{ details.range ? details.range.category.name : 'N/A' }}</p>
                                                     <p><strong>Courier Instructions:</strong> {{ details.instructions }}</p>
@@ -104,6 +106,7 @@
                                                     <table class="table table-bordered">
                                                         <thead>
                                                             <tr>
+                                                                <th></th>
                                                                 <th>Product</th>
                                                                 <th>Quantity</th>
                                                                 <th>Price</th>
@@ -117,6 +120,15 @@
                                                         </thead>
                                                         <tbody>
                                                             <tr v-for="item in details.items" :key="item.id">
+                                                                <td class="text-truncate" v-if="item.variation">
+                                                                    <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                                      <li class="team-member team-member-sm">
+                                                                        <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
+                                                                          <img class="rounded-circle" :src="getImageUrl(item.variation.images[0].attachment.attachment)">
+                                                                        </a>
+                                                                      </li>
+                                                                    </ul>
+                                                                  </td>
                                                                 <td>
                                                                     <b>SKU : </b>{{ item.variation.sku  }}<br>
                                                                     <b>Title : </b>{{ item.variation.product.title }}<br>
@@ -125,12 +137,12 @@
                                                                     <b>Size : </b>{{ item.variation.size ?item.variation.size.name : '-'  }}
                                                                 </td>
                                                                 <td>{{ item.quantity }}</td>
-                                                                <td>{{ parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) }}</td>
-                                                                <td>{{ item.packaging_cost }}</td>
-                                                                <td>{{ item.courier_cost }}</td>
-                                                                <td>{{ item.price }}</td>
-                                                                <td>{{ item.sell_price }}</td>
-                                                                <td>{{ parseFloat(item.sell_price) - parseFloat(item.price) }}</td>
+                                                                <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * item.packaging_cost }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * item.courier_cost }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * item.price }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * item.sell_price }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - parseFloat(item.price) ) }}</td>
                                                                 <!-- <td class="text-truncate">
                                                                     <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                                         <li class="team-member team-member-sm"
@@ -352,27 +364,27 @@ export default {
         },
         totalPrice() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.price);
+                return total + parseFloat(item.price) * item.quantity;
             }, 0).toFixed(2) : 0;
         },
         totalPackagingCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.packaging_cost);
+                return total + parseFloat(item.packaging_cost) * item.quantity;
             }, 0).toFixed(2) : 0;
         },
         totalCourierCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.courier_cost);
+                return total + parseFloat(item.courier_cost) * item.quantity;
             }, 0).toFixed(2) : 0;
         },
         totalSellPrice() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.sell_price);
+                return total + parseFloat(item.sell_price) * item.quantity;
             }, 0).toFixed(2) : 0;
         },
         totalNetProfit() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + (parseFloat(item.sell_price) - parseFloat(item.price));
+                return total + (parseFloat(item.sell_price) - parseFloat(item.price)) * item.quantity;
             }, 0).toFixed(2) : 0;
         }
     },
