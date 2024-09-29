@@ -32,8 +32,9 @@
                                                             <span class="badge badge-info text-dark" v-else-if="item.status == 1">Inventory Issuance</span>
                                                             <span class="badge badge-secondary" v-else-if="item.status == 2">QC</span>
                                                             <span class="badge badge-success" v-else-if="item.status == 3">Packing/Dispatch</span>
-                                                            <span class="badge badge-sucess" v-else-if="item.status == 4">Delivered</span>
-                                                            <span class="badge badge-danger" v-else-if="item.status == 5">Rejected</span>
+                                                            <span class="badge badge-sucess" v-else-if="item.status == 4">Audit</span>
+                                                            <span class="badge badge-sucess" v-else-if="item.status == 5">With Courier</span>
+                                                            <span class="badge badge-danger" v-else-if="item.status == 6">Rejected</span>
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
@@ -59,6 +60,7 @@
             :rejectLoader="rejectLoader"
             :details="details"
             :loader="commentLoader"
+            :role="role"
             @addComment="addComment($event)"
             @forward="forward($event)"
             @reject="reject($event)"
@@ -92,7 +94,8 @@ export default {
             loader: true,
             details: {},
             commentLoader : false,
-            rejectLoader : false
+            rejectLoader : false,
+            role : ''
         };
     },
     created() {
@@ -109,7 +112,8 @@ export default {
             axios
                 .get(this.api_url + "inventory/products/orders")
                 .then((response) => {
-                    vm.orders = response.data.response
+                    vm.orders = response.data.response.orders
+                    vm.role   = response.data.response.role
 
                     setTimeout(() => {
                         vm.dataTable();

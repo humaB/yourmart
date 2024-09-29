@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory\Gate;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
+use App\Models\Inventory\Product\ProductQrCode;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -79,6 +80,7 @@ class StoreInwardController extends Controller
     }
 
     public function inWard( Request $request ){
+
         $lock = Cache::lock('store_inward')->block(7, function () use ($request) {
             $products = json_decode( $request['details']);
 
@@ -86,6 +88,8 @@ class StoreInwardController extends Controller
                 'po_id'     => $request['po'],
                 'added_by'  => auth()->user()->id,
             ]);
+
+            $po = PurchaseOrder::where('id', $request['po'])->first();
 
 
             foreach( $products as $product ){
@@ -114,6 +118,17 @@ class StoreInwardController extends Controller
                             'total' => ($data->price * $receivedQty) - $discountForReceivedQty + $taxForReceivedQty,
                             'added_by' => auth()->user()->id,
                         ]);
+
+                        ProductQrCode::updateOrCreate(
+                            [
+                                'product_variation_id' => $data->product_variation_id,
+                                'supplier_id'          => $po->supplier_id,
+                            ],
+                            [
+                                'barcode' => $product->qrCodeDataUrl,
+                            ]
+                        );
+
                     }else{
                         return ( new ValidationCollection ( ['Quantity added should be less than Receiveable'] ) )
                         ->response()

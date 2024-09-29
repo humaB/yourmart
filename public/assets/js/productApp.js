@@ -1127,7 +1127,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "OrderDetailView",
-  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
+  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'role'],
   data: function data() {
     return {
       public_url: window.location.origin + "",
@@ -1204,6 +1204,18 @@ __webpack_require__.r(__webpack_exports__);
       var string = parseFloat(price).toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
+    validateQR: function validateQR(item) {
+      this.errors = [];
+      // Check if the input matches the barcode
+      if (item.scannedQR && item.scannedQR !== item.variation.barcode.barcode) {
+        return swal({
+          title: "Error",
+          text: "QR code does not match the item",
+          icon: "error",
+          timer: 3000
+        });
+      }
+    },
     getImageUrl: function getImageUrl(imageId) {
       // Check if the image is null
       if (!imageId) {
@@ -1241,7 +1253,7 @@ __webpack_require__.r(__webpack_exports__);
         this.image = this.public_url + "/assets/img/blank_image.jpg";
         return this.image;
       }
-      this.image = this.public_url + "/storage/uploads/support_tickets/" + path;
+      this.image = this.public_url + "/storage/uploads/order/comments/attachments/" + path;
       return this.image;
     },
     isImage: function isImage(attachment) {
@@ -1253,7 +1265,7 @@ __webpack_require__.r(__webpack_exports__);
         this.image = this.public_url + "/assets/img/blank_image.jpg";
         return this.image;
       }
-      this.image = this.public_url + "/storage/uploads/support_tickets/" + path;
+      this.image = this.public_url + "/storage/uploads/order/comments/attachments/" + path;
       return this.image;
     },
     setProfile: function setProfile(path) {
@@ -3202,7 +3214,8 @@ __webpack_require__.r(__webpack_exports__);
       loader: true,
       details: {},
       commentLoader: false,
-      rejectLoader: false
+      rejectLoader: false,
+      role: ''
     };
   },
   created: function created() {
@@ -3216,7 +3229,8 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       vm.loader = false;
       axios.get(this.api_url + "inventory/products/orders").then(function (response) {
-        vm.orders = response.data.response;
+        vm.orders = response.data.response.orders;
+        vm.role = response.data.response.role;
         setTimeout(function () {
           vm.dataTable();
         }, 300);
@@ -7234,7 +7248,59 @@ var render = function render() {
     staticClass: "btn btn-primary btn-progress disabled"
   }, [_c("i", {
     staticClass: "far fa-paper-plane"
-  })])])])])])])]), _vm._v(" "), _c("div", {
+  })])])])])]), _vm._v(" "), _vm.role == "inventory manager" ? _c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body row"
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(10), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+    return _c("tr", {
+      key: item.id
+    }, [item.variation ? _c("td", {
+      staticClass: "text-truncate"
+    }, [_c("ul", {
+      staticClass: "list-unstyled order-list m-b-0 m-b-0"
+    }, [_c("li", {
+      staticClass: "team-member team-member-sm"
+    }, [_c("a", {
+      attrs: {
+        href: _vm.getImageUrl(item.variation.images[0].attachment.attachment),
+        target: "_blank"
+      }
+    }, [_c("img", {
+      staticClass: "rounded-circle",
+      attrs: {
+        src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
+      }
+    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.scannedQR,
+        expression: "item.scannedQR"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.scannedQR
+      },
+      on: {
+        keypress: function keypress($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.validateQR(item);
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "scannedQR", $event.target.value);
+        }
+      }
+    })])]);
+  }), 0)])])])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -7323,6 +7389,16 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("td", [_c("b", [_vm._v("Total")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Please scan products")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th"), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("QR Code")])])]);
 }];
 render._withStripped = true;
 
@@ -10300,7 +10376,9 @@ var render = function render() {
       staticClass: "badge badge-success"
     }, [_vm._v("Packing/Dispatch")]) : item.status == 4 ? _c("span", {
       staticClass: "badge badge-sucess"
-    }, [_vm._v("Delivered")]) : item.status == 5 ? _c("span", {
+    }, [_vm._v("Audit")]) : item.status == 5 ? _c("span", {
+      staticClass: "badge badge-sucess"
+    }, [_vm._v("With Courier")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
@@ -10321,7 +10399,8 @@ var render = function render() {
     attrs: {
       rejectLoader: _vm.rejectLoader,
       details: _vm.details,
-      loader: _vm.commentLoader
+      loader: _vm.commentLoader,
+      role: _vm.role
     },
     on: {
       addComment: function addComment($event) {

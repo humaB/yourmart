@@ -27,7 +27,8 @@ class OrderController extends Controller
             'order collection manager' => 0,    // Role for order collection
             'inventory manager' => 1,  // Role for inventory issuance
             'qc manager' => 2,         // Role for quality control
-            'packing & dispatch manager' => 3    // Role for packing and dispatch
+            'packing & dispatch manager' => 3,    // Role for packing and dispatch
+            'autidor'                   => 4    // Autidor
         ];
 
 
@@ -41,7 +42,12 @@ class OrderController extends Controller
             ->get();
         }
 
-        return (new ResponseCollection($orders))
+        $data = [
+            'orders' => $orders,
+            'role'   =>  $userRole
+        ];
+
+        return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
     }
@@ -59,6 +65,7 @@ class OrderController extends Controller
             'items.variation.product',
             'comments.user',
             'items.variation.images.attachment',
+            'items.variation.barcode',
             'items.variation.color',
             'items.variation.size'
             )->where('id', $request->id)->get();
@@ -79,7 +86,8 @@ class OrderController extends Controller
             'order collection manager' => ['next' => 'inventory manager'],
             'inventory manager' => ['next' => 'qc manager'],
             'qc manager' => ['next' => 'packing & dispatch manager'],
-            'packing & dispatch manager' => ['next' => null]
+            'packing & dispatch manager' => ['next' => 'autidor'],
+            'autidor' => ['next' => null]
         ];
 
         $nextRole = $activity[$userRole]['next'];
@@ -100,7 +108,8 @@ class OrderController extends Controller
             'order collection manager' => 1,    // Role for order collection
             'inventory manager' => 2,  // Role for inventory issuance
             'qc manager' => 3,         // Role for quality control
-            'packing & dispatch manager' => 4    // Role for packing and dispatch
+            'packing & dispatch manager' => 4,    // Role for packing and dispatch
+            'autidor'                    => 5    // Role for packing and dispatch
         ];
 
         if (array_key_exists($userRole, $statusMap)) {
@@ -135,7 +144,7 @@ class OrderController extends Controller
 
         $order = Order::with('items')->find($request->id);
 
-        $order->update(['status' => '5']);
+        $order->update(['status' => '6']);
 
         OrderActivity::create([
             'order_id'  => $request->id,

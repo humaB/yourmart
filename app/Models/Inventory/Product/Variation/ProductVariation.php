@@ -3,6 +3,7 @@
 namespace App\Models\Inventory\Product\Variation;
 
 use App\Models\Inventory\Product\Color;
+use App\Models\Inventory\Product\ProductQrCode;
 use App\Models\Inventory\Product\Size;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +38,10 @@ class ProductVariation extends Model
 
     public function size(){
         return $this->hasOne(Size::class, 'id', 'size_id');
+    }
+
+    public function barcode(){
+        return $this->hasOne(ProductQrCode::class, 'product_variation_id', 'id');
     }
 
     public function images(){

@@ -285,6 +285,49 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="card" v-if="role == 'inventory manager'">
+                                <div class="card-body row">
+                                    <div class="col-md-12">
+                                        <h5>Please scan products</h5>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Product</th>
+                                                    <th>QR Code</th>
+                                                    <!-- <th>Images</th> -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="item in details.items" :key="item.id">
+                                                        <td class="text-truncate" v-if="item.variation">
+                                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                            <li class="team-member team-member-sm">
+                                                                <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
+                                                                <img class="rounded-circle" :src="getImageUrl(item.variation.images[0].attachment.attachment)">
+                                                                </a>
+                                                            </li>
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            <b>SKU : </b>{{ item.variation.sku  }}<br>
+                                                            <b>Title : </b>{{ item.variation.product.title }}<br>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                   v-model="item.scannedQR"
+                                                                   @keypress.enter="validateQR(item)">
+                                                        </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -315,7 +358,7 @@
 
 export default {
     name: "OrderDetailView",
-    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
+    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'role'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
@@ -336,7 +379,7 @@ export default {
             tagSearchQuery: '',
             cursorPosition: 0,
             highlightedIndex: -1,
-            taggedUsers: []
+            taggedUsers: [],
         }
     },
     mounted() {
@@ -395,6 +438,18 @@ export default {
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
         },
+        validateQR(item) {
+            this.errors = [];
+            // Check if the input matches the barcode
+            if (item.scannedQR && item.scannedQR !== item.variation.barcode.barcode) {
+                return swal({
+                    title: "Error",
+                    text: "QR code does not match the item",
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+        },
         getImageUrl(imageId) {
             // Check if the image is null
             if (!imageId) {
@@ -427,7 +482,7 @@ export default {
                 return this.image;
             }
             this.image =
-                this.public_url + "/storage/uploads/support_tickets/" + path;
+                this.public_url + "/storage/uploads/order/comments/attachments/" + path;
             return this.image;
         },
         isImage(attachment) {
@@ -440,7 +495,7 @@ export default {
                 return this.image;
             }
             this.image =
-                this.public_url + "/storage/uploads/support_tickets/" + path;
+                this.public_url + "/storage/uploads/order/comments/attachments/" + path;
             return this.image;
         },
         setProfile(path) {

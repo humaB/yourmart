@@ -35,6 +35,8 @@
                                                     <th>Gate Received Quantity</th>
                                                     <th>Already Received Quantity</th>
                                                     <th>Received Quantity</th>
+                                                    <th>Scan QR </th>
+                                                    <th>Generate QR</th>
                                                 </tr>
                                             </thead>
                                             <tbody v-if="details">
@@ -51,6 +53,14 @@
                                                              />
                                                              <span v-if="received[index] && received[index].qty > item.gate_received_quantity" style="color: red;">Received quantity cannot be greater than gate received quantity</span>
                                                     </td>
+                                                    <td>
+                                                        <input  type="text" class="form-control" placeholder="Please scan QR code here" @keyup="addedQr($event, index, item.id)">
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" @click="generateQRCode(index, received ,item.product, details.supplier)">
+                                                            Generate QR code
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -62,6 +72,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+
                         <button class="btn btn-primary" v-if="!loader"
                             @click="generatePass()">
                             Generate Gate Pass
@@ -76,6 +87,7 @@
     </div>
 </template>
 <script>
+import QRCode from 'qrcode';
 export default {
     name: 'StoreProductInwardPopup',
     props : ['details', 'loader'],
@@ -87,6 +99,7 @@ export default {
             },
             received: [],
             quantity: 0,
+            qrCodeDataUrl : ''
         };
     },
     methods: {
@@ -95,6 +108,32 @@ export default {
             if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
                 // 46 is dot
                 $event.preventDefault();
+            }
+        },
+        async generateQRCode(index, received, product, supplier) {
+            try {
+                // Get the first three characters of the product title and supplier's full name
+                const shortTitle = product.title.substring(0, 3);
+                const supplierTitle = supplier.full_name.substring(0, 3);
+
+                // Generate the QR code using the combined string
+                this.qrCodeDataUrl = await QRCode.toDataURL(`${supplierTitle}-${shortTitle}-${product.id}`);
+
+                      // Check if received array is defined and index is valid
+                if (received && Array.isArray(received) && received[index]) {
+                    // Store the generated QR code URL in the received array
+                    this.received[index].qrCodeDataUrl = `${supplierTitle}-${shortTitle}-${product.id}`
+                } else {
+                    alert('Please type some value in receiving column for this product')
+                    return;
+                }
+                // Open the QR code in a new tab
+                const newWindow = window.open();
+                newWindow.document.write(`<img src="${this.qrCodeDataUrl}" alt="QR Code">`);
+                newWindow.document.title = "QR Code";
+
+            } catch (error) {
+                console.error("Error generating QR code:", error);
             }
         },
         generatePass() {
@@ -120,8 +159,14 @@ export default {
                 this.received[index] = { qty: value, id };
             }
         },
-        close(){
+        addedQr(event, index, id) {
+            const value = event.target.value;
+            this.received[index].qrCodeDataUrl = value;
+            console.log(this.received);
 
+        },
+        close(){
+            vm.qrCodeDataUrl = ''
         }
     }
 }
