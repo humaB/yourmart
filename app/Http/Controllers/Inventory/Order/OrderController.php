@@ -82,27 +82,40 @@ class OrderController extends Controller
         $order = Order::with('items')->find($request->id);
 
         // Map roles to corresponding statuses
-        $activity = [
-            'order collection manager' => ['next' => 'inventory manager'],
-            'inventory manager' => ['next' => 'qc manager'],
-            'qc manager' => ['next' => 'packing & dispatch manager'],
-            'packing & dispatch manager' => ['next' => 'auditor'],
-            'auditor' => ['next' => null]
+        $statusMap = [
+            'order collection manager' => 1,    // Role for order collection
+            'inventory manager' => 2,  // Role for inventory issuance
+            'qc manager' => 3,         // Role for quality control
+            'packing & dispatch manager' => 4,    // Role for packing and dispatch
+            'auditor' => 5    // Role for audit
         ];
+
+        // Get current order status
+        $currentStatus = $order->status;
 
         // Check if user is admin
         if (auth()->user()->role === 'admin') {
             // Allow admin to forward to any role
-            return $nextRole = $request->next_role; // Assuming next_role is passed in the request
+            $nextStatus = $currentStatus + 1;
+            if ($nextStatus > max($statusMap)) {
+                $nextStatus = max($statusMap); // Prevent exceeding max status
+            }
         } else {
-            $nextRole = $activity[$userRole]['next'];
+            // Get user's role
+            $userRole = auth()->user()->role;
+
+            // Find next status based on user's role
+            $nextStatus = array_search($userRole, array_keys($statusMap)) + 1;
+            $nextStatus = $statusMap[array_search($nextStatus, $statusMap)] ?? $currentStatus;
         }
 
-        // Check if next role exists
-        if ($nextRole) {
-            // Update order status based on next role
-            $order->update(['status' => array_search($nextRole, array_column($activity, 'next'))]);
+        // Update order status
+        $order->update(['status' => $nextStatus]);
 
+        // Get next role based on next status
+        $nextRole = array_search($nextStatus, $statusMap);
+
+        if( $nextRole ){
             // Create activity log
             OrderActivity::create([
                 'order_id'  => $request->id,
