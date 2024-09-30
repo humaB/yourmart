@@ -14,6 +14,7 @@ use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
@@ -215,6 +216,13 @@ class OrderController extends Controller
                 ProductVariation::where('id', $product->product_variation_id)
                 ->increment('stock', $product->quantity);
             }
+
+            $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
+                'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+                'api_password' => 'Allah@001#',
+                'cn_numbers' => $order->tracking_number, // or 'XXYYYYYYYY,XXYYYYYYYY,XXYYYYYY'
+            ]);
+
         }else{
             $order->update(['status' => '6']);
             OrderActivity::create([
