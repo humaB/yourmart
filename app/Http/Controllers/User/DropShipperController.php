@@ -91,10 +91,10 @@ class DropShipperController extends Controller
                 'shipment_name'  => $dropshipper->full_name,
                 'shipment_email' => $dropshipper->email, // Optional, can be left empty
                 'shipment_phone' => $dropshipper->whatsapp_number,
-                'shipment_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad',
+                'shipment_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab',
                 'city_id' => '322',
                 'cnic' => $dropshipper->cnic, // Optional, can be left empty
-                'return_address' => 'aa-27 main boulevard, citi housing, samundri road, faisalabad', // Optional, can be left empty
+                'return_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab', // Optional, can be left empty
             ]);
 
             $leopard = 0;
