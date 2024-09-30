@@ -21,14 +21,14 @@ class OrderController extends Controller
     }
 
     public function fetchOrders(){
-        $userRole  = auth()->user()->role;
+        return $userRole  = auth()->user()->role;
           // Map roles to corresponding statuses
         $statusMap = [
             'order collection manager' => 0,    // Role for order collection
             'inventory manager' => 1,  // Role for inventory issuance
             'qc manager' => 2,         // Role for quality control
             'packing & dispatch manager' => 3,    // Role for packing and dispatch
-            'autidor'                   => 4    // Autidor
+            'auditor'                   => 4    // Autidor
         ];
 
 
@@ -87,7 +87,7 @@ class OrderController extends Controller
             'inventory manager' => ['next' => 'qc manager'],
             'qc manager' => ['next' => 'packing & dispatch manager'],
             'packing & dispatch manager' => ['next' => 'autidor'],
-            'autidor' => ['next' => null]
+            'auditor' => ['next' => null]
         ];
 
         $nextRole = $activity[$userRole]['next'];
