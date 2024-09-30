@@ -157,7 +157,7 @@ class OrderController extends Controller
                 }
             }
             else if($userRole == 'admin'){
-
+                return $order->status;
                 if( $order->status == '1'){
                     $issuance = StoreIssuance::create([
                         'order_id'  => $request->id,
