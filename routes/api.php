@@ -29,6 +29,7 @@ use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -236,6 +237,11 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
     });
 });
 
+Route::post('/web-hook/leopard',  function( Request $request ){
+    Log::info($request);
+    return "WEBHOOK RUNNING";
+});
+
 Route::prefix('accounts')->group(function () {
 
     Route::get('/{first}/second', [AccountController::class,'secondLevelOfFirst']);
@@ -258,7 +264,7 @@ Route::prefix('accounts')->group(function () {
             Route::get('/', [AccountHeadController::class,'accountHeadBanks']);
             Route::post('/update', [AccountHeadController::class,'headBankUpdate']);
         });
-        
+
         Route::prefix('cash')->group(function () {
             Route::post('/add', [AccountHeadController::class,'headCashStore']);
             Route::get('/', [AccountHeadController::class,'accountHeadCash']);
@@ -277,7 +283,7 @@ Route::prefix('accounts')->group(function () {
             Route::post('/do/approve', [BankTransactionController::class,'approveBankTransaction']);
             Route::post('/update', [BankTransactionController::class,'bankTransactionUpdate']);
         });
-        
+
         Route::prefix('cash-transactions')->group(function () {
             Route::post('/add', [CashTransactionController::class,'cashTransactionAdd']);
             Route::get('/', [CashTransactionController::class,'cashTransactions']);
@@ -286,7 +292,7 @@ Route::prefix('accounts')->group(function () {
             Route::post('/do/approve', [CashTransactionController::class,'approveCashTransaction']);
             Route::post('/update', [CashTransactionController::class,'cashTransactionUpdate']);
         });
-        
+
         Route::prefix('journal-transactions')->group(function () {
             Route::post('/add', [JournalTransactionController::class,'journalTransactionAdd']);
             Route::get('/', [JournalTransactionController::class,'journalTransactions']);
@@ -308,7 +314,7 @@ Route::prefix('accounts')->group(function () {
             Route::post('/daily/report', [FinanceReportController::class,'dailyReport']);
         });
     });
-    
+
 });
 
 //Http Exception
