@@ -71,7 +71,7 @@ class OrderController extends Controller
             'items.variation.color',
             'items.variation.size',
             'returns.details.variation.product',
-            'returns.details.variation.attachment',
+            'returns.details.variation.images.attachment',
             )->where('id', $request->id)->get();
 
         return (new ResponseCollection($orders))
