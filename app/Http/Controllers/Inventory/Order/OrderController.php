@@ -109,9 +109,6 @@ class OrderController extends Controller
             $nextStatus = $statusMap[array_search($nextStatus, $statusMap)] ?? $currentStatus;
         }
 
-        // Update order status
-        $order->update(['status' => $nextStatus]);
-
         // Get next role based on next status
         $nextRole = array_search($nextStatus, $statusMap);
 
