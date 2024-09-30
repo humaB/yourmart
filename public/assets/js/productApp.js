@@ -10686,9 +10686,9 @@ var render = function render() {
     }, [_vm._v("QC")]) : item.status == 3 ? _c("span", {
       staticClass: "badge badge-success"
     }, [_vm._v("Packing/Dispatch")]) : item.status == 4 ? _c("span", {
-      staticClass: "badge badge-success"
+      staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Audit")]) : item.status == 5 ? _c("span", {
-      staticClass: "badge badge-success"
+      staticClass: "badge badge-succes"
     }, [_vm._v("Dispatched")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {

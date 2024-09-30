@@ -34,8 +34,8 @@
                                                             <span class="badge badge-info text-dark" v-else-if="item.status == 1">Inventory Issuance</span>
                                                             <span class="badge badge-secondary" v-else-if="item.status == 2">QC</span>
                                                             <span class="badge badge-success" v-else-if="item.status == 3">Packing/Dispatch</span>
-                                                            <span class="badge badge-success" v-else-if="item.status == 4">Audit</span>
-                                                            <span class="badge badge-success" v-else-if="item.status == 5">Dispatched</span>
+                                                            <span class="badge badge-warning text-dark" v-else-if="item.status == 4">Audit</span>
+                                                            <span class="badge badge-succes" v-else-if="item.status == 5">Dispatched</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 6">Rejected</span>
                                                         </td>
                                                         <td>
