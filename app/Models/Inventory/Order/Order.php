@@ -73,6 +73,6 @@ class Order extends Model
     }
 
     public function returns(){
-        return $this->hasMany(StoreReturn::class);
+        return $this->hasOne(StoreReturn::class);
     }
 }
