@@ -22,6 +22,12 @@
                         <input type="text" class="form-control" v-model="internalLabel">
                     </div>
 
+                    <div class="col-md-12 mt-3">
+                        <label for=""><b>Our Charges <span class="text-danger">*</span></b></label>
+                        <input type="text" class="form-control" v-model="ourCharges">
+                        <small>This will be the amount charged by us as profit</small>
+                    </div>
+
                     <!-- Category Ranges -->
                     <div v-for="(range, index) in ranges" :key="index" class="col-md-12 mt-4">
                         <h6>Range {{ index + 1 }} (Max 3 ranges)</h6>
@@ -137,6 +143,7 @@ export default {
                     gst : ''
                 },
             ],
+            ourCharges : 0,
             testWeight: '',  // User input for weight
         }
     },
@@ -189,6 +196,7 @@ export default {
            fd.append('id', vm.details.id);
            fd.append('name', vm.name);
            fd.append('internalLabel', vm.internalLabel);
+           fd.append('ourCharges', vm.ourCharges)
            // Loop through the ranges array and append each range to FormData
             vm.ranges.forEach((range, index) => {
                 fd.append(`ranges[${index}][minimum_quantity]`, range.minimum_quantity);
@@ -268,6 +276,7 @@ export default {
         close(){
             this.name = '';
             this.internalLabel = '';
+            this.ourCharges = 0;
             this. ranges = [
                 {
                     minimum_quantity: '',

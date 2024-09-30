@@ -12,6 +12,7 @@ class CourierCategoryRange extends Model
     protected $table = 'courier_categories_ranges';
 
     protected $fillable = [
+        'our_charges',
         'category_id',
         'minimum_quantity',
         'maximum_quantity',

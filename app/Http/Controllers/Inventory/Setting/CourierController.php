@@ -158,6 +158,7 @@ class CourierController extends Controller
                     'courier_id'     => $request->input('id'),
                     'name'           => $request->input('name'),
                     'internal_label' => $request->input('internalLabel'),
+                    'our_charges'    => $request->input('ourCharges') ?? 0,
                     'description'    => $request->input('description') ?? '', // Assuming there's a description
                     'added_by'       => auth()->user()->id,
                 ]);
@@ -165,6 +166,7 @@ class CourierController extends Controller
                 // Loop through the ranges and create the related CourierCategoryRange records
                 foreach ($request->input('ranges') as $range) {
                     CourierCategoryRange::create([
+                        'our_charges'    => $request->input('ourCharges') ?? 0,
                         'category_id'      => $category->id,
                         'minimum_quantity' => $range['minimum_quantity'],
                         'maximum_quantity' => $range['maximum_quantity'],

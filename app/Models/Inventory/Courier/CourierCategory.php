@@ -13,6 +13,7 @@ class CourierCategory extends Model
         'courier_id',
         'name',
         'internal_label',
+        'our_charges',
         'description',
         'added_by'
     ];
