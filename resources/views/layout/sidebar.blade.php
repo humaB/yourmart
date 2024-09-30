@@ -31,7 +31,7 @@
         @include('layout.other_sidebar.inventory_sidebar')
     @endif
 
-    @if( auth()->user()->role == 'qc manager')
+    @if( auth()->user()->role == 'qc manger')
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 
