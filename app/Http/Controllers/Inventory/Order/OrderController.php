@@ -77,7 +77,7 @@ class OrderController extends Controller
 
     public function updateStatus( Request $request ){
 
-        return $userRole  = trim(auth()->user()->role);
+        $userRole  = trim(auth()->user()->role);
 
         $order = Order::with('items')->find($request->id);
 
