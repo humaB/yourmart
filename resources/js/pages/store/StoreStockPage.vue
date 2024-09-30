@@ -23,7 +23,7 @@
                                 <tbody>
                                     <tr v-for="(item,index) in products" :key="item.id">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ item.product.title || '-'}}</td>
+                                        <td>{{ item.product ? item.product.title : '-'}}</td>
                                         <td>{{ item.stock}}</td>
                                         <td>{{ item.barcode ? item.barcode.barcode : '-'}}</td>
                                     </tr>
