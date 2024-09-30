@@ -96,6 +96,14 @@ class StoreInwardController extends Controller
                 if( $product ){
                     $data = PurchaseOrderDetail::where('id', $product->id )->first();
                     if( $product->qty == 0 ){
+                        ProductQrCode::updateOrCreate(
+                            [
+                                'product_variation_id' => $data->product_variation_id,
+                            ],
+                            [
+                                'barcode' => $product->qrCodeDataUrl ?? '-',
+                            ]
+                        );
                         continue;
                     }
                     if ($data->gate_received_quantity >= $data->store_received_quantity + $product->qty) {
@@ -119,14 +127,7 @@ class StoreInwardController extends Controller
                             'added_by' => auth()->user()->id,
                         ]);
 
-                        ProductQrCode::updateOrCreate(
-                            [
-                                'product_variation_id' => $data->product_variation_id,
-                            ],
-                            [
-                                'barcode' => $product->qrCodeDataUrl ?? '-',
-                            ]
-                        );
+
 
                     }else{
                         return ( new ValidationCollection ( ['Quantity added should be less than Receiveable'] ) )
