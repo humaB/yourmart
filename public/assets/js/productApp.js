@@ -1238,6 +1238,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    calculateItemProfit: function calculateItemProfit(item) {
+      return (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
+    },
     fetchDropshipperDetails: function fetchDropshipperDetails(id) {
       this.$emit('fetchDropshipperDetails', {
         id: id

@@ -455,6 +455,9 @@ export default {
         }
     },
     methods: {
+        calculateItemProfit(item) {
+            return (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
+        },
         fetchDropshipperDetails( id ){
             this.$emit('fetchDropshipperDetails' , { id })
         },
