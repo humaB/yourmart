@@ -34,7 +34,7 @@ class Order extends Model
         'payment_proof_attachment',
         'selling_price',
         'packaging_price',
-        'status', // 0 => Dailer || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Courier || 6 => Rejected
+        'status', // 0 => Dailer || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Courier || 6 => Admin approval for Rejected || 7 => Rejected
         'tracking_number',
         'belongs_to',
     ];

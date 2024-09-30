@@ -10691,6 +10691,8 @@ var render = function render() {
       staticClass: "badge badge-succes"
     }, [_vm._v("Dispatched")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
+    }, [_vm._v("Rejection Under Review")]) : item.status == 7 ? _c("span", {
+      staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {

@@ -36,7 +36,8 @@
                                                             <span class="badge badge-success" v-else-if="item.status == 3">Packing/Dispatch</span>
                                                             <span class="badge badge-warning text-dark" v-else-if="item.status == 4">Audit</span>
                                                             <span class="badge badge-succes" v-else-if="item.status == 5">Dispatched</span>
-                                                            <span class="badge badge-danger" v-else-if="item.status == 6">Rejected</span>
+                                                            <span class="badge badge-danger" v-else-if="item.status == 6">Rejection Under Review</span>
+                                                            <span class="badge badge-danger" v-else-if="item.status == 7">Rejected</span>
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"

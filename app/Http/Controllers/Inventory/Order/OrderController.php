@@ -11,6 +11,8 @@ use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
+use App\Models\Inventory\Store\StoreReturn;
+use App\Models\Inventory\Store\StoreReturnDetail;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -183,14 +185,43 @@ class OrderController extends Controller
     public function reject( Request $request ){
 
         $order = Order::with('items')->find($request->id);
+        if( auth()->user()->role == 'admin'){
+            $order->update(['status' => '7']);
+            OrderActivity::create([
+                'order_id'  => $request->id,
+                'activity'  => 'Order rejected',
+                'added_by'  => auth()->user()->id,
+            ]);
 
-        $order->update(['status' => '6']);
+            $srn = StoreReturn::create([
+                'order_id'        => $order->id,
+                'dropshipper_id'  => $order->belongs_to,
+                'remarks'         => 'Rejected',
+                'added_by'        => auth()->user()->id
+            ]);
 
-        OrderActivity::create([
-            'order_id'  => $request->id,
-            'activity'  => 'Order Rejected',
-            'added_by'  => auth()->user()->id,
-        ]);
+            foreach($order->items as $product){
+                StoreReturnDetail::create([
+                    'srn_id'     => $srn->id,
+                    'product_id' => $product->product_variation_id,
+                    'quantity'   => $product->quantity,
+                    'price'      => $product->price,
+                    'total'      => (float)$product->quantity * (float)$product->price,
+                    'added_by'   => auth()->user()->id
+                ]);
+
+                ProductVariation::where('id', $product->product_variation_id)->increament('stock', $product->quantity);
+            }
+        }else{
+            $order->update(['status' => '6']);
+            OrderActivity::create([
+                'order_id'  => $request->id,
+                'activity'  => 'Order sent for final approval from admin to reject',
+                'added_by'  => auth()->user()->id,
+            ]);
+        }
+
+
 
         return response()->json(['message' => 'Order status updated successfully.'], 200);
 
