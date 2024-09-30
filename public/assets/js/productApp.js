@@ -10686,10 +10686,10 @@ var render = function render() {
     }, [_vm._v("QC")]) : item.status == 3 ? _c("span", {
       staticClass: "badge badge-success"
     }, [_vm._v("Packing/Dispatch")]) : item.status == 4 ? _c("span", {
-      staticClass: "badge badge-sucess"
+      staticClass: "badge badge-success"
     }, [_vm._v("Audit")]) : item.status == 5 ? _c("span", {
-      staticClass: "badge badge-sucess"
-    }, [_vm._v("Dispatch")]) : item.status == 6 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Dispatched")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
