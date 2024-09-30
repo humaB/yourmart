@@ -103,7 +103,6 @@ class OrderController extends Controller
         } else {
             // Get user's role
             $userRole = auth()->user()->role;
-
             // Find next status based on user's role
             $nextStatus = array_search($userRole, array_keys($statusMap)) + 1;
             $nextStatus = $statusMap[array_search($nextStatus, $statusMap)] ?? $currentStatus;
@@ -153,33 +152,32 @@ class OrderController extends Controller
                     ]);
                 }
             }
-            else if($userRole == 'admin'){
-                return $order->status;
-                if( $order->status == '1'){
-                    $issuance = StoreIssuance::create([
-                        'order_id'  => $request->id,
+
+        }     else if($userRole == 'admin'){
+
+            if( $order->status == '1'){
+                $issuance = StoreIssuance::create([
+                    'order_id'  => $request->id,
+                    'added_by'  => auth()->user()->id,
+                ]);
+                foreach( $order->items as $product ){
+                    $variation = ProductVariation::where('id', $product->product_variation_id)->first();
+                    $variation->decrement('stock', $product->quantity);
+
+                    StoreIssuanceDetail::create([
+                        'sin_id'     => $issuance->id,
+                        'product_id' => $variation->product_id,
+                        'quantity'   => $product->quantity,
+                        'price'      => $product->price,
+                        'total'      => (float)$product->quantity * (float)$product->price,
                         'added_by'  => auth()->user()->id,
                     ]);
-                    foreach( $order->items as $product ){
-                        $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                        $variation->decrement('stock', $product->quantity);
-
-                        StoreIssuanceDetail::create([
-                            'sin_id'     => $issuance->id,
-                            'product_id' => $variation->product_id,
-                            'quantity'   => $product->quantity,
-                            'price'      => $product->price,
-                            'total'      => (float)$product->quantity * (float)$product->price,
-                            'added_by'  => auth()->user()->id,
-                        ]);
-                    }
                 }
-
-                $order->increment('status');
             }
 
-            return response()->json(['message' => 'Order status updated successfully.'], 200);
+            $order->increment('status');
         }
+        return response()->json(['message' => 'Order status updated successfully.'], 200);
     }
 
     public function reject( Request $request ){
