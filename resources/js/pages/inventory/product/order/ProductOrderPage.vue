@@ -24,7 +24,9 @@
                                                 <tbody>
                                                     <tr v-for="(item, index) in orders" :key="item.id">
                                                         <td>{{ index + 1 }}</td>
-                                                        <td>{{ item.id }}</td>
+                                                        <td>
+                                                            {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
+                                                        </td>
                                                         <td>{{ item.user ? item.user.name : 'GUEST' }}</td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
                                                         <td>
@@ -138,7 +140,7 @@ export default {
         fetchDropshipperDetails( data ){
 
             let vm = this;
-   
+
             axios
             .post(this.api_url + "dropshippers/details", { id : data.id })
             .then((response) => {

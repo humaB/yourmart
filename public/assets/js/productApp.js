@@ -10677,7 +10677,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "GUEST"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "GUEST"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Order Collection")]) : item.status == 1 ? _c("span", {
       staticClass: "badge badge-info text-dark"
