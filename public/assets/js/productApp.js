@@ -1212,7 +1212,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalBasePrice: function totalBasePrice() {
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.packaging_cost)) * item.quantity;
+        return total + (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.packaging_cost))) * item.quantity;
       }, 0).toFixed(2) : 0;
     },
     totalPackagingCost: function totalPackagingCost() {
