@@ -50,7 +50,7 @@
                                                                     <img alt="image" :src="`${web_url}public/storage/uploads/dropshipper/${details.user.dropshipper.profile_image}`" width="100%" class="rounded-circle author-box-picture">
                                                                     <div class="clearfix"></div>
                                                                     <div class="author-box-name">
-                                                                        <a href="#">{{ details.user.dropshipper.full_name  }}</a>
+                                                                        <a href="#" @click="fetchDropshipperDetails(details.user.dropshipper.id)" data-toggle="modal" data-target="#dropShipperDetail">{{ details.user.dropshipper.full_name  }}</a>
                                                                         <div class="author-box-job">{{ details.user.dropshipper.whatsapp_number  }}</div>
                                                                     </div>
                                                                 </div>
@@ -449,6 +449,9 @@ export default {
         }
     },
     methods: {
+        fetchDropshipperDetails( id ){
+            this.$emit('fetchDropshipperDetails' , { id })
+        },
         formatPrice: function formatPrice(price) {
             var string = parseFloat(price).toString();
             return string

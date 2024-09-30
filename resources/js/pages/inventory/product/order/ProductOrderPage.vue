@@ -64,6 +64,10 @@
             @addComment="addComment($event)"
             @forward="forward($event)"
             @reject="reject($event)"
+            @fetchDropshipperDetails="fetchDropshipperDetails($event)"
+        />
+        <DropshipperDetails
+            :details="dropShipperDetails"
         />
     </div>
 </template>
@@ -73,13 +77,15 @@ import { BulletListLoader } from "vue-content-loader";
 import moment from "moment";
 import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
 import OrderDetailView from "../../../../components/inventory/product/order/OrderDetailView.vue";
+import DropshipperDetails from "../../../../components/admin/request/DropshipperDetails.vue";
 
 export default {
     name: 'ProductOrderPage',
     components: {
         TableHeader,
         BulletListLoader,
-        OrderDetailView
+        OrderDetailView,
+        DropshipperDetails
     },
     data() {
         return {
@@ -95,7 +101,8 @@ export default {
             details: {},
             commentLoader : false,
             rejectLoader : false,
-            role : ''
+            role : '',
+            dropShipperDetails : {}
         };
     },
     created() {
@@ -127,6 +134,17 @@ export default {
                 .then((response) => {
                     vm.details = response.data.response[0]
                 });
+        },
+        fetchDropshipperDetails( data ){
+
+            let vm = this;
+   
+            axios
+            .post(this.api_url + "dropshippers/details", { id : data.id })
+            .then((response) => {
+                    vm.dropShipperDetails = response.data.response[0]
+             });
+
         },
         forward( data ){
             let vm = this;
