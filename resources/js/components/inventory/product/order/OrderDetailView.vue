@@ -181,6 +181,7 @@
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
+                                                                <td></td>
                                                                 <td><b>Total</b></td>
                                                                 <td><!-- Total quantity (if needed) --></td>
                                                                 <td><!-- Total net cost (calculated below) --></td>
