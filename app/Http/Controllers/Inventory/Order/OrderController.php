@@ -158,7 +158,7 @@ class OrderController extends Controller
             }
             else if($userRole == 'admin'){
 
-                if( $order->status == 1){
+                if( $order->status == '1'){
                     $issuance = StoreIssuance::create([
                         'order_id'  => $request->id,
                         'added_by'  => auth()->user()->id,
