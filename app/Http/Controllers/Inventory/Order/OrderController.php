@@ -21,7 +21,7 @@ class OrderController extends Controller
     }
 
     public function fetchOrders(){
-        return $userRole  = auth()->user()->role;
+        $userRole  = auth()->user()->role;
           // Map roles to corresponding statuses
         $statusMap = [
             'order collection manager' => 0,    // Role for order collection
