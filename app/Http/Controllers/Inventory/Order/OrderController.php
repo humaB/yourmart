@@ -86,21 +86,29 @@ class OrderController extends Controller
             'order collection manager' => ['next' => 'inventory manager'],
             'inventory manager' => ['next' => 'qc manager'],
             'qc manager' => ['next' => 'packing & dispatch manager'],
-            'packing & dispatch manager' => ['next' => 'autidor'],
+            'packing & dispatch manager' => ['next' => 'auditor'],
             'auditor' => ['next' => null]
         ];
 
-        $nextRole = $activity[$userRole]['next'];
+        // Check if user is admin
+        if (auth()->user()->role === 'admin') {
+            // Allow admin to forward to any role
+            $nextRole = $request->next_role; // Assuming next_role is passed in the request
+        } else {
+            $nextRole = $activity[$userRole]['next'];
+        }
 
         // Check if next role exists
         if ($nextRole) {
+            // Update order status based on next role
+            $order->update(['status' => array_search($nextRole, array_column($activity, 'next'))]);
+
+            // Create activity log
             OrderActivity::create([
                 'order_id'  => $request->id,
                 'activity'  => 'Order sent to '.$nextRole,
                 'added_by'  => auth()->user()->id,
             ]);
-        } else {
-            // Handle case where no next role exists
         }
 
          // Map roles to corresponding statuses
@@ -156,7 +164,7 @@ class OrderController extends Controller
                         ]);
                     }
                 }
-                
+
                 $order->increment('status');
             }
 
