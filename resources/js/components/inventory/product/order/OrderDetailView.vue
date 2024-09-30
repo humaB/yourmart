@@ -34,13 +34,31 @@
                                                 <div class="card-header">
                                                     <h5>Customer Information</h5>
                                                 </div>
-                                                <div class="card-body">
-                                                    <p><strong>Name:</strong> {{ details.customer_name }}</p>
-                                                    <p><strong>Address:</strong> {{ details.address }}</p>
-                                                    <p><strong>Phone Number 1:</strong> {{ details.phone_number }}</p>
-                                                    <p><strong>Phone Number 2:</strong> {{ details.phone_number2 }}</p>
-                                                    <p><strong>City:</strong> {{ details.city ? details.city.name : ''
-                                                        }}</p>
+                                                <div class="card-body row">
+                                                    <div class="col-md-8">
+                                                        <p><strong>Name:</strong> {{ details.customer_name }}</p>
+                                                        <p><strong>Address:</strong> {{ details.address }}</p>
+                                                        <p><strong>Phone Number 1:</strong> {{ details.phone_number }}</p>
+                                                        <p><strong>Phone Number 2:</strong> {{ details.phone_number2 }}</p>
+                                                        <p><strong>City:</strong> {{ details.city ? details.city.name : ''
+                                                            }}</p>
+                                                    </div>
+                                                    <div class="col-md-4" v-if="details.user && details.user.dropshipper">
+                                                        <div class="card author-box">
+                                                            <div class="card-body">
+                                                                <div class="author-box-center">
+                                                                    <img alt="image" :src="`${web_url}public/storage/uploads/dropshipper/${details.user.dropshipper.profile_image}`" width="100%" class="rounded-circle author-box-picture">
+                                                                    <div class="clearfix"></div>
+                                                                    <div class="author-box-name">
+                                                                        <a href="#">{{ details.user.dropshipper.full_name  }}</a>
+                                                                        <div class="author-box-job">{{ details.user.dropshipper.whatsapp_number  }}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -180,26 +198,24 @@
                                         <div class="attachment-mail">
                                             <p>
                                                 <span>
-                                                    <i class="fa fa-paperclip"></i> {{ details.attachments ?
-                                                    details.attachments.length : 0 }} attachments — </span>
+                                                    <i class="fa fa-paperclip"></i> 1 attachments — </span>
                                                 <a href="#">Download all attachments</a>
                                             </p>
-                                            <div class="row"
-                                                v-if="details.attachments && details.attachments.length > 0">
-                                                <div class="col-md-2" v-for="item in details.attachments"
-                                                    :key="item.id">
-                                                    <a target="_blank" :href="setImage(item.attachment)">
+                                            <div class="row" v-if="details.payment_proof_attachment">
+                                                <div class="col-md-2">
+                                                    <a target="_blank" :href="setImage(details.payment_proof_attachment)">
                                                         <img class="img-thumbnail img-responsive"
-                                                            v-if="isImage(item.attachment)" alt="attachment"
-                                                            :src="setImage(item.attachment)">
-                                                        <i v-else class="img-thumbnail img-responsive fas fa-file p-5"
-                                                            style="color: red;"></i>
+                                                            alt="attachment"
+                                                            :src="`${web_url}public/storage/uploads/payments/${details.payment_proof_attachment}`">
                                                     </a>
-                                                    <a class="name" :href="setImage(item.attachment)" target="_blank">
-                                                        {{ truncatedAttachmentName(item.attachment) }}
+                                                    <a class="name"
+                                                    :href="`${web_url}public/storage/uploads/payments/${details.payment_proof_attachment}`"
+                                                    target="_blank">
+                                                        {{ truncatedAttachmentName(details.payment_proof_attachment) }}
                                                     </a>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -380,6 +396,7 @@ export default {
             cursorPosition: 0,
             highlightedIndex: -1,
             taggedUsers: [],
+            web_url : process.env.MIX_WEB_URL,
         }
     },
     mounted() {
@@ -521,10 +538,7 @@ export default {
         },
         truncatedAttachmentName(attachment) {
             const maxLength = 20; // Set your desired max length here
-            if (attachment.length > maxLength) {
-                return attachment.substring(0, maxLength) + '...';
-            }
-            return attachment;
+            return attachment.substring(0, maxLength) + '...';
         },
         close() {
             let vm = this;

@@ -1148,7 +1148,8 @@ __webpack_require__.r(__webpack_exports__);
       tagSearchQuery: '',
       cursorPosition: 0,
       highlightedIndex: -1,
-      taggedUsers: []
+      taggedUsers: [],
+      web_url: "https://yourmart.pk/"
     };
   },
   mounted: function mounted() {
@@ -1289,10 +1290,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     truncatedAttachmentName: function truncatedAttachmentName(attachment) {
       var maxLength = 20; // Set your desired max length here
-      if (attachment.length > maxLength) {
-        return attachment.substring(0, maxLength) + '...';
-      }
-      return attachment;
+      return attachment.substring(0, maxLength) + '...';
     },
     close: function close() {
       var vm = this;
@@ -6984,8 +6982,35 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card mb-3"
   }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-8"
+  }, [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("div", {
+    staticClass: "card author-box"
+  }, [_c("div", {
     staticClass: "card-body"
-  }, [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))])])]), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "author-box-center"
+  }, [_c("img", {
+    staticClass: "rounded-circle author-box-picture",
+    attrs: {
+      alt: "image",
+      src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.user.dropshipper.profile_image),
+      width: "100%"
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "clearfix"
+  }), _vm._v(" "), _c("div", {
+    staticClass: "author-box-name"
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v(_vm._s(_vm.details.user.dropshipper.full_name))]), _vm._v(" "), _c("div", {
+    staticClass: "author-box-job"
+  }, [_vm._v(_vm._s(_vm.details.user.dropshipper.whatsapp_number))])])])])])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "card mb-3"
   }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-body"
@@ -7050,42 +7075,28 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalNetProfit))])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
-  }, [_c("p", [_c("span", [_c("i", {
-    staticClass: "fa fa-paperclip"
-  }), _vm._v(" " + _vm._s(_vm.details.attachments ? _vm.details.attachments.length : 0) + " attachments — ")]), _vm._v(" "), _c("a", {
-    attrs: {
-      href: "#"
-    }
-  }, [_vm._v("Download all attachments")])]), _vm._v(" "), _vm.details.attachments && _vm.details.attachments.length > 0 ? _c("div", {
+  }, [_vm._m(9), _vm._v(" "), _vm.details.payment_proof_attachment ? _c("div", {
     staticClass: "row"
-  }, _vm._l(_vm.details.attachments, function (item) {
-    return _c("div", {
-      key: item.id,
-      staticClass: "col-md-2"
-    }, [_c("a", {
-      attrs: {
-        target: "_blank",
-        href: _vm.setImage(item.attachment)
-      }
-    }, [_vm.isImage(item.attachment) ? _c("img", {
-      staticClass: "img-thumbnail img-responsive",
-      attrs: {
-        alt: "attachment",
-        src: _vm.setImage(item.attachment)
-      }
-    }) : _c("i", {
-      staticClass: "img-thumbnail img-responsive fas fa-file p-5",
-      staticStyle: {
-        color: "red"
-      }
-    })]), _vm._v(" "), _c("a", {
-      staticClass: "name",
-      attrs: {
-        href: _vm.setImage(item.attachment),
-        target: "_blank"
-      }
-    }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(item.attachment)) + "\n                                                ")])]);
-  }), 0) : _vm._e()])])])]), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "col-md-2"
+  }, [_c("a", {
+    attrs: {
+      target: "_blank",
+      href: _vm.setImage(_vm.details.payment_proof_attachment)
+    }
+  }, [_c("img", {
+    staticClass: "img-thumbnail img-responsive",
+    attrs: {
+      alt: "attachment",
+      src: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment)
+    }
+  })]), _vm._v(" "), _c("a", {
+    staticClass: "name",
+    attrs: {
+      href: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment),
+      target: "_blank"
+    }
+  }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])])]) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
@@ -7252,11 +7263,11 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(10), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+  }, [_vm._m(11), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -7389,6 +7400,16 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("td", [_c("b", [_vm._v("Total")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("p", [_c("span", [_c("i", {
+    staticClass: "fa fa-paperclip"
+  }), _vm._v(" 1 attachments — ")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("Download all attachments")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

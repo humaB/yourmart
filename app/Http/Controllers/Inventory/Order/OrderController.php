@@ -58,7 +58,7 @@ class OrderController extends Controller
         $orders = Order::with(
             'city',
             'shop',
-            'user',
+            'user.dropshipper',
             'courier',
             'activity.user:id,name',
             'range.category',

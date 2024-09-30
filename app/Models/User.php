@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User\DropShipper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -62,5 +63,9 @@ class User extends Authenticatable
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function dropshipper(){
+        return $this->hasOne(DropShipper::class, 'user_id', 'id');
     }
 }
