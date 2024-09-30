@@ -94,7 +94,6 @@ class StoreInwardController extends Controller
 
             foreach( $products as $product ){
                 if( $product ){
-                    return $product;
                     $data = PurchaseOrderDetail::where('id', $product->id )->first();
                     if( $product->qty == 0 ){
                         continue;
