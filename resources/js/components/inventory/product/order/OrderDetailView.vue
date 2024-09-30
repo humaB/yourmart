@@ -197,7 +197,7 @@
                                             </div>
 
                                                    <!-- Order Retuns -->
-                                                   <div class="card" v-if="details.returns && details.returns.length > 0">
+                                                   <div class="card" v-if="details.returns">
                                                     <div class="card-header">
                                                         <h5>Items</h5>
                                                     </div>
@@ -234,7 +234,7 @@
 
                                                                 </tr>
                                                             </tbody>
-                                                          
+
                                                         </table>
                                                     </div>
                                                 </div>

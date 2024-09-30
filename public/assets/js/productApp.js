@@ -7363,7 +7363,7 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalSellPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.totalNetProfit))])])])])])]), _vm._v(" "), _vm.details.returns && _vm.details.returns.length > 0 ? _c("div", {
+  }, [_vm._v(_vm._s(_vm.totalNetProfit))])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
     staticClass: "card"
   }, [_vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "card-body"
