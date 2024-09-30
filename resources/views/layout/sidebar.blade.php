@@ -35,6 +35,10 @@
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 
+    @if( auth()->user()->role == 'audit')
+        @include('layout.other_sidebar.dailer_sidebar')
+    @endif
+
     @if( auth()->user()->role == 'packing & dispatch manager')
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
