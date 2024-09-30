@@ -320,7 +320,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       if (value > remainingQuantity) {
         this.received[index] = {
           qty: remainingQuantity,
-          id: id
+          id: id,
+          qrCodeDataUrl: qrCodeDataUrl
         };
         return swal({
           title: "Error",
@@ -331,17 +332,34 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       } else {
         this.received[index] = {
           qty: value,
-          id: id
+          id: id,
+          qrCodeDataUrl: qrCodeDataUrl
         };
       }
     },
     addedQr: function addedQr(event, index, id) {
       var value = event.target.value;
       this.received[index].qrCodeDataUrl = value;
-      console.log(this.received);
     },
     close: function close() {
       vm.qrCodeDataUrl = '';
+    }
+  },
+  watch: {
+    'details.details': {
+      handler: function handler(newValue) {
+        this.received = newValue.map(function (item) {
+          return {
+            qty: 0,
+            // initialize with a default value
+            id: item.id,
+            qrCodeDataUrl: '' // initialize with a default value
+          };
+        });
+      },
+      immediate: true,
+      // run handler when component is created
+      deep: true // watch nested properties
     }
   }
 });

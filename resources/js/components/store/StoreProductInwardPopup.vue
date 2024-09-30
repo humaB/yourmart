@@ -148,7 +148,7 @@ export default {
             const value = event.target.value;
             const remainingQuantity = this.details.details[index].gate_received_quantity - this.details.details[index].store_received_quantity;
             if (value > remainingQuantity) {
-                this.received[index] = { qty: remainingQuantity, id };
+                this.received[index] = { qty: remainingQuantity, id , qrCodeDataUrl };
                 return swal({
                         title: "Error",
                         text: "Received quantity cannot be greater than remaining quantity",
@@ -156,18 +156,29 @@ export default {
                         timer: 3000,
                     });
             } else {
-                this.received[index] = { qty: value, id };
+                this.received[index] = { qty: value, id , qrCodeDataUrl};
             }
         },
         addedQr(event, index, id) {
             const value = event.target.value;
             this.received[index].qrCodeDataUrl = value;
-            console.log(this.received);
-
         },
         close(){
             vm.qrCodeDataUrl = ''
         }
+    },
+    watch: {
+    'details.details': {
+        handler(newValue) {
+        this.received = newValue.map((item) => ({
+            qty: 0, // initialize with a default value
+            id: item.id,
+            qrCodeDataUrl: '', // initialize with a default value
+        }));
+        },
+        immediate: true, // run handler when component is created
+        deep: true, // watch nested properties
+    },
     }
 }
 </script>
