@@ -210,7 +210,8 @@ class OrderController extends Controller
                     'added_by'   => auth()->user()->id
                 ]);
 
-                ProductVariation::where('id', $product->product_variation_id)->increment('stock', $product->quantity);
+                ProductVariation::where('id', $product->product_variation_id)
+                ->increment('stock', $product->quantity);
             }
         }else{
             $order->update(['status' => '6']);
