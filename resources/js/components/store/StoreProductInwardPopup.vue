@@ -148,9 +148,8 @@ export default {
             const value = event.target.value;
             const remainingQuantity = this.details.details[index].gate_received_quantity - this.details.details[index].store_received_quantity;
             if (value > remainingQuantity) {
-                this.received[index] = { qty: remainingQuantity, id , qrCodeDataUrl };
-                console.log(this.received[index]);
-
+                this.received[index] = { qty: remainingQuantity, id  };
+                
                 return swal({
                         title: "Error",
                         text: "Received quantity cannot be greater than remaining quantity",
@@ -158,7 +157,7 @@ export default {
                         timer: 3000,
                     });
             } else {
-                this.received[index] = { qty: value, id , qrCodeDataUrl};
+                this.received[index] = { qty: value, id };
             }
         },
         addedQr(event, index, id) {

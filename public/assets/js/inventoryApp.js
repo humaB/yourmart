@@ -320,10 +320,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       if (value > remainingQuantity) {
         this.received[index] = {
           qty: remainingQuantity,
-          id: id,
-          qrCodeDataUrl: qrCodeDataUrl
+          id: id
         };
-        console.log(this.received[index]);
         return swal({
           title: "Error",
           text: "Received quantity cannot be greater than remaining quantity",
@@ -333,8 +331,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       } else {
         this.received[index] = {
           qty: value,
-          id: id,
-          qrCodeDataUrl: qrCodeDataUrl
+          id: id
         };
       }
     },
