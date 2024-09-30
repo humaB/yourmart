@@ -124,7 +124,7 @@ class StoreInwardController extends Controller
                                 'product_variation_id' => $data->product_variation_id,
                             ],
                             [
-                                'barcode' => $product->qrCodeDataUrl,
+                                'barcode' => $product->qrCodeDataUrl ?? '-',
                             ]
                         );
 
