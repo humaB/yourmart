@@ -10226,7 +10226,7 @@ var render = function render() {
       staticClass: "badge badge-sm badge-danger"
     }, [_vm._v("In Trash")]) : _vm._e(), _vm._v(" "), _c("br"), _vm._v("\n                                                            " + _vm._s(item.title) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.sku))]), _vm._v(" "), _c("td", [item.variation.stock > 0 ? _c("p", {
       staticClass: "text-success"
-    }, [_vm._v("In stock")]) : _vm._e(), _vm._v(" "), item.variation.stock == 0 ? _c("p", {
+    }, [_vm._v("In stock " + _vm._s(item.variation.stock))]) : _vm._e(), _vm._v(" "), item.variation.stock == 0 ? _c("p", {
       staticClass: "text-danger"
     }, [_vm._v("Out of stock")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("del", [_vm._v("PKR " + _vm._s(item.variation.regular_price))]), _c("br"), _vm._v("\n                                                            PKR " + _vm._s(item.variation.sale_price) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(item.category.name) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(_vm.formattedTags(item.tags)) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
       staticClass: "d-flex"

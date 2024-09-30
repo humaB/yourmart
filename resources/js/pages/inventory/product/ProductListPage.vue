@@ -147,7 +147,7 @@
                                                             </td>
                                                             <td>{{ item.variation.sku }}</td>
                                                             <td>
-                                                                <p class="text-success" v-if="item.variation.stock > 0 ">In stock</p>
+                                                                <p class="text-success" v-if="item.variation.stock > 0 ">In stock {{ item.variation.stock }}</p>
                                                                 <p class="text-danger" v-if="item.variation.stock == 0 ">Out of stock</p>
                                                             </td>
                                                             <td>
