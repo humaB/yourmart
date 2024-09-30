@@ -429,9 +429,9 @@ export default {
             }, 0).toFixed(2) : 0;
         },
         totalBasePrice() {
-            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.packaging_cost)) ) * parseFloat(item.quantity);
-            }, 0).toFixed(2) : 0;
+        return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+            return total + this.calculateItemProfit(item);
+        }, 0).toFixed(2) : 0;
         },
         totalPackagingCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {

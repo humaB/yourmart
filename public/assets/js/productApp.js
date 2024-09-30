@@ -1211,8 +1211,9 @@ __webpack_require__.r(__webpack_exports__);
       }, 0).toFixed(2) : 0;
     },
     totalBasePrice: function totalBasePrice() {
+      var _this2 = this;
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.packaging_cost))) * parseFloat(item.quantity);
+        return total + _this2.calculateItemProfit(item);
       }, 0).toFixed(2) : 0;
     },
     totalPackagingCost: function totalPackagingCost() {
