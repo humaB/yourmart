@@ -45,7 +45,7 @@ class StoreInwardController extends Controller
 
     public function fetchStock(){
 
-        $data = ProductVariation::with('product')->where('stock', '!=', 0 )->get();
+        $data = ProductVariation::with('product' , 'barcode')->where('stock', '!=', 0 )->get();
 
         return (new ResponseCollection($data))
         ->response()

@@ -2379,7 +2379,7 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product.title || "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product.title || "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.barcode ? item.barcode.barcode : "-"))])]);
   }), 0)])])])])])])], 1)])])]);
 };
 var staticRenderFns = [function () {

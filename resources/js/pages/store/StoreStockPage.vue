@@ -25,6 +25,7 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.product.title || '-'}}</td>
                                         <td>{{ item.stock}}</td>
+                                        <td>{{ item.barcode ? item.barcode.barcode : '-'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
