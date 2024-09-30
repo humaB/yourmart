@@ -149,6 +149,8 @@ export default {
             const remainingQuantity = this.details.details[index].gate_received_quantity - this.details.details[index].store_received_quantity;
             if (value > remainingQuantity) {
                 this.received[index] = { qty: remainingQuantity, id , qrCodeDataUrl };
+                console.log(this.received[index]);
+
                 return swal({
                         title: "Error",
                         text: "Received quantity cannot be greater than remaining quantity",
@@ -170,11 +172,11 @@ export default {
     watch: {
     'details.details': {
         handler(newValue) {
-        this.received = newValue.map((item) => ({
-            qty: 0, // initialize with a default value
-            id: item.id,
-            qrCodeDataUrl: '', // initialize with a default value
-        }));
+            this.received = newValue.map((item) => ({
+                qty: 0, // initialize with a default value
+                id: item.id,
+                qrCodeDataUrl: '', // initialize with a default value
+            }));
         },
         immediate: true, // run handler when component is created
         deep: true, // watch nested properties

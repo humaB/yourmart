@@ -323,6 +323,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           id: id,
           qrCodeDataUrl: qrCodeDataUrl
         };
+        console.log(this.received[index]);
         return swal({
           title: "Error",
           text: "Received quantity cannot be greater than remaining quantity",
