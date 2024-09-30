@@ -184,7 +184,7 @@
                                                                 <td></td>
                                                                 <td><b>Total</b></td>
                                                                 <td><!-- Total quantity (if needed) --></td>
-                                                                <td><!-- Total net cost (calculated below) --></td>
+                                                                <td class="h5">{{ totalBasePrice }}</td>
                                                                 <td class="h5">{{ totalPackagingCost }}</td>
                                                                 <td class="h5">{{ totalCourierCost }}</td>
                                                                 <td class="h5">{{ totalPrice }}</td>
@@ -426,6 +426,11 @@ export default {
         totalPrice() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + parseFloat(item.price) * item.quantity;
+            }, 0).toFixed(2) : 0;
+        },
+        totalBasePrice() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.packaging_cost)) * item.quantity;
             }, 0).toFixed(2) : 0;
         },
         totalPackagingCost() {
