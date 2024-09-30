@@ -93,7 +93,7 @@ class OrderController extends Controller
         // Check if user is admin
         if (auth()->user()->role === 'admin') {
             // Allow admin to forward to any role
-            $nextRole = $request->next_role; // Assuming next_role is passed in the request
+            return $nextRole = $request->next_role; // Assuming next_role is passed in the request
         } else {
             $nextRole = $activity[$userRole]['next'];
         }
