@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory\Store;
 
+use App\Models\Inventory\Product\Variation\ProductVariation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,5 +20,9 @@ class StoreReturnDetail extends Model
         'total',
         'added_by',
     ];
+
+    public function variation(){
+        return $this->belongsTo(ProductVariation::class, 'product_id', 'id');
+    }
 
 }

@@ -195,6 +195,49 @@
                                                     </table>
                                                 </div>
                                             </div>
+
+                                                   <!-- Order Retuns -->
+                                                   <div class="card" v-if="details.returns && details.returns.length > 0">
+                                                    <div class="card-header">
+                                                        <h5>Items</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <table class="table table-bordered">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Product</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Price</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="item in details.returns.details" :key="item.id">
+                                                                    <td class="text-truncate" v-if="item.variation">
+                                                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                                          <li class="team-member team-member-sm">
+                                                                            <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
+                                                                              <img class="rounded-circle" :src="getImageUrl(item.variation.images[0].attachment.attachment)">
+                                                                            </a>
+                                                                          </li>
+                                                                        </ul>
+                                                                      </td>
+                                                                    <td>
+                                                                        <b>SKU : </b>{{ item.variation.sku  }}<br>
+                                                                        <b>Title : </b>{{ item.variation.product.title }}<br>
+                                                                        <b>Description : </b>{{ item.variation.product.short_description }}<br>
+                                                                        <b>Color : </b>{{ item.variation.color ?item.variation.color.name : '-'  }}<br>
+                                                                        <b>Size : </b>{{ item.variation.size ?item.variation.size.name : '-'  }}
+                                                                    </td>
+                                                                    <td>{{ item.quantity }}</td>
+                                                                    <td>{{ parseFloat(item.quantity) *( parseFloat(item.price)  ) }}</td>
+
+                                                                </tr>
+                                                            </tbody>
+                                                          
+                                                        </table>
+                                                    </div>
+                                                </div>
                                         </div>
                                         <div class="attachment-mail">
                                             <p>
