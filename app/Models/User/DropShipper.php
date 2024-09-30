@@ -2,7 +2,7 @@
 
 namespace App\Models\User;
 
-use App\Models\Bank;
+use App\Models\CustomerBank;
 use App\Models\City;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -49,7 +49,7 @@ class DropShipper extends Model
     }
 
     public function bank(){
-        return $this->hasOne(Bank::class,'id','bank_id');
+        return $this->hasOne(CustomerBank::class,'id','bank_id');
     }
 
     public function shops(){

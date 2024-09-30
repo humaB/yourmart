@@ -1,0 +1,325 @@
+<?php
+
+namespace App\Http\Controllers\Account;
+
+use App\Models\Account\Account;
+use App\Models\Account\AccountGroup;
+use App\Models\Account\AccountHead;
+use App\Models\Account\Bank;
+use App\Models\Account\Cash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\ActivityLog;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+use Exception;
+use Illuminate\Routing\Controller as BaseController;
+
+class AccountHeadController extends BaseController
+{
+
+    public function headIndex(Request $request)
+    {
+        return view('account.head');
+    }
+    
+    public function headBankIndex(Request $request)
+    {
+        return view('account.head_bank');
+    }
+    
+    public function headCashIndex(Request $request)
+    {
+        return view('account.head_cash');
+    }
+
+    public function accountHeads(Request $request)
+    {
+        $firstLevel = Account::where('parent_id' , '=' ,'0')->get(["id","name as text"]);
+       
+        $accountHeads = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code")
+        ->latest('id')
+        ->where(["company_id"=>Auth::user()->company_id])->get();
+
+        return [
+            "firstLevel" => $firstLevel,
+            "accountHeads" => $accountHeads,
+        ];
+    }
+
+    public function headStore(Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
+            ],
+            'first_level' => [
+                'required',
+            ],
+            'second_level' => [
+                'required',
+            ],
+            'third_level' => [
+                'required',
+            ],
+            'fourth_level' => [
+                'required',
+            ],
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            $this->accountHeadCreate( 
+                $request->name,
+                $request->first_level,
+                $request->second_level,
+                $request->third_level,
+                $request->fourth_level
+            );
+
+
+            DB::commit();
+            return response()->json([],201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Database transaction error: ' . $e->getMessage());
+            return response()->json(["errors" => ["Error" => ['An error occurred during the database transaction.']]], 422);
+        }
+
+    }
+    
+    public function headUpdate(Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
+            ],
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            AccountHead::where("id",$request->id)->update([
+                'name' => strtoupper($request->name),
+                'updated_by' => Auth::user()->id,
+            ]);
+
+
+            DB::commit();
+            return response()->json([],200);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Database transaction error: ' . $e->getMessage());
+            return response()->json(["errors" => ["Error" => ['An error occurred during the database transaction.']]], 422);
+        }
+
+    }
+
+    public function accountHeadBanks(Request $request)
+    {  
+        $accountHeadBanks = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_bank")
+        ->latest('id')
+        ->where(["company_id"=>Auth::user()->company_id,"group_id"=>31])->get();
+
+        return [
+            "accountHeadBanks" => $accountHeadBanks,
+        ];
+    }
+
+    public function headBankStore(Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
+            ],
+            'address' => [
+                'required',
+            ],
+            'iban' => [
+                'required',
+            ],
+            'account_number' => [
+                'required',
+            ],
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            $head = $this->accountHeadCreate( 
+                $request->name,
+                1, // Asset
+                6, // Current asset
+                29, // Cash and bank balances
+                31, // Bank current account
+            );
+
+            Bank::create([
+                "name" => $request->name,
+                "address" => $request->address,
+                "iban" => $request->iban,
+                "account_number" => $request->account_number,
+                "balance" => 0,
+                "status" => "active",
+                "account_head_id" => $head->id,
+                'added_by' => Auth::user()->id,
+                "company_id" => Auth::user()->company_id
+            ]);
+
+
+            DB::commit();
+            return response()->json([],201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Database transaction error: ' . $e->getMessage());
+            return response()->json(["errors" => ["Error" => ['An error occurred during the database transaction.']]], 422);
+        }
+
+    }
+    
+    public function headBankUpdate(Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
+            ],
+            'head_bank.address' => [
+                'required',
+            ],
+            'head_bank.iban' => [
+                'required',
+            ],
+            'head_bank.account_number' => [
+                'required',
+            ],
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            AccountHead::where("id",$request->id)->update([
+                'name' => strtoupper($request->name),
+                'updated_by' => Auth::user()->id,
+            ]);
+
+            Bank::where("account_head_id",$request->id)->update([
+                "name" => $request->name,
+                "address" => $request->head_bank['address'],
+                "iban" => $request->head_bank['iban'],
+                "account_number" => $request->head_bank['account_number'],
+                'updated_by' => Auth::user()->id,
+            ]);
+
+
+            DB::commit();
+            return response()->json([],200);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Database transaction error: ' . $e->getMessage());
+            return response()->json(["errors" => ["Error" => ['An error occurred during the database transaction.']]], 422);
+        }
+
+    }
+    
+    public function accountHeadCash(Request $request)
+    {  
+        $accountHeadCash = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_cash")
+        ->latest('id')
+        ->where(["company_id"=>Auth::user()->company_id,"group_id"=>30])->get();
+
+        return [
+            "accountHeadCash" => $accountHeadCash,
+        ];
+    }
+
+    public function headCashStore(Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
+            ],
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            $head = $this->accountHeadCreate( 
+                $request->name,
+                1, // Asset
+                6, // Current asset
+                29, // Cash and bank balances
+                30, // Cash ledger
+            );
+
+            Cash::create([
+                "amount" => 0,
+                "account_head_id" => $head->id,
+                'added_by' => Auth::user()->id,
+                "company_id" => Auth::user()->company_id
+            ]);
+
+
+            DB::commit();
+            return response()->json([],201);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Database transaction error: ' . $e->getMessage());
+            return response()->json(["errors" => ["Error" => ['An error occurred during the database transaction.']]], 422);
+        }
+
+    }
+    
+    public function headCashUpdate(Request $request)
+    {
+        $request->validate([
+            'name' => [
+                'required',
+                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
+            ],
+        ]);
+        
+        try {
+            DB::beginTransaction();
+
+            AccountHead::where("id",$request->id)->update([
+                'name' => strtoupper($request->name),
+                'updated_by' => Auth::user()->id,
+            ]);
+
+
+            DB::commit();
+            return response()->json([],200);
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Database transaction error: ' . $e->getMessage());
+            return response()->json(["errors" => ["Error" => ['An error occurred during the database transaction.']]], 422);
+        }
+
+    }
+
+    function accountHeadCreate($name, $first, $second, $third, $fourth) {
+
+        $code = AccountHead::latest('id')->where('group_id', $fourth )->limit(1)->value('code') + 1;
+        $code = str_pad($code, 4, '0', STR_PAD_LEFT);
+
+        $head = AccountHead::create([
+            'name' => strtoupper($name),
+            'code' => $code,
+            'parent_account_id' => $first,
+            'account_id' => $second,
+            'parent_group_id' => $third,
+            'group_id' => $fourth,
+            'company_id' => Auth::user()->company_id,
+            'added_by' => Auth::user()->id
+        ]);
+
+        return $head;
+    }
+}

@@ -17,6 +17,12 @@ use App\Http\Controllers\Pages\LibraryPageController;
 use App\Http\Controllers\Pages\HelpCenterPageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
+use App\Http\Controllers\Account\AccountController;
+use App\Http\Controllers\Account\AccountHeadController;
+use App\Http\Controllers\Account\BankTransactionController;
+use App\Http\Controllers\Account\CashTransactionController;
+use App\Http\Controllers\Account\JournalTransactionController;
+use App\Http\Controllers\Account\Report\FinanceReportController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -103,6 +109,18 @@ Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
 
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('request.supplier');
     Route::post('/suppliers/pdf', [SupplierController::class, 'pdf']);
+
+});
+
+Route::group(['prefix' => '/accounts', 'middleware' => 'auth'], function () {
+    Route::get('/groups', [AccountController::class, 'groupIndex'])->name('account.group');
+    Route::get('/heads', [AccountHeadController::class, 'headIndex'])->name('account.head');
+    Route::get('/heads/banks', [AccountHeadController::class, 'headBankIndex'])->name('account.head.bank');
+    Route::get('/heads/cash', [AccountHeadController::class, 'headCashIndex'])->name('account.head.cash');
+    Route::get('/transactions/bank-transactions', [BankTransactionController::class, 'bankTransactionIndex'])->name('account.transaction.bank.transactions');
+    Route::get('/transactions/cash-transactions', [CashTransactionController::class, 'cashTransactionIndex'])->name('account.transaction.cash.transactions');
+    Route::get('/transactions/journal-transactions', [JournalTransactionController::class, 'journalTransactionIndex'])->name('account.transaction.journal.transactions');
+    Route::get('/reports/finance', [FinanceReportController::class, 'reportIndex'])->name('account.report.finance');
 
 });
 
