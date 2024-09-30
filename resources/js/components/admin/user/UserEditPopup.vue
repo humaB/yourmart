@@ -22,7 +22,7 @@
                                             <option value="inventory manager">Inventory Manager</option>
                                             <option value="qc manager">QC Manger</option>
                                             <option value="packing & dispatch manager">Packing & Dispatch Manager</option>
-                                            <option value="autidor">Auditor</option>
+                                            <option value="auditor">Auditor</option>
                                         </select>
                                 </div>
                             </div>

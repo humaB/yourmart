@@ -35,7 +35,7 @@
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 
-    @if( auth()->user()->role == 'audit')
+    @if( auth()->user()->role == 'auditor')
         @include('layout.other_sidebar.dailer_sidebar')
     @endif
 

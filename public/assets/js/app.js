@@ -3543,7 +3543,7 @@ var render = function render() {
     }
   }, [_vm._v("Packing & Dispatch Manager")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "autidor"
+      value: "auditor"
     }
   }, [_vm._v("Auditor")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
@@ -3881,7 +3881,7 @@ var render = function render() {
     }
   }, [_vm._v("Packing & Dispatch Manager")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "autidor"
+      value: "auditor"
     }
   }, [_vm._v("Auditor")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
