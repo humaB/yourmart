@@ -17,13 +17,13 @@
                                         <th>Sr #</th>
                                         <th>Product</th>
                                         <th>Quantity</th>
-
+                                        <th>Barcode</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item,index) in products" :key="item.id">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ item.product.title }}</td>
+                                        <td>{{ item.product.title || '-'}}</td>
                                         <td>{{ item.stock}}</td>
                                     </tr>
                                 </tbody>
