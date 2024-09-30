@@ -18,4 +18,9 @@ class StoreReturn extends Model
         'added_by'
     ];
 
+
+    public function details(){
+        return $this->hasMany(StoreReturnDetail::class, 'srn_id', 'id');
+    }
+
 }

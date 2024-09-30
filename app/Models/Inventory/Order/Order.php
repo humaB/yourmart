@@ -5,6 +5,7 @@ namespace App\Models\Inventory\Order;
 use App\Models\City;
 use App\Models\Inventory\Courier\Courier;
 use App\Models\Inventory\Courier\CourierCategoryRange;
+use App\Models\Inventory\Store\StoreReturn;
 use App\Models\User;
 use App\Models\User\DropShipperShop;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -69,5 +70,9 @@ class Order extends Model
 
     public function comments(){
         return $this->hasMany(OrderComment::class);
+    }
+
+    public function returns(){
+        return $this->hasMany(StoreReturn::class);
     }
 }
