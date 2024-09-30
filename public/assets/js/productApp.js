@@ -10689,7 +10689,7 @@ var render = function render() {
       staticClass: "badge badge-sucess"
     }, [_vm._v("Audit")]) : item.status == 5 ? _c("span", {
       staticClass: "badge badge-sucess"
-    }, [_vm._v("With Courier")]) : item.status == 6 ? _c("span", {
+    }, [_vm._v("Dispatch")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
