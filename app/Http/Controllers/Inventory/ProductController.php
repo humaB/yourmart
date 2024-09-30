@@ -201,7 +201,7 @@ class ProductController extends Controller
                 'short_description'   => $request->input('shortDescription'),
                 'brand_id'            => $request->input('brand'),
                 'category_id'         => $request->input('category'),
-                'shipping_method_id'  => $request->input('selectedPackaging'),//this column using package class and there is no module like shipping class from now
+                'shipping_method_id'  => $request->input('selectedPackaging') == 0 ? 1 : $request->input('selectedPackaging'),//this column using package class and there is no module like shipping class from now
                 'hero_image'          => $request->input('heroImage'),
                 'video_link'          => $request->input('videoLink'),
                 'product_description' => $request->input('productDescription'),

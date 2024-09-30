@@ -469,32 +469,32 @@ export default {
         totalPrice() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + parseFloat(item.price) * item.quantity;
-            }, 0).toFixed(2) : 0;
+            }, 0).toFixed(0) : 0;
         },
         totalBasePrice() {
         return this.details && this.details.items ? this.details.items.reduce((total, item) => {
             return total + this.calculateItemProfit(item);
-        }, 0).toFixed(2) : 0;
+        }, 0).toFixed(0) : 0;
         },
         totalPackagingCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + parseFloat(item.packaging_cost) * item.quantity;
-            }, 0).toFixed(2) : 0;
+            }, 0).toFixed(0) : 0;
         },
         totalCourierCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + parseFloat(item.courier_cost) * item.quantity;
-            }, 0).toFixed(2) : 0;
+            }, 0).toFixed(0) : 0;
         },
         totalSellPrice() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + parseFloat(item.sell_price) * item.quantity;
-            }, 0).toFixed(2) : 0;
+            }, 0).toFixed(0) : 0;
         },
         totalNetProfit() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + (parseFloat(item.sell_price) - parseFloat(item.price)) * item.quantity;
-            }, 0).toFixed(2) : 0;
+            }, 0).toFixed(0) : 0;
         }
     },
     methods: {
