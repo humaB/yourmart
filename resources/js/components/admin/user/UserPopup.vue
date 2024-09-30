@@ -31,7 +31,7 @@
               <option value="gate incharge">Gate Incharge</option>
               <option value="order collection manager">Order Collection Manager</option>
               <option value="inventory manager">Inventory Manager</option>
-              <option value="qc manger">QC Manger</option>
+              <option value="qc manager">QC Manger</option>
               <option value="packing & dispatch manager">Packing & Dispatch Manager</option>
               <option value="autidor">Auditor</option>
             </select>

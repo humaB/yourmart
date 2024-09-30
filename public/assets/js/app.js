@@ -3535,7 +3535,7 @@ var render = function render() {
     }
   }, [_vm._v("Inventory Manager")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "qc manger"
+      value: "qc manager"
     }
   }, [_vm._v("QC Manger")]), _vm._v(" "), _c("option", {
     attrs: {
@@ -3873,7 +3873,7 @@ var render = function render() {
     }
   }, [_vm._v("Inventory Manager")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "qc manger"
+      value: "qc manager"
     }
   }, [_vm._v("QC Manger")]), _vm._v(" "), _c("option", {
     attrs: {
