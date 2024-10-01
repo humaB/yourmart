@@ -1239,7 +1239,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     calculateItemProfit: function calculateItemProfit(item) {
-      return (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
+      return (parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
     },
     fetchDropshipperDetails: function fetchDropshipperDetails(id) {
       this.$emit('fetchDropshipperDetails', {
@@ -7350,16 +7350,16 @@ var render = function render() {
       attrs: {
         src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
       }
-    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * (parseFloat(item.sell_price) - parseFloat(item.price))))])]);
+    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.price + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * (parseFloat(item.sell_price) - (parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))))])]);
   }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(8), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.totalBasePrice))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPackagingCost))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalCourierCost))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.totalBasePrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalSellPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"

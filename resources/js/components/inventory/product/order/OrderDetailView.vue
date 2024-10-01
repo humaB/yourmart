@@ -155,12 +155,12 @@
                                                                     <b>Size : </b>{{ item.variation.size ?item.variation.size.name : '-'  }}
                                                                 </td>
                                                                 <td>{{ item.quantity }}</td>
-                                                                <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
+                                                                <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) )  }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.packaging_cost }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.courier_cost }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * item.price }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * item.price + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.sell_price }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - parseFloat(item.price) ) }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - (parseFloat(item.price) +  (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) ) ) }}</td>
                                                                 <!-- <td class="text-truncate">
                                                                     <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                                         <li class="team-member team-member-sm"
@@ -184,10 +184,10 @@
                                                                 <td></td>
                                                                 <td><b>Total</b></td>
                                                                 <td><!-- Total quantity (if needed) --></td>
-                                                                <td class="h5">{{ totalBasePrice }}</td>
+                                                                <td class="h5">{{ totalPrice }}</td>
                                                                 <td class="h5">{{ totalPackagingCost }}</td>
                                                                 <td class="h5">{{ totalCourierCost }}</td>
-                                                                <td class="h5">{{ totalPrice }}</td>
+                                                                <td class="h5">{{ totalBasePrice }}</td>
                                                                 <td class="h5">{{ totalSellPrice }}</td>
                                                                 <td class="h5">{{ totalNetProfit }}</td>
                                                             </tr>
@@ -499,7 +499,7 @@ export default {
     },
     methods: {
         calculateItemProfit(item) {
-            return (parseFloat(item.price) - (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
+            return (parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
         },
         fetchDropshipperDetails( id ){
             this.$emit('fetchDropshipperDetails' , { id })
