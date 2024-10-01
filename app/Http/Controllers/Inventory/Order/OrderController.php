@@ -189,32 +189,36 @@ class OrderController extends Controller
 
         $order = Order::with('items')->find($request->id);
         if( auth()->user()->role == 'admin'){
-            $order->update(['status' => '7']);
+
             OrderActivity::create([
                 'order_id'  => $request->id,
                 'activity'  => 'Order rejected',
                 'added_by'  => auth()->user()->id,
             ]);
 
-            $srn = StoreReturn::create([
-                'order_id'        => $order->id,
-                'dropshipper_id'  => $order->belongs_to,
-                'remarks'         => 'Rejected',
-                'added_by'        => auth()->user()->id
-            ]);
-
-            foreach($order->items as $product){
-                StoreReturnDetail::create([
-                    'srn_id'     => $srn->id,
-                    'product_id' => $product->product_variation_id,
-                    'quantity'   => $product->quantity,
-                    'price'      => $product->price,
-                    'total'      => (float)$product->quantity * (float)$product->price,
-                    'added_by'   => auth()->user()->id
+            if( $order->status > 1){
+                $srn = StoreReturn::create([
+                    'order_id'        => $order->id,
+                    'dropshipper_id'  => $order->belongs_to,
+                    'remarks'         => 'Rejected',
+                    'added_by'        => auth()->user()->id
                 ]);
 
-                ProductVariation::where('id', $product->product_variation_id)
-                ->increment('stock', $product->quantity);
+                foreach($order->items as $product){
+                    StoreReturnDetail::create([
+                        'srn_id'     => $srn->id,
+                        'product_id' => $product->product_variation_id,
+                        'quantity'   => $product->quantity,
+                        'price'      => $product->price,
+                        'total'      => (float)$product->quantity * (float)$product->price,
+                        'added_by'   => auth()->user()->id
+                    ]);
+
+                    ProductVariation::where('id', $product->product_variation_id)
+                    ->increment('stock', $product->quantity);
+            }
+
+                $order->update(['status' => '7']);
             }
 
             $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
