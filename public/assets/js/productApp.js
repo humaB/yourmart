@@ -1337,12 +1337,34 @@ __webpack_require__.r(__webpack_exports__);
       var maxLength = 20; // Set your desired max length here
       return attachment.substring(0, maxLength) + '...';
     },
+    dataTable: function dataTable() {},
+    clearDataTable: function clearDataTable() {
+      var table = $("#products_items_table").DataTable();
+      table.destroy();
+    },
     close: function close() {
       var vm = this;
       vm.comment = '';
       vm.attachment = '';
       vm.filteredUsers = [], vm.tagSearchQuery = '', vm.cursorPosition = 0, vm.highlightedIndex = -1, vm.taggedUsers = [];
       $("input[type=file]").val("");
+    }
+  },
+  watch: {
+    details: function details(newLedger) {
+      this.clearDataTable();
+      setTimeout(function () {
+        $("#products_items_table").DataTable({
+          paging: false,
+          ordering: false,
+          info: false,
+          dom: "Bfrtip",
+          buttons: [{
+            extend: "excel",
+            title: 'Order Details'
+          }]
+        });
+      }, 300);
     }
   }
 });
@@ -7330,7 +7352,10 @@ var render = function render() {
   }, [_vm._m(6), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
-    staticClass: "table table-bordered"
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "products_items_table"
+    }
   }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id

@@ -121,7 +121,7 @@
                                                     <h5>Items</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <table class="table table-bordered">
+                                                    <table class="table table-bordered" id="products_items_table">
                                                         <thead>
                                                             <tr>
                                                                 <th></th>
@@ -579,6 +579,13 @@ export default {
             const maxLength = 20; // Set your desired max length here
             return attachment.substring(0, maxLength) + '...';
         },
+        dataTable(){
+
+        },
+        clearDataTable(){
+            const table = $("#products_items_table").DataTable();
+            table.destroy();
+        },
         close() {
             let vm = this;
             vm.comment = '';
@@ -591,5 +598,23 @@ export default {
             $("input[type=file]").val("");
         }
     },
+    watch: {
+    details(newLedger) {
+        this.clearDataTable()
+      setTimeout(() => {
+        $("#products_items_table").DataTable({
+          paging: false,
+          ordering: false,
+          info: false,
+          dom: "Bfrtip",
+          buttons: [{
+              extend: "excel",
+              title: 'Order Details'
+            },
+          ],
+        });
+      }, 300);
+    },
+  },
 };
 </script>
