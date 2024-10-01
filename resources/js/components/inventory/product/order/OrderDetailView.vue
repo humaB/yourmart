@@ -477,7 +477,7 @@ export default {
         },
         totalNetProfit() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + (parseFloat(item.sell_price) - parseFloat(item.price)) * item.quantity;
+                return total + (parseFloat(item.sell_price) - (parseFloat(item.price) +parseFloat(item.courier_cost) + parseFloat(item.packaging_cost) )) * item.quantity;
             }, 0).toFixed(0) : 0;
         }
     },
