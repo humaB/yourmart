@@ -158,7 +158,7 @@
                                                                 <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) )  }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.packaging_cost }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.courier_cost }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * parseFloat(item.price + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.price) + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.sell_price }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - (parseFloat(item.price) +  (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) ) }}</td>
                                                             </tr>
