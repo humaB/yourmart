@@ -158,25 +158,9 @@
                                                                 <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) )  }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.packaging_cost }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.courier_cost }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * item.price + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) }}</td>
+                                                                <td>{{ parseFloat(item.quantity) * parseFloat(item.price + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * item.sell_price }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - (parseFloat(item.price) +  (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) ) ) }}</td>
-                                                                <!-- <td class="text-truncate">
-                                                                    <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                                        <li class="team-member team-member-sm"
-                                                                            v-for="image in item.variation.images"
-                                                                            :key="image.id">
-                                                                            <a :href="getImageUrl(image.attachment.attachment)"
-                                                                                target="_blank"
-                                                                                rel="noopener noreferrer">
-                                                                                <img class="rounded-circle"
-                                                                                    :src="getImageUrl(image.attachment.attachment)"
-                                                                                    alt="user" data-toggle="tooltip"
-                                                                                    title="" data-original-title="">
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </td> -->
+                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - (parseFloat(item.price) +  (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) ) }}</td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
