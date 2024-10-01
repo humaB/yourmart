@@ -114,7 +114,7 @@ class AccountController extends BaseController
 
     public function secondLevelOfFirst($first)
     {
-        $secondLevel = Account::where(["parent_id" => $first])->orderBy('id')->get(["id","name as text"]);
+        $secondLevel = Account::where(["parent_id" => $first])->orderBy('id')->get(['id as code', 'name as label']);
         
         return [
             "secondLevel" => $secondLevel,
@@ -132,7 +132,7 @@ class AccountController extends BaseController
     
     public function fourthLevelOfThird($third)
     {
-        $fourthLevel = AccountGroup::where(["parent_id" => $third])->orderBy('id')->get(["id","name as text"]);
+        $fourthLevel = AccountGroup::where(["parent_id" => $third])->orderBy('id')->get(['id as code', 'name as label']);
         
         return [
             "fourthLevel" => $fourthLevel,

@@ -14,7 +14,6 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Project</th>
                                 <th scope="col">Voucher</th>
                                 <th scope="col">Amount</th>
                                 <th scope="col">Type</th>
@@ -28,7 +27,6 @@
                         <tbody>
                             <tr v-for="(transaction, index) in alltransactions" :key="index">
                                 <th scope="row">{{ index + 1 }}</th>
-                                <td>{{transaction.project}}</td>
                                 <td>{{transaction.type}}-{{transaction.document_id}}</td>
                                 <td>{{transaction.amount}}</td>
                                 <td>{{transaction.type}}</td>
@@ -74,7 +72,7 @@
             </div>
         </div>
         <!-- External Form Submission -->
-        <form :action="`${this.$store.state.main_url}accounts/transactions/pdf`" method="post" ref="transactionFormPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/pdf`" method="post" ref="transactionFormPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
             <input type="hidden" name="id" :value="this.voucher.id">
             <input type="hidden" name="type" :value="this.voucher.type">
@@ -83,7 +81,6 @@
         <NewTransaction
             :btnLoading="btnLoading"
             :addData="addData"
-            :projects="projects"
             :heads="heads"
             ref="childComponentRef"
             @add="addTransaction"
@@ -92,7 +89,6 @@
         <EditTransaction
             :btnLoading="btnLoading"
             :editData="editData"
-            :projects="projects"
             :heads="heads"
             @update="updateTransaction"
         />
@@ -124,10 +120,11 @@ export default {
     },
     data() {
         return {
+            api_url: window.location.origin + process.env.MIX_API_URL,
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             btnLoading: false,
             tableLoading: false,
             alltransactions: [],
-            projects: [],
             heads: [],
             voucher: {
                 id: null,
@@ -142,7 +139,6 @@ export default {
             },
             addDataReset: {},
             addData: {
-                project: "0",
                 ledgers: [],
                 credits: [],
                 debits: [],
@@ -164,16 +160,16 @@ export default {
     },
     methods: {
         async journalTransactions() {
+            if ($.fn.DataTable.isDataTable("#transaction_table")) {
+                $('#transaction_table').DataTable().destroy();
+            }
             this.tableLoading = true;
             const res = await this.callApi("get", "accounts/transactions/journal-transactions");
             if(res.status == 200)
             {
                 this.alltransactions = res.data.journalTransactions;
-                this.projects = res.data.projects;
                 this.heads = res.data.heads;
-                if ($.fn.DataTable.isDataTable("#transaction_table")) {
-                    $('#transaction_table').DataTable().destroy();
-                }
+                
                 setTimeout(function () {
                     $("#transaction_table").DataTable();
                 }, 300);
@@ -216,7 +212,7 @@ export default {
                 });
                 return false;
             }
-            if (indicateDuplication(this.addData.ledgers))
+            if (this.indicateDuplication(this.addData.ledgers))
             {
                 this.$swal({
                     icon: 'error',
@@ -323,7 +319,7 @@ export default {
                 });
                 return false;
             }
-            if (indicateDuplication(this.editData.ledgers))
+            if (this.indicateDuplication(this.editData.ledgers))
             {
                 this.$swal({
                     icon: 'error',
@@ -345,6 +341,16 @@ export default {
                 });
             }
             this.btnLoading = false;
+        },
+        indicateDuplication(data) {
+            const values = data.filter((item, index) => data.indexOf(item) !== index)
+        
+            if(values.length > 0)
+            {
+                return true;
+            }
+            return false
+            
         },
     }
 };

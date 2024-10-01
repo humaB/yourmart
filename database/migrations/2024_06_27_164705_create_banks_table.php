@@ -22,7 +22,7 @@ class CreateBanksTable extends Migration
             $table->double('balance', 20, 2);
             $table->string('status');
             $table->integer('account_head_id');
-            $table->integer('company_id');
+            $table->integer('company_id')->nullable();
             $table->integer('added_by');
             $table->integer('updated_by')->nullable();
             $table->softDeletes();

@@ -98,14 +98,15 @@ export default {
     },
     methods: {
         async headCash() {
+            if ($.fn.DataTable.isDataTable("#head_cash_table")) {
+                $('#head_cash_table').DataTable().destroy();
+            }
             this.tableLoading = true;
             const res = await this.callApi("get", "accounts/heads/cash");
             if(res.status == 200)
             {
                 this.accountHeadCash = res.data.accountHeadCash;
-                if ($.fn.DataTable.isDataTable("#head_cash_table")) {
-                    $('#head_cash_table').DataTable().destroy();
-                }
+                
                 setTimeout(function () {
                     $("#head_cash_table").DataTable();
                 }, 300);

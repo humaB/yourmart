@@ -14,7 +14,6 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Project</th>
                                 <th scope="col">Voucher</th>
                                 <th scope="col">Cash Name</th>
                                 <th scope="col">Amount</th>
@@ -29,7 +28,6 @@
                         <tbody>
                             <tr v-for="(transaction, index) in alltransactions" :key="index">
                                 <th scope="row">{{ index + 1 }}</th>
-                                <td>{{transaction.project}}</td>
                                 <td>{{transaction.type}}-{{transaction.document_id}}</td>
                                 <td>{{transaction.cash_name}}</td>
                                 <td>{{transaction.amount}}</td>
@@ -76,7 +74,7 @@
             </div>
         </div>
         <!-- External Form Submission -->
-        <form :action="`${this.$store.state.main_url}accounts/transactions/pdf`" method="post" ref="transactionFormPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/pdf`" method="post" ref="transactionFormPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
             <input type="hidden" name="id" :value="this.voucher.id">
             <input type="hidden" name="type" :value="this.voucher.type">
@@ -85,7 +83,6 @@
         <NewTransaction
             :btnLoading="btnLoading"
             :addData="addData"
-            :projects="projects"
             :cashes="cashes"
             :heads="heads"
             ref="childComponentRef"
@@ -95,7 +92,6 @@
         <EditTransaction
             :btnLoading="btnLoading"
             :editData="editData"
-            :projects="projects"
             :cashes="cashes"
             :heads="heads"
             @update="updateTransaction"
@@ -128,10 +124,11 @@ export default {
     },
     data() {
         return {
+            api_url: window.location.origin + process.env.MIX_API_URL,
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             btnLoading: false,
             tableLoading: false,
             alltransactions: [],
-            projects: [],
             cashes: [],
             heads: [],
             voucher: {
@@ -147,8 +144,7 @@ export default {
             addDataReset: {},
             addData: {
                 type: "",
-                project: "0",
-                cash_ledger: "0",
+                cash_ledger: { code: 0, label: "Select from the following" },
                 narration: "",
                 ledgers: [],
                 amounts: [],
@@ -170,17 +166,17 @@ export default {
     },
     methods: {
         async cashTransactions() {
+            if ($.fn.DataTable.isDataTable("#transaction_table")) {
+                $('#transaction_table').DataTable().destroy();
+            }
             this.tableLoading = true;
             const res = await this.callApi("get", "accounts/transactions/cash-transactions");
             if(res.status == 200)
             {
                 this.alltransactions = res.data.cashTransactions;
-                this.projects = res.data.projects;
                 this.cashes = res.data.cashes;
                 this.heads = res.data.heads;
-                if ($.fn.DataTable.isDataTable("#transaction_table")) {
-                    $('#transaction_table').DataTable().destroy();
-                }
+                
                 setTimeout(function () {
                     $("#transaction_table").DataTable();
                 }, 300);
@@ -196,7 +192,7 @@ export default {
                     text: 'Please select transaction type',
                 });
             }
-            if(this.addData.cash_ledger == 0)
+            if(this.addData.cash_ledger.code == 0)
             {
                 return this.$swal({
                     icon: 'error',
@@ -239,7 +235,7 @@ export default {
                 });
                 return false;
             }
-            if (indicateDuplication(this.addData.ledgers))
+            if (this.indicateDuplication(this.addData.ledgers))
             {
                 this.$swal({
                     icon: 'error',
@@ -360,7 +356,7 @@ export default {
                 });
                 return false;
             }
-            if (indicateDuplication(this.editData.ledgers))
+            if (this.indicateDuplication(this.editData.ledgers))
             {
                 this.$swal({
                     icon: 'error',
@@ -382,6 +378,16 @@ export default {
                 });
             }
             this.btnLoading = false;
+        },
+        indicateDuplication(data) {
+            const values = data.filter((item, index) => data.indexOf(item) !== index)
+        
+            if(values.length > 0)
+            {
+                return true;
+            }
+            return false
+            
         },
     }
 };

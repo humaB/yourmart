@@ -18,7 +18,7 @@ class CreateAccountsTable extends Migration
             $table->string('name');
             $table->string('code');
             $table->integer('parent_id');
-            $table->integer('company_id');
+            $table->integer('company_id')->nullable();
             $table->integer('added_by');
             $table->softDeletes();
             $table->timestamps();

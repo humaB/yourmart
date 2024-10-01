@@ -36,7 +36,7 @@ class AccountHeadController extends BaseController
 
     public function accountHeads(Request $request)
     {
-        $firstLevel = Account::where('parent_id' , '=' ,'0')->get(["id","name as text"]);
+        $firstLevel = Account::where('parent_id' , '=' ,'0')->get(['id as code', 'name as label']);
        
         $accountHeads = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code")
         ->latest('id')

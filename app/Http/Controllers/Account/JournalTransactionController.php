@@ -34,8 +34,8 @@ class JournalTransactionController extends BaseController
         ->get()
         ->map(function($single) {
             return [
-                'id' => $single->id,
-                'text' => $single->name . ' (' . $single->level_four->name . ')',
+                'code' => $single->id,
+                'label' => $single->name . ' (' . $single->level_four->name . ')',
                 'name' => $single->name,
             ];
         });
@@ -53,10 +53,10 @@ class JournalTransactionController extends BaseController
                 'document_id' => $group->first()->document_id ?? null,
                 'cash_name' => $group->first()->account_head->name ?? 'N/A',
                 'amount' => $group->sum("debit"),
-                'added_by' => $group->first()->added_by_name->username ?? 'N/A',
+                'added_by' => $group->first()->added_by_name->name ?? 'N/A',
                 'type' => $group->first()->type,
                 'approved' => $group->first()->approved,
-                'approved_by' => $group->first()->approved_by_name->username ?? 'N/A',
+                'approved_by' => $group->first()->approved_by_name->name ?? 'N/A',
                 'posted_date' => date("H:i d/m/Y",strtotime($group->first()->created_at)),
             ];
         })->values();
@@ -148,7 +148,7 @@ class JournalTransactionController extends BaseController
         where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
         ->orderBy("id",'ASC')
         ->with("account_head.level_four:id,code","account_head.level_three:id,code","account_head.level_two:id,code","account_head.level_one:id,code")
-        ->with("added_by_name:id,username","updated_by_name:id,username")
+        ->with("added_by_name:id,name","updated_by_name:id,name")
         ->get();
 
         return [

@@ -27,10 +27,10 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive" v-if="tableLoading">
+            <!-- <div class="table-responsive" v-if="tableLoading">
                 <BulletListLoader></BulletListLoader>
-            </div>
-            <div v-else class="table-responsive">
+            </div> -->
+            <div class="table-responsive">
                 <table class="table table-sm" id="ledger_table">
                     <thead>
                         <tr>

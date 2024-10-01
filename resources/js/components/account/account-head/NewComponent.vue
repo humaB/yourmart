@@ -26,27 +26,23 @@
                     <div class="row">
                         <div class="form-group col-md-3">
                             <label>Tier 1 <span class="text-danger">*</span></label>
-                            <select2 v-model="addData.first_level" :options="firstLevel" @select="getSecondLevel(addData.first_level)"
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
+                            <v-select :options="firstLevel" v-model="addData.first_level" :reduce="option => option.code" @input="getSecondLevel(addData.first_level)">
+                            </v-select>
                         </div>
                         <div class="form-group col-md-3">
                             <label>Tier 2 <span class="text-danger">*</span></label>
-                            <select2 v-model="addData.second_level" :options="secondLevel"  @select="getThirdLevel(addData.second_level)"
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
+                            <v-select :options="secondLevel" v-model="addData.second_level" :reduce="option => option.code" @input="getThirdLevel(addData.second_level)">
+                            </v-select>
                         </div>
                         <div class="form-group col-md-3">
                             <label>Tier 3 <span class="text-danger">*</span></label>
-                            <select2 v-model="addData.third_level" :options="thirdLevel" @select="getFourthLevel(addData.third_level)"
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
+                            <v-select :options="thirdLevel" v-model="addData.third_level" :reduce="option => option.code" @input="getFourthLevel(addData.third_level)">
+                            </v-select>
                         </div>
                         <div class="form-group col-md-3">
                             <label>Tier 4 <span class="text-danger">*</span></label>
-                            <select2 v-model="addData.fourth_level" :options="fourthLevel"
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
+                            <v-select :options="fourthLevel" v-model="addData.fourth_level" :reduce="option => option.code">
+                            </v-select>
                         </div>
                         <div class="form-group col-md-12">
                             <label>Ledger Name <span class="text-danger">*</span></label>

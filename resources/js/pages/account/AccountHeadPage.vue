@@ -88,10 +88,10 @@ export default {
             addDataReset: {},
             addData: {
                 name: "",
-                first_level: "0",
-                second_level: "0",
-                third_level: "0",
-                fourth_level: "0",
+                first_level: { code: 0, label: "Select from the following" },
+                second_level: { code: 0, label: "Select from the following" },
+                third_level: { code: 0, label: "Select from the following" },
+                fourth_level: { code: 0, label: "Select from the following" },
             },
         };
     },
@@ -103,15 +103,16 @@ export default {
     },
     methods: {
         async heads() {
+            if ($.fn.DataTable.isDataTable("#head_table")) {
+                $('#head_table').DataTable().destroy();
+            }
             this.tableLoading = true;
             const res = await this.callApi("get", "accounts/heads");
             if(res.status == 200)
             {
                 this.accountHeads = res.data.accountHeads;
                 this.firstLevel = res.data.firstLevel;
-                if ($.fn.DataTable.isDataTable("#head_table")) {
-                    $('#head_table').DataTable().destroy();
-                }
+                
                 setTimeout(function () {
                     $("#head_table").DataTable();
                 }, 300);
@@ -119,7 +120,7 @@ export default {
             this.tableLoading = false;
         },
         async addHead() {
-            if (this.addData.first_level == 0)
+            if (this.addData.first_level.code == 0)
             {
                 return this.$swal({
                     title: "Required!",
@@ -128,7 +129,7 @@ export default {
                     timer: 2000
                 });
             }
-            if (this.addData.second_level == 0)
+            if (this.addData.second_level.code == 0)
             {
                 return this.$swal({
                     title: "Required!",
@@ -137,7 +138,7 @@ export default {
                     timer: 2000
                 });
             }
-            if (this.addData.third_level == 0)
+            if (this.addData.third_level.code == 0)
             {
                 return this.$swal({
                     title: "Required!",
@@ -146,7 +147,7 @@ export default {
                     timer: 2000
                 });
             }
-            if (this.addData.fourth_level == 0)
+            if (this.addData.fourth_level.code == 0)
             {
                 return this.$swal({
                     title: "Required!",

@@ -51,8 +51,8 @@
                                 <td>{{transaction.narration}}</td>
                                 <td>{{transaction.debit}}</td>
                                 <td>{{transaction.credit}}</td>
-                                <td>{{transaction.added_by_name.username??'N/A'}}</td>
-                                <td>{{transaction.updated_by_name ? transaction.updated_by_name.username : 'N/A'}}</td>
+                                <td>{{transaction.added_by_name.name??'N/A'}}</td>
+                                <td>{{transaction.updated_by_name ? transaction.updated_by_name.name : 'N/A'}}</td>
                             </tr>
                         </tbody>
                     </table>

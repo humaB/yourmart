@@ -108,14 +108,15 @@ export default {
     },
     methods: {
         async headBanks() {
+            if ($.fn.DataTable.isDataTable("#head_bank_table")) {
+                $('#head_bank_table').DataTable().destroy();
+            }
             this.tableLoading = true;
             const res = await this.callApi("get", "accounts/heads/banks");
             if(res.status == 200)
             {
                 this.accountHeadBanks = res.data.accountHeadBanks;
-                if ($.fn.DataTable.isDataTable("#head_bank_table")) {
-                    $('#head_bank_table').DataTable().destroy();
-                }
+                
                 setTimeout(function () {
                     $("#head_bank_table").DataTable();
                 }, 300);

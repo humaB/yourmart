@@ -24,7 +24,20 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                       
+                        <div class="form-group col-md-4">
+                            <label>Tier 2 <span class="text-danger">*</span></label>
+                            <v-select disabled :options="secondLevel" v-model="editData.account_id" :reduce="option => option.code">
+                            </v-select>
+                        </div>
+                        <div class="form-group col-md-4" >
+                            <label>Tier 3 <span class="text-danger">*</span></label>
+                            <v-select disabled :options="thirdLevel" v-model="editData.parent_id" :reduce="option => option.code">
+                            </v-select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>{{ editData.group_type == 'tier 3' ? 'Tier 3' : 'Tier 4' }} <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" v-model="editData.name">
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">

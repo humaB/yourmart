@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('account_transactions', function (Blueprint $table) {
             $table->id();
-            $table->integer('project_id');
             $table->integer('account_head_id');
             $table->integer('other_account_head_id');
             $table->decimal('debit', 20, 2)->default(0);
@@ -34,7 +33,7 @@ return new class extends Migration
             $table->integer('parent_group_id')->nullable();
             $table->integer('group_id')->nullable();
             $table->timestamp('time');
-            $table->integer('company_id');
+            $table->integer('company_id')->nullable();
             $table->integer('added_by');
             $table->integer('updated_by')->nullable();
             $table->softDeletes();

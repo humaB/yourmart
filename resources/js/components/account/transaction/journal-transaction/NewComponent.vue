@@ -23,14 +23,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="form-group col-md-12">
-                            <label>Project</label>
-                            <select2 v-model="addData.project" :options="projects" 
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
-                        </div>
-                    </div>
                     <div class="border p-2 mb-2">
                         <div class="d-flex justify-content-between">
                             <h5>Transaction <small :class="finalData.total_amount == 0 && (finalData.credits > 0 || finalData.debits > 0) ? 'text-success' : 'text-danger'">Credit({{finalData.credits}}) - Debit({{finalData.debits}}) = Difference({{finalData.total_amount}})</small></h5>
@@ -57,15 +49,14 @@
                         </div>
                         <div class="row" v-for="(i, index) in transactionLoop" :key="index">
                             <div class="form-group mb-2 col-md-3">
-                                <select2 v-model="addData.ledgers[index]" :options="heads" @select="saveTransactionRow($event, 'first', index)"
-                                :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                    />
+                                <v-select :options="heads" v-model="addData.ledgers[index]" :reduce="option => option.code" @input="saveTransactionRow($event, 'first', index)">
+                                </v-select>
                             </div>
                             <div class="form-group mb-2 col-md-2">
-                                <input class="form-control" type="text" :value="addData.credits[index]" :disabled="addData.debits[index] > 0" @keyup="saveTransactionRow($event, 'second', index)" onkeypress="numberValidate(event,{dot:true})">
+                                <input class="form-control" type="text" :value="addData.credits[index]" :disabled="addData.debits[index] > 0" @keyup="saveTransactionRow($event, 'second', index)" @keypress="numberValidate($event,{dot:true})">
                             </div>
                             <div class="form-group mb-2 col-md-2">
-                                <input class="form-control" type="text" :value="addData.debits[index]" :disabled="addData.credits[index] > 0" @keyup="saveTransactionRow($event, 'third', index)" onkeypress="numberValidate(event,{dot:true})">
+                                <input class="form-control" type="text" :value="addData.debits[index]" :disabled="addData.credits[index] > 0" @keyup="saveTransactionRow($event, 'third', index)" @keypress="numberValidate($event,{dot:true})">
                             </div>
                             <div class="form-group mb-2 col-md-3">
                                 <input class="form-control" type="text" :value="addData.narrations[index]" @change="saveTransactionRow($event, 'fourth', index)" @keyup.enter="addTransactionRow" />
@@ -87,7 +78,7 @@
 
 <script>
 export default {
-  props: ['btnLoading', 'addData', 'projects', 'heads'],
+  props: ['btnLoading', 'addData', 'heads'],
   data() {
     return {
         finalData: {
@@ -110,7 +101,7 @@ export default {
         },
         saveTransactionRow(event, fieldName, index) {
             if (fieldName == "first") {
-                this.addData.ledgers[index] = event.id;
+                this.addData.ledgers[index] = event;
             }
             if (fieldName == "second") {
                 this.addData.credits[index] = event.target.value ? event.target.value : 0;
@@ -144,6 +135,49 @@ export default {
             this.finalData.credits = this.addData.credits.reduce((acc, current) => acc + parseFloat(current), 0);
             this.finalData.debits = this.addData.debits.reduce((acc, current) => acc + parseFloat(current), 0);
             this.finalData.total_amount = (this.finalData.credits) - (this.finalData.debits);
+        },
+        numberValidate(event, { dot = false, maxLen = null, negative = false, comma = false } = {}) {
+        
+            const charCode = event.charCode;
+            const value = event.target.value.toString().replace(/,/g, '');
+            
+            // Allow numbers (48-57), dot (46), and control keys (0)
+            if ((charCode >= 48 && charCode <= 57) || charCode === 0) {
+        
+                // Check the length if it's not null
+                if (maxLen !== null && value.length >= maxLen) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                return true;
+            }
+            // Accept dot
+            if (dot && charCode === 46) {
+                // Allow only one dot
+                if (value.includes('.')) {
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Check the length if it's not null
+                if (maxLen !== null && value.length >= maxLen) {
+                    event.preventDefault();
+                    return false;
+                }
+                return true;
+            }
+            // Accept negative value
+            if (negative && charCode === 45) {
+                if (value.includes('-') || value.length !== 0) {
+                    event.preventDefault();
+                    return false;
+                }
+                return true;
+            }
+        
+            event.preventDefault();
+            return false;
         },
     }
 }

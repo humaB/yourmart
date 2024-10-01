@@ -21,7 +21,7 @@ class CreateAccountHeadsTable extends Migration
             $table->integer('account_id');
             $table->integer('parent_group_id');
             $table->integer('group_id');
-            $table->integer('company_id');
+            $table->integer('company_id')->nullable();
             $table->integer('added_by');
             $table->integer('updated_by')->nullable();
             $table->softDeletes();

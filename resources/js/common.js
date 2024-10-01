@@ -23,14 +23,14 @@ export default {
                     });
                     errorMessage += '</ul>';
 
-                    swal({
+                    this.$swal({
                         icon: 'error',
                         title: 'Error',
-                        html: errorMessage,
+                        html: errorMessage, 
                     });
                 }
                 if (error.response.status === 409) {
-                    swal({
+                    this.$swal({
                         icon: 'error',
                         title: 'Error',
                         html: error.response.data.message,

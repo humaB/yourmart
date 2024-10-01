@@ -91,15 +91,16 @@ export default {
     },
     methods: {
         async groups() {
+            if ($.fn.DataTable.isDataTable("#group_table")) {
+                $('#group_table').DataTable().destroy();
+            }
             this.tableLoading = true;
             const res = await this.callApi("get", "accounts/groups");
             if(res.status == 200)
             {
                 this.fourthLevel = res.data.fourthLevel;
                 this.secondLevel = res.data.secondLevel;
-                if ($.fn.DataTable.isDataTable("#group_table")) {
-                    $('#group_table').DataTable().destroy();
-                }
+                
                 setTimeout(function () {
                     $("#group_table").DataTable();
                 }, 300);
@@ -109,25 +110,25 @@ export default {
         async addGroup() {
             if (this.addData.group_type == "")
             {
-                return swal({
+                return this.$swal({
                     title: "Required!",
                     text: "Please select type",
                     icon: "error",
                     timer: 2000
                 });
             }
-            if (this.addData.second_level == 0)
+            if (this.addData.second_level.code == 0)
             {
-                return swal({
+                return this.$swal({
                     title: "Required!",
                     text: "Please select tier 2",
                     icon: "error",
                     timer: 2000
                 });
             }
-            if (this.addData.group_type == "tier 4" && this.addData.third_level == 0)
+            if (this.addData.group_type == "tier 4" && this.addData.third_level.code == 0)
             {
-                return swal({
+                return this.$swal({
                     title: "Required!",
                     text: "Please select tier 3",
                     icon: "error",
@@ -136,7 +137,7 @@ export default {
             }
             if (!this.addData.name)
             {
-                return swal({
+                return this.$swal({
                     title: "Required!",
                     text: "Name is required",
                     icon: "error",
@@ -150,7 +151,7 @@ export default {
                 this.groups();
                 this.addData = { ...this.addDataReset};
                 $(".modal").modal('hide');
-                swal({
+                this.$swal({
                     icon: 'success',
                     title: 'Success',
                     text: 'Successfully Added',
@@ -174,7 +175,7 @@ export default {
         async updateGroup() {
             if(!this.editData.name)
             {
-                return swal({
+                return this.$swal({
                     icon: 'error',
                     title: 'Error',
                     text: 'Name is required',
@@ -186,7 +187,7 @@ export default {
             if (res.status === 200) {
                 this.groups();
                 $(".modal").modal('hide');
-                swal({
+                this.$swal({
                     icon: 'success',
                     title: 'Success',
                     text: 'Successfully Updated',

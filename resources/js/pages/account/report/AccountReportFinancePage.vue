@@ -47,21 +47,15 @@
             <div class="card-body">
                 <div>
                     <div class="row">
-                        <div class="form-group col-md-3">
-                            <label>Project</label>
-                            <select2 v-model="filterData.project" :options="projects"
-                            :settings="{ width: '100%' }" 
-                                />
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>From</label>
                             <input type="date" class="form-control" v-model="filterData.from"/>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>To</label>
                             <input type="date" class="form-control" v-model="filterData.to"/>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <button type="button" class="btn btn-block btn-primary"
                             style="margin-top: 1.9rem !important"
                             :class="{ 'disabled btn-progress': btnLoading }" @click=receiptReport()>Filter</button>
@@ -78,23 +72,16 @@
             <div class="card-body">
                 <div>
                     <div class="row">
-                        <div class="form-group col-md-3">
-                            <label>Project</label>
-                            <select2 v-model="filterData.project" :options="projects"
-                            :settings="{ width: '100%' }" 
-                                />
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>General Ledger <span class="text-danger">*</span></label>
-                            <select2 v-model="filterData.level_four" :options="fourth_level"
-                            :settings="{ width: '100%' }" 
-                                />
+                            <v-select :options="fourth_level" v-model="filterData.level_four" :reduce="option => option.code">
+                            </v-select>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>From</label>
                             <input type="date" class="form-control" v-model="filterData.from"/>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>To</label>
                             <input type="date" class="form-control" v-model="filterData.to"/>
                         </div>
@@ -115,23 +102,16 @@
             <div class="card-body">
                 <div>
                     <div class="row">
-                        <div class="form-group col-md-3">
-                            <label>Project</label>
-                            <select2 v-model="filterData.project" :options="projects"
-                            :settings="{ width: '100%' }" 
-                                />
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>Ledger <span class="text-danger">*</span></label>
-                            <select2 v-model="filterData.head" :options="heads"
-                            :settings="{ width: '100%' }" 
-                                />
+                            <v-select :options="heads" v-model="filterData.head" :reduce="option => option.code">
+                            </v-select>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>From</label>
                             <input type="date" class="form-control" v-model="filterData.from"/>
                         </div>
-                        <div class="form-group col-md-2">
+                        <div class="form-group col-md-3">
                             <label>To</label>
                             <input type="date" class="form-control" v-model="filterData.to"/>
                         </div>
@@ -152,21 +132,15 @@
             <div class="card-body">
                 <div>
                     <div class="row">
-                        <div class="form-group col-md-3">
-                            <label>Project</label>
-                            <select2 v-model="filterData.project" :options="projects"
-                            :settings="{ width: '100%' }" 
-                                />
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>From</label>
                             <input type="date" class="form-control" v-model="filterData.from"/>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>To</label>
                             <input type="date" class="form-control" v-model="filterData.to"/>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <button type="button" class="btn btn-block btn-primary"
                             style="margin-top: 1.9rem !important"
                             :class="{ 'disabled btn-progress': btnLoading }" @click=journalReport()>Filter</button>
@@ -183,21 +157,15 @@
             <div class="card-body">
                 <div>
                     <div class="row">
-                        <div class="form-group col-md-3">
-                            <label>Project</label>
-                            <select2 v-model="filterData.project" :options="projects"
-                            :settings="{ width: '100%' }" 
-                                />
-                        </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>From</label>
                             <input type="date" class="form-control" v-model="filterData.from"/>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <label>To</label>
                             <input type="date" class="form-control" v-model="filterData.to"/>
                         </div>
-                        <div class="form-group col-md-3">
+                        <div class="form-group col-md-4">
                             <button type="button" class="btn btn-block btn-primary"
                             style="margin-top: 1.9rem !important"
                             :class="{ 'disabled btn-progress': btnLoading }" @click=trialSheetReport()>Filter</button>
@@ -214,17 +182,11 @@
             <div class="card-body">
                 <div>
                     <div class="row">
-                        <div class="form-group col-md-4">
-                            <label>Project</label>
-                            <select2 v-model="filterData.project" :options="projects"
-                            :settings="{ width: '100%' }" 
-                                />
-                        </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <label>Date</label>
                             <input type="date" class="form-control" v-model="filterData.current"/>
                         </div>
-                        <div class="form-group col-md-4">
+                        <div class="form-group col-md-6">
                             <button type="button" class="btn btn-block btn-primary"
                             style="margin-top: 1.9rem !important"
                             :class="{ 'disabled btn-progress': btnLoading }" @click=dailyReport()>Filter</button>
@@ -293,56 +255,50 @@
             @print="printDailyReport"
         />
         <!-- External Form Submission -->
-        <form :action="`${api_url}accounts/transactions/receipts/pdf`" method="post" ref="printReceiptPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/receipts/pdf`" method="post" ref="printReceiptPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="project" :value="this.filterData.project">
             <input type="hidden" name="id" :value="this.voucher.id">
             <input type="hidden" name="type" :value="this.voucher.type">
             <input type="hidden" name="posting_id" :value="this.voucher.posting_id">
         </form>
         
         <!-- External General Ledger -->
-        <form :action="`${api_url}accounts/transactions/general/ledger/pdf`" method="post" ref="printAccountLedgerReportPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/general/ledger/pdf`" method="post" ref="printAccountLedgerReportPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="project" :value="this.filterData.project">
             <input type="hidden" name="level_four" :value="this.filterData.level_four">
             <input type="hidden" name="from" :value="this.filterData.from">
             <input type="hidden" name="to" :value="this.filterData.to">
         </form>
         
         <!-- External Ledger -->
-        <form :action="`${api_url}accounts/transactions/ledger/pdf`" method="post" ref="printLedgerReportPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/ledger/pdf`" method="post" ref="printLedgerReportPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="project" :value="this.filterData.project">
             <input type="hidden" name="head" :value="this.filterData.head">
             <input type="hidden" name="from" :value="this.filterData.from">
             <input type="hidden" name="to" :value="this.filterData.to">
         </form>
 
         <!-- External General Journal -->
-        <form :action="`${api_url}accounts/transactions/general/journal/pdf`" method="post" ref="printJournalReportPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/general/journal/pdf`" method="post" ref="printJournalReportPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="project" :value="this.filterData.project">
             <input type="hidden" name="from" :value="this.filterData.from">
             <input type="hidden" name="to" :value="this.filterData.to">
         </form>
         
         <!-- External Trial Report -->
-        <form :action="`${api_url}accounts/transactions/general/trial/pdf`" method="post" ref="printGeneralTrialReportPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/general/trial/pdf`" method="post" ref="printGeneralTrialReportPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="project" :value="this.filterData.project">
             <input type="hidden" name="from" :value="this.filterData.from">
             <input type="hidden" name="to" :value="this.filterData.to">
         </form>
         
         <!-- External Daily Report -->
-        <form :action="`${api_url}accounts/transactions/daily/report/pdf`" method="post" ref="printDailyReportPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/daily/report/pdf`" method="post" ref="printDailyReportPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="project" :value="this.filterData.project">
             <input type="hidden" name="current" :value="this.filterData.current">
         </form>
         <!-- Voucher Pdf -->
-        <form :action="`${api_url}accounts/transactions/pdf`" method="post" ref="transactionFormPdf" target="_blank">
+        <form :action="`${public_url}accounts/transactions/pdf`" method="post" ref="transactionFormPdf" target="_blank">
             <input type="hidden" name="_token" :value="csrf" >
             <input type="hidden" name="id" :value="this.voucher.id">
             <input type="hidden" name="type" :value="this.voucher.type">
@@ -369,6 +325,7 @@ export default {
     data() {
         return {
             api_url: window.location.origin + process.env.MIX_API_URL,
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             btnLoading: false,
             tableLoading: false,
             abstep: 0,
@@ -379,7 +336,6 @@ export default {
             ledgers: [],
             journals: [],
             data: [],
-            projects: [],
             voucher: {
                 id: null,
                 type: null,
@@ -389,9 +345,8 @@ export default {
             },
             filterDataReset: {},
             filterData: {
-                project: "0",
-                head: "0",
-                level_four: "0",
+                head: { code: 0, label: "Select from the following" },
+                level_four: { code: 0, label: "Select from the following" },
                 from: "",
                 to: "",
                 current: "",
@@ -419,7 +374,6 @@ export default {
             {
                 this.fourth_level = res.data.fourth_level;
                 this.heads = res.data.heads;
-                this.projects = res.data.projects;
                 this.journals = res.data.journals;
             }
             this.tableLoading = false;
@@ -458,7 +412,7 @@ export default {
             this.tableLoading = false;
         },
         async generalLedgerReport() {
-            if(this.filterData.level_four == 0)
+            if(this.filterData.level_four.code == 0)
             {
                 return this.$swal({
                     icon: 'error',
@@ -503,7 +457,7 @@ export default {
             this.tableLoading = false;
         },
         async ledgerReport() {
-            if(this.filterData.head == 0)
+            if(this.filterData.head.code == 0)
             {
                 return this.$swal({
                     icon: 'error',

@@ -23,6 +23,7 @@ use App\Http\Controllers\Account\BankTransactionController;
 use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
+use App\Http\Controllers\Account\pdf\TransactionPdfController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -112,6 +113,7 @@ Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
 
 });
 
+// this is just for preview pages
 Route::group(['prefix' => '/accounts', 'middleware' => 'auth'], function () {
     Route::get('/groups', [AccountController::class, 'groupIndex'])->name('account.group');
     Route::get('/heads', [AccountHeadController::class, 'headIndex'])->name('account.head');
@@ -122,6 +124,22 @@ Route::group(['prefix' => '/accounts', 'middleware' => 'auth'], function () {
     Route::get('/transactions/journal-transactions', [JournalTransactionController::class, 'journalTransactionIndex'])->name('account.transaction.journal.transactions');
     Route::get('/reports/finance', [FinanceReportController::class, 'reportIndex'])->name('account.report.finance');
 
+});
+// this is functional route that will show pdf etc
+Route::prefix('accounts')->group(function () {
+    // Transactions
+    Route::prefix('transactions')->group(function () {
+
+        Route::post('/pdf', [TransactionPdfController::class,'transactionPdf']);
+        Route::post('receipts/pdf', [TransactionPdfController::class,'receiptPdf']);
+        Route::post('general/ledger/pdf', [TransactionPdfController::class,'generalLedgerPdf']);
+        Route::post('ledger/pdf', [TransactionPdfController::class,'ledgerPdf']);
+        Route::post('general/journal/pdf', [TransactionPdfController::class,'journalPdf']);
+        Route::post('general/trial/pdf', [TransactionPdfController::class,'generalTrialPdf']);
+        Route::post('daily/report/pdf', [TransactionPdfController::class,'dailyReportPdf']);
+    });
+
+    
 });
 
 Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {

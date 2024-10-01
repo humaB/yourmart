@@ -24,7 +24,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-12">
                             <label class="d-block">Transaction Type <span class="text-danger">*</span></label>
                             <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" id="cpEdit" value="CP" v-model="editData.type">
@@ -35,17 +35,10 @@
                             <label class="form-check-label" for="brEdit">Cash Receipt</label>
                             </div>
                         </div>
-                        <div class="form-group col-md-12">
-                            <label>Project</label>
-                            <select2 v-model="editData.project_id" :options="projects" 
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
-                        </div>
                         <div class="form-group col-md-6">
                             <label>Cash Ledger <span class="text-danger">*</span></label>
-                            <select2 v-model="editData.account_head_id" :options="cashes" 
-                            :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                />
+                            <v-select :options="cashes" v-model="editData.account_head_id" :reduce="option => option.code">
+                            </v-select>
                         </div>
                         <div class="form-group col-md-6">
                             <label>Cash Narration <span class="text-danger">*</span></label>
@@ -75,12 +68,11 @@
                         </div>
                         <div class="row" v-for="(i, index) in transactionLoop" :key="index">
                             <div class="form-group mb-2 col-md-4">
-                                <select2 v-model="editData.ledgers[index]" :options="heads" @select="saveTransactionRow($event, 'first', index)"
-                                :settings="{ settingOption: value, settingOption: value, width: '100%' }" 
-                                    />
+                                <v-select :options="heads" v-model="editData.ledgers[index]" :reduce="option => option.code" @input="saveTransactionRow($event, 'first', index)">
+                                </v-select>
                             </div>
                             <div class="form-group mb-2 col-md-3">
-                                <input class="form-control" type="text" :value="editData.amounts[index]" @keyup="saveTransactionRow($event, 'second', index)" onkeypress="numberValidate(event,{dot:true})">
+                                <input class="form-control" type="text" :value="editData.amounts[index]" @keyup="saveTransactionRow($event, 'second', index)" @keypress="numberValidate($event,{dot:true})">
                             </div>
                             <div class="form-group mb-2 col-md-3">
                                 <input class="form-control" type="text" :value="editData.narrations[index]" @change="saveTransactionRow($event, 'third', index)" />
@@ -102,7 +94,7 @@
 
 <script>
 export default {
-  props: ['btnLoading', 'editData', 'projects', 'cashes', 'heads'],
+  props: ['btnLoading', 'editData', 'cashes', 'heads'],
   data() {
     return {
         finalData: {
@@ -133,7 +125,7 @@ export default {
         },
         saveTransactionRow(event, fieldName, index) {
             if (fieldName == "first") {
-                this.editData.ledgers[index] = event.id;
+                this.editData.ledgers[index] = event;
             }
             if (fieldName == "second") {
                 this.editData.amounts[index] = event.target.value ? event.target.value : 0;
@@ -157,6 +149,49 @@ export default {
         totalAmount()
         {
             this.finalData.total_amount = this.editData.amounts.reduce((acc, current) => acc + parseFloat(current), 0);
+        },
+        numberValidate(event, { dot = false, maxLen = null, negative = false, comma = false } = {}) {
+        
+            const charCode = event.charCode;
+            const value = event.target.value.toString().replace(/,/g, '');
+            
+            // Allow numbers (48-57), dot (46), and control keys (0)
+            if ((charCode >= 48 && charCode <= 57) || charCode === 0) {
+        
+                // Check the length if it's not null
+                if (maxLen !== null && value.length >= maxLen) {
+                    event.preventDefault();
+                    return false;
+                }
+
+                return true;
+            }
+            // Accept dot
+            if (dot && charCode === 46) {
+                // Allow only one dot
+                if (value.includes('.')) {
+                    event.preventDefault();
+                    return false;
+                }
+        
+                // Check the length if it's not null
+                if (maxLen !== null && value.length >= maxLen) {
+                    event.preventDefault();
+                    return false;
+                }
+                return true;
+            }
+            // Accept negative value
+            if (negative && charCode === 45) {
+                if (value.includes('-') || value.length !== 0) {
+                    event.preventDefault();
+                    return false;
+                }
+                return true;
+            }
+        
+            event.preventDefault();
+            return false;
         },
     }
 }

@@ -7,9 +7,15 @@
 window.Vue = require('vue').default;
 window.axios = require('axios');
 import common from './common.js';
+
+// loader
 import { BulletListLoader } from 'vue-content-loader'
+// vue select
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
+// sweet alert 2
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 /**
@@ -26,7 +32,7 @@ import "vue-select/dist/vue-select.css";
 Vue.component('account-group-page', require('./pages/account/AccountGroupPage.vue').default );
 Vue.component('account-head-page', require('./pages/account/AccountHeadPage.vue').default );
 Vue.component('account-head-bank-page', require('./pages/account/AccountHeadBankPage.vue').default );
-Vue.component('account-head-cas-page', require('./pages/account/AccountHeadCashPage.vue').default );
+Vue.component('account-head-cash-page', require('./pages/account/AccountHeadCashPage.vue').default );
 Vue.component('account-bank-transaction-page', require('./pages/account/transaction/BankTransactionPage.vue').default );
 Vue.component('account-cash-transaction-page', require('./pages/account/transaction/CashTransactionPage.vue').default );
 Vue.component('account-journal-transaction-page', require('./pages/account/transaction/JournalTransactionPage.vue').default );
@@ -35,6 +41,7 @@ Vue.component('account-finance-report-page', require('./pages/account/report/Acc
 Vue.mixin(common);
 Vue.component('BulletListLoader', BulletListLoader)
 Vue.component("v-select", vSelect);
+Vue.use(VueSweetalert2);
 
 const app = new Vue({
     el: '#app',

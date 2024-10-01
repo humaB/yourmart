@@ -33,14 +33,14 @@ class CashTransactionController extends BaseController
         // dropdown data
         $cashes = Cash::where('cash.company_id', Auth::user()->company_id)
             ->join('account_heads', 'cash.account_head_id', 'account_heads.id')
-            ->select('account_heads.*', 'account_heads.name as text')
+            ->select('account_heads.*','account_heads.id as code', 'account_heads.name as label')
             ->get();
         $heads = AccountHead::with('level_four:id,name')
         ->get()
         ->map(function($single) {
             return [
-                'id' => $single->id,
-                'text' => $single->name . ' (' . $single->level_four->name . ')',
+                'code' => $single->id,
+                'label' => $single->name . ' (' . $single->level_four->name . ')',
                 'name' => $single->name,
             ];
         });
@@ -62,10 +62,10 @@ class CashTransactionController extends BaseController
                 'document_id' => $group->first()->document_id ?? null,
                 'cash_name' => $group->first()->account_head->name ?? 'N/A',
                 'amount' => $group->sum($column),
-                'added_by' => $group->first()->added_by_name->username ?? 'N/A',
+                'added_by' => $group->first()->added_by_name->name ?? 'N/A',
                 'type' => $group->first()->type,
                 'approved' => $group->first()->approved,
-                'approved_by' => $group->first()->approved_by_name->username ?? 'N/A',
+                'approved_by' => $group->first()->approved_by_name->name ?? 'N/A',
                 'posted_date' => date("H:i d/m/Y",strtotime($group->first()->created_at)),
             ];
         })->values();
@@ -187,7 +187,7 @@ class CashTransactionController extends BaseController
         where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
         ->orderBy("id",'ASC')
         ->with("account_head.level_four:id,code","account_head.level_three:id,code","account_head.level_two:id,code","account_head.level_one:id,code")
-        ->with("added_by_name:id,username","updated_by_name:id,username")
+        ->with("added_by_name:id,name","updated_by_name:id,name")
         ->get();
 
         return [

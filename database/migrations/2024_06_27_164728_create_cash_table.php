@@ -17,7 +17,7 @@ class CreateCashTable extends Migration
             $table->id();
             $table->decimal('amount', 20, 2);
             $table->integer('account_head_id');
-            $table->integer('company_id');
+            $table->integer('company_id')->nullable();
             $table->integer('added_by');
             $table->integer('updated_by')->nullable();
             $table->softDeletes();
