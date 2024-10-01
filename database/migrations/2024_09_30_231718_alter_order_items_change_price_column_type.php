@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->decimal('price', 15 , 2)->change();
-        });
+        // Schema::table('order_items', function (Blueprint $table) {
+        //     $table->decimal('price', 15 , 2)->change();
+        // });
     }
 
     /**
