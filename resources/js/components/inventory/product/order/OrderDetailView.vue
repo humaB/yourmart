@@ -156,11 +156,11 @@
                                                                 </td>
                                                                 <td>{{ item.quantity }}</td>
                                                                 <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) )  }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * item.packaging_cost }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * item.courier_cost }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.price) + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * item.sell_price }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * (parseFloat(item.sell_price) - (parseFloat(item.price) +  (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) ) }}</td>
+                                                                <td>{{ item.packaging_cost }}</td>
+                                                                <td>{{ item.courier_cost }}</td>
+                                                                <td>{{ (parseFloat(item.quantity) * parseFloat(item.price)) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
+                                                                <td>{{ item.sell_price }}</td>
+                                                                <td>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -456,34 +456,34 @@ export default {
             }, 0).toFixed(0) : 0;
         },
         totalBasePrice() {
-        return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-            return total + this.calculateItemProfit(item);
-        }, 0).toFixed(0) : 0;
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + this.calculateItemProfit(item);
+            }, 0).toFixed(0) : 0;
         },
         totalPackagingCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.packaging_cost) * item.quantity;
+                return total + parseFloat(item.packaging_cost);
             }, 0).toFixed(0) : 0;
         },
         totalCourierCost() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.courier_cost) * item.quantity;
+                return total + parseFloat(item.courier_cost);
             }, 0).toFixed(0) : 0;
         },
         totalSellPrice() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + parseFloat(item.sell_price) * item.quantity;
+                return total + parseFloat(item.sell_price);
             }, 0).toFixed(0) : 0;
         },
         totalNetProfit() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + (parseFloat(item.sell_price) - (parseFloat(item.price) +parseFloat(item.courier_cost) + parseFloat(item.packaging_cost) )) * item.quantity;
+                return total + (parseFloat(item.sell_price) - (( parseFloat(item.price) * item.quantity ) +parseFloat(item.courier_cost) + parseFloat(item.packaging_cost) )) ;
             }, 0).toFixed(0) : 0;
         }
     },
     methods: {
         calculateItemProfit(item) {
-            return (parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) * parseFloat(item.quantity);
+            return ((parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) + (parseFloat(item.price) *  parseFloat(item.quantity));
         },
         fetchDropshipperDetails( id ){
             this.$emit('fetchDropshipperDetails' , { id })
