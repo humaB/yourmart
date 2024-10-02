@@ -41,7 +41,7 @@ Vue.component('account-finance-report-page', require('./pages/account/report/Acc
 Vue.mixin(common);
 Vue.component('BulletListLoader', BulletListLoader)
 Vue.component("v-select", vSelect);
-Vue.use(VueSweetalert2);
+
 
 const app = new Vue({
     el: '#app',

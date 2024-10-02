@@ -5411,10 +5411,7 @@ var render = function render() {
       "aria-hidden": "true"
     }
   }, [_c("div", {
-    staticClass: "modal-dialog modal-lg modal-dialog-centered",
-    staticStyle: {
-      "max-width": "960px"
-    }
+    staticClass: "modal-dialog modal-xl modal-dialog-centered"
   }, [_c("div", {
     staticClass: "modal-content"
   }, [_vm._m(0), _vm._v(" "), _c("div", {
@@ -37211,7 +37208,6 @@ Vue.component('account-finance-report-page', (__webpack_require__(/*! ./pages/ac
 Vue.mixin(_common_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 Vue.component('BulletListLoader', vue_content_loader__WEBPACK_IMPORTED_MODULE_3__.BulletListLoader);
 Vue.component("v-select", (vue_select__WEBPACK_IMPORTED_MODULE_1___default()));
-Vue.use(VueSweetalert2);
 var app = new Vue({
   el: '#app'
 });

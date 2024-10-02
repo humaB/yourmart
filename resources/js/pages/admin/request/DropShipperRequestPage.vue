@@ -26,6 +26,9 @@
                                                 <td>{{ index + 1 }}</td>
                                                 <td>{{ item.full_name }}</td>
                                                 <td>{{ item.email }}</td>
+                                                <td>{{ formatPrice(item.total_payable) }}</td>
+                                                <td>{{ formatPrice(item.total_paid) }}</td>
+                                                <td>{{ formatPrice(item.remaining_amount) }}</td>
                                                 <td>
                                                     <span v-if="item.status == 0" class="badge badge-warning">Pending</span>
                                                     <span v-if="item.status == 1" class="badge badge-success">Approved</span>
@@ -86,7 +89,7 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                 tableHeader: {
                     heading: "Dropshipper Request's",
                 },
-                th: ["Sr #","Name", "email", "Status", "Added Date", "Action"],
+                th: ["Sr #","Name", "Email","Total Payable", "Total Paid","Remaining Amount", "Status", "Added Date", "Action"],
                 table_id: "moq_table",
                 guestQuantity : 0,
                 registeredQuantity : 0,
@@ -104,6 +107,12 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
             this.fetchRecord();
         },
         methods : {
+            formatPrice(price) {
+                var string = parseFloat(price).toString();
+                return string
+                    .replace(/,/g, "")
+                    .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            },
             printRequest( id ){
                 this.id = id;
                 const form = this.$refs.requestForm;

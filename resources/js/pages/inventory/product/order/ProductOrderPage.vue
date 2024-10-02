@@ -28,6 +28,9 @@
                                                             {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
                                                         </td>
                                                         <td>{{ item.user ? item.user.name : 'GUEST' }}</td>
+                                                        <td>{{ formatPrice(item.total_bill) }}</td>
+                                                        <td>{{ formatPrice(item.paid_amount) }}</td>
+                                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
                                                         <td>
                                                             <span class="badge badge-warning text-dark" v-if="item.status == 0">Order Collection</span>
@@ -96,7 +99,7 @@ export default {
             tableHeader: {
                 heading: "Pending Orders",
             },
-            th: ["Sr #", "Order #", "Belongs To", "Added Date", "Status","Action"],
+            th: ["Sr #", "Order #", "Belongs To","Total Amount","Paid Amount", "Remaining Amount",  "Added Date", "Status","Action"],
             table_id: "moq_table",
             btnLoader: false,
             orders: [],
@@ -114,6 +117,12 @@ export default {
     methods: {
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
+        },
+        formatPrice(price) {
+            var string = parseFloat(price).toString();
+            return string
+                .replace(/,/g, "")
+                .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
         },
         fetchOrders() {
             let vm = this;
