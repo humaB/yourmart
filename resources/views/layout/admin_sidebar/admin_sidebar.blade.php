@@ -33,6 +33,11 @@
         <a href="{{ route('user') }}" class="nav-link"><i
                 class="fas fa-user-alt"></i><span>Users</span></a>
     </li>
+    
+    <li class="dropdown" >
+        <a href="{{ route('tickets') }}" class="nav-link"><i
+                class="fas fa-user-alt"></i><span>Tickets</span></a>
+    </li>
 
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i

@@ -16,6 +16,7 @@ use App\Http\Controllers\Pages\PageController;
 use App\Http\Controllers\Pages\LibraryPageController;
 use App\Http\Controllers\Pages\HelpCenterPageController;
 use App\Http\Controllers\User\DropShipperController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\User\SupplierController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\AccountHeadController;
@@ -55,6 +56,10 @@ Route::group(['prefix' => '/users', 'middleware' => 'auth'], function () {
     Route::get('/', [UserController::class, 'index'])->name('user');
     Route::get('/create', [UserController::class, 'create'])->name('user.add');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
+});
+
+Route::group(['prefix' => '/tickets', 'middleware' => 'auth'], function () {
+    Route::get('/', [TicketController::class, 'index'])->name('tickets');
 });
 
 Route::group(['prefix' => '/pages', 'middleware' => 'auth'], function () {
