@@ -33,6 +33,7 @@
                                                     <span v-if="item.status == 0" class="badge badge-warning">Pending</span>
                                                     <span v-if="item.status == 1" class="badge badge-success">Approved</span>
                                                     <span v-if="item.status == 2" class="badge badge-danger">Rejected</span>
+                                                    <span v-if="item.status == 3" class="badge badge-danger">Deactivated</span>
                                                 </td>
                                                 <td>{{ formatDate(item.created_at) }}</td>
                                                 <td>

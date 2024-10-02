@@ -83,25 +83,37 @@ class DropShipperController extends Controller
         $lock = Cache::lock('dropshipper_decision')->block(7, function () use ($request) {
 
             $dropshipper = DropShipper::where('id', $request->id)->first();
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-            ])->post('https://merchantapi.leopardscourier.com/api/createShipper/format/json/', [
-                'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
-                'api_password' => 'Allah@001#',
-                'shipment_name'  => $dropshipper->full_name,
-                'shipment_email' => $dropshipper->email, // Optional, can be left empty
-                'shipment_phone' => $dropshipper->whatsapp_number,
-                'shipment_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab',
-                'city_id' => '322',
-                'cnic' => $dropshipper->cnic, // Optional, can be left empty
-                'return_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab', // Optional, can be left empty
-            ]);
+
+            if($request->action == 'deactivate' ){
+                User::where('id', $dropshipper->user_id)->delete();
+                $dropshipper->update([
+                    'status'  => '3' // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
+                ]);
+
+                return ['message' => 'successfully updated'];
+            }
+
+            if ($request->action == 'approve') {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/json',
+                ])->post('https://merchantapi.leopardscourier.com/api/createShipper/format/json/', [
+                    'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+                    'api_password' => 'Allah@001#',
+                    'shipment_name'  => $dropshipper->full_name,
+                    'shipment_email' => $dropshipper->email, // Optional, can be left empty
+                    'shipment_phone' => $dropshipper->whatsapp_number,
+                    'shipment_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab',
+                    'city_id' => '322',
+                    'cnic' => $dropshipper->cnic, // Optional, can be left empty
+                    'return_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab', // Optional, can be left empty
+                ]);
+            }
 
             $leopard = 0;
             // Check if the request was successful
             if ($response->successful()) {
-            $data = $response->json();
-            $leopard = $data['data']['shipment_id'];
+                $data = $response->json();
+                $leopard = $data['data']['shipment_id'];
             }
 
             if ($request->action != 'reject') {

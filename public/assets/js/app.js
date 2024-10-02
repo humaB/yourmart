@@ -3005,7 +3005,18 @@ var render = function render() {
         return _vm.decision("reject");
       }
     }
-  }, [_vm._v("Reject")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("Reject")]) : _vm._e(), _vm._v(" "), _vm.details.status == 1 ? _c("button", {
+    staticClass: "btn btn-danger",
+    "class": _vm.loader ? "btn-progress disabled" : "",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.decision("deactivate");
+      }
+    }
+  }, [_vm._v("Deactivate")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -7166,7 +7177,9 @@ var render = function render() {
       staticClass: "badge badge-success"
     }, [_vm._v("Approved")]) : _vm._e(), _vm._v(" "), item.status == 2 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_vm._v("Rejected")]) : _vm._e(), _vm._v(" "), item.status == 3 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",

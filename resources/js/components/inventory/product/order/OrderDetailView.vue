@@ -9,6 +9,16 @@
                             Order # <b>{{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</b>
                         </div> <!-- Empty div to push the content to the right -->
                         <div class="d-flex">
+                            <h5>
+                                <span class="badge badge-warning text-dark" v-if="details.status == 0">Order Collection</span>
+                                <span class="badge badge-info text-dark" v-else-if="details.status == 1">Inventory Issuance</span>
+                                <span class="badge badge-secondary" v-else-if="details.status == 2">QC</span>
+                                <span class="badge badge-success" v-else-if="details.status == 3">Packing/Dispatch</span>
+                                <span class="badge badge-warning text-dark" v-else-if="details.status == 4">Audit</span>
+                                <span class="badge badge-succes" v-else-if="details.status == 5">Dispatched</span>
+                                <span class="badge badge-danger" v-else-if="details.status == 6">Rejection Under Review</span>
+                                <span class="badge badge-danger" v-else-if="details.status == 7">Rejected</span>
+                            </h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -133,7 +143,6 @@
                                                                 <th>Total Cost</th>
                                                                 <th>Sell Price</th>
                                                                 <th>Net Profit</th>
-                                                                <!-- <th>Images</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -339,37 +348,45 @@
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th></th>
                                                     <th>Product</th>
+                                                    <th>Quantity</th>
                                                     <th>QR Code</th>
                                                     <!-- <th>Images</th> -->
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="item in details.items" :key="item.id">
-                                                        <td class="text-truncate" v-if="item.variation">
-                                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                            <li class="team-member team-member-sm">
-                                                                <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
-                                                                <img class="rounded-circle" :src="getImageUrl(item.variation.images[0].attachment.attachment)">
-                                                                </a>
-                                                            </li>
-                                                            </ul>
-                                                        </td>
+                                                <tr v-for="(item, index) in details.items" :key="item.id">
+
                                                         <td>
                                                             <b>SKU : </b>{{ item.variation.sku  }}<br>
                                                             <b>Title : </b>{{ item.variation.product.title }}<br>
                                                         </td>
                                                         <td>
                                                             <input type="text" class="form-control"
-                                                                   v-model="item.scannedQR"
-                                                                   @keypress.enter="validateQR(item)">
+                                                                   v-model="item.addedQuantity"
+                                                                   @keypress.enter="validateQR(item, index)">
                                                         </td>
+                                                        <td>
+                                                            <input type="text" class="form-control"
+                                                                   v-model="item.scannedQRNumber"
+                                                                   @keypress.enter="validateQR(item, index)">
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">Please press enter or scan with barcode reader</td>
                                                 </tr>
                                             </tbody>
 
+
                                         </table>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="card" v-if="role == 'packing & dispatch manager'">
+                                <div class="card-body">
+                                    <h5>Scan the Order Parcel</h5>
+                                    <input type="text" class="form-control" v-model="scannedTrackingNumber">
                                 </div>
                             </div>
                         </div>
@@ -402,7 +419,7 @@
 
 export default {
     name: "OrderDetailView",
-    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'role'],
+    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
@@ -425,6 +442,7 @@ export default {
             highlightedIndex: -1,
             taggedUsers: [],
             web_url : process.env.MIX_WEB_URL,
+            scannedTrackingNumber: '' // Store the scanned QR code for tracking number
         }
     },
     mounted() {
@@ -494,18 +512,50 @@ export default {
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
         },
-        validateQR(item) {
-            this.errors = [];
-            // Check if the input matches the barcode
-            if (item.scannedQR && item.scannedQR !== item.variation.barcode.barcode) {
-                return swal({
-                    title: "Error",
-                    text: "QR code does not match the item",
-                    icon: "error",
-                    timer: 3000,
-                });
-            }
-        },
+        validateQR(item, index) {
+        this.errors = [];
+
+        // Ensure the addedQuantity is valid
+        if (item.addedQuantity !== item.quantity) {
+            this.$set(this.details.items, index, {
+                ...item,
+                scannedQR: false
+            });
+            return swal({
+                title: "Error",
+                text: `Entered quantity does not match the expected quantity. Expected: ${item.quantity}, Entered: ${item.addedQuantity}`,
+                icon: "error",
+                timer: 3000,
+            });
+        }
+
+        // Ensure the QR code is valid
+        if (item.scannedQRNumber !== item.variation.barcode.barcode) {
+            this.$set(this.details.items, index, {
+                ...item,
+                scannedQR: false
+            });
+            return swal({
+                title: "Error",
+                text: "QR code does not match the item",
+                icon: "error",
+                timer: 3000,
+            });
+        }
+
+        // If all validations pass, mark the item as scanned
+        this.$set(this.details.items, index, {
+            ...item,
+            scannedQR: true
+        });
+
+        swal({
+            title: "Success",
+            text: "Item validated successfully!",
+            icon: "success",
+            timer: 3000,
+        });
+    },
         getImageUrl(imageId) {
             // Check if the image is null
             if (!imageId) {
@@ -514,6 +564,34 @@ export default {
             return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
         },
         forward(){
+            if(this.role == 'inventory manager'){
+                // Check if any item hasn't been scanned
+                const unscannedItems = this.details.items.filter(item => !item.scannedQR);
+
+                // If any item is unscanned, display an error
+                if (unscannedItems.length > 0) {
+                    return swal({
+                        title: "Error",
+                        text: "Some items have not been scanned. Please scan all items before proceeding.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            }
+
+            // Check if the role is 'packing & dispatch manager'
+            if (this.role === 'packing & dispatch manager') {
+                // Check if the scanned tracking number matches the details tracking number
+                if (this.scannedTrackingNumber !== this.details.tracking_number) {
+                    return swal({
+                        title: "Error",
+                        text: "The scanned QR code does not match the tracking number.",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            }
+
             this.$emit('forward', { id : this.details.id });
         },
         reject(){
@@ -590,11 +668,7 @@ export default {
             let vm = this;
             vm.comment = '';
             vm.attachment = '';
-            vm.filteredUsers = [],
-                vm.tagSearchQuery = '',
-                vm.cursorPosition = 0,
-                vm.highlightedIndex = -1,
-                vm.taggedUsers = []
+            vm.scannedTrackingNumber = "";
             $("input[type=file]").val("");
         }
     },

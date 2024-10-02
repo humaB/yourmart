@@ -1156,9 +1156,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "OrderDetailView",
-  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'role'],
+  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
   data: function data() {
     return {
       public_url: window.location.origin + "",
@@ -1180,7 +1186,8 @@ __webpack_require__.r(__webpack_exports__);
       cursorPosition: 0,
       highlightedIndex: -1,
       taggedUsers: [],
-      web_url: "https://yourmart.pk/"
+      web_url: "https://yourmart.pk/",
+      scannedTrackingNumber: '' // Store the scanned QR code for tracking number
     };
   },
   mounted: function mounted() {
@@ -1250,10 +1257,27 @@ __webpack_require__.r(__webpack_exports__);
       var string = parseFloat(price).toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
-    validateQR: function validateQR(item) {
+    validateQR: function validateQR(item, index) {
       this.errors = [];
-      // Check if the input matches the barcode
-      if (item.scannedQR && item.scannedQR !== item.variation.barcode.barcode) {
+
+      // Ensure the addedQuantity is valid
+      if (item.addedQuantity !== item.quantity) {
+        this.$set(this.details.items, index, _objectSpread(_objectSpread({}, item), {}, {
+          scannedQR: false
+        }));
+        return swal({
+          title: "Error",
+          text: "Entered quantity does not match the expected quantity. Expected: ".concat(item.quantity, ", Entered: ").concat(item.addedQuantity),
+          icon: "error",
+          timer: 3000
+        });
+      }
+
+      // Ensure the QR code is valid
+      if (item.scannedQRNumber !== item.variation.barcode.barcode) {
+        this.$set(this.details.items, index, _objectSpread(_objectSpread({}, item), {}, {
+          scannedQR: false
+        }));
         return swal({
           title: "Error",
           text: "QR code does not match the item",
@@ -1261,6 +1285,17 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       }
+
+      // If all validations pass, mark the item as scanned
+      this.$set(this.details.items, index, _objectSpread(_objectSpread({}, item), {}, {
+        scannedQR: true
+      }));
+      swal({
+        title: "Success",
+        text: "Item validated successfully!",
+        icon: "success",
+        timer: 3000
+      });
     },
     getImageUrl: function getImageUrl(imageId) {
       // Check if the image is null
@@ -1270,6 +1305,35 @@ __webpack_require__.r(__webpack_exports__);
       return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
     },
     forward: function forward() {
+      if (this.role == 'inventory manager') {
+        // Check if any item hasn't been scanned
+        var unscannedItems = this.details.items.filter(function (item) {
+          return !item.scannedQR;
+        });
+
+        // If any item is unscanned, display an error
+        if (unscannedItems.length > 0) {
+          return swal({
+            title: "Error",
+            text: "Some items have not been scanned. Please scan all items before proceeding.",
+            icon: "error",
+            timer: 3000
+          });
+        }
+      }
+
+      // Check if the role is 'packing & dispatch manager'
+      if (this.role === 'packing & dispatch manager') {
+        // Check if the scanned tracking number matches the details tracking number
+        if (this.scannedTrackingNumber !== this.details.tracking_number) {
+          return swal({
+            title: "Error",
+            text: "The scanned QR code does not match the tracking number.",
+            icon: "error",
+            timer: 3000
+          });
+        }
+      }
       this.$emit('forward', {
         id: this.details.id
       });
@@ -1346,7 +1410,7 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       vm.comment = '';
       vm.attachment = '';
-      vm.filteredUsers = [], vm.tagSearchQuery = '', vm.cursorPosition = 0, vm.highlightedIndex = -1, vm.taggedUsers = [];
+      vm.scannedTrackingNumber = "";
       $("input[type=file]").val("");
     }
   },
@@ -4012,7 +4076,18 @@ var render = function render() {
         return _vm.decision("reject");
       }
     }
-  }, [_vm._v("Reject")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("Reject")]) : _vm._e(), _vm._v(" "), _vm.details.status == 1 ? _c("button", {
+    staticClass: "btn btn-danger",
+    "class": _vm.loader ? "btn-progress disabled" : "",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.decision("deactivate");
+      }
+    }
+  }, [_vm._v("Deactivate")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -7270,7 +7345,25 @@ var render = function render() {
     staticClass: "modal-content"
   }, [_c("div", {
     staticClass: "modal-header d-flex justify-content-between"
-  }, [_c("div", [_vm._v("\n                        Order # "), _c("b", [_vm._v(_vm._s(_vm.details.shop ? _vm.details.shop.store_name.substring(0, 3) + "-" : "") + _vm._s(_vm.details.order_no))])]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
+  }, [_c("div", [_vm._v("\n                        Order # "), _c("b", [_vm._v(_vm._s(_vm.details.shop ? _vm.details.shop.store_name.substring(0, 3) + "-" : "") + _vm._s(_vm.details.order_no))])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex"
+  }, [_c("h5", [_vm.details.status == 0 ? _c("span", {
+    staticClass: "badge badge-warning text-dark"
+  }, [_vm._v("Order Collection")]) : _vm.details.status == 1 ? _c("span", {
+    staticClass: "badge badge-info text-dark"
+  }, [_vm._v("Inventory Issuance")]) : _vm.details.status == 2 ? _c("span", {
+    staticClass: "badge badge-secondary"
+  }, [_vm._v("QC")]) : _vm.details.status == 3 ? _c("span", {
+    staticClass: "badge badge-success"
+  }, [_vm._v("Packing/Dispatch")]) : _vm.details.status == 4 ? _c("span", {
+    staticClass: "badge badge-warning text-dark"
+  }, [_vm._v("Audit")]) : _vm.details.status == 5 ? _c("span", {
+    staticClass: "badge badge-succes"
+  }, [_vm._v("Dispatched")]) : _vm.details.status == 6 ? _c("span", {
+    staticClass: "badge badge-danger"
+  }, [_vm._v("Rejection Under Review")]) : _vm.details.status == 7 ? _c("span", {
+    staticClass: "badge badge-danger"
+  }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c("div", {
     staticClass: "modal-body row"
   }, [_c("div", {
     staticClass: "col-md-8"
@@ -7612,51 +7705,83 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(13), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+  }, [_vm._m(13), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [item.variation ? _c("td", {
-      staticClass: "text-truncate"
-    }, [_c("ul", {
-      staticClass: "list-unstyled order-list m-b-0 m-b-0"
-    }, [_c("li", {
-      staticClass: "team-member team-member-sm"
-    }, [_c("a", {
-      attrs: {
-        href: _vm.getImageUrl(item.variation.images[0].attachment.attachment),
-        target: "_blank"
-      }
-    }, [_c("img", {
-      staticClass: "rounded-circle",
-      attrs: {
-        src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
-      }
-    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
+    }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
       directives: [{
         name: "model",
         rawName: "v-model",
-        value: item.scannedQR,
-        expression: "item.scannedQR"
+        value: item.addedQuantity,
+        expression: "item.addedQuantity"
       }],
       staticClass: "form-control",
       attrs: {
         type: "text"
       },
       domProps: {
-        value: item.scannedQR
+        value: item.addedQuantity
       },
       on: {
         keypress: function keypress($event) {
           if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
-          return _vm.validateQR(item);
+          return _vm.validateQR(item, index);
         },
         input: function input($event) {
           if ($event.target.composing) return;
-          _vm.$set(item, "scannedQR", $event.target.value);
+          _vm.$set(item, "addedQuantity", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("td", [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: item.scannedQRNumber,
+        expression: "item.scannedQRNumber"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: item.scannedQRNumber
+      },
+      on: {
+        keypress: function keypress($event) {
+          if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
+          return _vm.validateQR(item, index);
+        },
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(item, "scannedQRNumber", $event.target.value);
         }
       }
     })])]);
-  }), 0)])])])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm._m(14)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body"
+  }, [_c("h5", [_vm._v("Scan the Order Parcel")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.scannedTrackingNumber,
+      expression: "scannedTrackingNumber"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.scannedTrackingNumber
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.scannedTrackingNumber = $event.target.value;
+      }
+    }
+  })])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -7687,9 +7812,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "d-flex"
-  }, [_c("button", {
+  return _c("button", {
     staticClass: "close",
     attrs: {
       type: "button",
@@ -7700,7 +7823,7 @@ var staticRenderFns = [function () {
     attrs: {
       "aria-hidden": "true"
     }
-  }, [_vm._v("×")])])]);
+  }, [_vm._v("×")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -7774,7 +7897,15 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th"), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("QR Code")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("QR Code")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("td", {
+    attrs: {
+      colspan: "3"
+    }
+  }, [_vm._v("Please press enter or scan with barcode reader")])]);
 }];
 render._withStripped = true;
 
