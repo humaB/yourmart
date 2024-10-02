@@ -159,7 +159,7 @@
 
         <!-- Modal for Ticket Details -->
         <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-labelledby="ticketDetailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg"> <!-- Add 'modal-lg' for a larger modal -->
+            <div class="modal-dialog modal-xl"> <!-- Add 'modal-lg' for a larger modal -->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Ticket Details</h5>
@@ -202,7 +202,7 @@
                             <div class="border rounded p-2 mb-2" ref="chatContainer" style="height: 200px; overflow-y: auto;">
                                 <!-- Display Previous Chat Messages -->
                                 <div v-for="(chat, index) in chats" :key="index" class="mb-2">
-                                    <div :class="{'text-white bg-primary w-75 rounded float-right px-2': user.id === chat.added_by, 
+                                    <div :class="{'text-white bg-primary w-75 rounded float-right px-2': user.id === chat.added_by,
                                                 'text-dark bg-secondary w-75 rounded float-left px-2': user.id !== chat.added_by}">
                                         <p class="d-flex justify-content-between mb-0">
                                             <strong>{{ chat.added_by === user.id ? 'You' : chat.added_by_name.name }}:</strong>
@@ -288,7 +288,7 @@ export default {
                 chatMessage: '',
                 selectedStatus: '',
                 selectedFile: null,
-                ticketId: null 
+                ticketId: null
             },
         };
     },
@@ -401,8 +401,8 @@ export default {
                 this.getMessages();
             });
              // Set the selected ticket
-            
-            
+
+
             $('#ticketDetailsModal').modal('show'); // Open the modal using jQuery
         },
         closeModal() {

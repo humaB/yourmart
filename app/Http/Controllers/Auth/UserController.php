@@ -15,23 +15,6 @@ class UserController extends Controller
 {
     public function index()
     {
-
-        // $mailData = [
-        //     'id'       =>"helo",
-        //     'name' =>"helo",
-        //     'email' =>"helo",
-        //     'whatsapp_number' =>"helo",
-        //     'address' =>"helo",
-        //     'bank_name' =>"helo",
-        //     'city_name' =>"helo",
-        //     'store_name' =>"helo",
-        //     'store_url' =>"helo",
-        // ];
-
-        // Mail::to("malik.rehman7272@gmail.com")->send(new RegMail($mailData, 'Dropshipping'));
-
-        // return 'helo';
-
         $users = User::get();
         return view('auth.user.users', [
             'users' => $users
