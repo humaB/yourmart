@@ -3,7 +3,7 @@
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
             <a href="#"><span
-                    class="logo-name">eComm</span>
+                    class="logo-name">YourMart</span>
             </a>
         </div>
 
