@@ -17,7 +17,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Pending Inwards"
       },
@@ -69,8 +69,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['products', 'suppliers', 'srID', 'categories', "loader"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       expenses: [{
         product: {
           code: 0,
@@ -246,7 +246,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['details', 'loader'],
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Pending Inwards"
       },
@@ -408,8 +408,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Purchase Order",
         link: "#",
@@ -546,8 +546,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Inward Record"
       },
@@ -613,8 +613,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Pending Purchase Order"
       },
@@ -711,8 +711,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Purchase Order",
         link: "#",
@@ -821,8 +821,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Inward Record"
       },
@@ -888,8 +888,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Pending Purchase Order"
       },
@@ -980,7 +980,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Product Stock"
       },
