@@ -32,6 +32,7 @@ Vue.component('courier-page', require('./pages/inventory/product/setting/Courier
 Vue.component('page-setting-page', require('./pages/pages/PageSettingPage.vue').default );
 Vue.component('library-setting-page', require('./pages/pages/LibrarySettingPage.vue').default );
 Vue.component('help-center-setting-page', require('./pages/pages/HelpCenterSettingPage.vue').default );
+Vue.component('ticket-page', require('./pages/TicketPage.vue').default );
 
 
 const app = new Vue({

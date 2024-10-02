@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
+        Schema::create('ticket_messages', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('order_no')->nullable();
-            $table->string('ticket_type');
-            $table->text('message'); 
-            $table->text('expected_result')->nullable(); 
-            $table->string('file_path')->nullable(); 
-            $table->string('status')->default('In-Process'); 
+            $table->bigInteger('ticket_id');
+            $table->string('chat_message');
+            $table->string('status');
+            $table->string('file_path')->nullable();
+            $table->bigInteger('reply_to')->nullable();
             $table->bigInteger('added_by')->nullable();
             $table->bigInteger('updated_by')->nullable();
-            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tickets');
+        Schema::dropIfExists('ticket_messages');
     }
 };

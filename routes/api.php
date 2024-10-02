@@ -27,6 +27,7 @@ use App\Http\Controllers\Account\AccountHeadController;
 use App\Http\Controllers\Account\BankTransactionController;
 use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -55,6 +56,17 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ UserController::class , 'getUsers']);
     Route::post('/',  [ UserController::class , 'store']);
     Route::post('/update',  [ UserController::class , 'update']);
+});
+
+Route::group(['prefix' => 'tickets'], function(){
+    Route::post('/', [TicketController::class, 'fetchTickets']);
+    Route::get('/status-counts', [TicketController::class, 'getTicketStatusCounts']);
+    Route::post('/particular', [TicketController::class, 'getTicket']);
+
+    Route::group(['prefix' => 'messages'], function(){
+        Route::post('/add', [TicketController::class, 'storeMessage']);
+        Route::post('/particular', [TicketController::class, 'getMessages']);
+    });
 });
 
 
