@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -186,7 +186,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       name: '',
       image: '',
       description: ''
@@ -269,7 +269,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -347,7 +347,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       name: '',
       hex: '',
       image: ''
@@ -434,7 +434,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -673,7 +673,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "packagingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1161,7 +1161,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'role'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1456,7 +1456,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', "colors", "sizes", "loader", "activeStatus"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       color: {
         code: 0,
         label: 'Select from the following'
@@ -1757,7 +1757,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "packagingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2179,8 +2179,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      public_url: window.location.origin + "" + '/',
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3271,7 +3271,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3422,7 +3422,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3530,8 +3530,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -3718,7 +3718,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
