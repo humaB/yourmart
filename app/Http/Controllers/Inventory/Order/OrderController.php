@@ -80,6 +80,17 @@ class OrderController extends Controller
             ->setStatusCode(200);
     }
 
+    public function updatePaidAmount( Request $request ){
+        $order = Order::find($request->id);
+
+        $order->update([
+            'paid_amount'    => $request->amount,
+            'remaining_amount' => (float)$order->total_bill - (float)$request->amount,
+        ]);
+
+        return response()->json(['message' => 'Order status updated successfully.'], 200);
+    }
+
     public function updateStatus( Request $request ){
 
         $userRole  = trim(auth()->user()->role);

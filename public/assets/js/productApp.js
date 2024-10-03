@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -186,7 +186,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       name: '',
       image: '',
       description: ''
@@ -269,7 +269,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -347,7 +347,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       name: '',
       hex: '',
       image: ''
@@ -434,7 +434,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -673,7 +673,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "packagingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1164,10 +1164,10 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "OrderDetailView",
-  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
+  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1187,7 +1187,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       highlightedIndex: -1,
       taggedUsers: [],
       web_url: "https://yourmart.pk/",
-      scannedTrackingNumber: '' // Store the scanned QR code for tracking number
+      scannedTrackingNumber: '',
+      // Store the scanned QR code for tracking number
+      paidAmount: ''
     };
   },
   mounted: function mounted() {
@@ -1258,6 +1260,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     fetchDropshipperDetails: function fetchDropshipperDetails(id) {
       this.$emit('fetchDropshipperDetails', {
         id: id
+      });
+    },
+    updatePaidAmount: function updatePaidAmount() {
+      this.$emit('updatePaidAmount', {
+        id: this.details.id,
+        amount: this.paidAmount
       });
     },
     formatPrice: function formatPrice(price) {
@@ -1418,6 +1426,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       vm.comment = '';
       vm.attachment = '';
       vm.scannedTrackingNumber = "";
+      vm.paidAmount = "";
       $("input[type=file]").val("");
     }
   },
@@ -1527,7 +1536,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', "colors", "sizes", "loader", "activeStatus"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       color: {
         code: 0,
         label: 'Select from the following'
@@ -1828,7 +1837,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "packagingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2250,8 +2259,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3342,7 +3351,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3355,7 +3364,8 @@ __webpack_require__.r(__webpack_exports__);
       commentLoader: false,
       rejectLoader: false,
       role: '',
-      dropShipperDetails: {}
+      dropShipperDetails: {},
+      paidAmountLoader: false
     };
   },
   created: function created() {
@@ -3368,6 +3378,29 @@ __webpack_require__.r(__webpack_exports__);
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    updatePaidAmount: function updatePaidAmount(data) {
+      var _this = this;
+      var vm = this;
+      vm.paidAmountLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data).then(function (response) {
+        _this.fetchDetail(data.id);
+        vm.paidAmountLoader = false;
+        return swal({
+          title: "Success",
+          text: "Amount Updated Successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.paidAmountLoader = false;
+        return swal({
+          title: "Error",
+          text: "Oops.. Something went wrong",
+          icon: "error",
+          timer: 3000
+        });
+      });
     },
     fetchOrders: function fetchOrders() {
       var vm = this;
@@ -3497,7 +3530,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3605,8 +3638,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -3793,7 +3826,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -7790,7 +7823,7 @@ var render = function render() {
         _vm.scannedTrackingNumber = $event.target.value;
       }
     }
-  })])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.role == "order collection manager" ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
@@ -7817,7 +7850,18 @@ var render = function render() {
         _vm.paidAmount = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm._m(17)])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [!_vm.paidAmountLoader ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.updatePaidAmount();
+      }
+    }
+  }, [_vm._v("Update Amount")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled"
+  }, [_vm._v("Update Amount")])])])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -7954,14 +7998,6 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Confirm Paid Amount")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("button", {
-    staticClass: "btn btn-primary"
-  }, [_vm._v("Update Amount")])]);
 }];
 render._withStripped = true;
 
@@ -10963,6 +10999,7 @@ var render = function render() {
   }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("OrderDetailView", {
     attrs: {
       rejectLoader: _vm.rejectLoader,
+      paidAmountLoader: _vm.paidAmountLoader,
       details: _vm.details,
       loader: _vm.commentLoader,
       role: _vm.role
@@ -10979,6 +11016,9 @@ var render = function render() {
       },
       fetchDropshipperDetails: function fetchDropshipperDetails($event) {
         return _vm.fetchDropshipperDetails($event);
+      },
+      updatePaidAmount: function updatePaidAmount($event) {
+        return _vm.updatePaidAmount($event);
       }
     }
   }), _vm._v(" "), _c("DropshipperDetails", {
