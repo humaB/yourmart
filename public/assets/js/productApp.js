@@ -7444,16 +7444,18 @@ var render = function render() {
     staticClass: "col-md-6"
   }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))])]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
+  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.remaining_amount)))])]), _vm._v(" "), _vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
   }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
       id: "products_items_table"
     }
-  }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+  }, [_vm._m(8), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -7473,7 +7475,7 @@ var render = function render() {
         src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
       }
     })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.sell_price) - (parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))))])]);
-  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(8), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -7487,11 +7489,11 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalNetProfit))])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
     staticClass: "card"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(10), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
+  }, [_vm._m(11), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -7513,7 +7515,7 @@ var render = function render() {
     })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))])]);
   }), 0)])])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
-  }, [_vm._m(11), _vm._v(" "), _vm.details.payment_proof_attachment ? _c("div", {
+  }, [_vm._m(12), _vm._v(" "), _vm.details.payment_proof_attachment ? _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-2"
@@ -7701,11 +7703,11 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(12), _vm._v(" "), _c("div", {
+  }, [_vm._m(13), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(13), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
+  }, [_vm._m(14), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
@@ -7757,7 +7759,7 @@ var render = function render() {
         }
       }
     })])]);
-  }), _vm._v(" "), _vm._m(14)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+  }), _vm._v(" "), _vm._m(15)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
@@ -7848,6 +7850,12 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-6"
   }, [_c("h5", [_c("strong", [_vm._v("Paid Amount:")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("h5", [_c("strong", [_vm._v("Remaining Amount:")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
