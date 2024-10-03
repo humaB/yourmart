@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -186,7 +186,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       name: '',
       image: '',
       description: ''
@@ -269,7 +269,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -347,7 +347,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       name: '',
       hex: '',
       image: ''
@@ -434,7 +434,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -673,7 +673,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "packagingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1167,7 +1167,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1245,6 +1245,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
+    onlyNumber: function onlyNumber($event) {
+      var keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+        // 46 is dot
+        $event.preventDefault();
+      }
+    },
     calculateItemProfit: function calculateItemProfit(item) {
       return parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + parseFloat(item.price) * parseFloat(item.quantity);
     },
@@ -1520,7 +1527,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', "colors", "sizes", "loader", "activeStatus"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       color: {
         code: 0,
         label: 'Select from the following'
@@ -1821,7 +1828,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "packagingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2243,8 +2250,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      public_url: window.location.origin + "" + '/',
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3335,7 +3342,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Pending Orders"
       },
@@ -3490,7 +3497,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3598,8 +3605,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -3786,7 +3793,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -7783,7 +7790,34 @@ var render = function render() {
         _vm.scannedTrackingNumber = $event.target.value;
       }
     }
-  })])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  })])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body row"
+  }, [_vm._m(16), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.paidAmount,
+      expression: "paidAmount"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.paidAmount
+    },
+    on: {
+      keypress: _vm.onlyNumber,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.paidAmount = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _vm._m(17)])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -7914,6 +7948,20 @@ var staticRenderFns = [function () {
       colspan: "3"
     }
   }, [_vm._v("Please press enter or scan with barcode reader")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Confirm Paid Amount")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("button", {
+    staticClass: "btn btn-primary"
+  }, [_vm._v("Update Amount")])]);
 }];
 render._withStripped = true;
 

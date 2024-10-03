@@ -395,6 +395,20 @@
                                     <input type="text" class="form-control" v-model="scannedTrackingNumber">
                                 </div>
                             </div>
+
+                            <div class="card" v-if="role == 'packing & dispatch manager'">
+                                <div class="card-body row">
+                                    <div class="col-md-12">
+                                        <h5>Confirm Paid Amount</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" @keypress="onlyNumber" v-model="paidAmount">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-primary">Update Amount</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -506,6 +520,13 @@ export default {
         }
     },
     methods: {
+        onlyNumber($event) {
+            let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+            if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+                // 46 is dot
+                $event.preventDefault();
+            }
+        },
         calculateItemProfit(item) {
             return ((parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) + (parseFloat(item.price) *  parseFloat(item.quantity));
         },
