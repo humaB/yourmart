@@ -17,5 +17,6 @@ class DropShipperShop extends Model
         'store_url',
         'social_media_profile_link',
         'business_description',
+        'leopard_id'
     ];
 }

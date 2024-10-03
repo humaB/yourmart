@@ -14,7 +14,7 @@ class DropShipper extends Model
     protected $table = 'drop_shippers';
 
     protected $fillable = [
-        'leopard_id', //Defualt Zero
+        'leopard_id', //Defualt Zero Not to be used for future reference
         'full_name',
         'email',
         'password',
@@ -50,6 +50,10 @@ class DropShipper extends Model
 
     public function bank(){
         return $this->hasOne(CustomerBank::class,'id','bank_id');
+    }
+
+    public function shop(){
+        return $this->hasOne(DropShipperShop::class,'dropshipper_id','id');
     }
 
     public function shops(){
