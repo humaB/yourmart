@@ -39,7 +39,7 @@
                                                 <td width="200">
                                                     <button class="btn btn-info" @click="fetchDetail( item.id )" data-toggle="modal" data-target="#dropShipperDetail" title="View Details"><i class="fa fa-eye"></i></button>
                                                     <button class="btn btn-dark" @click="printRequest( item.id )" title="Print"><i class="fa fa-print"></i></button>
-                                                    <button class="btn btn-primary" @click="paymentDetail( item.group_id )" data-toggle="modal" data-target="#dropShipperPayment" title="Payment">Payment</button>
+                                                    <button class="btn btn-primary" @click="paymentDetail( item.group_id )" data-toggle="modal" data-target="#dropShipperPayment" title="Payment"><i class="fas fa-credit-card"></i></button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -61,7 +61,7 @@
             :loader="btnLoader"
             @decision="decision($event)"
           />
-          
+
           <DropshipperPayment
             :shopHeads="shopHeads"
             :addData="addData"
