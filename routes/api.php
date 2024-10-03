@@ -69,6 +69,8 @@ Route::group(['prefix' => 'tickets'], function(){
     });
 });
 
+Route::post('tickets/messages/upload/image', [TicketController::class, 'apiImage']); //this will be open route for now
+
 
 Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ DropShipperController::class , 'getRequests']);
