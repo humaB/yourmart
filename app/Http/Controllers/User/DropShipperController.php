@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Mail\DropshipperDecision;
+use App\Models\Account\Bank;
 use App\Mail\DropshipperDecisionMail;
+use App\Models\Account\AccountGroup;
+use App\Models\Account\Cash;
+use App\Models\Account\AccountHead;
 use App\Http\Resources\ValidationCollection;
+use App\Models\Account\AccountTransaction;
 use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
@@ -78,6 +83,73 @@ class DropShipperController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+    
+    public function paymentData(Request $request)
+    {
+        $banks = Bank::join('account_heads', 'banks.account_head_id', 'account_heads.id')
+        ->select('account_heads.*','account_heads.id as code', 'account_heads.name as label')
+        ->get();
+        $cash = Cash::join('account_heads', 'cash.account_head_id', 'account_heads.id')
+            ->select('account_heads.*','account_heads.id as code', 'account_heads.name as label')
+            ->get();
+
+        $heads = AccountHead::where('group_id', $request->id)->get(["id as code","name as label"]);
+
+        return response()->json([
+            "heads" => $heads,
+            "banks" => $banks,
+            "cash" => $cash,
+        ]);
+    }
+    
+    public function addPayment(Request $request)
+    {
+        $request->validate([
+            'type' => ['required'],
+            'head_id' => ['required'],
+            'from_account' => ['required'],
+            'amount' => ['required'],
+        ]);
+            
+        // to create document serial of BP/BR
+        $document = AccountTransaction::
+        where(function($q){
+            $q->where("type","BP");
+            $q->orWhere("type","CP");
+        })
+        ->orderBy("document_id","DESC")
+        ->first();
+        $document_id = $document ? $document->document_id + 1 : 1;
+        
+        // receipt id only generate when voucher will approved
+        $posting = AccountTransaction::create([                                         
+            'account_head_id' => $request->from_account,                                     
+            'other_account_head_id' => $request->head_id,                                      
+            'debit' => 0,   
+            'credit' => $request->amount, 
+            'document_id' => $document_id,                                            
+            'type' => $request->type == 'cash' ? 'CP' : 'BP',                                            
+            'narration' => null,                                                          
+            'cheque' => null,                                             
+            'added_by' => auth()->user()->id,
+        ]);
+
+        
+        AccountTransaction::create([                               
+            'account_head_id' => $request->head_id,                            
+            'other_account_head_id' => $request->from_account,                            
+            'debit' =>  $request->amount, 
+            'credit' => 0, 
+            'document_id' => $document_id,                                            
+            'type' => $request->type == 'cash' ? 'CP' : 'BP',                                   
+            'narration' => null,                                                                     
+            'cheque' => null,                                                 
+            'added_by' => auth()->user()->id,                                           
+        ]);
+            
+        
+        return response()->json([],200);
+    }
 
     public function decision(Request $request)
     {
@@ -85,6 +157,9 @@ class DropShipperController extends Controller
         $lock = Cache::lock('dropshipper_decision')->block(7, function () use ($request) {
 
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
+            $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
+            $group_id = null;
+            $head_id = null;
 
             if( $request->action == 'deactivate' ){
                 User::where('id', $dropshipper->user_id)->delete();
@@ -116,15 +191,33 @@ class DropShipperController extends Controller
                     'role'     => 'dropshipper',
                     'allowed_ip_address' => '*'
                 ]);
+
+                $group = $this->accountGroupFourthCreate( 
+                    $dropshipper->full_name.'-'.$dropshipper->cnic_number,
+                    6, // Current asset
+                    50, // Account Receivable
+                );
+                $group_id = $group->id;
+
+                $head = $this->accountHeadCreate( 
+                    $shop->store_name.'-'.$shop->dropshipper_id,
+                    1, // Asset
+                    6, // Current asset
+                    50, // Account Receivable
+                    $group->id, // Bank current account
+                );
+                $head_id = $head->id;
             }
 
             $dropshipper->update([
                 'user_id' => $user->id ?? 0,
+                'group_id' => $group_id,
                 'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
             ]);
 
             DropShipperShop::where('dropshipper_id', $dropshipper->id)->update([
                 'leopard_id' => $leopard,
+                'account_head_id' => $head_id,
             ]);
 
             // Prepare the data
@@ -143,6 +236,41 @@ class DropShipperController extends Controller
         });
 
         return $lock;
+    }
+
+    function accountGroupFourthCreate($name, $second, $third,) {
+
+        $code = AccountGroup::latest('id')->where('parent_id', $third )->limit(1)->value('code') + 1;
+        $code = str_pad($code, 3, '0', STR_PAD_LEFT);
+
+        $group = AccountGroup::create([
+            'name'       => strtoupper($name),
+            'code'       => $code,
+            'account_id' =>  $second, 
+            'parent_id'  => $third,
+            'company_id'  => 0,
+            'added_by'         => auth()->user()->id
+        ]);
+
+        return $group;
+    }
+
+    function accountHeadCreate($name, $first, $second, $third, $fourth) {
+
+        $code = AccountHead::latest('id')->where('group_id', $fourth )->limit(1)->value('code') + 1;
+        $code = str_pad($code, 4, '0', STR_PAD_LEFT);
+
+        $head = AccountHead::create([
+            'name' => strtoupper($name),
+            'code' => $code,
+            'parent_account_id' => $first,
+            'account_id' => $second,
+            'parent_group_id' => $third,
+            'group_id' => $fourth,
+            'added_by' => auth()->user()->id
+        ]);
+
+        return $head;
     }
 
     public function pdf(Request $request)

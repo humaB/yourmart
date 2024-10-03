@@ -36,10 +36,10 @@
                                                     <span v-if="item.status == 3" class="badge badge-danger">Deactivated</span>
                                                 </td>
                                                 <td>{{ formatDate(item.created_at) }}</td>
-                                                <td>
+                                                <td width="200">
                                                     <button class="btn btn-info" @click="fetchDetail( item.id )" data-toggle="modal" data-target="#dropShipperDetail" title="View Details"><i class="fa fa-eye"></i></button>
                                                     <button class="btn btn-dark" @click="printRequest( item.id )" title="Print"><i class="fa fa-print"></i></button>
-
+                                                    <button class="btn btn-primary" @click="paymentDetail( item.group_id )" data-toggle="modal" data-target="#dropShipperPayment" title="Payment">Payment</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -61,6 +61,15 @@
             :loader="btnLoader"
             @decision="decision($event)"
           />
+          
+          <DropshipperPayment
+            :shopHeads="shopHeads"
+            :addData="addData"
+            :loader="btnLoader"
+            :accountCash="accountCash"
+            :accountBanks="accountBanks"
+            @add="addPayment"
+          />
 
                 <!-- Summary PRINT -->
         <form method="POST" :action="public_url+'/requests/dropshippers/pdf'" target="_blank" ref="requestForm">
@@ -75,13 +84,15 @@ import { BulletListLoader } from "vue-content-loader";
 import moment from "moment";
 import TableHeader from "../../../components/table/TableHeaderComponent.vue";
 import DropshipperDetails from "../../../components/admin/request/DropshipperDetails.vue";
+import DropshipperPayment from "../../../components/admin/request/DropshipperPayment.vue";
 
     export  default {
         name : 'DropShipperRequestPage',
         components : {
             TableHeader,
             BulletListLoader,
-            DropshipperDetails
+            DropshipperDetails,
+            DropshipperPayment
         },
         data() {
             return {
@@ -96,16 +107,26 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                 registeredQuantity : 0,
                 btnLoader : false,
                 records : [],
+                shopHeads : [],
+                accountBanks : [],
+                accountCash : [],
                 loader : true,
                 details : {},
                 activeStatus : '',
                 editDetails : {},
-                id : ''
+                id : '',
+                addData: {
+                    head_id: { code: 0, label: "Select from the following" },
+                    type: null,
+                    from_account: { code: 0, label: "Select from the following" },
+                    amount: null
+                },
             };
         },
         created(){
             this.csrf = $('meta[name=csrf-token]').attr('content');
             this.fetchRecord();
+            this.addDataReset = JSON.parse(JSON.stringify(this.addData));
         },
         methods : {
             formatPrice(price) {
@@ -172,6 +193,42 @@ import DropshipperDetails from "../../../components/admin/request/DropshipperDet
                 .post(this.api_url + "dropshippers/details", { id })
                 .then((response) => {
                     vm.details = response.data.response[0]
+                });
+            },
+            paymentDetail( id ){
+                let vm = this;
+                vm.activeStatus = status;
+
+                axios
+                .post(this.api_url + "dropshippers/payments/data", { id:id })
+                .then((response) => {
+                    vm.shopHeads = response.data.heads
+                    vm.accountBanks = response.data.banks
+                    vm.accountCash = response.data.cash
+                });
+            },
+            addPayment(){
+
+                if(this.addData.head_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null)
+                {
+                    return swal({
+                            title: "Error",
+                            text: 'Please fill all field',
+                            icon: "error",
+                            timer: 3000,
+                        });
+                }
+
+                axios
+                .post(this.api_url + "dropshippers/payments/add", this.addData)
+                .then((response) => {
+                    swal({
+                        title: "Success",
+                        text: 'Saved',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                    this.addData = JSON.parse(JSON.stringify(this.addDataReset));
                 });
             },
             dataTable(){

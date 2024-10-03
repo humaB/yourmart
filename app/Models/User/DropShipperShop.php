@@ -13,10 +13,11 @@ class DropShipperShop extends Model
 
     protected $fillable = [
         'dropshipper_id',
+        'account_head_id',
         'store_name',
         'store_url',
         'social_media_profile_link',
         'business_description',
-        'leopard_id'
+        'leopard_id',
     ];
 }

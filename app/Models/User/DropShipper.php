@@ -15,6 +15,7 @@ class DropShipper extends Model
 
     protected $fillable = [
         'leopard_id', //Defualt Zero Not to be used for future reference
+        'group_id',
         'full_name',
         'email',
         'password',
@@ -41,7 +42,7 @@ class DropShipper extends Model
         'cnic_back_image',
         'profile_image',
         'status', // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
-        'user_id'
+        'user_id',
     ];
 
     public function city(){
