@@ -64,6 +64,7 @@
 
         <OrderDetailView
             :rejectLoader="rejectLoader"
+            :paidAmountLoader="paidAmountLoader"
             :details="details"
             :loader="commentLoader"
             :role="role"
@@ -71,6 +72,7 @@
             @forward="forward($event)"
             @reject="reject($event)"
             @fetchDropshipperDetails="fetchDropshipperDetails($event)"
+            @updatePaidAmount="updatePaidAmount( $event )"
         />
         <DropshipperDetails
             :details="dropShipperDetails"
@@ -108,7 +110,8 @@ export default {
             commentLoader : false,
             rejectLoader : false,
             role : '',
-            dropShipperDetails : {}
+            dropShipperDetails : {},
+            paidAmountLoader : false
         };
     },
     created() {
@@ -123,6 +126,32 @@ export default {
             return string
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        },
+        updatePaidAmount( data ){
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data)
+            .then((response) => {
+
+            this.fetchDetail(data.id);
+
+            vm.paidAmountLoader = false;
+                return swal({
+                    title: "Success",
+                    text: "Amount Updated Successfully",
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.paidAmountLoader = false;
+                return swal({
+                    title: "Error",
+                    text: "Oops.. Something went wrong",
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
         },
         fetchOrders() {
             let vm = this;
@@ -148,9 +177,7 @@ export default {
                 });
         },
         fetchDropshipperDetails( data ){
-
             let vm = this;
-
             axios
             .post(this.api_url + "dropshippers/details", { id : data.id })
             .then((response) => {

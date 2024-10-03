@@ -395,6 +395,21 @@
                                     <input type="text" class="form-control" v-model="scannedTrackingNumber">
                                 </div>
                             </div>
+
+                            <div class="card" v-if="role == 'order collection manager'">
+                                <div class="card-body row">
+                                    <div class="col-md-12">
+                                        <h5>Confirm Paid Amount</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" @keypress="onlyNumber" v-model="paidAmount">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-primary" v-if="!paidAmountLoader" @click="updatePaidAmount()">Update Amount</button>
+                                        <button class="btn btn-primary btn-progress disabled" v-else>Update Amount</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -425,7 +440,7 @@
 
 export default {
     name: "OrderDetailView",
-    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader'],
+    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
@@ -448,7 +463,8 @@ export default {
             highlightedIndex: -1,
             taggedUsers: [],
             web_url : process.env.MIX_WEB_URL,
-            scannedTrackingNumber: '' // Store the scanned QR code for tracking number
+            scannedTrackingNumber: '', // Store the scanned QR code for tracking number
+            paidAmount : ''
         }
     },
     mounted() {
@@ -506,11 +522,21 @@ export default {
         }
     },
     methods: {
+        onlyNumber($event) {
+            let keyCode = $event.keyCode ? $event.keyCode : $event.which;
+            if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+                // 46 is dot
+                $event.preventDefault();
+            }
+        },
         calculateItemProfit(item) {
             return ((parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))) + (parseFloat(item.price) *  parseFloat(item.quantity));
         },
         fetchDropshipperDetails( id ){
             this.$emit('fetchDropshipperDetails' , { id })
+        },
+        updatePaidAmount(){
+            this.$emit('updatePaidAmount', { id : this.details.id, amount : this.paidAmount });
         },
         formatPrice: function formatPrice(price) {
             var string = parseFloat(price).toString();
@@ -675,6 +701,7 @@ export default {
             vm.comment = '';
             vm.attachment = '';
             vm.scannedTrackingNumber = "";
+            vm.paidAmount = ""
             $("input[type=file]").val("");
         }
     },

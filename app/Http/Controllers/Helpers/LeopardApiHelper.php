@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Helpers;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
 class LeopardApiHelper
 {

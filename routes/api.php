@@ -208,6 +208,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
             Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
             Route::post('/reject',  [ OrderController::class , 'reject']);
+
+            Route::post('/update-paid-amount',  [ OrderController::class , 'updatePaidAmount']);
         });
 
         Route::group(['prefix' => 'settings'], function(){
