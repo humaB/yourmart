@@ -159,7 +159,7 @@
 
         <!-- Modal for Ticket Details -->
         <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-labelledby="ticketDetailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl"> <!-- Add 'modal-lg' for a larger modal -->
+            <div class="modal-dialog modal-lg"> <!-- Add 'modal-lg' for a larger modal -->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Ticket Details</h5>

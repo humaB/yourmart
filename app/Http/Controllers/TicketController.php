@@ -133,4 +133,30 @@ class TicketController extends Controller
         $path            = $image->storeAs('public/uploads/tickets/message', $nameToStore);
         return $nameToStore;
     }
+
+    public function apiImage( Request $request ){
+        // Retrieve the uploaded file
+        $image = $request->file('image');
+
+        // Get the original filename with extension
+        $filenameWithExt = $image->getClientOriginalName();
+        
+        // Get just filename
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        
+        // Get just extension
+        $extension = $image->extension();
+        
+        // Create a unique filename to store
+        $nameToStore = str_replace(' ', '', $filename) . "_" . time() . "." . $extension;
+
+        // Store the file in the specified directory (ensure the directory exists)
+        $path = $image->storeAs('public/uploads/tickets/message', $nameToStore); // Use the 'public' disk
+
+        // Return the stored filename or a success response
+        return response()->json([
+            'message' => 'Image uploaded successfully',
+            'name' => $nameToStore // You can also return the path if needed
+        ], 201);
+    }
 }
