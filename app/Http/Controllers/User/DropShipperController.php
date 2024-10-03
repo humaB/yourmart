@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Mail\DropshipperDecision;
