@@ -114,6 +114,12 @@
                                                                  <h5>{{ formatPrice(details.paid_amount) }}</h5>
                                                              </div>
                                                              <div class="col-md-6">
+                                                                <h5> <strong>Remaining Amount:</strong></h5>
+                                                             </div>
+                                                             <div class="col-md-6">
+                                                                 <h5>{{ formatPrice(details.remaining_amount) }}</h5>
+                                                             </div>
+                                                             <div class="col-md-6">
                                                                 <h5> <strong>Sell Price:</strong></h5>
                                                              </div>
                                                              <div class="col-md-6">

@@ -218,8 +218,8 @@ class OrderController extends Controller
                     ->increment('stock', $product->quantity);
             }
 
-                $order->update(['status' => '7']);
-            }
+        }
+            $order->update(['status' => '7']);
 
             $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
                 'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
@@ -235,8 +235,6 @@ class OrderController extends Controller
                 'added_by'  => auth()->user()->id,
             ]);
         }
-
-
 
         return response()->json(['message' => 'Order status updated successfully.'], 200);
 
