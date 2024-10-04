@@ -254,15 +254,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperPayment',
-  props: ['shopHeads', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
+  props: ['shops', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/"
+      web_url: "http://localhost/ds-web/",
+      api_url: window.location.origin + "/ds/public/api/",
+      shopPayments: [],
+      shop: []
     };
   },
   methods: {
     add: function add() {
       this.$emit('add');
+    },
+    numberValidate: function numberValidate(event) {
+      var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+        _ref$dot = _ref.dot,
+        dot = _ref$dot === void 0 ? false : _ref$dot,
+        _ref$maxLen = _ref.maxLen,
+        maxLen = _ref$maxLen === void 0 ? null : _ref$maxLen,
+        _ref$negative = _ref.negative,
+        negative = _ref$negative === void 0 ? false : _ref$negative,
+        _ref$comma = _ref.comma,
+        comma = _ref$comma === void 0 ? false : _ref$comma;
+      var charCode = event.charCode;
+      var value = event.target.value.toString().replace(/,/g, '');
+
+      // Allow numbers (48-57), dot (46), and control keys (0)
+      if (charCode >= 48 && charCode <= 57 || charCode === 0) {
+        // Check the length if it's not null
+        if (maxLen !== null && value.length >= maxLen) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+      // Accept dot
+      if (dot && charCode === 46) {
+        // Allow only one dot
+        if (value.includes('.')) {
+          event.preventDefault();
+          return false;
+        }
+
+        // Check the length if it's not null
+        if (maxLen !== null && value.length >= maxLen) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+      // Accept negative value
+      if (negative && charCode === 45) {
+        if (value.includes('-') || value.length !== 0) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+      event.preventDefault();
+      return false;
+    },
+    paymentShopPayments: function paymentShopPayments(id) {
+      var _this = this;
+      axios.post(this.api_url + "dropshippers/shops/payments", {
+        id: id
+      }).then(function (response) {
+        _this.shopPayments = response.data.shopPayments;
+        _this.shop = response.data.shop;
+      });
     }
   }
 });
@@ -1815,7 +1875,7 @@ __webpack_require__.r(__webpack_exports__);
       registeredQuantity: 0,
       btnLoader: false,
       records: [],
-      shopHeads: [],
+      shops: [],
       accountBanks: [],
       accountCash: [],
       loader: true,
@@ -1824,7 +1884,7 @@ __webpack_require__.r(__webpack_exports__);
       editDetails: {},
       id: '',
       addData: {
-        head_id: {
+        shop_id: {
           code: 0,
           label: "Select from the following"
         },
@@ -1833,7 +1893,8 @@ __webpack_require__.r(__webpack_exports__);
           code: 0,
           label: "Select from the following"
         },
-        amount: null
+        amount: null,
+        narration: null
       }
     };
   },
@@ -1906,14 +1967,14 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(this.api_url + "dropshippers/payments/data", {
         id: id
       }).then(function (response) {
-        vm.shopHeads = response.data.heads;
+        vm.shops = response.data.shops;
         vm.accountBanks = response.data.banks;
         vm.accountCash = response.data.cash;
       });
     },
     addPayment: function addPayment() {
       var _this2 = this;
-      if (this.addData.head_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
+      if (this.addData.shop_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
         return swal({
           title: "Error",
           text: 'Please fill all field',
@@ -1928,6 +1989,7 @@ __webpack_require__.r(__webpack_exports__);
           icon: "success",
           timer: 3000
         });
+        _this2.$refs.dropshipperPayment.paymentShopPayments(_this2.addData.shop_id);
         _this2.addData = JSON.parse(JSON.stringify(_this2.addDataReset));
       });
     },
@@ -3519,6 +3581,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
+  var _vm$shop$store_name;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -3542,92 +3605,68 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-7"
+    staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "form-group"
-  }, [_c("label", {
+  }, [_vm._m(1), _vm._v(" "), _c("v-select", {
     attrs: {
-      "for": "dropdownField"
-    }
-  }, [_vm._v("Select Head:")]), _vm._v(" "), _c("v-select", {
-    attrs: {
-      options: _vm.shopHeads,
+      options: _vm.shops,
       reduce: function reduce(option) {
         return option.code;
       }
     },
+    on: {
+      input: function input($event) {
+        return _vm.paymentShopPayments(_vm.addData.shop_id);
+      }
+    },
     model: {
-      value: _vm.addData.head_id,
+      value: _vm.addData.shop_id,
       callback: function callback($$v) {
-        _vm.$set(_vm.addData, "head_id", $$v);
+        _vm.$set(_vm.addData, "shop_id", $$v);
       },
-      expression: "addData.head_id"
+      expression: "addData.shop_id"
     }
-  })], 1), _vm._v(" "), _c("div", {
+  })], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("div", {
     staticClass: "form-group"
-  }, [_c("label", [_vm._v("Payment Method:")]), _c("br"), _vm._v(" "), _c("div", {
-    staticClass: "form-check"
-  }, [_c("input", {
+  }, [_vm._m(2), _c("br"), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
       value: _vm.addData.type,
       expression: "addData.type"
     }],
-    staticClass: "form-check-input",
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.addData, "type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
     attrs: {
-      type: "radio",
-      id: "paymentCash",
+      value: "null"
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
       value: "cash"
-    },
-    domProps: {
-      checked: _vm._q(_vm.addData.type, "cash")
-    },
-    on: {
-      change: function change($event) {
-        return _vm.$set(_vm.addData, "type", "cash");
-      }
     }
-  }), _vm._v(" "), _c("label", {
-    staticClass: "form-check-label",
+  }, [_vm._v("Cash")]), _vm._v(" "), _c("option", {
     attrs: {
-      "for": "paymentCash"
-    }
-  }, [_vm._v("Cash")])]), _vm._v(" "), _c("div", {
-    staticClass: "form-check"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.addData.type,
-      expression: "addData.type"
-    }],
-    staticClass: "form-check-input",
-    attrs: {
-      type: "radio",
-      id: "paymentBank",
       value: "bank"
-    },
-    domProps: {
-      checked: _vm._q(_vm.addData.type, "bank")
-    },
-    on: {
-      change: function change($event) {
-        return _vm.$set(_vm.addData, "type", "bank");
-      }
     }
-  }), _vm._v(" "), _c("label", {
-    staticClass: "form-check-label",
-    attrs: {
-      "for": "paymentBank"
-    }
-  }, [_vm._v("Bank")])])]), _vm._v(" "), _vm.addData.type == "bank" ? _c("div", {
+  }, [_vm._v("Bank")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_vm.addData.type == "bank" ? _c("div", {
     staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "dropdownField"
-    }
-  }, [_vm._v("Select Bank Account:")]), _vm._v(" "), _c("v-select", {
+  }, [_vm._m(3), _vm._v(" "), _c("v-select", {
     attrs: {
       options: _vm.accountBanks,
       reduce: function reduce(option) {
@@ -3641,13 +3680,9 @@ var render = function render() {
       },
       expression: "addData.from_account"
     }
-  })], 1) : _vm._e(), _vm._v(" "), _vm.addData.type == "cash" ? _c("div", {
+  })], 1) : _vm.addData.type == "cash" ? _c("div", {
     staticClass: "form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "dropdownField"
-    }
-  }, [_vm._v("Select Cash Account:")]), _vm._v(" "), _c("v-select", {
+  }, [_vm._m(4), _vm._v(" "), _c("v-select", {
     attrs: {
       options: _vm.accountCash,
       reduce: function reduce(option) {
@@ -3661,13 +3696,23 @@ var render = function render() {
       },
       expression: "addData.from_account"
     }
-  })], 1) : _vm._e(), _vm._v(" "), _c("div", {
+  })], 1) : _c("div", {
     staticClass: "form-group"
   }, [_c("label", {
     attrs: {
-      "for": "amountField"
+      "for": "dropdownField"
     }
-  }, [_vm._v("Amount:")]), _vm._v(" "), _c("input", {
+  }, [_vm._v("Select Payment Method First")]), _vm._v(" "), _c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      disabled: ""
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_vm._m(5), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3676,7 +3721,7 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      type: "number",
+      type: "text",
       id: "amountField",
       placeholder: "Enter amount"
     },
@@ -3684,12 +3729,58 @@ var render = function render() {
       value: _vm.addData.amount
     },
     on: {
+      keypress: function keypress($event) {
+        return _vm.numberValidate($event, {
+          dot: true
+        });
+      },
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.$set(_vm.addData, "amount", $event.target.value);
       }
     }
-  })])]), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c("div", {
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "amountField"
+    }
+  }, [_vm._v("Narration")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.addData.narration,
+      expression: "addData.narration"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      id: "amountField",
+      placeholder: "Enter amount"
+    },
+    domProps: {
+      value: _vm.addData.narration
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.addData, "narration", $event.target.value);
+      }
+    }
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "py-1"
+  }, [_c("h5", {
+    staticClass: "text-capitalize"
+  }, [_vm._v(_vm._s((_vm$shop$store_name = _vm.shop.store_name) !== null && _vm$shop$store_name !== void 0 ? _vm$shop$store_name : "") + " Payment History")]), _vm._v(" "), _c("table", {
+    staticClass: "table"
+  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.shopPayments, function (item, index) {
+    var _item$narration;
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(item.debit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s((_item$narration = item.narration) !== null && _item$narration !== void 0 ? _item$narration : "No Added"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.time))])]);
+  }), 0)])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("button", {
     staticClass: "btn btn-primary",
@@ -3735,9 +3826,53 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-5 border"
-  }, [_c("h5", [_vm._v("Payment History")])]);
+  return _c("label", {
+    attrs: {
+      "for": "dropdownField"
+    }
+  }, [_vm._v("Select Shop "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", [_vm._v("Payment Method "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": "dropdownField"
+    }
+  }, [_vm._v("Select Bank Account "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": "dropdownField"
+    }
+  }, [_vm._v("Select Cash Account "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": "amountField"
+    }
+  }, [_vm._v("Amount "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Narration")]), _vm._v(" "), _c("th", [_vm._v("Time")])])]);
 }];
 render._withStripped = true;
 
@@ -7534,7 +7669,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.paymentDetail(item.group_id);
+          return _vm.paymentDetail(item.id);
         }
       }
     }, [_c("i", {
@@ -7551,8 +7686,9 @@ var render = function render() {
       }
     }
   }), _vm._v(" "), _c("DropshipperPayment", {
+    ref: "dropshipperPayment",
     attrs: {
-      shopHeads: _vm.shopHeads,
+      shops: _vm.shops,
       addData: _vm.addData,
       loader: _vm.btnLoader,
       accountCash: _vm.accountCash,

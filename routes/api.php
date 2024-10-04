@@ -78,6 +78,7 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
     Route::get('/orders',  [ DropShipperController::class , 'orders']);
+    Route::post('/shops/payments',  [ DropShipperController::class , 'shopPayments']);
 
     Route::group(['prefix' => 'payments'], function(){
         Route::post('/data',  [ DropShipperController::class , 'paymentData']);

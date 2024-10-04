@@ -39,7 +39,7 @@
                                                 <td width="200">
                                                     <button class="btn btn-info" @click="fetchDetail( item.id )" data-toggle="modal" data-target="#dropShipperDetail" title="View Details"><i class="fa fa-eye"></i></button>
                                                     <button class="btn btn-dark" @click="printRequest( item.id )" title="Print"><i class="fa fa-print"></i></button>
-                                                    <button class="btn btn-primary" @click="paymentDetail( item.group_id )" data-toggle="modal" data-target="#dropShipperPayment" title="Payment"><i class="fas fa-credit-card"></i></button>
+                                                    <button class="btn btn-primary" @click="paymentDetail( item.id )" data-toggle="modal" data-target="#dropShipperPayment" title="Payment"><i class="fas fa-credit-card"></i></button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -63,7 +63,8 @@
           />
 
           <DropshipperPayment
-            :shopHeads="shopHeads"
+            ref="dropshipperPayment"
+            :shops="shops"
             :addData="addData"
             :loader="btnLoader"
             :accountCash="accountCash"
@@ -107,7 +108,7 @@ import DropshipperPayment from "../../../components/admin/request/DropshipperPay
                 registeredQuantity : 0,
                 btnLoader : false,
                 records : [],
-                shopHeads : [],
+                shops : [],
                 accountBanks : [],
                 accountCash : [],
                 loader : true,
@@ -116,10 +117,11 @@ import DropshipperPayment from "../../../components/admin/request/DropshipperPay
                 editDetails : {},
                 id : '',
                 addData: {
-                    head_id: { code: 0, label: "Select from the following" },
+                    shop_id: { code: 0, label: "Select from the following" },
                     type: null,
                     from_account: { code: 0, label: "Select from the following" },
-                    amount: null
+                    amount: null,
+                    narration: null
                 },
             };
         },
@@ -202,14 +204,14 @@ import DropshipperPayment from "../../../components/admin/request/DropshipperPay
                 axios
                 .post(this.api_url + "dropshippers/payments/data", { id:id })
                 .then((response) => {
-                    vm.shopHeads = response.data.heads
+                    vm.shops = response.data.shops
                     vm.accountBanks = response.data.banks
                     vm.accountCash = response.data.cash
                 });
             },
             addPayment(){
 
-                if(this.addData.head_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null)
+                if(this.addData.shop_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null)
                 {
                     return swal({
                             title: "Error",
@@ -228,6 +230,7 @@ import DropshipperPayment from "../../../components/admin/request/DropshipperPay
                         icon: "success",
                         timer: 3000,
                     });
+                    this.$refs.dropshipperPayment.paymentShopPayments(this.addData.shop_id);
                     this.addData = JSON.parse(JSON.stringify(this.addDataReset));
                 });
             },
