@@ -204,7 +204,7 @@ class DropShipperController extends Controller
                     1, // Asset
                     6, // Current asset
                     50, // Account Receivable
-                    $group->id, // Bank current account
+                    $group->id, // Dropshipper
                 );
                 $head_id = $head->id;
             }
