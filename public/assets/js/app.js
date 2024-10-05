@@ -1882,7 +1882,16 @@ __webpack_require__.r(__webpack_exports__);
       details: {},
       activeStatus: '',
       editDetails: {},
+      totalRequest: 0,
+      pendingRequest: 0,
+      approvedRequest: 0,
+      rejectedRequest: 0,
       id: '',
+      filter: {
+        status: '',
+        from: '',
+        to: ''
+      },
       addData: {
         shop_id: {
           code: 0,
@@ -1945,11 +1954,26 @@ __webpack_require__.r(__webpack_exports__);
     fetchRecord: function fetchRecord() {
       var vm = this;
       vm.loader = false;
-      axios.get(this.api_url + "dropshippers").then(function (response) {
+      axios.get(this.api_url + "dropshippers", {
+        params: {
+          status: vm.filter.status,
+          from: vm.filter.from,
+          to: vm.filter.to
+        }
+      }).then(function (response) {
         vm.records = response.data.response;
-        setTimeout(function () {
-          vm.dataTable();
-        }, 300);
+
+        // Calculate request statistics
+        vm.totalRequest = vm.records.length;
+        vm.pendingRequest = vm.records.filter(function (record) {
+          return record.status === 0;
+        }).length;
+        vm.approvedRequest = vm.records.filter(function (record) {
+          return record.status === 1;
+        }).length;
+        vm.rejectedRequest = vm.records.filter(function (record) {
+          return record.status === 2;
+        }).length;
       });
     },
     fetchDetail: function fetchDetail(id, status) {
@@ -1960,6 +1984,20 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         vm.details = response.data.response[0];
       });
+    },
+    applyFilter: function applyFilter() {
+      this.clearDataTable();
+      this.fetchRecord();
+    },
+    resetFilter: function resetFilter() {
+      var vm = this;
+      vm.filter = {
+        status: '',
+        from: '',
+        to: ''
+      };
+      this.clearDataTable();
+      this.fetchRecord();
     },
     paymentDetail: function paymentDetail(id) {
       var vm = this;
@@ -1999,6 +2037,19 @@ __webpack_require__.r(__webpack_exports__);
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
       table.destroy();
+    }
+  },
+  watch: {
+    records: function records(newLedger) {
+      setTimeout(function () {
+        $("#moq_table").DataTable({
+          paging: false,
+          ordering: false,
+          info: false,
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel"]
+        });
+      }, 300);
     }
   }
 });
@@ -7593,6 +7644,193 @@ var render = function render() {
       tableHeader: _vm.tableHeader
     }
   }), _vm._v(" "), _c("div", {
+    staticClass: "row px-4"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.totalRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Request's")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.pendingRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Pending")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.approvedRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Approved")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.rejectedRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Rejected")])])])])])]), _vm._v(" "), _c("form", {
+    staticClass: "row col-md-12",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.applyFilter.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Select Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.status,
+      expression: "filter.status"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "0"
+    }
+  }, [_vm._v("Pending")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "1"
+    }
+  }, [_vm._v("Approved")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "2"
+    }
+  }, [_vm._v("Rejected")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "3"
+    }
+  }, [_vm._v("Deactivated")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Action")]), _c("br"), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary mr-2 btn-block",
+    on: {
+      click: _vm.applyFilter
+    }
+  }, [_vm._v("Filter")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger btn-block",
+    on: {
+      click: _vm.resetFilter
+    }
+  }, [_vm._v("Reset")])])])]), _vm._v(" "), _c("div", {
     staticClass: "card-body row"
   }, [_c("div", {
     staticClass: "col-md-12 mt-3"
@@ -7611,6 +7849,7 @@ var render = function render() {
   })], 1) : _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
+    ref: "datatable",
     staticClass: "table table-bordered",
     attrs: {
       id: _vm.table_id
@@ -7722,7 +7961,39 @@ var render = function render() {
     }
   })])], 1);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-chart-pie"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-spinner"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-thumbs-up"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-thumbs-down"
+  })]);
+}];
 render._withStripped = true;
 
 
