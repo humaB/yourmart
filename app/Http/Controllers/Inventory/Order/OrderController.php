@@ -137,12 +137,12 @@ class OrderController extends Controller
         }
 
          // Map roles to corresponding statuses
-        $statusMap = [
+       $statusMap = [
             'order collection manager' => 1,    // Role for order collection
             'inventory manager' => 2,  // Role for inventory issuance
             'qc manager' => 3,         // Role for quality control
             'packing & dispatch manager' => 4,    // Role for packing and dispatch
-            'autidor'                    => 5    // Role for packing and dispatch
+            'auditor'                    => 5    // Role for packing and dispatch
         ];
 
         if (array_key_exists($userRole, $statusMap)) {
