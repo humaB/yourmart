@@ -193,6 +193,25 @@ class OrderController extends Controller
 
         }     else if($userRole == 'admin'){
 
+            if( $order->status == '0'){
+
+                $leopardData = [
+                    'track_number' => null,
+                    'slip_link'    => null
+                ];
+
+                $leopardApi = new LeopardApiHelper();
+                $city = City::where('id', $order->city_id)->first();
+                $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id) ;
+
+                $order->update([
+                    'tracking_number'       => $leopardData['track_number'],
+                    'slip_link'             => $leopardData['slip_link']
+                ]);
+
+            }
+
             if( $order->status == '1'){
                 $issuance = StoreIssuance::create([
                     'order_id'  => $request->id,
