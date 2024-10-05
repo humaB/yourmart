@@ -11109,7 +11109,7 @@ var render = function render() {
       "data-height": "6"
     }
   }, [_c("div", {
-    staticClass: "progress-bar bg-warning",
+    staticClass: "progress-bar bg-light",
     style: {
       width: _vm.getPercentage(_vm.totalOrders.audit) + "%"
     }

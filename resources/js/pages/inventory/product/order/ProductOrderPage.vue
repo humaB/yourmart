@@ -63,7 +63,7 @@
                                                 {{ getPercentage(totalOrders.audit) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-warning" :style="{ width: getPercentage(totalOrders.audit) + '%' }"></div>
+                                                <div class="progress-bar bg-light" :style="{ width: getPercentage(totalOrders.audit) + '%' }"></div>
                                             </div>
                                             {{ totalOrders.audit }}
                                         </td>
