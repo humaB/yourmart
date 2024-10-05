@@ -2043,9 +2043,6 @@ __webpack_require__.r(__webpack_exports__);
     records: function records(newLedger) {
       setTimeout(function () {
         $("#moq_table").DataTable({
-          paging: false,
-          ordering: false,
-          info: false,
           dom: "Bfrtip",
           buttons: ["copy", "csv", "excel"]
         });

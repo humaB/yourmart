@@ -300,7 +300,7 @@ export default {
                     vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
                     vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
 
-                 
+
                 });
         },
         fetchDetail(id, status) {
@@ -376,9 +376,6 @@ export default {
         records(newLedger) {
             setTimeout(() => {
                 $("#moq_table").DataTable({
-                    paging: false,
-                    ordering: false,
-                    info: false,
                     dom: "Bfrtip",
                     buttons: ["copy","csv","excel"],
                 });

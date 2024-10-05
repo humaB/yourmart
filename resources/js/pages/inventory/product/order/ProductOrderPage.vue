@@ -5,6 +5,130 @@
                 <div class="card card-primary">
                     <TableHeader :tableHeader="tableHeader" />
 
+                    <div class="card"  v-if="role == 'admin'">
+                        <div class="card-body px-2">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tr>
+                                        <th>Total Orders</th>
+                                        <th>Order Collection</th>
+                                        <th>Inventory Manager</th>
+                                        <th>QC Manager</th>
+                                        <th>Packing & Dispatch</th>
+                                        <th>Audit Manager</th>
+                                        <th>Dispatched</th>
+                                        <th>Rejection Under Review</th>
+                                        <th>Rejected</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ totalOrders.totalOrders }}</td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.orderCollection) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-warning" :style="{ width: getPercentage(totalOrders.orderCollection) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.orderCollection }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.inventoryManager) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-primary" :style="{ width: getPercentage(totalOrders.inventoryManager) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.inventoryManager }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.qcManager) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-info" :style="{ width: getPercentage(totalOrders.qcManager) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.qcManager }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.packing) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-dark" :style="{ width: getPercentage(totalOrders.packing) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.packing }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.audit) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-warning" :style="{ width: getPercentage(totalOrders.audit) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.audit }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.dispatched) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-success" :style="{ width: getPercentage(totalOrders.dispatched) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.dispatched }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.underReview) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-warning" :style="{ width: getPercentage(totalOrders.underReview) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.underReview }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.rejected) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalOrders.rejected) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.rejected }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <form @submit.prevent="applyFilter" class="row col-md-12 mb-3">
+                            <div class="col-md-3">
+                                <label for="">Select Status</label>
+                                <select v-model="filter.status" class="form-control">
+                                    <option value="">Select from the following</option>
+                                    <option value="0">Order Collection</option>
+                                    <option value="1">Inventory Manager</option>
+                                    <option value="2">QA Manager</option>
+                                    <option value="3">Packing/Dispatch</option>
+                                    <option value="4">Auditor</option>
+                                    <option value="5">Under Review</option>
+                                    <option value="7">Rejected</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">From</label>
+                                <input type="date" v-model="filter.from" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">To</label>
+                                <input type="date" v-model="filter.to" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Action</label><br>
+                                <button class="btn btn-primary mr-2" @click="applyFilter">Filter</button>
+                                <button class="btn btn-danger" @click="resetFilter">Reset</button>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="card-body row">
                         <!-- Table -->
                         <div class="col-md-12 mt-3">
@@ -99,7 +223,7 @@ export default {
         return {
             api_url: window.location.origin + process.env.MIX_API_URL,
             tableHeader: {
-                heading: "Pending Orders",
+                heading: "All Orders",
             },
             th: ["Sr #", "Order #", "Belongs To","Total Amount","Paid Amount", "Remaining Amount",  "Added Date", "Status","Action"],
             table_id: "moq_table",
@@ -111,13 +235,48 @@ export default {
             rejectLoader : false,
             role : '',
             dropShipperDetails : {},
-            paidAmountLoader : false
+            paidAmountLoader : false,
+            totalOrders: {
+                totalOrders: 0,
+                orderCollection: 0,
+                inventoryManager: 0,
+                qcManager: 0,
+                packing: 0,
+                audit: 0,
+                dispatched : 0,
+                underReview: 0,
+                rejected : 0
+            },
+            filter: {
+                status: '',
+                from: '',
+                to: '',
+            },
         };
     },
     created() {
         this.fetchOrders();
     },
     methods: {
+        applyFilter() {
+            this.clearDataTable();
+            this.fetchOrders();
+        },
+        resetFilter() {
+            let vm = this;
+            vm.filter = {
+                status: '',
+                from: '',
+                to: ''
+            }
+
+            this.clearDataTable();
+            this.fetchOrders();
+        },
+        getPercentage(statusCount) {
+            if (this.totalOrders.totalOrders === 0) return 0;
+            return Math.round((statusCount / this.totalOrders.totalOrders) * 100);
+        },
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },
@@ -158,15 +317,61 @@ export default {
 
             vm.loader = false;
             axios
-                .get(this.api_url + "inventory/products/orders")
+                .get(this.api_url + "inventory/products/orders",{
+                    params: {
+                        status: vm.filter.status,
+                        from: vm.filter.from,
+                        to: vm.filter.to,
+                    },
+                })
                 .then((response) => {
                     vm.orders = response.data.response.orders
                     vm.role   = response.data.response.role
 
-                    setTimeout(() => {
-                        vm.dataTable();
-                    }, 300);
+                     // Reset totalOrders object before populating it
+                vm.totalOrders = {
+                    totalOrders: 0,
+                    orderCollection: 0,
+                    inventoryManager: 0,
+                    qcManager: 0,
+                    packing: 0,
+                    audit: 0,
+                    underReview: 0,
+                    rejected: 0,
+                    dispatched : 0
+                };
+
+                // Process orders and calculate total counts based on the status
+                vm.orders.forEach((order) => {
+                    vm.totalOrders.totalOrders++;
+                    switch (order.status) {
+                        case 0: // Order Collection
+                            vm.totalOrders.orderCollection++;
+                            break;
+                        case 1: // Inventory Manager
+                            vm.totalOrders.inventoryManager++;
+                            break;
+                        case 2: // QA Manager
+                            vm.totalOrders.qcManager++;
+                            break;
+                        case 3: // Packing/Dispatch
+                            vm.totalOrders.packing++;
+                            break;
+                        case 4: // Auditor
+                            vm.totalOrders.audit++;
+                            break;
+                        case 5: // Dispatched
+                            vm.totalOrders.dispatched++;
+                            break;
+                        case 6: // Under Review
+                            vm.totalOrders.underReview++;
+                            break;
+                        case 7: // Rejected
+                            vm.totalOrders.rejected++;
+                            break;
+                    }
                 });
+            });
         },
         fetchDetail(id) {
             let vm = this;
@@ -219,7 +424,8 @@ export default {
 
             setTimeout( () => {
                 $("#ticket").modal('hide');
-            },2000)
+            },2000);
+
             return swal({
                 title: "Success",
                 text: "Order Rejected Successfully",
@@ -268,6 +474,17 @@ export default {
             const table = $("#moq_table").DataTable();
             table.destroy();
         },
-    }
+    },
+    watch: {
+        orders(newLedger) {
+            this.clearDataTable();
+            setTimeout(() => {
+                $("#moq_table").DataTable({
+                    dom: "Bfrtip",
+                    buttons: ["copy","csv","excel"],
+                });
+            }, 300);
+        },
+    },
 }
 </script>

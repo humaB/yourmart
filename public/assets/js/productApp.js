@@ -3353,7 +3353,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       api_url: window.location.origin + "/public/api/",
       tableHeader: {
-        heading: "Pending Orders"
+        heading: "All Orders"
       },
       th: ["Sr #", "Order #", "Belongs To", "Total Amount", "Paid Amount", "Remaining Amount", "Added Date", "Status", "Action"],
       table_id: "moq_table",
@@ -3365,13 +3365,47 @@ __webpack_require__.r(__webpack_exports__);
       rejectLoader: false,
       role: '',
       dropShipperDetails: {},
-      paidAmountLoader: false
+      paidAmountLoader: false,
+      totalOrders: {
+        totalOrders: 0,
+        orderCollection: 0,
+        inventoryManager: 0,
+        qcManager: 0,
+        packing: 0,
+        audit: 0,
+        dispatched: 0,
+        underReview: 0,
+        rejected: 0
+      },
+      filter: {
+        status: '',
+        from: '',
+        to: ''
+      }
     };
   },
   created: function created() {
     this.fetchOrders();
   },
   methods: {
+    applyFilter: function applyFilter() {
+      this.clearDataTable();
+      this.fetchOrders();
+    },
+    resetFilter: function resetFilter() {
+      var vm = this;
+      vm.filter = {
+        status: '',
+        from: '',
+        to: ''
+      };
+      this.clearDataTable();
+      this.fetchOrders();
+    },
+    getPercentage: function getPercentage(statusCount) {
+      if (this.totalOrders.totalOrders === 0) return 0;
+      return Math.round(statusCount / this.totalOrders.totalOrders * 100);
+    },
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
@@ -3405,12 +3439,67 @@ __webpack_require__.r(__webpack_exports__);
     fetchOrders: function fetchOrders() {
       var vm = this;
       vm.loader = false;
-      axios.get(this.api_url + "inventory/products/orders").then(function (response) {
+      axios.get(this.api_url + "inventory/products/orders", {
+        params: {
+          status: vm.filter.status,
+          from: vm.filter.from,
+          to: vm.filter.to
+        }
+      }).then(function (response) {
         vm.orders = response.data.response.orders;
         vm.role = response.data.response.role;
-        setTimeout(function () {
-          vm.dataTable();
-        }, 300);
+
+        // Reset totalOrders object before populating it
+        vm.totalOrders = {
+          totalOrders: 0,
+          orderCollection: 0,
+          inventoryManager: 0,
+          qcManager: 0,
+          packing: 0,
+          audit: 0,
+          underReview: 0,
+          rejected: 0,
+          dispatched: 0
+        };
+
+        // Process orders and calculate total counts based on the status
+        vm.orders.forEach(function (order) {
+          vm.totalOrders.totalOrders++;
+          switch (order.status) {
+            case 0:
+              // Order Collection
+              vm.totalOrders.orderCollection++;
+              break;
+            case 1:
+              // Inventory Manager
+              vm.totalOrders.inventoryManager++;
+              break;
+            case 2:
+              // QA Manager
+              vm.totalOrders.qcManager++;
+              break;
+            case 3:
+              // Packing/Dispatch
+              vm.totalOrders.packing++;
+              break;
+            case 4:
+              // Auditor
+              vm.totalOrders.audit++;
+              break;
+            case 5:
+              // Dispatched
+              vm.totalOrders.dispatched++;
+              break;
+            case 6:
+              // Under Review
+              vm.totalOrders.underReview++;
+              break;
+            case 7:
+              // Rejected
+              vm.totalOrders.rejected++;
+              break;
+          }
+        });
       });
     },
     fetchDetail: function fetchDetail(id) {
@@ -3498,6 +3587,17 @@ __webpack_require__.r(__webpack_exports__);
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
       table.destroy();
+    }
+  },
+  watch: {
+    orders: function orders(newLedger) {
+      this.clearDataTable();
+      setTimeout(function () {
+        $("#moq_table").DataTable({
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel"]
+        });
+      }, 300);
     }
   }
 });
@@ -10935,7 +11035,260 @@ var render = function render() {
     attrs: {
       tableHeader: _vm.tableHeader
     }
-  }), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _vm.role == "admin" ? _c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body px-2"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_vm._m(0), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalOrders.totalOrders))]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.orderCollection)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-warning",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.orderCollection) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.orderCollection) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.inventoryManager)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-primary",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.inventoryManager) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.inventoryManager) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.qcManager)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-info",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.qcManager) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.qcManager) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.packing)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-dark",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.packing) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.packing) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.audit)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-warning",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.audit) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.audit) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.dispatched)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-success",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.dispatched) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.dispatched) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.underReview)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-warning",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.underReview) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.underReview) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.rejected)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-danger",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.rejected) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.rejected) + "\n                                    ")])])])])]), _vm._v(" "), _c("form", {
+    staticClass: "row col-md-12 mb-3",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.applyFilter.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Select Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.status,
+      expression: "filter.status"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "0"
+    }
+  }, [_vm._v("Order Collection")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "1"
+    }
+  }, [_vm._v("Inventory Manager")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "2"
+    }
+  }, [_vm._v("QA Manager")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "3"
+    }
+  }, [_vm._v("Packing/Dispatch")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "4"
+    }
+  }, [_vm._v("Auditor")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "5"
+    }
+  }, [_vm._v("Under Review")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "7"
+    }
+  }, [_vm._v("Rejected")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Action")]), _c("br"), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary mr-2",
+    on: {
+      click: _vm.applyFilter
+    }
+  }, [_vm._v("Filter")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: _vm.resetFilter
+    }
+  }, [_vm._v("Reset")])])])]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "card-body row"
   }, [_c("div", {
     staticClass: "col-md-12 mt-3"
@@ -11027,7 +11380,11 @@ var render = function render() {
     }
   })], 1);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Order Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory Manager")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing & Dispatch")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Rejection Under Review")]), _vm._v(" "), _c("th", [_vm._v("Rejected")])]);
+}];
 render._withStripped = true;
 
 

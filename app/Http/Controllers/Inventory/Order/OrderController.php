@@ -26,7 +26,7 @@ class OrderController extends Controller
         return view('inventory.product.order.orders');
     }
 
-    public function fetchOrders(){
+    public function fetchOrders( Request $request ){
         $userRole  = trim(auth()->user()->role);
           // Map roles to corresponding statuses
         $statusMap = [
@@ -45,6 +45,17 @@ class OrderController extends Controller
         }else{
             $orders = Order::with('user', 'shop')
             ->orderBy('id', 'desc')
+            // Apply status filter when provided
+            ->when($request->status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            // Apply date range filters when provided
+            ->when($request->from, function ($query, $from) {
+                return $query->whereDate('created_at', '>=', $from);
+            })
+            ->when($request->to, function ($query, $to) {
+                return $query->whereDate('created_at', '<=', $to);
+            })
             ->get();
         }
 
