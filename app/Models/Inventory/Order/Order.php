@@ -37,7 +37,9 @@ class Order extends Model
         'selling_price',
         'packaging_price',
         'status', // 0 => Dailer || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Courier || 6 => Admin approval for Rejected || 7 => Rejected
+        'total_weight',
         'tracking_number',
+        'slip_link', // from Leopard
         'belongs_to',
     ];
 

@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Inventory\Order;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Resources\ResponseCollection;
+use App\Models\City;
+use App\Models\Inventory\Courier\CourierCategoryRange;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
@@ -148,6 +151,25 @@ class OrderController extends Controller
         if (array_key_exists($userRole, $statusMap)) {
             // Update the order status based on the role
             $order->update(['status' => $statusMap[$userRole]]);
+
+            if( $userRole == 'order collection manager'){
+
+                $leopardData = [
+                    'track_number' => null,
+                    'slip_link'    => null
+                ];
+
+                $leopardApi = new LeopardApiHelper();
+                $city = City::where('id', $order->city_id)->first();
+                $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id) ;
+
+                $order->update([
+                    'tracking_number'       => $leopardData['track_number'],
+                    'slip_link'             => $leopardData['slip_link']
+                ]);
+
+            }
 
             if($userRole == 'inventory manager'){
                 $issuance = StoreIssuance::create([

@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('order_items', function (Blueprint $table) {
-            $table->decimal('total_weight', 15 , 2)->change();
+        Schema::table('orders', function (Blueprint $table) {
+            $table->decimal('total_weight', 15 , 2)->after('status')->default(0);
         });
     }
 
@@ -25,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropColumn('total_weight');
+        });
     }
 };

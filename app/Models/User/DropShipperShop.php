@@ -20,4 +20,8 @@ class DropShipperShop extends Model
         'business_description',
         'leopard_id',
     ];
+
+    public function dropshipper(){
+        return $this->belongsTo(Dropshipper::class, 'dropshipper_id', 'id');
+    }
 }
