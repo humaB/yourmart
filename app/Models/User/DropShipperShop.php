@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\DropShipper;
 
 class DropShipperShop extends Model
 {
@@ -22,6 +23,6 @@ class DropShipperShop extends Model
     ];
 
     public function dropshipper(){
-        return $this->belongsTo(Dropshipper::class, 'dropshipper_id', 'id');
+        return $this->belongsTo(DropShipper::class, 'dropshipper_id', 'id');
     }
 }
