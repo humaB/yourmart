@@ -81,7 +81,7 @@
                 .catch((err) => this.fetchStock());
             },
             dataTable() {
-                $("#moq_table").DataTable({
+                $("#stock_table").DataTable({
                     dom: "Bfrtip",
                     buttons: ["copy","csv","excel"],
                 });

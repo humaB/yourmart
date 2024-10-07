@@ -1005,7 +1005,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     dataTable: function dataTable() {
-      $("#moq_table").DataTable({
+      $("#stock_table").DataTable({
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel"]
       });
