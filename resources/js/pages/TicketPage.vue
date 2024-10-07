@@ -218,6 +218,8 @@
                                 </div>
                             </div>
 
+                            
+
                             <!-- New Fields for Message, Attachment, and Status -->
                             <div class="mb-2 row">
                                 <div class="col-12"> <!-- Half width for the file input -->
