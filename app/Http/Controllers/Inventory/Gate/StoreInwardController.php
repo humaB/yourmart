@@ -137,7 +137,7 @@ class StoreInwardController extends Controller
                         $avg_price = ( ( (float)$variation->avg_price * (float)$variation->stock ) + ( (float)$receivedQty * (float)$data->price) ) / ( (float)$variation->stock + (float)$receivedQty);
 
                         $variation->increment('stock', $receivedQty);
-                        $variation->update(['avg_price' =>  $avg_price]);
+                        $variation->update(['avg_price' =>  round($avg_price) ]);
 
                         if (isset($product->qrCodeDataUrl) && $product->qrCodeDataUrl) {
                             ProductQrCode::updateOrCreate(
