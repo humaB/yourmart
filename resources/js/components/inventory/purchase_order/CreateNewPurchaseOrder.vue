@@ -93,6 +93,10 @@
                                                 <td><input type="text" v-model="tax" class="form-control" @input="calculateTotals" @keypress="onlyNumber" ></td>
                                             </tr>
                                             <tr>
+                                                <td>Delivery Charges:</td>
+                                                <td><input type="text" v-model="deliveryCharges" class="form-control" @input="calculateTotals" @keypress="onlyNumber" ></td>
+                                            </tr>
+                                            <tr>
                                                 <td>Net Amount:</td>
                                                 <td>{{ netAmount }}</td>
                                             </tr>
@@ -137,7 +141,8 @@ export default {
             advance: 0,
             delivery: 0,
             discount: 0,
-            tax : 0
+            tax : 0,
+            deliveryCharges : 0
         };
     },
     computed: {
@@ -154,7 +159,8 @@ export default {
             const subtotal = parseFloat(this.subtotal) || 0;
             const discount = parseFloat(this.discount) || 0;
             const tax = parseFloat(this.tax) || 0;
-            return (subtotal - discount + tax).toFixed(2);
+            const delivery = parseFloat(this.deliveryCharges) || 0;
+            return (subtotal - discount + (tax + delivery)).toFixed(2);
         }
     },
     mounted() {
@@ -224,6 +230,7 @@ export default {
             fd.append('advance', vm.advance);
             fd.append('delivery', vm.delivery);
             fd.append('discount', vm.discount);
+            fd.append('deliveryCharges', vm.deliveryCharges);
             fd.append('tax', vm.tax);
 
             // Append the expenses array (convert to JSON string)
@@ -252,6 +259,7 @@ export default {
             vm.tax = 0;
             vm.advance = 0;
             vm.delivery = 0;
+            vm.deliveryCharges = 0;
             vm.expenses = [
                 { product: { code : 0 , label : "Select from the following"}, rate: '', qty: '' } // Initialize with one row
             ];

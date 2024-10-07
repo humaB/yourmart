@@ -21,6 +21,7 @@ class PurchaseOrderDetail extends Model
         'quantity',
         'price',
         'tax',
+        'delivery_charges',
         'discount',
         'total',
         'added_by',

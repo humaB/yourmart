@@ -95,51 +95,60 @@ class StoreInwardController extends Controller
             foreach( $products as $product ){
                 if( $product ){
                     $data = PurchaseOrderDetail::where('id', $product->id )->first();
-                    if( $product->qty == 0 ){
-                        ProductQrCode::updateOrCreate(
-                            [
-                                'product_variation_id' => $data->product_variation_id,
-                            ],
-                            [
-                                'barcode' => $product->qrCodeDataUrl ?? '-',
-                            ]
-                        );
-                        continue;
+                    if ($data->gate_received_quantity < ($data->store_received_quantity + $product->qty)) {
+                        return ( new ValidationCollection ( ['Quantity added should be less than Receiveable'] ) )
+                        ->response()
+                        ->setStatusCode( 409 );
                     }
+                }
+            }
+
+            foreach( $products as $product ){
+                if( $product ){
+                    $data = PurchaseOrderDetail::where('id', $product->id )->first();
                     if ($data->gate_received_quantity >= $data->store_received_quantity + $product->qty) {
 
                         $receivedQty = $product->qty;
-                        ProductVariation::where('id', $data->product_variation_id)->increment('stock', $receivedQty);
+                        $variation = ProductVariation::where('id', $data->product_variation_id)->first();
 
-                        $taxPerItem = $data->tax / $data->quantity;
-                        $discountPerItem = $data->discount / $data->quantity;
-                        $taxForReceivedQty = $taxPerItem * $receivedQty;
-                        $discountForReceivedQty = $discountPerItem * $receivedQty;
+                        // Proportion of tax and discount based on total price
+                        $taxForReceivedQty  = ($data->tax /  $data->quantity) * $receivedQty;
+                        $discountForReceivedQty = ($data->discount /  $data->quantity) * $receivedQty;
+                        $deliveryChargesForReceivedQty  = ($data->delivery_charges /  $data->quantity) * $receivedQty;
+
                         PurchaseOrderDetail::where('id', $product->id)->increment('store_received_quantity', $receivedQty);
+
                         StoreReceivedDetail::create([
                             'grn_id' => $grn->id,
                             'product_id' => $data->product_id,
                             'quantity' => $receivedQty,
                             'price' => $data->price,
-                            'tax' => $taxForReceivedQty,
-                            'discount' => $discountForReceivedQty,
-                            'total' => ($data->price * $receivedQty) - $discountForReceivedQty + $taxForReceivedQty,
+                            'tax' => round($taxForReceivedQty),
+                            'delivery_charges' => round($deliveryChargesForReceivedQty),
+                            'discount' => round($discountForReceivedQty),
+                            'total' => round( ($data->price * $receivedQty) - $discountForReceivedQty + ($taxForReceivedQty + $deliveryChargesForReceivedQty) ),
                             'added_by' => auth()->user()->id,
                         ]);
 
-                        ProductQrCode::updateOrCreate(
-                            [
-                                'product_variation_id' => $data->product_variation_id,
-                            ],
-                            [
-                                'barcode' => $product->qrCodeDataUrl ?? '-',
-                            ]
-                        );
+                         //Calculate Weigthed Average Rate
+                        //Total Avail. Stock
+                        //Total average rate = ( average_rate * stock ) + (new_qty * new_rate) / total_stock + new_qty
 
-                    }else{
-                        return ( new ValidationCollection ( ['Quantity added should be less than Receiveable'] ) )
-                        ->response()
-                        ->setStatusCode( 409 );
+                        $avg_price = ( ( (float)$variation->avg_price * (float)$variation->stock ) + ( (float)$receivedQty * (float)$data->price) ) / ( (float)$variation->stock + (float)$receivedQty);
+
+                        $variation->increment('stock', $receivedQty);
+                        $variation->update(['avg_price' =>  $avg_price]);
+
+                        if (isset($product->qrCodeDataUrl) && $product->qrCodeDataUrl) {
+                            ProductQrCode::updateOrCreate(
+                                [
+                                    'product_variation_id' => $data->product_variation_id,
+                                ],
+                                [
+                                    'barcode' => $product->qrCodeDataUrl ?? '-',
+                                ]
+                            );
+                        }
                     }
                 }
             }

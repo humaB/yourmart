@@ -87,7 +87,8 @@ __webpack_require__.r(__webpack_exports__);
       advance: 0,
       delivery: 0,
       discount: 0,
-      tax: 0
+      tax: 0,
+      deliveryCharges: 0
     };
   },
   computed: {
@@ -104,7 +105,8 @@ __webpack_require__.r(__webpack_exports__);
       var subtotal = parseFloat(this.subtotal) || 0;
       var discount = parseFloat(this.discount) || 0;
       var tax = parseFloat(this.tax) || 0;
-      return (subtotal - discount + tax).toFixed(2);
+      var delivery = parseFloat(this.deliveryCharges) || 0;
+      return (subtotal - discount + (tax + delivery)).toFixed(2);
     }
   },
   mounted: function mounted() {
@@ -181,6 +183,7 @@ __webpack_require__.r(__webpack_exports__);
       fd.append('advance', vm.advance);
       fd.append('delivery', vm.delivery);
       fd.append('discount', vm.discount);
+      fd.append('deliveryCharges', vm.deliveryCharges);
       fd.append('tax', vm.tax);
 
       // Append the expenses array (convert to JSON string)
@@ -209,6 +212,7 @@ __webpack_require__.r(__webpack_exports__);
       vm.tax = 0;
       vm.advance = 0;
       vm.delivery = 0;
+      vm.deliveryCharges = 0;
       vm.expenses = [{
         product: {
           code: 0,
@@ -1403,6 +1407,27 @@ var render = function render() {
       input: [function ($event) {
         if ($event.target.composing) return;
         _vm.tax = $event.target.value;
+      }, _vm.calculateTotals],
+      keypress: _vm.onlyNumber
+    }
+  })])]), _vm._v(" "), _c("tr", [_c("td", [_vm._v("Delivery Charges:")]), _vm._v(" "), _c("td", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.deliveryCharges,
+      expression: "deliveryCharges"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.deliveryCharges
+    },
+    on: {
+      input: [function ($event) {
+        if ($event.target.composing) return;
+        _vm.deliveryCharges = $event.target.value;
       }, _vm.calculateTotals],
       keypress: _vm.onlyNumber
     }

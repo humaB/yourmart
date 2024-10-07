@@ -18,6 +18,7 @@ class PurchaseOrder extends Model
         'total_amount',
         'remaining_amount',
         'tax',
+        'delivery_charges',
         'discount',
         'payment_term_advance',
         'payment_term_after_delivery',

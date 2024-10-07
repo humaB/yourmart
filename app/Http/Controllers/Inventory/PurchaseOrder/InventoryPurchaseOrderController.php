@@ -71,23 +71,17 @@ class InventoryPurchaseOrderController extends Controller
 
             // Calculate totals
             $totalAmount = 0;
-            $remainingAmount = 0;
             foreach ($expenses as $expense) {
                 $totalAmount += $expense['rate'] * $expense['qty'];
-                $remainingAmount += $expense['rate'] * $expense['qty'];
             }
 
-            // Calculate tax and discount per product
-            $totalProducts = count($expenses);
-            $taxPerProduct = $request->tax / $totalProducts;
-            $discountPerProduct = $request->discount / $totalProducts;
-
-            // Create the Purchase Order
+            // // Create the Purchase Order
             $po = PurchaseOrder::create([
                 'supplier_id' => $request->vendor,
-                'total_amount' => ($totalAmount + $request->tax) - $request->discount,
-                'remaining_amount' => ($remainingAmount+ $request->tax) - $request->discount,
+                'total_amount' => ($totalAmount + $request->tax + $request->deliveryCharges) - $request->discount,
+                'remaining_amount' => ($totalAmount + $request->tax + $request->deliveryCharges) - $request->discount,
                 'tax' => $request->tax,
+                'delivery_charges' => $request->deliveryCharges,
                 'discount' => $request->discount,
                 'payment_term_advance' => $request->advance,
                 'payment_term_after_delivery' => $request->delivery,
@@ -97,7 +91,14 @@ class InventoryPurchaseOrderController extends Controller
 
             // Loop through each expense to create PurchaseOrderDetail entries
             foreach ($expenses as $expense) {
-                $variation = Product::with('variation:id,product_id')->where('id',$expense['product']['code'])->first();
+                $variation = Product::with('variation:id,product_id')->where('id', $expense['product']['code'])->first();
+
+                // Calculate the proportion of this product's total amount to the overall total amount
+                $productTotal = $expense['rate'] * $expense['qty'];
+                $taxForProduct = ($productTotal / $totalAmount) * $request->tax;
+                $discountForProduct = ($productTotal / $totalAmount) * $request->discount;
+                $deliveryChargeForProduct = ($productTotal / $totalAmount) * $request->deliveryCharges;
+                $total = ($productTotal + $taxForProduct + $deliveryChargeForProduct) - $discountForProduct;
                 PurchaseOrderDetail::create([
                     'po_id' => $po->id,
                     'product_id' => $expense['product']['code'],
@@ -106,9 +107,10 @@ class InventoryPurchaseOrderController extends Controller
                     'store_received_quantity' => 0,
                     'quantity' => $expense['qty'],
                     'price' => $expense['rate'],
-                    'tax' => $taxPerProduct, // Distribute total tax
-                    'discount' => $discountPerProduct, // Distribute total discount
-                    'total' => ($expense['rate'] * $expense['qty']) - $discountPerProduct + $taxPerProduct,
+                    'tax' => round($taxForProduct), // Tax distributed based on product proportion
+                    'delivery_charges' => round($deliveryChargeForProduct), // Delivery charges distributed based on product proportion
+                    'discount' => round($discountForProduct), // Discount distributed based on product proportion
+                    'total' => round( $total),
                     'added_by' => auth()->user()->id,
                 ]);
             }
@@ -177,6 +179,12 @@ class InventoryPurchaseOrderController extends Controller
              $pdf->MultiCell(40, 0, "", 1, 'L', 0, 0);
              $pdf->MultiCell(35, 0, "", 1, 'R', 0, 0);
              $pdf->MultiCell(15, 0, "", 0, 'C', 0, 0);
+             $pdf->MultiCell(37, 0, "Delivery Charges", 1, 'L', 0, 0);
+             $pdf->MultiCell(30, 0, number_format( $details->delivery_charges ), 1, 'R', 0, 1);
+
+             $pdf->MultiCell(40, 0, "", 1, 'L', 0, 0);
+             $pdf->MultiCell(35, 0, "", 1, 'R', 0, 0);
+             $pdf->MultiCell(15, 0, "", 0, 'C', 0, 0);
              $pdf->MultiCell(37, 0, "Total Amount", 1, 'L', 0, 0);
              $pdf->MultiCell(30, 0, number_format( $details->total_amount  ), 1, 'R', 0, 1);
 
@@ -214,6 +222,7 @@ class InventoryPurchaseOrderController extends Controller
              $pdf->Cell(20, 0, "Price", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(24, 0, "Quantity", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(17, 0, "Tax", 1, false, 'L', 0, '', 0, false, 'T',);
+             $pdf->Cell(17, 0, "Delivery", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(18, 0, "Discount", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(30, 0, "Total Amount", 1, 1, 'L', 0, '', 0, false, 'T',);
 
@@ -227,14 +236,16 @@ class InventoryPurchaseOrderController extends Controller
                  $pdf->Cell(20, 9, number_format((float)$product->price, 2), 1, false, 'L', 0, '', 0, false, 'T',);
                  $pdf->Cell(24, 9, $product->quantity, 1, false, 'L', 0, '', 0, false, 'T',);
                  $pdf->Cell(17, 9, number_format($product->tax, 2), 1, false, 'L', 0, '', 0, false, 'T',);
+                 $pdf->Cell(17, 9, number_format($product->delivery_charges, 2), 1, false, 'L', 0, '', 0, false, 'T',);
                  $pdf->Cell(18, 9, number_format($product->discount, 2), 1, false, 'L', 0, '', 0, false, 'T',);
-                 $pdf->Cell(30, 9, number_format ( ( ( (float)$product->price * (float)$product->quantity ) + (float)$product->tax ) -  (float)$product->discount, 2), 1, 1, 'R', 0, '', 0, false, 'T',);
+                 $pdf->Cell(30, 9, number_format ( ( ( (float)$product->price * (float)$product->quantity ) + (float)$product->tax + (float)$product->delivery_charges) -  (float)$product->discount, 2), 1, 1, 'R', 0, '', 0, false, 'T',);
              }
 
              $pdf->Cell(5, 5, "", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(70, 5, "", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(20, 5, "Total QTY", 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(24, 5, $total_quantity, 1, false, 'L', 0, '', 0, false, 'T',);
+             $pdf->Cell(17, 5, '', 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(17, 5, '', 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(18, 5, '', 1, false, 'L', 0, '', 0, false, 'T',);
              $pdf->Cell(30, 5,'Total : '. number_format ( $details->total_amount  ), 1, 1, 'R', 0, '', 0, false, 'T',);
