@@ -2434,13 +2434,13 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.barcode ? item.barcode.barcode : "-"))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.barcode ? item.barcode.barcode : "-"))])]);
   }), 0)])])])])])])], 1)])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Barcode")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Barcode")])])]);
 }];
 render._withStripped = true;
 

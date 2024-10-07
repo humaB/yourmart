@@ -16,6 +16,7 @@
                                     <tr>
                                         <th>Sr #</th>
                                         <th>Reference ID</th>
+                                        <th>SKU</th>
                                         <th>Product</th>
                                         <th>Avg Price</th>
                                         <th>Quantity</th>
@@ -26,6 +27,7 @@
                                     <tr v-for="(item,index) in products" :key="item.id">
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.id }}</td>
+                                        <td>{{ item.sku }}</td>
                                         <td>{{ item.product ? item.product.title : '-'}}</td>
                                         <td>{{ item.avg_price || 0 }}</td>
                                         <td>{{ item.stock }}</td>
