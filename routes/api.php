@@ -259,7 +259,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 });
 
 Route::post('/web-hook/leopard',  function( Request $request ){
-    Log::info($request);
+    Log::info($request, 'WEBHOOK RUNNING');
     return "WEBHOOK RUNNING";
 });
 
