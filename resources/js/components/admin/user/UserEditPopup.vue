@@ -23,6 +23,7 @@
                                             <option value="qc manager">QC Manger</option>
                                             <option value="packing & dispatch manager">Packing & Dispatch Manager</option>
                                             <option value="auditor">Auditor</option>
+                                            <option value="supervisor">Supervisor</option>
                                         </select>
                                 </div>
                             </div>

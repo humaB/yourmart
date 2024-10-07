@@ -414,23 +414,23 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-danger" @click="revertBack()" v-if="details.status > 0 && !revertLoader">
+                        <button class="btn btn-danger" @click="revertBack()" v-if="details.status > 0 && !revertLoader && role != 'supervisor'">
                             <i class="fas fa-undo-alt"></i> Revert to Pre Step
                         </button>
-                        <button class="btn btn-danger btn-progress disabled" v-else-if="revertLoader">
+                        <button class="btn btn-danger btn-progress disabled" v-else-if="revertLoader && role != 'supervisor'">
                             <i class="fas fa-undo-alt"></i>  Revert to Pre Step
                         </button>
 
-                        <button class="btn btn-primary" @click="forward()" v-if="!loader">
+                        <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
                             <i class="fas fa-paper-plane"></i>  Forward Order
                         </button>
-                        <button class="btn btn-primary btn-progress disabled"  v-else>
+                        <button class="btn btn-primary btn-progress disabled"  v-else-if="loader">
                          Forward
                         </button>
-                        <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader">
+                        <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
                            <i class="fa fa-trash"></i> Reject Order
                         </button>
-                        <button class="btn btn-danger btn-progress disabled"  v-else>
+                        <button class="btn btn-danger btn-progress disabled"  v-else-if="rejectLoader">
                             Forward
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">

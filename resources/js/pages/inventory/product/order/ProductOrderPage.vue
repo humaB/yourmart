@@ -5,7 +5,7 @@
                 <div class="card card-primary">
                     <TableHeader :tableHeader="tableHeader" />
 
-                    <div class="card"  v-if="role == 'admin'">
+                    <div class="card"  v-if="role == 'admin' || role == 'supervisor'">
                         <div class="card-body px-2">
                             <div class="table-responsive">
                                 <table class="table table-striped">

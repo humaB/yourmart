@@ -25,7 +25,7 @@ class InventoryPurchaseOrderController extends Controller
 
     public function requests()
     {
-        if( auth()->user()->role != 'admin'){
+        if( auth()->user()->role != 'admin' && auth()->user()->role != 'supervisor' ){
              abort(401);
         }
 
@@ -38,7 +38,12 @@ class InventoryPurchaseOrderController extends Controller
         ->orderBy('id', 'desc')
         ->get();
 
-        return (new ResponseCollection($purchaseOrders))
+        $data = [
+            'purchase_orders' => $purchaseOrders,
+            'role' => auth()->user()->role
+        ];
+
+        return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
     }

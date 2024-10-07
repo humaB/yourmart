@@ -4275,7 +4275,11 @@ var render = function render() {
     attrs: {
       value: "auditor"
     }
-  }, [_vm._v("Auditor")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Auditor")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "supervisor"
+    }
+  }, [_vm._v("Supervisor")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
   }, [_c("div", {
     staticClass: "form-line"
@@ -4613,7 +4617,11 @@ var render = function render() {
     attrs: {
       value: "auditor"
     }
-  }, [_vm._v("Auditor")])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Auditor")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "supervisor"
+    }
+  }, [_vm._v("Supervisor")])])])]), _vm._v(" "), _c("div", {
     staticClass: "form-group form-float col-md-12"
   }, [_c("div", {
     staticClass: "form-line"

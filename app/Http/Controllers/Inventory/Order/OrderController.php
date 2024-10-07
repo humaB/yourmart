@@ -39,11 +39,7 @@ class OrderController extends Controller
         ];
 
 
-        if ($userRole != 'admin') {
-            $orders = Order::with('user', 'shop')->where('status', $statusMap[$userRole])
-                ->orderBy('id', 'desc')
-                ->get();
-        } else {
+        if ($userRole == 'admin' || $userRole == 'supervisor') {
             $orders = Order::with('user', 'shop')
                 ->orderBy('id', 'desc')
                 // Apply status filter when provided
@@ -57,6 +53,10 @@ class OrderController extends Controller
                 ->when($request->to, function ($query, $to) {
                     return $query->whereDate('created_at', '<=', $to);
                 })
+                ->get();
+        }else {
+            $orders = Order::with('user', 'shop')->where('status', $statusMap[$userRole])
+                ->orderBy('id', 'desc')
                 ->get();
         }
 

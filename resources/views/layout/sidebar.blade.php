@@ -19,6 +19,10 @@
             @include('layout.admin_sidebar.admin_sidebar')
         @endif
 
+        @if( auth()->user()->role == 'supervisor')
+            @include('layout.other_sidebar.supervisor_sidebar')
+        @endif
+
         @if( auth()->user()->role == 'dob')
             @include('layout.dob_sidebar.dob_sidebar')
         @endif

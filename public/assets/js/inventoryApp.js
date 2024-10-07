@@ -429,7 +429,8 @@ __webpack_require__.r(__webpack_exports__);
         id: '',
         decision: ''
       },
-      decisionLoader: false
+      decisionLoader: false,
+      role: ''
     };
   },
   created: function created() {
@@ -471,7 +472,8 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       axios.get(this.api_url + "inventory/products/purchase-orders").then(function (response) {
         var results = response.data.response;
-        vm.purchaseOrders = results;
+        vm.purchaseOrders = results.purchase_orders;
+        vm.role = results.role;
       })["catch"](function (err) {
         return _this2.fetchPurchaseOrders();
       });
@@ -1795,7 +1797,7 @@ var render = function render() {
       staticClass: "badge badge-success"
     }, [_vm._v("Approved")]) : _vm._e(), _vm._v(" "), item.status == 2 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [item.status == 0 ? _c("button", {
+    }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [item.status == 0 && _vm.role == "admin" ? _c("button", {
       staticClass: "btn btn-success",
       attrs: {
         "data-toggle": "modal",
@@ -1808,7 +1810,7 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fa fa-check"
-    })]) : _vm._e(), _vm._v(" "), item.status == 0 ? _c("button", {
+    })]) : _vm._e(), _vm._v(" "), item.status == 0 && _vm.role == "admin" ? _c("button", {
       staticClass: "btn btn-danger",
       attrs: {
         "data-toggle": "modal",

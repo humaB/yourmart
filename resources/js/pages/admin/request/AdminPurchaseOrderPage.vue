@@ -64,10 +64,10 @@
                                             <span class="badge badge-danger"  v-if="item.status == 2">Rejected</span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-success" data-toggle="modal" data-target="#confirmation" @click="decision(item.id, 'Approve')" v-if="item.status == 0">
+                                            <button class="btn btn-success" data-toggle="modal" data-target="#confirmation" @click="decision(item.id, 'Approve')" v-if="item.status == 0 && role == 'admin'">
                                                 <i class="fa fa-check"></i>
                                             </button>
-                                            <button class="btn btn-danger" data-toggle="modal" data-target="#confirmation" @click="decision(item.id, 'Reject')" v-if="item.status == 0">
+                                            <button class="btn btn-danger" data-toggle="modal" data-target="#confirmation" @click="decision(item.id, 'Reject')" v-if="item.status == 0 && role == 'admin'">
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                             <button class="btn btn-dark" @click="printPurchaseOrder( item.id )"><i class="fa fa-print"></i></button>
@@ -132,7 +132,8 @@
                     id : '',
                     decision : ''
                 },
-                decisionLoader : false
+                decisionLoader : false,
+                role : ''
             };
         },
         created(){
@@ -177,7 +178,8 @@
                 .get(this.api_url + "inventory/products/purchase-orders")
                 .then((response) => {
                     const results = response.data.response;
-                    vm.purchaseOrders = results;
+                    vm.purchaseOrders = results.purchase_orders;
+                    vm.role = results.role;
                 })
                 .catch((err) => this.fetchPurchaseOrders());
             },
