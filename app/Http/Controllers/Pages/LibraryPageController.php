@@ -14,7 +14,7 @@ class LibraryPageController extends Controller
         return view('pages.library_page');
     }
 
-    public function fectLibraryPageSettingStore(){
+    public function fetchCourses(){
         $data = LibraryPageSetting::with("added_name")->get();
 
         return (new ResponseCollection( $data ))
@@ -22,7 +22,7 @@ class LibraryPageController extends Controller
             ->setStatusCode(200);
     }
 
-    public function libraryPageSettingStore( Request $request ){
+    public function store( Request $request ){
 
         // Decode the incoming JSON data
         $data = json_decode($request->data);
@@ -38,8 +38,8 @@ class LibraryPageController extends Controller
 
         return response()->json(['message' => 'Library page settings saved successfully!'], 200);
     }
-    
-    public function libraryPageSettingUpdate( Request $request )
+
+    public function update( Request $request )
     {
         // Decode the incoming JSON data
         $data = json_decode($request->data);
@@ -57,9 +57,15 @@ class LibraryPageController extends Controller
             LibraryPageSetting::where("id",$data->id)->update([
                 'attachment' => $this->image($request->image),  // Store the image path if available
             ]);
-            
+
         }
 
+        return response()->json(['message' => 'Library page settings saved successfully!'], 200);
+    }
+
+    public function delete( Request $request ){
+
+        LibraryPageSetting::where('id', $request->id)->delete();
         return response()->json(['message' => 'Library page settings saved successfully!'], 200);
     }
 

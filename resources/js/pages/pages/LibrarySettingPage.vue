@@ -25,20 +25,22 @@
                             <tr v-for="(course, index) in allCourses" :key="index">
                                 <th scope="row">{{ index + 1 }}</th>
                                 <td>
-                                    <a :href="public_url+'storage/uploads/pages/library/courses/'+course.attachment" target="_blank">
-                                        <img width="80" :src="public_url+'storage/uploads/pages/library/courses/'+course.attachment">
+                                    <a :href="public_url + 'storage/uploads/pages/library/courses/' + course.attachment"
+                                        target="_blank">
+                                        <img width="80"
+                                            :src="public_url + 'storage/uploads/pages/library/courses/' + course.attachment">
                                     </a>
                                 </td>
-                                <td>{{course.name}}</td>
-                                <td>{{course.description}}</td>
-                                <td>{{course.added_name.name}}</td>
-                                <td>
-                                    <a
-                                        href="#"
-                                        class="btn btn-primary"
-                                        @click="editCourse(course)"
-                                        ><i class="far fa-edit"></i
-                                    ></a>
+                                <td>{{ course.name }}</td>
+                                <td>{{ course.description }}</td>
+                                <td>{{ course.added_name.name }}</td>
+                                <td class="d-flex align-items-center">
+                                    <a href="#" class="btn btn-primary mr-2" @click="editCourse(course)"><i
+                                            class="far fa-edit"></i></a>
+
+                                    <a href="#" data-toggle="modal" data-target="#deleteConfirmation"
+                                        class="btn btn-danger" @click="deleteCourse(course)"><i
+                                            class="fa fa-trash"></i></a>
 
                                 </td>
                             </tr>
@@ -48,17 +50,34 @@
             </div>
         </div>
         <!-- add modal -->
-        <NewLibraryCourse
-            :btnLoading="btnLoading"
-            :addData="addData"
-            @add="addPartner"
-        />
+        <NewLibraryCourse :btnLoading="btnLoading" :addData="addData" @add="addPartner" />
         <!-- update modal -->
-        <EditLibraryCourse
-            :btnLoading="btnLoading"
-            :editData="editData"
-            @update="updateCourse"
-        />
+        <EditLibraryCourse :btnLoading="btnLoading" :editData="editData" @update="updateCourse" />
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmation"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-md-12">
+                            <h5>Are you sure you want to delete {{ editData.name }} ?</h5>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" @click="yesDelete()" v-if="!deleteLoader">Yes, Delete</button>
+                        <button type="button" class="btn btn-danger btn-progress disabled" v-else>Yes, Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
 <script>
@@ -74,7 +93,7 @@ export default {
     },
     data() {
         return {
-            api_url : window.location.origin + process.env.MIX_API_URL,
+            api_url: window.location.origin + process.env.MIX_API_URL,
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
             btnLoading: false,
             tableLoading: false,
@@ -88,29 +107,23 @@ export default {
                 image: null, // keep track of the image file
                 video_links: [], // keep track of the image file
             },
+            deleteLoader : false
         };
     },
     created() {
         this.courses();
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
-    mounted() {
-    },
     methods: {
         async courses() {
             this.tableLoading = true;
             axios.get(this.api_url + "pages/settings/library-page")
-            .then((response) => {
-                this.allCourses = response.data.response;
-            }).catch((err) => this.fetchTags());
-
-            // if ($.fn.DataTable.isDataTable("#course_table")) {
-            //     $('#course_table').DataTable().destroy();
-            // }
-            // setTimeout(function () {
-            //     $('#course_table').DataTable();
-            // }, 300);
-            this.tableLoading = false;
+                .then((response) => {
+                    this.allCourses = response.data.response;
+                    this.tableLoading = false;
+                }).catch((err) => {
+                    this.courses();
+                });
         },
         async addPartner(selectedImage) {
             if (!this.addData.name || !this.addData.description || !selectedImage) {
@@ -127,26 +140,48 @@ export default {
 
             this.btnLoading = true;
 
-            axios.post(this.api_url + "pages/settings/library-page/add", formData, {
+            axios.post(this.api_url + "pages/settings/library-page", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            .then((response) => {
-                this.addData = JSON.parse(JSON.stringify(this.addDataReset));
-                this.courses();
-                return swal({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Successfully Added',
+                .then((response) => {
+                    this.addData = JSON.parse(JSON.stringify(this.addDataReset));
+                    this.courses();
+                    return swal({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully Added',
+                    });
+                }).catch((err) => {
                 });
-            }).catch((err) => {
-            });
             this.btnLoading = false;
         },
         async editCourse(course) {
             this.editData = course;
             $("#editCourse").modal('show');
+        },
+        deleteCourse(course) {
+            this.editData = course;
+        },
+        yesDelete() {
+            let vm = this;
+            vm.deleteLoader = true;
+            axios
+                .post(this.api_url + "pages/settings/library-page/delete", this.editData)
+                .then((response) => {
+                    vm.deleteLoader = false;
+                    $("#deleteConfirmation").modal('hide');
+                    this.courses();
+                    return swal({
+                        title: "Success",
+                        text: 'Deleted Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }).catch((err) => {
+                    vm.deleteLoader = false;
+                });
         },
         async updateCourse(selectedImage) {
             if (!this.editData.name || !this.editData.description) {

@@ -92,9 +92,10 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
         Route::post('/home-page',  [ PageController::class , 'homePageSettingStore']);
 
         Route::group(['prefix' => 'library-page'], function(){
-            Route::get('/',  [ LibraryPageController::class , 'fectLibraryPageSettingStore']);
-            Route::post('/add',  [ LibraryPageController::class , 'libraryPageSettingStore']);
-            Route::post('/update',  [ LibraryPageController::class , 'libraryPageSettingUpdate']);
+            Route::get('/',  [ LibraryPageController::class , 'fetchCourses']);
+            Route::post('/',  [ LibraryPageController::class , 'store']);
+            Route::post('/update',  [ LibraryPageController::class , 'update']);
+            Route::post('/delete',  [ LibraryPageController::class , 'delete']);
         });
         Route::group(['prefix' => 'help-center-page'], function(){
             Route::get('/',  [ HelpCenterPageController::class , 'fectHelpCenterPageSetting']);

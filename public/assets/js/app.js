@@ -2766,14 +2766,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         image: null,
         // keep track of the image file
         video_links: [] // keep track of the image file
-      }
+      },
+      deleteLoader: false
     };
   },
   created: function created() {
     this.courses();
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
-  mounted: function mounted() {},
   methods: {
     courses: function courses() {
       var _this = this;
@@ -2784,18 +2784,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this.tableLoading = true;
               axios__WEBPACK_IMPORTED_MODULE_2__["default"].get(_this.api_url + "pages/settings/library-page").then(function (response) {
                 _this.allCourses = response.data.response;
+                _this.tableLoading = false;
               })["catch"](function (err) {
-                return _this.fetchTags();
+                _this.courses();
               });
-
-              // if ($.fn.DataTable.isDataTable("#course_table")) {
-              //     $('#course_table').DataTable().destroy();
-              // }
-              // setTimeout(function () {
-              //     $('#course_table').DataTable();
-              // }, 300);
-              _this.tableLoading = false;
-            case 3:
+            case 2:
             case "end":
               return _context.stop();
           }
@@ -2824,7 +2817,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               formData.append('image', selectedImage); // append the image
 
               _this2.btnLoading = true;
-              axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this2.api_url + "pages/settings/library-page/add", formData, {
+              axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this2.api_url + "pages/settings/library-page", formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 }
@@ -2860,14 +2853,35 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee3);
       }))();
     },
-    updateCourse: function updateCourse(selectedImage) {
+    deleteCourse: function deleteCourse(course) {
+      this.editData = course;
+    },
+    yesDelete: function yesDelete() {
       var _this4 = this;
+      var vm = this;
+      vm.deleteLoader = true;
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(this.api_url + "pages/settings/library-page/delete", this.editData).then(function (response) {
+        vm.deleteLoader = false;
+        $("#deleteConfirmation").modal('hide');
+        _this4.courses();
+        return swal({
+          title: "Success",
+          text: 'Deleted Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.deleteLoader = false;
+      });
+    },
+    updateCourse: function updateCourse(selectedImage) {
+      var _this5 = this;
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var formData;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              if (!(!_this4.editData.name || !_this4.editData.description)) {
+              if (!(!_this5.editData.name || !_this5.editData.description)) {
                 _context4.next = 2;
                 break;
               }
@@ -2878,23 +2892,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               }));
             case 2:
               formData = new FormData();
-              formData.append('data', JSON.stringify(_this4.editData));
+              formData.append('data', JSON.stringify(_this5.editData));
 
               // Append the image if it's selected
               if (selectedImage) {
                 formData.append('image', selectedImage);
               }
-              _this4.btnLoading = true;
+              _this5.btnLoading = true;
               _context4.prev = 6;
               _context4.next = 9;
-              return axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this4.api_url + "pages/settings/library-page/update", formData, {
+              return axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(_this5.api_url + "pages/settings/library-page/update", formData, {
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 }
               });
             case 9:
-              _this4.editData = JSON.parse(JSON.stringify(_this4.editDataReset));
-              _this4.courses(); // Refresh the course list
+              _this5.editData = JSON.parse(JSON.stringify(_this5.editDataReset));
+              _this5.courses(); // Refresh the course list
               return _context4.abrupt("return", swal({
                 icon: 'success',
                 title: 'Success',
@@ -2911,7 +2925,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               }));
             case 18:
               _context4.prev = 18;
-              _this4.btnLoading = false;
+              _this5.btnLoading = false;
               return _context4.finish(18);
             case 21:
             case "end":
@@ -8553,8 +8567,10 @@ var render = function render() {
         width: "80",
         src: _vm.public_url + "storage/uploads/pages/library/courses/" + course.attachment
       }
-    })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(course.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(course.description))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(course.added_name.name))]), _vm._v(" "), _c("td", [_c("a", {
-      staticClass: "btn btn-primary",
+    })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(course.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(course.description))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(course.added_name.name))]), _vm._v(" "), _c("td", {
+      staticClass: "d-flex align-items-center"
+    }, [_c("a", {
+      staticClass: "btn btn-primary mr-2",
       attrs: {
         href: "#"
       },
@@ -8565,6 +8581,20 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "far fa-edit"
+    })]), _vm._v(" "), _c("a", {
+      staticClass: "btn btn-danger",
+      attrs: {
+        href: "#",
+        "data-toggle": "modal",
+        "data-target": "#deleteConfirmation"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.deleteCourse(course);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
     })])])]);
   }), 0)])])])]), _vm._v(" "), _c("NewLibraryCourse", {
     attrs: {
@@ -8582,7 +8612,50 @@ var render = function render() {
     on: {
       update: _vm.updateCourse
     }
-  })], 1);
+  }), _vm._v(" "), _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "deleteConfirmation",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "deleteConfirmation",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Are you sure you want to delete " + _vm._s(_vm.editData.name) + " ?")])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.deleteLoader ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.yesDelete();
+      }
+    }
+  }, [_vm._v("Yes, Delete")]) : _c("button", {
+    staticClass: "btn btn-danger btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Yes, Delete")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])])], 1);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -8625,6 +8698,28 @@ var staticRenderFns = [function () {
       scope: "col"
     }
   }, [_vm._v("Action")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Confirmation")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
 }];
 render._withStripped = true;
 
