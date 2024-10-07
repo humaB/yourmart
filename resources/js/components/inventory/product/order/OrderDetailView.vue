@@ -414,17 +414,21 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button class="btn btn-danger" @click="forward()" v-if="!loader">
-                            Revert to Pre Step
+                        <button class="btn btn-danger" @click="revertBack()" v-if="details.status > 0 && !revertLoader">
+                            <i class="fas fa-undo-alt"></i> Revert to Pre Step
                         </button>
+                        <button class="btn btn-danger btn-progress disabled" v-else-if="revertLoader">
+                            <i class="fas fa-undo-alt"></i>  Revert to Pre Step
+                        </button>
+
                         <button class="btn btn-primary" @click="forward()" v-if="!loader">
-                            Forward Order
+                            <i class="fas fa-paper-plane"></i>  Forward Order
                         </button>
                         <button class="btn btn-primary btn-progress disabled"  v-else>
-                            Forward
+                         Forward
                         </button>
                         <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader">
-                           Reject Order
+                           <i class="fa fa-trash"></i> Reject Order
                         </button>
                         <button class="btn btn-danger btn-progress disabled"  v-else>
                             Forward
@@ -443,7 +447,7 @@
 
 export default {
     name: "OrderDetailView",
-    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader'],
+    props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader'],
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
@@ -628,6 +632,9 @@ export default {
             }
 
             this.$emit('forward', { id : this.details.id });
+        },
+        revertBack(){
+            this.$emit('revert', { id : this.details.id });
         },
         reject(){
             this.$emit('reject', { id : this.details.id });

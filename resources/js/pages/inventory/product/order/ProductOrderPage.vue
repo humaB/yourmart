@@ -187,6 +187,7 @@
         </div>
 
         <OrderDetailView
+            :revertLoader="revertLoader"
             :rejectLoader="rejectLoader"
             :paidAmountLoader="paidAmountLoader"
             :details="details"
@@ -195,6 +196,7 @@
             @addComment="addComment($event)"
             @forward="forward($event)"
             @reject="reject($event)"
+            @revert="revert($event)"
             @fetchDropshipperDetails="fetchDropshipperDetails($event)"
             @updatePaidAmount="updatePaidAmount( $event )"
         />
@@ -233,6 +235,7 @@ export default {
             details: {},
             commentLoader : false,
             rejectLoader : false,
+            revertLoader : false,
             role : '',
             dropShipperDetails : {},
             paidAmountLoader : false,
@@ -435,6 +438,30 @@ export default {
             })
             .catch((err) => {
                 vm.rejectLoader = false;
+            });
+        },
+        revert( data ){
+            let vm = this;
+            vm.revertLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/revert", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.revertLoader = false;
+
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000);
+
+            return swal({
+                title: "Success",
+                text: "Order Revert Successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.revertLoader = false;
             });
         },
         addComment(data) {

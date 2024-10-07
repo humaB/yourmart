@@ -26,9 +26,10 @@ class OrderController extends Controller
         return view('inventory.product.order.orders');
     }
 
-    public function fetchOrders( Request $request ){
+    public function fetchOrders(Request $request)
+    {
         $userRole  = trim(auth()->user()->role);
-          // Map roles to corresponding statuses
+        // Map roles to corresponding statuses
         $statusMap = [
             'order collection manager' => 0,    // Role for order collection
             'inventory manager' => 1,  // Role for inventory issuance
@@ -38,25 +39,25 @@ class OrderController extends Controller
         ];
 
 
-        if( $userRole != 'admin'){
+        if ($userRole != 'admin') {
             $orders = Order::with('user', 'shop')->where('status', $statusMap[$userRole])
-            ->orderBy('id', 'desc')
-            ->get();
-        }else{
+                ->orderBy('id', 'desc')
+                ->get();
+        } else {
             $orders = Order::with('user', 'shop')
-            ->orderBy('id', 'desc')
-            // Apply status filter when provided
-            ->when($request->status, function ($query, $status) {
-                return $query->where('status', $status);
-            })
-            // Apply date range filters when provided
-            ->when($request->from, function ($query, $from) {
-                return $query->whereDate('created_at', '>=', $from);
-            })
-            ->when($request->to, function ($query, $to) {
-                return $query->whereDate('created_at', '<=', $to);
-            })
-            ->get();
+                ->orderBy('id', 'desc')
+                // Apply status filter when provided
+                ->when($request->status, function ($query, $status) {
+                    return $query->where('status', $status);
+                })
+                // Apply date range filters when provided
+                ->when($request->from, function ($query, $from) {
+                    return $query->whereDate('created_at', '>=', $from);
+                })
+                ->when($request->to, function ($query, $to) {
+                    return $query->whereDate('created_at', '<=', $to);
+                })
+                ->get();
         }
 
         $data = [
@@ -87,14 +88,15 @@ class OrderController extends Controller
             'items.variation.size',
             'returns.details.variation.product',
             'returns.details.variation.images.attachment',
-            )->where('id', $request->id)->get();
+        )->where('id', $request->id)->get();
 
         return (new ResponseCollection($orders))
             ->response()
             ->setStatusCode(200);
     }
 
-    public function updatePaidAmount( Request $request ){
+    public function updatePaidAmount(Request $request)
+    {
         $order = Order::find($request->id);
 
         $order->update([
@@ -105,7 +107,8 @@ class OrderController extends Controller
         return response()->json(['message' => 'Order status updated successfully.'], 200);
     }
 
-    public function updateStatus( Request $request ){
+    public function updateStatus(Request $request)
+    {
 
         $userRole  = trim(auth()->user()->role);
 
@@ -113,11 +116,11 @@ class OrderController extends Controller
 
         // Map roles to corresponding statuses
         $statusMap = [
-            'order collection manager' => 1,    // Role for order collection
-            'inventory manager' => 2,  // Role for inventory issuance
-            'qc manager' => 3,         // Role for quality control
-            'packing & dispatch manager' => 4,    // Role for packing and dispatch
-            'auditor' => 5    // Role for audit
+            'order collection manager' => 0,    // Role for order collection
+            'inventory manager' => 1,  // Role for inventory issuance
+            'qc manager' => 2,         // Role for quality control
+            'packing & dispatch manager' => 3,    // Role for packing and dispatch
+            'auditor' => 4   // Role for audit
         ];
 
         // Get current order status
@@ -134,6 +137,7 @@ class OrderController extends Controller
             // Get user's role
             $userRole = auth()->user()->role;
             // Find next status based on user's role
+
             $nextStatus = array_search($userRole, array_keys($statusMap)) + 1;
             $nextStatus = $statusMap[array_search($nextStatus, $statusMap)] ?? $currentStatus;
         }
@@ -141,29 +145,18 @@ class OrderController extends Controller
         // Get next role based on next status
         $nextRole = array_search($nextStatus, $statusMap);
 
-        if( $nextRole ){
+        if ($nextRole) {
             // Create activity log
             OrderActivity::create([
                 'order_id'  => $request->id,
-                'activity'  => 'Order sent to '.$nextRole,
+                'activity'  => 'Order sent to ' . $nextRole,
                 'added_by'  => auth()->user()->id,
             ]);
         }
 
-         // Map roles to corresponding statuses
-       $statusMap = [
-            'order collection manager' => 1,    // Role for order collection
-            'inventory manager' => 2,  // Role for inventory issuance
-            'qc manager' => 3,         // Role for quality control
-            'packing & dispatch manager' => 4,    // Role for packing and dispatch
-            'auditor'                    => 5    // Role for packing and dispatch
-        ];
-
         if (array_key_exists($userRole, $statusMap)) {
-            // Update the order status based on the role
-            $order->update(['status' => $statusMap[$userRole]]);
 
-            if( $userRole == 'order collection manager'){
+            if ($userRole == 'order collection manager') {
 
                 $leopardData = [
                     'track_number' => null,
@@ -173,21 +166,20 @@ class OrderController extends Controller
                 $leopardApi = new LeopardApiHelper();
                 $city = City::where('id', $order->city_id)->first();
                 $range = CourierCategoryRange::where('id', $order->range_id)->first();
-                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id) ;
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
 
                 $order->update([
                     'tracking_number'       => $leopardData['track_number'],
                     'slip_link'             => $leopardData['slip_link']
                 ]);
-
             }
 
-            if($userRole == 'inventory manager'){
+            if ($userRole == 'inventory manager') {
                 $issuance = StoreIssuance::create([
                     'order_id'  => $request->id,
                     'added_by'  => auth()->user()->id,
                 ]);
-                foreach( $order->items as $product ){
+                foreach ($order->items as $product) {
                     $variation = ProductVariation::where('id', $product->product_variation_id)->first();
                     $variation->decrement('stock', $product->quantity);
 
@@ -201,57 +193,57 @@ class OrderController extends Controller
                     ]);
                 }
             }
-
-        }     else if($userRole == 'admin'){
-
-            if( $order->status == '0'){
-
-                $leopardData = [
-                    'track_number' => null,
-                    'slip_link'    => null
-                ];
-
-                $leopardApi = new LeopardApiHelper();
-                $city = City::where('id', $order->city_id)->first();
-                $range = CourierCategoryRange::where('id', $order->range_id)->first();
-                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id) ;
-
-                $order->update([
-                    'tracking_number'       => $leopardData['track_number'],
-                    'slip_link'             => $leopardData['slip_link']
-                ]);
-
-            }
-
-            if( $order->status == '1'){
-                $issuance = StoreIssuance::create([
-                    'order_id'  => $request->id,
-                    'added_by'  => auth()->user()->id,
-                ]);
-                foreach( $order->items as $product ){
-                    $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                    $variation->decrement('stock', $product->quantity);
-
-                    StoreIssuanceDetail::create([
-                        'sin_id'     => $issuance->id,
-                        'product_id' => $variation->product_id,
-                        'quantity'   => $product->quantity,
-                        'price'      => $product->price,
-                        'total'      => (float)$product->quantity * (float)$product->price,
-                        'added_by'  => auth()->user()->id,
-                    ]);
-                }
-            }
-
-            $order->increment('status');
         }
+        else if ($userRole == 'admin') {
+
+            if ($order->status == '0') {
+
+                $leopardData = [
+                    'track_number' => null,
+                    'slip_link'    => null
+                ];
+
+                $leopardApi = new LeopardApiHelper();
+                $city = City::where('id', $order->city_id)->first();
+                $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+
+                $order->update([
+                    'tracking_number'       => $leopardData['track_number'],
+                    'slip_link'             => $leopardData['slip_link']
+                ]);
+            }
+
+            if ($order->status == '1') {
+                $issuance = StoreIssuance::create([
+                    'order_id'  => $request->id,
+                    'added_by'  => auth()->user()->id,
+                ]);
+                foreach ($order->items as $product) {
+                    $variation = ProductVariation::where('id', $product->product_variation_id)->first();
+                    $variation->decrement('stock', $product->quantity);
+
+                    StoreIssuanceDetail::create([
+                        'sin_id'     => $issuance->id,
+                        'product_id' => $variation->product_id,
+                        'quantity'   => $product->quantity,
+                        'price'      => $product->price,
+                        'total'      => (float)$product->quantity * (float)$product->price,
+                        'added_by'  => auth()->user()->id,
+                    ]);
+                }
+            }
+
+        }
+        $order->increment('status');
         return response()->json(['message' => 'Order status updated successfully.'], 200);
     }
 
-    public function reject( Request $request ){
+    public function reject(Request $request)
+    {
 
         $order = Order::with('items')->find($request->id);
-        if( auth()->user()->role == 'admin'){
+        if (auth()->user()->role == 'admin') {
 
             OrderActivity::create([
                 'order_id'  => $request->id,
@@ -259,7 +251,7 @@ class OrderController extends Controller
                 'added_by'  => auth()->user()->id,
             ]);
 
-            if( $order->status > 1){
+            if ($order->status > 1) {
                 $srn = StoreReturn::create([
                     'order_id'        => $order->id,
                     'dropshipper_id'  => $order->belongs_to,
@@ -267,7 +259,7 @@ class OrderController extends Controller
                     'added_by'        => auth()->user()->id
                 ]);
 
-                foreach($order->items as $product){
+                foreach ($order->items as $product) {
                     StoreReturnDetail::create([
                         'srn_id'     => $srn->id,
                         'product_id' => $product->product_variation_id,
@@ -278,10 +270,9 @@ class OrderController extends Controller
                     ]);
 
                     ProductVariation::where('id', $product->product_variation_id)
-                    ->increment('stock', $product->quantity);
+                        ->increment('stock', $product->quantity);
+                }
             }
-
-        }
             $order->update(['status' => '7']);
 
             $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
@@ -289,8 +280,7 @@ class OrderController extends Controller
                 'api_password' => 'Allah@001#',
                 'cn_numbers' => $order->tracking_number, // or 'XXYYYYYYYY,XXYYYYYYYY,XXYYYYYY'
             ]);
-
-        }else{
+        } else {
             $order->update(['status' => '6']);
             OrderActivity::create([
                 'order_id'  => $request->id,
@@ -300,7 +290,39 @@ class OrderController extends Controller
         }
 
         return response()->json(['message' => 'Order status updated successfully.'], 200);
+    }
 
+    public function revert(Request $request)
+    {
+
+        $order = Order::with('items')->find($request->id);
+
+        if ( $order->status > 1) {
+            $srn = StoreReturn::create([
+                'order_id'        => $order->id,
+                'dropshipper_id'  => $order->belongs_to,
+                'remarks'         => 'Rejected',
+                'added_by'        => auth()->user()->id
+            ]);
+
+            foreach ($order->items as $product) {
+                StoreReturnDetail::create([
+                    'srn_id'     => $srn->id,
+                    'product_id' => $product->product_variation_id,
+                    'quantity'   => $product->quantity,
+                    'price'      => $product->price,
+                    'total'      => (float)$product->quantity * (float)$product->price,
+                    'added_by'   => auth()->user()->id
+                ]);
+
+                ProductVariation::where('id', $product->product_variation_id)
+                    ->increment('stock', $product->quantity);
+            }
+        }
+
+        $order->decrement('status');
+
+        return response()->json(['message' => 'Order status updated successfully.'], 200);
     }
 
     public function comment(Request $request)
@@ -317,7 +339,8 @@ class OrderController extends Controller
         return ['message' => 'Comment Added Successfully'];
     }
 
-    public function commentAttachment($image){
+    public function commentAttachment($image)
+    {
 
         $filenameWithExt = $image->getClientOriginalName();
         //get just filename
@@ -329,5 +352,4 @@ class OrderController extends Controller
         $path            = $image->storeAs('public/uploads/order/comments/attachments', $nameToStore);
         return $nameToStore;
     }
-
 }
