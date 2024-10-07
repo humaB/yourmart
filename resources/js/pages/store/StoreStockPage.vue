@@ -11,7 +11,7 @@
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="stock_table">
                                 <thead>
                                     <tr>
                                         <th>Sr #</th>
@@ -69,8 +69,18 @@
                 .then((response) => {
                     const results = response.data.response;
                     vm.products = results;
+
+                    setTimeout(() => {
+                        this.dataTable()
+                    },300)
                 })
                 .catch((err) => this.fetchStock());
+            },
+            dataTable() {
+                $("#moq_table").DataTable({
+                    dom: "Bfrtip",
+                    buttons: ["copy","csv","excel"],
+                });
             },
         }
     }

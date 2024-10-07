@@ -997,8 +997,17 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.api_url + "inventory/products/store/stocks").then(function (response) {
         var results = response.data.response;
         vm.products = results;
+        setTimeout(function () {
+          _this.dataTable();
+        }, 300);
       })["catch"](function (err) {
         return _this.fetchStock();
+      });
+    },
+    dataTable: function dataTable() {
+      $("#moq_table").DataTable({
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel"]
       });
     }
   }
@@ -2391,7 +2400,10 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-body"
   }, [_c("table", {
-    staticClass: "table table-bordered"
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "stock_table"
+    }
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
