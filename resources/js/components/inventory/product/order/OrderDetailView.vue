@@ -414,6 +414,9 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button class="btn btn-danger" @click="forward()" v-if="!loader">
+                            Revert to Pre Step
+                        </button>
                         <button class="btn btn-primary" @click="forward()" v-if="!loader">
                             Forward Order
                         </button>
