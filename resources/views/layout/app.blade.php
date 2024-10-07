@@ -15,6 +15,8 @@
     <!-- Custom style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel='shortcut icon' type='image/x-icon' href="{{ asset('assets/img/logo-sna.png') }}" />
+    <link rel="icon" type="image/png"  href="{{ asset('assets/img/fa-icon.jpg') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/fa-icon.jpg') }}">
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 

@@ -2,6 +2,7 @@
 
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
+            <img alt="image" src="{{ asset('assets/img/fa-icon.jpg') }}" class="header-logo" width="25%">
             <a href="#"><span
                     class="logo-name">YourMart</span>
             </a>

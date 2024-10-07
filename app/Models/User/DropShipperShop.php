@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\DropShipper;
 
 class DropShipperShop extends Model
 {
@@ -20,4 +21,8 @@ class DropShipperShop extends Model
         'business_description',
         'leopard_id',
     ];
+
+    public function dropshipper(){
+        return $this->belongsTo(DropShipper::class, 'dropshipper_id', 'id');
+    }
 }

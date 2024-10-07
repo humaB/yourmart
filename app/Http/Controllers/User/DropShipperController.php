@@ -64,10 +64,25 @@ class DropShipperController extends Controller
             ->setStatusCode(200);
     }
 
-    public function getRequests()
+    public function getRequests(Request $request)
     {
 
-        $dropshippers = DropShipper::orderBy('id', 'desc')->get();
+        $status = $request->query('status');
+        $from = $request->query('from');
+        $to = $request->query('to');
+
+        // Apply filters to the query
+        $dropshippers = Dropshipper::when($status, function ($query, $status) {
+            return $query->where('status', $status);
+        })
+        ->when($from, function ($query, $from) {
+            return $query->whereDate('created_at', '>=', $from);
+        })
+        ->when($to, function ($query, $to) {
+            return $query->whereDate('created_at', '<=', $to);
+        })
+        ->orderBy('id', 'desc')
+        ->get();
 
         return (new ResponseCollection($dropshippers))
             ->response()
@@ -83,7 +98,7 @@ class DropShipperController extends Controller
             ->response()
             ->setStatusCode(200);
     }
-    
+
     public function paymentData(Request $request)
     {
         $banks = Bank::join('account_heads', 'banks.account_head_id', 'account_heads.id')
@@ -102,7 +117,7 @@ class DropShipperController extends Controller
             "cash" => $cash,
         ]);
     }
-    
+
     public function shopPayments(Request $request)
     {
         $shop = DropshipperShop::where('id',$request->id)->first();
@@ -119,14 +134,14 @@ class DropShipperController extends Controller
             $item->time = date("H:i d-m-Y",strtotime($item->created_at));
             return $item;
         });;
-        
+
 
         return response()->json([
             "shopPayments" => $shopPayments,
             "shop" => $shop,
         ]);
     }
-    
+
     public function addPayment(Request $request)
     {
         $request->validate([
@@ -144,11 +159,11 @@ class DropShipperController extends Controller
         $group_id = $accDropshipper->group_id;
         if($accShop->account_head_id == null || $accShop->account_head_id == 0)
         {
-         
+
             // to check dropshipper ledger
             if($accDropshipper->group_id == null || $accDropshipper->group_id == 0)
             {
-                $group = $this->accountGroupFourthCreate( 
+                $group = $this->accountGroupFourthCreate(
                     $accDropshipper->full_name.'-'.$accDropshipper->cnic_number,
                     6, // Current asset
                     50, // Account Receivable
@@ -158,7 +173,7 @@ class DropShipperController extends Controller
                 $accDropshipper->update(["group_id"=>$group_id]);
             }
 
-            $head = $this->accountHeadCreate( 
+            $head = $this->accountHeadCreate(
                 $accShop->store_name.'-'.$accDropshipper->id,
                 1, // Asset
                 6, // Current asset
@@ -169,7 +184,7 @@ class DropShipperController extends Controller
 
             $accShop->update(["account_head_id"=>$head_id]);
         }
-            
+
         // to create document serial of BP/BR
         $document = AccountTransaction::
         where(function($q) use ($request){
@@ -185,34 +200,34 @@ class DropShipperController extends Controller
         ->orderBy("document_id","DESC")
         ->first();
         $document_id = $document ? $document->document_id + 1 : 1;
-        
+
         // receipt id only generate when voucher will approved
-        $posting = AccountTransaction::create([                                         
-            'account_head_id' => $request->from_account,                                     
-            'other_account_head_id' => $head_id,                                      
-            'debit' => 0,   
-            'credit' => $request->amount, 
-            'narration' => $request->narration, 
-            'document_id' => $document_id,                                            
-            'type' => $request->type == 'cash' ? 'CP' : 'BP',                                                          
-            'cheque' => null,                                             
+        $posting = AccountTransaction::create([
+            'account_head_id' => $request->from_account,
+            'other_account_head_id' => $head_id,
+            'debit' => 0,
+            'credit' => $request->amount,
+            'narration' => $request->narration,
+            'document_id' => $document_id,
+            'type' => $request->type == 'cash' ? 'CP' : 'BP',
+            'cheque' => null,
             'added_by' => auth()->user()->id,
         ]);
 
-        
-        AccountTransaction::create([                               
-            'account_head_id' => $head_id,                            
-            'other_account_head_id' => $request->from_account,                            
-            'debit' =>  $request->amount, 
-            'credit' => 0, 
-            'narration' => $request->narration, 
-            'document_id' => $document_id,                                            
-            'type' => $request->type == 'cash' ? 'CP' : 'BP',                                                                     
-            'cheque' => null,                                                 
-            'added_by' => auth()->user()->id,                                           
+
+        AccountTransaction::create([
+            'account_head_id' => $head_id,
+            'other_account_head_id' => $request->from_account,
+            'debit' =>  $request->amount,
+            'credit' => 0,
+            'narration' => $request->narration,
+            'document_id' => $document_id,
+            'type' => $request->type == 'cash' ? 'CP' : 'BP',
+            'cheque' => null,
+            'added_by' => auth()->user()->id,
         ]);
-            
-        
+
+
         return response()->json([],200);
     }
 
@@ -257,14 +272,14 @@ class DropShipperController extends Controller
                     'allowed_ip_address' => '*'
                 ]);
 
-                $group = $this->accountGroupFourthCreate( 
+                $group = $this->accountGroupFourthCreate(
                     $dropshipper->full_name.'-'.$dropshipper->cnic_number,
                     6, // Current asset
                     50, // Account Receivable
                 );
                 $group_id = $group->id;
 
-                $head = $this->accountHeadCreate( 
+                $head = $this->accountHeadCreate(
                     $shop->store_name.'-'.$shop->dropshipper_id,
                     1, // Asset
                     6, // Current asset
@@ -311,7 +326,7 @@ class DropShipperController extends Controller
         $group = AccountGroup::create([
             'name'       => strtoupper($name),
             'code'       => $code,
-            'account_id' =>  $second, 
+            'account_id' =>  $second,
             'parent_id'  => $third,
             'company_id'  => 0,
             'added_by'         => auth()->user()->id
@@ -337,7 +352,7 @@ class DropShipperController extends Controller
 
         return $head;
     }
-    
+
 
     public function pdf(Request $request)
     {

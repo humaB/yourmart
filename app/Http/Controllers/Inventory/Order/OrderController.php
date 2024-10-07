@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Inventory\Order;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Resources\ResponseCollection;
+use App\Models\City;
+use App\Models\Inventory\Courier\CourierCategoryRange;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
@@ -23,7 +26,7 @@ class OrderController extends Controller
         return view('inventory.product.order.orders');
     }
 
-    public function fetchOrders(){
+    public function fetchOrders( Request $request ){
         $userRole  = trim(auth()->user()->role);
           // Map roles to corresponding statuses
         $statusMap = [
@@ -42,6 +45,17 @@ class OrderController extends Controller
         }else{
             $orders = Order::with('user', 'shop')
             ->orderBy('id', 'desc')
+            // Apply status filter when provided
+            ->when($request->status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            // Apply date range filters when provided
+            ->when($request->from, function ($query, $from) {
+                return $query->whereDate('created_at', '>=', $from);
+            })
+            ->when($request->to, function ($query, $to) {
+                return $query->whereDate('created_at', '<=', $to);
+            })
             ->get();
         }
 
@@ -137,17 +151,36 @@ class OrderController extends Controller
         }
 
          // Map roles to corresponding statuses
-        $statusMap = [
+       $statusMap = [
             'order collection manager' => 1,    // Role for order collection
             'inventory manager' => 2,  // Role for inventory issuance
             'qc manager' => 3,         // Role for quality control
             'packing & dispatch manager' => 4,    // Role for packing and dispatch
-            'autidor'                    => 5    // Role for packing and dispatch
+            'auditor'                    => 5    // Role for packing and dispatch
         ];
 
         if (array_key_exists($userRole, $statusMap)) {
             // Update the order status based on the role
             $order->update(['status' => $statusMap[$userRole]]);
+
+            if( $userRole == 'order collection manager'){
+
+                $leopardData = [
+                    'track_number' => null,
+                    'slip_link'    => null
+                ];
+
+                $leopardApi = new LeopardApiHelper();
+                $city = City::where('id', $order->city_id)->first();
+                $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id) ;
+
+                $order->update([
+                    'tracking_number'       => $leopardData['track_number'],
+                    'slip_link'             => $leopardData['slip_link']
+                ]);
+
+            }
 
             if($userRole == 'inventory manager'){
                 $issuance = StoreIssuance::create([
@@ -170,6 +203,25 @@ class OrderController extends Controller
             }
 
         }     else if($userRole == 'admin'){
+
+            if( $order->status == '0'){
+
+                $leopardData = [
+                    'track_number' => null,
+                    'slip_link'    => null
+                ];
+
+                $leopardApi = new LeopardApiHelper();
+                $city = City::where('id', $order->city_id)->first();
+                $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id) ;
+
+                $order->update([
+                    'tracking_number'       => $leopardData['track_number'],
+                    'slip_link'             => $leopardData['slip_link']
+                ]);
+
+            }
 
             if( $order->status == '1'){
                 $issuance = StoreIssuance::create([
