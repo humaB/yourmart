@@ -249,7 +249,6 @@ class LeopardApiHelper
         $dropshipper->increment('total_payable' , $courierCharges + $packingCharges);
         $dropshipper->increment('remaining_amount' , $courierCharges + $packingCharges);
 
-
         $shop->increment('total_payable' , $courierCharges + $packingCharges);
         $shop->increment('total_remaining' , $courierCharges + $packingCharges);
 
@@ -290,11 +289,11 @@ class LeopardApiHelper
             //Dropshipper Credit
             $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
 
-            $dropshipper->increment('total_paid' , $order->paid_amount);
-            $dropshipper->decrement('remaining_amount' , $order->paid_amount);
+            $dropshipper->increment('total_payable' , $order->paid_amount);
+            $dropshipper->increment('remaining_amount' , $order->paid_amount);
 
-            $shop->increment('total_paid' , $order->paid_amount);
-            $shop->decrement('total_remaining' , $order->paid_amount);
+            $shop->increment('total_payable' , $order->paid_amount);
+            $shop->increment('total_remaining' , $order->paid_amount);
         }
 
     }
