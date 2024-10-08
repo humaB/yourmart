@@ -245,12 +245,11 @@ class LeopardApiHelper
         $advance         = $order->paid_amount;
         $courierExtraCharges = $order->range->our_charges;
 
+        $dropshipper->decrement('total_payable' , $courierCharges + $packingCharges);
+        $dropshipper->decrement('remaining_amount' , $courierCharges + $packingCharges);
 
-        $dropshipper->increment('total_payable' , $courierCharges + $packingCharges);
-        $dropshipper->increment('remaining_amount' , $courierCharges + $packingCharges);
-
-        $shop->increment('total_payable' , $courierCharges + $packingCharges);
-        $shop->increment('total_remaining' , $courierCharges + $packingCharges);
+        $shop->decrement('total_payable' , $courierCharges + $packingCharges);
+        $shop->decrement('total_remaining' , $courierCharges + $packingCharges);
 
         //Checks account if or not they are open
         //General Ledger
