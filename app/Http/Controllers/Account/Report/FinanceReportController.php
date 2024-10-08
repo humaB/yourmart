@@ -26,9 +26,7 @@ class FinanceReportController extends BaseController
     {
         $fourth_level = AccountGroup::where("parent_id", '!=', 0)
         ->get(['id as code', 'name as label']);
-        $heads = AccountHead::where(["company_id"=>Auth::user()->company_id])
-        ->get(['id as code', 'name as label']);
-
+        $heads = AccountHead::get(['id as code', 'name as label']);
 
         return [
             "fourth_level" => $fourth_level,
