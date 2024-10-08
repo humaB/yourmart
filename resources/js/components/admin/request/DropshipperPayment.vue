@@ -44,7 +44,7 @@
                                 <v-select :options="accountBanks" v-model="addData.from_account" :reduce="option => option.code">
                                 </v-select>
                             </div>
-                            
+
                             <div class="form-group" v-else-if="addData.type == 'cash'">
                                 <label for="dropdownField">Select Cash Account <span class="text-danger">*</span></label>
                                 <v-select :options="accountCash" v-model="addData.from_account" :reduce="option => option.code">
@@ -65,18 +65,18 @@
                                 <input type="text" v-model="addData.amount" class="form-control" id="amountField" placeholder="Enter amount" @keypress="numberValidate($event,{dot:true})" />
                             </div>
                         </div>
-                        
+
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="amountField">Narration</label>
                                 <input type="text" v-model="addData.narration" class="form-control" id="amountField" placeholder="Enter amount" />
                             </div>
                         </div>
-                       
+
                     </div>
-                
+
                     <div class=" py-1">
-                        <h5 class="text-capitalize">{{shop.store_name??''}} Payment History</h5>
+                        <h5 class="text-capitalize">{{shop.store_name ?? ''}} Payment History,  Total Remaining : {{ shop.total_remaining }}</h5>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -95,9 +95,10 @@
                         </table>
                     </div>
                     </div>
-                
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" :class="loader ? 'btn-progress disabled' : ''" @click="add()">Save</button>
+                    <button type="button" class="btn btn-primary" @click="add()" v-if="!loader">Add Payment</button>
+                    <button type="button" class="btn btn-primary btn-progress disabled" v-else>Add Payment</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -122,13 +123,13 @@ export default {
         this.$emit('add')
       },
       numberValidate(event, { dot = false, maxLen = null, negative = false, comma = false } = {}) {
-        
+
             const charCode = event.charCode;
             const value = event.target.value.toString().replace(/,/g, '');
-            
+
             // Allow numbers (48-57), dot (46), and control keys (0)
             if ((charCode >= 48 && charCode <= 57) || charCode === 0) {
-        
+
                 // Check the length if it's not null
                 if (maxLen !== null && value.length >= maxLen) {
                     event.preventDefault();
@@ -144,7 +145,7 @@ export default {
                     event.preventDefault();
                     return false;
                 }
-        
+
                 // Check the length if it's not null
                 if (maxLen !== null && value.length >= maxLen) {
                     event.preventDefault();
@@ -160,16 +161,19 @@ export default {
                 }
                 return true;
             }
-        
+
             event.preventDefault();
             return false;
         },
         paymentShopPayments( id ){
+            let vm = this;
+
             axios
             .post(this.api_url + "dropshippers/shops/payments", { id:id })
             .then((response) => {
                 this.shopPayments = response.data.shopPayments;
                 this.shop = response.data.shop;
+
             });
         },
     }

@@ -23,12 +23,12 @@ class AccountHeadController extends BaseController
     {
         return view('account.head');
     }
-    
+
     public function headBankIndex(Request $request)
     {
         return view('account.head_bank');
     }
-    
+
     public function headCashIndex(Request $request)
     {
         return view('account.head_cash');
@@ -37,7 +37,7 @@ class AccountHeadController extends BaseController
     public function accountHeads(Request $request)
     {
         $firstLevel = Account::where('parent_id' , '=' ,'0')->get(['id as code', 'name as label']);
-       
+
         $accountHeads = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code")
         ->latest('id')
         ->where(["company_id"=>Auth::user()->company_id])->get();
@@ -68,11 +68,11 @@ class AccountHeadController extends BaseController
                 'required',
             ],
         ]);
-        
+
         try {
             DB::beginTransaction();
 
-            $this->accountHeadCreate( 
+            $this->accountHeadCreate(
                 $request->name,
                 $request->first_level,
                 $request->second_level,
@@ -90,7 +90,7 @@ class AccountHeadController extends BaseController
         }
 
     }
-    
+
     public function headUpdate(Request $request)
     {
         $request->validate([
@@ -99,7 +99,7 @@ class AccountHeadController extends BaseController
                 Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
             ],
         ]);
-        
+
         try {
             DB::beginTransaction();
 
@@ -120,7 +120,7 @@ class AccountHeadController extends BaseController
     }
 
     public function accountHeadBanks(Request $request)
-    {  
+    {
         $accountHeadBanks = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_bank")
         ->latest('id')
         ->where(["company_id"=>Auth::user()->company_id,"group_id"=>31])->get();
@@ -135,7 +135,7 @@ class AccountHeadController extends BaseController
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
+                Rule::unique('account_heads','name'),
             ],
             'address' => [
                 'required',
@@ -147,11 +147,11 @@ class AccountHeadController extends BaseController
                 'required',
             ],
         ]);
-        
+
         try {
             DB::beginTransaction();
 
-            $head = $this->accountHeadCreate( 
+           $head = $this->accountHeadCreate(
                 $request->name,
                 1, // Asset
                 6, // Current asset
@@ -167,8 +167,8 @@ class AccountHeadController extends BaseController
                 "balance" => 0,
                 "status" => "active",
                 "account_head_id" => $head->id,
-                'added_by' => Auth::user()->id,
-                "company_id" => Auth::user()->company_id
+                'added_by' => Auth::user()->id ?? 0,
+                "company_id" => 0
             ]);
 
 
@@ -181,7 +181,7 @@ class AccountHeadController extends BaseController
         }
 
     }
-    
+
     public function headBankUpdate(Request $request)
     {
         $request->validate([
@@ -199,7 +199,7 @@ class AccountHeadController extends BaseController
                 'required',
             ],
         ]);
-        
+
         try {
             DB::beginTransaction();
 
@@ -226,9 +226,9 @@ class AccountHeadController extends BaseController
         }
 
     }
-    
+
     public function accountHeadCash(Request $request)
-    {  
+    {
         $accountHeadCash = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_cash")
         ->latest('id')
         ->where(["company_id"=>Auth::user()->company_id,"group_id"=>30])->get();
@@ -246,11 +246,11 @@ class AccountHeadController extends BaseController
                 Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
             ],
         ]);
-        
+
         try {
             DB::beginTransaction();
 
-            $head = $this->accountHeadCreate( 
+            $head = $this->accountHeadCreate(
                 $request->name,
                 1, // Asset
                 6, // Current asset
@@ -275,7 +275,7 @@ class AccountHeadController extends BaseController
         }
 
     }
-    
+
     public function headCashUpdate(Request $request)
     {
         $request->validate([
@@ -284,7 +284,7 @@ class AccountHeadController extends BaseController
                 Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
             ],
         ]);
-        
+
         try {
             DB::beginTransaction();
 
@@ -316,8 +316,8 @@ class AccountHeadController extends BaseController
             'account_id' => $second,
             'parent_group_id' => $third,
             'group_id' => $fourth,
-            'company_id' => Auth::user()->company_id,
-            'added_by' => Auth::user()->id
+            'company_id' => 0,
+            'added_by' => Auth::user()->id ?? 0
         ]);
 
         return $head;

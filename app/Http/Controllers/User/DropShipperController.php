@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
@@ -151,82 +152,59 @@ class DropShipperController extends Controller
             'amount' => ['required'],
         ]);
 
-        $accShop = DropshipperShop::where('id',$request->shop_id)->first();
-        $accDropshipper = Dropshipper::where('id', $accShop->dropshipper_id)->first();
+        $shop = DropshipperShop::where('id',$request->shop_id)->first();
+        $dropshipper = Dropshipper::where('id', $shop->dropshipper_id)->first();
 
-        // now creating shop ledger
-        $head_id = $accShop->account_head_id;
-        $group_id = $accDropshipper->group_id;
-        if($accShop->account_head_id == null || $accShop->account_head_id == 0)
-        {
+        $ledger = new AccountHeadHelper();
 
-            // to check dropshipper ledger
-            if($accDropshipper->group_id == null || $accDropshipper->group_id == 0)
-            {
-                $group = $this->accountGroupFourthCreate(
-                    $accDropshipper->full_name.'-'.$accDropshipper->cnic_number,
-                    6, // Current asset
-                    50, // Account Receivable
-                );
-                $group_id = $group->id;
+        //Checks account if or not they are open
+        //General Ledger
+        $group_id = $dropshipper->group_id;
+        if( !$dropshipper->group_id ){
+            $group = $ledger->accountGroupFourthCreate(
+                $dropshipper->full_name.'-'.$dropshipper->cnic_number,
+                6, // Current asset
+                50, // Account Receivable
+            );
 
-                $accDropshipper->update(["group_id"=>$group_id]);
-            }
+            $dropshipper->update([
+                'group_id' => $group->id
+            ]);
 
-            $head = $this->accountHeadCreate(
-                $accShop->store_name.'-'.$accDropshipper->id,
+            $group_id = $group->id;
+        }
+
+
+        $head_id = $shop->account_head_id;
+        if( !$shop->account_head_id ){
+            //Shop Ledger
+            $head = $ledger->accountHeadCreate(
+                $shop->store_name.'-'.$shop->dropshipper_id,
                 1, // Asset
                 6, // Current asset
                 50, // Account Receivable
                 $group_id, // Dropshipper
             );
-            $head_id = $head->id;
 
-            $accShop->update(["account_head_id"=>$head_id]);
+            $shop->update([
+                'account_head_id' => $head->id
+            ]);
+
+            $head_id = $head->id;
         }
 
-        // to create document serial of BP/BR
-        $document = AccountTransaction::
-        where(function($q) use ($request){
-            if($request->type == 'cash')
-            {
-                $q->where("type","CP");
-            }
-            else
-            {
-                $q->where("type","BP");
-            }
-        })
-        ->orderBy("document_id","DESC")
-        ->first();
-        $document_id = $document ? $document->document_id + 1 : 1;
-
-        // receipt id only generate when voucher will approved
-        $posting = AccountTransaction::create([
-            'account_head_id' => $request->from_account,
-            'other_account_head_id' => $head_id,
-            'debit' => 0,
-            'credit' => $request->amount,
-            'narration' => $request->narration,
-            'document_id' => $document_id,
-            'type' => $request->type == 'cash' ? 'CP' : 'BP',
-            'cheque' => null,
-            'added_by' => auth()->user()->id,
-        ]);
+        $document = $ledger->voucherType('bank');
+        //Shop Debit
+        $ledger->accountTransaction($head_id,$request->from_account, $request->amount, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
+        //Bank Cash Credit
+        $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
 
 
-        AccountTransaction::create([
-            'account_head_id' => $head_id,
-            'other_account_head_id' => $request->from_account,
-            'debit' =>  $request->amount,
-            'credit' => 0,
-            'narration' => $request->narration,
-            'document_id' => $document_id,
-            'type' => $request->type == 'cash' ? 'CP' : 'BP',
-            'cheque' => null,
-            'added_by' => auth()->user()->id,
-        ]);
+        $dropshipper->increment('total_paid', $request->amount);
+        $shop->increment('total_paid', $request->amount);
 
+        $dropshipper->decrement('remaining_amount', $request->amount);
+        $shop->decrement('total_remaining', $request->amount);
 
         return response()->json([],200);
     }
@@ -272,6 +250,7 @@ class DropShipperController extends Controller
                     'allowed_ip_address' => '*'
                 ]);
 
+                //General Ledger
                 $group = $this->accountGroupFourthCreate(
                     $dropshipper->full_name.'-'.$dropshipper->cnic_number,
                     6, // Current asset
@@ -279,6 +258,7 @@ class DropShipperController extends Controller
                 );
                 $group_id = $group->id;
 
+                //Shop Ledger
                 $head = $this->accountHeadCreate(
                     $shop->store_name.'-'.$shop->dropshipper_id,
                     1, // Asset

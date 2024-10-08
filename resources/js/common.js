@@ -15,30 +15,30 @@ export default {
                 });
             } catch (error) {
                 if (error.response.status === 422) {
-                    let errorMessage = '<ul>';
+                    let errorMessage = '';
                     Object.keys(error.response.data.errors).forEach(key => {
                         Object.keys(error.response.data.errors[key]).forEach(inner => {
-                            errorMessage += `<li>${error.response.data.errors[key][inner]}</li>`; 
+                            errorMessage += `${error.response.data.errors[key][inner]}`;
                         });
                     });
-                    errorMessage += '</ul>';
+                    errorMessage += '';
 
-                    this.$swal({
+                    swal({
                         icon: 'error',
                         title: 'Error',
-                        html: errorMessage, 
+                        text: errorMessage,
                     });
                 }
                 if (error.response.status === 409) {
-                    this.$swal({
+                    swal({
                         icon: 'error',
                         title: 'Error',
-                        html: error.response.data.message,
+                        text: error.response.data.message,
                     });
                 }
                 if(error.response.status == 401)
                 {
-                    store.dispatch('clearUserData');
+                    // store.dispatch('clearUserData');
                 }
                 return error.response
             }

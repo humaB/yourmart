@@ -396,7 +396,7 @@
                                 </div>
                             </div>
 
-                            <div class="card" v-if="role == 'order collection manager'">
+                            <div class="card" v-if="(role == 'order collection manager' || role == 'admin') && details.status < 7">
                                 <div class="card-body row">
                                     <div class="col-md-12">
                                         <h5>Confirm Paid Amount</h5>

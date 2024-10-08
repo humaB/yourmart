@@ -14,8 +14,8 @@ import { BulletListLoader } from 'vue-content-loader'
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 // sweet alert 2
-// import VueSweetalert2 from 'vue-sweetalert2';
-// import 'sweetalert2/dist/sweetalert2.min.css';
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
 
 
 /**

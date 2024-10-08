@@ -28,7 +28,7 @@ class FinanceReportController extends BaseController
         ->get(['id as code', 'name as label']);
         $heads = AccountHead::where(["company_id"=>Auth::user()->company_id])
         ->get(['id as code', 'name as label']);
-        
+
 
         return [
             "fourth_level" => $fourth_level,
@@ -38,7 +38,7 @@ class FinanceReportController extends BaseController
 
     public function receiptReport(Request $request)
     {
-        $receipts = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $receipts = AccountTransaction::where(["approved"=>1])
         ->where("receipt_id",'!=',null)
         ->with("account_head:id,name,code")
         ->when($request->from, function ($q) use ($request) {
@@ -51,7 +51,7 @@ class FinanceReportController extends BaseController
         ->get()
         ->groupBy('receipt_id')
         ->map(function ($group) {
-            $group->shift();  
+            $group->shift();
             return $group;
         })
         ->flatten(1); //this take inner data from groupby and leave it at parent
@@ -60,25 +60,25 @@ class FinanceReportController extends BaseController
             "receipts" => $receipts,
         ];
     }
-    
+
     public function generalLedgerReport(Request $request)
     {
-        $heads = AccountHead::where(["company_id"=>Auth::user()->company_id,"group_id"=>$request->level_four])->pluck('id');
-        
+        $heads = AccountHead::where(["group_id"=>$request->level_four])->pluck('id');
+
         // to get name
         $level_four = AccountGroup::where("id",$request->level_four)->first();
 
         // to get sum of previous debits
-        $previous_debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_debits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of previous credits
-        $previous_credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_credits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
@@ -87,7 +87,7 @@ class FinanceReportController extends BaseController
         ->sum("credit");
 
         // to get sum of debits
-        $debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $debits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -97,9 +97,9 @@ class FinanceReportController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of credits
-        $credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $credits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -111,7 +111,7 @@ class FinanceReportController extends BaseController
         ->sum("credit");
 
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->with("account_head:id,name,code","other_head_name:id,name,code")
         ->when($request->from, function ($q) use ($request) {
@@ -137,23 +137,23 @@ class FinanceReportController extends BaseController
             "general_ledgers" => $general_ledgers,
         ];
     }
-    
+
     public function ledgerReport(Request $request)
     {
         // to get name
         $head = AccountHead::with("level_four:id,name")->where("id",$request->head)->first();
 
         // to get sum of previous debits
-        $previous_debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_debits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of previous credits
-        $previous_credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_credits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
@@ -162,7 +162,7 @@ class FinanceReportController extends BaseController
         ->sum("credit");
 
         // to get sum of debits
-        $debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $debits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -172,9 +172,9 @@ class FinanceReportController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of credits
-        $credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $credits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -186,7 +186,7 @@ class FinanceReportController extends BaseController
         ->sum("credit");
 
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -215,15 +215,15 @@ class FinanceReportController extends BaseController
     {
 
         // to get sum of previous debits
-        $previous_debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_debits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of previous credits
-        $previous_credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_credits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
@@ -231,7 +231,7 @@ class FinanceReportController extends BaseController
         ->sum("credit");
 
         // to get sum of debits
-        $debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $debits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
         })
@@ -240,9 +240,9 @@ class FinanceReportController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of credits
-        $credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $credits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
         })
@@ -253,7 +253,7 @@ class FinanceReportController extends BaseController
         ->sum("credit");
 
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->with("account_head:id,name,code,group_id","other_head_name:id,name,code","account_head.level_four:id,name,code")
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -281,7 +281,7 @@ class FinanceReportController extends BaseController
     public function trialSheetReport(Request $request)
     {
         // this is for get previous trial
-        $previous_transactions = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
@@ -289,7 +289,7 @@ class FinanceReportController extends BaseController
         ->groupBy(["account_id","group_id"]);
 
         // this is to get duration trial
-        $current_transactions = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $current_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
         })
@@ -299,8 +299,8 @@ class FinanceReportController extends BaseController
         ->get()
         ->groupBy(["account_id","group_id"]);
 
-        // this loop for if any previous trial or current trial does't respond then this loop will handle and show    
-        $total_transactions = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        // this loop for if any previous trial or current trial does't respond then this loop will handle and show
+        $total_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
@@ -334,8 +334,8 @@ class FinanceReportController extends BaseController
                 $temp->closing_credits =  $temp->current_credits + $temp->previous_credits;
 
                 $fourData[] = $temp;
-            } 
-            
+            }
+
             $single['level_two_id'] = $two->first()[0]->level_two->id;
             $single['level_two_name'] = $two->first()[0]->level_two->name;
             $single['level_four'] = $fourData;
@@ -354,7 +354,7 @@ class FinanceReportController extends BaseController
     public function dailyReport(Request $request)
     {
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->when($request->current, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->current." 00:00:00");
             $q->where('created_at', '<=', $request->current." 23:59:59");
@@ -382,7 +382,7 @@ class FinanceReportController extends BaseController
             }
             $main[$outerKey] = (object)$single;
         }
-        
+
         $daily_data = (object)[];
         $daily_data->current = $request->current;
         $daily_data->record = (object)$main;

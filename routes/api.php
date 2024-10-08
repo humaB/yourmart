@@ -29,6 +29,7 @@ use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
+use App\Http\Controllers\Helpers\LeopardApiHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -261,8 +262,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 });
 
 Route::post('/web-hook/leopard',  function( Request $request ){
-    Log::info('WEBHOOK RUNNING', ['request' => $request->all()]);
-    return "WEBHOOK RUNNING";
+    $leopard = new LeopardApiHelper();
+    return $leopard->webHook($request);
 });
 
 Route::prefix('accounts')->group(function () {
