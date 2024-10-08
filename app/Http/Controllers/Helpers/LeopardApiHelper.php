@@ -271,11 +271,11 @@ class LeopardApiHelper
         *   Total Packaging and Courier + 60 Credit in leopard and sales account
         */
         $document = $ledger->voucherType('JV');
-        $ledger->accountTransaction($head_id, 3, $courierCharges + $packingCharges + 60 , 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + 60 , 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //Sale Credit
-        $ledger->accountTransaction(3, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(74, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //leopard Credit
-        $ledger->accountTransaction(4, $head_id, 0, $packingCharges + 60 + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(73, $head_id, 0, $packingCharges + 60 + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
 
            //Advance payment Entry if
         /*
@@ -286,9 +286,9 @@ class LeopardApiHelper
         if($order->paid_amount > 0 ){
             $document = $ledger->voucherType('bank');
             //Bank Cash Debit
-            $ledger->accountTransaction(9, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
+            $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
             //Dropshipper Credit
-            $ledger->accountTransaction($head_id, 9, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
 
             $dropshipper->increment('total_paid' , $order->paid_amount);
             $dropshipper->decrement('remaining_amount' , $order->paid_amount);
@@ -322,11 +322,11 @@ class LeopardApiHelper
         *   Total Amount Credit in Sales
         */
         $document = $ledger->voucherType('JV');
-        $ledger->accountTransaction($head_id, 3, $order->total_bill, 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction($head_id, 74, $order->total_bill, 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //Sale Credit
-        $ledger->accountTransaction(3, $head_id, 0, $productPrice + $packingCharges + $courierExtraCharges, 'Product + Packaging Cost', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(74, $head_id, 0, $productPrice + $packingCharges + $courierExtraCharges, 'Product + Packaging Cost', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //leopard Credit
-        $ledger->accountTransaction(4, $head_id, 0, $courierCharges - $courierExtraCharges, 'Courier Cost', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(73, $head_id, 0, $courierCharges - $courierExtraCharges, 'Courier Cost', $document, 'JV', 'ORDER', $order->id, $approved = 1);
 
         //Advance payment Entry if
         /*
@@ -336,9 +336,9 @@ class LeopardApiHelper
         //Meezan Bank Debit
         if($order->paid_amount > 0 ){
             $document = $ledger->voucherType('bank');
-            $ledger->accountTransaction(9, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
+            $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction($head_id, 9, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'ORDER', $order->id, $approved = 1);
         }
 
         //When Leopard Received Payment
@@ -347,9 +347,9 @@ class LeopardApiHelper
         *   Dropshipper Credit with selling price
         */
         $document = $ledger->voucherType('JV');
-        $ledger->accountTransaction(4, $head_id, $order->selling_price, 0, 'COD amount received from customer', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(73, $head_id, $order->selling_price, 0, 'COD amount received from customer', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //Sale Credit
-        $ledger->accountTransaction($head_id, 4, 0, $order->selling_price, 'COD amount received from customer', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction($head_id, 73, 0, $order->selling_price, 'COD amount received from customer', $document, 'JV', 'ORDER', $order->id, $approved = 1);
     }
 
     private function openShopLedger( $shop , $ledger, $group){
