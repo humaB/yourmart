@@ -321,7 +321,29 @@ class OrderController extends Controller
             }
         }
 
+
         $order->decrement('status');
+
+       // Map roles to corresponding statuses
+        $statusMap = [
+            0 => 'order collection manager',   // Role for order collection
+            1 => 'inventory manager',          // Role for inventory issuance
+            2 => 'qc manager',                 // Role for quality control
+            3 => 'packing & dispatch manager', // Role for packing and dispatch
+            4 => 'auditor'                     // Role for audit
+        ];
+
+        // Get the current status after decrement
+        $currentStatus = $order->status;
+
+        $role = $statusMap[$currentStatus]; // Get the role corresponding to the new status
+
+        // Create activity log
+        OrderActivity::create([
+            'order_id'  => $order->id,
+            'activity'  => 'Order reverted back to ' . $role,
+            'added_by'  => auth()->user()->id,
+        ]);
 
         return response()->json(['message' => 'Order status updated successfully.'], 200);
     }

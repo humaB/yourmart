@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory\Store;
 
+use App\Models\Inventory\Order\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,6 +22,10 @@ class StoreReturn extends Model
 
     public function details(){
         return $this->hasMany(StoreReturnDetail::class, 'srn_id', 'id');
+    }
+
+    public function order(){
+        return $this->hasOne(Order::class, 'id', 'order_id');
     }
 
 }

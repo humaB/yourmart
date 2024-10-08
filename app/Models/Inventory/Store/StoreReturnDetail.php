@@ -14,7 +14,7 @@ class StoreReturnDetail extends Model
 
     protected $fillable = [
         'srn_id',
-        'product_id',
+        'product_id', // This is product variation id
         'quantity',
         'price',
         'total',
@@ -23,6 +23,10 @@ class StoreReturnDetail extends Model
 
     public function variation(){
         return $this->belongsTo(ProductVariation::class, 'product_id', 'id');
+    }
+
+    public function srn(){
+        return $this->belongsTo(StoreReturn::class, 'srn_id', 'id');
     }
 
 }

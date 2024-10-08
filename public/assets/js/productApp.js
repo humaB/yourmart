@@ -3381,7 +3381,10 @@ __webpack_require__.r(__webpack_exports__);
         audit: 0,
         dispatched: 0,
         underReview: 0,
-        rejected: 0
+        rejected: 0,
+        delivered: 0,
+        returned: 0,
+        returnedToStock: 0
       },
       filter: {
         status: '',
@@ -3465,7 +3468,10 @@ __webpack_require__.r(__webpack_exports__);
           audit: 0,
           underReview: 0,
           rejected: 0,
-          dispatched: 0
+          dispatched: 0,
+          delivered: 0,
+          returned: 0,
+          returnedToStock: 0
         };
 
         // Process orders and calculate total counts based on the status
@@ -3503,6 +3509,18 @@ __webpack_require__.r(__webpack_exports__);
             case 7:
               // Rejected
               vm.totalOrders.rejected++;
+              break;
+            case 8:
+              // Delivered
+              vm.totalOrders.delivered++;
+              break;
+            case 9:
+              // Returned
+              vm.totalOrders.returned++;
+              break;
+            case 10:
+              // Returned
+              vm.totalOrders.returnedToStock++;
               break;
           }
         });
@@ -11197,7 +11215,49 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalOrders.rejected) + "%"
     }
-  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.rejected) + "\n                                    ")])])])])]), _vm._v(" "), _c("form", {
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.rejected) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.delivered)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-success",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.delivered) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.delivered) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.returned)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-danger",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.returned) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.returned) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.returnedToStock)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-danger",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.returnedToStock) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.returnedToStock) + "\n                                    ")])])])])]), _vm._v(" "), _c("form", {
     staticClass: "row col-md-12 mb-3",
     on: {
       submit: function submit($event) {
@@ -11376,7 +11436,15 @@ var render = function render() {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejection Under Review")]) : item.status == 7 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_vm._v("Rejected")]) : item.status == 8 ? _c("span", {
+      staticClass: "badge badge-succes"
+    }, [_vm._v("Delivered")]) : item.status == 9 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Returned")]) : item.status == 10 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Returned To Stock")]) : item.status == 11 ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Out for delivery")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",
@@ -11429,7 +11497,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Order Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory Manager")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing & Dispatch")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Rejection Under Review")]), _vm._v(" "), _c("th", [_vm._v("Rejected")])]);
+  return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Under Review")]), _vm._v(" "), _c("th", [_vm._v("Rejected")]), _vm._v(" "), _c("th", [_vm._v("Delivered")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Returned to store")])]);
 }];
 render._withStripped = true;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Inventory\Gate;
+namespace App\Http\Controllers\Inventory\Store;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;

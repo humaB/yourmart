@@ -245,6 +245,7 @@ class LeopardApiHelper
         $advance         = $order->paid_amount;
         $courierExtraCharges = $order->range->our_charges;
 
+        //60 are extra charges which will in future be set by admin
         $dropshipper->decrement('total_payable' , $courierCharges + $packingCharges + 60);
         $dropshipper->decrement('remaining_amount' , $courierCharges + $packingCharges + 60);
 
@@ -270,10 +271,10 @@ class LeopardApiHelper
         */
         $document = $ledger->voucherType('JV');
         $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + 60 , 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        //Leopard Credit
+        $ledger->accountTransaction(73, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //Sale Credit
-        $ledger->accountTransaction(74, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
-        //leopard Credit
-        $ledger->accountTransaction(73, $head_id, 0, $packingCharges + 60 + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(74, $head_id, 0, $packingCharges + 60 + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
 
            //Advance payment Entry if
         /*

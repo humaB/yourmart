@@ -11,14 +11,17 @@
                                 <table class="table table-striped">
                                     <tr>
                                         <th>Total Orders</th>
-                                        <th>Order Collection</th>
-                                        <th>Inventory Manager</th>
+                                        <th>Collection</th>
+                                        <th>Inventory</th>
                                         <th>QC Manager</th>
-                                        <th>Packing & Dispatch</th>
+                                        <th>Packing </th>
                                         <th>Audit Manager</th>
                                         <th>Dispatched</th>
-                                        <th>Rejection Under Review</th>
+                                        <th>Under Review</th>
                                         <th>Rejected</th>
+                                        <th>Delivered</th>
+                                        <th>Returned</th>
+                                        <th>Returned to store</th>
                                     </tr>
                                     <tr>
                                         <td>{{ totalOrders.totalOrders }}</td>
@@ -94,6 +97,33 @@
                                             </div>
                                             {{ totalOrders.rejected }}
                                         </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.delivered) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-success" :style="{ width: getPercentage(totalOrders.delivered) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.delivered }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.returned) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalOrders.returned) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.returned }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.returnedToStock) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalOrders.returnedToStock) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.returnedToStock }}
+                                        </td>
                                     </tr>
                                 </table>
                             </div>
@@ -165,6 +195,10 @@
                                                             <span class="badge badge-succes" v-else-if="item.status == 5">Dispatched</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 6">Rejection Under Review</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 7">Rejected</span>
+                                                            <span class="badge badge-succes" v-else-if="item.status == 8">Delivered</span>
+                                                            <span class="badge badge-danger" v-else-if="item.status == 9">Returned</span>
+                                                            <span class="badge badge-danger" v-else-if="item.status == 10">Returned To Stock</span>
+                                                            <span class="badge badge-warning" v-else-if="item.status == 11">Out for delivery</span>
                                                         </td>
                                                         <td>
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
@@ -248,7 +282,10 @@ export default {
                 audit: 0,
                 dispatched : 0,
                 underReview: 0,
-                rejected : 0
+                rejected : 0,
+                delivered : 0,
+                returned : 0,
+                returnedToStock : 0
             },
             filter: {
                 status: '',
@@ -341,7 +378,10 @@ export default {
                     audit: 0,
                     underReview: 0,
                     rejected: 0,
-                    dispatched : 0
+                    dispatched : 0,
+                    delivered : 0,
+                    returned : 0,
+                    returnedToStock : 0
                 };
 
                 // Process orders and calculate total counts based on the status
@@ -371,6 +411,15 @@ export default {
                             break;
                         case 7: // Rejected
                             vm.totalOrders.rejected++;
+                            break;
+                        case 8: // Delivered
+                            vm.totalOrders.delivered++;
+                            break;
+                        case 9: // Returned
+                            vm.totalOrders.returned++;
+                            break;
+                        case 10: // Returned
+                            vm.totalOrders.returnedToStock++;
                             break;
                     }
                 });

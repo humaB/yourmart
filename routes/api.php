@@ -13,7 +13,7 @@ use App\Http\Controllers\Inventory\Attributes\SizeController;
 use App\Http\Controllers\Inventory\Attributes\TagController;
 use App\Http\Controllers\Inventory\Gate\GateInWardController;
 use App\Http\Controllers\Inventory\Setting\ProductPackagingClassController;
-use App\Http\Controllers\Inventory\Gate\StoreInwardController;
+use App\Http\Controllers\Inventory\Store\StoreInwardController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\PurchaseOrder\InventoryPurchaseOrderController;
@@ -30,6 +30,7 @@ use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -257,6 +258,11 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/product-inward',  [ StoreInwardController::class , 'inWard']);
 
             Route::get('/stocks',  [ StoreInwardController::class , 'fetchStock']);
+
+            //Returns
+            Route::get('/pending-returns',  [ CourierReturnController::class , 'pendingReturns']);
+            Route::get('/product-returned',  [ CourierReturnController::class , 'inWardRecord']);
+            Route::post('/product-returned',  [ CourierReturnController::class , 'returnProduct']);
         });
     });
 });

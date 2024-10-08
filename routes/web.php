@@ -4,7 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\UserController;
 use App\Http\Controllers\Inventory\Gate\GateInWardController;
-use App\Http\Controllers\Inventory\Gate\StoreInwardController;
+use App\Http\Controllers\Inventory\Store\StoreInwardController;
 use App\Http\Controllers\Inventory\Order\OrderController;
 use App\Http\Controllers\Inventory\ProductController;
 use App\Http\Controllers\Inventory\PurchaseOrder\InventoryPurchaseOrderController;
@@ -25,6 +25,7 @@ use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Account\pdf\TransactionPdfController;
+use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -100,6 +101,11 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
             Route::get('/inward-records', [StoreInwardController::class, 'record'])->name('inventory.products.store.record');
             Route::post('/inward-record/pdf', [StoreInwardController::class, 'pdf']);
 
+            Route::group(['prefix' => '/returns'], function () {
+                Route::get('/couriers', [CourierReturnController::class, 'index'])->name('inventory.products.store.returns');
+                Route::get('/couriers/records', [CourierReturnController::class, 'record'])->name('inventory.products.store.return_record');
+            });
+
             Route::get('/stock', [StoreInwardController::class, 'stock'])->name('inventory.products.store.stock');
         });
     });
@@ -144,7 +150,7 @@ Route::prefix('accounts')->group(function () {
         Route::post('daily/report/pdf', [TransactionPdfController::class,'dailyReportPdf']);
     });
 
-    
+
 });
 
 Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {

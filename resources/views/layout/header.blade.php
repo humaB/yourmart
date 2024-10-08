@@ -8,24 +8,26 @@
                 <i data-feather="maximize"></i>
               </a></li>
             <li>
-              
+                <a href="#" class="nav-link nav-link-lg text-dark">
+              {{  strtoupper(auth()->user()->role) }}
+                </a>
             </li>
           </ul>
         </div>
         <ul class="navbar-nav navbar-right">
-        
-        
+
+
           <li class="dropdown">
 
-            
+
             <a href="#" data-toggle="dropdown"
               class="nav-link dropdown-toggle nav-link-lg nav-link-user"> <img alt="image" src="{{ asset('assets/img/users/user-4.jpg') }}"
                 class="user-img-radious-style"> <span class="d-sm-none d-lg-inline-block"></span></a>
-            
+
 
             <div class="dropdown-menu dropdown-menu-right pullDown">
               <div class="dropdown-title">Hello {{ auth()->user()->name }}</div>
-      
+
               <div class="dropdown-divider"></div>
               <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
                 Logout
