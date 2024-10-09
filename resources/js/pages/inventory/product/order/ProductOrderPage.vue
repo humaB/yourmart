@@ -168,7 +168,7 @@
                                         <div class="card-body table-responsive" v-if="loader">
                                             <bullet-list-loader :width="250"> </bullet-list-loader>
                                         </div>
-                                        <div class="col-md-12" v-else>
+                                        <div class="col-md-12 table-responsive" v-else>
                                             <table class="table table-bordered" :id="table_id">
                                                 <thead>
                                                     <tr>

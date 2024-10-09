@@ -11415,7 +11415,7 @@ var render = function render() {
       width: 250
     }
   })], 1) : _c("div", {
-    staticClass: "col-md-12"
+    staticClass: "col-md-12 table-responsive"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
