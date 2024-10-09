@@ -76,7 +76,6 @@ class AccountHeadHelper {
                 'posting_id'     => $postingID,
                 'cheque'         => null,
                 'approved'       => $approved,
-                'project_id'     => 0,
                 'added_by'       => auth()->user()->id ?? 0,
             ]);
     }

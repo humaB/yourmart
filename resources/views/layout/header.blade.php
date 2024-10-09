@@ -27,7 +27,11 @@
 
             <div class="dropdown-menu dropdown-menu-right pullDown">
               <div class="dropdown-title">Hello {{ auth()->user()->name }}</div>
-
+              
+              <a href="{{ route('profile.setting') }}" class="dropdown-item has-icon"> <i class="fas fa-cog"></i>
+                Profile Setting
+              </a>
+              
               <div class="dropdown-divider"></div>
               <a href="{{ route('logout') }}" class="dropdown-item has-icon text-danger"> <i class="fas fa-sign-out-alt"></i>
                 Logout

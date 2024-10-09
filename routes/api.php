@@ -29,6 +29,7 @@ use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use Illuminate\Http\Request;
@@ -53,6 +54,10 @@ use Illuminate\Support\Facades\Route;
 //     Route::get('/',  [ UserController::class , 'getUsers']);
 //     Route::post('/',  [ UserController::class , 'userStore']);
 // });
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::get('/get-profile', [LoginController::class , 'getProfile']);
+    Route::post('/update-profile', [LoginController::class , 'updateProfile']);
+});
 
 Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ UserController::class , 'getUsers']);
