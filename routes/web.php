@@ -26,6 +26,7 @@ use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Account\pdf\TransactionPdfController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
@@ -160,13 +161,7 @@ Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
 
 
 Route::get('/test', function(){
-    $response = Http::post('https://merchantapi.leopardscourier.com/api/getAllCities/format/json/', [
-        'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
-        'api_password' => 'Allah@001#',
-    ]);
-
-    // // Get the response content
-    return $buffer = $response->body();
+    return Hash::make('123456');
 });
 
 

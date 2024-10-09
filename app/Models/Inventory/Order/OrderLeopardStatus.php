@@ -9,7 +9,6 @@ class OrderLeopardStatus extends Model
 {
     use HasFactory;
 
-
     protected $fillable = [
         'order_id',
         'leopard_label',

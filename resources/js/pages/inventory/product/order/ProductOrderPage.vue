@@ -179,6 +179,8 @@
                                                         <th>Courier</th>
                                                         <th>Packaging</th>
                                                         <th>Total Cost</th>
+                                                        <th>Received</th>
+                                                        <th>Remaining</th>
                                                         <th>COD</th>
                                                         <th>Advance</th>
                                                         <th>Total Payable</th>
@@ -199,6 +201,8 @@
                                                         <td>{{ item.courier_service_price }}</td>
                                                         <td>{{ item.packaging_price }}</td>
                                                         <td>{{ formatPrice(item.total_bill) }}</td>
+                                                        <td>{{ formatPrice(item.paid_amount) }}</td>
+                                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
                                                         <td>{{ formatPrice(item.selling_price) }}</td>
                                                         <td>{{ formatPrice(item.advance_amount) }}</td>
                                                         <td>{{ formatPrice( item.total_profit) }}</td>
