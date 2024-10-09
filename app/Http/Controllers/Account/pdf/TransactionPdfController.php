@@ -24,7 +24,7 @@ use Illuminate\Routing\Controller as BaseController;
 class TransactionPdfController extends BaseController
 {
     public function transactionPdf(Request $request)
-    {   
+    {
         $transactions = AccountTransaction::
         where(['type'=>$request->type,"document_id"=>$request->id])
         ->orderBy("id",'ASC')
@@ -38,7 +38,7 @@ class TransactionPdfController extends BaseController
             $amount   = $transactions->sum('credit');
             $dateTime = $transactions[0]->created_at;
             $heading  = '';
-    
+
             if($request->type == 'BP')
             {
                 $vocher = $transactions->where('debit', 0);
@@ -60,7 +60,7 @@ class TransactionPdfController extends BaseController
                 $heading = "Cash Receipt Voucher";
                 $particular = $transactions->where('credit', 0)->first()->other_head_name->name;
             }
-            elseif ($request->type == 'JV') 
+            elseif ($request->type == 'JV')
             {
                 $vocher = $transactions->where('credit', 0);
                 $heading = "Journal Voucher";
@@ -75,51 +75,51 @@ class TransactionPdfController extends BaseController
         {
             return redirect()->back()->with('danger', 'Data not Found');
         }
-    
+
             $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-    
+
             $pdf->heading = $heading;
             // set document information
             $pdf->SetCreator(PDF_CREATOR);
             $pdf->SetAuthor('GA');
             $pdf->SetTitle('Jornal Entries');
-    
+
             // set default header data
             // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 005', PDF_HEADER_STRING);
-    
+
             // set header and footer fonts
             $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
             $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-    
+
             // set default monospaced font
             $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-    
+
             // set margins
             $pdf->SetMargins(4, PDF_MARGIN_TOP, 5);
             $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
             $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-    
+
             // set auto page breaks
             $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-    
+
             // set image scale factor
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-    
+
             // set some language-dependent strings (optional)
             if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
                 require_once(dirname(__FILE__) . '/lang/eng.php');
                 $pdf->setLanguageArray($l);
             }
             // ---------------------------------------------------------
-    
-    
-    
+
+
+
             // set font
             $pdf->setPrintFooter(false);
             // add a page
             $pdf->AddPage('P', 'A4');
             // set color for background
-    
+
             $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
             // set color for background
             $pdf->SetFillColor(255, 255, 0);
@@ -133,30 +133,30 @@ class TransactionPdfController extends BaseController
             $pdf->Cell(0, 0, $heading, 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Ln();
             $pdf->Ln();
-    
+
             $pdf->SetFont('times', '', 11);
             // ---------------------------------------------------------
-            
+
             $pdf->MultiCell(130, 0, 'Particular  : ' . strtoupper( $particular ), 'B', 'L', 0, 0, '', '', true, 0, false, true, 13, 'T');
-            
+
             $pdf->MultiCell(10, 5, '', 0, 'R', 0, 0, '', '', true, 0, false, true, 5, 'M');
             $pdf->MultiCell(60, 5, 'Amount : ' . number_format($amount, 2, ".", ','), 'B', 'L', 0, 1, '', '', true, 0, false, true, 5, 'T');
-    
+
             $pdf->MultiCell(130, 7, 'Voucher # : ' . $request->type.'-'.$request->id, 'B', 'L', 0, 0, '', '', true, 0, false, true, 7, 'B');
             $pdf->MultiCell(10, 5, '', 0, 'R', 0, 0, '', '', true, 0, false, true, 5, 'M');
-    
-    
+
+
             $pdf->MultiCell(60, 7, 'Dated :  ' . date("d-m-Y", strtotime($dateTime)), 'B', 'L', 0, 1, '', '', true, 0, false, true, 7, 'B');
             $reference =  $transactions[0]->posting_type . '-' . $transactions[0]->posting_id;
             $pdf->MultiCell(130, 0, 'Reference # : ' . strtoupper($reference), 'B', 'L', 0, $request->type == 'BP' || $request->type == 'BR' ? 0 : 1, '', '', true, 0, false, true, 7, 'B');
             $pdf->MultiCell(10, 5, '', 0, 'R', 0, 0, '', '', true, 0, false, true, 5, 'M');
-       
-            if ($request->type == 'BP' || $request->type == 'BR' ) { 
-                
+
+            if ($request->type == 'BP' || $request->type == 'BR' ) {
+
                 $pdf->MultiCell(60, 0, 'Cheque # '. $transactions[0]->cheque . '', 'B', 'L', 0, 1, '', '', true, 0, false, true, 7, 'B');
-                
+
             }
-           
+
             $pdf->Ln(5);
             $pdf->SetFont('times', 'B', 10);
             // MultiCell($w, $h, $txt, $border=0, $align='J', $fill=0, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0)
@@ -167,24 +167,24 @@ class TransactionPdfController extends BaseController
             $pdf->MultiCell(70, 10, 'Narration', 'TR', 'L', 0, 0, '', '', true, 0, false, true, 10, 'M');
             $pdf->MultiCell(16, 10, 'Debit', 'TR', 'R', 0, 0, '', '', true, 0, false, true, 10, 'M');
             $pdf->MultiCell(16, 10, 'Credit', 'TR', 'R', 0, 1, '', '', true, 0, false, true, 10, 'M');
-    
+
             $narration_length = strlen($transactions[0]->narration);
             if ($narration_length > 50) {
                 $narration_length = 18;
             } else {
                 $narration_length = 12;
             }
-           
+
             foreach ($transactions as $i => $transaction) {
                 // try{
                     $pdf->SetFont('times', '', 9);
                     $pdf->MultiCell(8, $narration_length, $i + 1, 1, 'L', 0, 0, '', '', true, 0, false, true, $narration_length, 'M');
-                    
+
                     $head_name = strtoupper($transaction->account_head->name);
                     $group = $transaction->account_head->level_three->name;
                     $code = $transaction->account_head->level_one->code.'-'.$transaction->account_head->level_two->code.'-'.$transaction->account_head->level_three->code.'-'.$transaction->account_head->level_four->code.'-'.$transaction->account_head->code;
                     $pdf->MultiCell(20, $narration_length,  $code, 'TBR', 'L', 0, 0, '', '', true, 0, false, true, $narration_length, 'M');
-        
+
                     $pdf->MultiCell(70, $narration_length, $head_name . ' - ( ' . $group . ' )', 'TBR', 'L', 0, 0, '', '', true, 0, false, true, $narration_length, 'M');
                     //$pdf->MultiCell(15, $narration_length, $transaction->head_name->code, 'TBR', 'L', 0, 0, '', '', true, 0, false, true, $narration_length, 'M');
                     $pdf->MultiCell(70, $narration_length,strtoupper( $transaction->narration ), 'TBR', 'L', 0, 0, '', '', true, 0, false, true, $narration_length, 'M');
@@ -200,29 +200,29 @@ class TransactionPdfController extends BaseController
             $pdf->MultiCell(70, 12, 'Total : ', 'TBR', 'R', 0, 0, '', '', true, 0, false, true, 12, 'M');
             $pdf->MultiCell(16, 12, number_format($transactions->sum('debit') , 2), 'TBR', 'R', 0, 0, '', '', true, 0, false, true, 12, 'M');
             $pdf->MultiCell(16, 12, number_format($transactions->sum('credit'), 2), 'TBR', 'R', 0, 1, '', '', true, 0, false, true, 12, 'M');
-    
+
             $pdf->Ln(5);
             $pdf->SetFont('times', '', 12);
             $Amount = $transactions->sum('debit');
-    
+
             // $f = new NumberFormatter("PKR", NumberFormatter::SPELLOUT);
-    
+
             $date_now = date('d-M-Y h:i A', strtotime(now()));
-    
+
             $pdf->Ln(15);
-    
+
             $pdf->SetFont('times', '', 11);
-          
+
             $pdf->Cell(30, 0, '__________________', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Cell(30, 0, $transactions[0]->added_by_name->name, 'B', 0, 'C', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(30, 0, $transactions[0]->added_by_name->name ?? '', 'B', 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(30, 0, ' __________________', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(10, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(30, 0, '__________________', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(10, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(30, 0, $transactions[0]->approved_by_name->name ?? '', 'B', 1, 'C', 0, '', 0, false, 'T', 'M');
-    
+
             $pdf->Cell(30, 0, 'Received By ', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(30, 0, 'Prepared By', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
@@ -232,7 +232,7 @@ class TransactionPdfController extends BaseController
             $pdf->Cell(30, 0, 'Finance Manager', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(10, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(30, 0, 'Approved By', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
-    
+
             $pdf->Ln(10);
             $pdf->SetFont('times', 'B', 9);
             $status = $transactions[0]->approved ? "Approved" : "Pending";
@@ -240,7 +240,7 @@ class TransactionPdfController extends BaseController
             $pdf->SetFont('times', '', 8);
             $pdf->Ln();
             $pdf->Cell(0, 0,'"Errors and omissions excepted" (E&OE)', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
-    
+
             return $pdf->Output('voucher.pdf', 'I');
     }
 
@@ -252,8 +252,8 @@ class TransactionPdfController extends BaseController
         ->with('account_head:id,name')
         ->with('other_head_name:id,name')
         ->first();
-        
-          
+
+
         if ($request->type == 'BP') {
             $heading = "Receipt # ". $payment->receipt_id;
             $paid = 'Paid To : ';
@@ -329,7 +329,7 @@ class TransactionPdfController extends BaseController
         // ---------------------------------------------------------
         $pdf->SetFont('times', 'B', 16);
         $pdf->Cell(0, 0, strtoupper('Dropshipping'), 0, 1, 'C', 0, '', 0, false, 'T', 'M');
-        
+
         $pdf->SetFont('times', 'B', 11);
         $pdf->Cell(100, 5, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->SetFont('times', '', 9);
@@ -375,24 +375,24 @@ class TransactionPdfController extends BaseController
 
         $pdf->SetFont('times', '', 9);
         $Amount = (float)$payment->debit > 0 ? $payment->debit : $payment->credit;
-        
+
         $pdf->Cell(8, 8, '', 0, 0, '', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(15, 8, 1, 'BL', 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(22, 8, $Instruments, 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(60, 8, $payment->narration, 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(22, 8, $ChequeNo, 'B', 0, 'C', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(49, 8, (float)$payment->debit > 0 ? number_format($payment->debit) : number_format($payment->credit), 'BR', 1, 'R', 0, '', 0, false, 'T', 'M');
-        
+
         $pdf->Cell(175, 7, 'Total Amount : ' . $Amount, 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->Ln(8);
 
 
-        
+
         $pdf->SetFont('times', '', 10);
         $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(40, 0, 'Amount : ' . number_format($Amount), 0, 1, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
-        
+
 
         $pdf->Ln(3);
 
@@ -402,9 +402,9 @@ class TransactionPdfController extends BaseController
         $pdf->Cell(9, 0, '', 0, 1, 'L', 0, '', 0, false, 'T', 'M');
         $received_name = $payment->account_head->name;
 
-        
+
         $pdf->SetFont('times', 'B', 9);
-        $added_by = $payment->added_by_name->name; 
+        $added_by = $payment->added_by_name->name;
         $pdf->Cell(160, 0, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(19, 0, $added_by, 'B', 1, 'C', 0, '', 0, false, 'T', 'M');
         //Close and
@@ -436,7 +436,7 @@ class TransactionPdfController extends BaseController
         // ---------------------------------------------------------
         $pdf->SetFont('times', 'B', 16);
         $pdf->Cell(0, 0, strtoupper('Dropshipping'), 0, 1, 'C', 0, '', 0, false, 'T', 'M');
-        
+
         $pdf->SetFont('times', 'B', 11);
         $pdf->Cell(100, 5, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->SetFont('times', '', 9);
@@ -489,14 +489,14 @@ class TransactionPdfController extends BaseController
 
         $pdf->SetFont('times', '', 9);
         $Amount = (float)$payment->debit > 0 ? $payment->debit : $payment->credit;
-        
+
         $pdf->Cell(8, 8, '', 0, 0, '', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(15, 8, 1, 'BL', 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(22, 8, $Instruments, 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(60, 8, $payment->narration, 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(22, 8, $ChequeNo, 'B', 0, 'C', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(49, 8, (float)$payment->debit > 0 ? number_format($payment->debit) : number_format($payment->credit), 'BR', 1, 'R', 0, '', 0, false, 'T', 'M');
-        
+
         $pdf->Cell(175, 7, 'Total Amount : ' . $Amount, 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->Ln(8);
 
@@ -506,7 +506,7 @@ class TransactionPdfController extends BaseController
         $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(40, 0, 'Amount : ' . number_format($Amount), 0, 1, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
-        
+
 
         $pdf->Ln(3);
 
@@ -516,9 +516,9 @@ class TransactionPdfController extends BaseController
         $pdf->Cell(9, 0, '', 0, 1, 'L', 0, '', 0, false, 'T', 'M');
         $received_name = $payment->account_head->name;
 
-        
+
         $pdf->SetFont('times', 'B', 9);
-        $added_by = $payment->added_by_name->name; 
+        $added_by = $payment->added_by_name->name;
         $pdf->Cell(160, 0, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(19, 0, $added_by, 'B', 1, 'C', 0, '', 0, false, 'T', 'M');
         //Close and
@@ -534,11 +534,11 @@ class TransactionPdfController extends BaseController
 
         $pdf->Output('receipt.pdf', 'I');
     }
-    
+
     public function generalLedgerPdf(Request $request)
     {
         $heads = AccountHead::where(["group_id"=>$request->level_four])->pluck('id');
-        
+
         // to get name
         $level_four = AccountGroup::where("id",$request->level_four)->first();
 
@@ -550,7 +550,7 @@ class TransactionPdfController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of previous credits
         $previous_credits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
@@ -571,7 +571,7 @@ class TransactionPdfController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of credits
         $credits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
@@ -607,7 +607,7 @@ class TransactionPdfController extends BaseController
         $general_ledgers->previous_debits = $previous_debits;
         $general_ledgers->previous_credits = $previous_credits;
         // Initialize TCPDF object
-       
+
         // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
@@ -701,7 +701,7 @@ class TransactionPdfController extends BaseController
         }
 
         // Set fill color to Bootstrap secondary
-        $pdf->SetFillColor(230, 230, 230); 
+        $pdf->SetFillColor(230, 230, 230);
         $pdf->SetTextColor(255, 0, 0);
         $pdf->Cell(132, 10, 'Balance', 1, 0, 'C', true);
         $sign = $balance > 0 ? ' (Cr)' : ' (Dr)';
@@ -726,7 +726,7 @@ class TransactionPdfController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of previous credits
         $previous_credits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
@@ -747,7 +747,7 @@ class TransactionPdfController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of credits
         $credits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
@@ -782,7 +782,7 @@ class TransactionPdfController extends BaseController
         $ledgers->previous_debits = $previous_debits;
         $ledgers->previous_credits = $previous_credits;
         // Initialize TCPDF object
-       
+
         // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
@@ -874,7 +874,7 @@ class TransactionPdfController extends BaseController
         }
 
         // Set fill color to Bootstrap secondary
-        $pdf->SetFillColor(230, 230, 230); 
+        $pdf->SetFillColor(230, 230, 230);
         $pdf->SetTextColor(255, 0, 0);
         $pdf->Cell(112, 10, 'Balance', 1, 0, 'C', true);
         $sign = $balance > 0 ? ' (Cr)' : ' (Dr)';
@@ -886,7 +886,7 @@ class TransactionPdfController extends BaseController
         // Output PDF
         $pdf->Output('general_ledger_report.pdf', 'I');
     }
-    
+
     public function journalPdf(Request $request)
     {
 
@@ -897,7 +897,7 @@ class TransactionPdfController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of previous credits
         $previous_credits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
@@ -916,7 +916,7 @@ class TransactionPdfController extends BaseController
         })
         ->orderBy("created_at",'ASC')
         ->sum("debit");
-        
+
         // to get sum of credits
         $credits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
@@ -949,7 +949,7 @@ class TransactionPdfController extends BaseController
         $journals->previous_debits = $previous_debits;
         $journals->previous_credits = $previous_credits;
         // Initialize TCPDF object
-       
+
         // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
@@ -1044,7 +1044,7 @@ class TransactionPdfController extends BaseController
         }
 
         // Set fill color to Bootstrap secondary
-        $pdf->SetFillColor(230, 230, 230); 
+        $pdf->SetFillColor(230, 230, 230);
         $pdf->SetTextColor(255, 0, 0);
         $pdf->Cell(132, 10, 'Balance', 1, 0, 'C', true);
         $sign = $balance > 0 ? ' (Cr)' : ' (Dr)';
@@ -1056,7 +1056,7 @@ class TransactionPdfController extends BaseController
         // Output PDF
         $pdf->Output('general_ledger_report.pdf', 'I');
     }
-    
+
     public function generalTrialPdf(Request $request)
     {
         // this is for get previous trial
@@ -1078,7 +1078,7 @@ class TransactionPdfController extends BaseController
         ->get()
         ->groupBy(["account_id","group_id"]);
 
-        // this loop for if any previous trial or current trial does't respond then this loop will handle and show    
+        // this loop for if any previous trial or current trial does't respond then this loop will handle and show
         $total_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
@@ -1113,8 +1113,8 @@ class TransactionPdfController extends BaseController
                 $temp->closing_credits =  $temp->current_credits + $temp->previous_credits;
 
                 $fourData[] = $temp;
-            } 
-            
+            }
+
             $single['level_two_id'] = $two->first()[0]->level_two->id;
             $single['level_two_name'] = $two->first()[0]->level_two->name;
             $single['level_four'] = (object)$fourData;
@@ -1126,7 +1126,7 @@ class TransactionPdfController extends BaseController
         $data->from = $request->from;
         $data->to = $request->to;
         // Initialize TCPDF object
-       
+
         // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
@@ -1245,7 +1245,7 @@ class TransactionPdfController extends BaseController
         // Output PDF
         $pdf->Output('general_ledger_report.pdf', 'I');
     }
-    
+
     public function dailyReportPdf(Request $request)
     {
         // main record
@@ -1277,12 +1277,12 @@ class TransactionPdfController extends BaseController
             }
             $main[$outerKey] = (object)$single;
         }
-        
+
         $daily_data = (object)[];
         $daily_data->current = $request->current;
         $daily_data->record = (object)$main;
         // Initialize TCPDF object
-       
+
         // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         // set document information
@@ -1350,13 +1350,13 @@ class TransactionPdfController extends BaseController
         if(isset($daily_data->record->BP))
         {
             $pdf->SetFillColor(0, 0, 0);
-            $pdf->SetTextColor(255, 255, 255); 
-    
+            $pdf->SetTextColor(255, 255, 255);
+
             $pdf->Cell(204, 10,'Bank Payments', 1, 0, 'C', true);
             $pdf->ln();
-    
+
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->SetTextColor(0, 0, 0); 
+            $pdf->SetTextColor(0, 0, 0);
             foreach ($daily_data->record->BP as $bp) {
                 $pdf->Cell(54, 10, date("d-M-Y",strtotime($bp->created_at)), 1, 0, 'C', true);
                 $pdf->Cell(25, 10, $bp->type.'-'.$bp->document_id, 1, 0, 'C', true);
@@ -1370,13 +1370,13 @@ class TransactionPdfController extends BaseController
         if(isset($daily_data->record->BR))
         {
             $pdf->SetFillColor(0, 0, 0);
-            $pdf->SetTextColor(255, 255, 255); 
-    
+            $pdf->SetTextColor(255, 255, 255);
+
             $pdf->Cell(204, 10,'Bank Receipts', 1, 0, 'C', true);
             $pdf->ln();
-    
+
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->SetTextColor(0, 0, 0); 
+            $pdf->SetTextColor(0, 0, 0);
             foreach ($daily_data->record->BR as $br) {
                 $pdf->Cell(54, 10, date("d-M-Y",strtotime($br->created_at)), 1, 0, 'C', true);
                 $pdf->Cell(25, 10, $br->type.'-'.$br->document_id, 1, 0, 'C', true);
@@ -1390,13 +1390,13 @@ class TransactionPdfController extends BaseController
         if(isset($daily_data->record->CP))
         {
             $pdf->SetFillColor(0, 0, 0);
-            $pdf->SetTextColor(255, 255, 255); 
-    
+            $pdf->SetTextColor(255, 255, 255);
+
             $pdf->Cell(204, 10,'Cash Payments', 1, 0, 'C', true);
             $pdf->ln();
-    
+
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->SetTextColor(0, 0, 0); 
+            $pdf->SetTextColor(0, 0, 0);
             foreach ($daily_data->record->CP as $cp) {
                 $pdf->Cell(54, 10, date("d-M-Y",strtotime($cp->created_at)), 1, 0, 'C', true);
                 $pdf->Cell(25, 10, $cp->type.'-'.$cp->document_id, 1, 0, 'C', true);
@@ -1410,13 +1410,13 @@ class TransactionPdfController extends BaseController
         if(isset($daily_data->record->CR))
         {
             $pdf->SetFillColor(0, 0, 0);
-            $pdf->SetTextColor(255, 255, 255); 
-    
+            $pdf->SetTextColor(255, 255, 255);
+
             $pdf->Cell(204, 10,'Cash Receipts', 1, 0, 'C', true);
             $pdf->ln();
-    
+
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->SetTextColor(0, 0, 0); 
+            $pdf->SetTextColor(0, 0, 0);
             foreach ($daily_data->record->CR as $cr) {
                 $pdf->Cell(54, 10, date("d-M-Y",strtotime($cr->created_at)), 1, 0, 'C', true);
                 $pdf->Cell(25, 10, $cr->type.'-'.$cr->document_id, 1, 0, 'C', true);
@@ -1430,13 +1430,13 @@ class TransactionPdfController extends BaseController
         if(isset($daily_data->record->JV))
         {
             $pdf->SetFillColor(0, 0, 0);
-            $pdf->SetTextColor(255, 255, 255); 
-    
+            $pdf->SetTextColor(255, 255, 255);
+
             $pdf->Cell(204, 10,'Journal Voucher', 1, 0, 'C', true);
             $pdf->ln();
-    
+
             $pdf->SetFillColor(255, 255, 255);
-            $pdf->SetTextColor(0, 0, 0); 
+            $pdf->SetTextColor(0, 0, 0);
             foreach ($daily_data->record->JV as $jv) {
                 $pdf->Cell(54, 10, date("d-M-Y",strtotime($jv->created_at)), 1, 0, 'C', true);
                 $pdf->Cell(25, 10, $jv->type.'-'.$jv->document_id, 1, 0, 'C', true);

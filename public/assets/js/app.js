@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/"
+      web_url: "https://yourmart.pk/"
     };
   },
   methods: {
@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -257,8 +257,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['shops', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/",
-      api_url: window.location.origin + "/ds/public/api/",
+      web_url: "https://yourmart.pk/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       shopPayments: [],
       shop: []
     };
@@ -346,7 +346,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/"
+      web_url: "https://yourmart.pk/"
     };
   },
   methods: {
@@ -377,7 +377,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       name: "",
       email: "",
       password: "",
@@ -434,7 +434,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       name: "",
       email: "",
       password: "",
@@ -496,7 +496,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds"
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -1036,7 +1036,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds"
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -1080,7 +1080,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   props: ['tags', 'loader', 'settings', 'categories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       form: {
         headline: {
           text: ''
@@ -1621,8 +1621,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: "/ds/public/api/",
-      public_url: window.location.origin + "/ds"
+      api_url: "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   created: function created() {},
@@ -1658,9 +1658,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
-      api_url: window.location.origin + "/ds/public/api/",
-      web_url: "http://localhost/ds-web/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      web_url: "https://yourmart.pk/",
       tickets: [],
       chats: [],
       showModal: false,
@@ -1865,8 +1865,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
-      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -2083,8 +2083,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
-      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Supplier Request's"
       },
@@ -2192,7 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Orders"
       },
@@ -2314,7 +2314,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -2439,7 +2439,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Couriers",
         link: "#",
@@ -2598,8 +2598,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -2745,8 +2745,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allCourses: [],
@@ -2969,7 +2969,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Page Setting's"
       },
@@ -6081,7 +6081,7 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.form.advertiseImages, function (advertise, index) {
     return _c("tr", {
       key: "adv-" + advertise.index
-    }, [_c("td", [_vm._v("\r\n                                Image " + _vm._s(advertise.index) + "\r\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
+    }, [_c("td", [_vm._v("\n                                Image " + _vm._s(advertise.index) + "\n                            ")]), _vm._v(" "), _c("td", [_c("input", {
       staticClass: "form-control",
       attrs: {
         type: "file",
@@ -10825,7 +10825,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Add any specific styling for the modal content here */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* Add any specific styling for the modal content here */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -10849,7 +10849,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Add any specific styling for the modal content here */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* Add any specific styling for the modal content here */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -10873,7 +10873,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Add any specific styling for the modal content here */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* Add any specific styling for the modal content here */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -10897,7 +10897,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter-active[data-v-393d2748],\r\n.fade-leave-active[data-v-393d2748] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter[data-v-393d2748], .fade-leave-to[data-v-393d2748] /* .fade-leave-active below version 2.1.8 */ {\r\n  opacity: 0;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.fade-enter-active[data-v-393d2748],\n.fade-leave-active[data-v-393d2748] {\n  transition: opacity 0.5s;\n}\n.fade-enter[data-v-393d2748], .fade-leave-to[data-v-393d2748] /* .fade-leave-active below version 2.1.8 */ {\n  opacity: 0;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -10969,7 +10969,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-7a40a33e] {\r\n  text-transform: capitalize;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-7a40a33e] {\n  text-transform: capitalize;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

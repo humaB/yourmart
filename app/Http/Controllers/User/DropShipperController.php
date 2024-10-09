@@ -109,7 +109,6 @@ class DropShipperController extends Controller
             ->select('account_heads.*','account_heads.id as code', 'account_heads.name as label')
             ->get();
 
-        AccountHead::where('group_id', $request->id)->get(["id as code","name as label"]);
         $shops = DropshipperShop::where('dropshipper_id',$request->id)->get(["id as code","store_name as label"]);
 
         return response()->json([
