@@ -72,7 +72,6 @@ class AccountController extends BaseController
                 'code'       => $code,
                 'account_id' => $request->second_level,
                 'parent_id'  => $request->third_level['code'] ?? $request->third_level,
-                'company_id'  => 0,
                 'added_by'         => Auth::user()->id
             ]);
 
@@ -152,7 +151,6 @@ class AccountController extends BaseController
             'account_id' => $second,
             'parent_group_id' => $third,
             'group_id' => $fourth,
-            'company_id' => Auth::user()->company_id,
             'added_by' => Auth::user()->id
         ]);
 

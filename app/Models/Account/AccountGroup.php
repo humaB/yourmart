@@ -10,7 +10,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccountGroup extends Model
 {
     use HasFactory, softDeletes;
-    protected $guarded = [];
+    protected $fillable = [
+        "name",
+        "code",
+        "account_id", // accounts table id
+        "parent_id", // self table id
+        "company_id",
+        "added_by",
+    ];
 
     public function level_two(){
         return $this->belongsTo( Account::class, 'account_id', 'id');

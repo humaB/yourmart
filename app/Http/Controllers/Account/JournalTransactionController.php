@@ -42,8 +42,7 @@ class JournalTransactionController extends BaseController
        
         // main page data
         $journalTransactions = AccountTransaction::
-        where(["company_id"=>Auth::user()->company_id])
-        ->where("type","JV")
+        where("type","JV")
         ->orderBy("id",'ASC')
         ->get()
         ->groupBy('document_id')
@@ -80,8 +79,8 @@ class JournalTransactionController extends BaseController
             DB::beginTransaction();
             
             
-            $document = AccountTransaction::where(["company_id"=>Auth::user()->company_id])
-            ->where("type","JV")
+            $document = AccountTransaction::
+            where("type","JV")
             ->orderBy("document_id","DESC")
             ->first();
             $document_id = $document ? $document->document_id + 1 : 1;
@@ -99,7 +98,6 @@ class JournalTransactionController extends BaseController
                     'posting_type' => '',
                     'posting_id' => null,
                     'added_by' => Auth::user()->id,
-                    'company_id' => Auth::user()->company_id,
                 ]);
             }
 
@@ -116,7 +114,7 @@ class JournalTransactionController extends BaseController
     public function journalTransaction(Request $request)
     {
         $transactions = AccountTransaction::
-        where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        where(['type'=>$request->type,"document_id"=>$request->id])
         ->orderBy('id','ASC')
         ->get();
 
@@ -145,7 +143,7 @@ class JournalTransactionController extends BaseController
     public function journalTransactionDetail(Request $request)
     {
         $transaction = AccountTransaction::
-        where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        where(['type'=>$request->type,"document_id"=>$request->id])
         ->orderBy("id",'ASC')
         ->with("account_head.level_four:id,code","account_head.level_three:id,code","account_head.level_two:id,code","account_head.level_one:id,code")
         ->with("added_by_name:id,name","updated_by_name:id,name")
@@ -163,16 +161,16 @@ class JournalTransactionController extends BaseController
 
 
             $trans = AccountTransaction::
-            where(["company_id"=>Auth::user()->company_id,"document_id"=>$request->id,'type'=>$request->type])->get();
+            where(["document_id"=>$request->id,'type'=>$request->type])->get();
 
             foreach($trans as $single)
             {
 
-                $head = AccountHead::where(["company_id"=>Auth::user()->company_id,"id"=>$single->account_head_id])
+                $head = AccountHead::where(["id"=>$single->account_head_id])
                 ->first();
 
                 AccountTransaction::
-                where(["company_id"=>Auth::user()->company_id,"id"=>$single->id])
+                where(["id"=>$single->id])
                 ->update([
                     "approved" => 1,
                     "approved_by" => Auth::user()->id,
@@ -207,7 +205,7 @@ class JournalTransactionController extends BaseController
     
             $oldTrans = AccountTransaction::where("id",$request->id)->first();
 
-            AccountTransaction::where(["type"=>$oldTrans->type,"document_id"=>$oldTrans->document_id,"company_id"=>Auth::user()->company_id])
+            AccountTransaction::where(["type"=>$oldTrans->type,"document_id"=>$oldTrans->document_id])
             ->delete();
     
             foreach ($request->ledgers as $i => $value) {
@@ -221,7 +219,6 @@ class JournalTransactionController extends BaseController
                         'narration' => strtoupper($request->narrations[$i]),
                         'posting_type' => '',
                         'posting_id' => null,
-                        'company_id' => Auth::user()->company_id,
                         'added_by' => $oldTrans->added_by ?? Auth::user()->id,
                         'updated_by' => Auth::user()->id,
                         'created_at' => $oldTrans->created_at ?? now(),

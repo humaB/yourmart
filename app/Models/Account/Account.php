@@ -12,7 +12,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Account extends Model
 {
     use HasFactory, softDeletes;
-    protected $guarded = [];
+    protected $fillable = [
+        "name",
+        "code",
+        "parent_id",//self account table id
+        "company_id",
+        "added_by",
+    ];
 
     public function level_four(){
         return $this->hasMany( AccountGroup::class, 'account_id', 'id');

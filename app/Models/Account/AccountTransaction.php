@@ -10,7 +10,29 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class AccountTransaction extends Model
 {
     use HasFactory, softDeletes;
-    protected $guarded = [];
+    protected $fillable = [
+        "account_head_id",
+        "other_account_head_id",
+        "debit",
+        "credit",
+        "document_id",
+        "type",
+        "narration",
+        "receipt_id",
+        "posting_type",
+        "posting_id",
+        "cheque",
+        "approved", // 1 for approved, 2 for pending 
+        "approved_by",
+        "parent_account_id", // first tier id
+        "account_id", // second tier id
+        "parent_group_id", // third tier id
+        "group_id", // fourt tier id
+        "time",
+        "company_id",
+        "added_by",
+        "updated_by",
+    ];
 
     public function added_by_name()
     {

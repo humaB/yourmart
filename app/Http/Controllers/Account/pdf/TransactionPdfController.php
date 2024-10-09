@@ -26,7 +26,7 @@ class TransactionPdfController extends BaseController
     public function transactionPdf(Request $request)
     {   
         $transactions = AccountTransaction::
-        where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        where(['type'=>$request->type,"document_id"=>$request->id])
         ->orderBy("id",'ASC')
         ->with("account_head.level_four:id,name,code","account_head.level_three:id,name,code","account_head.level_two:id,name,code","account_head.level_one:id,name,code")
         ->with("added_by_name:id,name","updated_by_name:id,name","approved_by_name:id,name")
@@ -537,13 +537,13 @@ class TransactionPdfController extends BaseController
     
     public function generalLedgerPdf(Request $request)
     {
-        $heads = AccountHead::where(["company_id"=>Auth::user()->company_id,"group_id"=>$request->level_four])->pluck('id');
+        $heads = AccountHead::where(["group_id"=>$request->level_four])->pluck('id');
         
         // to get name
         $level_four = AccountGroup::where("id",$request->level_four)->first();
 
         // to get sum of previous debits
-        $previous_debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_debits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
@@ -552,7 +552,7 @@ class TransactionPdfController extends BaseController
         ->sum("debit");
         
         // to get sum of previous credits
-        $previous_credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_credits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
@@ -561,7 +561,7 @@ class TransactionPdfController extends BaseController
         ->sum("credit");
 
         // to get sum of debits
-        $debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $debits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -573,7 +573,7 @@ class TransactionPdfController extends BaseController
         ->sum("debit");
         
         // to get sum of credits
-        $credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $credits = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -585,7 +585,7 @@ class TransactionPdfController extends BaseController
         ->sum("credit");
 
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->whereIn("account_head_id",$heads)
         ->with("account_head:id,name,code","other_head_name:id,name,code")
         ->when($request->from, function ($q) use ($request) {
@@ -719,7 +719,7 @@ class TransactionPdfController extends BaseController
         $head = AccountHead::with("level_four:id,name")->where("id",$request->head)->first();
 
         // to get sum of previous debits
-        $previous_debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_debits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
@@ -728,7 +728,7 @@ class TransactionPdfController extends BaseController
         ->sum("debit");
         
         // to get sum of previous credits
-        $previous_credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_credits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
@@ -737,7 +737,7 @@ class TransactionPdfController extends BaseController
         ->sum("credit");
 
         // to get sum of debits
-        $debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $debits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -749,7 +749,7 @@ class TransactionPdfController extends BaseController
         ->sum("debit");
         
         // to get sum of credits
-        $credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $credits = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -761,7 +761,7 @@ class TransactionPdfController extends BaseController
         ->sum("credit");
 
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->where("account_head_id",$request->head)
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -891,7 +891,7 @@ class TransactionPdfController extends BaseController
     {
 
         // to get sum of previous debits
-        $previous_debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_debits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
@@ -899,7 +899,7 @@ class TransactionPdfController extends BaseController
         ->sum("debit");
         
         // to get sum of previous credits
-        $previous_credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_credits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
@@ -907,7 +907,7 @@ class TransactionPdfController extends BaseController
         ->sum("credit");
 
         // to get sum of debits
-        $debits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $debits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
         })
@@ -918,7 +918,7 @@ class TransactionPdfController extends BaseController
         ->sum("debit");
         
         // to get sum of credits
-        $credits = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $credits = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
         })
@@ -929,7 +929,7 @@ class TransactionPdfController extends BaseController
         ->sum("credit");
 
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->with("account_head:id,name,code,group_id","other_head_name:id,name,code","account_head.level_four:id,name,code")
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
@@ -1060,7 +1060,7 @@ class TransactionPdfController extends BaseController
     public function generalTrialPdf(Request $request)
     {
         // this is for get previous trial
-        $previous_transactions = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $previous_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
@@ -1068,7 +1068,7 @@ class TransactionPdfController extends BaseController
         ->groupBy(["account_id","group_id"]);
 
         // this is to get duration trial
-        $current_transactions = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $current_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->from." 00:00:00");
         })
@@ -1079,7 +1079,7 @@ class TransactionPdfController extends BaseController
         ->groupBy(["account_id","group_id"]);
 
         // this loop for if any previous trial or current trial does't respond then this loop will handle and show    
-        $total_transactions = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $total_transactions = AccountTransaction::where(["approved"=>1])
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
@@ -1249,7 +1249,7 @@ class TransactionPdfController extends BaseController
     public function dailyReportPdf(Request $request)
     {
         // main record
-        $record = AccountTransaction::where(["company_id"=>Auth::user()->company_id,"approved"=>1])
+        $record = AccountTransaction::where(["approved"=>1])
         ->when($request->current, function ($q) use ($request) {
             $q->where('created_at', '>=', $request->current." 00:00:00");
             $q->where('created_at', '<=', $request->current." 23:59:59");

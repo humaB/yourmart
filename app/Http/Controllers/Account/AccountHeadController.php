@@ -40,7 +40,7 @@ class AccountHeadController extends BaseController
 
         $accountHeads = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code")
         ->latest('id')
-        ->where(["company_id"=>Auth::user()->company_id])->get();
+        ->get();
 
         return [
             "firstLevel" => $firstLevel,
@@ -53,7 +53,7 @@ class AccountHeadController extends BaseController
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
+                Rule::unique('account_heads','name'),
             ],
             'first_level' => [
                 'required',
@@ -96,7 +96,7 @@ class AccountHeadController extends BaseController
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
+                Rule::unique('account_heads','name')->ignore($request->id),
             ],
         ]);
 
@@ -123,7 +123,7 @@ class AccountHeadController extends BaseController
     {
         $accountHeadBanks = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_bank")
         ->latest('id')
-        ->where(["company_id"=>Auth::user()->company_id,"group_id"=>31])->get();
+        ->where(["group_id"=>31])->get();
 
         return [
             "accountHeadBanks" => $accountHeadBanks,
@@ -168,7 +168,6 @@ class AccountHeadController extends BaseController
                 "status" => "active",
                 "account_head_id" => $head->id,
                 'added_by' => Auth::user()->id ?? 0,
-                "company_id" => 0
             ]);
 
 
@@ -187,7 +186,7 @@ class AccountHeadController extends BaseController
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
+                Rule::unique('account_heads','name')->ignore($request->id),
             ],
             'head_bank.address' => [
                 'required',
@@ -231,7 +230,7 @@ class AccountHeadController extends BaseController
     {
         $accountHeadCash = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_cash")
         ->latest('id')
-        ->where(["company_id"=>Auth::user()->company_id,"group_id"=>30])->get();
+        ->where(["group_id"=>30])->get();
 
         return [
             "accountHeadCash" => $accountHeadCash,
@@ -243,7 +242,7 @@ class AccountHeadController extends BaseController
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id),
+                Rule::unique('account_heads','name'),
             ],
         ]);
 
@@ -262,7 +261,6 @@ class AccountHeadController extends BaseController
                 "amount" => 0,
                 "account_head_id" => $head->id,
                 'added_by' => Auth::user()->id,
-                "company_id" => Auth::user()->company_id
             ]);
 
 
@@ -281,7 +279,7 @@ class AccountHeadController extends BaseController
         $request->validate([
             'name' => [
                 'required',
-                Rule::unique('account_heads','name')->where("company_id",Auth::user()->company_id)->ignore($request->id),
+                Rule::unique('account_heads','name')->ignore($request->id),
             ],
         ]);
 
@@ -316,7 +314,6 @@ class AccountHeadController extends BaseController
             'account_id' => $second,
             'parent_group_id' => $third,
             'group_id' => $fourth,
-            'company_id' => 0,
             'added_by' => Auth::user()->id ?? 0
         ]);
 

@@ -31,8 +31,8 @@ class CashTransactionController extends BaseController
     public function cashTransactions(Request $request)
     {
         // dropdown data
-        $cashes = Cash::where('cash.company_id', Auth::user()->company_id)
-            ->join('account_heads', 'cash.account_head_id', 'account_heads.id')
+        $cashes = Cash::
+        join('account_heads', 'cash.account_head_id', 'account_heads.id')
             ->select('account_heads.*','account_heads.id as code', 'account_heads.name as label')
             ->get();
         $heads = AccountHead::with('level_four:id,name')
@@ -47,8 +47,7 @@ class CashTransactionController extends BaseController
        
         // main page data
         $cashTransactions = AccountTransaction::
-        where(["company_id"=>Auth::user()->company_id])
-        ->where(function($q){
+        where(function($q){
             $q->where("type","CP");
             $q->orWhere("type","CR");
         })
@@ -92,8 +91,8 @@ class CashTransactionController extends BaseController
             DB::beginTransaction();
             
             // to create document serial of BP/BR
-            $document = AccountTransaction::where(["company_id"=>Auth::user()->company_id])
-            ->where(function($q){
+            $document = AccountTransaction::
+            where(function($q){
                 $q->where("type","CP");
                 $q->orWhere("type","CR");
             })
@@ -113,7 +112,6 @@ class CashTransactionController extends BaseController
                 'posting_type' => '',
                 'posting_id' => null,
                 'added_by'           => Auth::user()->id,
-                'company_id'           => Auth::user()->company_id,
             ]);
     
             foreach ($request->ledgers as $i => $value) {
@@ -128,7 +126,6 @@ class CashTransactionController extends BaseController
                     'posting_type' => '',
                     'posting_id' => null,
                     'added_by' => Auth::user()->id,
-                    'company_id' => Auth::user()->company_id,
                 ]);
             }
 
@@ -148,31 +145,31 @@ class CashTransactionController extends BaseController
     {
         $column = $request->type=="CP" ? "debit" : "credit";
         $transaction = AccountTransaction::
-        where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        where(['type'=>$request->type,"document_id"=>$request->id])
         ->orderBy('id','ASC')
         ->first();
 
         // to get posting ids
         $transaction->postings = AccountTransaction::orderBy('id','ASC')
-        ->where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        ->where(['type'=>$request->type,"document_id"=>$request->id])
         ->where("id",'!=', $transaction->id)
         ->where("other_account_head_id", $transaction->account_head_id)->pluck("id");
         
         // to get receiver ledgers
         $transaction->ledgers = AccountTransaction::orderBy('id','ASC')
-        ->where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        ->where(['type'=>$request->type,"document_id"=>$request->id])
         ->where("id",'!=', $transaction->id)
         ->where("other_account_head_id", $transaction->account_head_id)->pluck("account_head_id");
         
         // to get receiver amounts
         $transaction->amounts = AccountTransaction::orderBy('id','ASC')
-        ->where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        ->where(['type'=>$request->type,"document_id"=>$request->id])
         ->where("id",'!=', $transaction->id)
         ->where("other_account_head_id", $transaction->account_head_id)->pluck($column);
         
         // to get receiver narration
         $transaction->narrations = AccountTransaction::orderBy('id','ASC')
-        ->where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        ->where(['type'=>$request->type,"document_id"=>$request->id])
         ->where("id",'!=', $transaction->id)
         ->where("other_account_head_id", $transaction->account_head_id)->pluck("narration");
 
@@ -184,7 +181,7 @@ class CashTransactionController extends BaseController
     public function cashTransactionDetail(Request $request)
     {
         $transaction = AccountTransaction::
-        where(['type'=>$request->type,"company_id"=>Auth::user()->company_id,"document_id"=>$request->id])
+        where(['type'=>$request->type,"document_id"=>$request->id])
         ->orderBy("id",'ASC')
         ->with("account_head.level_four:id,code","account_head.level_three:id,code","account_head.level_two:id,code","account_head.level_one:id,code")
         ->with("added_by_name:id,name","updated_by_name:id,name")
@@ -201,13 +198,13 @@ class CashTransactionController extends BaseController
             DB::beginTransaction();
 
             $trans = AccountTransaction::
-            where(["company_id"=>Auth::user()->company_id,"document_id"=>$request->id,'type'=>$request->type])->get();
+            where(["document_id"=>$request->id,'type'=>$request->type])->get();
             // to create receipt serial of BP/BR/CP/CR
             $receipt_id = null;
             if($trans->count() == 2)
             {
-                $receipt = AccountTransaction::where(["company_id"=>Auth::user()->company_id])
-                ->where(function($q){
+                $receipt = AccountTransaction::
+                where(function($q){
                     $q->where("type","BP");
                     $q->orWhere("type","BR");
                     $q->orWhere("type","CP");
@@ -221,11 +218,11 @@ class CashTransactionController extends BaseController
             foreach($trans as $single)
             {
 
-                $head = AccountHead::where(["company_id"=>Auth::user()->company_id,"id"=>$single->account_head_id])
+                $head = AccountHead::where(["id"=>$single->account_head_id])
                 ->first();
 
                 AccountTransaction::
-                where(["company_id"=>Auth::user()->company_id,"id"=>$single->id])
+                where(["id"=>$single->id])
                 ->update([
                     "approved" => 1,
                     "approved_by" => Auth::user()->id,
@@ -264,7 +261,7 @@ class CashTransactionController extends BaseController
     
             $oldTrans = AccountTransaction::where("id",$request->id)->first();
 
-            AccountTransaction::where(["type"=>$oldTrans->type,"document_id"=>$oldTrans->document_id,"company_id"=>Auth::user()->company_id])
+            AccountTransaction::where(["type"=>$oldTrans->type,"document_id"=>$oldTrans->document_id])
             ->delete();
             
             $posting = AccountTransaction::create([
@@ -277,7 +274,6 @@ class CashTransactionController extends BaseController
                 'type' => $request->type,
                 'posting_type' => '',
                 'posting_id' => null,
-                'company_id' => Auth::user()->company_id,
                 'added_by' => $oldTrans->added_by ?? Auth::user()->id,
                 'updated_by' => Auth::user()->id,
                 'created_at' => $oldTrans->created_at ?? now(),
@@ -294,7 +290,6 @@ class CashTransactionController extends BaseController
                         'narration' => strtoupper($request->narrations[$i]),
                         'posting_type' => '',
                         'posting_id' => null,
-                        'company_id' => Auth::user()->company_id,
                         'added_by' => $oldTrans->added_by ?? Auth::user()->id,
                         'updated_by' => Auth::user()->id,
                         'created_at' => $oldTrans->created_at ?? now(),

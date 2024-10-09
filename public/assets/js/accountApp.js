@@ -2482,8 +2482,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "/ds" + '/',
       btnLoading: false,
       tableLoading: false,
       abstep: 0,
@@ -2991,8 +2991,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "/ds" + '/',
       btnLoading: false,
       tableLoading: false,
       allTransactions: [],
@@ -3436,8 +3436,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "/ds" + '/',
       btnLoading: false,
       tableLoading: false,
       alltransactions: [],
@@ -3880,8 +3880,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "/ds" + '/',
       btnLoading: false,
       tableLoading: false,
       alltransactions: [],
@@ -10846,6 +10846,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   methods: {
     callApi: function callApi(method, url, data) {
+      var _this = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
         var errorMessage;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -10855,7 +10856,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.next = 3;
               return (0,axios__WEBPACK_IMPORTED_MODULE_0__["default"])({
                 method: method,
-                url: window.location.origin + "/public/api/" + url,
+                url: window.location.origin + "/ds/public/api/" + url,
                 data: data
               });
             case 3:
@@ -10864,28 +10865,28 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.prev = 6;
               _context.t0 = _context["catch"](0);
               if (_context.t0.response.status === 422) {
-                errorMessage = '';
+                errorMessage = '<ul>';
                 Object.keys(_context.t0.response.data.errors).forEach(function (key) {
                   Object.keys(_context.t0.response.data.errors[key]).forEach(function (inner) {
-                    errorMessage += "".concat(_context.t0.response.data.errors[key][inner]);
+                    errorMessage += "<li>".concat(_context.t0.response.data.errors[key][inner], "</li>");
                   });
                 });
-                errorMessage += '';
-                swal({
+                errorMessage += '</ul>';
+                _this.$swal({
                   icon: 'error',
                   title: 'Error',
-                  text: errorMessage
+                  html: errorMessage
                 });
               }
               if (_context.t0.response.status === 409) {
-                swal({
+                _this.$swal({
                   icon: 'error',
                   title: 'Error',
-                  text: _context.t0.response.data.message
+                  html: _context.t0.response.data.message
                 });
               }
               if (_context.t0.response.status == 401) {
-                // store.dispatch('clearUserData');
+                store.dispatch('clearUserData');
               }
               return _context.abrupt("return", _context.t0.response);
             case 12:
@@ -38960,6 +38961,7 @@ Vue.component('account-finance-report-page', (__webpack_require__(/*! ./pages/ac
 Vue.mixin(_common_js__WEBPACK_IMPORTED_MODULE_0__["default"]);
 Vue.component('BulletListLoader', vue_content_loader__WEBPACK_IMPORTED_MODULE_5__.BulletListLoader);
 Vue.component("v-select", (vue_select__WEBPACK_IMPORTED_MODULE_1___default()));
+Vue.use(vue_sweetalert2__WEBPACK_IMPORTED_MODULE_3__["default"]);
 var app = new Vue({
   el: '#app'
 });

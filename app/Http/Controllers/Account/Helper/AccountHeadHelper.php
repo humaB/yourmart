@@ -18,7 +18,6 @@ class AccountHeadHelper {
             'code'       =>  $code,
             'account_id' =>  $second,
             'parent_id'  =>  $third,
-            'company_id' => 0,
             'added_by'   => auth()->user()->id ?? 0
         ]);
 
@@ -78,7 +77,6 @@ class AccountHeadHelper {
                 'cheque'         => null,
                 'approved'       => $approved,
                 'project_id'     => 0,
-                'company_id'     => 0,
                 'added_by'       => auth()->user()->id ?? 0,
             ]);
     }
