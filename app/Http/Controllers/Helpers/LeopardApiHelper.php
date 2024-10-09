@@ -161,7 +161,7 @@ class LeopardApiHelper
     }
 
     public function webHook($request){
-        $data = $request['request']['data'];
+        $data = $request['data'];
 
         // Sort the data array by 'activity_date' in ascending order
         usort($data, function ($a, $b) {
