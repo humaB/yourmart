@@ -2482,8 +2482,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       abstep: 0,
@@ -2991,8 +2991,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allTransactions: [],
@@ -3436,8 +3436,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       alltransactions: [],
@@ -3880,8 +3880,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       alltransactions: [],
@@ -10856,7 +10856,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context.next = 3;
               return (0,axios__WEBPACK_IMPORTED_MODULE_0__["default"])({
                 method: method,
-                url: window.location.origin + "/ds/public/api/" + url,
+                url: window.location.origin + "/public/api/" + url,
                 data: data
               });
             case 3:

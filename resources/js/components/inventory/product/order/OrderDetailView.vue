@@ -119,11 +119,18 @@
                                                              <div class="col-md-6">
                                                                  <h5>{{ formatPrice(details.remaining_amount) }}</h5>
                                                              </div>
-                                                             <div class="col-md-6">
-                                                                <h5> <strong>Sell Price:</strong></h5>
+
+                                                             <div class="col-md-6 border-top border-1">
+                                                                <h5> <strong>COD Amount:</strong></h5>
+                                                             </div>
+                                                             <div class="col-md-6 border-top border-1">
+                                                                 <h5>{{  formatPrice(details.selling_price) }}</h5>
                                                              </div>
                                                              <div class="col-md-6">
-                                                                 <h5>{{  formatPrice(details.selling_price) }}</h5>
+                                                                <h5> <strong>Final Total After Delivery (Advance included):</strong></h5>
+                                                             </div>
+                                                             <div class="col-md-6">
+                                                                 <h5>{{  formatPrice( parseFloat(details.selling_price) + parseFloat(details.paid_amount)) }}</h5>
                                                              </div>
 
                                                         </div>

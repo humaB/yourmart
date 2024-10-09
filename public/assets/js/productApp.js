@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "http://localhost/ds-web/"
+      web_url: "https://yourmart.pk/"
     };
   },
   methods: {
@@ -108,7 +108,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'attributes', 'parentAttributes'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -186,7 +186,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'brands'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       name: '',
       image: '',
       description: ''
@@ -269,7 +269,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'categories', 'parentCategories'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       category: {
         code: 0,
         label: 'Select from the following'
@@ -347,7 +347,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['loader', 'colors'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       name: '',
       hex: '',
       image: ''
@@ -434,7 +434,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   props: ['selectedColor', 'colors', 'loader', 'attachments', 'type', 'colorId', 'imageAlt'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       selectedImagesByColor: {},
       selectedImages: [],
       heroImage: {},
@@ -673,7 +673,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["images", "heroImage", "brands", "categories", "colors", "sizes", "tags", "attributes", "packagingOptions", "loader", "productOptions"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       brand: {
         code: 0,
         label: "Select from the following"
@@ -1167,7 +1167,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1186,7 +1186,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       cursorPosition: 0,
       highlightedIndex: -1,
       taggedUsers: [],
-      web_url: "http://localhost/ds-web/",
+      web_url: "https://yourmart.pk/",
       scannedTrackingNumber: '',
       // Store the scanned QR code for tracking number
       paidAmount: ''
@@ -1541,7 +1541,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', "colors", "sizes", "loader", "activeStatus"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       color: {
         code: 0,
         label: 'Select from the following'
@@ -1842,7 +1842,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["brands", "categories", "tags", "attributes", "packagingOptions", "loader", "product", "productNotUpdated", "productOptions", "addedTags", "heroImage"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/ds" + '/',
+      public_url: window.location.origin + "" + '/',
       selectedShipping: {
         code: 0,
         label: 'Select from the following'
@@ -2264,8 +2264,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
   data: function data() {
     var _ref;
     return _ref = {
-      public_url: window.location.origin + "/ds" + '/',
-      api_url: window.location.origin + "/ds/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Product List",
         link: "#",
@@ -3356,7 +3356,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "All Orders"
       },
@@ -3673,7 +3673,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Minimum Order Quantity"
       },
@@ -3781,8 +3781,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
-      public_url: window.location.origin + "/ds" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -3969,7 +3969,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/ds/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Shipping Classes",
         link: "#",
@@ -7628,17 +7628,19 @@ var render = function render() {
   }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))])]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.remaining_amount)))])]), _vm._v(" "), _vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 border-top border-1"
+  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))])]), _vm._v(" "), _vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
-  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))])])])])])]), _vm._v(" "), _c("div", {
+  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.paid_amount))))])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
-  }, [_vm._m(7), _vm._v(" "), _c("div", {
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
       id: "products_items_table"
     }
-  }, [_vm._m(8), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+  }, [_vm._m(9), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -7658,7 +7660,7 @@ var render = function render() {
         src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
       }
     })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.sell_price) - (parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))))])]);
-  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(10), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -7672,11 +7674,11 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalNetProfit))])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
     staticClass: "card"
-  }, [_vm._m(10), _vm._v(" "), _c("div", {
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(11), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
+  }, [_vm._m(12), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -7698,7 +7700,7 @@ var render = function render() {
     })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))])]);
   }), 0)])])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
-  }, [_vm._m(12), _vm._v(" "), _vm.details.payment_proof_attachment ? _c("div", {
+  }, [_vm._m(13), _vm._v(" "), _vm.details.payment_proof_attachment ? _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-2"
@@ -7886,11 +7888,11 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(13), _vm._v(" "), _c("div", {
+  }, [_vm._m(14), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(14), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
+  }, [_vm._m(15), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
@@ -7942,7 +7944,7 @@ var render = function render() {
         }
       }
     })])]);
-  }), _vm._v(" "), _vm._m(15)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+  }), _vm._v(" "), _vm._m(16)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
@@ -7970,7 +7972,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(16), _vm._v(" "), _c("div", {
+  }, [_vm._m(17), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -8098,8 +8100,14 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
+    staticClass: "col-md-6 border-top border-1"
+  }, [_c("h5", [_c("strong", [_vm._v("COD Amount:")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "col-md-6"
-  }, [_c("h5", [_c("strong", [_vm._v("Sell Price:")])])]);
+  }, [_c("h5", [_c("strong", [_vm._v("Final Total After Delivery (Advance included):")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -13895,7 +13903,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Add any specific styling for the modal content here */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n/* Add any specific styling for the modal content here */\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13919,7 +13927,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\r\n    position: absolute;\r\n    top: 3px;\r\n    right: 3px;\r\n    background-color: rgba(255, 255, 255, 0.7);\r\n    border: none;\r\n    cursor: pointer;\r\n    padding: 5px;\r\n    border-radius: 50%;\r\n    font-size: 10px;\r\n    line-height: 1;\r\n    color: #ff0000;\r\n    /* red color for the icon */\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.remove-icon[data-v-d6b885e0] {\n    position: absolute;\n    top: 3px;\n    right: 3px;\n    background-color: rgba(255, 255, 255, 0.7);\n    border: none;\n    cursor: pointer;\n    padding: 5px;\n    border-radius: 50%;\n    font-size: 10px;\n    line-height: 1;\n    color: #ff0000;\n    /* red color for the icon */\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -13943,7 +13951,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\r\n    width: 16px;  /* Adjust the width as needed */\r\n    height: 16px; /* Adjust the height as needed */\r\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-checkbox[data-v-13476cd0] {\n    width: 16px;  /* Adjust the width as needed */\n    height: 16px; /* Adjust the height as needed */\n    transform: scale(0.8); /* You can also use scale to adjust the size */\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

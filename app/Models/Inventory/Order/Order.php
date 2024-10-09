@@ -35,6 +35,8 @@ class Order extends Model
         'payment_method',
         'payment_proof_attachment',
         'selling_price',
+        'total_profit',
+        'total_paid_profit',
         'packaging_price',
         'status', // 0 => Order Collection || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Dispatched || 6 => Admin approval for Rejected || 7 => Rejected || 8 => Delivered || 9 => Returned || 10 => Returned to store from leopard || 11 => Out for Delivery
         'total_weight',

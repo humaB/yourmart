@@ -219,6 +219,7 @@ class LeopardApiHelper
         $sellingPrice    = $order->selling_price - (float)$order->total_bill + $advance;
         $courierExtraCharges = $order->range->our_charges;
         $payableAmount = (float)$order->total_bill - $advance;
+        $profit      = ((float)$order->selling_price + $advance) - (float)$order->total_bill;
 
         $dropshipper = DropShipper::where('id', $order->belongs_to)->first();
         $shop = DropShipperShop::where('id', $order->shop_id)->first();
@@ -226,12 +227,17 @@ class LeopardApiHelper
 
         $order->decrement('remaining_amount' , $payableAmount);
         $order->increment('paid_amount' , $payableAmount);
+        $order->update([
+            'total_profit'  => $profit
+        ]);
 
         $dropshipper->increment('total_payable' , $sellingPrice);
         $dropshipper->increment('remaining_amount' , $sellingPrice);
 
         $shop->increment('total_payable' , $sellingPrice);
         $shop->increment('total_remaining' , $sellingPrice);
+
+
     }
 
     private function parcelCancel( $dropshipper, $shop , $order ){
@@ -251,6 +257,11 @@ class LeopardApiHelper
 
         $shop->decrement('total_payable' , $courierCharges + $packingCharges + 60);
         $shop->decrement('total_remaining' , $courierCharges + $packingCharges + 60);
+
+        $remainingPayable = $advance - ( $courierCharges + $packingCharges + 60 );
+        $order->update([
+            'total_profit'  => $remainingPayable
+        ]);
 
         //Checks account if or not they are open
         //General Ledger
