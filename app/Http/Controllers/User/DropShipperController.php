@@ -131,6 +131,7 @@ class DropShipperController extends Controller
 
     public function shopPayments(Request $request)
     {
+
         $shop = DropshipperShop::where('id', $request->id)->first();
 
         $shopPayments = AccountTransaction::where(function ($q) {
@@ -156,65 +157,92 @@ class DropShipperController extends Controller
     {
         $request->validate([
             'type' => ['required'],
-            'shop_id' => ['required'],
             'from_account' => ['required'],
             'amount' => ['required'],
         ]);
 
-        $shop = DropshipperShop::where('id', $request->shop_id)->first();
-        $dropshipper = Dropshipper::where('id', $shop->dropshipper_id)->first();
+        $dropshipper = DropShipper::where('id', $request->id)->first();
+
+        $orders = Order::with('shop')
+            ->where('belongs_to', $dropshipper->user_id)
+            ->whereIn('status', [8, 9, 10])
+            ->whereColumn('total_profit', '!=', 'total_paid_profit')
+            ->get();
 
         $ledger = new AccountHeadHelper();
 
-        //Checks account if or not they are open
-        //General Ledger
-        $group_id = $dropshipper->group_id;
-        if (!$dropshipper->group_id) {
-            $group = $ledger->accountGroupFourthCreate(
-                $dropshipper->full_name . '-' . $dropshipper->cnic_number,
-                6, // Current asset
-                50, // Account Receivable
-            );
-
-            $dropshipper->update([
-                'group_id' => $group->id
-            ]);
-
-            $group_id = $group->id;
-        }
-
-
-        $head_id = $shop->account_head_id;
-        if (!$shop->account_head_id) {
-            //Shop Ledger
-            $head = $ledger->accountHeadCreate(
-                $shop->store_name . '-' . $shop->dropshipper_id,
-                1, // Asset
-                6, // Current asset
-                50, // Account Receivable
-                $group_id, // Dropshipper
-            );
-
-            $shop->update([
-                'account_head_id' => $head->id
-            ]);
-
-            $head_id = $head->id;
-        }
-
+        // Initialize remaining amount to the requested amount
+        $remainingAmount = $request->amount;
         $document = $ledger->voucherType('bank');
-        //Shop Debit
-        $ledger->accountTransaction($head_id, $request->from_account, $request->amount, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
-        //Bank Cash Credit
-        $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
+        
+        foreach ($orders as $order) {
+            $shop = $order->shop;
 
+            // Checks account if or not they are open
+            // General Ledger
+            $group_id = $dropshipper->group_id;
+            if (!$dropshipper->group_id) {
+                $group = $ledger->accountGroupFourthCreate(
+                    $dropshipper->full_name . '-' . $dropshipper->cnic_number,
+                    6, // Current asset
+                    50, // Account Receivable
+                );
 
-        $dropshipper->increment('total_paid', $request->amount);
-        $shop->increment('total_paid', $request->amount);
+                $dropshipper->update([
+                    'group_id' => $group->id
+                ]);
 
-        $dropshipper->decrement('remaining_amount', $request->amount);
-        $shop->decrement('total_remaining', $request->amount);
+                $group_id = $group->id;
+            }
 
+            $head_id = $shop->account_head_id;
+            if (!$shop->account_head_id) {
+                // Shop Ledger
+                $head = $ledger->accountHeadCreate(
+                    $shop->store_name . '-' . $shop->dropshipper_id,
+                    1, // Asset
+                    6, // Current asset
+                    50, // Account Receivable
+                    $group_id, // Dropshipper
+                );
+
+                $shop->update([
+                    'account_head_id' => $head->id
+                ]);
+
+                $head_id = $head->id;
+            }
+
+            // Calculate the amount to pay for this order
+            $orderProfit = $order->total_profit - $order->total_paid_profit;
+            if ($remainingAmount <= 0) {
+                // If no remaining amount, exit the loop
+                break;
+            }
+
+            // Determine the amount to pay for this order
+            $amountToPay = min($orderProfit, $remainingAmount);
+
+            // Only proceed if there is an amount to pay
+            if ($amountToPay > 0) {
+
+                // Shop Debit
+                $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
+
+                // Bank Cash Credit
+                $ledger->accountTransaction($request->from_account, $head_id, 0, $amountToPay, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
+
+                // Update totals
+                $dropshipper->increment('total_paid', $amountToPay);
+                $shop->increment('total_paid', $amountToPay);
+                $dropshipper->decrement('remaining_amount', $amountToPay);
+                $shop->decrement('total_remaining', $amountToPay);
+                $order->increment('total_paid_profit', $amountToPay);
+
+                // Reduce the remaining amount
+                $remainingAmount -= $amountToPay;
+            }
+        }
         return response()->json([], 200);
     }
 

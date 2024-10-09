@@ -1904,8 +1904,11 @@ __webpack_require__.r(__webpack_exports__);
           label: "Select from the following"
         },
         amount: null,
-        narration: null
-      }
+        narration: null,
+        id: ''
+      },
+      paymentLoader: false,
+      selectedDropshipper: ''
     };
   },
   created: function created() {
@@ -2003,6 +2006,7 @@ __webpack_require__.r(__webpack_exports__);
     paymentDetail: function paymentDetail(id) {
       var vm = this;
       vm.activeStatus = status;
+      vm.selectedDropshipper = id;
       axios.post(this.api_url + "dropshippers/payments/data", {
         id: id
       }).then(function (response) {
@@ -2014,7 +2018,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addPayment: function addPayment() {
       var _this2 = this;
-      if (this.addData.shop_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
+      if (this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
         return swal({
           title: "Error",
           text: 'Please fill all field',
@@ -2022,6 +2026,8 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       }
+      this.paymentLoader = true;
+      this.addData.id = this.selectedDropshipper;
       axios.post(this.api_url + "dropshippers/payments/add", this.addData).then(function (response) {
         swal({
           title: "Success",
@@ -2031,6 +2037,7 @@ __webpack_require__.r(__webpack_exports__);
         });
         _this2.$refs.dropshipperPayment.paymentShopPayments(_this2.addData.shop_id);
         _this2.addData = JSON.parse(JSON.stringify(_this2.addDataReset));
+        _this2.paymentLoader = false;
       });
     },
     dataTable: function dataTable() {
@@ -3932,7 +3939,7 @@ var render = function render() {
   }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(item.shop.store_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid_profit))])]);
+    }, [_c("td", [_vm._v(_vm._s(item.shop.store_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.advance_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid_profit))])]);
   }), 0)])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
@@ -4019,7 +4026,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Shop Name")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Shop Name")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")])])]);
 }];
 render._withStripped = true;
 
@@ -8033,7 +8040,7 @@ var render = function render() {
     attrs: {
       orders: _vm.orders,
       addData: _vm.addData,
-      loader: _vm.btnLoader,
+      loader: _vm.paymentLoader,
       accountCash: _vm.accountCash,
       accountBanks: _vm.accountBanks
     },

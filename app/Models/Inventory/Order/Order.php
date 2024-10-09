@@ -35,6 +35,7 @@ class Order extends Model
         'payment_method',
         'payment_proof_attachment',
         'selling_price',
+        'advance_amount',
         'total_profit',
         'total_paid_profit',
         'packaging_price',

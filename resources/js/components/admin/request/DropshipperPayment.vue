@@ -82,6 +82,7 @@
                                     <th>Packaging</th>
                                     <th>Total Cost</th>
                                     <th>COD</th>
+                                    <th>Advance</th>
                                     <th>Total Payable</th>
                                     <th>Total Paid</th>
                                 </tr>
@@ -96,6 +97,7 @@
                                     <td>{{ item.packaging_price }}</td>
                                     <td>{{ item.total_bill }}</td>
                                     <td>{{ item.selling_price }}</td>
+                                    <td>{{ item.advance_amount }}</td>
                                     <td>{{ item.total_profit }}</td>
                                     <td>{{ item.total_paid_profit }}</td>
                                 </tr>

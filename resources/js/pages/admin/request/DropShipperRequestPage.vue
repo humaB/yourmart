@@ -165,7 +165,7 @@
 
         <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)" />
 
-        <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="btnLoader"
+        <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
             :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
 
         <!-- Summary PRINT -->
@@ -226,8 +226,11 @@ export default {
                 type: null,
                 from_account: { code: 0, label: "Select from the following" },
                 amount: null,
-                narration: null
+                narration: null,
+                id : ''
             },
+            paymentLoader :  false,
+            selectedDropshipper : ''
         };
     },
     created() {
@@ -332,10 +335,11 @@ export default {
             let vm = this;
             vm.activeStatus = status;
 
+            vm.selectedDropshipper = id;
             axios
                 .post(this.api_url + "dropshippers/payments/data", { id: id })
                 .then((response) => {
-                    const results =response.data.response
+                    const results = response.data.response
                     vm.orders = results.orders
                     vm.accountBanks = results.banks
                     vm.accountCash = results.cash
@@ -343,7 +347,7 @@ export default {
         },
         addPayment() {
 
-            if (this.addData.shop_id == 0 || this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
+            if (this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
                 return swal({
                     title: "Error",
                     text: 'Please fill all field',
@@ -352,6 +356,9 @@ export default {
                 });
             }
 
+            this.paymentLoader = true;
+
+            this.addData.id = this.selectedDropshipper;
             axios
                 .post(this.api_url + "dropshippers/payments/add", this.addData)
                 .then((response) => {
@@ -363,6 +370,8 @@ export default {
                     });
                     this.$refs.dropshipperPayment.paymentShopPayments(this.addData.shop_id);
                     this.addData = JSON.parse(JSON.stringify(this.addDataReset));
+
+                    this.paymentLoader = false;
                 });
         },
         dataTable() {

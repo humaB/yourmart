@@ -180,10 +180,12 @@
                                                         <th>Packaging</th>
                                                         <th>Total Cost</th>
                                                         <th>COD</th>
+                                                        <th>Advance</th>
                                                         <th>Total Payable</th>
                                                         <th>Total Paid</th>
                                                         <th>Status</th>
                                                         <th>Date</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -198,6 +200,7 @@
                                                         <td>{{ item.packaging_price }}</td>
                                                         <td>{{ formatPrice(item.total_bill) }}</td>
                                                         <td>{{ formatPrice(item.selling_price) }}</td>
+                                                        <td>{{ formatPrice(item.advance_amount) }}</td>
                                                         <td>{{ formatPrice( item.total_profit) }}</td>
                                                         <td>{{ formatPrice(item.total_paid_profit) }}</td>
                                                         <td>
@@ -215,9 +218,13 @@
                                                             <span class="badge badge-warning" v-else-if="item.status == 11">Out for delivery</span>
                                                         </td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
+                                                        <td>
+                                                            <button class="btn btn-info" @click="fetchDetail(item.id)"
+                                                                data-toggle="modal" data-target="#ticket"
+                                                                title="View Details"><i class="fa fa-eye"></i></button>
+                                                        </td>
                                                     </tr>
                                                 </tbody>
-
                                             </table>
                                         </div>
                                     </div>
