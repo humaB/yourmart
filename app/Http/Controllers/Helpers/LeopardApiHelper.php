@@ -183,15 +183,15 @@ class LeopardApiHelper
             ]);
 
             //If product is delivered
-            if( $status['label'] == 'Delivered'){
+            if( $status['label'] == 'Delivered' && $detail->status != '8'){
                 $this->parcelDelivered($detail);
                 $detail->update([
                     'status' => '8'
                 ]);
             }
               //If product is delivered
-            if( $status['leopard_id'] == 'Being Return'){
-                $dropshipper = DropShipper::where('id', $detail->belongs_to)->first();
+            if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
+                $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
                 $shop = DropShipperShop::where('id', $detail->shop_id)->first();
                 $this->parcelCancel($dropshipper, $shop, $detail);
 
@@ -221,7 +221,7 @@ class LeopardApiHelper
         $payableAmount = (float)$order->total_bill - $advance;
         $profit      = ((float)$order->selling_price + $advance) - (float)$order->total_bill;
 
-        $dropshipper = DropShipper::where('id', $order->belongs_to)->first();
+        $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
         $shop = DropShipperShop::where('id', $order->shop_id)->first();
         $this->accountOnDelivered( $dropshipper, $shop, $order, $productPrice, $packingCharges, $courierCharges, $courierExtraCharges );
 

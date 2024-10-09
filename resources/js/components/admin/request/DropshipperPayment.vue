@@ -1,6 +1,6 @@
 <template>
     <div class="modal fade" id="dropShipperPayment" tabindex="-1" role="dialog" aria-labelledby="dropShipperDetailTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document" style="max-width: 90%;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="dropShipperDetailTitle">Payment</h5>
@@ -11,15 +11,9 @@
                 <div class="modal-body">
                     <div class="row">
 
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label for="dropdownField">Select Shop <span class="text-danger">*</span></label>
-                                <v-select :options="shops" v-model="addData.shop_id" :reduce="option => option.code" @input="paymentShopPayments(addData.shop_id)">
-                                </v-select>
-                            </div>
-                        </div>
+
                         <!-- Radio buttons for payment method -->
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label>Payment Method <span class="text-danger">*</span></label><br />
                                 <select v-model="addData.type" class="form-control">
@@ -38,7 +32,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group" v-if="addData.type == 'bank'">
                                 <label for="dropdownField">Select Bank Account <span class="text-danger">*</span></label>
                                 <v-select :options="accountBanks" v-model="addData.from_account" :reduce="option => option.code">
@@ -76,20 +70,34 @@
                     </div>
 
                     <div class=" py-1">
-                        <h5 class="text-capitalize">{{shop.store_name ?? ''}} Payment History,  Total Remaining : {{ shop.total_remaining }}</h5>
+
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Amount</th>
-                                    <th>Narration</th>
-                                    <th>Time</th>
+                                    <th>Shop Name</th>
+                                    <th>Order #</th>
+                                    <th>Tracking Number</th>
+                                    <th>Product Price</th>
+                                    <th>Courier</th>
+                                    <th>Packaging</th>
+                                    <th>Total Cost</th>
+                                    <th>COD</th>
+                                    <th>Total Payable</th>
+                                    <th>Total Paid</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item, index) in shopPayments" :key="item.id">
-                                    <td>{{ item.debit }}</td>
-                                    <td>{{ item.narration??'No Added' }}</td>
-                                    <td>{{ item.time }}</td>
+                                <tr v-for="(item, index) in orders" :key="item.id">
+                                    <td>{{ item.shop.store_name }}</td>
+                                    <td>{{ item.order_no }}</td>
+                                    <td>{{ item.tracking_number }}</td>
+                                    <td>{{ parseFloat(item.total_bill) - ( parseFloat(item.courier_service_price) + parseFloat(item.packaging_price) ) }}</td>
+                                    <td>{{ item.courier_service_price }}</td>
+                                    <td>{{ item.packaging_price }}</td>
+                                    <td>{{ item.total_bill }}</td>
+                                    <td>{{ item.selling_price }}</td>
+                                    <td>{{ item.total_profit }}</td>
+                                    <td>{{ item.total_paid_profit }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -109,7 +117,7 @@
 <script>
 export default {
     name: 'DropshipperPayment',
-    props: ['shops', 'addData', 'loader','accountCash','accountBanks', 'details'],
+    props: ['orders', 'addData', 'loader','accountCash','accountBanks', 'details'],
     data() {
           return {
               web_url : process.env.MIX_WEB_URL,

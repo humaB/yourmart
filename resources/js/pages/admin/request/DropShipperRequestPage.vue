@@ -165,7 +165,7 @@
 
         <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)" />
 
-        <DropshipperPayment ref="dropshipperPayment" :shops="shops" :addData="addData" :loader="btnLoader"
+        <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="btnLoader"
             :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
 
         <!-- Summary PRINT -->
@@ -204,7 +204,7 @@ export default {
             registeredQuantity: 0,
             btnLoader: false,
             records: [],
-            shops: [],
+            orders: [],
             accountBanks: [],
             accountCash: [],
             loader: true,
@@ -335,9 +335,10 @@ export default {
             axios
                 .post(this.api_url + "dropshippers/payments/data", { id: id })
                 .then((response) => {
-                    vm.shops = response.data.shops
-                    vm.accountBanks = response.data.banks
-                    vm.accountCash = response.data.cash
+                    const results =response.data.response
+                    vm.orders = results.orders
+                    vm.accountBanks = results.banks
+                    vm.accountCash = results.cash
                 });
         },
         addPayment() {

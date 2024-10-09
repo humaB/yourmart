@@ -172,7 +172,18 @@
                                             <table class="table table-bordered" :id="table_id">
                                                 <thead>
                                                     <tr>
-                                                        <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                        <th>Sr #</th>
+                                                        <th>Order #</th>
+                                                        <th>Tracking Number</th>
+                                                        <th>Product Price</th>
+                                                        <th>Courier</th>
+                                                        <th>Packaging</th>
+                                                        <th>Total Cost</th>
+                                                        <th>COD</th>
+                                                        <th>Total Payable</th>
+                                                        <th>Total Paid</th>
+                                                        <th>Status</th>
+                                                        <th>Date</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -181,11 +192,14 @@
                                                         <td>
                                                             {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
                                                         </td>
-                                                        <td>{{ item.user ? item.user.name : 'GUEST' }}</td>
+                                                        <td>{{ item.tracking_number }}</td>
+                                                        <td>{{ formatPrice(parseFloat(item.total_bill) - ( parseFloat(item.courier_service_price) + parseFloat(item.packaging_price) ) ) }}</td>
+                                                        <td>{{ item.courier_service_price }}</td>
+                                                        <td>{{ item.packaging_price }}</td>
                                                         <td>{{ formatPrice(item.total_bill) }}</td>
-                                                        <td>{{ formatPrice(item.paid_amount) }}</td>
-                                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                                        <td>{{ formatDate(item.created_at) }}</td>
+                                                        <td>{{ formatPrice(item.selling_price) }}</td>
+                                                        <td>{{ formatPrice( item.total_profit) }}</td>
+                                                        <td>{{ formatPrice(item.total_paid_profit) }}</td>
                                                         <td>
                                                             <span class="badge badge-warning text-dark" v-if="item.status == 0">Order Collection</span>
                                                             <span class="badge badge-info text-dark" v-else-if="item.status == 1">Inventory Issuance</span>
@@ -195,18 +209,15 @@
                                                             <span class="badge badge-succes" v-else-if="item.status == 5">Dispatched</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 6">Rejection Under Review</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 7">Rejected</span>
-                                                            <span class="badge badge-succes" v-else-if="item.status == 8">Delivered</span>
+                                                            <span class="badge badge-success" v-else-if="item.status == 8">Delivered</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 9">Returned</span>
                                                             <span class="badge badge-danger" v-else-if="item.status == 10">Returned To Stock</span>
                                                             <span class="badge badge-warning" v-else-if="item.status == 11">Out for delivery</span>
                                                         </td>
-                                                        <td>
-                                                            <button class="btn btn-info" @click="fetchDetail(item.id)"
-                                                                data-toggle="modal" data-target="#ticket"
-                                                                title="View Details"><i class="fa fa-eye"></i></button>
-                                                        </td>
+                                                        <td>{{ formatDate(item.created_at) }}</td>
                                                     </tr>
                                                 </tbody>
+
                                             </table>
                                         </div>
                                     </div>

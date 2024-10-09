@@ -254,7 +254,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperPayment',
-  props: ['shops', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
+  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
@@ -1876,7 +1876,7 @@ __webpack_require__.r(__webpack_exports__);
       registeredQuantity: 0,
       btnLoader: false,
       records: [],
-      shops: [],
+      orders: [],
       accountBanks: [],
       accountCash: [],
       loader: true,
@@ -2006,9 +2006,10 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(this.api_url + "dropshippers/payments/data", {
         id: id
       }).then(function (response) {
-        vm.shops = response.data.shops;
-        vm.accountBanks = response.data.banks;
-        vm.accountCash = response.data.cash;
+        var results = response.data.response;
+        vm.orders = results.orders;
+        vm.accountBanks = results.banks;
+        vm.accountCash = results.cash;
       });
     },
     addPayment: function addPayment() {
@@ -3757,7 +3758,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
-  var _vm$shop$store_name;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -3771,6 +3771,9 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "modal-dialog modal-dialog-centered modal-xl",
+    staticStyle: {
+      "max-width": "90%"
+    },
     attrs: {
       role: "document"
     }
@@ -3781,33 +3784,10 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-4"
+    staticClass: "col-md-6"
   }, [_c("div", {
     staticClass: "form-group"
-  }, [_vm._m(1), _vm._v(" "), _c("v-select", {
-    attrs: {
-      options: _vm.shops,
-      reduce: function reduce(option) {
-        return option.code;
-      }
-    },
-    on: {
-      input: function input($event) {
-        return _vm.paymentShopPayments(_vm.addData.shop_id);
-      }
-    },
-    model: {
-      value: _vm.addData.shop_id,
-      callback: function callback($$v) {
-        _vm.$set(_vm.addData, "shop_id", $$v);
-      },
-      expression: "addData.shop_id"
-    }
-  })], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_vm._m(2), _c("br"), _vm._v(" "), _c("select", {
+  }, [_vm._m(1), _c("br"), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3839,10 +3819,10 @@ var render = function render() {
       value: "bank"
     }
   }, [_vm._v("Bank")])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4"
+    staticClass: "col-md-6"
   }, [_vm.addData.type == "bank" ? _c("div", {
     staticClass: "form-group"
-  }, [_vm._m(3), _vm._v(" "), _c("v-select", {
+  }, [_vm._m(2), _vm._v(" "), _c("v-select", {
     attrs: {
       options: _vm.accountBanks,
       reduce: function reduce(option) {
@@ -3858,7 +3838,7 @@ var render = function render() {
     }
   })], 1) : _vm.addData.type == "cash" ? _c("div", {
     staticClass: "form-group"
-  }, [_vm._m(4), _vm._v(" "), _c("v-select", {
+  }, [_vm._m(3), _vm._v(" "), _c("v-select", {
     attrs: {
       options: _vm.accountCash,
       reduce: function reduce(option) {
@@ -3888,7 +3868,7 @@ var render = function render() {
     staticClass: "col-md-6"
   }, [_c("div", {
     staticClass: "form-group"
-  }, [_vm._m(5), _vm._v(" "), _c("input", {
+  }, [_vm._m(4), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3947,15 +3927,12 @@ var render = function render() {
     }
   })])])]), _vm._v(" "), _c("div", {
     staticClass: "py-1"
-  }, [_c("h5", {
-    staticClass: "text-capitalize"
-  }, [_vm._v(_vm._s((_vm$shop$store_name = _vm.shop.store_name) !== null && _vm$shop$store_name !== void 0 ? _vm$shop$store_name : "") + " Payment History,  Total Remaining : " + _vm._s(_vm.shop.total_remaining))]), _vm._v(" "), _c("table", {
+  }, [_c("table", {
     staticClass: "table"
-  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.shopPayments, function (item, index) {
-    var _item$narration;
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(item.debit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s((_item$narration = item.narration) !== null && _item$narration !== void 0 ? _item$narration : "No Added"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.time))])]);
+    }, [_c("td", [_vm._v(_vm._s(item.shop.store_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid_profit))])]);
   }), 0)])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
@@ -4006,16 +3983,6 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": "dropdownField"
-    }
-  }, [_vm._v("Select Shop "), _c("span", {
-    staticClass: "text-danger"
-  }, [_vm._v("*")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("label", [_vm._v("Payment Method "), _c("span", {
     staticClass: "text-danger"
   }, [_vm._v("*")])]);
@@ -4052,7 +4019,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Narration")]), _vm._v(" "), _c("th", [_vm._v("Time")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Shop Name")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")])])]);
 }];
 render._withStripped = true;
 
@@ -8064,7 +8031,7 @@ var render = function render() {
   }), _vm._v(" "), _c("DropshipperPayment", {
     ref: "dropshipperPayment",
     attrs: {
-      shops: _vm.shops,
+      orders: _vm.orders,
       addData: _vm.addData,
       loader: _vm.btnLoader,
       accountCash: _vm.accountCash,

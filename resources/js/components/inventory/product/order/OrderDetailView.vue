@@ -130,7 +130,7 @@
                                                                 <h5> <strong>Final Total After Delivery (Advance included):</strong></h5>
                                                              </div>
                                                              <div class="col-md-6">
-                                                                 <h5>{{  formatPrice( parseFloat(details.selling_price) + parseFloat(details.paid_amount)) }}</h5>
+                                                                 <h5>{{  formatPrice( totalSellPrice ) }}</h5>
                                                              </div>
 
                                                         </div>
