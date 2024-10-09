@@ -274,6 +274,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
 Route::post('/web-hook/leopard',  function( Request $request ){
     $leopard = new LeopardApiHelper();
+    Log::info($request);
     return $leopard->webHook($request);
 });
 
