@@ -170,40 +170,42 @@ class LeopardApiHelper
 
         foreach( $data as $order ){
             $detail = Order::with('range')->where('tracking_number', $order['cn_number'])->first();
-            $status = $this->shipmentStatuses[$order['status']];
+            if (isset($this->shipmentStatuses[$order['status']])) {
+                $status = $this->shipmentStatuses[$order['status']];
 
-            OrderLeopardStatus::create([
-                'order_id'      => $detail->id,
-                'leopard_label' => $status['leopard_id'],
-                'short_code'    => $order['status'],
-                'internal_label'  => $status['label'],
-                'receiver_name'   => $order['receiver_name'],
-                'reason'          => $order['reason'],
-                'time'            => $order['activity_date'],
-            ]);
-
-            //If product is delivered
-            if( $status['label'] == 'Delivered' && $detail->status != '8'){
-                $this->parcelDelivered($detail);
-                $detail->update([
-                    'status' => '8'
+                OrderLeopardStatus::create([
+                    'order_id'      => $detail->id,
+                    'leopard_label' => $status['leopard_id'],
+                    'short_code'    => $order['status'],
+                    'internal_label'  => $status['label'],
+                    'receiver_name'   => $order['receiver_name'],
+                    'reason'          => $order['reason'],
+                    'time'            => $order['activity_date'],
                 ]);
-            }
-              //If product is delivered
-            if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
-                $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
-                $shop = DropShipperShop::where('id', $detail->shop_id)->first();
-                $this->parcelCancel($dropshipper, $shop, $detail);
 
-                $detail->update([
-                    'status' => '9'
-                ]);
-            }
+                //If product is delivered
+                if( $status['label'] == 'Delivered' && $detail->status != '8'){
+                    $this->parcelDelivered($detail);
+                    $detail->update([
+                        'status' => '8'
+                    ]);
+                }
+                  //If product is delivered
+                if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
+                    $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
+                    $shop = DropShipperShop::where('id', $detail->shop_id)->first();
+                    $this->parcelCancel($dropshipper, $shop, $detail);
 
-            if( $order['status'] == 'AC'){
-                $detail->update([
-                    'status' => '11'
-                ]);
+                    $detail->update([
+                        'status' => '9'
+                    ]);
+                }
+
+                if( $order['status'] == 'AC'){
+                    $detail->update([
+                        'status' => '11'
+                    ]);
+                }
             }
         }
     }
