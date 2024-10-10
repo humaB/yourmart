@@ -123,6 +123,7 @@
                                                         <td>{{ index + 1 }}</td>
                                                         <td>{{ item.full_name }}</td>
                                                         <td>{{ item.email }}</td>
+                                                        <td>{{ item.whatsapp_number }}</td>
                                                         <td>{{ formatPrice(item.total_payable) }}</td>
                                                         <td>{{ formatPrice(item.total_paid) }}</td>
                                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
@@ -198,7 +199,7 @@ export default {
             tableHeader: {
                 heading: "Dropshipper Request's",
             },
-            th: ["Sr #", "Name", "Email", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
+            th: ["Sr #", "Name", "Email","Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
             table_id: "moq_table",
             guestQuantity: 0,
             registeredQuantity: 0,

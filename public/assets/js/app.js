@@ -1870,7 +1870,7 @@ __webpack_require__.r(__webpack_exports__);
       tableHeader: {
         heading: "Dropshipper Request's"
       },
-      th: ["Sr #", "Name", "Email", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
+      th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
       table_id: "moq_table",
       guestQuantity: 0,
       registeredQuantity: 0,
@@ -7972,7 +7972,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning"
     }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
       staticClass: "badge badge-success"
