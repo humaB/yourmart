@@ -10,6 +10,7 @@ use App\Models\Inventory\Courier\CourierCategoryRange;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
+use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreIssuance;
@@ -88,6 +89,9 @@ class OrderController extends Controller
             'items.variation.size',
             'returns.details.variation.product',
             'returns.details.variation.images.attachment',
+
+            //For Daraz Order
+            'daraz_labels'
         )->where('id', $request->id)->get();
 
         return (new ResponseCollection($orders))
@@ -105,6 +109,36 @@ class OrderController extends Controller
         ]);
 
         return response()->json(['message' => 'Order status updated successfully.'], 200);
+    }
+
+    public function updatePackagingAmount(Request $request)
+    {
+        $order = Order::find($request->id);
+
+        $previousTotal = (float)$order->total_bill - (float)$order->packaging_price;
+
+        $order->update([
+            'packaging_price'  => $request->amount,
+            'total_bill'       => (float)$previousTotal + (float)$request->amount,
+            'remaining_amount' => ( (float)$previousTotal + (float)$request->amount) - $order->paid_amount,
+        ]);
+
+        $items = OrderItem::where('order_id', $order->id)->get();
+        foreach( $items as $item ){
+            $quantity = $item->quantity;
+            $singlePrice = $item->price;
+
+            $totalItemPrice = $singlePrice * $quantity;
+             //Calculate Packaging
+             $extraPackagingCharges = ((float)$request->amount / (float)$previousTotal) * (float)$totalItemPrice;
+
+            $item->update([
+                'packaging_cost'  => round($extraPackagingCharges),
+                'sell_price'     => round( $totalItemPrice + $extraPackagingCharges),
+            ]);
+        }
+
+        return response()->json(['message' => 'Order packaging amount updated successfully.'], 200);
     }
 
     public function updateStatus(Request $request)
@@ -156,7 +190,7 @@ class OrderController extends Controller
 
         if (array_key_exists($userRole, $statusMap)) {
 
-            if ($userRole == 'order collection manager') {
+            if ($userRole == 'order collection manager' && $order->type == 'Normal') {
 
                 $leopardData = [
                     'track_number' => null,
@@ -196,7 +230,7 @@ class OrderController extends Controller
         }
         else if ($userRole == 'admin') {
 
-            if ($order->status == '0') {
+            if ($order->status == '0' && $order->type == 'Normal') {
 
                 $leopardData = [
                     'track_number' => null,

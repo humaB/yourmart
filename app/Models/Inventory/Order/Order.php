@@ -16,6 +16,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
+        'type', // Nomal || Cash || Daraz
         'order_no',
         'customer_name',
         'address',
@@ -80,5 +81,9 @@ class Order extends Model
 
     public function returns(){
         return $this->hasOne(StoreReturn::class);
+    }
+
+    public function daraz_labels(){
+        return $this->hasMany(OrderLabel::class);
     }
 }

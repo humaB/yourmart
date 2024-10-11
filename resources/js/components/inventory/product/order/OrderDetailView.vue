@@ -6,7 +6,7 @@
                 <div class="modal-content">
                     <div class="modal-header d-flex justify-content-between">
                         <div>
-                            Order # <b>{{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</b>
+                            Order # <b>{{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</b>, Order Type <b>{{ details.type }}</b>
                         </div> <!-- Empty div to push the content to the right -->
                         <div class="d-flex">
                             <h5>
@@ -78,12 +78,15 @@
                                                     <h5>Order Information</h5>
                                                 </div>
                                                 <div class="card-body">
-                                                    <h5>Order # {{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</h5>
-                                                    <h5>Tracking # {{ details.tracking_number }}</h5>
-                                                    <a :href="details.slip_link" target="_blank">Press to Print</a>
-                                                    <p class="mt-2"><strong>Courier Service:</strong> {{ details.courier ? details.courier.courier_name : 'N/A' }}</p>
-                                                    <p><strong>Selected Package :</strong> {{ details.range ? details.range.category.name : 'N/A' }}</p>
-                                                    <p><strong>Courier Instructions:</strong> {{ details.instructions }}</p>
+                                                    <h5 class="d-flex justify-content-between align-items-center">
+                                                        <span>Order # {{ details.shop ? details.shop.store_name.substring(0, 3) + '-' : '' }}{{ details.order_no }}</span>
+                                                        <span>Date/Time : {{ formatNormalDate(details.created_at) }}</span>
+                                                    </h5>
+                                                    <h5 v-if="details.type == 'Normal'">Tracking # {{ details.tracking_number }}</h5>
+                                                    <a v-if="details.type == 'Normal'" :href="details.slip_link" target="_blank">Press to Print</a>
+                                                    <p v-if="details.type == 'Normal'" class="mt-2"><strong>Courier Service:</strong> {{ details.courier ? details.courier.courier_name : 'N/A' }}</p>
+                                                    <p v-if="details.type == 'Normal'"><strong>Selected Package :</strong> {{ details.range ? details.range.category.name : 'N/A' }}</p>
+                                                    <p v-if="details.type == 'Normal'"><strong>Courier Instructions:</strong> {{ details.instructions }}</p>
                                                     <hr>
 
                                                     <div class="row">
@@ -120,16 +123,16 @@
                                                                  <h5>{{ formatPrice(details.remaining_amount) }}</h5>
                                                              </div>
 
-                                                             <div class="col-md-6 border-top border-1">
+                                                             <div class="col-md-6 border-top border-1" v-if="details.type == 'Normal'">
                                                                 <h5> <strong>COD Amount:</strong></h5>
                                                              </div>
-                                                             <div class="col-md-6 border-top border-1">
+                                                             <div class="col-md-6 border-top border-1" v-if="details.type == 'Normal'">
                                                                  <h5>{{  formatPrice(details.selling_price) }}</h5>
                                                              </div>
-                                                             <div class="col-md-6">
+                                                             <div class="col-md-6" v-if="details.type == 'Normal'">
                                                                 <h5> <strong>Final Total After Delivery (Advance included):</strong></h5>
                                                              </div>
-                                                             <div class="col-md-6">
+                                                             <div class="col-md-6" v-if="details.type == 'Normal'">
                                                                  <h5>{{  formatPrice( totalSellPrice ) }}</h5>
                                                              </div>
 
@@ -248,8 +251,8 @@
                                         <div class="attachment-mail">
                                             <p>
                                                 <span>
-                                                    <i class="fa fa-paperclip"></i> 1 attachments — </span>
-                                                <a href="#">Download all attachments</a>
+                                                    <i class="fa fa-paperclip"></i> {{  1 + (details.daraz_labels ? details.daraz_labels.length : 0) }} attachments — </span>
+                                                <!-- <a href="#">Download all attachments</a> -->
                                             </p>
                                             <div class="row" v-if="details.payment_proof_attachment">
                                                 <div class="col-md-2">
@@ -264,7 +267,24 @@
                                                         {{ truncatedAttachmentName(details.payment_proof_attachment) }}
                                                     </a>
                                                 </div>
+
+
+                                              <!-- Attachments from daraz_labels array -->
+                                            <div class="col-md-2" v-for="attachment in details.daraz_labels" :key="attachment.id">
+                                                <a target="_blank" :href="setImage(attachment.attachment)">
+                                                    <img class="img-thumbnail img-responsive"
+                                                        alt="daraz label attachment"
+                                                        :src="`${web_url}public/storage/uploads/payments/${attachment.attachment}`">
+                                                </a>
+                                                <a class="name"
+                                                :href="`${web_url}public/storage/uploads/payments/${attachment.attachment}`"
+                                                target="_blank">
+                                                {{ truncatedAttachmentName(attachment.attachment) }}
+                                                </a>
                                             </div>
+
+                                            </div>
+
 
                                         </div>
                                     </div>
@@ -417,6 +437,21 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="card" v-if="(role == 'order collection manager' || role == 'admin') && details.status < 7 && details.type == 'Daraz'">
+                                <div class="card-body row">
+                                    <div class="col-md-12">
+                                        <h5>Confirm Packaging Amount</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" @keypress="onlyNumber" v-model="packagingAmount">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-primary" v-if="!paidAmountLoader" @click="updatePackagingAmount()">Update Amount</button>
+                                        <button class="btn btn-primary btn-progress disabled" v-else>Update Amount</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -478,7 +513,8 @@ export default {
             taggedUsers: [],
             web_url : process.env.MIX_WEB_URL,
             scannedTrackingNumber: '', // Store the scanned QR code for tracking number
-            paidAmount : ''
+            paidAmount : '',
+            packagingAmount : ''
         }
     },
     mounted() {
@@ -552,11 +588,17 @@ export default {
         updatePaidAmount(){
             this.$emit('updatePaidAmount', { id : this.details.id, amount : this.paidAmount });
         },
+        updatePackagingAmount(){
+            this.$emit('updatePackagingAmount', { id : this.details.id, amount : this.packagingAmount });
+        },
         formatPrice: function formatPrice(price) {
             var string = parseFloat(price).toString();
             return string
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        },
+        formatNormalDate(date) {
+            return date ? moment(date).format('DD-MMM-YYYY hh:mm A') : 'N/A';
         },
         validateQR(item, index) {
         this.errors = [];
@@ -626,7 +668,7 @@ export default {
             }
 
             // Check if the role is 'packing & dispatch manager'
-            if (this.role === 'packing & dispatch manager') {
+            if (this.role === 'packing & dispatch manager' && this.details.type == 'Normal') {
                 // Check if the scanned tracking number matches the details tracking number
                 if (this.scannedTrackingNumber !== this.details.tracking_number) {
                     return swal({

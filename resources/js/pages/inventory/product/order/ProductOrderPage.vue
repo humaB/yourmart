@@ -198,7 +198,7 @@
                                                         <td>
                                                             {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
                                                         </td>
-                                                        <td>{{ item.tracking_number }}</td>
+                                                        <td>{{ item.type == 'Normal' ?  item.tracking_number : item.type }}</td>
                                                         <td>{{ formatPrice(parseFloat(item.total_bill) - ( parseFloat(item.courier_service_price) + parseFloat(item.packaging_price) ) ) }}</td>
                                                         <td>{{ item.courier_service_price }}</td>
                                                         <td>{{ item.packaging_price }}</td>
@@ -257,6 +257,7 @@
             @revert="revert($event)"
             @fetchDropshipperDetails="fetchDropshipperDetails($event)"
             @updatePaidAmount="updatePaidAmount( $event )"
+            @updatePackagingAmount="updatePackagingAmount( $event )"
         />
         <DropshipperDetails
             :details="dropShipperDetails"
@@ -354,6 +355,32 @@ export default {
             let vm = this;
             vm.paidAmountLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data)
+            .then((response) => {
+
+            this.fetchDetail(data.id);
+
+            vm.paidAmountLoader = false;
+                return swal({
+                    title: "Success",
+                    text: "Amount Updated Successfully",
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.paidAmountLoader = false;
+                return swal({
+                    title: "Error",
+                    text: "Oops.. Something went wrong",
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updatePackagingAmount( data ){
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data)
             .then((response) => {
 
             this.fetchDetail(data.id);
