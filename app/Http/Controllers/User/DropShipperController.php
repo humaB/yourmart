@@ -174,7 +174,7 @@ class DropShipperController extends Controller
         // Initialize remaining amount to the requested amount
         $remainingAmount = $request->amount;
         $document = $ledger->voucherType('bank');
-        
+
         foreach ($orders as $order) {
             $shop = $order->shop;
 
@@ -256,6 +256,13 @@ class DropShipperController extends Controller
             $group_id = null;
             $head_id = null;
 
+            $checkUser = User::where("email", $dropshipper->email)->first();
+            if ($checkUser) {
+                return (new ValidationCollection(["This Email already registered with another account"]))
+                    ->response()
+                    ->setStatusCode(400);
+            }
+
             if ($request->action == 'deactivate') {
                 User::where('id', $dropshipper->user_id)->delete();
                 $dropshipper->update([
@@ -272,12 +279,7 @@ class DropShipperController extends Controller
             }
 
             if ($request->action != 'reject') {
-                $checkUser = User::where("email", $dropshipper->email)->first();
-                if ($checkUser) {
-                    return (new ValidationCollection(["This Email already registered with another account"]))
-                        ->response()
-                        ->setStatusCode(400);
-                }
+
                 $user = User::create([
                     'name'     => $dropshipper->full_name,
                     'email'    => $dropshipper->email,
