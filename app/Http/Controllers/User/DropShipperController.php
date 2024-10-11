@@ -273,10 +273,6 @@ class DropShipperController extends Controller
             }
 
             $leopard = 0;
-            if ($request->action == 'approve') {
-                $leopardApi = new LeopardApiHelper();
-                $leopard  = $leopardApi->createShipperAccount($dropshipper);
-            }
 
             if ($request->action != 'reject') {
 
@@ -287,6 +283,9 @@ class DropShipperController extends Controller
                     'role'     => 'dropshipper',
                     'allowed_ip_address' => '*'
                 ]);
+
+                $leopardApi = new LeopardApiHelper();
+                $leopard  = $leopardApi->createShipperAccount($dropshipper);
 
                 //General Ledger
                 $group = $this->accountGroupFourthCreate(
