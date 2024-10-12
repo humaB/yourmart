@@ -173,15 +173,19 @@ class LeopardApiHelper
             if (isset($this->shipmentStatuses[$order['status']])) {
                 $status = $this->shipmentStatuses[$order['status']];
 
-                OrderLeopardStatus::create([
-                    'order_id'      => $detail->id,
-                    'leopard_label' => $status['leopard_id'],
-                    'short_code'    => $order['status'],
-                    'internal_label'  => $status['label'],
-                    'receiver_name'   => $order['receiver_name'],
-                    'reason'          => $order['reason'],
-                    'time'            => $order['activity_date'],
-                ]);
+                OrderLeopardStatus::updateOrCreate(
+                    [
+                        'order_id'   => $detail->id,       // Condition 1: order_id must match
+                        'short_code' => $order['status'],  // Condition 2: short_code must match
+                    ],
+                    [
+                        'leopard_label'  => $status['leopard_id'],
+                        'internal_label' => $status['label'],
+                        'receiver_name'  => $order['receiver_name'],
+                        'reason'         => $order['reason'],
+                        'time'           => $order['activity_date'],
+                    ]
+                );
 
                 //If product is delivered
                 if( $status['label'] == 'Delivered' && $detail->status != '8'){
