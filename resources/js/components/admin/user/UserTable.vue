@@ -23,7 +23,7 @@
 
               <a href="#" class="btn btn-icon icon-left btn-primary" data-toggle="modal" data-target="#editUser" @click="edit( item.id ,item.name, item.email, item.role )"><i class="far fa-edit"></i>
               </a>
-              <a href="#" class="btn btn-icon icon-left btn-danger" data-toggle="modal" data-target="#delete_confirmation" @click="deleteFunc( item.id )"><i class="fas fa-trash-alt"></i>
+              <a href="#" class="btn btn-icon icon-left btn-danger"  data-toggle="modal" data-target="#deleteConfirmation" @click="deleteFunc( item.id )"><i class="fas fa-trash-alt"></i>
               </a>
               </td>
           </tr>
@@ -45,6 +45,9 @@
         edit( id, name, email , role ){
             let password = "";
             this.$emit( 'edit', { id, name, email , password , role } )
+        },
+        deleteFunc( id ){
+            this.$emit('deleteFunc', { id })
         }
     }
   };

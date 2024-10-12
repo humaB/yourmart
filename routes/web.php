@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LoginController::class, 'index'])->name('dashboard');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
-Route::get('profile-setting', [LoginController::class, 'profileSettingIndex'])->name('profile.setting');
+Route::get('profile-settings', [LoginController::class, 'profileSettingIndex'])->name('profile.setting');
 
 
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {

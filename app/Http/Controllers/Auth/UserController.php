@@ -24,7 +24,7 @@ class UserController extends Controller
     public function  getUsers()
     {
 
-        $data = User::get();
+        $data = User::where('role','!=' , 'dropshipper')->where('role','!=' , 'supplier')->get();
 
         return (new ResponseCollection($data))
             ->response()
@@ -95,13 +95,6 @@ class UserController extends Controller
             ->response()
             ->setStatusCode(400);
         }
-
-        if ($request->password && !\Hash::check($request->oldPassword, $user->password)) {
-            return (new ValidationCollection(['Incorrect old password!']))
-                ->response()
-                ->setStatusCode(400);
-        }
-
         // Update user data
         $user->name  = $request->name;
         $user->email = $request->email;
@@ -120,6 +113,11 @@ class UserController extends Controller
 
         // Redirect with success
         return redirect()->back()->with('success', 'Successfully Updated!');
+    }
+
+    public function delete( Request $request ){
+        User::where('id', $request->id)->delete();
+        return ['message' => 'User deleted successfully'];
     }
 
     private function validation($validator){

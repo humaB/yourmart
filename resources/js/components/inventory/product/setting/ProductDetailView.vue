@@ -216,6 +216,38 @@
                                             </td>
                                         </tr>
 
+                                         <!-- Show Stock -->
+                                            <tr>
+                                                <th>Show Stock</th>
+                                                <td>
+                                                    <div v-if="!editingField.show_stock">
+                                                        <span v-if="product.show_stock == 1">Yes</span>
+                                                        <span v-else>No</span>
+                                                    </div>
+                                                    <div v-else>
+                                                        <label>
+                                                            <input
+                                                                type="radio"
+                                                                v-model="editedProduct.show_stock"
+                                                                value="1"
+                                                            /> Yes
+                                                        </label>
+                                                        <label>
+                                                            <input
+                                                                type="radio"
+                                                                v-model="editedProduct.show_stock"
+                                                                value="0"
+                                                            /> No
+                                                        </label>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button v-if="!editingField.show_stock" @click="editField('show_stock')" class="btn btn-sm btn-primary">Edit</button>
+                                                    <button v-else @click="saveField('show_stock')" class="btn btn-sm btn-success">Save</button>
+                                                    <button v-if="editingField.show_stock" @click="cancelEdit('show_stock')" class="btn btn-sm btn-danger">Cancel</button>
+                                                </td>
+                                            </tr>
+
                                     </tbody>
                                 </table>
                             </div>
@@ -554,7 +586,8 @@ export default {
                 product_highlight: false,
                 warranty: false,
                 max_quantity: false,
-                quantity_step: false
+                quantity_step: false,
+                show_stock : false
             },
             editedProduct: {
                 title: this.product.title || '',
@@ -564,6 +597,7 @@ export default {
                 warranty: this.product.warranty || '',
                 max_quantity: this.product.max_quantity || 'N/A',
                 quantity_step: this.product.quantity_step || '',
+                show_stock : this.product.show_stock || '0',
             },
             editingIndex: null, // Track which row is being edited
             dimensionEditing: false,

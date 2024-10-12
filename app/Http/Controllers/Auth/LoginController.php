@@ -46,7 +46,7 @@ class LoginController extends Controller
             "user" => $user
         ]);
     }
-    
+
     public function updateProfile(Request $request)
     {
         $validator = \Validator::make($request->all(), [
@@ -58,12 +58,21 @@ class LoginController extends Controller
         if ($validation) {
             return $validation;
         }
-        
+
+        $user = User::findOrFail($request->id);
+
+        if ($request->new_password && !\Hash::check($request->oldPassword, $user->password)) {
+            return (new ValidationCollection(['Incorrect old password!']))
+                ->response()
+                ->setStatusCode(400);
+        }
+
+
         User::where("id",$request->id)->update([
             'name'     => $request->name,
             'email'    => $request->email,
         ]);
-        
+
         if($request->new_password)
         {
             User::where("id",$request->id)->update([

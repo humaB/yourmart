@@ -121,6 +121,17 @@ class ProductController extends Controller
             ->setStatusCode(200);
     }
 
+    public function completeDropDown(Request $request)
+    {
+        $products = Product::orderBy('id', 'desc')
+            ->select('id as code', 'title as label')
+            ->get();
+
+        return (new ResponseCollection($products))
+            ->response()
+            ->setStatusCode(200);
+    }
+
     public function details(Request $request)
     {
         $products = Product::withTrashed()

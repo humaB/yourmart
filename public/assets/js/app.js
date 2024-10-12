@@ -509,6 +509,11 @@ __webpack_require__.r(__webpack_exports__);
         password: password,
         role: role
       });
+    },
+    deleteFunc: function deleteFunc(id) {
+      this.$emit('deleteFunc', {
+        id: id
+      });
     }
   }
 });
@@ -1077,7 +1082,7 @@ function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'HomePageSetting',
-  props: ['tags', 'loader', 'settings', 'categories'],
+  props: ['tags', 'loader', 'settings', 'categories', 'products'],
   data: function data() {
     return {
       public_url: window.location.origin + "" + '/',
@@ -1294,7 +1299,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         });
 
         // Find the corresponding category name by tag_id
-        var category = _this.categories.find(function (category) {
+        var category = _this.products.find(function (category) {
           return category.code === (imageSetting === null || imageSetting === void 0 ? void 0 : imageSetting.tag_id);
         }) || {
           code: 0,
@@ -2332,7 +2337,8 @@ __webpack_require__.r(__webpack_exports__);
       table_id: "user_list_table",
       users: [],
       editDetails: {},
-      btnLoader: false
+      btnLoader: false,
+      user: ''
     };
   },
   created: function created() {
@@ -2353,6 +2359,35 @@ __webpack_require__.r(__webpack_exports__);
         }, 300);
       })["catch"](function (err) {
         return console.log(err);
+      });
+    },
+    deleteFunc: function deleteFunc(data) {
+      this.user = data.id;
+    },
+    deleteConfirmation: function deleteConfirmation() {
+      var vm = this;
+      vm.btnLoader = true;
+      var data = {
+        id: this.user
+      };
+      axios.post(this.api_url + "users/delete", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchUsers();
+        $("#deleteConfirmation").modal('hide');
+        return swal({
+          title: "Success",
+          text: 'User Deleted Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
       });
     },
     dataTable: function dataTable() {
@@ -2987,13 +3022,15 @@ __webpack_require__.r(__webpack_exports__);
       homePageLoader: false,
       loader: false,
       homePagesSettings: [],
-      categories: []
+      categories: [],
+      products: []
     };
   },
   created: function created() {
     var _this = this;
     this.fetchTags();
     this.fetchCategories();
+    this.fetchProducts();
     setTimeout(function () {
       _this.fetchHomePageSetting();
     }, 300);
@@ -3021,6 +3058,14 @@ __webpack_require__.r(__webpack_exports__);
         vm.categories = response.data.response.dropdown;
       })["catch"](function (err) {
         vm.fetchCategories();
+      });
+    },
+    fetchProducts: function fetchProducts() {
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/complete-drop-down").then(function (response) {
+        vm.products = response.data.response;
+      })["catch"](function (err) {
+        vm.fetchProducts();
       });
     },
     fetchHomePageSetting: function fetchHomePageSetting() {
@@ -3072,7 +3117,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       api_url: window.location.origin + "/public/api/",
       public_url: window.location.origin + "",
       profileData: {},
-      btnLoading: false
+      btnLoading: false,
+      oldPassword: ''
     };
   },
   methods: {
@@ -4436,33 +4482,6 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.oldPassword,
-      expression: "oldPassword"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "password",
-      placeholder: "Please Enter your old password"
-    },
-    domProps: {
-      value: _vm.oldPassword
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.oldPassword = $event.target.value;
-      }
-    }
-  })])])]), _vm._v(" "), _c("div", {
-    staticClass: "form-group form-float col-md-12"
-  }, [_c("div", {
-    staticClass: "form-line"
-  }, [_vm._m(7), _vm._v(" "), _c("div", {
-    staticClass: "input-group"
-  }, [_vm._m(8), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
       value: _vm.password,
       expression: "password"
     }],
@@ -4481,7 +4500,7 @@ var render = function render() {
         _vm.password = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("small", {
+  })]), _vm._v(" "), _vm._m(7), _vm._v(" "), _c("small", {
     staticClass: "form-text text-muted",
     attrs: {
       id: "passwordHelpBlock"
@@ -4556,24 +4575,6 @@ var staticRenderFns = [function () {
   }, [_c("div", {
     staticClass: "input-group-text"
   }, [_vm._v("@ecomm.com")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    staticClass: "form-label"
-  }, [_vm._v("Old Password "), _c("span", {
-    staticClass: "text-danger"
-  }, [_vm._v("*")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "input-group-prepend"
-  }, [_c("div", {
-    staticClass: "input-group-text"
-  }, [_c("i", {
-    staticClass: "fas fa-lock"
-  })])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -4959,7 +4960,7 @@ var render = function render() {
       attrs: {
         href: "#",
         "data-toggle": "modal",
-        "data-target": "#delete_confirmation"
+        "data-target": "#deleteConfirmation"
       },
       on: {
         click: function click($event) {
@@ -6187,7 +6188,7 @@ var render = function render() {
       }
     })]), _vm._v(" "), _c("td", [_c("v-select", {
       attrs: {
-        options: _vm.categories
+        options: _vm.products
       },
       model: {
         value: advertise.category,
@@ -6347,7 +6348,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Title")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Preview")]), _vm._v(" "), _c("th", [_vm._v("Category (Shop Now Redirect )")]), _vm._v(" "), _c("th", [_vm._v("Button Label")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Title")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Preview")]), _vm._v(" "), _c("th", [_vm._v("Product (Shop Now Redirect )")]), _vm._v(" "), _c("th", [_vm._v("Button Label")])])]);
 }];
 render._withStripped = true;
 
@@ -8390,11 +8391,81 @@ var render = function render() {
     on: {
       edit: function edit($event) {
         return _vm.edit($event);
+      },
+      deleteFunc: function deleteFunc($event) {
+        return _vm.deleteFunc($event);
       }
     }
-  })], 1)])])])])], 1)])])], 1);
+  })], 1)])])])])], 1)])]), _vm._v(" "), _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "deleteConfirmation",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "deleteConfirmationTitle",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.btnLoader ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.deleteConfirmation();
+      }
+    }
+  }, [_vm._v("Yes, Delete")]) : _c("button", {
+    staticClass: "btn btn-danger btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Yes, Delete")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])])], 1);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Confirmaion")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("h5", [_vm._v("Are you sure you want to delete this user ?")]), _vm._v(" "), _c("small", [_vm._v("This will deactivate user account not delete in actual")])]);
+}];
 render._withStripped = true;
 
 
@@ -8882,6 +8953,7 @@ var render = function render() {
     attrs: {
       tags: _vm.tags,
       categories: _vm.categories,
+      products: _vm.products,
       loader: _vm.homePageLoader,
       settings: _vm.homePagesSettings
     },
@@ -8994,21 +9066,39 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "form-group mb-3"
-  }, [_c("label", {
-    attrs: {
-      "for": "new_password"
-    }
-  }, [_vm._v("Password")]), _vm._v(" "), _c("input", {
-    staticStyle: {
-      display: "none"
-    },
+    staticClass: "form-group form-float"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "input-group"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.oldPassword,
+      expression: "oldPassword"
+    }],
+    staticClass: "form-control",
     attrs: {
       type: "password",
-      name: "fakePassword",
-      autocomplete: "new-password"
+      placeholder: "Please Enter your old password"
+    },
+    domProps: {
+      value: _vm.oldPassword
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.oldPassword = $event.target.value;
+      }
     }
-  }), _vm._v(" "), _c("input", {
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "form-group form-float"
+  }, [_c("div", {
+    staticClass: "form-line"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "input-group"
+  }, [_vm._m(4), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -9018,9 +9108,7 @@ var render = function render() {
     staticClass: "form-control",
     attrs: {
       type: "password",
-      autocomplete: "off",
-      id: "new_password",
-      placeholder: "Enter your password"
+      placeholder: "Please Enter your new password"
     },
     domProps: {
       value: _vm.profileData.new_password
@@ -9031,7 +9119,7 @@ var render = function render() {
         _vm.$set(_vm.profileData, "new_password", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("button", {
+  })])])]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary",
     "class": _vm.btnLoading ? "btn-progress" : "",
     attrs: {
@@ -9051,6 +9139,42 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "card-header"
   }, [_c("h4", [_vm._v("Update Profile")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Old Password "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "input-group-prepend"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_c("i", {
+    staticClass: "fas fa-lock"
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    staticClass: "form-label"
+  }, [_vm._v("Set New Password "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("*")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "input-group-prepend"
+  }, [_c("div", {
+    staticClass: "input-group-text"
+  }, [_c("i", {
+    staticClass: "fas fa-lock"
+  })])]);
 }];
 render._withStripped = true;
 

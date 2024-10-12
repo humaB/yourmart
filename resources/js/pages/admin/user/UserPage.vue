@@ -26,6 +26,7 @@
                       :th="th"
                       :tbody="users"
                       @edit="edit( $event )"
+                      @deleteFunc="deleteFunc( $event )"
                     />
                   </div>
                 </div>
@@ -36,6 +37,29 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal -->
+<div class="modal fade" id="deleteConfirmation" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Confirmaion</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body row">
+          <h5>Are you sure you want to delete this user ?</h5>
+          <small>This will deactivate user account not delete in actual</small>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" @click="deleteConfirmation()" v-if="!btnLoader">Yes, Delete</button>
+            <button type="button" class="btn btn-danger btn-progress disabled" v-else>Yes, Delete</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 <script>
@@ -64,7 +88,8 @@ export default {
       table_id: "user_list_table",
       users : [],
       editDetails : {},
-      btnLoader : false
+      btnLoader : false,
+      user : ''
     };
   },
   created() {
@@ -89,6 +114,38 @@ export default {
           },300);
         })
         .catch((err) => console.log(err));
+    },
+    deleteFunc( data ){
+        this.user = data.id;
+    },
+    deleteConfirmation(){
+        let vm = this;
+        vm.btnLoader = true;
+        const data = {
+            id : this.user
+        }
+        axios
+            .post( this.api_url + "users/delete", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchUsers();
+                $("#deleteConfirmation").modal('hide')
+                return swal({
+                    title: "Success",
+                    text: 'User Deleted Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
     },
     dataTable(){
        $('#user_list_table').DataTable();

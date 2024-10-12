@@ -59,7 +59,7 @@
                             <th>Title</th>
                             <th>Image</th>
                             <th>Preview</th>
-                            <th>Category (Shop Now Redirect )</th>
+                            <th>Product (Shop Now Redirect )</th>
                             <th>Button Label</th>
                         </tr>
                     </thead>
@@ -78,7 +78,7 @@
                             </td>
                             <!-- Category Dropdown -->
                             <td>
-                                <v-select :options="categories" v-model="advertise.category">
+                                <v-select :options="products" v-model="advertise.category">
 
                                 </v-select>
                             </td>
@@ -133,7 +133,7 @@
 <script>
     export default {
         name :  'HomePageSetting',
-        props : ['tags', 'loader', 'settings', 'categories'],
+        props : ['tags', 'loader', 'settings', 'categories', 'products'],
         data() {
             return {
                 public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
@@ -266,7 +266,7 @@
                     const imageSetting = newSettings.find(setting => setting.type === imageType);
 
                     // Find the corresponding category name by tag_id
-                    const category = this.categories.find(category => category.code === imageSetting?.tag_id) || { code: 0, label: 'Select from the following' };
+                    const category = this.products.find(category => category.code === imageSetting?.tag_id) || { code: 0, label: 'Select from the following' };
 
 
                     // If an image is found, use its data; otherwise, fill with empty values

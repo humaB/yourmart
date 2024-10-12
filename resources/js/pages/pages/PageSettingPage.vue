@@ -46,6 +46,7 @@
           <HomePageSetting
             :tags="tags"
             :categories="categories"
+            :products="products"
             :loader="homePageLoader"
             :settings="homePagesSettings"
             @updateHomePage="updateHomePage( $event )"
@@ -81,12 +82,14 @@ import HomePageSetting from "../../components/pages/HomePageSetting.vue";
                 homePageLoader : false,
                 loader : false,
                 homePagesSettings : [],
-                categories : []
+                categories : [],
+                products : []
             };
         },
         created() {
             this.fetchTags();
             this.fetchCategories();
+            this. fetchProducts();
             setTimeout(()=>{
                 this.fetchHomePageSetting();
             },300)
@@ -115,6 +118,16 @@ import HomePageSetting from "../../components/pages/HomePageSetting.vue";
                         vm.categories = response.data.response.dropdown;
                     }).catch((err) => {
                         vm.fetchCategories();
+                    });
+            },
+            fetchProducts(){
+                let vm = this;
+                axios
+                    .get(this.api_url + "inventory/products/complete-drop-down")
+                    .then((response) => {
+                        vm.products = response.data.response;
+                    }).catch((err) => {
+                        vm.fetchProducts();
                     });
             },
             fetchHomePageSetting(){

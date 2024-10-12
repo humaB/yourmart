@@ -64,6 +64,7 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ UserController::class , 'getUsers']);
     Route::post('/',  [ UserController::class , 'store']);
     Route::post('/update',  [ UserController::class , 'update']);
+    Route::post('/delete',  [ UserController::class , 'delete']);
 });
 
 Route::group(['prefix' => 'tickets'], function(){
@@ -149,6 +150,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/filter-data', [ ProductController::class , 'filterData']);
 
         Route::post('/drop-down', [ ProductController::class , 'dropDown']);
+        Route::get('/complete-drop-down', [ ProductController::class , 'completeDropDown']);
+
         Route::post('/variations/update', [ ProductController::class , 'variationUpdate']);
         Route::post('/variations/delete-images', [ ProductController::class , 'variationDeleteImage']);
         Route::post('/variations/change-status', [ ProductController::class , 'variationChangeStatus']);

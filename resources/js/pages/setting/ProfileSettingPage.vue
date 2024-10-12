@@ -19,13 +19,37 @@
                                 <label for="email">Email</label>
                                 <input type="email" id="email" v-model="profileData.email" class="form-control" placeholder="Enter your email" required />
                             </div>
-                            
-                            <!-- Password -->
-                            <div class="form-group mb-3">
-                                <label for="new_password">Password</label>
-                                <input type="password" name="fakePassword" style="display:none;" autocomplete="new-password"/> <!-- this is for auto complete no functionality on it-->
-                                <input type="password" autocomplete="off" id="new_password" v-model="profileData.new_password" class="form-control" placeholder="Enter your password" />
+
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Old Password <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-lock"></i>
+                                            </div>
+                                        </div>
+                                        <input type="password" v-model="oldPassword" class="form-control" placeholder="Please Enter your old password"/>
+                                    </div>
+
+                                </div>
                             </div>
+
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <label class="form-label">Set New Password <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fas fa-lock"></i>
+                                            </div>
+                                        </div>
+                                        <input type="password" v-model="profileData.new_password" class="form-control" placeholder="Please Enter your new password"/>
+                                    </div>
+
+                                </div>
+                            </div>
+
 
                             <!-- Submit Button -->
                             <button type="button" @click="updateProfile()" class="btn btn-primary" :class="btnLoading ? 'btn-progress' : ''" :disabled="btnLoading">Update Profile</button>
@@ -45,6 +69,7 @@ export default {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             profileData: {},
             btnLoading: false,
+            oldPassword : ''
         };
     },
     methods: {
@@ -58,7 +83,7 @@ export default {
         },
         // Update profile method
         async updateProfile() {
-            
+
             this.btnLoading = true;
             const formData = new FormData();
             formData.append('id', this.profileData.id);

@@ -51,20 +51,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group form-float col-md-12">
-                                <div class="form-line">
-                                    <label class="form-label">Old Password <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <i class="fas fa-lock"></i>
-                                            </div>
-                                        </div>
-                                        <input type="password" v-model="oldPassword" class="form-control" placeholder="Please Enter your old password"/>
-                                    </div>
-
-                                </div>
-                            </div>
 
                             <div class="form-group form-float col-md-12">
                                 <div class="form-line">

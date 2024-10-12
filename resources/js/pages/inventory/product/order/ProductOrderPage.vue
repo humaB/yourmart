@@ -141,6 +141,10 @@
                                     <option value="4">Auditor</option>
                                     <option value="5">Under Review</option>
                                     <option value="7">Rejected</option>
+                                    <option value="11">Out for Delivery</option>
+                                    <option value="8">Delivered</option>
+                                    <option value="9">Returned</option>
+                                    <option value="10">Returned to store</option>
                                 </select>
                             </div>
                             <div class="col-md-3">

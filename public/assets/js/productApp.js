@@ -1882,7 +1882,8 @@ __webpack_require__.r(__webpack_exports__);
         product_highlight: false,
         warranty: false,
         max_quantity: false,
-        quantity_step: false
+        quantity_step: false,
+        show_stock: false
       },
       editedProduct: {
         title: this.product.title || '',
@@ -1891,7 +1892,8 @@ __webpack_require__.r(__webpack_exports__);
         video_link: this.product.video_link || 'N/A',
         warranty: this.product.warranty || '',
         max_quantity: this.product.max_quantity || 'N/A',
-        quantity_step: this.product.quantity_step || ''
+        quantity_step: this.product.quantity_step || '',
+        show_stock: this.product.show_stock || '0'
       },
       editingIndex: null,
       // Track which row is being edited
@@ -9917,6 +9919,65 @@ var render = function render() {
         return _vm.cancelEdit("quantity_step");
       }
     }
+  }, [_vm._v("Cancel")]) : _vm._e()])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Show Stock")]), _vm._v(" "), _c("td", [!_vm.editingField.show_stock ? _c("div", [_vm.product.show_stock == 1 ? _c("span", [_vm._v("Yes")]) : _c("span", [_vm._v("No")])]) : _c("div", [_c("label", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editedProduct.show_stock,
+      expression: "editedProduct.show_stock"
+    }],
+    attrs: {
+      type: "radio",
+      value: "1"
+    },
+    domProps: {
+      checked: _vm._q(_vm.editedProduct.show_stock, "1")
+    },
+    on: {
+      change: function change($event) {
+        return _vm.$set(_vm.editedProduct, "show_stock", "1");
+      }
+    }
+  }), _vm._v(" Yes\n                                                        ")]), _vm._v(" "), _c("label", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editedProduct.show_stock,
+      expression: "editedProduct.show_stock"
+    }],
+    attrs: {
+      type: "radio",
+      value: "0"
+    },
+    domProps: {
+      checked: _vm._q(_vm.editedProduct.show_stock, "0")
+    },
+    on: {
+      change: function change($event) {
+        return _vm.$set(_vm.editedProduct, "show_stock", "0");
+      }
+    }
+  }), _vm._v(" No\n                                                        ")])])]), _vm._v(" "), _c("td", [!_vm.editingField.show_stock ? _c("button", {
+    staticClass: "btn btn-sm btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.editField("show_stock");
+      }
+    }
+  }, [_vm._v("Edit")]) : _c("button", {
+    staticClass: "btn btn-sm btn-success",
+    on: {
+      click: function click($event) {
+        return _vm.saveField("show_stock");
+      }
+    }
+  }, [_vm._v("Save")]), _vm._v(" "), _vm.editingField.show_stock ? _c("button", {
+    staticClass: "btn btn-sm btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.cancelEdit("show_stock");
+      }
+    }
   }, [_vm._v("Cancel")]) : _vm._e()])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-4"
   }, [_c("h5", [_vm._v("Product Variations")]), _vm._v(" "), _c("table", {
@@ -11536,7 +11597,23 @@ var render = function render() {
     attrs: {
       value: "7"
     }
-  }, [_vm._v("Rejected")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Rejected")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "11"
+    }
+  }, [_vm._v("Out for Delivery")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "8"
+    }
+  }, [_vm._v("Delivered")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "9"
+    }
+  }, [_vm._v("Returned")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "10"
+    }
+  }, [_vm._v("Returned to store")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
