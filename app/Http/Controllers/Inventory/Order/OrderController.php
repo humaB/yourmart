@@ -116,6 +116,7 @@ class OrderController extends Controller
 
         $order->update([
             'paid_amount'    => $request->amount,
+            'advance_amount' => $request->amount,
             'remaining_amount' => (float)$order->total_bill - (float)$request->amount,
         ]);
 
