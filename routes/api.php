@@ -31,6 +31,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -228,6 +229,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::group(['prefix' => 'settings'], function(){
             Route::get('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'fetchHistory']);
             Route::post('/minimum-order-quantities',  [ ProductMinimumOrderController::class , 'store']);
+
+            Route::get('/other-charges',  [ ProductOtherChargesController::class , 'fetchHistory']);
+            Route::post('/other-charges',  [ ProductOtherChargesController::class , 'store']);
 
 
             Route::group(['prefix' => 'packaging-classes'], function(){

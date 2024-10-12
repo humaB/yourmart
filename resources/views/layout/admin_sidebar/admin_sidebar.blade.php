@@ -131,6 +131,9 @@
                     <li><a class="nav-link" href="{{ route('packaging.class') }}">
                         <i data-feather="file-text"></i>Packaging Class</a></li>
                         <li>
+                    <li><a class="nav-link" href="{{ route('inventory.products.other_charges') }}">
+                        <i data-feather="file-text"></i>Other Charges</a></li>
+                    <li>
                 </ul>
     </li>
 </ul>

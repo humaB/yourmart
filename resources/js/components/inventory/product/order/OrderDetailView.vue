@@ -93,6 +93,7 @@
                                                         <div class="col-md-6">
                                                             <p><strong>Shop:</strong> {{ details.shop ? details.shop.store_name: 'N/A' }}</p>
                                                             <p><strong>Order Notes:</strong> {{ details.order_note }}</p>
+                                                            <p><strong>No of labels:</strong> {{ details.no_of_labels }}</p>
                                                         </div>
                                                         <div class="col-md-6 text-right">
                                                             <p><strong>Sub Total:</strong> {{ parseFloat(details.total_bill) - ( parseFloat(details.courier_service_price)  + parseFloat(details.packaging_price) ) }}</p>

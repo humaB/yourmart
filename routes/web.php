@@ -25,6 +25,7 @@ use App\Http\Controllers\Account\CashTransactionController;
 use App\Http\Controllers\Account\JournalTransactionController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Account\pdf\TransactionPdfController;
+use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -68,7 +69,6 @@ Route::group(['prefix' => '/pages', 'middleware' => 'auth'], function () {
     Route::get('/', [PageController::class, 'index'])->name('pages');
     Route::get('/library', [LibraryPageController::class, 'index'])->name('library.page');
     Route::get('/help-center', [HelpCenterPageController::class, 'index'])->name('help.center.page');
-
 });
 
 
@@ -79,6 +79,9 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
             Route::get('/minimum-order-quantity', [ProductMinimumOrderController::class, 'index'])->name('inventory.products.moq');
             Route::get('/shipping-classes', [ProductShippingClassController::class, 'index'])->name('inventory.products.shipping_classes');
             Route::get('/packaging-classes', [ProductPackagingClassController::class, 'index'])->name('packaging.class');
+
+            Route::get('/other-charges', [ProductOtherChargesController::class, 'index'])->name('inventory.products.other_charges');
+
         });
 
         Route::group(['prefix' => '/orders'], function () {

@@ -20,6 +20,7 @@ window.axios = require('axios');
 
 Vue.component('product-list-page', require('./pages/inventory/product/ProductListPage.vue').default );
 Vue.component('product-minimum-order-quantity-page', require('./pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue').default );
+Vue.component('product-other-charges-page', require('./pages/inventory/product/setting/ProductOtherChargePage.vue').default );
 
 Vue.component('product-shipping-classes-page', require('./pages/inventory/product/setting/ProductShippingClassesPage.vue').default );
 Vue.component('product-packaging-classes-page', require('./pages/inventory/product/setting/ProductPackagingClassesPage.vue').default );

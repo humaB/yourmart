@@ -6,6 +6,7 @@ use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Models\Inventory\Courier\CourierCategory;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderLeopardStatus;
+use App\Models\Inventory\Product\Setting\OtherCharge;
 use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
 use Illuminate\Http\Request;
@@ -283,17 +284,19 @@ class LeopardApiHelper
             $head_id = $this->openShopLedger( $shop , $ledger, $group_id);
         }
 
+        $otherCharges = OtherCharge::where('type', 'Return')->where('status', '0')->first();
+
         //Book Total Packaging and Courier + 60 RS as charge
         /*
         *   Total Packaging and Courier + 60 Debit to Dropshipper
         *   Total Packaging and Courier + 60 Credit in leopard and sales account
         */
         $document = $ledger->voucherType('JV');
-        $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + 60 , 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + $otherCharges , 0, 'Total Receivable Amount', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //Leopard Credit
         $ledger->accountTransaction(73, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
         //Sale Credit
-        $ledger->accountTransaction(74, $head_id, 0, $packingCharges + 60 + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
+        $ledger->accountTransaction(74, $head_id, 0, $packingCharges + $otherCharges + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'ORDER', $order->id, $approved = 1);
 
            //Advance payment Entry if
         /*
