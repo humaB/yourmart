@@ -47,7 +47,6 @@ Route::get('profile-setting', [LoginController::class, 'profileSettingIndex'])->
 
 
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
-    Route::get('generate_token', [AuthController::class, 'getToken']);
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 });
 
