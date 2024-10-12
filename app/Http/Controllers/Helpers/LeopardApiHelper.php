@@ -144,6 +144,8 @@ class LeopardApiHelper
             'consignment_address' => $request->address,  // Replace with consignee address
             'special_instructions' => $request->instructions ?? '', // Replace with actual instructions
 
+            'shipment_type' => strtolower($package->name), // Optional Field (You can keep it empty so It will pick default value i.e. "overnight"), Type Shipment type name here
+
             'return_address' => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab', // Optional, can be empty
         ]);
 
