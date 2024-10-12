@@ -11,6 +11,7 @@ use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
 use App\Models\Inventory\Order\OrderItem;
+use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreIssuance;
@@ -69,6 +70,16 @@ class OrderController extends Controller
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+
+    public function trackingDetails( Request $request ){
+
+        $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('id', 'desc')->get();
+
+            return (new ResponseCollection($orders))
+                ->response()
+                ->setStatusCode(200);
     }
 
     public function details(Request $request)

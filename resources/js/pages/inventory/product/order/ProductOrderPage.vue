@@ -198,7 +198,17 @@
                                                         <td>
                                                             {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
                                                         </td>
-                                                        <td>{{ item.type == 'Normal' ?  item.tracking_number : item.type }}</td>
+                                                        <td>
+                                                            <span v-if="item.type === 'Normal'">
+                                                              <a href="#" data-toggle="modal" data-target="#trackingInformation" @click="fetchTracking(item.id)">
+                                                                {{ item.tracking_number }}
+                                                              </a>
+                                                            </span>
+                                                            <span v-else>
+                                                              {{ item.type }}
+                                                            </span>
+                                                          </td>
+
                                                         <td>{{ formatPrice(parseFloat(item.total_bill) - ( parseFloat(item.courier_service_price) + parseFloat(item.packaging_price) ) ) }}</td>
                                                         <td>{{ item.courier_service_price }}</td>
                                                         <td>{{ item.packaging_price }}</td>
@@ -262,6 +272,49 @@
         <DropshipperDetails
             :details="dropShipperDetails"
         />
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="trackingInformation" tabindex="-1" role="dialog"
+            aria-labelledby="trackingInformationTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Tracking Details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Sr #</th>
+                                        <th>Status</th>
+                                        <th>Date Time</th>
+                                        <th>Remarks</th>
+                                        <th>Receiver Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in trackingDetails" :key="item.id">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ item.leopard_label }}</td>
+                                        <td>{{ item.time }}</td>
+                                        <td>{{ item.reason }}</td>
+                                        <td>{{ item.receiver_name }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -317,12 +370,21 @@ export default {
                 from: '',
                 to: '',
             },
+            trackingDetails : []
         };
     },
     created() {
         this.fetchOrders();
     },
     methods: {
+        fetchTracking(id){
+            let vm = this;
+            axios
+                .post(this.api_url + "inventory/products/orders/tracking", { id })
+                .then((response) => {
+                    vm.trackingDetails = response.data.response
+                });
+        },
         applyFilter() {
             this.clearDataTable();
             this.fetchOrders();

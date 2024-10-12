@@ -221,6 +221,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
             Route::post('/update-paid-amount',  [ OrderController::class , 'updatePaidAmount']);
             Route::post('/update-packaging-amount',  [ OrderController::class , 'updatePackagingAmount']);
+
+            Route::post('/tracking',  [ OrderController::class , 'trackingDetails']);
         });
 
         Route::group(['prefix' => 'settings'], function(){
