@@ -31,7 +31,15 @@
                                         <td>{{ item.product ? item.product.title : '-'}}</td>
                                         <td>{{ item.avg_price || 0 }}</td>
                                         <td>{{ item.stock }}</td>
-                                        <td>{{ item.barcode ? item.barcode.barcode : '-'}}</td>
+                                        <td width="20%">
+                                            <div v-if="item.barcode && item.barcode.barcode != '-'">
+                                              {{ item.barcode.barcode }}
+                                            </div>
+                                            <div class="d-flex" v-else>
+                                              <input type="text" class="form-control" v-model="newBarcode" placeholder="Enter barcode" />
+                                              <button class="btn btn-sm btn-primary" @click="updateBarcode(item)">Update</button>
+                                            </div>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -62,6 +70,7 @@
                     heading: "Product Stock",
                 },
                 products : [],
+                newBarcode : ''
             };
         },
         created(){
@@ -82,11 +91,38 @@
                 })
                 .catch((err) => this.fetchStock());
             },
+            updateBarcode(item) {
+                let vm = this;
+                vm.clearDataTable()
+                const data = {
+                    id : item.id,
+                    barcode : vm.newBarcode
+                }
+
+                axios
+                .post(this.api_url + "inventory/products/store/stocks/update-barcode", data)
+                .then((response) => {
+
+                    this.fetchStock();
+                    return swal({
+                        title: "Success",
+                        text: 'Barcode updated successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => this.fetchStock());
+            },
             dataTable() {
                 $("#stock_table").DataTable({
                     dom: "Bfrtip",
                     buttons: ["copy","csv","excel"],
                 });
+            },
+            clearDataTable() {
+                //
+                const table = $("#stock_table").DataTable();
+                table.destroy();
             },
         }
     }

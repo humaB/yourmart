@@ -1047,7 +1047,8 @@ __webpack_require__.r(__webpack_exports__);
       tableHeader: {
         heading: "Product Stock"
       },
-      products: []
+      products: [],
+      newBarcode: ''
     };
   },
   created: function created() {
@@ -1067,11 +1068,36 @@ __webpack_require__.r(__webpack_exports__);
         return _this.fetchStock();
       });
     },
+    updateBarcode: function updateBarcode(item) {
+      var _this2 = this;
+      var vm = this;
+      vm.clearDataTable();
+      var data = {
+        id: item.id,
+        barcode: vm.newBarcode
+      };
+      axios.post(this.api_url + "inventory/products/store/stocks/update-barcode", data).then(function (response) {
+        _this2.fetchStock();
+        return swal({
+          title: "Success",
+          text: 'Barcode updated successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        return _this2.fetchStock();
+      });
+    },
     dataTable: function dataTable() {
       $("#stock_table").DataTable({
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel"]
       });
+    },
+    clearDataTable: function clearDataTable() {
+      //
+      var table = $("#stock_table").DataTable();
+      table.destroy();
     }
   }
 });
@@ -2770,7 +2796,41 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.barcode ? item.barcode.barcode : "-"))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", {
+      attrs: {
+        width: "20%"
+      }
+    }, [item.barcode && item.barcode.barcode != "-" ? _c("div", [_vm._v("\n                                          " + _vm._s(item.barcode.barcode) + "\n                                        ")]) : _c("div", {
+      staticClass: "d-flex"
+    }, [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: _vm.newBarcode,
+        expression: "newBarcode"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text",
+        placeholder: "Enter barcode"
+      },
+      domProps: {
+        value: _vm.newBarcode
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.newBarcode = $event.target.value;
+        }
+      }
+    }), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-sm btn-primary",
+      on: {
+        click: function click($event) {
+          return _vm.updateBarcode(item);
+        }
+      }
+    }, [_vm._v("Update")])])])]);
   }), 0)])])])])])])], 1)])])]);
 };
 var staticRenderFns = [function () {

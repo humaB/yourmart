@@ -52,6 +52,19 @@ class StoreInwardController extends Controller
         ->setStatusCode(200);
     }
 
+    public function updateBarcode( Request $request ){
+    
+        ProductQrCode::updateOrCreate(
+            [
+                'product_variation_id' => $request->id,
+            ],
+            [
+                'barcode' => $request->barcode ?? '-',
+            ]
+        );
+        return ['message' => 'Successfully Updated'];
+    }
+
     public function pendingPO(){
 
         $data = PurchaseOrderDetail::whereColumn('quantity', '!=', 'store_received_quantity')

@@ -273,6 +273,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/product-inward',  [ StoreInwardController::class , 'inWard']);
 
             Route::get('/stocks',  [ StoreInwardController::class , 'fetchStock']);
+            Route::post('/stocks/update-barcode',  [ StoreInwardController::class , 'updateBarcode']);
 
             //Returns
             Route::get('/pending-returns',  [ CourierReturnController::class , 'pendingReturns']);
