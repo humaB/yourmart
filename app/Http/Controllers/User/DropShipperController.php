@@ -346,7 +346,6 @@ class DropShipperController extends Controller
             'code'       => $code,
             'account_id' =>  $second,
             'parent_id'  => $third,
-            'company_id'  => 0,
             'added_by'         => auth()->user()->id
         ]);
 
