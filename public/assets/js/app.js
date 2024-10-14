@@ -1241,8 +1241,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }, 0).toFixed(0) : 0;
     },
     totalNetProfit: function totalNetProfit() {
+      var _this3 = this;
       return this.details && this.details.items ? this.details.items.reduce(function (total, item) {
-        return total + (parseFloat(item.sell_price) - parseFloat(item.price) * item.quantity);
+        var advance = _this3.details.advance_amount;
+        var subTotal = _this3.details.total_bill - (_this3.details.courier_service_price + _this3.details.packaging_price);
+        var itemTotal = parseFloat(item.price) * item.quantity;
+        var advanceAmount = advance / subTotal * itemTotal;
+        return total + (parseFloat(item.sell_price) - (itemTotal + advanceAmount));
       }, 0).toFixed(0) : 0;
     }
   },

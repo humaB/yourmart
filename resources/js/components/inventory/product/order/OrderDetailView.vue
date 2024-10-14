@@ -583,7 +583,11 @@ export default {
         },
         totalNetProfit() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + (parseFloat(item.sell_price) - (( parseFloat(item.price) * item.quantity ))) ;
+                const advance = this.details.advance_amount;
+                const subTotal = this.details.total_bill - ( this.details.courier_service_price + this.details.packaging_price);
+                const itemTotal = parseFloat(item.price) * item.quantity;
+                const advanceAmount = (advance / subTotal) * itemTotal;
+                return total + (parseFloat(item.sell_price) - (( itemTotal + advanceAmount )) ) ;
             }, 0).toFixed(0) : 0;
         }
     },
