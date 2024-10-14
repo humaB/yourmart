@@ -257,7 +257,7 @@ class DropShipperController extends Controller
             $head_id = null;
 
             $checkUser = User::where("email", $dropshipper->email)->first();
-            if ($checkUser) {
+            if ($checkUser && $request->action == 'approve') {
                 return (new ValidationCollection(["This Email already registered with another account"]))
                     ->response()
                     ->setStatusCode(400);
