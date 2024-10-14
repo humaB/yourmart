@@ -1048,7 +1048,7 @@ __webpack_require__.r(__webpack_exports__);
         heading: "Product Stock"
       },
       products: [],
-      newBarcode: ''
+      newBarcodes: {}
     };
   },
   created: function created() {
@@ -1068,13 +1068,13 @@ __webpack_require__.r(__webpack_exports__);
         return _this.fetchStock();
       });
     },
-    updateBarcode: function updateBarcode(item) {
+    updateBarcode: function updateBarcode(item, newBarcode) {
       var _this2 = this;
       var vm = this;
       vm.clearDataTable();
       var data = {
         id: item.id,
-        barcode: vm.newBarcode
+        barcode: newBarcode
       };
       axios.post(this.api_url + "inventory/products/store/stocks/update-barcode", data).then(function (response) {
         _this2.fetchStock();
@@ -2796,18 +2796,18 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.barcode ? item.barcode.barcode : "-") + "\n                                    ")]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
-    }, [item.barcode && item.barcode.barcode != "-" ? _c("div", [_vm._v("\n                                          " + _vm._s(item.barcode.barcode) + "\n                                        ")]) : _c("div", {
+    }, [_c("div", {
       staticClass: "d-flex"
     }, [_c("input", {
       directives: [{
         name: "model",
         rawName: "v-model",
-        value: _vm.newBarcode,
-        expression: "newBarcode"
+        value: _vm.newBarcodes[item.id],
+        expression: "newBarcodes[item.id]"
       }],
       staticClass: "form-control",
       attrs: {
@@ -2815,19 +2815,19 @@ var render = function render() {
         placeholder: "Enter barcode"
       },
       domProps: {
-        value: _vm.newBarcode
+        value: _vm.newBarcodes[item.id]
       },
       on: {
         input: function input($event) {
           if ($event.target.composing) return;
-          _vm.newBarcode = $event.target.value;
+          _vm.$set(_vm.newBarcodes, item.id, $event.target.value);
         }
       }
     }), _vm._v(" "), _c("button", {
       staticClass: "btn btn-sm btn-primary",
       on: {
         click: function click($event) {
-          return _vm.updateBarcode(item);
+          return _vm.updateBarcode(item, _vm.newBarcodes[item.id]);
         }
       }
     }, [_vm._v("Update")])])])]);
@@ -2836,7 +2836,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Barcode")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Barcode")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

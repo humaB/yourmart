@@ -21,6 +21,7 @@
                                         <th>Avg Price</th>
                                         <th>Quantity</th>
                                         <th>Barcode</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -31,15 +32,20 @@
                                         <td>{{ item.product ? item.product.title : '-'}}</td>
                                         <td>{{ item.avg_price || 0 }}</td>
                                         <td>{{ item.stock }}</td>
-                                        <td width="20%">
-                                            <div v-if="item.barcode && item.barcode.barcode != '-'">
-                                              {{ item.barcode.barcode }}
-                                            </div>
-                                            <div class="d-flex" v-else>
-                                              <input type="text" class="form-control" v-model="newBarcode" placeholder="Enter barcode" />
-                                              <button class="btn btn-sm btn-primary" @click="updateBarcode(item)">Update</button>
-                                            </div>
+                                        <td>
+                                            {{ item.barcode ? item.barcode.barcode : '-' }}
                                         </td>
+                                        <td width="20%">
+                                            <div class="d-flex">
+                                              <input
+                                                type="text"
+                                                class="form-control"
+                                                v-model="newBarcodes[item.id]"
+                                                placeholder="Enter barcode"
+                                              />
+                                              <button class="btn btn-sm btn-primary" @click="updateBarcode(item, newBarcodes[item.id])">Update</button>
+                                            </div>
+                                          </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -70,7 +76,7 @@
                     heading: "Product Stock",
                 },
                 products : [],
-                newBarcode : ''
+                newBarcodes: {}
             };
         },
         created(){
@@ -91,12 +97,12 @@
                 })
                 .catch((err) => this.fetchStock());
             },
-            updateBarcode(item) {
+            updateBarcode(item, newBarcode) {
                 let vm = this;
                 vm.clearDataTable()
                 const data = {
                     id : item.id,
-                    barcode : vm.newBarcode
+                    barcode : newBarcode
                 }
 
                 axios
