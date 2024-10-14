@@ -195,7 +195,19 @@
                                                                 <td>{{ (parseFloat(item.quantity) * parseFloat(item.price)) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
                                                                 <td>{{ item.sell_price }}</td>
                                                                 <td>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
-                                                                <td>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) ) }}</td>
+                                                                <td>
+                                                                    {{
+                                                                      (parseFloat(item.sell_price)
+                                                                      - (
+                                                                          (parseFloat(item.quantity) * parseFloat(item.price))
+                                                                          + parseFloat(item.packaging_cost)
+                                                                          + parseFloat(item.courier_cost)
+                                                                          + ((details.advance_amount / (parseFloat(details.total_bill) - (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))))
+                                                                          * (parseFloat(item.price) * parseFloat(item.quantity)))
+                                                                        )
+                                                                      ).toFixed(0)
+                                                                    }}
+                                                                  </td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -584,10 +596,12 @@ export default {
         totalNetProfit() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 const advance = this.details.advance_amount;
-                const subTotal = this.details.total_bill - ( this.details.courier_service_price + this.details.packaging_price);
-                const itemTotal = parseFloat(item.price) * item.quantity;
+                const subTotal = parseFloat(this.details.total_bill) - ( parseFloat(this.details.courier_service_price) + parseFloat(this.details.packaging_price));
+                const itemTotal = parseFloat(item.price) * parseFloat(item.quantity);
                 const advanceAmount = (advance / subTotal) * itemTotal;
-                return total + (parseFloat(item.sell_price) - (( itemTotal + advanceAmount )) ) ;
+                console.log(advance, subTotal, itemTotal, advanceAmount);
+
+                return total + (parseFloat(item.sell_price) - ( itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + advanceAmount ) ) ;
             }, 0).toFixed(0) : 0;
         }
     },
