@@ -211,7 +211,15 @@ class DropShipperController extends Controller
             ->where('belongs_to', $dropshipper->user_id)
             ->whereIn('status', [8, 9, 10])
             ->whereColumn('total_profit', '!=', 'total_paid_profit')
-            ->get();
+            ->get()
+            ->sortBy(function($order) {
+                // Calculate the order profit
+                $orderProfit = $order->total_profit - $order->total_paid_profit;
+
+                // Prioritize negative profits by returning them as lower values
+                return $orderProfit < 0 ? 0 : 1; // Return 0 for negative profits, 1 for positive or zero profits
+            })->values(); // Reset the keys to make it a proper collection
+
 
         $ledger = new AccountHeadHelper();
 
@@ -259,6 +267,19 @@ class DropShipperController extends Controller
 
             // Calculate the amount to pay for this order
             $orderProfit = $order->total_profit - $order->total_paid_profit;
+
+            // If the orderProfit is negative, the customer owes money
+            if ($orderProfit < 0) {
+                // Increase remainingAmount by the amount the customer owes (i.e., the absolute value of the negative profit)
+                $remainingAmount += abs($orderProfit);
+                // Shop Debit
+                $ledger->accountTransaction($head_id, $request->from_account, $orderProfit, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
+                // Optionally update other fields, such as remaining amounts for dropshipper/shop, if required
+                $order->increment('total_paid_profit', $orderProfit);
+
+                continue; // Skip further processing for this order, as no payment can be made
+            }
+
             if ($remainingAmount <= 0) {
                 // If no remaining amount, exit the loop
                 break;
@@ -273,9 +294,6 @@ class DropShipperController extends Controller
                 // Shop Debit
                 $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
 
-                // Bank Cash Credit
-                $ledger->accountTransaction($request->from_account, $head_id, 0, $amountToPay, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
-
                 // Update totals
                 $dropshipper->increment('total_paid', $amountToPay);
                 $shop->increment('total_paid', $amountToPay);
@@ -287,6 +305,10 @@ class DropShipperController extends Controller
                 $remainingAmount -= $amountToPay;
             }
         }
+
+        // Bank Cash Credit
+        $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
+
         return response()->json([], 200);
     }
 

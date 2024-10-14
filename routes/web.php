@@ -168,7 +168,11 @@ Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
 
 
 Route::get('/test', function(){
-    return Hash::make('123456');
+     $amountToPay = min(-60, 725);
+      // Only proceed if there is an amount to pay
+      if (-60 > 0) {
+        return "asd";
+      }
 });
 
 
