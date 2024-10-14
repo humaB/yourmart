@@ -99,6 +99,21 @@
                                 <br>
                                 <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
                               </div>
+                              <div class="col-md-3 col-6">
+                                <strong>Total Payable</strong>
+                                <br>
+                                <h5 class="text-muted">{{ formatPrice( details.total_payable ) }}</h5>
+                              </div>
+                              <div class="col-md-3 col-6">
+                                <strong>Total Paid</strong>
+                                <br>
+                                <h5 class="text-muted">{{ formatPrice( details.total_paid ) }}</h5>
+                              </div>
+                              <div class="col-md-3 col-6">
+                                <strong>Remaining Balance</strong>
+                                <br>
+                                <h5 class="text-muted">{{ formatPrice( details.remaining_amount )}}</h5>
+                              </div>
 
                     </div>
 
@@ -170,6 +185,12 @@ export default {
           };
       },
     methods : {
+        formatPrice(price) {
+            var string = parseFloat(price).toString();
+            return string
+                .replace(/,/g, "")
+                .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        },
       add(){
         this.$emit('add')
       },

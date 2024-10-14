@@ -106,13 +106,13 @@
                                                     <div class="row">
                                                         <div class="col-md-12 text-right row">
                                                             <div class="col-md-6">
-                                                               <h5> <strong>Total Amount:</strong></h5>
+                                                               <h5> <strong>Total Order Amount:</strong></h5>
                                                             </div>
                                                             <div class="col-md-6">
                                                                 <h5>{{ formatPrice(details.total_bill) }}</h5>
                                                             </div>
                                                             <div class="col-md-6">
-                                                                <h5> <strong>Paid Amount:</strong></h5>
+                                                                <h5> <strong>Total Received Amount:</strong></h5>
                                                              </div>
                                                              <div class="col-md-6">
                                                                  <h5>{{ formatPrice(details.paid_amount) }}</h5>
@@ -129,6 +129,13 @@
                                                              </div>
                                                              <div class="col-md-6 border-top border-1" v-if="details.type == 'Normal'">
                                                                  <h5>{{  formatPrice(details.selling_price) }}</h5>
+                                                             </div>
+
+                                                             <div class="col-md-6 border-top border-1" v-if="details.type == 'Normal'">
+                                                                <h5> <strong>Advance Amount:</strong></h5>
+                                                             </div>
+                                                             <div class="col-md-6 border-top border-1" v-if="details.type == 'Normal'">
+                                                                 <h5>{{  formatPrice(details.advance_amount) }}</h5>
                                                              </div>
                                                              <div class="col-md-6" v-if="details.type == 'Normal'">
                                                                 <h5> <strong>Final Total After Delivery (Advance included):</strong></h5>
@@ -159,6 +166,7 @@
                                                                 <th>Shipping</th>
                                                                 <th>Total Cost</th>
                                                                 <th>Sell Price</th>
+                                                                <th>Total Payable</th>
                                                                 <th>Net Profit</th>
                                                             </tr>
                                                         </thead>
@@ -187,6 +195,7 @@
                                                                 <td>{{ (parseFloat(item.quantity) * parseFloat(item.price)) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
                                                                 <td>{{ item.sell_price }}</td>
                                                                 <td>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
+                                                                <td>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) ) }}</td>
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -199,6 +208,7 @@
                                                                 <td class="h5">{{ totalCourierCost }}</td>
                                                                 <td class="h5">{{ totalBasePrice }}</td>
                                                                 <td class="h5">{{ totalSellPrice }}</td>
+                                                                <td class="h5">{{ totalPaybale }}</td>
                                                                 <td class="h5">{{ totalNetProfit }}</td>
                                                             </tr>
                                                         </tfoot>
@@ -566,9 +576,14 @@ export default {
                 return total + parseFloat(item.sell_price);
             }, 0).toFixed(0) : 0;
         },
-        totalNetProfit() {
+        totalPaybale() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
                 return total + (parseFloat(item.sell_price) - (( parseFloat(item.price) * item.quantity ) +parseFloat(item.courier_cost) + parseFloat(item.packaging_cost) )) ;
+            }, 0).toFixed(0) : 0;
+        },
+        totalNetProfit() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + (parseFloat(item.sell_price) - (( parseFloat(item.price) * item.quantity ))) ;
             }, 0).toFixed(0) : 0;
         }
     },
