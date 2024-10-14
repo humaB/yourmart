@@ -4337,13 +4337,13 @@ var render = function render() {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
-  }, [_c("strong", [_vm._v("Account Number:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
-    staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.account_number || "N/A"))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Account Title")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.details.account_title || "N/A"))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Account Number:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.account_number || "N/A"))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Account IBAN")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"

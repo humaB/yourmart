@@ -25,8 +25,12 @@ Vue.component("v-select", vSelect);
 
 Vue.component('dashboard-page', require('./pages/DashboardPage.vue').default );
 Vue.component('users-page', require('./pages/admin/user/UserPage.vue').default );
+
+
 Vue.component('dropshipper-requests', require('./pages/admin/request/DropShipperRequestPage.vue').default );
 Vue.component('dropshipper-order-page', require('./pages/admin/user/DropShipperOrderPage.vue').default );
+Vue.component('dropshipper-payouts-page', require('./pages/admin/user/DropShipperPayOutPage.vue').default );
+
 Vue.component('supplier-requests', require('./pages/admin/request/SupplierRequestPage.vue').default );
 Vue.component('courier-page', require('./pages/inventory/product/setting/CourierPage.vue').default );
 Vue.component('page-setting-page', require('./pages/pages/PageSettingPage.vue').default );

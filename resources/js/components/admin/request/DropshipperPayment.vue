@@ -67,6 +67,39 @@
                             </div>
                         </div>
 
+                        <div class="col-md-12">
+                            <h5>Account Information</h5>
+                            <hr>
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                            <strong>Bank Name:</strong>
+                            <br>
+                            <p class="text-muted">{{ details.bank ? details.bank.name : '-' }}</p>
+                          </div>
+
+                          <div class="col-md-3 col-6">
+                              <strong>Account Number:</strong>
+                              <br>
+                              <p class="text-muted">{{ details.account_number || 'N/A' }}</p>
+                            </div>
+
+                            <div class="col-md-3 col-6">
+                              <strong>Account Title</strong>
+                              <br>
+                              <p class="text-muted">{{ details.account_title || 'N/A' }}</p>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <strong>Account IBAN</strong>
+                                <br>
+                                <p class="text-muted">{{ details.account_iban || 'N/A' }}</p>
+                              </div>
+                              <div class="col-md-3 col-6">
+                                <strong>Payment Cycle</strong>
+                                <br>
+                                <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
+                              </div>
+
                     </div>
 
                     <div class=" py-1">

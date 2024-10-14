@@ -9,15 +9,15 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="card-icon l-bg-purple">
-                                    <i class="fas fa-chart-pie"></i>
+                                    <i class="fa fa-hand-holding-usd"></i>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="padding-20">
                                         <div class="text-right">
                                             <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ totalRequest }}
+                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPayable) }}
                                             </h3>
-                                            <span class="text-muted">Total Request's</span>
+                                            <span class="text-muted">Total Payouts</span>
                                         </div>
                                     </div>
                                 </div>
@@ -26,15 +26,15 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="card-icon l-bg-green">
-                                    <i class="fas fa-spinner"></i>
+                                    <i class="fa fa-thumbs-up"></i>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="padding-20">
                                         <div class="text-right">
                                             <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ pendingRequest }}
+                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid) }}
                                             </h3>
-                                            <span class="text-muted">Pending</span>
+                                            <span class="text-muted">Total Paid</span>
                                         </div>
                                     </div>
                                 </div>
@@ -43,15 +43,16 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="card-icon l-bg-cyan">
-                                    <i class="fas fa-thumbs-up"></i>
+                                    <i class="fa fa-calculator"></i>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="padding-20">
                                         <div class="text-right">
                                             <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ approvedRequest }}
+                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalRemaining)
+                                                }}
                                             </h3>
-                                            <span class="text-muted">Approved</span>
+                                            <span class="text-muted">Total Remaining</span>
                                         </div>
                                     </div>
                                 </div>
@@ -60,46 +61,20 @@
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="card-icon l-bg-orange">
-                                    <i class="fas fa-thumbs-down"></i>
+                                    <i class="fa fa-clipboard-list"></i>
                                 </div>
                                 <div class="card-wrap">
                                     <div class="padding-20">
                                         <div class="text-right">
                                             <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ rejectedRequest }}
+                                                <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
                                             </h3>
-                                            <span class="text-muted">Rejected</span>
+                                            <span class="text-muted">Total Sellers</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <form @submit.prevent="applyFilter" class="row col-md-12">
-                            <div class="col-md-3">
-                                <label for="">Select Status</label>
-                                <select v-model="filter.status" class="form-control">
-                                    <option value="">Select from the following</option>
-                                    <option value="0">Pending</option>
-                                    <option value="1">Approved</option>
-                                    <option value="2">Rejected</option>
-                                    <option value="3">Deactivated</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <label for="">From</label>
-                                <input type="date" v-model="filter.from" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="">To</label>
-                                <input type="date" v-model="filter.to" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="">Action</label><br>
-                                <button class="btn btn-primary mr-2 btn-block" @click="applyFilter">Filter</button>
-                                <button class="btn btn-danger btn-block" @click="resetFilter">Reset</button>
-                            </div>
-                        </form>
                     </div>
 
                     <div class="card-body row">
@@ -127,17 +102,6 @@
                                                         <td>{{ formatPrice(item.total_payable) }}</td>
                                                         <td>{{ formatPrice(item.total_paid) }}</td>
                                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                                        <td>
-                                                            <span v-if="item.status == 0"
-                                                                class="badge badge-warning">Pending</span>
-                                                            <span v-if="item.status == 1"
-                                                                class="badge badge-success">Approved</span>
-                                                            <span v-if="item.status == 2"
-                                                                class="badge badge-danger">Rejected</span>
-                                                            <span v-if="item.status == 3"
-                                                                class="badge badge-danger">Deactivated</span>
-                                                        </td>
-                                                        <td>{{ formatDate(item.created_at) }}</td>
                                                         <td width="20%">
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                 data-toggle="modal" data-target="#dropShipperDetail"
@@ -151,7 +115,7 @@
                                                             <button class="btn btn-primary"
                                                                 @click="paymentHistory(item.id)" data-toggle="modal"
                                                                 data-target="#dropshipperHistory" title="Payment"><i
-                                                                    class="far fa-clock"></i></button>
+                                                                        class="far fa-clock"></i></button>
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -171,9 +135,10 @@
         <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)" />
 
         <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
-            :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
+            :details="details" :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
 
         <DropshipperPaymentHistory
+            :selectedDropshipper="selectedDropshipper"
             :history="paymentHistorys"
         />
 
@@ -194,7 +159,7 @@ import DropshipperPayment from "../../../components/admin/request/DropshipperPay
 import DropshipperPaymentHistory from "../../../components/admin/request/DropshipperPaymentHistory.vue";
 
 export default {
-    name: 'DropShipperRequestPage',
+    name: 'DropShipperPayOutPage',
     components: {
         TableHeader,
         BulletListLoader,
@@ -207,12 +172,10 @@ export default {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             api_url: window.location.origin + process.env.MIX_API_URL,
             tableHeader: {
-                heading: "Dropshipper Request's",
+                heading: "Dropshipper Pay outs",
             },
-            th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
+            th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
             table_id: "moq_table",
-            guestQuantity: 0,
-            registeredQuantity: 0,
             btnLoader: false,
             records: [],
             orders: [],
@@ -220,12 +183,10 @@ export default {
             accountCash: [],
             loader: true,
             details: {},
-            activeStatus: '',
-            editDetails: {},
-            totalRequest: 0,
-            pendingRequest: 0,
-            approvedRequest: 0,
-            rejectedRequest: 0,
+            totalPayable: 0,
+            totalPaid: 0,
+            totalRemaining: 0,
+            remainingDropshippers: 0,
             id: '',
             filter: {
                 status: '',
@@ -267,65 +228,22 @@ export default {
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },
-        decision(data) {
-            let vm = this;
-
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "dropshippers/decisions", data)
-                .then((response) => {
-                    vm.fetchRecord();
-                    $(".modal").click();
-                    this.btnLoader = false;
-                    return swal({
-                        title: "Success",
-                        text: 'Decision Made Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                }).catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
         fetchRecord() {
             let vm = this;
 
             vm.loader = false;
             axios
-                .get(this.api_url + "dropshippers", {
-                    params: {
-                        status: vm.filter.status,
-                        from: vm.filter.from,
-                        to: vm.filter.to,
-                    },
-                })
-                .then((response) => {
-                    vm.records = response.data.response
-
-
-                    // Calculate request statistics
-                    vm.totalRequest = vm.records.length;
-                    vm.pendingRequest = vm.records.filter(record => record.status === 0).length;
-                    vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
-                    vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
-
-
-                });
-        },
-        paymentHistory( id ){
-            let vm = this;
-            vm.selectedDropshipper = id;
-            axios
-                .post(this.api_url + "dropshippers/payments/history", { id: id })
+                .get(this.api_url + "dropshippers/pay-outs")
                 .then((response) => {
                     const results = response.data.response
-                    vm.paymentHistorys = results
+
+                    // Calculate request statistics
+                    vm.totalPayable = results.total_payable;
+                    vm.totalPaid = results.total_paid;
+                    vm.totalRemaining = results.total_remaining;
+                    vm.remainingDropshippers = results.remaining_dropshippers;
+
+                    vm.records = results.dropshippers;
                 });
         },
         fetchDetail(id, status) {
@@ -355,7 +273,6 @@ export default {
         },
         paymentDetail(id) {
             let vm = this;
-            vm.activeStatus = status;
 
             vm.selectedDropshipper = id;
             axios
@@ -365,6 +282,17 @@ export default {
                     vm.orders = results.orders
                     vm.accountBanks = results.banks
                     vm.accountCash = results.cash
+                    vm.details = results.dropshipper
+                });
+        },
+        paymentHistory( id ){
+            let vm = this;
+            vm.selectedDropshipper = id;
+            axios
+                .post(this.api_url + "dropshippers/payments/history", { id: id })
+                .then((response) => {
+                    const results = response.data.response
+                    vm.paymentHistorys = results
                 });
         },
         addPayment() {
@@ -384,16 +312,21 @@ export default {
             axios
                 .post(this.api_url + "dropshippers/payments/add", this.addData)
                 .then((response) => {
-                    swal({
+
+                    this.$refs.dropshipperPayment.paymentShopPayments(this.addData.shop_id);
+                    this.addData = JSON.parse(JSON.stringify(this.addDataReset));
+
+                    this.paymentLoader = false;
+
+                    this.paymentDetail(this.selectedDropshipper);
+                    this.fetchRecord();
+
+                    return swal({
                         title: "Success",
                         text: 'Saved',
                         icon: "success",
                         timer: 3000,
                     });
-                    this.$refs.dropshipperPayment.paymentShopPayments(this.addData.shop_id);
-                    this.addData = JSON.parse(JSON.stringify(this.addDataReset));
-
-                    this.paymentLoader = false;
                 });
         },
         dataTable() {

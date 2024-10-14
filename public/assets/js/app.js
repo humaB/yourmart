@@ -330,6 +330,68 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'DropshipperPaymentHistory',
+  props: ['history', 'selectedDropshipper'],
+  data: function data() {
+    return {
+      public_url: window.location.origin + "",
+      id: '',
+      csrf: ''
+    };
+  },
+  created: function created() {
+    this.csrf = $('meta[name=csrf-token]').attr('content');
+  },
+  computed: {
+    groupedData: function groupedData() {
+      var grouped = {};
+      this.history.forEach(function (payment) {
+        var documentId = payment.document_id;
+        if (!grouped[documentId]) {
+          grouped[documentId] = {
+            document_id: documentId,
+            total_debit: 0,
+            shop_orders: [],
+            created_at: payment.created_at
+          };
+        }
+        grouped[documentId].total_debit += parseFloat(payment.debit);
+        grouped[documentId].shop_orders.push({
+          store_name: payment.order.shop.store_name,
+          order_no: payment.order.order_no
+        });
+      });
+      return Object.values(grouped);
+    }
+  },
+  methods: {
+    formatDate: function formatDate(date) {
+      return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
+    },
+    printRequest: function printRequest(id) {
+      this.id = id;
+      var form = this.$refs.paymentHistory;
+      setTimeout(function () {
+        form.submit();
+      }, 500);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/SupplierDetails.vue?vue&type=script&lang=js":
 /*!***********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/SupplierDetails.vue?vue&type=script&lang=js ***!
@@ -1849,12 +1911,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
 /* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
 /* harmony import */ var _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperPayment.vue */ "./resources/js/components/admin/request/DropshipperPayment.vue");
+/* harmony import */ var _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperPaymentHistory.vue */ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue");
+
 
 
 
@@ -1864,9 +1928,10 @@ __webpack_require__.r(__webpack_exports__);
   name: 'DropShipperRequestPage',
   components: {
     TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_4__.BulletListLoader,
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_5__.BulletListLoader,
     DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    DropshipperPayment: _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
+    DropshipperPayment: _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    DropshipperPaymentHistory: _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
   },
   data: function data() {
     return {
@@ -1913,7 +1978,8 @@ __webpack_require__.r(__webpack_exports__);
         id: ''
       },
       paymentLoader: false,
-      selectedDropshipper: ''
+      selectedDropshipper: '',
+      paymentHistorys: []
     };
   },
   created: function created() {
@@ -1983,6 +2049,16 @@ __webpack_require__.r(__webpack_exports__);
         vm.rejectedRequest = vm.records.filter(function (record) {
           return record.status === 2;
         }).length;
+      });
+    },
+    paymentHistory: function paymentHistory(id) {
+      var vm = this;
+      vm.selectedDropshipper = id;
+      axios.post(this.api_url + "dropshippers/payments/history", {
+        id: id
+      }).then(function (response) {
+        var results = response.data.response;
+        vm.paymentHistorys = results;
       });
     },
     fetchDetail: function fetchDetail(id, status) {
@@ -2292,6 +2368,212 @@ __webpack_require__.r(__webpack_exports__);
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
       table.destroy();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
+/* harmony import */ var _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperPayment.vue */ "./resources/js/components/admin/request/DropshipperPayment.vue");
+/* harmony import */ var _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperPaymentHistory.vue */ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue");
+
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'DropShipperPayOutPage',
+  components: {
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_5__.BulletListLoader,
+    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    DropshipperPayment: _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    DropshipperPaymentHistory: _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  data: function data() {
+    return {
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
+      tableHeader: {
+        heading: "Dropshipper Pay outs"
+      },
+      th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+      table_id: "moq_table",
+      btnLoader: false,
+      records: [],
+      orders: [],
+      accountBanks: [],
+      accountCash: [],
+      loader: true,
+      details: {},
+      totalPayable: 0,
+      totalPaid: 0,
+      totalRemaining: 0,
+      remainingDropshippers: 0,
+      id: '',
+      filter: {
+        status: '',
+        from: '',
+        to: ''
+      },
+      addData: {
+        shop_id: {
+          code: 0,
+          label: "Select from the following"
+        },
+        type: null,
+        from_account: {
+          code: 0,
+          label: "Select from the following"
+        },
+        amount: null,
+        narration: null,
+        id: ''
+      },
+      paymentLoader: false,
+      selectedDropshipper: '',
+      paymentHistorys: []
+    };
+  },
+  created: function created() {
+    this.csrf = $('meta[name=csrf-token]').attr('content');
+    this.fetchRecord();
+    this.addDataReset = JSON.parse(JSON.stringify(this.addData));
+  },
+  methods: {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    printRequest: function printRequest(id) {
+      this.id = id;
+      var form = this.$refs.requestForm;
+      setTimeout(function () {
+        form.submit();
+      }, 500);
+    },
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
+    },
+    fetchRecord: function fetchRecord() {
+      var vm = this;
+      vm.loader = false;
+      axios.get(this.api_url + "dropshippers/pay-outs").then(function (response) {
+        var results = response.data.response;
+
+        // Calculate request statistics
+        vm.totalPayable = results.total_payable;
+        vm.totalPaid = results.total_paid;
+        vm.totalRemaining = results.total_remaining;
+        vm.remainingDropshippers = results.remaining_dropshippers;
+        vm.records = results.dropshippers;
+      });
+    },
+    fetchDetail: function fetchDetail(id, status) {
+      var vm = this;
+      vm.activeStatus = status;
+      axios.post(this.api_url + "dropshippers/details", {
+        id: id
+      }).then(function (response) {
+        vm.details = response.data.response[0];
+      });
+    },
+    applyFilter: function applyFilter() {
+      this.clearDataTable();
+      this.fetchRecord();
+    },
+    resetFilter: function resetFilter() {
+      var vm = this;
+      vm.filter = {
+        status: '',
+        from: '',
+        to: ''
+      };
+      this.clearDataTable();
+      this.fetchRecord();
+    },
+    paymentDetail: function paymentDetail(id) {
+      var vm = this;
+      vm.selectedDropshipper = id;
+      axios.post(this.api_url + "dropshippers/payments/data", {
+        id: id
+      }).then(function (response) {
+        var results = response.data.response;
+        vm.orders = results.orders;
+        vm.accountBanks = results.banks;
+        vm.accountCash = results.cash;
+        vm.details = results.dropshipper;
+      });
+    },
+    paymentHistory: function paymentHistory(id) {
+      var vm = this;
+      vm.selectedDropshipper = id;
+      axios.post(this.api_url + "dropshippers/payments/history", {
+        id: id
+      }).then(function (response) {
+        var results = response.data.response;
+        vm.paymentHistorys = results;
+      });
+    },
+    addPayment: function addPayment() {
+      var _this = this;
+      if (this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
+        return swal({
+          title: "Error",
+          text: 'Please fill all field',
+          icon: "error",
+          timer: 3000
+        });
+      }
+      this.paymentLoader = true;
+      this.addData.id = this.selectedDropshipper;
+      axios.post(this.api_url + "dropshippers/payments/add", this.addData).then(function (response) {
+        _this.$refs.dropshipperPayment.paymentShopPayments(_this.addData.shop_id);
+        _this.addData = JSON.parse(JSON.stringify(_this.addDataReset));
+        _this.paymentLoader = false;
+        _this.paymentDetail(_this.selectedDropshipper);
+        _this.fetchRecord();
+        return swal({
+          title: "Success",
+          text: 'Saved',
+          icon: "success",
+          timer: 3000
+        });
+      });
+    },
+    dataTable: function dataTable() {
+      $("#moq_table").DataTable();
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $("#moq_table").DataTable();
+      table.destroy();
+    }
+  },
+  watch: {
+    records: function records(newLedger) {
+      setTimeout(function () {
+        $("#moq_table").DataTable({
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel"]
+        });
+      }, 300);
     }
   }
 });
@@ -3305,13 +3587,13 @@ var render = function render() {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
-  }, [_c("strong", [_vm._v("Account Number:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
-    staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.account_number || "N/A"))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Account Title")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.details.account_title || "N/A"))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Account Number:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.account_number || "N/A"))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Account IBAN")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
@@ -3978,11 +4260,31 @@ var render = function render() {
         _vm.$set(_vm.addData, "narration", $event.target.value);
       }
     }
-  })])])]), _vm._v(" "), _c("div", {
+  })])]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Bank Name:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Account Number:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.account_number || "N/A"))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Account Title")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.account_title || "N/A"))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Account IBAN")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.account_iban || "N/A"))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6"
+  }, [_c("strong", [_vm._v("Payment Cycle")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])]), _vm._v(" "), _c("div", {
     staticClass: "py-1"
   }, [_c("table", {
     staticClass: "table"
-  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
+  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(item.shop.store_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.advance_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid_profit))])]);
@@ -4072,7 +4374,144 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Account Information")]), _vm._v(" "), _c("hr")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Shop Name")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6 ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "dropshipperHistory",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "dropshipperHistoryTitle",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered modal-xl",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.groupedData, function (group, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.document_id))]), _vm._v(" "), _c("td", _vm._l(group.shop_orders, function (shopOrder, shopIndex) {
+      return _c("span", {
+        key: shopIndex
+      }, [_vm._v("\n                                        " + _vm._s(shopOrder.store_name.substring(0, 3) + "-" + shopOrder.order_no) + "\n                                        "), shopIndex < group.shop_orders.length - 1 ? _c("br") : _vm._e()]);
+    }), 0), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.total_debit.toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(group.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-dark",
+      on: {
+        click: function click($event) {
+          return _vm.printRequest(group.document_id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-print"
+    })])])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c("form", {
+    ref: "paymentHistory",
+    attrs: {
+      method: "POST",
+      action: _vm.public_url + "/dropshippers/payment-history",
+      target: "_blank"
+    }
+  }, [_c("input", {
+    attrs: {
+      type: "hidden",
+      name: "_token"
+    },
+    domProps: {
+      value: _vm.csrf
+    }
+  }), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "hidden",
+      name: "document"
+    },
+    domProps: {
+      value: _vm.id
+    }
+  }), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "hidden",
+      name: "dropshipper"
+    },
+    domProps: {
+      value: _vm.selectedDropshipper
+    }
+  })])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Payment History")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Receipt #")]), _vm._v(" "), _c("th", [_vm._v("Against Order")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -7983,7 +8422,7 @@ var render = function render() {
       staticClass: "badge badge-danger"
     }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
       attrs: {
-        width: "200"
+        width: "20%"
       }
     }, [_c("button", {
       staticClass: "btn btn-info",
@@ -8025,6 +8464,20 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fas fa-credit-card"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropshipperHistory",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentHistory(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "far fa-clock"
     })])])]);
   }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
@@ -8047,6 +8500,10 @@ var render = function render() {
     },
     on: {
       add: _vm.addPayment
+    }
+  }), _vm._v(" "), _c("DropshipperPaymentHistory", {
+    attrs: {
+      history: _vm.paymentHistorys
     }
   }), _vm._v(" "), _c("form", {
     ref: "requestForm",
@@ -8323,6 +8780,278 @@ var render = function render() {
   })], 1);
 };
 var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=template&id=436620e8":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=template&id=436620e8 ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card card-primary"
+  }, [_c("TableHeader", {
+    attrs: {
+      tableHeader: _vm.tableHeader
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "row px-4"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPayable)) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Sellers")])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    ref: "datatable",
+    staticClass: "table table-bordered",
+    attrs: {
+      id: _vm.table_id
+    }
+  }, [_c("thead", [_c("tr", _vm._l(_vm.th, function (item, index) {
+    return _c("th", {
+      key: item
+    }, [_vm._v(_vm._s(item))]);
+  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", {
+      attrs: {
+        width: "20%"
+      }
+    }, [_c("button", {
+      staticClass: "btn btn-info",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropShipperDetail",
+        title: "View Details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetail(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-dark",
+      attrs: {
+        title: "Print"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.printRequest(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-print"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropShipperPayment",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentDetail(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fas fa-credit-card"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropshipperHistory",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentHistory(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "far fa-clock"
+    })])])]);
+  }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("DropshipperDetails", {
+    attrs: {
+      details: _vm.details,
+      loader: _vm.btnLoader
+    },
+    on: {
+      decision: function decision($event) {
+        return _vm.decision($event);
+      }
+    }
+  }), _vm._v(" "), _c("DropshipperPayment", {
+    ref: "dropshipperPayment",
+    attrs: {
+      orders: _vm.orders,
+      addData: _vm.addData,
+      loader: _vm.paymentLoader,
+      details: _vm.details,
+      accountCash: _vm.accountCash,
+      accountBanks: _vm.accountBanks
+    },
+    on: {
+      add: _vm.addPayment
+    }
+  }), _vm._v(" "), _c("DropshipperPaymentHistory", {
+    attrs: {
+      selectedDropshipper: _vm.selectedDropshipper,
+      history: _vm.paymentHistorys
+    }
+  }), _vm._v(" "), _c("form", {
+    ref: "requestForm",
+    attrs: {
+      method: "POST",
+      action: _vm.public_url + "/requests/dropshippers/pdf",
+      target: "_blank"
+    }
+  }, [_c("input", {
+    attrs: {
+      type: "hidden",
+      name: "_token"
+    },
+    domProps: {
+      value: _vm.csrf
+    }
+  }), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "hidden",
+      name: "id"
+    },
+    domProps: {
+      value: _vm.id
+    }
+  })])], 1);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fa fa-hand-holding-usd"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fa fa-thumbs-up"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-calculator"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fa fa-clipboard-list"
+  })]);
+}];
 render._withStripped = true;
 
 
@@ -34714,6 +35443,45 @@ component.options.__file = "resources/js/components/admin/request/DropshipperPay
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/admin/request/DropshipperPaymentHistory.vue ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DropshipperPaymentHistory_vue_vue_type_template_id_6ca681f6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6 */ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6");
+/* harmony import */ var _DropshipperPaymentHistory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropshipperPaymentHistory.vue?vue&type=script&lang=js */ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DropshipperPaymentHistory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DropshipperPaymentHistory_vue_vue_type_template_id_6ca681f6__WEBPACK_IMPORTED_MODULE_0__.render,
+  _DropshipperPaymentHistory_vue_vue_type_template_id_6ca681f6__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/request/DropshipperPaymentHistory.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/request/SupplierDetails.vue":
 /*!*******************************************************************!*\
   !*** ./resources/js/components/admin/request/SupplierDetails.vue ***!
@@ -35504,6 +36272,45 @@ component.options.__file = "resources/js/pages/admin/user/DropShipperOrderPage.v
 
 /***/ }),
 
+/***/ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue":
+/*!*****************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperPayOutPage.vue ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DropShipperPayOutPage_vue_vue_type_template_id_436620e8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropShipperPayOutPage.vue?vue&type=template&id=436620e8 */ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=template&id=436620e8");
+/* harmony import */ var _DropShipperPayOutPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropShipperPayOutPage.vue?vue&type=script&lang=js */ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DropShipperPayOutPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DropShipperPayOutPage_vue_vue_type_template_id_436620e8__WEBPACK_IMPORTED_MODULE_0__.render,
+  _DropShipperPayOutPage_vue_vue_type_template_id_436620e8__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/admin/user/DropShipperPayOutPage.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/pages/admin/user/UserPage.vue":
 /*!****************************************************!*\
   !*** ./resources/js/pages/admin/user/UserPage.vue ***!
@@ -35783,6 +36590,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPayment_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperPayment.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPayment.vue?vue&type=script&lang=js");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPayment_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPaymentHistory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperPaymentHistory.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPaymentHistory_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -36106,6 +36929,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperPayOutPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperPayOutPage.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperPayOutPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/pages/admin/user/UserPage.vue?vue&type=script&lang=js":
 /*!****************************************************************************!*\
   !*** ./resources/js/pages/admin/user/UserPage.vue?vue&type=script&lang=js ***!
@@ -36249,6 +37088,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPayment_vue_vue_type_template_id_d0cbc282_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPayment_vue_vue_type_template_id_d0cbc282_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperPayment.vue?vue&type=template&id=d0cbc282&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPayment.vue?vue&type=template&id=d0cbc282&scoped=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6 ***!
+  \***********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPaymentHistory_vue_vue_type_template_id_6ca681f6__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPaymentHistory_vue_vue_type_template_id_6ca681f6__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperPaymentHistory_vue_vue_type_template_id_6ca681f6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperPaymentHistory.vue?vue&type=template&id=6ca681f6");
 
 
 /***/ }),
@@ -36589,6 +37445,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperOrderPage_vue_vue_type_template_id_3d0658f6__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperOrderPage_vue_vue_type_template_id_3d0658f6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperOrderPage.vue?vue&type=template&id=3d0658f6 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperOrderPage.vue?vue&type=template&id=3d0658f6");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=template&id=436620e8":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=template&id=436620e8 ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperPayOutPage_vue_vue_type_template_id_436620e8__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperPayOutPage_vue_vue_type_template_id_436620e8__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperPayOutPage_vue_vue_type_template_id_436620e8__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperPayOutPage.vue?vue&type=template&id=436620e8 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperPayOutPage.vue?vue&type=template&id=436620e8");
 
 
 /***/ }),
@@ -57563,6 +58436,7 @@ Vue.component('dashboard-page', (__webpack_require__(/*! ./pages/DashboardPage.v
 Vue.component('users-page', (__webpack_require__(/*! ./pages/admin/user/UserPage.vue */ "./resources/js/pages/admin/user/UserPage.vue")["default"]));
 Vue.component('dropshipper-requests', (__webpack_require__(/*! ./pages/admin/request/DropShipperRequestPage.vue */ "./resources/js/pages/admin/request/DropShipperRequestPage.vue")["default"]));
 Vue.component('dropshipper-order-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperOrderPage.vue */ "./resources/js/pages/admin/user/DropShipperOrderPage.vue")["default"]));
+Vue.component('dropshipper-payouts-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperPayOutPage.vue */ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue")["default"]));
 Vue.component('supplier-requests', (__webpack_require__(/*! ./pages/admin/request/SupplierRequestPage.vue */ "./resources/js/pages/admin/request/SupplierRequestPage.vue")["default"]));
 Vue.component('courier-page', (__webpack_require__(/*! ./pages/inventory/product/setting/CourierPage.vue */ "./resources/js/pages/inventory/product/setting/CourierPage.vue")["default"]));
 Vue.component('page-setting-page', (__webpack_require__(/*! ./pages/pages/PageSettingPage.vue */ "./resources/js/pages/pages/PageSettingPage.vue")["default"]));

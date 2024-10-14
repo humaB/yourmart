@@ -26,6 +26,9 @@
         <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}" >
             <a href="{{ route('inventory.products.orders') }}" class="nav-link"><i class="fa fa-book" aria-hidden="true"></i><span>Orders</span></a>
         </li>
+        <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}" >
+            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's</span></a>
+        </li>
 
     </ul>
 

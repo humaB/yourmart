@@ -89,9 +89,12 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::get('/orders',  [ DropShipperController::class , 'orders']);
     Route::post('/shops/payments',  [ DropShipperController::class , 'shopPayments']);
 
+    Route::get('/pay-outs',  [ DropShipperController::class , 'pendingPayouts']);
+
     Route::group(['prefix' => 'payments'], function(){
         Route::post('/data',  [ DropShipperController::class , 'paymentData']);
         Route::post('/add',  [ DropShipperController::class , 'addPayment']);
+        Route::post('/history',  [ DropShipperController::class , 'paymentHistory']);
     });
 });
 

@@ -115,6 +115,11 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
     });
 });
 
+Route::group(['prefix' => '/dropshippers', 'middleware' => 'auth'], function () {
+    Route::get('/pay-outs', [DropShipperController::class, 'payOuts'])->name('dropshipper.payouts');
+    Route::post('/payment-history', [DropShipperController::class, 'payment_receipt'])->name('dropshipper.payment_receipt');
+});
+
 Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
     Route::get('/dropshippers', [DropShipperController::class, 'index'])->name('request.dropshipper');
     Route::post('/dropshippers/pdf', [DropShipperController::class, 'pdf']);

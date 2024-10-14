@@ -94,16 +94,17 @@
                               </div>
 
                               <div class="col-md-3 col-6">
+                                <strong>Account Title</strong>
+                                <br>
+                                <p class="text-muted">{{ details.account_title || 'N/A' }}</p>
+                              </div>
+
+                              <div class="col-md-3 col-6">
                                   <strong>Account Number:</strong>
                                   <br>
                                   <p class="text-muted">{{ details.account_number || 'N/A' }}</p>
                                 </div>
 
-                                <div class="col-md-3 col-6">
-                                  <strong>Account Title</strong>
-                                  <br>
-                                  <p class="text-muted">{{ details.account_title || 'N/A' }}</p>
-                                </div>
                                 <div class="col-md-3 col-6">
                                     <strong>Account IBAN</strong>
                                     <br>

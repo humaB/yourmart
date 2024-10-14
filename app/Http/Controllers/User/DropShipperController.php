@@ -22,6 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use NumberFormatter;
 use TCPDF;
 
 include(public_path() . '/assets/tcpdf/tcpdf.php');
@@ -31,6 +32,11 @@ class DropShipperController extends Controller
     public function index()
     {
         return view('user.dropshipper');
+    }
+
+    public function payOuts()
+    {
+        return view('user.dropshipper_payouts');
     }
 
     public function orderIndex()
@@ -43,6 +49,28 @@ class DropShipperController extends Controller
         $orders = Order::with('user')->where('belongs_to', auth()->user()->id)->get();
 
         return (new ResponseCollection($orders))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function pendingPayouts()
+    {
+        $dropshipper = DropShipper::whereColumn('total_payable', '!=', 'total_paid')->get();
+
+        $totalPayable = DropShipper::sum('total_payable');
+        $totalPayablePaid = DropShipper::sum('total_paid');
+        $totalRemaining   = DropShipper::sum('remaining_amount');
+        $remainingDropshippers = $dropshipper->count();
+
+        $response = [
+            'dropshippers' => $dropshipper,
+            'total_payable' => $totalPayable,
+            'total_paid' => $totalPayablePaid,
+            'total_remaining' => $totalRemaining,
+            'remaining_dropshippers' => $remainingDropshippers,
+        ];
+
+        return (new ResponseCollection($response))
             ->response()
             ->setStatusCode(200);
     }
@@ -110,7 +138,7 @@ class DropShipperController extends Controller
             ->select('account_heads.*', 'account_heads.id as code', 'account_heads.name as label')
             ->get();
 
-        $dropshipper = DropShipper::where('id', $request->id)->first();
+        $dropshipper = DropShipper::with('bank')->where('id', $request->id)->first();
 
         $orders = Order::with('shop')
         ->where('belongs_to', $dropshipper->user_id)
@@ -121,7 +149,8 @@ class DropShipperController extends Controller
         $data = [
             'orders'  => $orders,
             'banks'   => $banks,
-            'cash'    => $cash
+            'cash'    => $cash,
+            'dropshipper' =>  $dropshipper
         ];
 
         return (new ResponseCollection($data))
@@ -151,6 +180,21 @@ class DropShipperController extends Controller
             "shopPayments" => $shopPayments,
             "shop" => $shop,
         ]);
+    }
+
+    public function paymentHistory( Request $request ){
+
+        $dropshipper = DropShipper::where('id', $request->id)->first();
+
+        $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
+
+        $transactions = AccountTransaction::with('order.shop')->whereIn('account_head_id', $ledgers)
+        ->where('type', 'BP')
+        ->get();
+
+        return (new ResponseCollection($transactions))
+        ->response()
+        ->setStatusCode(200);
     }
 
     public function addPayment(Request $request)
@@ -227,10 +271,10 @@ class DropShipperController extends Controller
             if ($amountToPay > 0) {
 
                 // Shop Debit
-                $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
+                $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
 
                 // Bank Cash Credit
-                $ledger->accountTransaction($request->from_account, $head_id, 0, $amountToPay, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'shop', $shop->id, $approved = 1);
+                $ledger->accountTransaction($request->from_account, $head_id, 0, $amountToPay, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
 
                 // Update totals
                 $dropshipper->increment('total_paid', $amountToPay);
@@ -497,6 +541,215 @@ class DropShipperController extends Controller
 
         // Set PDF to display as inline in the browser
         $pdf->Output('dropshipper_form.pdf', 'I');
+    }
+
+    public function payment_receipt( Request $request  )
+    {
+        $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
+
+        $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
+
+        $transactions = AccountTransaction::with('order.shop', 'added_by_name')->whereIn('account_head_id', $ledgers)
+        ->where('type', 'BP')
+        ->where('document_id', $request->document)
+        ->get();
+
+        // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf = new MYPDF2(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('GCH');
+        $pdf->SetTitle('Payment Voucher');
+
+        $pdf->project = 'YourMart';
+        //GW-JAN-23-CR-1
+        $pdf->receipt = 'BP-'.$request->document;
+        //$pdf->copy_type = 'Customer Copy';
+
+        // set default header data
+        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 005', PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        // set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        // set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+        // set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        // set some language-dependent strings (optional)
+        if (@file_exists(dirname(__FILE__) . '/lang/eng.php')) {
+            require_once(dirname(__FILE__) . '/lang/eng.php');
+            $pdf->setLanguageArray($l);
+        }
+
+        // ---------------------------------------------------------
+
+        // set font
+        $pdf->SetFont('times', '', 9);
+
+        // add a page
+        $pdf->AddPage();
+        // set color for background
+        $pdf->SetFillColor(255, 255, 127);
+
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        $pdf->setPrintFooter(false);
+
+
+        // set color for background
+        $pdf->SetFillColor(255, 255, 127);
+        $pdf->Ln(-20);
+
+        // ---------------------------------------------------------
+        $pdf->SetFont('times', 'B', 12);
+        $pdf->Cell(160, 0, '', '', 0, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->SetFont('times', '', 10);
+        $pdf->Cell(27, 5, 'Dropshipper Copy', 0, 1, 'R', 0, '', 0, false, 'T', 'M');
+        $pdf->Ln(15);
+
+        $pdf->SetFont('times', '', 9);
+
+        $Date = date('d-m-Y', strtotime($transactions[0]->created_at));
+        $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(60, 0, '', '', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(10, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(5, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(40, 0, '', '', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(45, 0, 'Dated : ' . $Date, 'B', 1, 'L', 0, '', 0, false, 'T', 'M');
+
+        $Received_name = strtoupper( $dropshipper->full_name );
+        $Cnic = $dropshipper->cnic_number;
+        $pdf->Ln(3);
+
+        $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(105, 0, 'Paid To : ' . $Received_name, 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(10, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(50, 0, 'CNIC # : ' . $Cnic, 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
+
+        $pdf->Ln();
+
+        $Amount = number_format($transactions->sum('debit'));
+
+        $pdf->Ln();
+        $pdf->SetFont('times', 'B', 9);
+
+        $pdf->SetLineStyle(array('width' => 0.2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)));
+        $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(10, 0, 'Sr No.', 'TL', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(22, 0, 'MOP', 'T', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(20, 0, 'Order', 'T', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(30, 0, 'Tracking Number', 'T', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(30, 0, 'Total Payable', 'T', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(22, 0, 'Cheque #', 'T', 0, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(15, 0, 'Dated ', 'T', 0, 'T', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(25, 0, 'Paid Amount ', 'TR', 1, 'R', 0, '', 0, false, 'T', 'M');
+
+        $pdf->SetFont('times', '', 7.8);
+        foreach ($transactions as $i => $posting) {
+
+            $heigth = $pdf->getNumLines($posting->comment, 19);
+
+            $pdf->Cell(8,  $heigth, '', 0, 0, '', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(10,  $heigth, $i + 1, 'L', 0, 'L', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(22,  $heigth, 'Online', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+            $pdf->MultiCell(20, $heigth,  substr($posting->order->shop->store_name, 0, 3) . '-' . $posting->order->order_no , 0, 'L', 0, 0, '', '', true, 0, false, true, false, 'M');
+            $pdf->Cell(30,  $heigth, $posting->order->tracking_number, 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(30,  $heigth, number_format( $posting->order->total_profit ), 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(22,  $heigth, '', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(15,  $heigth, date('d-m-Y', strtotime($posting->created_at)), 0, 0, 'C', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(25,  $heigth, number_format($posting->debit), 'R', 1, 'R', 0, '', 0, false, 'T', 'M');
+        }
+
+        $pdf->Cell(8, 8, '', 0, 0, '', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(10, 8, '', 'BL', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(22, 8, '', 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(20, 8, '', 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(30, 8, '', 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(30, 8, '', 'B', 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(22, 8, '', 'B', 0, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(15, 8, '', 'B', 0, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(25, 8, 'Total Amount : ' . number_format($transactions->sum('debit')), 'BR', 1, 'R', 0, '', 0, false, 'T', 'M');
+        $pdf->Ln(3);
+
+        $f = new NumberFormatter("PKR", NumberFormatter::SPELLOUT);
+
+        $pdf->SetFont('times', '', 9);
+        $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(40, 0, 'Amount : ' . number_format($transactions->sum('debit')), 0, 1, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(8, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(180, 0, 'Amount In Words : ' . ucwords($f->format($transactions->sum('debit'))) . " Only", 0, 1, 'L', 0, '', 0, false, 'T', 'M');
+
+        $pdf->Ln();
+
+
+        $pdf->Ln(2);
+        //Close and output PDF document
+
+        $pdf->SetFont('times', 'U', 9);
+        $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(50, 0, $transactions[0]->added_by_name->name, 0, 0, 'C', 0, '', 0, false, 'T', 'M');
+
+        $pdf->Ln();
+        //Close and
+        $user_name = auth()->user()->name;
+        $date_now = date('d-M-Y h:i A', strtotime(now()));
+        $pdf->SetFont('times', '', 9);
+        $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(50, 0, 'Prepared By', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->Ln(2);
+        $pdf->SetFont('times', '', 8);
+        $pdf->Cell(180, 0, '* Errors and omissions excepted (E&OE)', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->Ln(3);
+        $pdf->SetFont('times', 'B', 9);
+        $pdf->Cell(180, 0, 'Printed By : ' . $user_name . ' || ' . $date_now, 0, 0, 'C', 0, '', 0, false, 'T', 'M');
+
+        $pdf->Output('payment_voucher.pdf', 'I');
+    }
+}
+
+class MYPDF2 extends TCPDF
+{
+
+    public $project;
+    public $receipt;
+    //Page header
+    public function Header()
+    {
+        $this->Ln(10);
+
+        $image = '';
+        $image_path = asset('assets/img/fa-icon.jpg');
+
+        //Logo
+        $this->Ln();
+
+        $this->Image($image_path, 20, 10, 15, '', 'JPG',  '', '', true, 150, '', false, false, 0, false, false, false);
+        //Project Name
+        $this->SetFont('dejavusans', 'B', 12);
+        $this->Cell(0, 5, $this->project, 0, false, 'C', 0, '', 0, false, 'M', 'M');
+        $this->Ln();
+        $this->SetFont('dejavusans', '', 10);
+        $this->Cell(0, 5, 'Receipt # ' . $this->receipt, 0, false, 'C', 0, '', 0, false, 'M', 'M');
+
+        $this->Ln();
+    }
+
+    // Page footer
+    public function Footer()
+    {
+
     }
 }
 
