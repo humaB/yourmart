@@ -16,6 +16,7 @@ class StoreReturn extends Model
         'order_id',
         'dropshipper_id',
         'remarks',
+        'return_type', //0 => Normal || 1 => Returned From Courier
         'added_by'
     ];
 

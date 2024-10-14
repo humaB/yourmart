@@ -62,6 +62,7 @@ class CourierReturnController extends Controller
             'order_id'        => $order->id,
             'dropshipper_id'  => $order->belongs_to,
             'remarks'         => 'Returned from courier',
+            'return_type'     => '1',
             'added_by'        => auth()->user()->id
         ]);
 
