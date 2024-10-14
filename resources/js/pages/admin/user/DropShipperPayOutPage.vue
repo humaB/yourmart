@@ -135,11 +135,34 @@
         <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)" />
 
         <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
-            :details="details" :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
+            :details="details" :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment"
+            @fetchTracking="fetchTracking($event)"
+            @fetchOrderDetails="fetchOrderDetails( $event )"
+        />
 
         <DropshipperPaymentHistory
             :selectedDropshipper="selectedDropshipper"
             :history="paymentHistorys"
+        />
+
+        <TrackingDetailPopup
+            :trackingDetails="trackingDetails"
+        />
+
+        <OrderDetailView
+            :revertLoader="revertLoader"
+            :rejectLoader="rejectLoader"
+            :paidAmountLoader="paidAmountLoader"
+            :details="orderDetails"
+            :loader="commentLoader"
+            :role="role"
+            @addComment="addComment($event)"
+            @forward="forward($event)"
+            @reject="reject($event)"
+            @revert="revert($event)"
+            @fetchDropshipperDetails="fetchDropshipperDetails($event)"
+            @updatePaidAmount="updatePaidAmount( $event )"
+            @updatePackagingAmount="updatePackagingAmount( $event )"
         />
 
         <!-- Summary PRINT -->
@@ -157,6 +180,8 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
 import DropshipperDetails from "../../../components/admin/request/DropshipperDetails.vue";
 import DropshipperPayment from "../../../components/admin/request/DropshipperPayment.vue";
 import DropshipperPaymentHistory from "../../../components/admin/request/DropshipperPaymentHistory.vue";
+import TrackingDetailPopup from "../../../components/inventory/product/order/TrackingDetailPopup.vue";
+import OrderDetailView from "../../../components/inventory/product/order/OrderDetailView.vue";
 
 export default {
     name: 'DropShipperPayOutPage',
@@ -165,7 +190,9 @@ export default {
         BulletListLoader,
         DropshipperDetails,
         DropshipperPayment,
-        DropshipperPaymentHistory
+        DropshipperPaymentHistory,
+        TrackingDetailPopup,
+        OrderDetailView
     },
     data() {
         return {
@@ -203,7 +230,15 @@ export default {
             },
             paymentLoader: false,
             selectedDropshipper: '',
-            paymentHistorys : []
+            paymentHistorys : [],
+            trackingDetails : [],
+            //Order
+            orderDetails: {},
+            commentLoader : false,
+            rejectLoader : false,
+            revertLoader : false,
+            role : '',
+            paidAmountLoader : false,
         };
     },
     created() {
@@ -212,6 +247,14 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        fetchTracking(id){
+            let vm = this;
+            axios
+                .post(this.api_url + "inventory/products/orders/tracking", { id })
+                .then((response) => {
+                    vm.trackingDetails = response.data.response
+                });
+        },
         formatPrice(price) {
             var string = parseFloat(price).toString();
             return string
@@ -335,6 +378,158 @@ export default {
         clearDataTable() {
             const table = $("#moq_table").DataTable();
             table.destroy();
+        },
+        fetchOrderDetails(id) {
+            let vm = this;
+            axios
+                .post(this.api_url + "inventory/products/orders/details", { id })
+                .then((response) => {
+                    vm.orderDetails = response.data.response[0]
+                });
+        },
+        addComment(data) {
+            let vm = this;
+            vm.commentLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/comments", data)
+                .then((response) => {
+
+                    vm.fetchDetail(vm.details.id);
+                    vm.commentLoader = false;
+                    vm.$emit('commentAdded', true);
+                    return swal({
+                        title: "Success",
+                        text: "Your Comment added successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.commentLoader = false;
+                });
+        },
+        forward( data ){
+            let vm = this;
+            vm.commentLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-status", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.commentLoader = false;
+            vm.$emit('commentAdded', true);
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000)
+            return swal({
+                title: "Success",
+                text: "Forwarded successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.commentLoader = false;
+            });
+        },
+        reject( data ){
+            let vm = this;
+            vm.rejectLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/reject", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.rejectLoader = false;
+
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000);
+
+            return swal({
+                title: "Success",
+                text: "Order Rejected Successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.rejectLoader = false;
+            });
+        },
+        revert( data ){
+            let vm = this;
+            vm.revertLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/revert", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.revertLoader = false;
+
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000);
+
+            return swal({
+                title: "Success",
+                text: "Order Revert Successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.revertLoader = false;
+            });
+        },
+        updatePaidAmount( data ){
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data)
+            .then((response) => {
+
+            this.fetchDetail(data.id);
+
+            vm.paidAmountLoader = false;
+                return swal({
+                    title: "Success",
+                    text: "Amount Updated Successfully",
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.paidAmountLoader = false;
+                return swal({
+                    title: "Error",
+                    text: "Oops.. Something went wrong",
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updatePackagingAmount( data ){
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data)
+            .then((response) => {
+
+            this.fetchDetail(data.id);
+
+            vm.paidAmountLoader = false;
+                return swal({
+                    title: "Success",
+                    text: "Amount Updated Successfully",
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.paidAmountLoader = false;
+                return swal({
+                    title: "Error",
+                    text: "Oops.. Something went wrong",
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
         },
     },
     watch: {

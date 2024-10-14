@@ -123,8 +123,16 @@
                             <tbody>
                                 <tr v-for="(item, index) in orders" :key="item.id">
                                     <td>{{ item.shop.store_name }}</td>
-                                    <td>{{ item.order_no }}</td>
-                                    <td>{{ item.tracking_number }}</td>
+                                    <td>
+                                        <a href="#" data-toggle="modal" data-target="#ticket" @click="fetchOrderDetails(item.id)">
+                                            {{ item.order_no }}
+                                          </a>
+                                    </td>
+                                    <td>
+                                        <a href="#" data-toggle="modal" data-target="#trackingInformation" @click="fetchTracking(item.id)">
+                                            {{ item.tracking_number }}
+                                          </a>
+                                    </td>
                                     <td>{{ parseFloat(item.total_bill) - ( parseFloat(item.courier_service_price) + parseFloat(item.packaging_price) ) }}</td>
                                     <td>{{ item.courier_service_price }}</td>
                                     <td>{{ item.packaging_price }}</td>
@@ -164,6 +172,12 @@ export default {
     methods : {
       add(){
         this.$emit('add')
+      },
+      fetchTracking( id ){
+        this.$emit('fetchTracking', { id })
+      },
+      fetchOrderDetails( id ){
+        this.$emit('fetchOrderDetails', { id })
       },
       numberValidate(event, { dot = false, maxLen = null, negative = false, comma = false } = {}) {
 
