@@ -324,7 +324,7 @@ class LeopardApiHelper
     }
 
     private function accountOnDelivered( $dropshipper, $shop , $order, $productPrice , $packingCharges, $courierCharges, $courierExtraCharges){
-  
+
         $ledger = new AccountHeadHelper();
         $document = $ledger->voucherType('JV');
 
@@ -375,9 +375,9 @@ class LeopardApiHelper
             *   Expense Account 164 debit to decrease expense
             */
             $document = $ledger->voucherType('JV');
-            $ledger->accountTransaction( $head_id, 164, $order->paid_amount, 0, 'Advance Payment adjusted against courier and packaging expense', $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction( $head_id, 164, $order->paid_amount, 0, 'Advance Payment adjusted against courier and packaging expense', $document, 'JV', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction(164, $head_id, 0, $order->paid_amount, 'Advance Payment adjusted against courier and packaging expense', $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction(164, $head_id, 0, $order->paid_amount, 'Advance Payment adjusted against courier and packaging expense', $document, 'JV', 'order', $order->id, $approved = 1);
         }
 
         //When Leopard Received Payment
