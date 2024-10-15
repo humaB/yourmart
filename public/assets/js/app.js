@@ -10376,7 +10376,8 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("DropshipperPaymentHistory", {
     attrs: {
-      history: _vm.paymentHistorys
+      history: _vm.paymentHistorys,
+      selectedDropshipper: _vm.selectedDropshipper
     }
   }), _vm._v(" "), _c("form", {
     ref: "requestForm",

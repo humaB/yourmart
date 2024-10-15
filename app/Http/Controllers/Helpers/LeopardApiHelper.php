@@ -69,6 +69,10 @@ class LeopardApiHelper
             'leopard_id' => 'Being Return',
             'label' => 'Return'
         ],
+        'RS' => [
+            'leopard_id' => 'Returned to Shipper (Terminal Status)',
+            'label' => 'Return'
+        ],
         'NR' => [
             'leopard_id' => 'Ready for Return',
             'label' => 'Return'
@@ -189,13 +193,14 @@ class LeopardApiHelper
 
                 //If product is delivered
                 if( $status['label'] == 'Delivered' && $detail->status != '8'){
-                    return $this->parcelDelivered($detail);
+                    $this->parcelDelivered($detail);
                     $detail->update([
                         'status' => '8'
                     ]);
                 }
                   //If product is delivered
-                if( $status['leopard_id'] == 'Being Return' && ($detail->status != '9' )){
+                if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
+
                     $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
                     $shop = DropShipperShop::where('id', $detail->shop_id)->first();
                     $this->parcelCancel($dropshipper, $shop, $detail);
@@ -258,15 +263,17 @@ class LeopardApiHelper
         $packingCharges = $order->packaging_price;
         $advance         = $order->paid_amount;
         $courierExtraCharges = $order->range->our_charges;
+        $otherCharges = OtherCharge::where('type', 'Return')->where('status', '0')->first();
+        $otherCharges = (float)$otherCharges->amount;
 
         //60 are extra charges which will in future be set by admin
-        $dropshipper->decrement('total_payable' , $courierCharges + $packingCharges + 60);
-        $dropshipper->decrement('remaining_amount' , $courierCharges + $packingCharges + 60);
+        $dropshipper->decrement('total_payable' , $courierCharges + $packingCharges +  $otherCharges);
+        $dropshipper->decrement('remaining_amount' , $courierCharges + $packingCharges +  $otherCharges);
 
-        $shop->decrement('total_payable' , $courierCharges + $packingCharges + 60);
-        $shop->decrement('total_remaining' , $courierCharges + $packingCharges + 60);
+        $shop->decrement('total_payable' , $courierCharges + $packingCharges +  $otherCharges);
+        $shop->decrement('total_remaining' , $courierCharges + $packingCharges +  $otherCharges);
 
-        $remainingPayable = $advance - ( $courierCharges + $packingCharges + 60 );
+        $remainingPayable = $advance - ( $courierCharges + $packingCharges + $otherCharges );
         $order->update([
             'total_profit'  => $remainingPayable
         ]);
@@ -283,7 +290,6 @@ class LeopardApiHelper
             $head_id = $this->openShopLedger( $shop , $ledger, $group_id);
         }
 
-        $otherCharges = OtherCharge::where('type', 'Return')->where('status', '0')->first();
 
         //Book Total Packaging and Courier + 60 RS as charge
         /*

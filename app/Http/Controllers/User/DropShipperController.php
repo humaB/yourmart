@@ -271,7 +271,7 @@ class DropShipperController extends Controller
         $document = $ledger->voucherType('bank');
 
         $attachment = $request->attachment ? $this->attachment($request->attachment) : null;
-
+        $addedAmount = 0;
         foreach ($orders as $order) {
             $shop = $order->shop;
 
@@ -315,18 +315,15 @@ class DropShipperController extends Controller
 
             // If the orderProfit is negative, the customer owes money
             if ($orderProfit < 0) {
+
                 // Increase remainingAmount by the amount the customer owes (i.e., the absolute value of the negative profit)
                 $remainingAmount += abs($orderProfit);
+                $addedAmount = abs($orderProfit);
                 // Shop Debit
                 $ledger->accountTransaction($head_id, $request->from_account, $orderProfit, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
                 // Optionally update other fields, such as remaining amounts for dropshipper/shop, if required
 
-                //
-                $dropshipper->increment('total_paid', $orderProfit);
-                $shop->increment('total_paid', $remainingAmount);
-                $dropshipper->decrement('remaining_amount', $remainingAmount);
-                $shop->decrement('total_remaining', $remainingAmount);
-                $order->increment('total_paid_profit', $remainingAmount);
+                $order->increment('total_paid_profit', $orderProfit);
 
                 continue; // Skip further processing for this order, as no payment can be made
             }
@@ -345,17 +342,17 @@ class DropShipperController extends Controller
                 // Shop Debit
                 $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
 
-                // Update totals
-                $dropshipper->increment('total_paid', $amountToPay);
-                $shop->increment('total_paid', $amountToPay);
-                $dropshipper->decrement('remaining_amount', $amountToPay);
-                $shop->decrement('total_remaining', $amountToPay);
                 $order->increment('total_paid_profit', $amountToPay);
 
                 // Reduce the remaining amount
                 $remainingAmount -= $amountToPay;
             }
         }
+
+        $dropshipper->increment('total_paid', $request->amount);
+        $shop->increment('total_paid', $request->amount);
+        $dropshipper->decrement('remaining_amount', $request->amount);
+        $shop->decrement('total_remaining', $request->amount);
 
         // Bank Cash Credit
         $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);

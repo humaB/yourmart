@@ -180,6 +180,7 @@
 
         <DropshipperPaymentHistory
             :history="paymentHistorys"
+            :selectedDropshipper="selectedDropshipper"
         />
 
         <!-- Summary PRINT -->
