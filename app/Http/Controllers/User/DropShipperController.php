@@ -323,10 +323,10 @@ class DropShipperController extends Controller
 
                 //
                 $dropshipper->increment('total_paid', $orderProfit);
-                $shop->increment('total_paid', $orderProfit);
-                $dropshipper->decrement('remaining_amount', $orderProfit);
-                $shop->decrement('total_remaining', $orderProfit);
-                $order->increment('total_paid_profit', $orderProfit);
+                $shop->increment('total_paid', $remainingAmount);
+                $dropshipper->decrement('remaining_amount', $remainingAmount);
+                $shop->decrement('total_remaining', $remainingAmount);
+                $order->increment('total_paid_profit', $remainingAmount);
 
                 continue; // Skip further processing for this order, as no payment can be made
             }
