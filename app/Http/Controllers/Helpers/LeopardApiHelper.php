@@ -69,10 +69,6 @@ class LeopardApiHelper
             'leopard_id' => 'Being Return',
             'label' => 'Return'
         ],
-        'RS' => [
-            'leopard_id' => 'Returned to Shipper (Terminal Status)',
-            'label' => 'Return'
-        ],
         'NR' => [
             'leopard_id' => 'Ready for Return',
             'label' => 'Return'
@@ -199,7 +195,7 @@ class LeopardApiHelper
                     ]);
                 }
                   //If product is delivered
-                if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
+                if( $status['leopard_id'] == 'Being Return' && ($detail->status != '9' )){
                     $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
                     $shop = DropShipperShop::where('id', $detail->shop_id)->first();
                     $this->parcelCancel($dropshipper, $shop, $detail);
