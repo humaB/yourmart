@@ -82,6 +82,15 @@ class OrderController extends Controller
                 ->setStatusCode(200);
     }
 
+    public function markasReplacement( Request $request ){
+        
+        Order::where('id', $request->id )->update([
+            'is_replacement' => '1'
+        ]);
+
+        return ['message' => 'Marked as Replacement'];
+    }
+
     public function details(Request $request)
     {
 

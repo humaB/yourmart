@@ -83,7 +83,8 @@ Route::post('tickets/messages/upload/image', [TicketController::class, 'apiImage
 
 Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ DropShipperController::class , 'getRequests']);
-    Route::post('/',  [ DropShipperController::class , 'store']);
+    Route::post('/',  [ DropShipperController::class , 'update']);
+
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
     Route::get('/orders',  [ DropShipperController::class , 'orders']);
@@ -230,6 +231,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/update-packaging-amount',  [ OrderController::class , 'updatePackagingAmount']);
 
             Route::post('/tracking',  [ OrderController::class , 'trackingDetails']);
+
+            Route::post('/mark-as-replacement',  [ OrderController::class , 'markasReplacement']);
         });
 
         Route::group(['prefix' => 'settings'], function(){

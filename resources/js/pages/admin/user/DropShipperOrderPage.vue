@@ -51,6 +51,7 @@
             :details="details"
             :loader="commentLoader"
             @addComment="addComment($event)"
+            @updateDropshipperInformation="updateDropshipperInformation($event)"
         />
     </div>
 </template>
@@ -87,6 +88,29 @@ export default {
         this.fetchOrders();
     },
     methods: {
+        updateDropshipperInformation( data ){
+                let vm = this;
+                axios
+                    .post(this.api_url + "dropshippers", data)
+                    .then((response) => {
+                        vm.fetchRecord();
+
+                        return swal({
+                            title: "Success",
+                            text: 'Information updated successfully',
+                            icon: "success",
+                            timer: 3000,
+                        });
+                    }).catch((err) => {
+
+                        return swal({
+                            title: "Error",
+                            text: err.response.data.response[0],
+                            icon: "error",
+                            timer: 3000,
+                        });
+                    });
+        },
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },

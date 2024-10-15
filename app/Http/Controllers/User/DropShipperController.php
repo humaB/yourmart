@@ -118,6 +118,48 @@ class DropShipperController extends Controller
             ->setStatusCode(200);
     }
 
+    public function update(Request $request)
+    {
+        // Update Dropshipper Information
+        $dropshipper = Dropshipper::findOrFail($request->id);
+
+        if( $dropshipper->email != $request->input('email') ){
+            //Check if email is already registered or not for status approved
+            $user = User::where('email', $request->input('email'))->first();
+            if( $user ){
+                return (new ValidationCollection(["This Email already registered with another account"]))
+                    ->response()
+                    ->setStatusCode(400);
+            }
+        }
+
+        $dropshipper->update([
+            'full_name' => $request->input('full_name'),
+            'email' => $request->input('email'),
+            'cnic_number' => $request->input('cnic_number'),
+            'whatsapp_number' => $request->input('whatsapp_number'),
+            'address' => $request->input('address'),
+            'account_number' => $request->input('account_number'),
+            'account_title' => $request->input('account_title'),
+            'account_iban'  => $request->input('account_iban'),
+        ]);
+
+        // Loop through the shops and update each record
+        foreach ($request->input('shops') as $shopData) {
+            // Find the shop by its ID
+            $shop = DropShipperShop::findOrFail($shopData['id']);
+
+            // Update the shop details
+            $shop->update([
+                'store_url' => $shopData['store_url'],
+                'social_media_profile_link' => $shopData['social_media_profile_link'],
+                'business_description' => $shopData['business_description']
+            ]);
+        }
+
+        return response()->json(['message' => 'Dropshipper information updated successfully.']);
+    }
+
     public function fetchDetails(Request $request)
     {
 
@@ -141,10 +183,10 @@ class DropShipperController extends Controller
         $dropshipper = DropShipper::with('bank')->where('id', $request->id)->first();
 
         $orders = Order::with('shop')
-        ->where('belongs_to', $dropshipper->user_id)
-        ->whereIn('status', [8,9,10])
-        ->whereColumn('total_profit' , '!=', 'total_paid_profit')
-        ->get();
+            ->where('belongs_to', $dropshipper->user_id)
+            ->whereIn('status', [8, 9, 10])
+            ->whereColumn('total_profit', '!=', 'total_paid_profit')
+            ->get();
 
         $data = [
             'orders'  => $orders,
@@ -164,9 +206,9 @@ class DropShipperController extends Controller
         $shop = DropshipperShop::where('id', $request->id)->first();
 
         $shopPayments = AccountTransaction::where(function ($q) {
-                $q->where("type", "BP");
-                $q->orWhere("type", "CP");
-            })
+            $q->where("type", "BP");
+            $q->orWhere("type", "CP");
+        })
             ->where("account_head_id", $shop->account_head_id)
             ->orderBy("document_id", 'DESC')
             ->get(["id", "debit", "narration", "created_at"])
@@ -182,19 +224,20 @@ class DropShipperController extends Controller
         ]);
     }
 
-    public function paymentHistory( Request $request ){
+    public function paymentHistory(Request $request)
+    {
 
         $dropshipper = DropShipper::where('id', $request->id)->first();
 
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop')->whereIn('account_head_id', $ledgers)
-        ->where('type', 'BP')
-        ->get();
+            ->where('type', 'BP')
+            ->get();
 
         return (new ResponseCollection($transactions))
-        ->response()
-        ->setStatusCode(200);
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function addPayment(Request $request)
@@ -212,7 +255,7 @@ class DropShipperController extends Controller
             ->whereIn('status', [8, 9, 10])
             ->whereColumn('total_profit', '!=', 'total_paid_profit')
             ->get()
-            ->sortBy(function($order) {
+            ->sortBy(function ($order) {
                 // Calculate the order profit
                 $orderProfit = $order->total_profit - $order->total_paid_profit;
 
@@ -565,16 +608,16 @@ class DropShipperController extends Controller
         $pdf->Output('dropshipper_form.pdf', 'I');
     }
 
-    public function payment_receipt( Request $request  )
+    public function payment_receipt(Request $request)
     {
         $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
 
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop', 'added_by_name')->whereIn('account_head_id', $ledgers)
-        ->where('type', 'BP')
-        ->where('document_id', $request->document)
-        ->get();
+            ->where('type', 'BP')
+            ->where('document_id', $request->document)
+            ->get();
 
         // $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
         $pdf = new MYPDF2(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -585,7 +628,7 @@ class DropShipperController extends Controller
 
         $pdf->project = 'YourMart';
         //GW-JAN-23-CR-1
-        $pdf->receipt = 'BP-'.$request->document;
+        $pdf->receipt = 'BP-' . $request->document;
         //$pdf->copy_type = 'Customer Copy';
 
         // set default header data
@@ -651,7 +694,7 @@ class DropShipperController extends Controller
         $pdf->Cell(15, 0, '', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Cell(45, 0, 'Dated : ' . $Date, 'B', 1, 'L', 0, '', 0, false, 'T', 'M');
 
-        $Received_name = strtoupper( $dropshipper->full_name );
+        $Received_name = strtoupper($dropshipper->full_name);
         $Cnic = $dropshipper->cnic_number;
         $pdf->Ln(3);
 
@@ -686,9 +729,9 @@ class DropShipperController extends Controller
             $pdf->Cell(8,  $heigth, '', 0, 0, '', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(10,  $heigth, $i + 1, 'L', 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(22,  $heigth, 'Online', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->MultiCell(20, $heigth,  substr($posting->order->shop->store_name, 0, 3) . '-' . $posting->order->order_no , 0, 'L', 0, 0, '', '', true, 0, false, true, false, 'M');
+            $pdf->MultiCell(20, $heigth,  substr($posting->order->shop->store_name, 0, 3) . '-' . $posting->order->order_no, 0, 'L', 0, 0, '', '', true, 0, false, true, false, 'M');
             $pdf->Cell(30,  $heigth, $posting->order->tracking_number, 0, 0, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Cell(30,  $heigth, number_format( $posting->order->total_profit ), 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(30,  $heigth, number_format($posting->order->total_profit), 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(22,  $heigth, '', 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(15,  $heigth, date('d-m-Y', strtotime($posting->created_at)), 0, 0, 'C', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(25,  $heigth, number_format($posting->debit), 'R', 1, 'R', 0, '', 0, false, 'T', 'M');
@@ -769,10 +812,7 @@ class MYPDF2 extends TCPDF
     }
 
     // Page footer
-    public function Footer()
-    {
-
-    }
+    public function Footer() {}
 }
 
 class MYPDF extends TCPDF

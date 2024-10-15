@@ -40,6 +40,7 @@ class Order extends Model
         'total_profit',
         'total_paid_profit',
         'packaging_price',
+        'is_replacement', // 0 => Normal || 1 => replacement
         'status', // 0 => Order Collection || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Dispatched || 6 => Admin approval for Rejected || 7 => Rejected || 8 => Delivered || 9 => Returned || 10 => Returned to store from leopard || 11 => Out for Delivery
         'total_weight',
         'no_of_labels',

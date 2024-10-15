@@ -132,7 +132,9 @@
             </div>
         </div>
 
-        <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)" />
+        <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)"
+         @updateDropshipperInformation="updateDropshipperInformation($event)"
+        />
 
         <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
             :details="details" :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment"
@@ -163,6 +165,13 @@
             @fetchDropshipperDetails="fetchDropshipperDetails($event)"
             @updatePaidAmount="updatePaidAmount( $event )"
             @updatePackagingAmount="updatePackagingAmount( $event )"
+             @markasReplacement="markasReplacement($event)"
+        />
+
+        <OrderMarkasReplacementConfirmation
+            :orderID="orderID"
+            :loader="markasReplacementLoader"
+            @markasReplacementConfirmation="markasReplacementConfirmation($event)"
         />
 
         <!-- Summary PRINT -->
@@ -182,6 +191,7 @@ import DropshipperPayment from "../../../components/admin/request/DropshipperPay
 import DropshipperPaymentHistory from "../../../components/admin/request/DropshipperPaymentHistory.vue";
 import TrackingDetailPopup from "../../../components/inventory/product/order/TrackingDetailPopup.vue";
 import OrderDetailView from "../../../components/inventory/product/order/OrderDetailView.vue";
+import OrderMarkasReplacementConfirmation from "../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue";
 
 export default {
     name: 'DropShipperPayOutPage',
@@ -192,7 +202,8 @@ export default {
         DropshipperPayment,
         DropshipperPaymentHistory,
         TrackingDetailPopup,
-        OrderDetailView
+        OrderDetailView,
+        OrderMarkasReplacementConfirmation
     },
     data() {
         return {
@@ -239,6 +250,8 @@ export default {
             revertLoader : false,
             role : '',
             paidAmountLoader : false,
+            orderID : '',
+            markasReplacementLoader : false
         };
     },
     created() {
@@ -247,6 +260,50 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        markasReplacement(data){
+            this.orderID = data.id
+        },
+        markasReplacementConfirmation(){
+            let vm = this;
+            vm.markasReplacementLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/mark-as-replacement", { id : this.orderID })
+                .then((response) => {
+                    vm.markasReplacementLoader = false;
+
+                    $("#markasReplacement").modal('hide');
+                    this.fetchDetail(this.orderID);
+                    return swal({
+                        title: "Success",
+                        text: "Marked as Replacement Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
+        updateDropshipperInformation( data ){
+                let vm = this;
+                axios
+                    .post(this.api_url + "dropshippers", data)
+                    .then((response) => {
+                        vm.fetchRecord();
+
+                        return swal({
+                            title: "Success",
+                            text: 'Information updated successfully',
+                            icon: "success",
+                            timer: 3000,
+                        });
+                    }).catch((err) => {
+
+                        return swal({
+                            title: "Error",
+                            text: err.response.data.response[0],
+                            icon: "error",
+                            timer: 3000,
+                        });
+                    });
+        },
         fetchTracking(id){
             let vm = this;
             axios

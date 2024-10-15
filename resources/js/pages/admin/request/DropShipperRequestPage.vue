@@ -168,7 +168,12 @@
             </div>
         </div>
 
-        <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)" />
+        <DropshipperDetails
+            :details="details"
+            :loader="btnLoader"
+            @decision="decision($event)"
+            @updateDropshipperInformation="updateDropshipperInformation($event)"
+        />
 
         <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
             :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
@@ -251,6 +256,29 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        updateDropshipperInformation( data ){
+                let vm = this;
+                axios
+                    .post(this.api_url + "dropshippers", data)
+                    .then((response) => {
+                        vm.fetchRecord();
+
+                        return swal({
+                            title: "Success",
+                            text: 'Information updated successfully',
+                            icon: "success",
+                            timer: 3000,
+                        });
+                    }).catch((err) => {
+
+                        return swal({
+                            title: "Error",
+                            text: err.response.data.response[0],
+                            icon: "error",
+                            timer: 3000,
+                        });
+                    });
+        },
         formatPrice(price) {
             var string = parseFloat(price).toString();
             return string

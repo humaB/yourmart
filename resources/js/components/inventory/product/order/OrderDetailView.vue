@@ -19,6 +19,7 @@
                                 <span class="badge badge-danger" v-else-if="details.status == 6">Rejection Under Review</span>
                                 <span class="badge badge-danger" v-else-if="details.status == 7">Rejected</span>
                             </h5>
+
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -30,9 +31,12 @@
                             <div class="card">
                                 <div class="boxs mail_listing">
                                     <div class="inbox-body no-pad">
-                                        <div class="mail-heading">
+                                        <div class="mail-heading d-flex justify-content-between">
                                             <h4 class="vew-mail-header">
                                                 <h3>Order Details # {{ details.shop ? details.shop.store_name.substring(0, 3)+'-' : '' }}{{ details.order_no }}</h3>
+                                            </h4>
+                                            <h4 v-if="details.is_replacement == 1">
+                                                Replacement Order
                                             </h4>
                                         </div>
                                         <hr />
@@ -121,7 +125,8 @@
                                                                 <h5> <strong>Remaining Amount:</strong></h5>
                                                              </div>
                                                              <div class="col-md-6">
-                                                                 <h5>{{ formatPrice(details.remaining_amount) }}</h5>
+                                                                <h5 v-if="details.is_replacement == 1">0</h5>
+                                                                 <h5 v-else>{{ formatPrice(details.remaining_amount) }}</h5>
                                                              </div>
 
                                                              <div class="col-md-6 border-top border-1" v-if="details.type == 'Normal'">
@@ -141,7 +146,8 @@
                                                                 <h5> <strong>Final Total After Delivery (Advance included):</strong></h5>
                                                              </div>
                                                              <div class="col-md-6" v-if="details.type == 'Normal'">
-                                                                 <h5>{{  formatPrice( totalSellPrice ) }}</h5>
+                                                                 <h5 v-if="details.is_replacement == 1">0</h5>
+                                                                 <h5 v-else>{{  formatPrice( totalSellPrice ) }}</h5>
                                                              </div>
 
                                                         </div>
@@ -193,9 +199,14 @@
                                                                 <td>{{ item.packaging_cost }}</td>
                                                                 <td>{{ item.courier_cost }}</td>
                                                                 <td>{{ (parseFloat(item.quantity) * parseFloat(item.price)) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)) }}</td>
-                                                                <td>{{ item.sell_price }}</td>
-                                                                <td>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
-                                                                <td>
+
+                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <td v-else>{{ item.sell_price }}</td>
+
+                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <td v-else>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
+                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <td v-else>
                                                                     {{
                                                                       (parseFloat(item.sell_price)
                                                                       - (
@@ -219,9 +230,15 @@
                                                                 <td class="h5">{{ totalPackagingCost }}</td>
                                                                 <td class="h5">{{ totalCourierCost }}</td>
                                                                 <td class="h5">{{ totalBasePrice }}</td>
-                                                                <td class="h5">{{ totalSellPrice }}</td>
-                                                                <td class="h5">{{ totalPaybale }}</td>
-                                                                <td class="h5">{{ totalNetProfit }}</td>
+
+                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <td v-else class="h5">{{ totalSellPrice }}</td>
+
+                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <td class="h5" v-else>{{ totalPaybale }}</td>
+
+                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <td v-else class="h5">{{ totalNetProfit }}</td>
                                                             </tr>
                                                         </tfoot>
                                                     </table>
@@ -479,6 +496,10 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement" @click="markasReplacement()" v-if="(role == 'order collection' || role == 'admin') && details.is_replacement == 0">
+                            <i class="fas fa-arrow-right"></i> Mark as Replacement
+                        </button>
+
                         <button class="btn btn-danger" @click="revertBack()" v-if="details.status > 0 && !revertLoader && role != 'supervisor'">
                             <i class="fas fa-undo-alt"></i> Revert to Pre Step
                         </button>
@@ -599,8 +620,6 @@ export default {
                 const subTotal = parseFloat(this.details.total_bill) - ( parseFloat(this.details.courier_service_price) + parseFloat(this.details.packaging_price));
                 const itemTotal = parseFloat(item.price) * parseFloat(item.quantity);
                 const advanceAmount = (advance / subTotal) * itemTotal;
-                console.log(advance, subTotal, itemTotal, advanceAmount);
-
                 return total + (parseFloat(item.sell_price) - ( itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + advanceAmount ) ) ;
             }, 0).toFixed(0) : 0;
         }
@@ -715,6 +734,9 @@ export default {
             }
 
             this.$emit('forward', { id : this.details.id });
+        },
+        markasReplacement(){
+            this.$emit('markasReplacement', { id : this.details.id });
         },
         revertBack(){
             this.$emit('revert', { id : this.details.id });

@@ -272,6 +272,7 @@
             @fetchDropshipperDetails="fetchDropshipperDetails($event)"
             @updatePaidAmount="updatePaidAmount( $event )"
             @updatePackagingAmount="updatePackagingAmount( $event )"
+            @markasReplacement="markasReplacement($event)"
         />
         <DropshipperDetails
             :details="dropShipperDetails"
@@ -281,6 +282,11 @@
             :trackingDetails="trackingDetails"
         />
         <!-- Modal -->
+         <OrderMarkasReplacementConfirmation
+                :orderID="orderID"
+                :loader="markasReplacementLoader"
+                @markasReplacementConfirmation="markasReplacementConfirmation($event)"
+         />
 
     </div>
 </template>
@@ -292,6 +298,7 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
 import OrderDetailView from "../../../../components/inventory/product/order/OrderDetailView.vue";
 import DropshipperDetails from "../../../../components/admin/request/DropshipperDetails.vue";
 import TrackingDetailPopup from "../../../../components/inventory/product/order/TrackingDetailPopup.vue";
+import OrderMarkasReplacementConfirmation from "../../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue";
 
 export default {
     name: 'ProductOrderPage',
@@ -300,6 +307,7 @@ export default {
         BulletListLoader,
         OrderDetailView,
         DropshipperDetails,
+        OrderMarkasReplacementConfirmation,
         TrackingDetailPopup
     },
     data() {
@@ -339,13 +347,36 @@ export default {
                 from: '',
                 to: '',
             },
-            trackingDetails : []
+            trackingDetails : [],
+            orderID : '',
+            markasReplacementLoader : false
         };
     },
     created() {
         this.fetchOrders();
     },
     methods: {
+        markasReplacement(data){
+            this.orderID = data.id
+        },
+        markasReplacementConfirmation(){
+            let vm = this;
+            vm.markasReplacementLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/mark-as-replacement", { id : this.orderID })
+                .then((response) => {
+                    vm.markasReplacementLoader = false;
+
+                    $("#markasReplacement").modal('hide');
+                    this.fetchDetail(this.orderID);
+                    return swal({
+                        title: "Success",
+                        text: "Marked as Replacement Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
         fetchTracking(id){
             let vm = this;
             axios

@@ -11,111 +11,129 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <h5>Basic Information</h5>
-                            <hr>
+                          <h5>Basic Information</h5>
+                          <hr>
                         </div>
+
                         <div class="col-md-3 col-6 b-r">
                           <strong>Full Name</strong>
                           <br>
-                          <p class="text-muted">{{ details.full_name }}</p>
+                          <p v-if="!editMode" class="text-muted">{{ details.full_name }}</p>
+                          <input v-else type="text" v-model="details.full_name" class="form-control">
                         </div>
+
                         <div class="col-md-3 col-6 b-r">
                           <strong>Mobile</strong>
                           <br>
-                          <p class="text-muted">{{ details.whatsapp_number }}</p>
+                          <p v-if="!editMode" class="text-muted">{{ details.whatsapp_number }}</p>
+                          <input v-else type="text" v-model="details.whatsapp_number" class="form-control">
                         </div>
+
                         <div class="col-md-3 col-6 b-r">
                           <strong>Email</strong>
                           <br>
-                          <p class="text-muted">{{ details.email }}</p>
+                          <p v-if="!editMode" class="text-muted">{{ details.email }}</p>
+                          <input v-else type="email" v-model="details.email" class="form-control">
                         </div>
+
                         <div class="col-md-3 col-6">
                           <strong>Location</strong>
                           <br>
                           <p class="text-muted">{{ details.city ? details.city.name : '-' }}</p>
+
                         </div>
 
                         <div class="col-md-3 col-6">
-                            <strong>CNIC</strong>
-                            <br>
-                            <p class="text-muted">{{ details.cnic_number }}</p>
-                          </div>
+                          <strong>CNIC</strong>
+                          <br>
+                          <p v-if="!editMode" class="text-muted">{{ details.cnic_number }}</p>
+                          <input v-else type="text" v-model="details.cnic_number" class="form-control">
+                        </div>
 
-                          <div class="col-md-3 col-6">
-                            <strong>Address</strong>
-                            <br>
-                            <p class="text-muted">{{ details.address }}</p>
-                          </div>
+                        <div class="col-md-3 col-6">
+                          <strong>Address</strong>
+                          <br>
+                          <p v-if="!editMode" class="text-muted">{{ details.address }}</p>
+                          <input v-else type="text" v-model="details.address" class="form-control">
+                        </div>
 
-                          <div class="col-md-12">
-                            <h5>Store Information</h5>
-                            <hr>
+                        <div class="col-md-12">
+                          <h5>Store Information</h5>
+                          <hr>
                         </div>
 
                         <div class="col-md-12 row" v-for="(shop, index) in details.shops" :key="shop.id">
-                            <div class="col-md-12">
-                              <h5>Shop {{ index + 1 }} Details</h5>
-                              <hr>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <strong>Store Name:</strong>
-                                <br>
-                                <p class="text-muted">{{ shop.store_name || 'N/A' }}</p>
-                              </div>
-                            <div class="col-md-3 col-6">
-                              <strong>Store URL:</strong>
-                              <br>
-                              <p class="text-muted">{{ shop.store_url || 'N/A' }}</p>
-                            </div>
-
-                            <div class="col-md-3 col-6">
-                              <strong>Social Media Link:</strong>
-                              <br>
-                              <p class="text-muted">{{ shop.social_media_profile_link || 'N/A' }}</p>
-                            </div>
-
-                            <div class="col-md-12 col-12">
-                              <strong>Business Description:</strong>
-                              <br>
-                              <p class="text-muted">{{ shop.business_description || 'N/A' }}</p>
-                            </div>
+                          <div class="col-md-12">
+                            <h5>Shop {{ index + 1 }} Details</h5>
+                            <hr>
                           </div>
 
+                          <div class="col-md-3 col-6">
+                            <strong>Store Name:</strong>
+                            <br>
+                            <p class="text-muted">{{ shop.store_name || 'N/A' }}</p>
+                          </div>
 
-                              <div class="col-md-12">
-                                <h5>Account Information</h5>
-                                <hr>
-                            </div>
+                          <div class="col-md-3 col-6">
+                            <strong>Store URL:</strong>
+                            <br>
+                            <p v-if="!editMode" class="text-muted">{{ shop.store_url || 'N/A' }}</p>
+                            <input v-else type="text" v-model="shop.store_url" class="form-control">
+                          </div>
 
-                            <div class="col-md-3 col-6">
-                                <strong>Bank Name:</strong>
-                                <br>
-                                <p class="text-muted">{{ details.bank ? details.bank.name : '-' }}</p>
-                              </div>
+                          <div class="col-md-3 col-6">
+                            <strong>Social Media Link:</strong>
+                            <br>
+                            <p v-if="!editMode" class="text-muted">{{ shop.social_media_profile_link || 'N/A' }}</p>
+                            <input v-else type="text" v-model="shop.social_media_profile_link" class="form-control">
+                          </div>
 
-                              <div class="col-md-3 col-6">
-                                <strong>Account Title</strong>
-                                <br>
-                                <p class="text-muted">{{ details.account_title || 'N/A' }}</p>
-                              </div>
+                          <div class="col-md-12 col-12">
+                            <strong>Business Description:</strong>
+                            <br>
+                            <p v-if="!editMode" class="text-muted">{{ shop.business_description || 'N/A' }}</p>
+                            <textarea v-else v-model="shop.business_description" class="form-control"></textarea>
+                          </div>
+                        </div>
 
-                              <div class="col-md-3 col-6">
-                                  <strong>Account Number:</strong>
-                                  <br>
-                                  <p class="text-muted">{{ details.account_number || 'N/A' }}</p>
-                                </div>
+                        <div class="col-md-12">
+                          <h5>Account Information</h5>
+                          <hr>
+                        </div>
 
-                                <div class="col-md-3 col-6">
-                                    <strong>Account IBAN</strong>
-                                    <br>
-                                    <p class="text-muted">{{ details.account_iban || 'N/A' }}</p>
-                                  </div>
-                                  <div class="col-md-3 col-6">
-                                    <strong>Payment Cycle</strong>
-                                    <br>
-                                    <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
-                                  </div>
+                        <div class="col-md-3 col-6">
+                          <strong>Bank Name:</strong>
+                          <br>
+                          <p class="text-muted">{{ details.bank ? details.bank.name : '-' }}</p>
 
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                          <strong>Account Title</strong>
+                          <br>
+                          <p v-if="!editMode" class="text-muted">{{ details.account_title || 'N/A' }}</p>
+                          <input v-else type="text" v-model="details.account_title" class="form-control">
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                          <strong>Account Number:</strong>
+                          <br>
+                          <p v-if="!editMode" class="text-muted">{{ details.account_number || 'N/A' }}</p>
+                          <input v-else type="text" v-model="details.account_number" class="form-control">
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                          <strong>Account IBAN</strong>
+                          <br>
+                          <p v-if="!editMode" class="text-muted">{{ details.account_iban || 'N/A' }}</p>
+                          <input v-else type="text" v-model="details.account_iban" class="form-control">
+                        </div>
+
+                        <div class="col-md-3 col-6">
+                          <strong>Payment Cycle</strong>
+                          <br>
+                          <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
+                        </div>
                       </div>
 
 
@@ -142,6 +160,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" @click="editMode ? saveDetails() : editMode = true">
+                        {{ editMode ? 'Update Information' : 'Edit Information' }}
+                      </button>
+
                     <button v-if="details.status == 0" type="button" class="btn btn-success" :class="loader ? 'btn-progress disabled' : ''" @click="decision('approve')">Approve</button>
                     <button v-if="details.status == 0" type="button" class="btn btn-danger" :class="loader ? 'btn-progress disabled' : ''" @click="decision('reject')">Reject</button>
 
@@ -160,12 +182,17 @@ export default {
     data() {
           return {
               web_url : process.env.MIX_WEB_URL,
+              editMode: false,  // This controls whether the user is in edit mode
           };
       },
     methods : {
       decision(action){
         this.$emit('decision', { id : this.details.id , action })
-      }
+      },
+      saveDetails() {
+            this.$emit('updateDropshipperInformation', this.details)
+            this.editMode = false;  // Exit edit mode after saving
+        }
     }
 }
 </script>
