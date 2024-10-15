@@ -12225,7 +12225,7 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
       attrs: {
         href: "#",
         "data-toggle": "modal",
@@ -12337,7 +12337,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Received")]), _vm._v(" "), _c("th", [_vm._v("Remaining")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Received")]), _vm._v(" "), _c("th", [_vm._v("Remaining")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

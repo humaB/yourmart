@@ -178,6 +178,7 @@
                                                     <tr>
                                                         <th>Sr #</th>
                                                         <th>Reference ID</th>
+                                                        <th>Dropshipper</th>
                                                         <th>Order #</th>
                                                         <th>Tracking Number</th>
                                                         <th>Product Price</th>
@@ -199,6 +200,7 @@
                                                     <tr v-for="(item, index) in orders" :key="item.id">
                                                         <td>{{ index + 1 }}</td>
                                                         <td>{{ item.id }}</td>
+                                                        <td>{{ item.user.name }}</td>
                                                         <td>
                                                             {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
                                                         </td>

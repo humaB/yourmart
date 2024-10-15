@@ -320,6 +320,12 @@ class DropShipperController extends Controller
                 // Shop Debit
                 $ledger->accountTransaction($head_id, $request->from_account, $orderProfit, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
                 // Optionally update other fields, such as remaining amounts for dropshipper/shop, if required
+
+                //
+                $dropshipper->increment('total_paid', $orderProfit);
+                $shop->increment('total_paid', $orderProfit);
+                $dropshipper->decrement('remaining_amount', $orderProfit);
+                $shop->decrement('total_remaining', $orderProfit);
                 $order->increment('total_paid_profit', $orderProfit);
 
                 continue; // Skip further processing for this order, as no payment can be made
