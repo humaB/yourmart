@@ -20,6 +20,7 @@
                                     <th>Against Order</th>
                                     <th>Amount</th>
                                     <th>Date</th>
+                                    <th>Proof of payment</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -35,6 +36,10 @@
                                     </td>
                                     <td>{{ group.total_debit.toFixed(2) }}</td>
                                     <td>{{ formatDate(group.created_at) }}</td>
+                                    <td v-if="group.attachment">
+                                        <a target="_blank" :href="`${public_url}/public/storage/uploads/dropshipper/payments/${group.attachment}`">Preview</a>
+                                    </td>
+                                    <td v-else>-</td>
                                     <td>
                                         <button class="btn btn-dark" @click="printRequest(group.document_id)">
                                             <i class="fa fa-print"></i>
@@ -77,11 +82,13 @@ export default {
             const grouped = {};
             this.history.forEach((payment) => {
                 const documentId = payment.document_id;
+                const attachment = payment.attachment;
                 if (!grouped[documentId]) {
                     grouped[documentId] = {
                         document_id: documentId,
                         total_debit: 0,
                         shop_orders: [],
+                        attachment: attachment,
                         created_at: payment.created_at,
                     };
                 }

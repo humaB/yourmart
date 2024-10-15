@@ -243,9 +243,9 @@ class DropShipperController extends Controller
     public function addPayment(Request $request)
     {
         $request->validate([
-            'type' => ['required'],
+            'type'         => ['required'],
             'from_account' => ['required'],
-            'amount' => ['required'],
+            'amount'       => ['required'],
         ]);
 
         $dropshipper = DropShipper::where('id', $request->id)->first();
@@ -269,6 +269,8 @@ class DropShipperController extends Controller
         // Initialize remaining amount to the requested amount
         $remainingAmount = $request->amount;
         $document = $ledger->voucherType('bank');
+
+        $attachment = $request->attachment ? $this->attachment($request->attachment) : null;
 
         foreach ($orders as $order) {
             $shop = $order->shop;
@@ -316,7 +318,7 @@ class DropShipperController extends Controller
                 // Increase remainingAmount by the amount the customer owes (i.e., the absolute value of the negative profit)
                 $remainingAmount += abs($orderProfit);
                 // Shop Debit
-                $ledger->accountTransaction($head_id, $request->from_account, $orderProfit, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
+                $ledger->accountTransaction($head_id, $request->from_account, $orderProfit, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
                 // Optionally update other fields, such as remaining amounts for dropshipper/shop, if required
                 $order->increment('total_paid_profit', $orderProfit);
 
@@ -335,7 +337,7 @@ class DropShipperController extends Controller
             if ($amountToPay > 0) {
 
                 // Shop Debit
-                $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
+                $ledger->accountTransaction($head_id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
 
                 // Update totals
                 $dropshipper->increment('total_paid', $amountToPay);
@@ -350,9 +352,21 @@ class DropShipperController extends Controller
         }
 
         // Bank Cash Credit
-        $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1);
+        $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
 
         return response()->json([], 200);
+    }
+
+    public function attachment( $image  ){
+        $filenameWithExt = $image->getClientOriginalName();
+        //get just filename
+        $filename        = pathinfo($filenameWithExt);
+        //get just extension
+        $extension       = $image->extension();
+        $nameToStore     = str_replace(' ', '' ,$filename['filename']) . "_" . time() . "." . $extension;
+        //Move to folder
+        $path            = $image->storeAs('public/uploads/dropshipper/payments/', $nameToStore);
+        return $nameToStore;
     }
 
     public function decision(Request $request)

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account\Helper;
 
+use App\Models\Account\Account;
 use App\Models\Account\AccountGroup;
 use App\Models\Account\AccountHead;
 use App\Models\Account\AccountTransaction;
@@ -62,8 +63,11 @@ class AccountHeadHelper {
               return $document_id;
     }
 
-    public function accountTransaction($head, $otherHead, $debit, $credit, $narration, $document_id, $type, $postingType, $postingID, $approved = 0){
+    public function accountTransaction($head, $otherHead, $debit, $credit, $narration, $document_id, $type, $postingType, $postingID, $approved = 0 , $attachment = null){
             // receipt id only generate when voucher will approved
+
+            $accountHead = AccountHead::where('id', $head)->first();
+
             $posting = AccountTransaction::create([
                 'account_head_id' => $head,
                 'other_account_head_id' => $otherHead,
@@ -75,6 +79,11 @@ class AccountHeadHelper {
                 'posting_type'   => $postingType,
                 'posting_id'     => $postingID,
                 'cheque'         => null,
+                "parent_account_id"  => $accountHead->parent_account_id, // first tier id
+                "account_id"         => $accountHead->account_id, // second tier id
+                "parent_group_id"    => $accountHead->parent_group_id, // third tier id
+                "group_id"           => $accountHead->group_id, // fourt tier id
+                "attachment"         => $attachment,
                 'approved'       => $approved,
                 'added_by'       => auth()->user()->id ?? 0,
             ]);

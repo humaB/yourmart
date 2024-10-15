@@ -136,8 +136,14 @@
          @updateDropshipperInformation="updateDropshipperInformation($event)"
         />
 
-        <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
-            :details="details" :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment"
+        <DropshipperPayment ref="dropshipperPayment"
+            :orders="orders"
+            :addData="addData"
+            :loader="paymentLoader"
+            :details="details"
+            :accountCash="accountCash"
+            :accountBanks="accountBanks"
+            @add="addPayment"
             @fetchTracking="fetchTracking($event)"
             @fetchOrderDetails="fetchOrderDetails( $event )"
         />
@@ -237,7 +243,8 @@ export default {
                 from_account: { code: 0, label: "Select from the following" },
                 amount: null,
                 narration: null,
-                id: ''
+                id: '',
+                attachment : null
             },
             paymentLoader: false,
             selectedDropshipper: '',
@@ -406,19 +413,32 @@ export default {
                 });
             }
 
-            this.paymentLoader = true;
+
+            const fd = new FormData()
+            // Append each field from addData to the FormData object
+            fd.append('id', this.selectedDropshipper);
+            fd.append('type', this.addData.type);
+            fd.append('from_account', this.addData.from_account); // Sending only the code (adjust as needed)
+            fd.append('amount', this.addData.amount);
+            fd.append('narration', this.addData.narration);
+
+            // If the attachment is a file, append it as well
+            if (this.addData.attachment instanceof File) {
+                fd.append('attachment', this.addData.attachment);
+            }
 
             this.addData.id = this.selectedDropshipper;
+            this.paymentLoader = true;
+
             axios
-                .post(this.api_url + "dropshippers/payments/add", this.addData)
+                .post(this.api_url + "dropshippers/payments/add", fd)
                 .then((response) => {
 
-                    this.$refs.dropshipperPayment.paymentShopPayments(this.addData.shop_id);
+                    this.paymentDetail(this.addData.id);
                     this.addData = JSON.parse(JSON.stringify(this.addDataReset));
 
                     this.paymentLoader = false;
 
-                    this.paymentDetail(this.selectedDropshipper);
                     this.fetchRecord();
 
                     return swal({

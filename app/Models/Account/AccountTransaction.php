@@ -29,6 +29,7 @@ class AccountTransaction extends Model
         "account_id", // second tier id
         "parent_group_id", // third tier id
         "group_id", // fourt tier id
+        "attachment",
         "time",
         "company_id",
         "added_by",

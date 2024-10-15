@@ -269,6 +269,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    setAttachment: function setAttachment(event) {
+      this.addData.attachment = event.target.files[0];
+    },
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
@@ -378,11 +381,13 @@ __webpack_require__.r(__webpack_exports__);
       var grouped = {};
       this.history.forEach(function (payment) {
         var documentId = payment.document_id;
+        var attachment = payment.attachment;
         if (!grouped[documentId]) {
           grouped[documentId] = {
             document_id: documentId,
             total_debit: 0,
             shop_orders: [],
+            attachment: attachment,
             created_at: payment.created_at
           };
         }
@@ -2890,7 +2895,8 @@ __webpack_require__.r(__webpack_exports__);
         },
         amount: null,
         narration: null,
-        id: ''
+        id: '',
+        attachment: null
       },
       paymentLoader: false,
       selectedDropshipper: '',
@@ -3045,13 +3051,24 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       }
-      this.paymentLoader = true;
+      var fd = new FormData();
+      // Append each field from addData to the FormData object
+      fd.append('id', this.selectedDropshipper);
+      fd.append('type', this.addData.type);
+      fd.append('from_account', this.addData.from_account); // Sending only the code (adjust as needed)
+      fd.append('amount', this.addData.amount);
+      fd.append('narration', this.addData.narration);
+
+      // If the attachment is a file, append it as well
+      if (this.addData.attachment instanceof File) {
+        fd.append('attachment', this.addData.attachment);
+      }
       this.addData.id = this.selectedDropshipper;
-      axios.post(this.api_url + "dropshippers/payments/add", this.addData).then(function (response) {
-        _this2.$refs.dropshipperPayment.paymentShopPayments(_this2.addData.shop_id);
+      this.paymentLoader = true;
+      axios.post(this.api_url + "dropshippers/payments/add", fd).then(function (response) {
+        _this2.paymentDetail(_this2.addData.id);
         _this2.addData = JSON.parse(JSON.stringify(_this2.addDataReset));
         _this2.paymentLoader = false;
-        _this2.paymentDetail(_this2.selectedDropshipper);
         _this2.fetchRecord();
         return swal({
           title: "Success",
@@ -5056,7 +5073,7 @@ var render = function render() {
       disabled: ""
     }
   })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
+    staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_vm._m(4), _vm._v(" "), _c("input", {
@@ -5087,7 +5104,7 @@ var render = function render() {
       }
     }
   })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
+    staticClass: "col-md-5"
   }, [_c("div", {
     staticClass: "form-group"
   }, [_c("label", {
@@ -5115,6 +5132,22 @@ var render = function render() {
         if ($event.target.composing) return;
         _vm.$set(_vm.addData, "narration", $event.target.value);
       }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "amountField"
+    }
+  }, [_vm._v("Proof of payment")]), _vm._v(" "), _c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file"
+    },
+    on: {
+      change: _vm.setAttachment
     }
   })])]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
@@ -5321,7 +5354,12 @@ var render = function render() {
       return _c("span", {
         key: shopIndex
       }, [_vm._v("\n                                        " + _vm._s(shopOrder.store_name.substring(0, 3) + "-" + shopOrder.order_no) + "\n                                        "), shopIndex < group.shop_orders.length - 1 ? _c("br") : _vm._e()]);
-    }), 0), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.total_debit.toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(group.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }), 0), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.total_debit.toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(group.created_at)))]), _vm._v(" "), group.attachment ? _c("td", [_c("a", {
+      attrs: {
+        target: "_blank",
+        href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(group.attachment)
+      }
+    }, [_vm._v("Preview")])]) : _c("td", [_vm._v("-")]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-dark",
       on: {
         click: function click($event) {
@@ -5389,7 +5427,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Receipt #")]), _vm._v(" "), _c("th", [_vm._v("Against Order")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Receipt #")]), _vm._v(" "), _c("th", [_vm._v("Against Order")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Proof of payment")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

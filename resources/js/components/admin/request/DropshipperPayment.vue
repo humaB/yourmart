@@ -53,17 +53,24 @@
                         </div>
 
                         <!-- Amount input field -->
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label for="amountField">Amount <span class="text-danger">*</span></label>
                                 <input type="text" v-model="addData.amount" class="form-control" id="amountField" placeholder="Enter amount" @keypress="numberValidate($event,{dot:true})" />
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="amountField">Narration</label>
                                 <input type="text" v-model="addData.narration" class="form-control" id="amountField" placeholder="Enter amount" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="amountField">Proof of payment</label>
+                                <input type="file" @change="setAttachment"  class="form-control" />
                             </div>
                         </div>
 
@@ -185,6 +192,9 @@ export default {
           };
       },
     methods : {
+        setAttachment( event ){
+            this.addData.attachment = event.target.files[0];
+        },
         formatPrice(price) {
             var string = parseFloat(price).toString();
             return string
