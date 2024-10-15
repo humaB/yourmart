@@ -349,7 +349,7 @@ class LeopardApiHelper
         */
         $document = $ledger->voucherType('JV');
         $mainAccount = $order->is_replacement == '1' ? 164 : $head_id;
-        $ledger->accountTransaction($mainAccount, 74, $order->total_bill, 0, 'Total Receivable Amount', $document, 'JV', 'order', $order->id, $approved = 1);
+        $ledger->accountTransaction($mainAccount, 74, $order->total_bill, 0, $order->is_replacement == '1' ? 'Expense amount on company for product replacement' : 'Total Receivable Amount', $document, 'JV', 'order', $order->id, $approved = 1);
         //Sale Credit
         $ledger->accountTransaction(74, $mainAccount, 0, $productPrice + $packingCharges + $courierExtraCharges, 'Product + Packaging Cost', $document, 'JV', 'order', $order->id, $approved = 1);
         //leopard Credit
