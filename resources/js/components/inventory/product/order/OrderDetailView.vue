@@ -208,17 +208,27 @@
                                                                 <td v-if="details.is_replacement == 1">0</td>
                                                                 <td v-else>
                                                                     {{
-                                                                      (parseFloat(item.sell_price)
-                                                                      - (
-                                                                          (parseFloat(item.quantity) * parseFloat(item.price))
-                                                                          + parseFloat(item.packaging_cost)
-                                                                          + parseFloat(item.courier_cost)
-                                                                          + ((details.advance_amount / (parseFloat(details.total_bill) - (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))))
-                                                                          * (parseFloat(item.price) * parseFloat(item.quantity)))
-                                                                        )
-                                                                      ).toFixed(0)
+                                                                      parseFloat(item.sell_price) === (
+                                                                        (parseFloat(item.quantity) * parseFloat(item.price))
+                                                                        + parseFloat(item.packaging_cost)
+                                                                        + parseFloat(item.courier_cost)
+                                                                      )
+                                                                      ? 0
+                                                                      : (
+                                                                          parseFloat(item.sell_price)
+                                                                          - (
+                                                                              (parseFloat(item.quantity) * parseFloat(item.price))
+                                                                              + parseFloat(item.packaging_cost)
+                                                                              + parseFloat(item.courier_cost)
+                                                                              + (
+                                                                                (parseFloat(details.advance_amount) / (parseFloat(details.total_bill) - (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))))
+                                                                                * (parseFloat(item.price) * parseFloat(item.quantity))
+                                                                              )
+                                                                            )
+                                                                        ).toFixed(0)
                                                                     }}
                                                                   </td>
+
                                                             </tr>
                                                         </tbody>
                                                         <tfoot>
@@ -615,14 +625,25 @@ export default {
             }, 0).toFixed(0) : 0;
         },
         totalNetProfit() {
-            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                const advance = this.details.advance_amount;
-                const subTotal = parseFloat(this.details.total_bill) - ( parseFloat(this.details.courier_service_price) + parseFloat(this.details.packaging_price));
-                const itemTotal = parseFloat(item.price) * parseFloat(item.quantity);
-                const advanceAmount = (advance / subTotal) * itemTotal;
-                return total + (parseFloat(item.sell_price) - ( itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + advanceAmount ) ) ;
-            }, 0).toFixed(0) : 0;
+            return this.details && this.details.items
+                ? this.details.items.reduce((total, item) => {
+                    const advance = this.details.advance_amount;
+                    const subTotal = parseFloat(this.details.total_bill) -
+                                    (parseFloat(this.details.courier_service_price) + parseFloat(this.details.packaging_price));
+                    const itemTotal = parseFloat(item.price) * parseFloat(item.quantity);
+                    const advanceAmount = (advance / subTotal) * itemTotal;
+
+                    const totalCost = itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + advanceAmount;
+                    const sellPrice = parseFloat(item.sell_price);
+
+                    // If total cost equals sell price, return 0 for that item, otherwise return the calculated difference
+                    const netProfit = sellPrice === totalCost ? 0 : sellPrice - totalCost;
+
+                    return total + netProfit;
+                }, 0).toFixed(0)
+                : 0;
         }
+
     },
     methods: {
         onlyNumber($event) {
