@@ -633,11 +633,11 @@ export default {
                     const itemTotal = parseFloat(item.price) * parseFloat(item.quantity);
                     const advanceAmount = (advance / subTotal) * itemTotal;
 
-                    const totalCost = itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + advanceAmount;
+                    const totalCost = itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost);
                     const sellPrice = parseFloat(item.sell_price);
 
                     // If total cost equals sell price, return 0 for that item, otherwise return the calculated difference
-                    const netProfit = sellPrice === totalCost ? 0 : sellPrice - totalCost;
+                    const netProfit = sellPrice === totalCost ? 0 : sellPrice - (totalCost  + advanceAmount);
 
                     return total + netProfit;
                 }, 0).toFixed(0)

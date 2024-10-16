@@ -1280,11 +1280,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         var subTotal = parseFloat(_this3.details.total_bill) - (parseFloat(_this3.details.courier_service_price) + parseFloat(_this3.details.packaging_price));
         var itemTotal = parseFloat(item.price) * parseFloat(item.quantity);
         var advanceAmount = advance / subTotal * itemTotal;
-        var totalCost = itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) + advanceAmount;
+        var totalCost = itemTotal + parseFloat(item.packaging_cost) + parseFloat(item.courier_cost);
         var sellPrice = parseFloat(item.sell_price);
 
         // If total cost equals sell price, return 0 for that item, otherwise return the calculated difference
-        var netProfit = sellPrice === totalCost ? 0 : sellPrice - totalCost;
+        var netProfit = sellPrice === totalCost ? 0 : sellPrice - (totalCost + advanceAmount);
         return total + netProfit;
       }, 0).toFixed(0) : 0;
     }
