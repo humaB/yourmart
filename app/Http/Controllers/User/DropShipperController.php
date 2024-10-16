@@ -908,7 +908,7 @@ class DropShipperController extends Controller
                     <table cellspacing="0" cellpadding="4" border="1">
                         <tr>
                             <td style="width:3.6%;">$index</td>
-                            <td style="width:7.2%;">$order->order_no</td>
+                            <td style="width:7.2%;">  $orderNo</td>
                             <td style="width:9%;">$order->tracking_number</td>
                             <td style="width:8%;">$date</td>
                             <td style="width:9%;">$status</td>
