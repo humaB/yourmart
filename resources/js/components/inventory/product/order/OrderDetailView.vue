@@ -173,7 +173,7 @@
                                                                 <th>Total Cost</th>
                                                                 <th>Sell Price</th>
                                                                 <th>Total Payable</th>
-                                                                <th>Net Profit</th>
+                                                                <!-- <th>Net Profit</th> -->
                                                             </tr>
                                                         </thead>
                                                         <tbody>
