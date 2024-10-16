@@ -799,6 +799,131 @@ class DropShipperController extends Controller
 
         $pdf->Output('payment_voucher.pdf', 'I');
     }
+
+    public function payment_ledger( Request $request ){
+
+        $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
+
+         $orders = Order::with('vouchers')->where('belongs_to', $dropshipper->user_id)->whereIn('status', ['8','9','10'])->get();
+
+         $pdf = new MYPDF3(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+         $pdf->SetCreator(PDF_CREATOR);
+         $pdf->SetAuthor('');
+         $pdf->SetTitle('Payment Ledger');
+         $pdf->SetSubject(' ');
+         $pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
+         $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+         $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+         $pdf->SetMargins(5, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+         $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+         // set default font subsetting mode
+         $pdf->setFontSubsetting(true);
+         $pdf->SetFont('times', 'B', 12, 'C', true);
+
+         $pdf->AddPage('L');
+
+
+         $pdf->SetFont('dejavusans', '', 10, 'C', true);
+
+         $pdf->Ln(5);
+
+         $pdf->SetFont('dejavusans', '', 10, 'C', true);
+         $pdf->MultiCell(40, 0, "Printed Date ", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, date('d-M-Y'), 1, 'R', 0, 0);
+
+         $totalPayable = $orders->sum('total_profit');
+         $totalPaid= $orders->sum('total_paid_profit');
+         $balance= $totalPayable - $totalPaid;
+
+
+         $pdf->Ln();
+         $pdf->MultiCell(40, 0, "Dropshipper", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, $dropshipper->full_name, 1, 'R', 0, 0);
+         $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+         $pdf->MultiCell(40, 0, "Total Payable", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, $totalPayable, 1, 'R', 0, 0);
+
+         $pdf->Ln();
+         $pdf->MultiCell(40, 0, "CNIC", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, $dropshipper->cnic_number, 1, 'R', 0, 0);
+         $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+         $pdf->MultiCell(40, 0, "Total Paid", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, $totalPaid, 1, 'R', 0, 0);
+
+         $pdf->Ln();
+         $pdf->MultiCell(40, 0, "Contact #", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, $dropshipper->whatsapp_number, 1, 'R', 0, 0);
+            $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+         $pdf->MultiCell(40, 0, "Remaining Balance", 1, 'L', 0, 0);
+         $pdf->MultiCell(35, 0, $balance, 1, 'R', 0, 0);
+
+         $pdf->Ln(10);
+         $pdf->SetFont('dejavusans', 'B', 8);
+         $pdf->Cell(10, 0, "Sr", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(20, 0, "Order #", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(25, 0, "Tracking #", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(22, 0, "Order Date", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(25, 0, "Status", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(35, 0, "Total Payable", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(35, 0, "Paid Date", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(35, 0, "Paid Amount", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(35, 0, "Receipt no", 1, false, 'L', 0, '', 0, false, 'T',);
+         $pdf->Cell(35, 0, "Balance", 1, 1, 'L', 0, '', 0, false, 'T',);
+
+         $pdf->SetFont('dejavusans', '', 7.7);
+         $total_quantity = 0;
+         $orderTbl = '';
+       // Iterate over each order
+        foreach ($orders as $orderIndex => $order) {
+            $vouchers = "";
+            $voucherDates = "";
+            $voucherAmount = "";
+
+            // Loop through vouchers
+            foreach ($order->vouchers as $index => $voucher) {
+                $date = date('d-M-Y', strtotime($voucher->created_at));
+                $amount = number_format($voucher->debit);
+                if( $index == 0){
+                    $vouchers .= "<span><u>{$voucher->type} - {$voucher->document_id}</u></span>";
+                    $voucherDates .= "<span><u>{$date}</u></span>";
+                    $voucherAmount .= "<span><u>{$amount}</u></span>";
+                }else{
+                    $vouchers .= "<br><span><u>{$voucher->type} - {$voucher->document_id}</u></span>";
+                    $voucherDates .= "<br><span><u>{$date}</u></span>";
+                    $voucherAmount .= "<br><span><u>{$amount}</u></span>";
+                }
+            }
+
+            $index = $orderIndex + 1;
+            $status = $order->status == '8' ? 'Delivered' : 'Returned';
+            $date = date('d-M-Y', strtotime($order->created_at));
+            $balances = $order->total_profit - $order->total_paid_profit;
+                // Generate the table rows for each order
+                $orderTbl .= <<<EOD
+                    <table cellspacing="0" cellpadding="4" border="1">
+                        <tr>
+                            <td style="width:3.6%;">$index</td>
+                            <td style="width:7.2%;">$order->order_no</td>
+                            <td style="width:9%;">$order->tracking_number</td>
+                            <td style="width:8%;">$date</td>
+                            <td style="width:9%;">$status</td>
+                            <td style="width:12.7%;">$order->total_profit</td>
+                            <td style="width:12.6%;">$voucherDates</td>
+                            <td style="width:12.6%;">$voucherAmount</td>
+                            <td style="width:12.6%;">$vouchers</td>
+                            <td style="width:12.7%;">$balances</td>
+                        </tr>
+                    </table>
+                EOD;
+        }
+        // Write order row to PDF
+        $pdf->writeHTML($orderTbl, true, false, false, false, '');
+
+         $pdf->Output('ledger.pdf', 'I');
+    }
 }
 
 class MYPDF2 extends TCPDF
@@ -846,6 +971,50 @@ class MYPDF extends TCPDF
         $this->Ln(5);
         // Title
         $this->Cell(0, 15, 'Dropshipper Form', 0, 1, 'L', 0, '', 0, false, 'M', 'M');
+        $this->SetFont('helvetica', '', 12);
+
+        $this->Cell(0, 0, "", 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
+    }
+
+    // Page footer
+    public function Footer()
+    {
+        $user_name = auth()->user()->name;
+        $date_now = date('d-M-Y h:i A', strtotime(now()));
+        $this->SetFont('times', '', 9);
+        //   Position at 15 mm from bottom
+        $this->Ln(-15);
+        $this->SetFont('times', '', 8);
+        $this->Cell(0, 0, '"Errors and omissions excepted" (E&OE)', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $this->SetFont('times', 'B', 9);
+        $this->Cell(0, 0, 'Printed By : ' . $user_name . ' || ' . $date_now, 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $this->SetFont('times', '', 8);
+        $this->Cell(0, 0, 'Developed By SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+    }
+}
+
+
+class MYPDF3 extends TCPDF
+{
+
+    //Page header
+    public function Header()
+    {
+        $image = '';
+        $image_path = asset('assets/img/fa-icon.jpg');
+
+        //Logo
+        $this->Ln();
+
+        $this->Image($image_path, 10, 2, 20, '', 'JPG',  '', '', true, 150, '', false, false, 0, false, false, false);
+        $this->SetFont('helvetica', 'B', 14);
+        $this->Ln(5);
+        // Title
+        $this->Cell(0, 10, 'YourMart', 0, 1, 'C', 0, '', 0, false, 'M', 'M');
+        $this->SetFont('helvetica', 'B', 12);
+        $this->Cell(0, 10, 'Customer Statement', 0, 0, 'C', 0, '', 0, false, 'M', 'M');
+        $this->SetFont('helvetica', '', 10);
+        $this->Cell(0, 10, '+92 326 981 0000', 0, 1, 'R', 0, '', 0, false, 'M', 'M');
         $this->SetFont('helvetica', '', 12);
 
         $this->Cell(0, 0, "", 'B', 1, 'L', 0, '', 0, false, 'M', 'M');

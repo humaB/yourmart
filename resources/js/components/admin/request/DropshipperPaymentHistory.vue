@@ -37,7 +37,8 @@
                                     <td>{{ group.total_debit.toFixed(2) }}</td>
                                     <td>{{ formatDate(group.created_at) }}</td>
                                     <td v-if="group.attachment">
-                                        <a target="_blank" :href="`${public_url}/public/storage/uploads/dropshipper/payments/${group.attachment}`">Preview</a>
+                                        <a target="_blank"
+                                            :href="`${public_url}/public/storage/uploads/dropshipper/payments/${group.attachment}`">Preview</a>
                                     </td>
                                     <td v-else>-</td>
                                     <td>
@@ -51,14 +52,21 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-dark" @click="printLedger()"><i class="fa fa-print"></i> Print Ledger</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-           <!-- Summary PRINT -->
+        <!-- Summary PRINT -->
         <form method="POST" :action="public_url + '/dropshippers/payment-history'" target="_blank" ref="paymentHistory">
             <input type="hidden" name="_token" :value="csrf">
             <input type="hidden" name="document" :value="id">
+            <input type="hidden" name="dropshipper" :value="selectedDropshipper">
+        </form>
+
+        <!-- Summary PRINT -->
+        <form method="POST" :action="public_url + '/dropshippers/ledger'" target="_blank" ref="paymentLedger">
+            <input type="hidden" name="_token" :value="csrf">
             <input type="hidden" name="dropshipper" :value="selectedDropshipper">
         </form>
     </div>
@@ -67,11 +75,11 @@
 export default {
     name: 'DropshipperPaymentHistory',
     props: ['history', 'selectedDropshipper'],
-    data(){
+    data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
-            id : '',
-            csrf : ''
+            id: '',
+            csrf: ''
         }
     },
     created() {
@@ -108,6 +116,12 @@ export default {
         printRequest(id) {
             this.id = id;
             const form = this.$refs.paymentHistory;
+            setTimeout(() => {
+                form.submit();
+            }, 500)
+        },
+        printLedger() {
+            const form = this.$refs.paymentLedger;
             setTimeout(() => {
                 form.submit();
             }, 500)

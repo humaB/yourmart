@@ -53,7 +53,7 @@ class StoreInwardController extends Controller
     }
 
     public function updateBarcode( Request $request ){
-    
+
         ProductQrCode::updateOrCreate(
             [
                 'product_variation_id' => $request->id,
@@ -229,7 +229,7 @@ class StoreInwardController extends Controller
 
 
          $pdf->Output('in_ward.pdf', 'I');
-}
+    }
 
 }
 

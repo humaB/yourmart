@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory\Order;
 
+use App\Models\Account\AccountTransaction;
 use App\Models\City;
 use App\Models\Inventory\Courier\Courier;
 use App\Models\Inventory\Courier\CourierCategoryRange;
@@ -87,5 +88,11 @@ class Order extends Model
 
     public function daraz_labels(){
         return $this->hasMany(OrderLabel::class);
+    }
+
+    public function vouchers(){
+        return $this->hasMany(AccountTransaction::class, 'posting_id', 'id')
+                    ->where('posting_type', 'order')
+                    ->whereIn('type', ['BP', 'CP']);
     }
 }

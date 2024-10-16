@@ -268,6 +268,23 @@ __webpack_require__.r(__webpack_exports__);
       shop: []
     };
   },
+  computed: {
+    totalProfit: function totalProfit() {
+      return this.orders.reduce(function (sum, item) {
+        return sum + parseFloat(item.total_profit);
+      }, 0).toFixed(2);
+    },
+    totalPaidProfit: function totalPaidProfit() {
+      return this.orders.reduce(function (sum, item) {
+        return sum + parseFloat(item.total_paid_profit);
+      }, 0).toFixed(2);
+    },
+    totalBalance: function totalBalance() {
+      return this.orders.reduce(function (sum, item) {
+        return sum + (parseFloat(item.total_profit) - parseFloat(item.total_paid_profit));
+      }, 0).toFixed(2);
+    }
+  },
   methods: {
     setAttachment: function setAttachment(event) {
       this.addData.attachment = event.target.files[0];
@@ -407,6 +424,12 @@ __webpack_require__.r(__webpack_exports__);
     printRequest: function printRequest(id) {
       this.id = id;
       var form = this.$refs.paymentHistory;
+      setTimeout(function () {
+        form.submit();
+      }, 500);
+    },
+    printLedger: function printLedger() {
+      var form = this.$refs.paymentLedger;
       setTimeout(function () {
         form.submit();
       }, 500);
@@ -5210,8 +5233,8 @@ var render = function render() {
           return _vm.fetchTracking(item.id);
         }
       }
-    }, [_vm._v("\n                                        " + _vm._s(item.tracking_number) + "\n                                      ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.advance_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid_profit))])]);
-  }), 0)])])]), _vm._v(" "), _c("div", {
+    }, [_vm._v("\n                                        " + _vm._s(item.tracking_number) + "\n                                      ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.advance_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid_profit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_profit - item.total_paid_profit))])]);
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(7), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.totalProfit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.totalPaidProfit))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.totalBalance))])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -5303,7 +5326,18 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Shop Name")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Shop Name")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Balance")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticStyle: {
+      "text-align": "right"
+    },
+    attrs: {
+      colspan: "9"
+    }
+  }, [_c("strong", [_vm._v("Total:")])]);
 }];
 render._withStripped = true;
 
@@ -5369,7 +5403,24 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "fa fa-print"
     })])])]);
-  }), 0)])])]), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c("form", {
+  }), 0)])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("button", {
+    staticClass: "btn btn-dark",
+    on: {
+      click: function click($event) {
+        return _vm.printLedger();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-print"
+  }), _vm._v(" Print Ledger")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])]), _vm._v(" "), _c("form", {
     ref: "paymentHistory",
     attrs: {
       method: "POST",
@@ -5391,6 +5442,29 @@ var render = function render() {
     },
     domProps: {
       value: _vm.id
+    }
+  }), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "hidden",
+      name: "dropshipper"
+    },
+    domProps: {
+      value: _vm.selectedDropshipper
+    }
+  })]), _vm._v(" "), _c("form", {
+    ref: "paymentLedger",
+    attrs: {
+      method: "POST",
+      action: _vm.public_url + "/dropshippers/ledger",
+      target: "_blank"
+    }
+  }, [_c("input", {
+    attrs: {
+      type: "hidden",
+      name: "_token"
+    },
+    domProps: {
+      value: _vm.csrf
     }
   }), _vm._v(" "), _c("input", {
     attrs: {
@@ -5428,18 +5502,6 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Receipt #")]), _vm._v(" "), _c("th", [_vm._v("Against Order")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Proof of payment")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-footer"
-  }, [_c("button", {
-    staticClass: "btn btn-secondary",
-    attrs: {
-      type: "button",
-      "data-dismiss": "modal"
-    }
-  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 

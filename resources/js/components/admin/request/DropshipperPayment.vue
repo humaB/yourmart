@@ -140,6 +140,7 @@
                                     <th>Advance</th>
                                     <th>Total Payable</th>
                                     <th>Total Paid</th>
+                                    <th>Balance</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,8 +164,17 @@
                                     <td>{{ item.advance_amount }}</td>
                                     <td>{{ item.total_profit }}</td>
                                     <td>{{ item.total_paid_profit }}</td>
+                                    <td>{{ item.total_profit - item.total_paid_profit }}</td>
                                 </tr>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                  <td colspan="9" style="text-align: right;"><strong>Total:</strong></td>
+                                  <td>{{ totalProfit }}</td>
+                                  <td>{{ totalPaidProfit }}</td>
+                                  <td>{{ totalBalance }}</td>
+                                </tr>
+                              </tfoot>
                         </table>
                     </div>
                     </div>
@@ -191,6 +201,17 @@ export default {
               shop: [],
           };
       },
+      computed: {
+        totalProfit() {
+            return this.orders.reduce((sum, item) => sum + parseFloat(item.total_profit), 0).toFixed(2);
+        },
+        totalPaidProfit() {
+            return this.orders.reduce((sum, item) => sum + parseFloat(item.total_paid_profit), 0).toFixed(2);
+        },
+        totalBalance() {
+            return this.orders.reduce((sum, item) => sum + (parseFloat(item.total_profit) - parseFloat(item.total_paid_profit)), 0).toFixed(2);
+        },
+    },
     methods : {
         setAttachment( event ){
             this.addData.attachment = event.target.files[0];
