@@ -205,7 +205,7 @@
 
                                                                 <td v-if="details.is_replacement == 1">0</td>
                                                                 <td v-else>{{ parseFloat(item.sell_price)  - ( (parseFloat(item.quantity) * parseFloat(item.price) ) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost) ) ) }}</td>
-                                                                <td v-if="details.is_replacement == 1">0</td>
+                                                                <!-- <td v-if="details.is_replacement == 1">0</td>
                                                                 <td v-else>
                                                                     {{
                                                                       parseFloat(item.sell_price) === (
@@ -227,7 +227,7 @@
                                                                             )
                                                                         ).toFixed(0)
                                                                     }}
-                                                                  </td>
+                                                                  </td> -->
 
                                                             </tr>
                                                         </tbody>
@@ -247,8 +247,8 @@
                                                                 <td v-if="details.is_replacement == 1">0</td>
                                                                 <td class="h5" v-else>{{ totalPaybale }}</td>
 
-                                                                <td v-if="details.is_replacement == 1">0</td>
-                                                                <td v-else class="h5">{{ totalNetProfit }}</td>
+                                                                <!-- <td v-if="details.is_replacement == 1">0</td>
+                                                                <td v-else class="h5">{{ totalNetProfit }}</td> -->
                                                             </tr>
                                                         </tfoot>
                                                     </table>
