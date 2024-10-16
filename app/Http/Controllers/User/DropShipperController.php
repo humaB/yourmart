@@ -802,9 +802,9 @@ class DropShipperController extends Controller
 
     public function payment_ledger( Request $request ){
 
-        $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
+         $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
 
-         $orders = Order::with('vouchers')->where('belongs_to', $dropshipper->user_id)->whereIn('status', ['8','9','10'])->get();
+         $orders = Order::with('vouchers', 'shop:id,store_name')->where('belongs_to', $dropshipper->user_id)->whereIn('status', ['8','9','10'])->get();
 
          $pdf = new MYPDF3(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
          $pdf->SetCreator(PDF_CREATOR);
@@ -856,7 +856,7 @@ class DropShipperController extends Controller
          $pdf->Ln();
          $pdf->MultiCell(40, 0, "Contact #", 1, 'L', 0, 0);
          $pdf->MultiCell(35, 0, $dropshipper->whatsapp_number, 1, 'R', 0, 0);
-            $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+         $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
          $pdf->MultiCell(40, 0, "Remaining Balance", 1, 'L', 0, 0);
          $pdf->MultiCell(35, 0, $balance, 1, 'R', 0, 0);
 
@@ -896,6 +896,8 @@ class DropShipperController extends Controller
                     $voucherAmount .= "<br><span><u>{$amount}</u></span>";
                 }
             }
+
+            $orderNo = strtoupper(substr($order->shop->store_name, 0, 3)) . '-' . $order->order_no;
 
             $index = $orderIndex + 1;
             $status = $order->status == '8' ? 'Delivered' : 'Returned';
