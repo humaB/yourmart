@@ -93,6 +93,7 @@ class Order extends Model
     public function vouchers(){
         return $this->hasMany(AccountTransaction::class, 'posting_id', 'id')
                     ->where('posting_type', 'order')
+                    ->where('debit', '!=', '0')
                     ->whereIn('type', ['BP', 'CP']);
     }
 }
