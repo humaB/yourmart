@@ -200,7 +200,7 @@ class DropshipperPreviewController extends Controller
                 $accountHealth = 0;
             }
             // Assign the calculated health to the store object
-            $store->health = $accountHealth;
+            $store->health = round($accountHealth);
         }
 
         return $stores;
@@ -224,7 +224,7 @@ class DropshipperPreviewController extends Controller
             $accountHealth = 0; // If no orders, health is 0
         }
 
-        return $accountHealth;
+        return round($accountHealth);
     }
 
     private function leopardPerformance($dropshipper ,$from = null, $to = null)
