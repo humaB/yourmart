@@ -33,6 +33,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
+use App\Http\Controllers\User\DropshipperPreviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -84,6 +85,8 @@ Route::post('tickets/messages/upload/image', [TicketController::class, 'apiImage
 Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ DropShipperController::class , 'getRequests']);
     Route::post('/',  [ DropShipperController::class , 'update']);
+
+    Route::post('/preview',  [ DropshipperPreviewController::class , 'fetchData']);
 
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);

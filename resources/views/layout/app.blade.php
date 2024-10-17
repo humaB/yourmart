@@ -56,6 +56,14 @@
 	<!-- General JS Scripts -->
     <script src="{{ asset('assets/js/app.min.js') }}"></script>
     <!-- JS Libraies -->
+    <script src="{{ asset('assets/bundles/chartjs/chart.min.js') }}"></script>
+    <script src="{{ asset('assets/bundles/jquery.sparkline.min.js') }}"></script>
+
+    <script src="{{ asset('assets/bundles/amcharts4/core.js') }}"></script>
+    <script src="{{ asset('assets/bundles/amcharts4/charts.js') }}"></script>
+    <script src="{{ asset('assets/bundles/amcharts4/animated.js') }}"></script>
+
+    <!-- JS Libraies -->
     <script src="{{ asset('assets/bundles/apexcharts/apexcharts.min.js') }}"></script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('assets/js/page/index.js') }}"></script>

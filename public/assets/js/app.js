@@ -2936,6 +2936,8 @@ __webpack_require__.r(__webpack_exports__);
       revenueGraphData: [],
       topFiveProducts: [],
       filter: {
+        id: null,
+        // To store the id from the URL
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
       },
@@ -2945,10 +2947,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    this.getParamsFromUrl();
     this.fetchData();
-    this.fetchTicketData();
   },
   methods: {
+    getParamsFromUrl: function getParamsFromUrl() {
+      // Use URLSearchParams to extract the id and contact from the URL
+      var params = new URLSearchParams(window.location.search);
+      this.filter.id = params.get('id');
+    },
     resetFilter: function resetFilter() {
       this.filter = {
         from: '2020-01-01',
@@ -2993,7 +3000,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     fetchData: function fetchData() {
       var _this2 = this;
-      axios.get(this.api_url + "dropshippers").then(function (response) {
+      axios.post(this.api_url + "dropshippers/preview", this.filter).then(function (response) {
         var result = response.data.response;
 
         // Assign the result values to the Vue data properties
@@ -3018,51 +3025,6 @@ __webpack_require__.r(__webpack_exports__);
         _this2.accountHealth = result.accountHealth;
         _this2.renderChart();
       })["catch"](function (err) {});
-    },
-    topSellingProduct: function topSellingProduct() {
-      var _this3 = this;
-      // Fetch settings where type is tag
-      axios.post(this.api_url + "dropshippers/products/top-sale-prdouct", {
-        number: 5
-      }).then(function (response) {
-        _this3.topSaleProducts = [];
-      });
-    },
-    fetchTicketData: function fetchTicketData() {
-      var _this4 = this;
-      // Fetch tickets based on filters
-      axios.post(this.api_url + "dropshippers/tickets", this.ticketFilter).then(function (response) {
-        _this4.tickets = response.data.response;
-      })["catch"](function (error) {
-        console.error("Error fetching tickets:", error);
-      });
-    },
-    clearFilters: function clearFilters() {
-      // Clear the filters
-      this.ticketFilter = {
-        status: '',
-        ticket_number_type: '',
-        ticket_number: ''
-      };
-      // Optionally, you can refetch the tickets without filters
-      this.fetchTicketData();
-    },
-    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
-      var _this5 = this;
-      axios.get(this.api_url + 'dropshippers/tickets/status-counts').then(function (response) {
-        var data = response.data;
-        _this5.totalTicketSum.total_tickets = data.total_tickets;
-        _this5.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
-        _this5.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
-        _this5.totalTicketSum.closed = data.closed;
-        _this5.totalTicketSum.expired = data.expired;
-        _this5.totalTicketSum.reviewed = data.reviewed;
-        _this5.totalTicketSum.in_process = data.in_process;
-      });
-    },
-    getPercentage: function getPercentage(statusCount) {
-      if (this.totalTicketSum.total_tickets === 0) return 0;
-      return Math.round(statusCount / this.totalTicketSum.total_tickets * 100);
     },
     renderChart: function renderChart() {
       var ctx = document.getElementById("myChart2").getContext('2d');
@@ -3100,9 +3062,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     }
-  },
-  mounted: function mounted() {
-    this.fetchTicketStatusCounts();
   }
 });
 
@@ -11150,7 +11109,7 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12"
-  }, [_c("h5", [_vm._v("Welcome " + _vm._s(_vm.customerName) + ",")]), _vm._v(" "), _c("p", [_vm._v("\n                This is your personalised portal, where you can view and\n                manage your orders as well as connect with the Customer Care\n                Representatives regarding any query\n            ")])])]), _vm._v(" "), _c("div", {
+  }, [_c("h5", [_vm._v("Preview Dashboard for " + _vm._s(_vm.customerName) + ",")])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6 mb-3"
@@ -11165,78 +11124,7 @@ var render = function render() {
       "aria-valuemin": "0",
       "aria-valuemax": "100"
     }
-  }, [_vm._v("\n                        " + _vm._s(_vm.accountHealth) + "%\n                    ")])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 ml-auto"
-  }, [_c("form", {
-    on: {
-      submit: function submit($event) {
-        $event.preventDefault();
-        return _vm.applyFilter.apply(null, arguments);
-      }
-    }
-  }, [_c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-md-4"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.from,
-      expression: "filter.from"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "date"
-    },
-    domProps: {
-      value: _vm.filter.from
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.filter, "from", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4"
-  }, [_c("div", {
-    staticClass: "form-group"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.to,
-      expression: "filter.to"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "date"
-    },
-    domProps: {
-      value: _vm.filter.to
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.filter, "to", $event.target.value);
-      }
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4"
-  }, [_c("button", {
-    staticClass: "btn btn-primary p-0 m-0 p-2 px-3",
-    on: {
-      click: _vm.applyFilter
-    }
-  }, [_vm._v("\n                                GO\n                            ")]), _vm._v(" "), _c("button", {
-    staticClass: "btn btn-danger p-0 m-0 p-2 px-3",
-    on: {
-      click: _vm.resetFilter
-    }
-  }, [_vm._v("\n                           Reset\n                        ")])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    " + _vm._s(_vm.accountHealth) + "%\n                ")])])])]), _vm._v(" "), _c("div", {
     staticClass: "row",
     staticStyle: {
       "margin-left": "-10px"
@@ -11458,7 +11346,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Total Order")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -11477,7 +11365,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("In Process")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -11496,7 +11384,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Out For Delivery")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -11515,7 +11403,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Delivered")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -11534,7 +11422,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -11634,7 +11522,7 @@ var staticRenderFns = [function () {
       left: "0",
       top: "0"
     }
-  })]), _c("div", {
+  })]), _vm._v(" "), _c("div", {
     staticClass: "chartjs-size-monitor-shrink",
     staticStyle: {
       position: "absolute",
@@ -11690,7 +11578,7 @@ var staticRenderFns = [function () {
       left: "0",
       top: "0"
     }
-  })]), _c("div", {
+  })]), _vm._v(" "), _c("div", {
     staticClass: "chartjs-size-monitor-shrink",
     staticStyle: {
       position: "absolute",
@@ -11746,7 +11634,7 @@ var staticRenderFns = [function () {
       left: "0",
       top: "0"
     }
-  })]), _c("div", {
+  })]), _vm._v(" "), _c("div", {
     staticClass: "chartjs-size-monitor-shrink",
     staticStyle: {
       position: "absolute",
@@ -11802,7 +11690,7 @@ var staticRenderFns = [function () {
       left: "0",
       top: "0"
     }
-  })]), _c("div", {
+  })]), _vm._v(" "), _c("div", {
     staticClass: "chartjs-size-monitor-shrink",
     staticStyle: {
       position: "absolute",
