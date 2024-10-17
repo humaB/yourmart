@@ -24,10 +24,12 @@ class DropshipperPreviewController extends Controller
 
         $orders = Order::where('belongs_to', $dropshipper->user_id)
             ->whereNotIn('status', [9, 10, 7])
+            ->where('is_replacement', '0')
             ->get();
 
         $confirmedOrders = Order::where('belongs_to', $dropshipper->user_id)
             ->where('status', 8)
+            ->where('is_replacement', '0')
             ->get();
 
         $totalOrders = $orders->count();
@@ -35,12 +37,13 @@ class DropshipperPreviewController extends Controller
         $totalProductCost = $confirmedOrders->sum('total_bill') - ($confirmedOrders->sum('packaging_price') + $confirmedOrders->sum('courier_service_price'));
         $totalPackingCourier =  $confirmedOrders->sum('packaging_price') + $confirmedOrders->sum('courier_service_price');
 
-        $outFordeliveredOrders  = Order::where('belongs_to', $dropshipper->user_id)->where('status', '11')->count();
-        $deliveredOrders  = Order::where('belongs_to', $dropshipper->user_id)->where('status', '8')->count();
+        $outFordeliveredOrders  = Order::where('belongs_to', $dropshipper->user_id)->where('is_replacement', '0')->where('status', '11')->count();
+        $deliveredOrders  = Order::where('belongs_to', $dropshipper->user_id)->where('is_replacement', '0')->where('status', '8')->count();
         $inProcessOrder   = Order::where('belongs_to', $dropshipper->user_id)
             ->whereNotIn('status', [9, 10, 7, 8])
+            ->where('is_replacement', '0')
             ->count();
-        $failedOrder  = Order::where('belongs_to', $dropshipper->user_id)->whereIn('status', [9, 10])->count();
+        $failedOrder  = Order::where('belongs_to', $dropshipper->user_id)->where('is_replacement', '0')->whereIn('status', [9, 10])->count();
 
         $revenueGraphData = [
             [
