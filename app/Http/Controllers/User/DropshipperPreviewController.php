@@ -33,7 +33,7 @@ class DropshipperPreviewController extends Controller
             ->get();
 
         $totalOrders = $orders->count();
-        $totalSales = $confirmedOrders->sum('selling_price');
+        $totalSales = $confirmedOrders->sum('selling_price') + $confirmedOrders->sum('advance_amount');
         $totalProductCost = $confirmedOrders->sum('total_bill') - ($confirmedOrders->sum('packaging_price') + $confirmedOrders->sum('courier_service_price'));
         $totalPackingCourier =  $confirmedOrders->sum('packaging_price') + $confirmedOrders->sum('courier_service_price');
 
