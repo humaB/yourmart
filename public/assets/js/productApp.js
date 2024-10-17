@@ -77,6 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
+      public_url: window.location.origin + "",
       web_url: "https://yourmart.pk/",
       editMode: false // This controls whether the user is in edit mode
     };
@@ -4699,7 +4700,15 @@ var render = function render() {
     }
   })]) : _vm._e()])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
-  }, [_c("button", {
+  }, [_c("a", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      href: "".concat(_vm.public_url, "/dropshippers/preview?id=").concat(_vm.details.id, "&contact=").concat(_vm.details.whatsapp_number),
+      target: "_blank"
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-eye"
+  }), _vm._v(" Preview\n                ")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
@@ -8215,12 +8224,12 @@ var render = function render() {
       staticClass: "img-thumbnail img-responsive",
       attrs: {
         alt: "daraz label attachment",
-        src: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(attachment.attachment)
+        src: "".concat(_vm.web_url, "public/storage/uploads/labels/").concat(attachment.attachment)
       }
     })]), _vm._v(" "), _c("a", {
       staticClass: "name",
       attrs: {
-        href: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(attachment.attachment),
+        href: "".concat(_vm.web_url, "public/storage/uploads/labels/").concat(attachment.attachment),
         target: "_blank"
       }
     }, [_vm._v("\n                                            " + _vm._s(_vm.truncatedAttachmentName(attachment.attachment)) + "\n                                            ")])]);

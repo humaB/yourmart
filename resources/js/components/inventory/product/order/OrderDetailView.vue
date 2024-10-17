@@ -324,10 +324,10 @@
                                                 <a target="_blank" :href="setImage(attachment.attachment)">
                                                     <img class="img-thumbnail img-responsive"
                                                         alt="daraz label attachment"
-                                                        :src="`${web_url}public/storage/uploads/payments/${attachment.attachment}`">
+                                                        :src="`${web_url}public/storage/uploads/labels/${attachment.attachment}`">
                                                 </a>
                                                 <a class="name"
-                                                :href="`${web_url}public/storage/uploads/payments/${attachment.attachment}`"
+                                                :href="`${web_url}public/storage/uploads/labels/${attachment.attachment}`"
                                                 target="_blank">
                                                 {{ truncatedAttachmentName(attachment.attachment) }}
                                                 </a>

@@ -117,61 +117,6 @@ var myChart = new Chart(ctx, {
   }
 });
 
-// card chart 2
-var ctx = document.getElementById("cardChart2").getContext("2d");
-var gradientStroke2 = ctx.createLinearGradient(500, 0, 0, 0);
-gradientStroke2.addColorStop(0, "rgba(55, 154, 80, 1)");
-gradientStroke2.addColorStop(1, "rgba(131, 210, 151, 1)");
-
-var myChart = new Chart(ctx, {
-  type: "lineShadow",
-  data: {
-    labels: ["2010", "2011", "2012", "2013", "2014", "2015", "2016"],
-    type: "line",
-    datasets: [{
-      label: "Income",
-      data: [0, 30, 10, 120, 50, 63, 10],
-      borderColor: gradientStroke2,
-      pointBorderColor: gradientStroke2,
-      pointBackgroundColor: gradientStroke2,
-      pointHoverBackgroundColor: gradientStroke2,
-      pointHoverBorderColor: gradientStroke2,
-      pointBorderWidth: 5,
-      pointHoverRadius: 5,
-      pointHoverBorderWidth: 1,
-      pointRadius: 0.5,
-      fill: false,
-      borderWidth: 4
-    }]
-  },
-  options: {
-    legend: {
-      display: false
-    },
-    tooltips: {},
-    scales: {
-      yAxes: [{
-        ticks: {
-          display: false //this will remove only the label
-        },
-        gridLines: {
-          display: false,
-          drawBorder: false
-        }
-      }],
-      xAxes: [{
-        gridLines: {
-          display: false,
-          drawBorder: false
-        },
-        ticks: {
-          display: false //this will remove only the label
-        }
-      }]
-    }
-  }
-});
-
 // card chart 3
 var ctx = document.getElementById("cardChart3").getContext("2d");
 var gradientStroke2 = ctx.createLinearGradient(0, 0, 700, 0);

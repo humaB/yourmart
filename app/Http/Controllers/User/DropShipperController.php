@@ -39,6 +39,11 @@ class DropShipperController extends Controller
         return view('user.dropshipper_payouts');
     }
 
+    public function preview()
+    {
+        return view('user.dropshipper_preview');
+    }
+
     public function orderIndex()
     {
         return view('user.dropshipper_order');

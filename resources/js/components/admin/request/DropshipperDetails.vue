@@ -160,6 +160,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <a class="btn btn-primary" :href="`${public_url}/dropshippers/preview?id=${details.id}&contact=${details.whatsapp_number}`" target="_blank">
+                        <i class="fa fa-eye"></i> Preview
+                    </a>
+
                     <button class="btn btn-primary" @click="editMode ? saveDetails() : editMode = true">
                         {{ editMode ? 'Update Information' : 'Edit Information' }}
                       </button>
@@ -181,6 +185,7 @@ export default {
     props: ['details', 'loader'],
     data() {
           return {
+              public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
               web_url : process.env.MIX_WEB_URL,
               editMode: false,  // This controls whether the user is in edit mode
           };

@@ -77,6 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
+      public_url: window.location.origin + "",
       web_url: "https://yourmart.pk/",
       editMode: false // This controls whether the user is in edit mode
     };
@@ -623,6 +624,178 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('deleteFunc', {
         id: id
       });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'RevenueBarChat',
+  props: ['barChart'],
+  data: function data() {
+    return {
+      chart: null // Holds the chart instance
+    };
+  },
+  methods: {
+    createBarChart: function createBarChart() {
+      var _this = this;
+      // Themes begin
+      am4core.useTheme(am4themes_animated);
+      // Themes end
+
+      // Create chart instance
+      this.chart = am4core.create("barChart", am4charts.XYChart);
+      this.chart.scrollbarX = new am4core.Scrollbar();
+
+      // Add data
+      this.chart.data = this.barChart;
+
+      // Create axes
+      var categoryAxis = this.chart.xAxes.push(new am4charts.CategoryAxis());
+      categoryAxis.dataFields.category = "country";
+      categoryAxis.renderer.grid.template.location = 0;
+      categoryAxis.renderer.minGridDistance = 30;
+      categoryAxis.renderer.labels.template.horizontalCenter = "right";
+      categoryAxis.renderer.labels.template.verticalCenter = "middle";
+      categoryAxis.renderer.labels.template.rotation = 270;
+      categoryAxis.tooltip.disabled = true;
+      categoryAxis.renderer.minHeight = 110;
+      categoryAxis.renderer.labels.template.fill = am4core.color("#9aa0ac");
+      var valueAxis = this.chart.yAxes.push(new am4charts.ValueAxis());
+      valueAxis.renderer.minWidth = 50;
+      valueAxis.renderer.labels.template.fill = am4core.color("#9aa0ac");
+
+      // Create series
+      var series = this.chart.series.push(new am4charts.ColumnSeries());
+      series.sequencedInterpolation = false;
+      series.dataFields.valueY = "visits";
+      series.dataFields.categoryX = "country";
+      series.tooltipText = "[{categoryX}: bold]{valueY}[/]";
+      series.columns.template.strokeWidth = 0;
+      series.tooltip.pointerOrientation = "vertical";
+      series.columns.template.column.cornerRadiusTopLeft = 10;
+      series.columns.template.column.cornerRadiusTopRight = 10;
+      series.columns.template.column.fillOpacity = 0.8;
+
+      // on hover, make corner radiuses bigger
+      var hoverState = series.columns.template.column.states.create("hover");
+      hoverState.properties.cornerRadiusTopLeft = 0;
+      hoverState.properties.cornerRadiusTopRight = 0;
+      hoverState.properties.fillOpacity = 1;
+      series.columns.template.adapter.add("fill", function (fill, target) {
+        return _this.chart.colors.getIndex(target.dataItem.index);
+      });
+
+      // Cursor
+      this.chart.cursor = new am4charts.XYCursor();
+    }
+  },
+  watch: {
+    // Watch for changes in revenueGraphData
+    barChart: {
+      handler: function handler(newValue, oldValue) {
+        this.createBarChart(); // Run the chart4 method when revenueGraphData changes
+      },
+      deep: true // If revenueGraphData is an object or array, deep: true ensures Vue watches for changes inside it
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueChat.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueChat.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'RevenueChat',
+  props: ['revenueDates', 'revenueGraphData'],
+  data: function data() {
+    return {
+      chart4Instance: ''
+    };
+  },
+  methods: {
+    chart4: function chart4() {
+      var options = {
+        chart: {
+          height: 385,
+          type: 'area',
+          toolbar: {
+            show: true
+          }
+        },
+        colors: ['#999b9c', '#4CC2B0'],
+        fill: {
+          colors: ['#999b9c', '#4CC2B0']
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          curve: 'smooth'
+        },
+        markers: {
+          colors: ['#999b9c', '#4CC2B0']
+        },
+        series: this.revenueGraphData,
+        legend: {
+          show: false
+        },
+        xaxis: {
+          categories: this.revenueDates,
+          labels: {
+            style: {
+              colors: '#9aa0ac'
+            }
+          }
+        },
+        yaxis: {
+          labels: {
+            style: {
+              color: '#9aa0ac'
+            }
+          }
+        }
+      };
+
+      // Destroy the existing chart instance if it exists
+      if (this.chart4Instance) {
+        this.chart4Instance.destroy();
+      }
+
+      // Create a new chart instance and render it
+      this.chart4Instance = new ApexCharts(document.querySelector('#chart4'), options);
+      this.chart4Instance.render();
+    }
+  },
+  watch: {
+    // Watch for changes in revenueGraphData
+    revenueGraphData: {
+      handler: function handler(newValue, oldValue) {
+        this.chart4(); // Run the chart4 method when revenueGraphData changes
+      },
+      deep: true // If revenueGraphData is an object or array, deep: true ensures Vue watches for changes inside it
     }
   }
 });
@@ -2702,6 +2875,239 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js ***!
+  \********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_dropshipper_RevenueChat_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/dropshipper/RevenueChat.vue */ "./resources/js/components/dropshipper/RevenueChat.vue");
+/* harmony import */ var _components_dropshipper_RevenueBarChat_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/dropshipper/RevenueBarChat.vue */ "./resources/js/components/dropshipper/RevenueBarChat.vue");
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "DropShipperDashboard",
+  components: {
+    RevenueChat: _components_dropshipper_RevenueChat_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    RevenueBarChat: _components_dropshipper_RevenueBarChat_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+  },
+  data: function data() {
+    return {
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + "/",
+      topSaleProducts: [],
+      tickets: [],
+      ticketFilter: {
+        status: "",
+        ticket_number_type: '',
+        ticket_number: ''
+      },
+      totalOrders: 0,
+      totalSales: 0,
+      totalProfit: 0,
+      totalRemaining: 0,
+      totalPaid: 0,
+      totalProductCost: 0,
+      totalPackingCourier: 0,
+      deliveredOrders: 0,
+      inProcessOrder: 0,
+      outFordeliveredOrders: 0,
+      failedOrder: 0,
+      customerName: "",
+      stores: [],
+      totalTicketSum: {
+        total_tickets: 0,
+        awaiting_your_reply: 0,
+        awaiting_yourmart_reply: 0,
+        closed: 0,
+        expired: 0,
+        reviewed: 0,
+        in_process: 0
+      },
+      revenueDates: [],
+      revenueGraphData: [],
+      topFiveProducts: [],
+      filter: {
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10)
+      },
+      leopardPerformance: [],
+      accountHealth: 0,
+      barChart: []
+    };
+  },
+  created: function created() {
+    this.fetchData();
+    this.fetchTicketData();
+  },
+  methods: {
+    resetFilter: function resetFilter() {
+      this.filter = {
+        from: '2020-01-01',
+        to: '2050-01-01'
+      };
+      this.applyFilter();
+      this.filter = {
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10)
+      };
+    },
+    applyFilter: function applyFilter() {
+      var _this = this;
+      axios.post(this.api_url + "dropshippers", this.filter).then(function (response) {
+        var result = response.data.response;
+
+        // Assign the result values to the Vue data properties
+        _this.totalProfit = result.totalProfit;
+        _this.totalRemaining = result.totalRemaining;
+        _this.totalPaid = result.totalPaid;
+        _this.totalSales = result.totalSales;
+        _this.totalProductCost = result.totalProductCost;
+        _this.totalPackingCourier = result.totalPackingCourier;
+        _this.totalOrders = result.totalOrders;
+        _this.deliveredOrders = result.deliveredOrders;
+        _this.inProcessOrder = result.inProcessOrder;
+        _this.failedOrder = result.failedOrder;
+        _this.outFordeliveredOrders = result.outFordeliveredOrders;
+        _this.customerName = result.name;
+        _this.stores = result.stores;
+        _this.revenueGraphData = result.revenueGraphData;
+        _this.revenueDates = result.revenueDates;
+        _this.topFiveProducts = result.topFiveProducts;
+      })["catch"](function (err) {});
+    },
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("DD-MMM-YYYY") : "N/A";
+    },
+    fetchData: function fetchData() {
+      var _this2 = this;
+      axios.get(this.api_url + "dropshippers").then(function (response) {
+        var result = response.data.response;
+
+        // Assign the result values to the Vue data properties
+        _this2.totalProfit = result.totalProfit;
+        _this2.totalRemaining = result.totalRemaining;
+        _this2.totalPaid = result.totalPaid;
+        _this2.totalSales = result.totalSales;
+        _this2.totalProductCost = result.totalProductCost;
+        _this2.totalPackingCourier = result.totalPackingCourier;
+        _this2.totalOrders = result.totalOrders;
+        _this2.deliveredOrders = result.deliveredOrders;
+        _this2.inProcessOrder = result.inProcessOrder;
+        _this2.failedOrder = result.failedOrder;
+        _this2.outFordeliveredOrders = result.outFordeliveredOrders;
+        _this2.customerName = result.name;
+        _this2.stores = result.stores;
+        _this2.revenueGraphData = result.revenueGraphData;
+        _this2.revenueDates = result.revenueDates;
+        _this2.barChart = result.barChart;
+        _this2.topFiveProducts = result.topFiveProducts;
+        _this2.leopardPerformance = result.leopardPerformance;
+        _this2.accountHealth = result.accountHealth;
+        _this2.renderChart();
+      })["catch"](function (err) {});
+    },
+    topSellingProduct: function topSellingProduct() {
+      var _this3 = this;
+      // Fetch settings where type is tag
+      axios.post(this.api_url + "dropshippers/products/top-sale-prdouct", {
+        number: 5
+      }).then(function (response) {
+        _this3.topSaleProducts = [];
+      });
+    },
+    fetchTicketData: function fetchTicketData() {
+      var _this4 = this;
+      // Fetch tickets based on filters
+      axios.post(this.api_url + "dropshippers/tickets", this.ticketFilter).then(function (response) {
+        _this4.tickets = response.data.response;
+      })["catch"](function (error) {
+        console.error("Error fetching tickets:", error);
+      });
+    },
+    clearFilters: function clearFilters() {
+      // Clear the filters
+      this.ticketFilter = {
+        status: '',
+        ticket_number_type: '',
+        ticket_number: ''
+      };
+      // Optionally, you can refetch the tickets without filters
+      this.fetchTicketData();
+    },
+    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
+      var _this5 = this;
+      axios.get(this.api_url + 'dropshippers/tickets/status-counts').then(function (response) {
+        var data = response.data;
+        _this5.totalTicketSum.total_tickets = data.total_tickets;
+        _this5.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
+        _this5.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
+        _this5.totalTicketSum.closed = data.closed;
+        _this5.totalTicketSum.expired = data.expired;
+        _this5.totalTicketSum.reviewed = data.reviewed;
+        _this5.totalTicketSum.in_process = data.in_process;
+      });
+    },
+    getPercentage: function getPercentage(statusCount) {
+      if (this.totalTicketSum.total_tickets === 0) return 0;
+      return Math.round(statusCount / this.totalTicketSum.total_tickets * 100);
+    },
+    renderChart: function renderChart() {
+      var ctx = document.getElementById("myChart2").getContext('2d');
+      this.chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.leopardPerformance.labels,
+          datasets: this.leopardPerformance.datasets
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              gridLines: {
+                drawBorder: false,
+                color: '#f2f2f2'
+              },
+              ticks: {
+                beginAtZero: true,
+                stepSize: 10,
+                fontColor: "#9aa0ac" // Font Color
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                fontColor: "#9aa0ac" // Font Color
+              }
+            }]
+          }
+        }
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.fetchTicketStatusCounts();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperOrderPage.vue?vue&type=script&lang=js":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperOrderPage.vue?vue&type=script&lang=js ***!
@@ -4529,7 +4935,15 @@ var render = function render() {
     }
   })]) : _vm._e()])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
-  }, [_c("button", {
+  }, [_c("a", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      href: "".concat(_vm.public_url, "/dropshippers/preview?id=").concat(_vm.details.id, "&contact=").concat(_vm.details.whatsapp_number),
+      target: "_blank"
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-eye"
+  }), _vm._v(" Preview\n                ")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
@@ -6412,6 +6826,87 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2 ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _vm._m(0);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-lg-6 col-md-6 col-sm-12 col-xs-12 col-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Month-Wise Profit")])]), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "recent-report__chart"
+  }, [_c("div", {
+    attrs: {
+      id: "barChart"
+    }
+  })])])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueChat.vue?vue&type=template&id=fb504308":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueChat.vue?vue&type=template&id=fb504308 ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _vm._m(0);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-xl-6 col-md-6 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Order - Profit Analysis")])]), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "chartsh",
+    attrs: {
+      id: "chart4"
+    }
+  })])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/AddCourierCategory.vue?vue&type=template&id=9eb364ac":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/AddCourierCategory.vue?vue&type=template&id=9eb364ac ***!
@@ -7678,12 +8173,12 @@ var render = function render() {
       staticClass: "img-thumbnail img-responsive",
       attrs: {
         alt: "daraz label attachment",
-        src: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(attachment.attachment)
+        src: "".concat(_vm.web_url, "public/storage/uploads/labels/").concat(attachment.attachment)
       }
     })]), _vm._v(" "), _c("a", {
       staticClass: "name",
       attrs: {
-        href: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(attachment.attachment),
+        href: "".concat(_vm.web_url, "public/storage/uploads/labels/").concat(attachment.attachment),
         target: "_blank"
       }
     }, [_vm._v("\n                                            " + _vm._s(_vm.truncatedAttachmentName(attachment.attachment)) + "\n                                            ")])]);
@@ -10631,6 +11126,786 @@ var render = function render() {
   })])], 1);
 };
 var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12"
+  }, [_c("h5", [_vm._v("Welcome " + _vm._s(_vm.customerName) + ",")]), _vm._v(" "), _c("p", [_vm._v("\n                This is your personalised portal, where you can view and\n                manage your orders as well as connect with the Customer Care\n                Representatives regarding any query\n            ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-6 mb-3"
+  }, [_c("h6", [_vm._v("Account Health Status")]), _vm._v(" "), _c("div", {
+    staticClass: "progress"
+  }, [_c("div", {
+    staticClass: "progress-bar",
+    style: "width:" + _vm.accountHealth + "%",
+    attrs: {
+      role: "progressbar",
+      "aria-valuenow": _vm.accountHealth,
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                        " + _vm._s(_vm.accountHealth) + "%\n                    ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 ml-auto"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.applyFilter.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-4"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("div", {
+    staticClass: "form-group"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("button", {
+    staticClass: "btn btn-primary p-0 m-0 p-2 px-3",
+    on: {
+      click: _vm.applyFilter
+    }
+  }, [_vm._v("\n                                GO\n                            ")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger p-0 m-0 p-2 px-3",
+    on: {
+      click: _vm.resetFilter
+    }
+  }, [_vm._v("\n                           Reset\n                        ")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row",
+    staticStyle: {
+      "margin-left": "-10px"
+    }
+  }, [_c("div", {
+    staticClass: "col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12"
+  }, [_c("div", {
+    staticClass: "card bg-info"
+  }, [_c("div", {
+    staticClass: "card-statistic-4 text-white"
+  }, [_c("div", {
+    staticClass: "align-items-center justify-content-between"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("Receivable Amount")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.totalProfit)) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
+  }, [_c("div", {
+    staticClass: "banner-img"
+  }, [_c("img", {
+    attrs: {
+      src: _vm.public_url + "/assets2/img/banner/2.png",
+      alt: ""
+    }
+  })])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12"
+  }, [_c("div", {
+    staticClass: "card bg-success"
+  }, [_c("div", {
+    staticClass: "card-statistic-4"
+  }, [_c("div", {
+    staticClass: "align-items-center justify-content-between"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content text-white"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("Received Amount")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
+  }, [_c("div", {
+    staticClass: "banner-img"
+  }, [_c("img", {
+    attrs: {
+      src: _vm.public_url + "/assets2/img/banner/4.png",
+      alt: ""
+    }
+  })])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12"
+  }, [_c("div", {
+    staticClass: "card bg-warning"
+  }, [_c("div", {
+    staticClass: "card-statistic-4"
+  }, [_c("div", {
+    staticClass: "align-items-center justify-content-between"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("\n                                        Current Balance in Wallet\n                                    ")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
+  }, [_c("div", {
+    staticClass: "banner-img"
+  }, [_c("img", {
+    attrs: {
+      src: _vm.public_url + "/assets2/img/banner/1.png",
+      alt: ""
+    }
+  })])])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-xl-3 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-bg"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "p-t-20 d-flex justify-content-between"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "mb-0"
+  }, [_vm._v("Sales")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0 font-20"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalSales)))])]), _vm._v(" "), _c("i", {
+    staticClass: "fas fa-diagnoses card-icon col-green font-30 p-r-30"
+  })]), _vm._v(" "), _c("canvas", {
+    staticClass: "chartjs-render-monitor",
+    staticStyle: {
+      display: "block",
+      height: "74px",
+      width: "280px"
+    },
+    attrs: {
+      id: "cardChart2",
+      height: "92",
+      width: "350"
+    }
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-3 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-bg"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "p-t-20 d-flex justify-content-between"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "mb-0"
+  }, [_vm._v("Cost of Products")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0 font-20"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalProductCost)))])]), _vm._v(" "), _c("i", {
+    staticClass: "fas fa-chart-bar card-icon col-indigo font-30 p-r-30"
+  })]), _vm._v(" "), _c("canvas", {
+    staticClass: "chartjs-render-monitor",
+    staticStyle: {
+      display: "block",
+      height: "74px",
+      width: "280px"
+    },
+    attrs: {
+      id: "cardChart3",
+      height: "92",
+      width: "350"
+    }
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-3 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-bg"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "p-t-20 d-flex justify-content-between"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "mb-0"
+  }, [_vm._v("Shipping & Packing")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0 font-20"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalPackingCourier)))])]), _vm._v(" "), _c("i", {
+    staticClass: "fas fa-hand-holding-usd card-icon col-cyan font-30 p-r-30"
+  })]), _vm._v(" "), _c("canvas", {
+    staticClass: "chartjs-render-monitor",
+    staticStyle: {
+      display: "block",
+      height: "74px",
+      width: "280px"
+    },
+    attrs: {
+      id: "cardChart4",
+      height: "92",
+      width: "350"
+    }
+  })])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-3 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-bg"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "p-t-20 d-flex justify-content-between"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "mb-0"
+  }, [_vm._v("Profit")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0 font-20"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalSales - (_vm.totalProductCost + _vm.totalPackingCourier))))])]), _vm._v(" "), _c("i", {
+    staticClass: "fas fa-address-card card-icon col-orange font-30 p-r-30"
+  })]), _vm._v(" "), _c("canvas", {
+    staticClass: "chartjs-render-monitor",
+    staticStyle: {
+      display: "block",
+      height: "74px",
+      width: "280px"
+    },
+    attrs: {
+      id: "cardChart1",
+      height: "92",
+      width: "350"
+    }
+  })])])])]), _vm._v(" "), _c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Order")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("In Process")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "25%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Out For Delivery")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "22%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Delivered")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("RevenueChat", {
+    attrs: {
+      revenueGraphData: _vm.revenueGraphData,
+      revenueDates: _vm.revenueDates
+    }
+  }), _vm._v(" "), _c("RevenueBarChat", {
+    attrs: {
+      barChart: _vm.barChart
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-hover mb-0"
+  }, [_vm._m(11), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))])]);
+  }), 0)])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(12), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped table-hover",
+    staticStyle: {
+      width: "100%"
+    },
+    attrs: {
+      id: "save-stage"
+    }
+  }, [_vm._m(13), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.store_name))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(_vm.formatDate(item.created_at)) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_payable))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_remaining))]), _vm._v(" "), _c("td", {
+      staticClass: "align-middle"
+    }, [_c("div", {
+      staticClass: "progress"
+    }, [_c("div", {
+      staticClass: "progress-bar",
+      style: "width:" + item.health + "%",
+      attrs: {
+        role: "progressbar",
+        "aria-valuenow": item.health,
+        "aria-valuemin": "0",
+        "aria-valuemax": "100"
+      }
+    }, [_vm._v("\n                                                " + _vm._s(item.health) + "%\n                                            ")])])])]);
+  }), 0)])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "chartjs-size-monitor",
+    staticStyle: {
+      position: "absolute",
+      inset: "0px",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticClass: "chartjs-size-monitor-expand",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "1000000px",
+      height: "1000000px",
+      left: "0",
+      top: "0"
+    }
+  })]), _c("div", {
+    staticClass: "chartjs-size-monitor-shrink",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "200%",
+      height: "200%",
+      left: "0",
+      top: "0"
+    }
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "chartjs-size-monitor",
+    staticStyle: {
+      position: "absolute",
+      inset: "0px",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticClass: "chartjs-size-monitor-expand",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "1000000px",
+      height: "1000000px",
+      left: "0",
+      top: "0"
+    }
+  })]), _c("div", {
+    staticClass: "chartjs-size-monitor-shrink",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "200%",
+      height: "200%",
+      left: "0",
+      top: "0"
+    }
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "chartjs-size-monitor",
+    staticStyle: {
+      position: "absolute",
+      inset: "0px",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticClass: "chartjs-size-monitor-expand",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "1000000px",
+      height: "1000000px",
+      left: "0",
+      top: "0"
+    }
+  })]), _c("div", {
+    staticClass: "chartjs-size-monitor-shrink",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "200%",
+      height: "200%",
+      left: "0",
+      top: "0"
+    }
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "chartjs-size-monitor",
+    staticStyle: {
+      position: "absolute",
+      inset: "0px",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticClass: "chartjs-size-monitor-expand",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "1000000px",
+      height: "1000000px",
+      left: "0",
+      top: "0"
+    }
+  })]), _c("div", {
+    staticClass: "chartjs-size-monitor-shrink",
+    staticStyle: {
+      position: "absolute",
+      left: "0",
+      top: "0",
+      right: "0",
+      bottom: "0",
+      overflow: "hidden",
+      "pointer-events": "none",
+      visibility: "hidden",
+      "z-index": "-1"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      position: "absolute",
+      width: "200%",
+      height: "200%",
+      left: "0",
+      top: "0"
+    }
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-shopping-bag"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-shopping-cart"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-undo"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-header"
+  }, [_vm._v("\n                    Courier Performance (Last 7 days)\n                ")]), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "card-body"
+  }, [_c("canvas", {
+    attrs: {
+      id: "myChart2",
+      height: "80"
+    }
+  })])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Top Selling Products")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("SKU #")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier Price")]), _vm._v(" "), _c("th", [_vm._v("Packaging Price")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Selling Price")]), _vm._v(" "), _c("th", [_vm._v("Net Profit")]), _vm._v(" "), _c("th", [_vm._v("Item Sold")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Buisness Stores")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Store Name")]), _vm._v(" "), _c("th", [_vm._v("Started Date")]), _vm._v(" "), _c("th", [_vm._v("Receivable Amount")]), _vm._v(" "), _c("th", [_vm._v("Received Amount")]), _vm._v(" "), _c("th", [_vm._v("Current Balance")]), _vm._v(" "), _c("th", [_vm._v("Account Health")])])]);
+}];
 render._withStripped = true;
 
 
@@ -37644,6 +38919,84 @@ component.options.__file = "resources/js/components/admin/user/UserTable.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/dropshipper/RevenueBarChat.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/components/dropshipper/RevenueBarChat.vue ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _RevenueBarChat_vue_vue_type_template_id_89b5d1d2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RevenueBarChat.vue?vue&type=template&id=89b5d1d2 */ "./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2");
+/* harmony import */ var _RevenueBarChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RevenueBarChat.vue?vue&type=script&lang=js */ "./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RevenueBarChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RevenueBarChat_vue_vue_type_template_id_89b5d1d2__WEBPACK_IMPORTED_MODULE_0__.render,
+  _RevenueBarChat_vue_vue_type_template_id_89b5d1d2__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/dropshipper/RevenueBarChat.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/dropshipper/RevenueChat.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/dropshipper/RevenueChat.vue ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _RevenueChat_vue_vue_type_template_id_fb504308__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RevenueChat.vue?vue&type=template&id=fb504308 */ "./resources/js/components/dropshipper/RevenueChat.vue?vue&type=template&id=fb504308");
+/* harmony import */ var _RevenueChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RevenueChat.vue?vue&type=script&lang=js */ "./resources/js/components/dropshipper/RevenueChat.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RevenueChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RevenueChat_vue_vue_type_template_id_fb504308__WEBPACK_IMPORTED_MODULE_0__.render,
+  _RevenueChat_vue_vue_type_template_id_fb504308__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/dropshipper/RevenueChat.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/courier/AddCourierCategory.vue":
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/inventory/product/courier/AddCourierCategory.vue ***!
@@ -38350,6 +39703,45 @@ component.options.__file = "resources/js/pages/admin/request/SupplierRequestPage
 
 /***/ }),
 
+/***/ "./resources/js/pages/admin/user/DropShipperDashboard.vue":
+/*!****************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperDashboard.vue ***!
+  \****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropShipperDashboard.vue?vue&type=template&id=7390990d */ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d");
+/* harmony import */ var _DropShipperDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropShipperDashboard.vue?vue&type=script&lang=js */ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DropShipperDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.render,
+  _DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/admin/user/DropShipperDashboard.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/pages/admin/user/DropShipperOrderPage.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/pages/admin/user/DropShipperOrderPage.vue ***!
@@ -38790,6 +40182,38 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueBarChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RevenueBarChat.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueBarChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/dropshipper/RevenueChat.vue?vue&type=script&lang=js":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/RevenueChat.vue?vue&type=script&lang=js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RevenueChat.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueChat.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueChat_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/courier/AddCourierCategory.vue?vue&type=script&lang=js":
 /*!**********************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/courier/AddCourierCategory.vue?vue&type=script&lang=js ***!
@@ -39078,6 +40502,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperDashboard.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/pages/admin/user/DropShipperOrderPage.vue?vue&type=script&lang=js":
 /*!****************************************************************************************!*\
   !*** ./resources/js/pages/admin/user/DropShipperOrderPage.vue?vue&type=script&lang=js ***!
@@ -39338,6 +40778,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserTable_vue_vue_type_template_id_311edd2c_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserTable_vue_vue_type_template_id_311edd2c_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserTable.vue?vue&type=template&id=311edd2c&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserTable.vue?vue&type=template&id=311edd2c&scoped=true");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2 ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueBarChat_vue_vue_type_template_id_89b5d1d2__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueBarChat_vue_vue_type_template_id_89b5d1d2__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueBarChat_vue_vue_type_template_id_89b5d1d2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RevenueBarChat.vue?vue&type=template&id=89b5d1d2 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/dropshipper/RevenueChat.vue?vue&type=template&id=fb504308":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/RevenueChat.vue?vue&type=template&id=fb504308 ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueChat_vue_vue_type_template_id_fb504308__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueChat_vue_vue_type_template_id_fb504308__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RevenueChat_vue_vue_type_template_id_fb504308__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RevenueChat.vue?vue&type=template&id=fb504308 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueChat.vue?vue&type=template&id=fb504308");
 
 
 /***/ }),
@@ -39644,6 +41118,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierRequestPage_vue_vue_type_template_id_4b08064e__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierRequestPage_vue_vue_type_template_id_4b08064e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SupplierRequestPage.vue?vue&type=template&id=4b08064e */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/request/SupplierRequestPage.vue?vue&type=template&id=4b08064e");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d":
+/*!**********************************************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d ***!
+  \**********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperDashboard.vue?vue&type=template&id=7390990d */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d");
 
 
 /***/ }),
@@ -60653,6 +62144,7 @@ Vue.component('users-page', (__webpack_require__(/*! ./pages/admin/user/UserPage
 Vue.component('dropshipper-requests', (__webpack_require__(/*! ./pages/admin/request/DropShipperRequestPage.vue */ "./resources/js/pages/admin/request/DropShipperRequestPage.vue")["default"]));
 Vue.component('dropshipper-order-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperOrderPage.vue */ "./resources/js/pages/admin/user/DropShipperOrderPage.vue")["default"]));
 Vue.component('dropshipper-payouts-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperPayOutPage.vue */ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue")["default"]));
+Vue.component('dropshipper-preview-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperDashboard.vue */ "./resources/js/pages/admin/user/DropShipperDashboard.vue")["default"]));
 Vue.component('supplier-requests', (__webpack_require__(/*! ./pages/admin/request/SupplierRequestPage.vue */ "./resources/js/pages/admin/request/SupplierRequestPage.vue")["default"]));
 Vue.component('courier-page', (__webpack_require__(/*! ./pages/inventory/product/setting/CourierPage.vue */ "./resources/js/pages/inventory/product/setting/CourierPage.vue")["default"]));
 Vue.component('page-setting-page', (__webpack_require__(/*! ./pages/pages/PageSettingPage.vue */ "./resources/js/pages/pages/PageSettingPage.vue")["default"]));

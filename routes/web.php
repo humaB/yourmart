@@ -120,6 +120,8 @@ Route::group(['prefix' => '/dropshippers', 'middleware' => 'auth'], function () 
     Route::post('/payment-history', [DropShipperController::class, 'payment_receipt'])->name('dropshipper.payment_receipt');
     Route::post('/ledger', [DropShipperController::class, 'payment_ledger'])->name('dropshipper.payment_ledger');
 
+    Route::get('/preview', [DropShipperController::class, 'preview'])->name('dropshipper.preview');
+
 });
 
 Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
