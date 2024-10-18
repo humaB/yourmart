@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Account;
 
+use App\Http\Resources\ResponseCollection;
 use App\Models\Account\Account;
 use App\Models\Account\AccountGroup;
 use App\Models\Account\AccountHead;
@@ -121,13 +122,13 @@ class AccountHeadController extends BaseController
 
     public function accountHeadBanks(Request $request)
     {
-        $accountHeadBanks = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_bank")
-        ->latest('id')
+        $banks = AccountHead::with("level_one:id,name,code","level_two:id,name,code","level_three:id,name,code","level_four:id,name,code","head_bank")
         ->where(["group_id"=>31])->get();
 
-        return [
-            "accountHeadBanks" => $accountHeadBanks,
-        ];
+        return (new ResponseCollection($banks))
+        ->response()
+        ->setStatusCode(200);
+
     }
 
     public function headBankStore(Request $request)

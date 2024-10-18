@@ -33,6 +33,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
+use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
 use App\Http\Controllers\User\DropshipperPreviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -155,6 +156,10 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/details', [ ProductController::class , 'details']);
         Route::post('/change-statuses', [ ProductController::class , 'changeStatus']);
         Route::post('/filter-data', [ ProductController::class , 'filterData']);
+
+        //Fetch For POS
+        Route::post('/scanned-data', [ StoreCheckOutController::class , 'scannedData']);
+        Route::post('/direct-checkout', [ StoreCheckOutController::class , 'store']);
 
         Route::post('/drop-down', [ ProductController::class , 'dropDown']);
         Route::get('/complete-drop-down', [ ProductController::class , 'completeDropDown']);
@@ -283,6 +288,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
             Route::get('/stocks',  [ StoreInwardController::class , 'fetchStock']);
             Route::post('/stocks/update-barcode',  [ StoreInwardController::class , 'updateBarcode']);
+
+            //Issuance
+            Route::get('/issuance',  [ StoreCheckOutController::class , 'fetchRecord']);
 
             //Returns
             Route::get('/pending-returns',  [ CourierReturnController::class , 'pendingReturns']);

@@ -8,6 +8,7 @@ use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Models\Inventory\Product\Color;
 use App\Models\Inventory\Product\ProductAttachment;
+use App\Models\Inventory\Product\ProductQrCode;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductAttribute;
 use App\Models\Inventory\Product\Variation\ProductDimension;

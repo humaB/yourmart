@@ -27,6 +27,7 @@ use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Account\pdf\TransactionPdfController;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
+use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -105,9 +106,17 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
             Route::get('/inward-records', [StoreInwardController::class, 'record'])->name('inventory.products.store.record');
             Route::post('/inward-record/pdf', [StoreInwardController::class, 'pdf']);
 
+
+
             Route::group(['prefix' => '/returns'], function () {
                 Route::get('/couriers', [CourierReturnController::class, 'index'])->name('inventory.products.store.returns');
                 Route::get('/couriers/records', [CourierReturnController::class, 'record'])->name('inventory.products.store.return_record');
+            });
+
+            Route::group(['prefix' => '/check-outs'], function () {
+                Route::get('/', [StoreCheckOutController::class, 'index'])->name('inventory.products.store.check_out');
+                Route::get('/records', [StoreCheckOutController::class, 'record'])->name('inventory.products.check_out.return_record');
+                Route::post('/pdf', [StoreCheckOutController::class, 'pdf']);
             });
 
             Route::get('/stock', [StoreInwardController::class, 'stock'])->name('inventory.products.store.stock');

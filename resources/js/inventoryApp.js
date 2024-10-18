@@ -40,6 +40,10 @@ Vue.component('store-stock-page', require('./pages/store/StoreStockPage.vue').de
 Vue.component('store-courier-return-page', require('./pages/store/return/StorePendingCourierReturnPage.vue').default );
 Vue.component('store-courier-return-record-page', require('./pages/store/return/StorePendingCourierReturnRecordPage.vue').default );
 
+//Direct Check out
+Vue.component('store-check-out-page', require('./pages/store/checkout/StoreCheckoutPage.vue').default );
+Vue.component('store-checkout-record-page', require('./pages/store/checkout/StoreCheckoutRecordPage.vue').default );
+
 const app = new Vue({
     el: '#app',
 });

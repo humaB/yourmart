@@ -1,0 +1,318 @@
+<template>
+    <div>
+        <div class="row">
+            <div class="col-12 col-md-12 col-lg-12">
+                <div class="card card-primary">
+                    <TableHeader :tableHeader="tableHeader" />
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <!-- Scan Barcode -->
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="input-group mb-3">
+                                                    <input type="text" v-model="barcode" @keyup.enter="scanBarcode"
+                                                        placeholder="Scan Barcode" class="form-control" />
+                                                    <div class="input-group-append">
+                                                        <button @click="scanBarcode" class="btn btn-primary">
+                                                            <i class="fas fa-barcode"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <!-- Total and Checkout -->
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <!-- Product List -->
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th>Total</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(product, index) in products" :key="index">
+                                                            <td>
+                                                                {{ product.name }}
+                                                                <br />
+                                                                <img :src="product.image" width="50" height="50"
+                                                                    alt="Product Image" />
+                                                            </td>
+                                                            <td>
+                                                                <input type="number" v-model="product.quantity"
+                                                                    @change="updateTotal" class="form-control" />
+                                                            </td>
+                                                            <td>{{ product.price }}</td>
+                                                            <td>{{ product.total }}</td>
+                                                            <td>
+                                                                <button class="btn btn-danger"
+                                                                    @click="removeProduct(index)">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-5">
+                                                <!-- Order Summary -->
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h5>Order Summary</h5>
+                                                        <hr />
+                                                        <div class="row">
+                                                            <div class="col-6">Total Item Quantity:</div>
+                                                            <div class="col-6">{{ totalQuantity }}</div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6">Subtotal:</div>
+                                                            <div class="col-6">{{ total }}</div>
+                                                        </div>
+                                                        <hr />
+                                                        <!-- Payment Methods -->
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h6>Payment Methods</h6>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6">Cash:</div>
+                                                            <div class="col-6">
+                                                                <input type="number" v-model="cashPayment"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class="row">
+                                                            <div class="col-12">Bank:</div>
+                                                            <div class="col-md-6">
+                                                                <select name="" id="" class="form-control"
+                                                                    v-model="selectedBank">
+                                                                    <option value="0">Select from the following</option>
+                                                                    <option :value="bank.id" v-for="bank in banks"
+                                                                        :key="bank.id">{{ bank.name }}</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <input type="number" v-model="bankPayment"
+                                                                    class="form-control" />
+                                                                <input type="file" @change="uploadProof" />
+                                                            </div>
+                                                        </div>
+                                                        <hr />
+                                                        <div class="row">
+                                                            <div class="col-6 h5">Total Payment:</div>
+                                                            <div class="col-6 h5">{{ totalPayment }}</div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-6 h5">Remaining:</div>
+                                                            <div class="col-6 h5">{{ change }}</div>
+                                                        </div>
+                                                        <button class="btn btn-primary w-100 mt-2" v-if="!loader" @click="checkOut()">
+                                                            <i class="fas fa-credit-card"></i> Checkout
+                                                        </button>
+
+                                                        <button class="btn btn-primary w-100 mt-2 btn-progress disabled" v-else>
+                                                            <i class="fas fa-credit-card"></i> Checkout
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import axios from "axios";
+import TableHeader from "../../../components/table/TableHeaderComponent.vue";
+export default {
+    name: 'StoreCheckoutPage',
+    components: {
+        TableHeader
+    },
+    data() {
+        return {
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
+            api_url: window.location.origin + process.env.MIX_API_URL,
+            barcode: "",
+            products: [],
+            tableHeader: {
+                heading: "POS System",
+            },
+            paymentMethod: "cash",
+            proofOfPayment: null,
+            cashPayment: 0,
+            bankPayment: 0,
+            selectedBank: '0',
+            banks: [],
+            loader : false
+        };
+    },
+    created() {
+        this.fetchBanks()
+    },
+    computed: {
+        total() {
+            return this.products.reduce((acc, product) => acc + parseFloat(product.total), 0);
+        },
+        totalQuantity() {
+            return this.products.reduce((acc, product) => acc + parseFloat(product.quantity), 0);
+        },
+        change() {
+            return this.totalPayment - this.total;
+        },
+        totalPayment() {
+            return parseFloat(this.cashPayment || 0) + parseFloat(this.bankPayment || 0);
+        },
+    },
+    methods: {
+        fetchBanks() {
+            axios.get(this.api_url + "accounts/heads/banks")
+                .then((res) => {
+                    const results = res.data.response;
+                    this.banks = results;
+                });
+        },
+        uploadProof(event) {
+            this.proofOfPayment = event.target.files[0];
+        },
+        scanBarcode() {
+            // API call to fetch product details based on barcode
+            // For demo purposes, assume product details are fetched successfully
+            let vm = this;
+
+            axios.post(this.api_url + "inventory/products/scanned-data", { barcode: vm.barcode })
+                .then((res) => {
+                    const result = res.data.response[0];
+
+                    const product = {
+                        id: result.id,
+                        name: result.product.title,
+                        image: vm.public_url + 'storage/uploads/inventory/products/media/' + result.product.hero_image,
+                        price: result.sale_price,
+                    };
+
+                    // Check if product already exists in the list
+                    const existingProduct = this.products.find((p) => p.name === product.name);
+
+                    if (existingProduct) {
+                        // Increase quantity if product already exists
+                        existingProduct.quantity += 1;
+                        existingProduct.total = existingProduct.price * existingProduct.quantity;
+                    } else {
+                        // Add new product to the list
+                        this.products.push({
+                            ...product,
+                            quantity: 1,
+                            total: product.price,
+                        });
+                    }
+
+                    this.barcode = "";
+
+                })
+                .catch()
+        },
+        updateTotal() {
+            this.products.forEach((product) => {
+                product.total = parseFloat(product.price) * parseFloat(product.quantity);
+            });
+        },
+        removeProduct(index) {
+            this.products.splice(index, 1);
+        },
+        checkOut() {
+            let vm = this;
+            if (vm.products.length == 0) {
+                return swal({
+                    title: "Required",
+                    text: 'Please add some products in cart first',
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            if (vm.totalPayment < vm.total) {
+                return swal({
+                    title: "Required",
+                    text: 'Please check paid amount first',
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            if (vm.bankPayment > 0) {
+                if (vm.selectedBank == '0') {
+                    return swal({
+                        title: "Required",
+                        text: 'Please select bank first',
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+                if (!vm.proofOfPayment) {
+                    return swal({
+                        title: "Required",
+                        text: 'Please upload proof of payment',
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            }
+
+            vm.loader = true;
+            const fd = new FormData();
+            vm.products.forEach((product, index) => {
+                Object.keys(product).forEach((key) => {
+                    fd.append(`products[${index}][${key}]`, product[key]);
+                });
+            });
+            fd.append('paymentAttachment', vm.proofOfPayment);
+            fd.append('cash', vm.cashPayment);
+            fd.append('bank', vm.bankPayment);
+            fd.append('bankAccount', vm.selectedBank);
+
+            fd.append('total', vm.total);
+
+            axios.post(this.api_url + "inventory/products/direct-checkout", fd)
+                .then((res) => {
+                    vm.loader = false;
+
+                    vm.cashPayment = 0;
+                    vm.bankPayment = 0;
+                    vm.selectedBank = 0;
+                    vm.proofOfPayment = '';
+                    vm.products = [];
+                    $("input[type=file]").val('');
+
+                    return swal({
+                        title: "Error",
+                        text: 'Product Issued Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+
+                })
+
+        }
+    },
+};
+</script>
