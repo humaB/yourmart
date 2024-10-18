@@ -23,6 +23,15 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-10 mb-3">
+                                                    <v-select :options="productsDropdown" v-model="selectedProduct"></v-select>
+                                            </div>
+                                            <div class="col-md-2 mb-2">
+                                                <button @click="scanBarcode('1')" class="btn btn-primary">
+                                                    <i class="fa fa-plus"></i> Press To Add
+                                                </button>
+                                            </div>
                                         </div>
 
 
@@ -141,8 +150,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import TableHeader from "../../../components/table/TableHeaderComponent.vue";
+
 export default {
     name: 'StoreCheckoutPage',
     components: {
@@ -163,11 +172,14 @@ export default {
             bankPayment: 0,
             selectedBank: '0',
             banks: [],
-            loader : false
+            loader : false,
+            selectedProduct : { code : 0 , label : "Select from the following"},
+            productsDropdown : []
         };
     },
     created() {
-        this.fetchBanks()
+        this.fetchBanks();
+        this.fetchProducts();
     },
     computed: {
         total() {
@@ -191,15 +203,31 @@ export default {
                     this.banks = results;
                 });
         },
+        fetchProducts(){
+            axios.get(this.api_url + "inventory/products/complete-drop-down")
+                .then((res) => {
+                    const results = res.data.response;
+                    this.productsDropdown = results;
+                });
+        },
         uploadProof(event) {
             this.proofOfPayment = event.target.files[0];
         },
-        scanBarcode() {
-            // API call to fetch product details based on barcode
-            // For demo purposes, assume product details are fetched successfully
-            let vm = this;
+        scanBarcode( product = null ) {
 
-            axios.post(this.api_url + "inventory/products/scanned-data", { barcode: vm.barcode })
+            let vm = this;
+            let data;
+            if( product == '1'){
+                data = {
+                    id : vm.selectedProduct.code
+                }
+            }
+            else{
+                data = {
+                    barcode: vm.barcode
+                }
+            }
+            axios.post(this.api_url + "inventory/products/scanned-data", data)
                 .then((res) => {
                     const result = res.data.response[0];
 
@@ -227,6 +255,7 @@ export default {
                     }
 
                     this.barcode = "";
+                    this.selectedProduct = { code : 0, label : 'Select from the following'}
 
                 })
                 .catch()
@@ -250,7 +279,7 @@ export default {
                 });
             }
 
-            if (vm.totalPayment < vm.total) {
+            if (vm.totalPayment != vm.total) {
                 return swal({
                     title: "Required",
                     text: 'Please check paid amount first',

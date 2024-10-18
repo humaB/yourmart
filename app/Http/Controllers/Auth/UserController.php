@@ -74,7 +74,6 @@ class UserController extends Controller
             'email' => 'required|email',
             'role'  => 'required',
             'password' => 'nullable|min:4',
-            'oldPassword' => 'required_with:password', // Custom validation for old password
         ]);
 
         $validation = $this->validation($validator);

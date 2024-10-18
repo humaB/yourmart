@@ -505,7 +505,7 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-if="details.type != 'Cash' && details.status < 8">
                         <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement" @click="markasReplacement()" v-if="(role == 'order collection' || role == 'admin') && details.is_replacement == 0">
                             <i class="fas fa-arrow-right"></i> Mark as Replacement
                         </button>
@@ -529,6 +529,23 @@
                         <button class="btn btn-danger btn-progress disabled"  v-else-if="rejectLoader">
                             Forward
                         </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                    <div class="modal-footer" v-else-if="details.type == 'Cash'">
+
+                        <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
+                            <i class="fas fa-paper-plane"></i>  Forward Order
+                        </button>
+                        <button class="btn btn-primary btn-progress disabled"  v-else-if="loader">
+                         Forward
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+                    <div class="modal-footer" v-else>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>

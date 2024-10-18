@@ -238,6 +238,7 @@ class DropShipperController extends Controller
 
         $transactions = AccountTransaction::with('order.shop')->whereIn('account_head_id', $ledgers)
             ->where('type', 'BP')
+            ->orWhere('type', 'CP')
             ->get();
 
         return (new ResponseCollection($transactions))
@@ -637,7 +638,10 @@ class DropShipperController extends Controller
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop', 'added_by_name')->whereIn('account_head_id', $ledgers)
-            ->where('type', 'BP')
+            ->where(function($q){
+                $q->where('type', 'BP')
+                ->orWhere('type', 'CP');
+            })
             ->where('document_id', $request->document)
             ->get();
 
@@ -650,7 +654,7 @@ class DropShipperController extends Controller
 
         $pdf->project = 'YourMart';
         //GW-JAN-23-CR-1
-        $pdf->receipt = 'BP-' . $request->document;
+        $pdf->receipt = $transactions[0]->type.'-' . $request->document;
         //$pdf->copy_type = 'Customer Copy';
 
         // set default header data
@@ -750,7 +754,7 @@ class DropShipperController extends Controller
 
             $pdf->Cell(8,  $heigth, '', 0, 0, '', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(10,  $heigth, $i + 1, 'L', 0, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Cell(22,  $heigth, 'Online', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
+            $pdf->Cell(22,  $heigth,  $transactions[0]->type == 'BP' ?  'Online' : 'Cash', 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->MultiCell(20, $heigth,  substr($posting->order->shop->store_name, 0, 3) . '-' . $posting->order->order_no, 0, 'L', 0, 0, '', '', true, 0, false, true, false, 'M');
             $pdf->Cell(30,  $heigth, $posting->order->tracking_number, 0, 0, 'L', 0, '', 0, false, 'T', 'M');
             $pdf->Cell(30,  $heigth, number_format($posting->order->total_profit), 0, 0, 'L', 0, '', 0, false, 'T', 'M');

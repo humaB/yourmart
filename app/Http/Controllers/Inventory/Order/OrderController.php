@@ -83,7 +83,7 @@ class OrderController extends Controller
     }
 
     public function markasReplacement( Request $request ){
-        
+
         Order::where('id', $request->id )->update([
             'is_replacement' => '1'
         ]);
@@ -290,7 +290,13 @@ class OrderController extends Controller
             }
 
         }
-        $order->increment('status');
+        if($order->type != 'Cash'){
+            $order->increment('status');
+        }else{
+            $order->update([
+                'status' => '5'
+            ]);
+        }
         return response()->json(['message' => 'Order status updated successfully.'], 200);
     }
 

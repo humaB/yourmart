@@ -8,6 +8,7 @@ use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Product\ProductQrCode;
+use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
@@ -22,7 +23,7 @@ class StoreCheckOutController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager') {
+        if (auth()->user()->role != 'admin' && auth()->user()->role != 'order collection manager') {
             abort(401);
         }
         return view('inventory.store.checkout.checkout');
@@ -51,9 +52,14 @@ class StoreCheckOutController extends Controller
     public function scannedData(Request $request)
     {
 
-        $scanned = ProductQrCode::where('barcode', $request->barcode)->first();
+        if( $request->barcode){
+            $scanned = ProductQrCode::where('barcode', $request->barcode)->first();
 
-        $product = ProductVariation::with('product')->where('id', $scanned->product_variation_id)->first();
+            $product = ProductVariation::with('product')->where('id', $scanned->product_variation_id)->first();
+        }else{
+            $product = Product::where('id', $request->id)->first();
+            $product = ProductVariation::with('product')->where('product_id', $product->id)->first();
+        }
 
         return (new ResponseCollection([$product]))
             ->response()
@@ -94,22 +100,12 @@ class StoreCheckOutController extends Controller
                 'selling_price'            => 0,
                 'packaging_price'          => 0,
                 'advance_amount'           => $request->total,
-                'status'                   => '5',
+                'status'                   => '1',
                 'total_weight'             => 0,
                 'belongs_to'               => auth()->user()->id ?? 0
             ]);
 
-
-            $issuance = StoreIssuance::create([
-                'order_id'  => $order->id,
-                'added_by'  => auth()->user()->id,
-            ]);
-
             foreach ($request->products as $item) {
-
-                $variation = ProductVariation::where('id', $item['id'])->first();
-                $variation->decrement('stock', $item['quantity']);
-
                 // Create OrderItem
                 OrderItem::create([
                     'order_id' => $order->id,
@@ -120,14 +116,6 @@ class StoreCheckOutController extends Controller
                     'belongs_to' => auth()->user()->id ?? 0
                 ]);
 
-                StoreIssuanceDetail::create([
-                    'sin_id'     => $issuance->id,
-                    'product_id' => $variation->product_id,
-                    'quantity'   => $item['quantity'],
-                    'price'      => $item['price'],
-                    'total'      => (float)$item['quantity'] * (float)$item['price'],
-                    'added_by'  => auth()->user()->id,
-                ]);
             }
 
 
@@ -135,7 +123,7 @@ class StoreCheckOutController extends Controller
 
         if((float)$request->cash > 0 ){
             $document = $ledger->voucherType('cash');
-            $amount = $request->cash - $request->bank;
+            $amount = $request->cash;
 
             $ledger->accountTransaction(158, 74, abs($amount), 0, 'Advance Payment received against order', $document, 'CR', 'order', $order->id, $approved = 1);
             //Sale Credit
