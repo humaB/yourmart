@@ -71,7 +71,9 @@ class StoreCheckOutController extends Controller
     {
         $lock = Cache::lock('checkout_order')->block(7, function () use ($request) {
 
-            $shop = null;
+            $shop = $request->shop == 0 ? null : $request->shop;
+            $dropshipperDetail = DropShipper::where('id', $request->dropshipper)->first();
+            $dropshipper = $request->dropshipper == 0 ? 0 : $dropshipperDetail->user_id;
             $city = 0;
 
             // Create a new order
@@ -80,9 +82,9 @@ class StoreCheckOutController extends Controller
             $order = Order::create([
                 'type'      => 'Cash',
                 'order_no'  =>   $lastShopOrder,
-                'customer_name'  => 'Walk in customer',
+                'customer_name'  => $request->customer ?? 'Walk in customer',
                 'address'        => 'N/A',
-                'phone_number'   => '',
+                'phone_number'   => $request->phone ?? '',
                 'phone_number2'  => '',
                 'city_id'        => $city,
                 'courier_service_id' => 0,
@@ -102,7 +104,7 @@ class StoreCheckOutController extends Controller
                 'advance_amount'           => $request->total,
                 'status'                   => '1',
                 'total_weight'             => 0,
-                'belongs_to'               => auth()->user()->id ?? 0
+                'belongs_to'               => $dropshipper
             ]);
 
             foreach ($request->products as $item) {
@@ -118,22 +120,56 @@ class StoreCheckOutController extends Controller
 
             }
 
-
         $ledger = new AccountHeadHelper();
+        $shop = DropShipperShop::where('id', $shop)->first();
+
+         // General Ledger
+         $group_id = $dropshipperDetail->group_id ?? 0;
+         if ($dropshipperDetail && !$dropshipperDetail->group_id) {
+             $group = $ledger->accountGroupFourthCreate(
+                 $dropshipperDetail->full_name . '-' . $dropshipperDetail->cnic_number,
+                 6, // Current asset
+                 50, // Account Receivable
+             );
+
+             $dropshipperDetail->update([
+                 'group_id' => $group->id
+             ]);
+
+             $group_id = $group->id;
+         }
+
+         $head = $shop->account_head_id ?? 74;
+         if ($shop && !$shop->account_head_id) {
+             // Shop Ledger
+             $head = $ledger->accountHeadCreate(
+                 $shop->store_name . '-' . $shop->dropshipper_id,
+                 1, // Asset
+                 6, // Current asset
+                 50, // Account Receivable
+                 $group_id, // Dropshipper
+             );
+
+             $shop->update([
+                 'account_head_id' => $head->id
+             ]);
+
+             $head = $head->id;
+         }
 
         if((float)$request->cash > 0 ){
             $document = $ledger->voucherType('cash');
             $amount = $request->cash;
-
-            $ledger->accountTransaction(158, 74, abs($amount), 0, 'Advance Payment received against order', $document, 'CR', 'order', $order->id, $approved = 1);
+            // 74 is sale Ledger
+            $ledger->accountTransaction(158, $head, abs($amount), 0, 'Advance Payment received against order', $document, 'CR', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction(74, 158, 0, abs($amount), 'Advance Payment against order', $document, 'CR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head, 158, 0, abs($amount), 'Advance Payment against order', $document, 'CR', 'order', $order->id, $approved = 1);
         }
         if((float)$request->bank > 0 ){
             $document = $ledger->voucherType('bank');
-            $ledger->accountTransaction($request->bankAccount, 74, $request->bank, 0, 'Advance Payment received against order', $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($request->bankAccount, $head, $request->bank, 0, 'Advance Payment received against order', $document, 'BR', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction(74, $request->bankAccount, 0, $request->bank, 'Advance Payment against order', $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head, $request->bankAccount, 0, $request->bank, 'Advance Payment against order', $document, 'BR', 'order', $order->id, $approved = 1);
         }
 
             return response()->json(['message' => 'Successfully added'], 201);

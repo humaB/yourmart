@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Inventory\Order;
 
+use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Resources\ResponseCollection;
+use App\Models\Account\AccountTransaction;
 use App\Models\City;
 use App\Models\Inventory\Courier\CourierCategoryRange;
 use App\Models\Inventory\Order\Order;
@@ -305,6 +307,27 @@ class OrderController extends Controller
 
         $order = Order::with('items')->find($request->id);
         if (auth()->user()->role == 'admin') {
+
+            if( $order->type == 'Cash'){
+                $transactions = AccountTransaction::where('posting_type', 'order')
+                ->where(function($q){
+                    $q->where('type', 'CR')
+                    ->orWhere('type', 'BR');
+                })
+                ->where('posting_id', $order->id)
+                ->get()
+                ->map(function($transaction) {
+                    [$transaction->debit, $transaction->credit] = [$transaction->credit, $transaction->debit];
+                    return $transaction;
+                });
+
+                $ledger = new AccountHeadHelper();
+                //Return Bank or Cash Entry
+                $document = $ledger->voucherType('JV');
+                foreach( $transactions as $transaction ){
+                    $ledger->accountTransaction($transaction->account_head_id, $transaction->other_account_head_id, $transaction->debit, $transaction->credit, 'Order Reject and payment refund', $document, 'JV', 'order', $order->id, $approved = 1);
+                }
+            }
 
             OrderActivity::create([
                 'order_id'  => $request->id,

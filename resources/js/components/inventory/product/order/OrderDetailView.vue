@@ -541,6 +541,12 @@
                         <button class="btn btn-primary btn-progress disabled"  v-else-if="loader">
                          Forward
                         </button>
+                        <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
+                            <i class="fa fa-trash"></i> Reject Order
+                         </button>
+                         <button class="btn btn-danger btn-progress disabled"  v-else-if="rejectLoader">
+                             Forward
+                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>

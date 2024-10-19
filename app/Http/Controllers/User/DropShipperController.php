@@ -20,6 +20,7 @@ use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use NumberFormatter;
@@ -165,7 +166,19 @@ class DropShipperController extends Controller
         return response()->json(['message' => 'Dropshipper information updated successfully.']);
     }
 
-    public function fetchDetails(Request $request)
+    public function dropDown(){
+
+        $dropshippers = DropShipper::where('status', '1')
+        ->select('id as code',
+                 DB::raw("CONCAT(full_name, ' - ', email) as label"))
+        ->get();
+
+        return (new ResponseCollection($dropshippers))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+public function fetchDetails(Request $request)
     {
 
         $dropshippers = DropShipper::with('bank', 'city', 'shops')->where('id', $request->id)->get();

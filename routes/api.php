@@ -86,6 +86,7 @@ Route::post('tickets/messages/upload/image', [TicketController::class, 'apiImage
 Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ DropShipperController::class , 'getRequests']);
     Route::post('/',  [ DropShipperController::class , 'update']);
+    Route::get('/drop-down',  [ DropShipperController::class , 'dropDown']);
 
     Route::post('/preview',  [ DropshipperPreviewController::class , 'fetchData']);
 

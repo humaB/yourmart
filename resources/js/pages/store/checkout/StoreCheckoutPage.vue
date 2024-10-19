@@ -12,6 +12,24 @@
                                     <div class="card-body">
                                         <!-- Scan Barcode -->
                                         <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="">Select Dropshipper <span class="text-danger">( optional )</span></label>
+                                                <v-select :options="dropshippers" v-model="selectedDropshipper" @input="fetchDropshipperDetails()"></v-select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="">Select Shop <span class="text-danger">( optional )</span></label>
+                                                <v-select :options="shops" v-model="selectedShop"></v-select>
+                                            </div>
+
+                                            <div class="col-md-6 mb-3">
+                                                <label for="">Customer Name <span class="text-danger">( optional )</span></label>
+                                                <input type="text" class="form-control" v-model="customerName">
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="">Customer Number <span class="text-danger">( optional )</span></label>
+                                                <input type="text" class="form-control" v-model="customerPhone">
+                                            </div>
+
                                             <div class="col-12">
                                                 <div class="input-group mb-3">
                                                     <input type="text" v-model="barcode" @keyup.enter="scanBarcode"
@@ -117,6 +135,13 @@
                                                                     class="form-control" />
                                                                 <input type="file" @change="uploadProof" />
                                                             </div>
+
+                                                            <div class="col-md-12 mt-3">
+                                                                <p>Bank Name : <span style="float:right"><b>{{ dropshipperDetails.bank ? dropshipperDetails.bank.name : '' }}</b></span></p>
+                                                                <p>Account Name : <span style="float:right"><b>{{ dropshipperDetails.account_title }}</b></span></p>
+                                                                <p>Account # : <span style="float:right"><b>{{ dropshipperDetails.account_number }}</b></span></p>
+                                                                <p>Account IBAN : <span style="float:right"><b>{{ dropshipperDetails.account_iban }}</b></span></p>
+                                                            </div>
                                                         </div>
                                                         <hr />
                                                         <div class="row">
@@ -174,12 +199,20 @@ export default {
             banks: [],
             loader : false,
             selectedProduct : { code : 0 , label : "Select from the following"},
-            productsDropdown : []
+            productsDropdown : [],
+            dropshippers : [],
+            selectedDropshipper : { code : 0 , label : "Select from the following"},
+            dropshipperDetails : {},
+            selectedShop : { code : 0 , label : "Select from the following"},
+            shops : [],
+            customerName : '',
+            customerPhone : ''
         };
     },
     created() {
         this.fetchBanks();
         this.fetchProducts();
+        this.fetchDropshippers();
     },
     computed: {
         total() {
@@ -196,6 +229,32 @@ export default {
         },
     },
     methods: {
+        fetchDropshippers() {
+            axios.get(this.api_url + "dropshippers/drop-down")
+                .then((res) => {
+                    const results = res.data.response;
+                    this.dropshippers = results;
+                });
+        },
+        fetchDropshipperDetails(){
+
+            axios.post(this.api_url + "dropshippers/details", { id : this.selectedDropshipper.code })
+                .then((res) => {
+                    const results = res.data.response;
+                    this.dropshipperDetails = results[0];
+
+                    this.customerName = this.dropshipperDetails.full_name;
+                    this.customerPhone = this.dropshipperDetails.whatsapp_number;
+
+                    this.selectedShop = { code : 0 , label : "Select from the following"};
+                    this.shops =   this.dropshipperDetails.shops.map( ( arr ) => {
+                        return {
+                            code : arr.id,
+                            label : arr.store_name
+                        }
+                    })
+                });
+        },
         fetchBanks() {
             axios.get(this.api_url + "accounts/heads/banks")
                 .then((res) => {
@@ -279,6 +338,17 @@ export default {
                 });
             }
 
+            if( vm.selectedDropshipper.code != 0){
+                if(vm.selectedShop.code == 0){
+                    return swal({
+                        title: "Required",
+                        text: 'Please select shop first',
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            }
+
             if (vm.totalPayment != vm.total) {
                 return swal({
                     title: "Required",
@@ -319,6 +389,11 @@ export default {
             fd.append('bank', vm.bankPayment);
             fd.append('bankAccount', vm.selectedBank);
 
+            fd.append('customer', vm.customerName);
+            fd.append('phone', vm.customerPhone);
+            fd.append('dropshipper', vm.selectedDropshipper.code);
+            fd.append('shop', vm.selectedShop.code);
+
             fd.append('total', vm.total);
 
             axios.post(this.api_url + "inventory/products/direct-checkout", fd)
@@ -329,6 +404,12 @@ export default {
                     vm.bankPayment = 0;
                     vm.selectedBank = 0;
                     vm.proofOfPayment = '';
+
+                    vm.selectedDropshipper = { code : 0 , label : 'Select from the following'};
+                    vm.selectedShop = { code : 0 , label : 'Select from the following'};
+                    vm.customerName = "";
+                    vm.customerPhone = "";
+
                     vm.products = [];
                     $("input[type=file]").val('');
 

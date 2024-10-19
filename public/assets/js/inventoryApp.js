@@ -1148,12 +1148,26 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         code: 0,
         label: "Select from the following"
       },
-      productsDropdown: []
+      productsDropdown: [],
+      dropshippers: [],
+      selectedDropshipper: {
+        code: 0,
+        label: "Select from the following"
+      },
+      dropshipperDetails: {},
+      selectedShop: {
+        code: 0,
+        label: "Select from the following"
+      },
+      shops: [],
+      customerName: '',
+      customerPhone: ''
     };
   },
   created: function created() {
     this.fetchBanks();
     this.fetchProducts();
+    this.fetchDropshippers();
   },
   computed: {
     total: function total() {
@@ -1174,25 +1188,53 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
-    fetchBanks: function fetchBanks() {
+    fetchDropshippers: function fetchDropshippers() {
       var _this = this;
+      axios.get(this.api_url + "dropshippers/drop-down").then(function (res) {
+        var results = res.data.response;
+        _this.dropshippers = results;
+      });
+    },
+    fetchDropshipperDetails: function fetchDropshipperDetails() {
+      var _this2 = this;
+      axios.post(this.api_url + "dropshippers/details", {
+        id: this.selectedDropshipper.code
+      }).then(function (res) {
+        var results = res.data.response;
+        _this2.dropshipperDetails = results[0];
+        _this2.customerName = _this2.dropshipperDetails.full_name;
+        _this2.customerPhone = _this2.dropshipperDetails.whatsapp_number;
+        _this2.selectedShop = {
+          code: 0,
+          label: "Select from the following"
+        };
+        _this2.shops = _this2.dropshipperDetails.shops.map(function (arr) {
+          return {
+            code: arr.id,
+            label: arr.store_name
+          };
+        });
+      });
+    },
+    fetchBanks: function fetchBanks() {
+      var _this3 = this;
       axios.get(this.api_url + "accounts/heads/banks").then(function (res) {
         var results = res.data.response;
-        _this.banks = results;
+        _this3.banks = results;
       });
     },
     fetchProducts: function fetchProducts() {
-      var _this2 = this;
+      var _this4 = this;
       axios.get(this.api_url + "inventory/products/complete-drop-down").then(function (res) {
         var results = res.data.response;
-        _this2.productsDropdown = results;
+        _this4.productsDropdown = results;
       });
     },
     uploadProof: function uploadProof(event) {
       this.proofOfPayment = event.target.files[0];
     },
     scanBarcode: function scanBarcode() {
-      var _this3 = this;
+      var _this5 = this;
       var product = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var vm = this;
       var data;
@@ -1215,7 +1257,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         };
 
         // Check if product already exists in the list
-        var existingProduct = _this3.products.find(function (p) {
+        var existingProduct = _this5.products.find(function (p) {
           return p.name === product.name;
         });
         if (existingProduct) {
@@ -1224,13 +1266,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           existingProduct.total = existingProduct.price * existingProduct.quantity;
         } else {
           // Add new product to the list
-          _this3.products.push(_objectSpread(_objectSpread({}, product), {}, {
+          _this5.products.push(_objectSpread(_objectSpread({}, product), {}, {
             quantity: 1,
             total: product.price
           }));
         }
-        _this3.barcode = "";
-        _this3.selectedProduct = {
+        _this5.barcode = "";
+        _this5.selectedProduct = {
           code: 0,
           label: 'Select from the following'
         };
@@ -1253,6 +1295,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           icon: "error",
           timer: 3000
         });
+      }
+      if (vm.selectedDropshipper.code != 0) {
+        if (vm.selectedShop.code == 0) {
+          return swal({
+            title: "Required",
+            text: 'Please select shop first',
+            icon: "error",
+            timer: 3000
+          });
+        }
       }
       if (vm.totalPayment != vm.total) {
         return swal({
@@ -1291,6 +1343,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       fd.append('cash', vm.cashPayment);
       fd.append('bank', vm.bankPayment);
       fd.append('bankAccount', vm.selectedBank);
+      fd.append('customer', vm.customerName);
+      fd.append('phone', vm.customerPhone);
+      fd.append('dropshipper', vm.selectedDropshipper.code);
+      fd.append('shop', vm.selectedShop.code);
       fd.append('total', vm.total);
       axios.post(this.api_url + "inventory/products/direct-checkout", fd).then(function (res) {
         vm.loader = false;
@@ -1298,6 +1354,16 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         vm.bankPayment = 0;
         vm.selectedBank = 0;
         vm.proofOfPayment = '';
+        vm.selectedDropshipper = {
+          code: 0,
+          label: 'Select from the following'
+        };
+        vm.selectedShop = {
+          code: 0,
+          label: 'Select from the following'
+        };
+        vm.customerName = "";
+        vm.customerPhone = "";
         vm.products = [];
         $("input[type=file]").val('');
         return swal({
@@ -3166,6 +3232,81 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-md-6 mb-3"
+  }, [_vm._m(0), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.dropshippers
+    },
+    on: {
+      input: function input($event) {
+        return _vm.fetchDropshipperDetails();
+      }
+    },
+    model: {
+      value: _vm.selectedDropshipper,
+      callback: function callback($$v) {
+        _vm.selectedDropshipper = $$v;
+      },
+      expression: "selectedDropshipper"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mb-3"
+  }, [_vm._m(1), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.shops
+    },
+    model: {
+      value: _vm.selectedShop,
+      callback: function callback($$v) {
+        _vm.selectedShop = $$v;
+      },
+      expression: "selectedShop"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mb-3"
+  }, [_vm._m(2), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.customerName,
+      expression: "customerName"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.customerName
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.customerName = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mb-3"
+  }, [_vm._m(3), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.customerPhone,
+      expression: "customerPhone"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.customerPhone
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.customerPhone = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
     staticClass: "col-12"
   }, [_c("div", {
     staticClass: "input-group mb-3"
@@ -3233,7 +3374,7 @@ var render = function render() {
     staticClass: "col-7"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (product, index) {
+  }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (product, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v("\n                                                            " + _vm._s(product.name) + "\n                                                            "), _c("br"), _vm._v(" "), _c("img", {
@@ -3292,7 +3433,7 @@ var render = function render() {
     staticClass: "col-6"
   }, [_vm._v("Subtotal:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6"
-  }, [_vm._v(_vm._s(_vm.total))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.total))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6"
@@ -3387,7 +3528,25 @@ var render = function render() {
     on: {
       change: _vm.uploadProof
     }
-  })])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_c("p", [_vm._v("Bank Name : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.bank ? _vm.dropshipperDetails.bank.name : ""))])])]), _vm._v(" "), _c("p", [_vm._v("Account Name : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.account_title))])])]), _vm._v(" "), _c("p", [_vm._v("Account # : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.account_number))])])]), _vm._v(" "), _c("p", [_vm._v("Account IBAN : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.account_iban))])])])])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6 h5"
@@ -3415,6 +3574,46 @@ var render = function render() {
   }), _vm._v(" Checkout\n                                                    ")])])])])])])])])])])], 1)])])]);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Select Dropshipper "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Select Shop "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Customer Name "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Customer Number "), _c("span", {
+    staticClass: "text-danger"
+  }, [_vm._v("( optional )")])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th")])]);

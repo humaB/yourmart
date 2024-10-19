@@ -8533,7 +8533,18 @@ var render = function render() {
     staticClass: "fas fa-paper-plane"
   }), _vm._v("  Forward Order\n                    ")]) : _vm.loader ? _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("\n                     Forward\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                     Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.reject();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-trash"
+  }), _vm._v(" Reject Order\n                     ")]) : _vm.rejectLoader ? _c("button", {
+    staticClass: "btn btn-danger btn-progress disabled"
+  }, [_vm._v("\n                         Forward\n                     ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
