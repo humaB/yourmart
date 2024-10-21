@@ -23,7 +23,7 @@ class StoreCheckOutController extends Controller
 {
     public function index()
     {
-        if (auth()->user()->role != 'admin' && auth()->user()->role != 'order collection manager') {
+        if (auth()->user()->role != 'admin' && auth()->user()->role != 'order collection manager' && auth()->user()->role != 'supervisor') {
             abort(401);
         }
         return view('inventory.store.checkout.checkout');
@@ -31,7 +31,7 @@ class StoreCheckOutController extends Controller
 
     public function record()
     {
-        if (auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager') {
+        if (auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor') {
             abort(401);
         }
         return view('inventory.store.checkout.checkout_record');
