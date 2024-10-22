@@ -15,7 +15,10 @@
                                 <thead>
                                     <tr>
                                         <th>Sr #</th>
+                                        <th>Type</th>
                                         <th>Order #</th>
+                                        <th>Belong To</th>
+                                        <th>Customer Name</th>
                                         <th>SIN #</th>
                                         <th>Created Date</th>
                                         <th>Action</th>
@@ -24,7 +27,12 @@
                                 <tbody>
                                     <tr v-for="(item,index) in issuance" :key="item.id">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ item.order.order_no}}</td>
+                                        <td>{{ item.order.type }}</td>
+                                        <td>
+                                            {{ item.order && item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + '-' + item.order.order_no : item.order.order_no }}
+                                          </td>
+                                          <td>{{ item.order.user ?item.order.user.name : '' }}</td>
+                                        <td>{{ item.order.customer_name }}</td>
                                         <td>{{ item.id }}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
                                         <td>

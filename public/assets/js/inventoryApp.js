@@ -1117,6 +1117,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -1188,6 +1194,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    onlyNumber: function onlyNumber($event) {
+      var keyCode = $event.keyCode ? $event.keyCode : $event.which;
+      if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
+        // 46 is dot
+        $event.preventDefault();
+      }
+    },
     fetchDropshippers: function fetchDropshippers() {
       var _this = this;
       axios.get(this.api_url + "dropshippers/drop-down").then(function (res) {
@@ -1253,7 +1270,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           id: result.id,
           name: result.product.title,
           image: vm.public_url + 'storage/uploads/inventory/products/media/' + result.product.hero_image,
-          price: result.sale_price
+          price: result.sale_price,
+          discounts: result.product.discounts
         };
 
         // Check if product already exists in the list
@@ -1268,6 +1286,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           // Add new product to the list
           _this5.products.push(_objectSpread(_objectSpread({}, product), {}, {
             quantity: 1,
+            discounts: product.discounts,
+            // Calculate initial price based on quantity
+            price: product.price,
             total: product.price
           }));
         }
@@ -1278,9 +1299,46 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         };
       })["catch"]();
     },
+    calculateDiscountedPrice: function calculateDiscountedPrice(aLLdiscounts, quantity, price) {
+      var _this6 = this;
+      // Get the product's discount rules
+      var discounts = aLLdiscounts;
+
+      // Initialize the price as the regular sale price
+      var discountedPrice = price;
+      discounts.forEach(function (discount) {
+        // Use the isInRange function to check if the quantity matches the discount range
+        if (_this6.isInRange(quantity, discount.quantity)) {
+          discountedPrice = discount.price;
+        }
+      });
+      return discountedPrice;
+    },
+    // Reusable function to check if quantity falls within a range
+    isInRange: function isInRange(quantity, range) {
+      // Check if range is "51+" or a standard range like "20-31"
+      if (range.includes('+')) {
+        var min = parseInt(range.split('+')[0], 10);
+        return quantity >= min;
+      } else {
+        var _range$split$map = range.split('-').map(Number),
+          _range$split$map2 = _slicedToArray(_range$split$map, 2),
+          _min = _range$split$map2[0],
+          max = _range$split$map2[1];
+        return quantity >= _min && quantity <= max;
+      }
+    },
     updateTotal: function updateTotal() {
+      var _this7 = this;
       this.products.forEach(function (product) {
-        product.total = parseFloat(product.price) * parseFloat(product.quantity);
+        // Calculate the new price based on the current quantity
+        var newPrice = _this7.calculateDiscountedPrice(product.discounts, product.quantity, product.price);
+
+        // Update the product's price
+        product.price = newPrice;
+
+        // Recalculate the total using the updated price
+        product.total = parseFloat(newPrice) * parseFloat(product.quantity);
       });
     },
     removeProduct: function removeProduct(index) {
@@ -1367,8 +1425,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         vm.products = [];
         $("input[type=file]").val('');
         return swal({
-          title: "Error",
-          text: 'Product Issued Successfully',
+          title: "Success",
+          text: 'Order Sent to Inventory manager',
           icon: "success",
           timer: 3000
         });
@@ -3233,38 +3291,7 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6 mb-3"
-  }, [_vm._m(0), _vm._v(" "), _c("v-select", {
-    attrs: {
-      options: _vm.dropshippers
-    },
-    on: {
-      input: function input($event) {
-        return _vm.fetchDropshipperDetails();
-      }
-    },
-    model: {
-      value: _vm.selectedDropshipper,
-      callback: function callback($$v) {
-        _vm.selectedDropshipper = $$v;
-      },
-      expression: "selectedDropshipper"
-    }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 mb-3"
-  }, [_vm._m(1), _vm._v(" "), _c("v-select", {
-    attrs: {
-      options: _vm.shops
-    },
-    model: {
-      value: _vm.selectedShop,
-      callback: function callback($$v) {
-        _vm.selectedShop = $$v;
-      },
-      expression: "selectedShop"
-    }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 mb-3"
-  }, [_vm._m(2), _vm._v(" "), _c("input", {
+  }, [_vm._m(0), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3286,7 +3313,7 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 mb-3"
-  }, [_vm._m(3), _vm._v(" "), _c("input", {
+  }, [_vm._m(1), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -3307,44 +3334,6 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-12"
-  }, [_c("div", {
-    staticClass: "input-group mb-3"
-  }, [_c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.barcode,
-      expression: "barcode"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      placeholder: "Scan Barcode"
-    },
-    domProps: {
-      value: _vm.barcode
-    },
-    on: {
-      keyup: function keyup($event) {
-        if (!$event.type.indexOf("key") && _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")) return null;
-        return _vm.scanBarcode.apply(null, arguments);
-      },
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.barcode = $event.target.value;
-      }
-    }
-  }), _vm._v(" "), _c("div", {
-    staticClass: "input-group-append"
-  }, [_c("button", {
-    staticClass: "btn btn-primary",
-    on: {
-      click: _vm.scanBarcode
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-barcode"
-  })])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-10 mb-3"
   }, [_c("v-select", {
     attrs: {
@@ -3374,7 +3363,7 @@ var render = function render() {
     staticClass: "col-7"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (product, index) {
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (product, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v("\n                                                            " + _vm._s(product.name) + "\n                                                            "), _c("br"), _vm._v(" "), _c("img", {
@@ -3393,12 +3382,13 @@ var render = function render() {
       }],
       staticClass: "form-control",
       attrs: {
-        type: "number"
+        type: "text"
       },
       domProps: {
         value: product.quantity
       },
       on: {
+        keypress: _vm.onlyNumber,
         change: _vm.updateTotal,
         input: function input($event) {
           if ($event.target.composing) return;
@@ -3433,7 +3423,7 @@ var render = function render() {
     staticClass: "col-6"
   }, [_vm._v("Subtotal:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6"
-  }, [_vm._v(_vm._s(_vm.total))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.total)))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6"
@@ -3448,12 +3438,13 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      type: "number"
+      type: "test"
     },
     domProps: {
       value: _vm.cashPayment
     },
     on: {
+      keypress: _vm.onlyNumber,
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.cashPayment = $event.target.value;
@@ -3510,12 +3501,13 @@ var render = function render() {
     }],
     staticClass: "form-control",
     attrs: {
-      type: "number"
+      type: "text"
     },
     domProps: {
       value: _vm.bankPayment
     },
     on: {
+      keypress: _vm.onlyNumber,
       input: function input($event) {
         if ($event.target.composing) return;
         _vm.bankPayment = $event.target.value;
@@ -3528,37 +3520,19 @@ var render = function render() {
     on: {
       change: _vm.uploadProof
     }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12 mt-3"
-  }, [_c("p", [_vm._v("Bank Name : "), _c("span", {
-    staticStyle: {
-      "float": "right"
-    }
-  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.bank ? _vm.dropshipperDetails.bank.name : ""))])])]), _vm._v(" "), _c("p", [_vm._v("Account Name : "), _c("span", {
-    staticStyle: {
-      "float": "right"
-    }
-  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.account_title))])])]), _vm._v(" "), _c("p", [_vm._v("Account # : "), _c("span", {
-    staticStyle: {
-      "float": "right"
-    }
-  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.account_number))])])]), _vm._v(" "), _c("p", [_vm._v("Account IBAN : "), _c("span", {
-    staticStyle: {
-      "float": "right"
-    }
-  }, [_c("b", [_vm._v(_vm._s(_vm.dropshipperDetails.account_iban))])])])])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _vm._m(4)]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6 h5"
   }, [_vm._v("Total Payment:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6 h5"
-  }, [_vm._v(_vm._s(_vm.totalPayment))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalPayment)))])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6 h5"
   }, [_vm._v("Remaining:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6 h5"
-  }, [_vm._v(_vm._s(_vm.change))])]), _vm._v(" "), !_vm.loader ? _c("button", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.change)))])]), _vm._v(" "), !_vm.loader ? _c("button", {
     staticClass: "btn btn-primary w-100 mt-2",
     on: {
       click: function click($event) {
@@ -3574,26 +3548,6 @@ var render = function render() {
   }), _vm._v(" Checkout\n                                                    ")])])])])])])])])])])], 1)])])]);
 };
 var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_vm._v("Select Dropshipper "), _c("span", {
-    staticClass: "text-danger"
-  }, [_vm._v("( optional )")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_vm._v("Select Shop "), _c("span", {
-    staticClass: "text-danger"
-  }, [_vm._v("( optional )")])]);
-}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("label", {
@@ -3625,6 +3579,28 @@ var staticRenderFns = [function () {
   }, [_c("div", {
     staticClass: "col-12"
   }, [_c("h6", [_vm._v("Payment Methods")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_c("p", [_vm._v("Bank Name : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v("Meezan Bank")])])]), _vm._v(" "), _c("p", [_vm._v("Account Name : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v("ECOMSTARTUPS")])])]), _vm._v(" "), _c("p", [_vm._v("Account # : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v("04090110227095")])])]), _vm._v(" "), _c("p", [_vm._v("Account IBAN : "), _c("span", {
+    staticStyle: {
+      "float": "right"
+    }
+  }, [_c("b", [_vm._v("PK37MEZN0004090110227095")])])])]);
 }];
 render._withStripped = true;
 
@@ -3674,7 +3650,7 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.issuance, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order.order_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order.type))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.order && item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + "-" + item.order.order_no : item.order.order_no) + "\n                                      ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order.user ? item.order.user.name : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order.customer_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-dark",
       on: {
         click: function click($event) {
@@ -3712,7 +3688,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("SIN #")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Type")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Belong To")]), _vm._v(" "), _c("th", [_vm._v("Customer Name")]), _vm._v(" "), _c("th", [_vm._v("SIN #")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

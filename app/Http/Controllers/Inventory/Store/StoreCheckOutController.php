@@ -31,7 +31,7 @@ class StoreCheckOutController extends Controller
 
     public function record()
     {
-        if (auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor') {
+        if (auth()->user()->role != 'admin' && auth()->user()->role != 'order collection manager' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor') {
             abort(401);
         }
         return view('inventory.store.checkout.checkout_record');
@@ -40,7 +40,7 @@ class StoreCheckOutController extends Controller
     public function fetchRecord()
     {
 
-        $issuance = StoreIssuance::with('order')
+        $issuance = StoreIssuance::with('order.shop' , 'order.user')
             ->orderBy('id', 'desc')
             ->get();
 
@@ -55,10 +55,10 @@ class StoreCheckOutController extends Controller
         if( $request->barcode){
             $scanned = ProductQrCode::where('barcode', $request->barcode)->first();
 
-            $product = ProductVariation::with('product')->where('id', $scanned->product_variation_id)->first();
+            $product = ProductVariation::with('product.discounts')->where('id', $scanned->product_variation_id)->first();
         }else{
             $product = Product::where('id', $request->id)->first();
-            $product = ProductVariation::with('product')->where('product_id', $product->id)->first();
+            $product = ProductVariation::with('product.discounts')->where('product_id', $product->id)->first();
         }
 
         return (new ResponseCollection([$product]))
@@ -255,18 +255,12 @@ class StoreCheckOutController extends Controller
         $pdf->Ln();
         $pdf->SetFont('Helvetica', 'B', '14');
         $pdf->Cell(0, 7, 'Bill To', 0, 1, 'L', 0, '', 0, false, 'T', 'M');
-        if ($dropshipper) {
-            $pdf->SetFont('Helvetica', '', '12');
-            $pdf->Cell(0, 7, $dropshipper->full_name, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Cell(0, 7, $dropshipper->email, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Cell(160, 7, $dropshipper->whatsapp_number, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Cell(160, 7, $dropshipper->address, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Ln(2);
-        } else {
-            $pdf->SetFont('Helvetica', '', '12');
-            $pdf->Cell(0, 7, 'Walk in customer', 0, 1, 'L', 0, '', 0, false, 'T', 'M');
-            $pdf->Ln(2);
-        }
+
+        $pdf->SetFont('Helvetica', '', '12');
+        $pdf->Cell(0, 7, $order->customer_name, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(0, 7, $order->phone_number, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
+        $pdf->Ln(2);
+
         // Set font
         $pdf->SetFont('Helvetica', '', 9);
 
