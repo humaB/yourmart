@@ -289,6 +289,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
             Route::get('/stocks',  [ StoreInwardController::class , 'fetchStock']);
             Route::post('/stocks/update-barcode',  [ StoreInwardController::class , 'updateBarcode']);
+            Route::post('/stocks/filter',  [ StoreInwardController::class , 'filterStock']);
 
             //Issuance
             Route::get('/issuance',  [ StoreCheckOutController::class , 'fetchRecord']);

@@ -45,7 +45,67 @@ class StoreInwardController extends Controller
 
     public function fetchStock(){
 
-        $data = ProductVariation::with('product' , 'barcode')->where('stock', '!=', 0 )->get();
+        $stock = ProductVariation::with('product' , 'barcode')->where('status', '0')->where('stock', '!=', 0 )->get();
+        $totalProducts = ProductVariation::where('status', '0')->count();
+        $totalQuantity = ProductVariation::where('status', '0')->sum('stock');
+
+        $lowStock = ProductVariation::where('status', '0')
+        ->where('stock', '>', 0)
+        ->where('stock', '<=', 20)
+        ->count();
+
+        $highStock = ProductVariation::where('status', '0')
+        ->where('stock', '>', 150)
+        ->count();
+
+        $outOfStock =  ProductVariation::where('status', '0')
+        ->where('stock', '<=', 0)
+        ->count();
+
+        // Step 1: Get IDs of product variations with status 0
+        $withOutBarcodeVariationIds = ProductVariation::where('status', '0')
+        ->pluck('id');
+
+        // Step 2: Get IDs of product variations that have a barcode of '-'
+        $withBarcodeIds = ProductQrCode::whereIn('product_variation_id', $withOutBarcodeVariationIds)
+        ->where('barcode', '-')
+        ->count();
+
+        $data = [
+            'stock'         => $stock,
+            'totalProducts' => $totalProducts,
+            'totalQuantity' => $totalQuantity,
+            'lowStock'      => $lowStock,
+            'highStock'     => $highStock,
+            'outOfStock'   => $outOfStock,
+            'withoutBarcodeCount' => $withBarcodeIds
+        ];
+
+        return (new ResponseCollection($data))
+        ->response()
+        ->setStatusCode(200);
+    }
+
+    public function filterStock( Request $request ){
+
+        if( $request->filter == 'low_stock'){
+            $data = ProductVariation::with('product' , 'barcode')->where('status', '0')
+            ->where('stock', '>', 0)
+            ->where('stock', '<=', 20)
+            ->get();
+        }
+
+        if( $request->filter == 'high_stock'){
+            $data = ProductVariation::with('product' , 'barcode')->where('status', '0')
+            ->where('stock', '>', 150)
+            ->get();
+        }
+
+        if( $request->filter == 'out_of_stock'){
+            $data =  ProductVariation::with('product' , 'barcode')->where('status', '0')
+            ->where('stock', '<=', 0)
+            ->get();
+        }
 
         return (new ResponseCollection($data))
         ->response()
