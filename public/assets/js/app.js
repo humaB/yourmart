@@ -3662,7 +3662,19 @@ __webpack_require__.r(__webpack_exports__);
       users: [],
       editDetails: {},
       btnLoader: false,
-      user: ''
+      user: '',
+      totalUsers: {
+        totalUsers: 0,
+        admin: 0,
+        orderCollection: 0,
+        inventoryManager: 0,
+        qcManager: 0,
+        packing: 0,
+        audit: 0,
+        dataEntry: 0,
+        gateIncharge: 0,
+        supervisor: 0
+      }
     };
   },
   created: function created() {
@@ -3678,6 +3690,47 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.api_url + "users").then(function (response) {
         var results = response.data.response;
         vm.users = results;
+
+        // Loop through the users and count each role
+        vm.users.forEach(function (user) {
+          // Increment the total user count
+          vm.totalUsers.totalUsers++;
+
+          // Check the user's role and increment the corresponding role count
+          switch (user.role) {
+            case 'admin':
+              vm.totalUsers.admin++;
+              break;
+            case 'order collection manager':
+              vm.totalUsers.orderCollection++;
+              break;
+            case 'inventory manager':
+              vm.totalUsers.inventoryManager++;
+              break;
+            case 'qc manager':
+              vm.totalUsers.qcManager++;
+              break;
+            case 'packing & dispatch manager':
+              vm.totalUsers.packing++;
+              break;
+            case 'auditor':
+              vm.totalUsers.audit++;
+              break;
+            case 'dob':
+              vm.totalUsers.dataEntry++;
+              break;
+            case 'gate incharge':
+              vm.totalUsers.gateIncharge++;
+              break;
+            case 'supervisor':
+              vm.totalUsers.supervisor++;
+              break;
+            default:
+              // Handle unknown roles if needed
+              console.warn('Unknown role:', user.role);
+              break;
+          }
+        });
         setTimeout(function () {
           vm.dataTable();
         }, 300);
@@ -3713,6 +3766,10 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       });
+    },
+    getPercentage: function getPercentage(statusCount) {
+      if (this.totalUsers.totalUsers === 0) return 0;
+      return Math.round(statusCount / this.totalUsers.totalUsers * 100);
     },
     dataTable: function dataTable() {
       $('#user_list_table').DataTable();
@@ -12295,6 +12352,122 @@ var render = function render() {
   }), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-md-12 card"
+  }, [_c("div", {
+    staticClass: "card-body px-2"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_vm._m(0), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalUsers.totalUsers))]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-success",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.admin) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.admin) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-warning",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.orderCollection) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.orderCollection) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-primary",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.inventoryManager) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.inventoryManager) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-info",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.qcManager) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.qcManager) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-dark",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.packing) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.packing) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-light",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.audit) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.audit) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-success",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.dataEntry) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.dataEntry) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-warning",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.gateIncharge) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.gateIncharge) + "\n                            ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-danger",
+    style: {
+      width: _vm.getPercentage(_vm.totalUsers.supervisor) + "%"
+    }
+  })]), _vm._v("\n                                " + _vm._s(_vm.totalUsers.supervisor) + "\n                            ")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
@@ -12342,7 +12515,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "modal-content"
-  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
+  }, [_vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.btnLoader ? _c("button", {
     staticClass: "btn btn-danger",
@@ -12368,6 +12541,10 @@ var render = function render() {
   }, [_vm._v("Close")])])])])])], 1);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("Total Users")]), _vm._v(" "), _c("th", [_vm._v("Admin's")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing & Dispatching ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Data Entry")]), _vm._v(" "), _c("th", [_vm._v("Gate Incharge")]), _vm._v(" "), _c("th", [_vm._v("Supervisor")])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
