@@ -39,7 +39,7 @@ class ProductOtherChargesController extends Controller
         $userId = auth()->user()->id;
 
         // Manage guest quantity
-        if ($request->filled('darazPacking') && $request->darazPacking != 0 ) {
+        if ($request->filled('darazPacking')  ) {
             // Set existing guest records to inactive
             OtherCharge::where('type', 'Daraz')
                 ->where('status', 0) // Only active records
@@ -55,7 +55,7 @@ class ProductOtherChargesController extends Controller
         }
 
         // Manage registered quantity
-        if ($request->filled('returnCharges') && $request->returnCharges != 0 ) {
+        if ($request->filled('returnCharges') ) {
             // Set existing registered records to inactive
             OtherCharge::where('type', 'Return')
             ->where('status', 0) // Only active records
