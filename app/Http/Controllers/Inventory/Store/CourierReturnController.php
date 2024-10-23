@@ -42,7 +42,7 @@ class CourierReturnController extends Controller
 
     public function pendingReturns(){
 
-        $data = Order::with('user')->where('status', 9)
+        $data = Order::with('user', 'shop')->where('status', 9)
         ->get();
 
 

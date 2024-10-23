@@ -1659,6 +1659,9 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.api_url + "inventory/products/store/pending-returns").then(function (response) {
         var results = response.data.response;
         vm.pendingReturns = results;
+        setTimeout(function () {
+          vm.dataTable();
+        }, 300);
       })["catch"](function (err) {
         return _this.fetchReturnOrders();
       });
@@ -1686,6 +1689,15 @@ __webpack_require__.r(__webpack_exports__);
           icon: "error",
           timer: 3000
         });
+      });
+    },
+    dataTable: function dataTable() {
+      $('#table').DataTable({
+        dom: "Bfrtip",
+        buttons: [{
+          extend: "excel",
+          title: 'Returns Details'
+        }]
       });
     }
   }
@@ -3971,11 +3983,14 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-body"
   }, [_c("table", {
-    staticClass: "table table-bordered"
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "table"
+    }
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingReturns, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.order_no))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                      ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-primary",
       attrs: {
         "data-toggle": "modal",
@@ -3987,30 +4002,7 @@ var render = function render() {
         }
       }
     }, [_vm._v(" Receive Product")])])]);
-  }), 0)])])])])])])], 1)])]), _vm._v(" "), _c("form", {
-    ref: "summaryForm",
-    attrs: {
-      method: "POST",
-      action: _vm.public_url + "inventory/products/purchase-orders/pdf",
-      target: "_blank"
-    }
-  }, [_c("input", {
-    attrs: {
-      type: "hidden",
-      name: "_token"
-    },
-    domProps: {
-      value: _vm.csrf
-    }
-  }), _vm._v(" "), _c("input", {
-    attrs: {
-      type: "hidden",
-      name: "id"
-    },
-    domProps: {
-      value: _vm.pid
-    }
-  })]), _vm._v(" "), _c("StoreProductReturnPopup", {
+  }), 0)])])])])])])], 1)])]), _vm._v(" "), _c("StoreProductReturnPopup", {
     attrs: {
       loader: _vm.btnLoader,
       detail: _vm.detail
@@ -4025,7 +4017,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Order Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

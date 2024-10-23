@@ -11,7 +11,7 @@
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="table">
                                 <thead>
                                     <tr>
                                         <th>Sr #</th>
@@ -19,14 +19,16 @@
                                         <th>Tracking Number</th>
                                         <th>Dropshipper</th>
                                         <th>Amount</th>
-                                        <th>Created Date</th>
+                                        <th>Order Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item,index) in pendingReturns" :key="item.id">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ item.order_no }}</td>
+                                        <td>
+                                            {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
+                                          </td>
                                         <td>{{ item.tracking_number }}</td>
                                         <td>{{ item.user.name }}</td>
                                         <td>{{ item.total_bill }}</td>
@@ -47,11 +49,6 @@
           </div>
           </div>
 
-        <!-- Summary PRINT -->
-        <form method="POST" :action="public_url+'inventory/products/purchase-orders/pdf'" target="_blank" ref="summaryForm">
-            <input type="hidden" name="_token" :value="csrf" >
-            <input type="hidden" name="id" :value="pid" >
-        </form>
 
         <StoreProductReturnPopup
             :loader="btnLoader"
@@ -102,6 +99,10 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
                 .then((response) => {
                     const results = response.data.response;
                     vm.pendingReturns = results;
+
+                    setTimeout(() => {
+                        vm.dataTable()
+                    }, 300);
                 })
                 .catch((err) => this.fetchReturnOrders());
             },
@@ -132,6 +133,16 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
                         timer: 3000,
                     });
                 });
+            },
+            dataTable(){
+                $('#table').DataTable({
+                    dom: "Bfrtip",
+                    buttons: [{
+                        extend: "excel",
+                        title: 'Returns Details'
+                        },
+                    ],
+                })
             }
         }
     }
