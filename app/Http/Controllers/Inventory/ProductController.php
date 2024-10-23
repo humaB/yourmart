@@ -60,6 +60,17 @@ class ProductController extends Controller
             'from'         => $products->firstItem(),
             'to'           => $products->lastItem(),
         ],
+
+        'productInsights' => [
+            'total' => Product::where('status', 0)->count(),
+            'airpod' => Product::where('status', 0)->where('category_id', '1')->count(),
+            'kids' => Product::where('status', 0)->where('category_id', '5')->count(),
+            'smartGadget' =>  Product::where('status', 0)->where('category_id', '7')->count(),
+            'personalCare' => Product::where('status', 0)->where('category_id', '8')->count(),
+            'smartWatch' =>  Product::where('status', 0)->where('category_id', '9')->count(),
+            'decor' =>  Product::where('status', 0)->where('category_id', '10')->count(),
+            'home' =>  Product::where('status', 0)->where('category_id', '6')->count(),
+        ]
       ];
 
       return (new ResponseCollection($data))

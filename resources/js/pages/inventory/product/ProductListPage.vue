@@ -75,7 +75,25 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-12 mb-2">
+                                        <div class="col-md-12 mb-5 card p-3">
+                                            <h5>Active Product's Insights</h5>
+                                            <nav>
+                                              <ul class="nav">
+                                                <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a href="#">Total Products ({{ productInsights.total }})</a> </li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(0)"><a href="#">⁠Airpods & Headsets ({{ productInsights.airpod }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(1)"><a href="#">⁠Kids ({{ productInsights.kids }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">Smart Gadgets ({{ productInsights.smartGadget }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">⁠Personal Care & Gadgets ({{ productInsights.personalCare }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">Home, Kitchen & Lifestyle ({{ productInsights.home }})</a></li> ||
+                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">Decore ({{ productInsights.decor }})</a></li> ||
+                                                <li class="nav-item ml-2" @click="changeProductFetchStatus(3)"><a href="#">⁠Smart Watches ({{ productInsights.smartWatch }})</a></li>
+
+
+                                              </ul>
+                                            </nav>
+                                          </div>
+
+                                        <div class="col-md-12">
                                             <nav>
                                               <ul class="nav">
                                                 <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a href="#">All ({{ allProductCount }})</a> </li> ||
@@ -85,6 +103,9 @@
                                               </ul>
                                             </nav>
                                           </div>
+
+
+
                                         <div class="col-md-12">
                                             <div class="table-responsive">
                                                 <table class="table table-striped" id="product_table">
@@ -428,6 +449,16 @@ export default {
             trashProductCount : 0,
             page: 1,
             pagination: {},
+            productInsights : {
+                total : 0,
+                airpod : 0,
+                kids : 0,
+                smartGadget : 0,
+                personalCare : 0,
+                smartWatch : 0,
+                decor : 0,
+                home : 0
+            }
         };
     },
     created() {
@@ -866,6 +897,17 @@ export default {
                     vm.publishedProductCount = results.publishedProductCount;
                     vm.draftProductCount = results.draftProductCount;
                     vm.trashProductCount = results.trashProductCount;
+
+                    vm.productInsights = {
+                        total : results.productInsights.total,
+                        airpod : results.productInsights.airpod,
+                        kids : results.productInsights.kids,
+                        smartGadget :  results.productInsights.smartGadget,
+                        personalCare : results.productInsights.personalCare,
+                        smartWatch :  results.productInsights.smartWatch,
+                        decor :  results.productInsights.decor,
+                        home :  results.productInsights.home,
+                    }
                     vm.pagination = results.pagination;
 
                 vm.dataTable();

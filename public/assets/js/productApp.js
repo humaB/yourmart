@@ -2435,7 +2435,16 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
       }
       // More variations...
       ]
-    }), "productNotUpdated", false), "editProductVariantData", {}), "activeProductVariantStatus", ''), "selectedType", ''), "colorId", ''), "imageAlt", ''), "selectedProducts", []), "multipleAction", ''), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "checkedAllProducts", false), "allProductCount", 0), "publishedProductCount", 0), "draftProductCount", 0), "trashProductCount", 0), "page", 1), "pagination", {});
+    }), "productNotUpdated", false), "editProductVariantData", {}), "activeProductVariantStatus", ''), "selectedType", ''), "colorId", ''), "imageAlt", ''), "selectedProducts", []), "multipleAction", ''), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "checkedAllProducts", false), "allProductCount", 0), "publishedProductCount", 0), "draftProductCount", 0), "trashProductCount", 0), "page", 1), "pagination", {}), "productInsights", {
+      total: 0,
+      airpod: 0,
+      kids: 0,
+      smartGadget: 0,
+      personalCare: 0,
+      smartWatch: 0,
+      decor: 0,
+      home: 0
+    });
   },
   created: function created() {
     this.fetchBrands();
@@ -2845,6 +2854,16 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         vm.publishedProductCount = results.publishedProductCount;
         vm.draftProductCount = results.draftProductCount;
         vm.trashProductCount = results.trashProductCount;
+        vm.productInsights = {
+          total: results.productInsights.total,
+          airpod: results.productInsights.airpod,
+          kids: results.productInsights.kids,
+          smartGadget: results.productInsights.smartGadget,
+          personalCare: results.productInsights.personalCare,
+          smartWatch: results.productInsights.smartWatch,
+          decor: results.productInsights.decor,
+          home: results.productInsights.home
+        };
         vm.pagination = results.pagination;
         vm.dataTable();
       })["catch"](function (err) {
@@ -11370,7 +11389,99 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-12 mb-2"
+    staticClass: "col-md-12 mb-5 card p-3"
+  }, [_c("h5", [_vm._v("Active Product's Insights")]), _vm._v(" "), _c("nav", [_c("ul", {
+    staticClass: "nav"
+  }, [_c("li", {
+    staticClass: "nav-item mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus();
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("Total Products (" + _vm._s(_vm.productInsights.total) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(0);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("⁠Airpods & Headsets (" + _vm._s(_vm.productInsights.airpod) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(1);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("⁠Kids (" + _vm._s(_vm.productInsights.kids) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(3);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("Smart Gadgets (" + _vm._s(_vm.productInsights.smartGadget) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(3);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("⁠Personal Care & Gadgets (" + _vm._s(_vm.productInsights.personalCare) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(3);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("Home, Kitchen & Lifestyle (" + _vm._s(_vm.productInsights.home) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(3);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("Decore (" + _vm._s(_vm.productInsights.decor) + ")")])]), _vm._v(" ||\n                                            "), _c("li", {
+    staticClass: "nav-item ml-2",
+    on: {
+      click: function click($event) {
+        return _vm.changeProductFetchStatus(3);
+      }
+    }
+  }, [_c("a", {
+    attrs: {
+      href: "#"
+    }
+  }, [_vm._v("⁠Smart Watches (" + _vm._s(_vm.productInsights.smartWatch) + ")")])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
   }, [_c("nav", [_c("ul", {
     staticClass: "nav"
   }, [_c("li", {
