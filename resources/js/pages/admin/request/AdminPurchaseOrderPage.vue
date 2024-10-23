@@ -27,6 +27,104 @@
         </div>
 
         <div class="row">
+            <div class="col-md-12 card">
+                <div class="card-header">
+                    <h5>Insight's</h5>
+                </div>
+                <div class="card-body row">
+                    <div class="col-md-12">
+                        <table style="table-layout: fixed; width: 100%;">
+                            <tr>
+                              <td style="padding : 5px">
+                                <div class="card">
+                                    <div class="card-body card-type-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <h6 class="text-muted mb-0">Total POs</h6>
+                                          <span class="font-weight-bold mb-0">{{ totalPo }}</span>
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                              </td>
+                              <td style="padding : 5px">
+                                <div class="card">
+                                    <div class="card-body card-type-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <h6 class="text-muted mb-0">Approved</h6>
+                                          <span class="font-weight-bold mb-0">{{ approved }}</span>
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                              </td>
+                              <td style="padding : 5px">
+                                <div class="card">
+                                    <div class="card-body card-type-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <h6 class="text-muted mb-0">Pending</h6>
+                                          <span class="font-weight-bold mb-0">{{ pending }}</span>
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                              </td>
+                              <td style="padding : 5px">
+                                <div class="card">
+                                    <div class="card-body card-type-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <h6 class="text-muted mb-0">Total Amount</h6>
+                                          <span class="font-weight-bold mb-0">{{ formatPrice(totalAmount) }}</span>
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                              </td>
+                              <td style="padding : 10px">
+                                <div class="card">
+                                    <div class="card-body card-type-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <h6 class="text-muted mb-0">Payment Made</h6>
+                                          <span class="font-weight-bold mb-0">{{ formatPrice(paid) }}</span>
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                              </td>
+                              <td style="padding : 5px">
+                                <div class="card">
+                                    <div class="card-body card-type-3">
+                                      <div class="row">
+                                        <div class="col">
+                                          <h6 class="text-muted mb-0">Remaining</h6>
+                                          <span class="font-weight-bold mb-0">{{ formatPrice(remaining) }}</span>
+                                        </div>
+
+                                      </div>
+
+                                    </div>
+                                  </div>
+                              </td>
+
+                            </tr>
+                            </table>
+                    </div>
+                </div>
+            </div>
             <div class="col-12 col-md-12 col-lg-12">
               <div class="card card-primary">
                 <TableHeader :tableHeader="tableHeader" />
@@ -37,7 +135,7 @@
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="table">
                                 <thead>
                                     <tr>
                                         <th>Sr #</th>
@@ -55,8 +153,8 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.id }}</td>
                                         <td>{{ item.supplier.full_name }}</td>
-                                        <td>{{ item.total_amount }}</td>
-                                        <td>{{ item.remaining_amount }}</td>
+                                        <td>{{ formatPrice(item.total_amount) }}</td>
+                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
                                         <td>
                                             <span class="badge badge-warning text-dark" v-if="item.status == 0">Pending</span>
@@ -133,7 +231,13 @@
                     decision : ''
                 },
                 decisionLoader : false,
-                role : ''
+                role : '',
+                totalPo : 0,
+                approved : 0,
+                pending : 0,
+                totalAmount : 0,
+                paid : 0,
+                remaining : 0
             };
         },
         created(){
@@ -180,8 +284,34 @@
                     const results = response.data.response;
                     vm.purchaseOrders = results.purchase_orders;
                     vm.role = results.role;
+                    vm.totalPo = results.totalPo;
+                    vm.approved = results.approved;
+                    vm.pending = results.pending;
+                    vm.totalAmount = results.totalAmount;
+                    vm.remaining = results.remaining;
+                    vm.paid = vm.totalAmount - vm.remaining;
+
+                    setTimeout(()=>{
+                        vm.dataTable()
+                    },300)
                 })
                 .catch((err) => this.fetchPurchaseOrders());
+            },
+            formatPrice(price) {
+                var string = parseFloat(price).toString();
+                return string
+                    .replace(/,/g, "")
+                    .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            },
+            dataTable(){
+                $('#table').DataTable({
+                    dom: "Bfrtip",
+                    buttons: [{
+                        extend: "excel",
+                        title: 'Returns Details'
+                        },
+                    ],
+                })
             },
             addPO( data ){
                 let vm = this;

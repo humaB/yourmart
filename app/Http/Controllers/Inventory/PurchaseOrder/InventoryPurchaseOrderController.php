@@ -40,7 +40,12 @@ class InventoryPurchaseOrderController extends Controller
 
         $data = [
             'purchase_orders' => $purchaseOrders,
-            'role' => auth()->user()->role
+            'role' => auth()->user()->role,
+            'totalPo' => $purchaseOrders->count(),
+            'approved' => $purchaseOrders->where('status', '1')->count(),
+            'pending'  => $purchaseOrders->where('status', '0')->count(),
+            'totalAmount'  => $purchaseOrders->where('status', '1')->sum('total_amount'),
+            'remaining'  => $purchaseOrders->where('status', '1')->sum('remaining_amount'),
         ];
 
         return (new ResponseCollection($data))

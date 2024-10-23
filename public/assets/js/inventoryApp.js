@@ -547,7 +547,13 @@ __webpack_require__.r(__webpack_exports__);
         decision: ''
       },
       decisionLoader: false,
-      role: ''
+      role: '',
+      totalPo: 0,
+      approved: 0,
+      pending: 0,
+      totalAmount: 0,
+      paid: 0,
+      remaining: 0
     };
   },
   created: function created() {
@@ -591,8 +597,30 @@ __webpack_require__.r(__webpack_exports__);
         var results = response.data.response;
         vm.purchaseOrders = results.purchase_orders;
         vm.role = results.role;
+        vm.totalPo = results.totalPo;
+        vm.approved = results.approved;
+        vm.pending = results.pending;
+        vm.totalAmount = results.totalAmount;
+        vm.remaining = results.remaining;
+        vm.paid = vm.totalAmount - vm.remaining;
+        setTimeout(function () {
+          vm.dataTable();
+        }, 300);
       })["catch"](function (err) {
         return _this2.fetchPurchaseOrders();
+      });
+    },
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    dataTable: function dataTable() {
+      $('#table').DataTable({
+        dom: "Bfrtip",
+        buttons: [{
+          extend: "excel",
+          title: 'Returns Details'
+        }]
       });
     },
     addPO: function addPO(data) {
@@ -2646,6 +2674,113 @@ var render = function render() {
   }, [_vm._v("Close")])])])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-md-12 card"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_c("td", {
+    staticStyle: {
+      padding: "5px"
+    }
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Total POs")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.totalPo))])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "5px"
+    }
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Approved")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.approved))])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "5px"
+    }
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Pending")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.pending))])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "5px"
+    }
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Total Amount")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalAmount)))])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Payment Made")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.paid)))])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "5px"
+    }
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Remaining")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.remaining)))])])])])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
@@ -2664,11 +2799,14 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card-body"
   }, [_c("table", {
-    staticClass: "table table-bordered"
-  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.purchaseOrders, function (item, index) {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "table"
+    }
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.purchaseOrders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.remaining_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
       staticClass: "badge badge-success"
@@ -2771,6 +2909,12 @@ var staticRenderFns = [function () {
       "aria-hidden": "true"
     }
   }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Insight's")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
