@@ -76,7 +76,7 @@
     <script src="{{ asset('assets/bundles/sweetalert/sweetalert.min.js') }}"></script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('assets/js/page/sweetalert.js') }}"></script>
-
+    <script src="{{ asset('assets/js/page/widget-chart.js') }}"></script>
     @stack('scripts')
 
 </body>
