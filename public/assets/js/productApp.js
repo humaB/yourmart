@@ -12557,7 +12557,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "card-header"
-  }, [_c("h4", [_vm._v("Order Statistics")])]);
+  }, [_c("h4", [_vm._v("Order Statistics "), _c("code", [_vm._v("( In process )")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

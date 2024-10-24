@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Order Statistics</h4>
+                        <h4>Order Statistics <code>( In process )</code></h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
