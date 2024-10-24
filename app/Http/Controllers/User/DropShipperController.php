@@ -819,7 +819,7 @@ public function fetchDetails(Request $request)
         $pdf->SetFont('times', 'B', 9);
         $pdf->Cell(180, 0, 'Printed By : ' . $user_name . ' || ' . $date_now, 0, 1, 'C', 0, '', 0, false, 'T', 'M');
         $pdf->SetFont('times', '', 8);
-        $pdf->Cell(180, 0, 'Developed by SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(0, 0, 'Developed by SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
 
         $pdf->Output('payment_voucher.pdf', 'I');
     }

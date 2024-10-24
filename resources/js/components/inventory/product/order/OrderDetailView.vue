@@ -181,9 +181,9 @@
                                                                 <td class="text-truncate" v-if="item.variation">
                                                                     <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                                       <li class="team-member team-member-sm">
-                                                                        <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
+                                                                        <!-- <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
                                                                           <img class="rounded-circle" :src="getImageUrl(item.variation.images[0].attachment.attachment)">
-                                                                        </a>
+                                                                        </a> -->
                                                                       </li>
                                                                     </ul>
                                                                   </td>
