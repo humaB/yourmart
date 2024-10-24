@@ -77,7 +77,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       web_url: "https://yourmart.pk/",
       editMode: false // This controls whether the user is in edit mode
     };
@@ -114,7 +114,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -264,7 +264,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       shopPayments: [],
       shop: []
     };
@@ -386,7 +386,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['history', 'selectedDropshipper'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       id: '',
       csrf: ''
     };
@@ -487,7 +487,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       password: "",
@@ -544,7 +544,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       password: "",
@@ -606,7 +606,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -1323,7 +1323,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -1367,7 +1367,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -1751,7 +1751,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   props: ['tags', 'loader', 'settings', 'categories', 'products'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       form: {
         headline: {
           text: ''
@@ -2295,8 +2295,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: "/public/api/",
+      public_url: window.location.origin + "",
       filter: {
         dropshipper: 0,
         shop: 0,
@@ -2360,8 +2360,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       web_url: "https://yourmart.pk/",
       tickets: [],
       chats: [],
@@ -2570,8 +2570,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -2826,8 +2826,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Supplier Request's"
       },
@@ -2932,8 +2932,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + "/",
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + "/",
       topSaleProducts: [],
       tickets: [],
       ticketFilter: {
@@ -3127,7 +3127,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Orders"
       },
@@ -3283,8 +3283,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Dropshipper Pay outs"
       },
@@ -3682,7 +3682,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -3894,7 +3894,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Couriers",
         link: "#",
@@ -4053,8 +4053,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -4200,8 +4200,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allCourses: [],
@@ -4424,7 +4424,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Page Setting's"
       },
@@ -4526,8 +4526,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "",
       profileData: {},
       btnLoading: false,
       oldPassword: ''
