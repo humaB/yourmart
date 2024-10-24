@@ -3551,6 +3551,151 @@ __webpack_require__.r(__webpack_exports__);
         amountReceived: 0,
         amountRemaining: 0
       });
+    },
+    // Calculate summary for "Normal" type
+    normalToday: function normalToday() {
+      var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+
+      return this.orders.reduce(function (totals, order) {
+        var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+        if (orderDate === today && order.type === 'Normal' && order.status <= 4) {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    },
+    // Calculate summary for "Normal" type
+    normalSummary: function normalSummary() {
+      return this.orders.reduce(function (totals, order) {
+        if (order.type === 'Normal' && order.status <= 4) {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    },
+    // Calculate summary for "Daraz" type
+    darazToday: function darazToday() {
+      var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+      return this.orders.reduce(function (totals, order) {
+        var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+        if (orderDate === today && order.type === 'Daraz' && order.status <= 4) {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    },
+    // Calculate summary for "Daraz" type
+    darazSummary: function darazSummary() {
+      return this.orders.reduce(function (totals, order) {
+        if (order.type === 'Daraz' && order.status <= 4) {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    },
+    // Calculate summary for "Cash" type
+    cashToday: function cashToday() {
+      var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+      return this.orders.reduce(function (totals, order) {
+        var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+        if (orderDate === today && order.type === 'Cash' && order.status <= 4) {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    },
+    // Calculate summary for "Cash" type
+    cashSummary: function cashSummary() {
+      return this.orders.reduce(function (totals, order) {
+        if (order.type === 'Cash' && order.status <= 4) {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
     }
   },
   created: function created() {
@@ -12098,11 +12243,56 @@ var render = function render() {
     staticClass: "card"
   }, [_vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "card-body"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "tab-content",
+    attrs: {
+      id: "myTabContent2"
+    }
+  }, [_c("div", {
+    staticClass: "tab-pane fade show active",
+    attrs: {
+      id: "overall",
+      role: "tabpanel",
+      "aria-labelledby": "home-tab3"
+    }
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_c("tbody", [_vm._m(1), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Today’s")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.productPrice - (_vm.todaySummary.courier + _vm.todaySummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.amountRemaining)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Overall")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.productPrice - (_vm.overallSummary.courier + _vm.overallSummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.amountRemaining)))])])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_c("tbody", [_vm._m(2), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Today’s")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.productPrice - (_vm.todaySummary.courier + _vm.todaySummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.amountRemaining)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Overall")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.productPrice - (_vm.overallSummary.courier + _vm.overallSummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.amountRemaining)))])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
+    attrs: {
+      id: "normal",
+      role: "tabpanel",
+      "aria-labelledby": "profile-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_c("tbody", [_vm._m(3), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Today’s")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.productPrice - (_vm.normalToday.courier + _vm.normalToday.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalToday.amountRemaining)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Overall")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.productPrice - (_vm.normalSummary.courier + _vm.normalSummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.normalSummary.amountRemaining)))])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
+    attrs: {
+      id: "cash",
+      role: "tabpanel",
+      "aria-labelledby": "contact-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_c("tbody", [_vm._m(4), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Today’s")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.productPrice - (_vm.cashToday.courier + _vm.cashToday.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashToday.amountRemaining)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Overall")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.productPrice - (_vm.cashSummary.courier + _vm.cashSummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.cashSummary.amountRemaining)))])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
+    attrs: {
+      id: "daraz",
+      role: "tabpanel",
+      "aria-labelledby": "contact-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_c("tbody", [_vm._m(5), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Today’s")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.productPrice - (_vm.darazToday.courier + _vm.darazToday.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazToday.amountRemaining)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Overall")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.productPrice - (_vm.darazSummary.courier + _vm.darazSummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.darazSummary.amountRemaining)))])])])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
@@ -12118,7 +12308,7 @@ var render = function render() {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_vm._m(2), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalOrders.totalOrders))]), _vm._v(" "), _c("td", {
+  }, [_vm._m(6), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalOrders.totalOrders))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
@@ -12444,7 +12634,7 @@ var render = function render() {
     attrs: {
       id: _vm.table_id
     }
-  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
+  }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "-"))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
@@ -12558,6 +12748,76 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "card-header"
   }, [_c("h4", [_vm._v("Order Statistics "), _c("code", [_vm._v("( In process )")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("ul", {
+    staticClass: "nav nav-pills",
+    attrs: {
+      id: "myTab3",
+      role: "tablist"
+    }
+  }, [_c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link active",
+    attrs: {
+      id: "home-tab3",
+      "data-toggle": "tab",
+      href: "#overall",
+      role: "tab",
+      "aria-controls": "home",
+      "aria-selected": "true"
+    }
+  }, [_vm._v("Over All")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      id: "profile-tab3",
+      "data-toggle": "tab",
+      href: "#normal",
+      role: "tab",
+      "aria-controls": "profile",
+      "aria-selected": "false"
+    }
+  }, [_vm._v("Normal")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      id: "contact-tab3",
+      "data-toggle": "tab",
+      href: "#daraz",
+      role: "tab",
+      "aria-controls": "contact",
+      "aria-selected": "false"
+    }
+  }, [_vm._v("Daraz")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      id: "contact-tab3",
+      "data-toggle": "tab",
+      href: "#cash",
+      role: "tab",
+      "aria-controls": "contact",
+      "aria-selected": "false"
+    }
+  }, [_vm._v("Cash")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("-")]), _vm._v(" "), _c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Sales")]), _vm._v(" "), _c("th", [_vm._v("Amount Received")]), _vm._v(" "), _c("th", [_vm._v("Amount Remaining")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("-")]), _vm._v(" "), _c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Sales")]), _vm._v(" "), _c("th", [_vm._v("Amount Received")]), _vm._v(" "), _c("th", [_vm._v("Amount Remaining")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("-")]), _vm._v(" "), _c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Sales")]), _vm._v(" "), _c("th", [_vm._v("Amount Received")]), _vm._v(" "), _c("th", [_vm._v("Amount Remaining")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

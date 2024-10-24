@@ -7,45 +7,191 @@
                         <h4>Order Statistics <code>( In process )</code></h4>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tbody>
-                                    <tr>
-                                        <th>-</th>
-                                        <th>Total Orders</th>
-                                        <th>Product Price</th>
-                                        <th>Courier</th>
-                                        <th>Packaging</th>
-                                        <th>Total Sales</th>
-                                        <th>Amount Received</th>
-                                        <th>Amount Remaining</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Today’s</th>
-                                        <td>{{formatPrice(todaySummary.totalOrders) }}</td>
-                                        <td>{{ formatPrice(todaySummary.productPrice - ( todaySummary.courier + todaySummary.packaging )) }}</td>
-                                        <td>{{ formatPrice(todaySummary.courier) }}</td>
-                                        <td>{{ formatPrice(todaySummary.packaging) }}</td>
-                                        <td>{{ formatPrice(todaySummary.totalSales) }}</td>
-                                        <td>{{ formatPrice(todaySummary.amountReceived) }}</td>
-                                        <td>{{ formatPrice(todaySummary.amountRemaining) }}</td>
-                                    </tr>
+                        <ul class="nav nav-pills" id="myTab3" role="tablist">
+                            <li class="nav-item">
+                              <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#overall" role="tab"
+                                aria-controls="home" aria-selected="true">Over All</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#normal" role="tab"
+                                aria-controls="profile" aria-selected="false">Normal</a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="contact-tab3" data-toggle="tab" href="#daraz" role="tab"
+                                aria-controls="contact" aria-selected="false">Daraz</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="contact-tab3" data-toggle="tab" href="#cash" role="tab"
+                                  aria-controls="contact" aria-selected="false">Cash</a>
+                              </li>
+                          </ul>
+                          <div class="tab-content" id="myTabContent2">
+                            <div class="tab-pane fade show active" id="overall" role="tabpanel" aria-labelledby="home-tab3">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th>-</th>
+                                                <th>Total Orders</th>
+                                                <th>Product Price</th>
+                                                <th>Courier</th>
+                                                <th>Packaging</th>
+                                                <th>Total Sales</th>
+                                                <th>Amount Received</th>
+                                                <th>Amount Remaining</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Today’s</th>
+                                                <td>{{formatPrice(todaySummary.totalOrders) }}</td>
+                                                <td>{{ formatPrice(todaySummary.productPrice - ( todaySummary.courier + todaySummary.packaging )) }}</td>
+                                                <td>{{ formatPrice(todaySummary.courier) }}</td>
+                                                <td>{{ formatPrice(todaySummary.packaging) }}</td>
+                                                <td>{{ formatPrice(todaySummary.totalSales) }}</td>
+                                                <td>{{ formatPrice(todaySummary.amountReceived) }}</td>
+                                                <td>{{ formatPrice(todaySummary.amountRemaining) }}</td>
+                                            </tr>
 
-                                    <!-- Overall Orders -->
-                                    <tr>
-                                        <th>Overall</th>
-                                        <td>{{ formatPrice(overallSummary.totalOrders) }}</td>
-                                        <td>{{ formatPrice(overallSummary.productPrice - ( overallSummary.courier + overallSummary.packaging) ) }}</td>
-                                        <td>{{ formatPrice(overallSummary.courier) }}</td>
-                                        <td>{{ formatPrice(overallSummary.packaging) }}</td>
-                                        <td>{{ formatPrice(overallSummary.totalSales) }}</td>
-                                        <td>{{ formatPrice(overallSummary.amountReceived) }}</td>
-                                        <td>{{ formatPrice(overallSummary.amountRemaining) }}</td>
-                                    </tr>
+                                            <!-- Overall Orders -->
+                                            <tr>
+                                                <th>Overall</th>
+                                                <td>{{ formatPrice(overallSummary.totalOrders) }}</td>
+                                                <td>{{ formatPrice(overallSummary.productPrice - ( overallSummary.courier + overallSummary.packaging) ) }}</td>
+                                                <td>{{ formatPrice(overallSummary.courier) }}</td>
+                                                <td>{{ formatPrice(overallSummary.packaging) }}</td>
+                                                <td>{{ formatPrice(overallSummary.totalSales) }}</td>
+                                                <td>{{ formatPrice(overallSummary.amountReceived) }}</td>
+                                                <td>{{ formatPrice(overallSummary.amountRemaining) }}</td>
+                                            </tr>
 
-                                </tbody>
-                            </table>
-                        </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="normal" role="tabpanel" aria-labelledby="profile-tab3">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th>-</th>
+                                                <th>Total Orders</th>
+                                                <th>Product Price</th>
+                                                <th>Courier</th>
+                                                <th>Packaging</th>
+                                                <th>Total Sales</th>
+                                                <th>Amount Received</th>
+                                                <th>Amount Remaining</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Today’s</th>
+                                                <td>{{formatPrice(normalToday.totalOrders) }}</td>
+                                                <td>{{ formatPrice(normalToday.productPrice - ( normalToday.courier + normalToday.packaging )) }}</td>
+                                                <td>{{ formatPrice(normalToday.courier) }}</td>
+                                                <td>{{ formatPrice(normalToday.packaging) }}</td>
+                                                <td>{{ formatPrice(normalToday.totalSales) }}</td>
+                                                <td>{{ formatPrice(normalToday.amountReceived) }}</td>
+                                                <td>{{ formatPrice(normalToday.amountRemaining) }}</td>
+                                            </tr>
+
+                                            <!-- Overall Orders -->
+                                            <tr>
+                                                <th>Overall</th>
+                                                <td>{{ formatPrice(normalSummary.totalOrders) }}</td>
+                                                <td>{{ formatPrice(normalSummary.productPrice - ( normalSummary.courier + normalSummary.packaging) ) }}</td>
+                                                <td>{{ formatPrice(normalSummary.courier) }}</td>
+                                                <td>{{ formatPrice(normalSummary.packaging) }}</td>
+                                                <td>{{ formatPrice(normalSummary.totalSales) }}</td>
+                                                <td>{{ formatPrice(normalSummary.amountReceived) }}</td>
+                                                <td>{{ formatPrice(normalSummary.amountRemaining) }}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="cash" role="tabpanel" aria-labelledby="contact-tab3">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th>-</th>
+                                                <th>Total Orders</th>
+                                                <th>Product Price</th>
+                                                <th>Courier</th>
+                                                <th>Packaging</th>
+                                                <th>Total Sales</th>
+                                                <th>Amount Received</th>
+                                                <th>Amount Remaining</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Today’s</th>
+                                                <td>{{ formatPrice(cashToday.totalOrders) }}</td>
+                                                <td>{{ formatPrice(cashToday.productPrice - ( cashToday.courier + cashToday.packaging )) }}</td>
+                                                <td>{{ formatPrice(cashToday.courier) }}</td>
+                                                <td>{{ formatPrice(cashToday.packaging) }}</td>
+                                                <td>{{ formatPrice(cashToday.totalSales) }}</td>
+                                                <td>{{ formatPrice(cashToday.amountReceived) }}</td>
+                                                <td>{{ formatPrice(cashToday.amountRemaining) }}</td>
+                                            </tr>
+
+                                            <!-- Overall Orders -->
+                                            <tr>
+                                                <th>Overall</th>
+                                                <td>{{ formatPrice(cashSummary.totalOrders) }}</td>
+                                                <td>{{ formatPrice(cashSummary.productPrice - ( cashSummary.courier + cashSummary.packaging) ) }}</td>
+                                                <td>{{ formatPrice(cashSummary.courier) }}</td>
+                                                <td>{{ formatPrice(cashSummary.packaging) }}</td>
+                                                <td>{{ formatPrice(cashSummary.totalSales) }}</td>
+                                                <td>{{ formatPrice(cashSummary.amountReceived) }}</td>
+                                                <td>{{ formatPrice(cashSummary.amountRemaining) }}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="daraz" role="tabpanel" aria-labelledby="contact-tab3">
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <tbody>
+                                            <tr>
+                                                <th>-</th>
+                                                <th>Total Orders</th>
+                                                <th>Product Price</th>
+                                                <th>Courier</th>
+                                                <th>Packaging</th>
+                                                <th>Total Sales</th>
+                                                <th>Amount Received</th>
+                                                <th>Amount Remaining</th>
+                                            </tr>
+                                            <tr>
+                                                <th>Today’s</th>
+                                                <td>{{formatPrice(darazToday.totalOrders) }}</td>
+                                                <td>{{ formatPrice(darazToday.productPrice - ( darazToday.courier + darazToday.packaging )) }}</td>
+                                                <td>{{ formatPrice(darazToday.courier) }}</td>
+                                                <td>{{ formatPrice(darazToday.packaging) }}</td>
+                                                <td>{{ formatPrice(darazToday.totalSales) }}</td>
+                                                <td>{{ formatPrice(darazToday.amountReceived) }}</td>
+                                                <td>{{ formatPrice(darazToday.amountRemaining) }}</td>
+                                            </tr>
+
+                                            <!-- Overall Orders -->
+                                            <tr>
+                                                <th>Overall</th>
+                                                <td>{{ formatPrice(darazSummary.totalOrders) }}</td>
+                                                <td>{{ formatPrice(darazSummary.productPrice - ( darazSummary.courier + darazSummary.packaging) ) }}</td>
+                                                <td>{{ formatPrice(darazSummary.courier) }}</td>
+                                                <td>{{ formatPrice(darazSummary.packaging) }}</td>
+                                                <td>{{ formatPrice(darazSummary.totalSales) }}</td>
+                                                <td>{{ formatPrice(darazSummary.amountReceived) }}</td>
+                                                <td>{{ formatPrice(darazSummary.amountRemaining) }}</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                          </div>
+
                     </div>
                 </div>
             </div>
@@ -474,7 +620,155 @@ export default {
                 amountReceived: 0,
                 amountRemaining: 0,
             });
-        }
+        },
+
+                 // Calculate summary for "Normal" type
+    normalToday() {
+        let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+
+        return this.orders.reduce((totals, order) => {
+            let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+            if (orderDate === today && order.type === 'Normal' && order.status <= 4) {
+                totals.totalOrders++;
+                totals.productPrice += parseFloat(order.total_bill || 0);
+                totals.courier += parseFloat(order.courier_service_price || 0);
+                totals.packaging += parseFloat(order.packaging_price || 0);
+                totals.totalSales += parseFloat(order.total_bill || 0);
+                totals.amountReceived += parseFloat(order.paid_amount || 0);
+                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+            }
+            return totals;
+        }, {
+            totalOrders: 0,
+            productPrice: 0,
+            courier: 0,
+            packaging: 0,
+            totalSales: 0,
+            amountReceived: 0,
+            amountRemaining: 0,
+        });
+    },
+          // Calculate summary for "Normal" type
+    normalSummary() {
+        return this.orders.reduce((totals, order) => {
+            if (order.type === 'Normal' && order.status <= 4) {
+                totals.totalOrders++;
+                totals.productPrice += parseFloat(order.total_bill || 0);
+                totals.courier += parseFloat(order.courier_service_price || 0);
+                totals.packaging += parseFloat(order.packaging_price || 0);
+                totals.totalSales += parseFloat(order.total_bill || 0);
+                totals.amountReceived += parseFloat(order.paid_amount || 0);
+                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+            }
+            return totals;
+        }, {
+            totalOrders: 0,
+            productPrice: 0,
+            courier: 0,
+            packaging: 0,
+            totalSales: 0,
+            amountReceived: 0,
+            amountRemaining: 0,
+        });
+    },
+ // Calculate summary for "Daraz" type
+ darazToday() {
+    let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+        return this.orders.reduce((totals, order) => {
+            let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+            if (orderDate === today && order.type === 'Daraz' && order.status <= 4) {
+                totals.totalOrders++;
+                totals.productPrice += parseFloat(order.total_bill || 0);
+                totals.courier += parseFloat(order.courier_service_price || 0);
+                totals.packaging += parseFloat(order.packaging_price || 0);
+                totals.totalSales += parseFloat(order.total_bill || 0);
+                totals.amountReceived += parseFloat(order.paid_amount || 0);
+                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+            }
+            return totals;
+        }, {
+            totalOrders: 0,
+            productPrice: 0,
+            courier: 0,
+            packaging: 0,
+            totalSales: 0,
+            amountReceived: 0,
+            amountRemaining: 0,
+        });
+    },
+
+    // Calculate summary for "Daraz" type
+    darazSummary() {
+        return this.orders.reduce((totals, order) => {
+            if (order.type === 'Daraz' && order.status <= 4) {
+                totals.totalOrders++;
+                totals.productPrice += parseFloat(order.total_bill || 0);
+                totals.courier += parseFloat(order.courier_service_price || 0);
+                totals.packaging += parseFloat(order.packaging_price || 0);
+                totals.totalSales += parseFloat(order.total_bill || 0);
+                totals.amountReceived += parseFloat(order.paid_amount || 0);
+                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+            }
+            return totals;
+        }, {
+            totalOrders: 0,
+            productPrice: 0,
+            courier: 0,
+            packaging: 0,
+            totalSales: 0,
+            amountReceived: 0,
+            amountRemaining: 0,
+        });
+    },
+
+    // Calculate summary for "Cash" type
+    cashToday() {
+        let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+        return this.orders.reduce((totals, order) => {
+            let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+            if (orderDate === today && order.type === 'Cash' && order.status <= 4) {
+                totals.totalOrders++;
+                totals.productPrice += parseFloat(order.total_bill || 0);
+                totals.courier += parseFloat(order.courier_service_price || 0);
+                totals.packaging += parseFloat(order.packaging_price || 0);
+                totals.totalSales += parseFloat(order.total_bill || 0);
+                totals.amountReceived += parseFloat(order.paid_amount || 0);
+                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+            }
+            return totals;
+        }, {
+            totalOrders: 0,
+            productPrice: 0,
+            courier: 0,
+            packaging: 0,
+            totalSales: 0,
+            amountReceived: 0,
+            amountRemaining: 0,
+        });
+    },
+    // Calculate summary for "Cash" type
+    cashSummary() {
+        return this.orders.reduce((totals, order) => {
+            if (order.type === 'Cash' && order.status <= 4) {
+                totals.totalOrders++;
+                totals.productPrice += parseFloat(order.total_bill || 0);
+                totals.courier += parseFloat(order.courier_service_price || 0);
+                totals.packaging += parseFloat(order.packaging_price || 0);
+                totals.totalSales += parseFloat(order.total_bill || 0);
+                totals.amountReceived += parseFloat(order.paid_amount || 0);
+                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+            }
+            return totals;
+        }, {
+            totalOrders: 0,
+            productPrice: 0,
+            courier: 0,
+            packaging: 0,
+            totalSales: 0,
+            amountReceived: 0,
+            amountRemaining: 0,
+        });
+    },
     },
 
     created() {
