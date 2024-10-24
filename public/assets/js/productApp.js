@@ -3502,6 +3502,57 @@ __webpack_require__.r(__webpack_exports__);
       markasReplacementLoader: false
     };
   },
+  computed: {
+    // Calculate today's summary
+    todaySummary: function todaySummary() {
+      var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+
+      return this.orders.reduce(function (totals, order) {
+        var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+        if (orderDate === today && order.status <= 5 && order.type == 'Normal') {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    },
+    // Calculate overall summary
+    overallSummary: function overallSummary() {
+      return this.orders.reduce(function (totals, order) {
+        if (order.status <= 5 && order.type == 'Normal') {
+          totals.totalOrders++;
+          totals.productPrice += parseFloat(order.total_bill || 0);
+          totals.courier += parseFloat(order.courier_service_price || 0);
+          totals.packaging += parseFloat(order.packaging_price || 0);
+          totals.totalSales += parseFloat(order.total_bill || 0);
+          totals.amountReceived += parseFloat(order.paid_amount || 0);
+          totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+        }
+        return totals;
+      }, {
+        totalOrders: 0,
+        productPrice: 0,
+        courier: 0,
+        packaging: 0,
+        totalSales: 0,
+        amountReceived: 0,
+        amountRemaining: 0
+      });
+    }
+  },
   created: function created() {
     this.fetchOrders();
   },
@@ -12042,6 +12093,16 @@ var render = function render() {
   return _c("div", [_c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped"
+  }, [_c("tbody", [_vm._m(1), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Today’s")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.productPrice - (_vm.todaySummary.courier + _vm.todaySummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.todaySummary.amountRemaining)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Overall")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.totalOrders)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.productPrice - (_vm.overallSummary.courier + _vm.overallSummary.packaging))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.courier)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.packaging)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.amountReceived)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.overallSummary.amountRemaining)))])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
@@ -12057,7 +12118,7 @@ var render = function render() {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_vm._m(0), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalOrders.totalOrders))]), _vm._v(" "), _c("td", {
+  }, [_vm._m(2), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalOrders.totalOrders))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
@@ -12383,7 +12444,7 @@ var render = function render() {
     attrs: {
       id: _vm.table_id
     }
-  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
+  }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "-"))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
@@ -12397,7 +12458,7 @@ var render = function render() {
           return _vm.fetchTracking(item.id);
         }
       }
-    }, [_vm._v("\n                                                            " + _vm._s(item.tracking_number) + "\n                                                          ")])]) : _c("span", [_vm._v("\n                                                          " + _vm._s(item.type) + "\n                                                        ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price)))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid_profit)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_vm._v("\n                                                                " + _vm._s(item.tracking_number) + "\n                                                            ")])]) : _c("span", [_vm._v("\n                                                            " + _vm._s(item.type) + "\n                                                        ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price)))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid_profit)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Order Collection")]) : item.status == 1 ? _c("span", {
       staticClass: "badge badge-info text-dark"
@@ -12411,7 +12472,7 @@ var render = function render() {
       staticClass: "badge badge-succes"
     }, [_vm._v("Dispatched")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Rejection Under Review")]) : item.status == 7 ? _c("span", {
+    }, [_vm._v("Rejection Under\n                                                            Review")]) : item.status == 7 ? _c("span", {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : item.status == 8 ? _c("span", {
       staticClass: "badge badge-success"
@@ -12492,6 +12553,16 @@ var render = function render() {
   })], 1);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Order Statistics")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("-")]), _vm._v(" "), _c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Sales")]), _vm._v(" "), _c("th", [_vm._v("Amount Received")]), _vm._v(" "), _c("th", [_vm._v("Amount Remaining")])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Under Review")]), _vm._v(" "), _c("th", [_vm._v("Rejected")]), _vm._v(" "), _c("th", [_vm._v("Delivered")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Returned to store")])]);

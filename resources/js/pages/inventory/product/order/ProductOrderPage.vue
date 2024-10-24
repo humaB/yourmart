@@ -1,11 +1,59 @@
 <template>
     <div>
         <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Order Statistics</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tbody>
+                                    <tr>
+                                        <th>-</th>
+                                        <th>Total Orders</th>
+                                        <th>Product Price</th>
+                                        <th>Courier</th>
+                                        <th>Packaging</th>
+                                        <th>Total Sales</th>
+                                        <th>Amount Received</th>
+                                        <th>Amount Remaining</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Today’s</th>
+                                        <td>{{formatPrice(todaySummary.totalOrders) }}</td>
+                                        <td>{{ formatPrice(todaySummary.productPrice - ( todaySummary.courier + todaySummary.packaging )) }}</td>
+                                        <td>{{ formatPrice(todaySummary.courier) }}</td>
+                                        <td>{{ formatPrice(todaySummary.packaging) }}</td>
+                                        <td>{{ formatPrice(todaySummary.totalSales) }}</td>
+                                        <td>{{ formatPrice(todaySummary.amountReceived) }}</td>
+                                        <td>{{ formatPrice(todaySummary.amountRemaining) }}</td>
+                                    </tr>
+
+                                    <!-- Overall Orders -->
+                                    <tr>
+                                        <th>Overall</th>
+                                        <td>{{ formatPrice(overallSummary.totalOrders) }}</td>
+                                        <td>{{ formatPrice(overallSummary.productPrice - ( overallSummary.courier + overallSummary.packaging) ) }}</td>
+                                        <td>{{ formatPrice(overallSummary.courier) }}</td>
+                                        <td>{{ formatPrice(overallSummary.packaging) }}</td>
+                                        <td>{{ formatPrice(overallSummary.totalSales) }}</td>
+                                        <td>{{ formatPrice(overallSummary.amountReceived) }}</td>
+                                        <td>{{ formatPrice(overallSummary.amountRemaining) }}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card card-primary">
                     <TableHeader :tableHeader="tableHeader" />
 
-                    <div class="card"  v-if="role == 'admin' || role == 'supervisor'">
+                    <div class="card" v-if="role == 'admin' || role == 'supervisor'">
                         <div class="card-body px-2">
                             <div class="table-responsive">
                                 <table class="table table-striped">
@@ -30,7 +78,9 @@
                                                 {{ getPercentage(totalOrders.orderCollection) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-warning" :style="{ width: getPercentage(totalOrders.orderCollection) + '%' }"></div>
+                                                <div class="progress-bar bg-warning"
+                                                    :style="{ width: getPercentage(totalOrders.orderCollection) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.orderCollection }}
                                         </td>
@@ -39,7 +89,9 @@
                                                 {{ getPercentage(totalOrders.inventoryManager) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-primary" :style="{ width: getPercentage(totalOrders.inventoryManager) + '%' }"></div>
+                                                <div class="progress-bar bg-primary"
+                                                    :style="{ width: getPercentage(totalOrders.inventoryManager) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.inventoryManager }}
                                         </td>
@@ -48,7 +100,9 @@
                                                 {{ getPercentage(totalOrders.qcManager) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-info" :style="{ width: getPercentage(totalOrders.qcManager) + '%' }"></div>
+                                                <div class="progress-bar bg-info"
+                                                    :style="{ width: getPercentage(totalOrders.qcManager) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.qcManager }}
                                         </td>
@@ -57,7 +111,8 @@
                                                 {{ getPercentage(totalOrders.packing) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-dark" :style="{ width: getPercentage(totalOrders.packing) + '%' }"></div>
+                                                <div class="progress-bar bg-dark"
+                                                    :style="{ width: getPercentage(totalOrders.packing) + '%' }"></div>
                                             </div>
                                             {{ totalOrders.packing }}
                                         </td>
@@ -66,7 +121,8 @@
                                                 {{ getPercentage(totalOrders.audit) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-light" :style="{ width: getPercentage(totalOrders.audit) + '%' }"></div>
+                                                <div class="progress-bar bg-light"
+                                                    :style="{ width: getPercentage(totalOrders.audit) + '%' }"></div>
                                             </div>
                                             {{ totalOrders.audit }}
                                         </td>
@@ -75,7 +131,9 @@
                                                 {{ getPercentage(totalOrders.dispatched) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-success" :style="{ width: getPercentage(totalOrders.dispatched) + '%' }"></div>
+                                                <div class="progress-bar bg-success"
+                                                    :style="{ width: getPercentage(totalOrders.dispatched) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.dispatched }}
                                         </td>
@@ -84,7 +142,9 @@
                                                 {{ getPercentage(totalOrders.underReview) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-warning" :style="{ width: getPercentage(totalOrders.underReview) + '%' }"></div>
+                                                <div class="progress-bar bg-warning"
+                                                    :style="{ width: getPercentage(totalOrders.underReview) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.underReview }}
                                         </td>
@@ -93,7 +153,8 @@
                                                 {{ getPercentage(totalOrders.rejected) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalOrders.rejected) + '%' }"></div>
+                                                <div class="progress-bar bg-danger"
+                                                    :style="{ width: getPercentage(totalOrders.rejected) + '%' }"></div>
                                             </div>
                                             {{ totalOrders.rejected }}
                                         </td>
@@ -102,7 +163,9 @@
                                                 {{ getPercentage(totalOrders.delivered) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-success" :style="{ width: getPercentage(totalOrders.delivered) + '%' }"></div>
+                                                <div class="progress-bar bg-success"
+                                                    :style="{ width: getPercentage(totalOrders.delivered) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.delivered }}
                                         </td>
@@ -111,7 +174,8 @@
                                                 {{ getPercentage(totalOrders.returned) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalOrders.returned) + '%' }"></div>
+                                                <div class="progress-bar bg-danger"
+                                                    :style="{ width: getPercentage(totalOrders.returned) + '%' }"></div>
                                             </div>
                                             {{ totalOrders.returned }}
                                         </td>
@@ -120,7 +184,9 @@
                                                 {{ getPercentage(totalOrders.returnedToStock) }}%
                                             </div>
                                             <div class="progress" data-height="6">
-                                                <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalOrders.returnedToStock) + '%' }"></div>
+                                                <div class="progress-bar bg-danger"
+                                                    :style="{ width: getPercentage(totalOrders.returnedToStock) + '%' }">
+                                                </div>
                                             </div>
                                             {{ totalOrders.returnedToStock }}
                                         </td>
@@ -204,20 +270,25 @@
                                                         <td>{{ item.type }}</td>
                                                         <td>{{ item.user ? item.user.name : '-' }}</td>
                                                         <td>
-                                                            {{ item.shop ? `${item.shop.store_name.substring(0, 3)}-${item.order_no}` : item.order_no }}
+                                                            {{ item.shop ? `${item.shop.store_name.substring(0,
+                                                                3)}-${item.order_no}` : item.order_no }}
                                                         </td>
                                                         <td>
                                                             <span v-if="item.type === 'Normal'">
-                                                              <a href="#" data-toggle="modal" data-target="#trackingInformation" @click="fetchTracking(item.id)">
-                                                                {{ item.tracking_number }}
-                                                              </a>
+                                                                <a href="#" data-toggle="modal"
+                                                                    data-target="#trackingInformation"
+                                                                    @click="fetchTracking(item.id)">
+                                                                    {{ item.tracking_number }}
+                                                                </a>
                                                             </span>
                                                             <span v-else>
-                                                              {{ item.type }}
+                                                                {{ item.type }}
                                                             </span>
-                                                          </td>
+                                                        </td>
 
-                                                        <td>{{ formatPrice(parseFloat(item.total_bill) - ( parseFloat(item.courier_service_price) + parseFloat(item.packaging_price) ) ) }}</td>
+                                                        <td>{{ formatPrice(parseFloat(item.total_bill) - (
+                                                            parseFloat(item.courier_service_price) +
+                                                            parseFloat(item.packaging_price))) }}</td>
                                                         <td>{{ item.courier_service_price }}</td>
                                                         <td>{{ item.packaging_price }}</td>
                                                         <td>{{ formatPrice(item.total_bill) }}</td>
@@ -225,21 +296,34 @@
                                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
                                                         <td>{{ formatPrice(item.selling_price) }}</td>
                                                         <td>{{ formatPrice(item.advance_amount) }}</td>
-                                                        <td>{{ formatPrice( item.total_profit) }}</td>
+                                                        <td>{{ formatPrice(item.total_profit) }}</td>
                                                         <td>{{ formatPrice(item.total_paid_profit) }}</td>
                                                         <td>
-                                                            <span class="badge badge-warning text-dark" v-if="item.status == 0">Order Collection</span>
-                                                            <span class="badge badge-info text-dark" v-else-if="item.status == 1">Inventory Issuance</span>
-                                                            <span class="badge badge-secondary" v-else-if="item.status == 2">QC</span>
-                                                            <span class="badge badge-success" v-else-if="item.status == 3">Packing/Dispatch</span>
-                                                            <span class="badge badge-warning text-dark" v-else-if="item.status == 4">Audit</span>
-                                                            <span class="badge badge-succes" v-else-if="item.status == 5">Dispatched</span>
-                                                            <span class="badge badge-danger" v-else-if="item.status == 6">Rejection Under Review</span>
-                                                            <span class="badge badge-danger" v-else-if="item.status == 7">Rejected</span>
-                                                            <span class="badge badge-success" v-else-if="item.status == 8">Delivered</span>
-                                                            <span class="badge badge-danger" v-else-if="item.status == 9">Returned</span>
-                                                            <span class="badge badge-danger" v-else-if="item.status == 10">Returned To Stock</span>
-                                                            <span class="badge badge-warning" v-else-if="item.status == 11">Out for delivery</span>
+                                                            <span class="badge badge-warning text-dark"
+                                                                v-if="item.status == 0">Order Collection</span>
+                                                            <span class="badge badge-info text-dark"
+                                                                v-else-if="item.status == 1">Inventory Issuance</span>
+                                                            <span class="badge badge-secondary"
+                                                                v-else-if="item.status == 2">QC</span>
+                                                            <span class="badge badge-success"
+                                                                v-else-if="item.status == 3">Packing/Dispatch</span>
+                                                            <span class="badge badge-warning text-dark"
+                                                                v-else-if="item.status == 4">Audit</span>
+                                                            <span class="badge badge-succes"
+                                                                v-else-if="item.status == 5">Dispatched</span>
+                                                            <span class="badge badge-danger"
+                                                                v-else-if="item.status == 6">Rejection Under
+                                                                Review</span>
+                                                            <span class="badge badge-danger"
+                                                                v-else-if="item.status == 7">Rejected</span>
+                                                            <span class="badge badge-success"
+                                                                v-else-if="item.status == 8">Delivered</span>
+                                                            <span class="badge badge-danger"
+                                                                v-else-if="item.status == 9">Returned</span>
+                                                            <span class="badge badge-danger"
+                                                                v-else-if="item.status == 10">Returned To Stock</span>
+                                                            <span class="badge badge-warning"
+                                                                v-else-if="item.status == 11">Out for delivery</span>
                                                         </td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
                                                         <td>
@@ -262,35 +346,17 @@
             </div>
         </div>
 
-        <OrderDetailView
-            :revertLoader="revertLoader"
-            :rejectLoader="rejectLoader"
-            :paidAmountLoader="paidAmountLoader"
-            :details="details"
-            :loader="commentLoader"
-            :role="role"
-            @addComment="addComment($event)"
-            @forward="forward($event)"
-            @reject="reject($event)"
-            @revert="revert($event)"
-            @fetchDropshipperDetails="fetchDropshipperDetails($event)"
-            @updatePaidAmount="updatePaidAmount( $event )"
-            @updatePackagingAmount="updatePackagingAmount( $event )"
-            @markasReplacement="markasReplacement($event)"
-        />
-        <DropshipperDetails
-            :details="dropShipperDetails"
-        />
+        <OrderDetailView :revertLoader="revertLoader" :rejectLoader="rejectLoader" :paidAmountLoader="paidAmountLoader"
+            :details="details" :loader="commentLoader" :role="role" @addComment="addComment($event)"
+            @forward="forward($event)" @reject="reject($event)" @revert="revert($event)"
+            @fetchDropshipperDetails="fetchDropshipperDetails($event)" @updatePaidAmount="updatePaidAmount($event)"
+            @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)" />
+        <DropshipperDetails :details="dropShipperDetails" />
 
-        <TrackingDetailPopup
-            :trackingDetails="trackingDetails"
-        />
+        <TrackingDetailPopup :trackingDetails="trackingDetails" />
         <!-- Modal -->
-         <OrderMarkasReplacementConfirmation
-                :orderID="orderID"
-                :loader="markasReplacementLoader"
-                @markasReplacementConfirmation="markasReplacementConfirmation($event)"
-         />
+        <OrderMarkasReplacementConfirmation :orderID="orderID" :loader="markasReplacementLoader"
+            @markasReplacementConfirmation="markasReplacementConfirmation($event)" />
 
     </div>
 </template>
@@ -320,18 +386,18 @@ export default {
             tableHeader: {
                 heading: "All Orders",
             },
-            th: ["Sr #", "Order #", "Belongs To","Total Amount","Paid Amount", "Remaining Amount",  "Added Date", "Status","Action"],
+            th: ["Sr #", "Order #", "Belongs To", "Total Amount", "Paid Amount", "Remaining Amount", "Added Date", "Status", "Action"],
             table_id: "moq_table",
             btnLoader: false,
             orders: [],
             loader: true,
             details: {},
-            commentLoader : false,
-            rejectLoader : false,
-            revertLoader : false,
-            role : '',
-            dropShipperDetails : {},
-            paidAmountLoader : false,
+            commentLoader: false,
+            rejectLoader: false,
+            revertLoader: false,
+            role: '',
+            dropShipperDetails: {},
+            paidAmountLoader: false,
             totalOrders: {
                 totalOrders: 0,
                 orderCollection: 0,
@@ -339,35 +405,90 @@ export default {
                 qcManager: 0,
                 packing: 0,
                 audit: 0,
-                dispatched : 0,
+                dispatched: 0,
                 underReview: 0,
-                rejected : 0,
-                delivered : 0,
-                returned : 0,
-                returnedToStock : 0
+                rejected: 0,
+                delivered: 0,
+                returned: 0,
+                returnedToStock: 0
             },
             filter: {
                 status: '',
                 from: '',
                 to: '',
             },
-            trackingDetails : [],
-            orderID : '',
-            markasReplacementLoader : false
+            trackingDetails: [],
+            orderID: '',
+            markasReplacementLoader: false
         };
     },
+    computed: {
+        // Calculate today's summary
+        todaySummary() {
+            let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+
+            return this.orders.reduce((totals, order) => {
+                let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+
+                if (orderDate === today && order.status <= 5 && order.type == 'Normal') {
+                    totals.totalOrders++;
+                    totals.productPrice += parseFloat(order.total_bill || 0);
+                    totals.courier += parseFloat(order.courier_service_price || 0);
+                    totals.packaging += parseFloat(order.packaging_price || 0);
+                    totals.totalSales += parseFloat(order.total_bill || 0);
+                    totals.amountReceived += parseFloat(order.paid_amount || 0);
+                    totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                }
+
+                return totals;
+            }, {
+                totalOrders: 0,
+                productPrice: 0,
+                courier: 0,
+                packaging: 0,
+                totalSales: 0,
+                amountReceived: 0,
+                amountRemaining: 0,
+            });
+        },
+
+        // Calculate overall summary
+        overallSummary() {
+            return this.orders.reduce((totals, order) => {
+                if (order.status <= 5 && order.type == 'Normal') {
+                    totals.totalOrders++;
+                    totals.productPrice += parseFloat(order.total_bill || 0);
+                    totals.courier += parseFloat(order.courier_service_price || 0);
+                    totals.packaging += parseFloat(order.packaging_price || 0);
+                    totals.totalSales += parseFloat(order.total_bill || 0);
+                    totals.amountReceived += parseFloat(order.paid_amount || 0);
+                    totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                }
+                return totals;
+            }, {
+                totalOrders: 0,
+                productPrice: 0,
+                courier: 0,
+                packaging: 0,
+                totalSales: 0,
+                amountReceived: 0,
+                amountRemaining: 0,
+            });
+        }
+    },
+
     created() {
         this.fetchOrders();
     },
     methods: {
-        markasReplacement(data){
+        markasReplacement(data) {
             this.orderID = data.id
         },
-        markasReplacementConfirmation(){
+        markasReplacementConfirmation() {
             let vm = this;
             vm.markasReplacementLoader = true;
             axios
-                .post(this.api_url + "inventory/products/orders/mark-as-replacement", { id : this.orderID })
+                .post(this.api_url + "inventory/products/orders/mark-as-replacement", { id: this.orderID })
                 .then((response) => {
                     vm.markasReplacementLoader = false;
 
@@ -381,7 +502,7 @@ export default {
                     });
                 });
         },
-        fetchTracking(id){
+        fetchTracking(id) {
             let vm = this;
             axios
                 .post(this.api_url + "inventory/products/orders/tracking", { id })
@@ -417,64 +538,64 @@ export default {
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
         },
-        updatePaidAmount( data ){
+        updatePaidAmount(data) {
             let vm = this;
             vm.paidAmountLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data)
-            .then((response) => {
+                .then((response) => {
 
-            this.fetchDetail(data.id);
+                    this.fetchDetail(data.id);
 
-            vm.paidAmountLoader = false;
-                return swal({
-                    title: "Success",
-                    text: "Amount Updated Successfully",
-                    icon: "success",
-                    timer: 3000,
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: "Amount Updated Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: "Oops.. Something went wrong",
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
-            })
-            .catch((err) => {
-                vm.paidAmountLoader = false;
-                return swal({
-                    title: "Error",
-                    text: "Oops.. Something went wrong",
-                    icon: "error",
-                    timer: 3000,
-                });
-            });
         },
-        updatePackagingAmount( data ){
+        updatePackagingAmount(data) {
             let vm = this;
             vm.paidAmountLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data)
-            .then((response) => {
+                .then((response) => {
 
-            this.fetchDetail(data.id);
+                    this.fetchDetail(data.id);
 
-            vm.paidAmountLoader = false;
-                return swal({
-                    title: "Success",
-                    text: "Amount Updated Successfully",
-                    icon: "success",
-                    timer: 3000,
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: "Amount Updated Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: "Oops.. Something went wrong",
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
-            })
-            .catch((err) => {
-                vm.paidAmountLoader = false;
-                return swal({
-                    title: "Error",
-                    text: "Oops.. Something went wrong",
-                    icon: "error",
-                    timer: 3000,
-                });
-            });
         },
         fetchOrders() {
             let vm = this;
 
             vm.loader = false;
             axios
-                .get(this.api_url + "inventory/products/orders",{
+                .get(this.api_url + "inventory/products/orders", {
                     params: {
                         status: vm.filter.status,
                         from: vm.filter.from,
@@ -483,64 +604,64 @@ export default {
                 })
                 .then((response) => {
                     vm.orders = response.data.response.orders
-                    vm.role   = response.data.response.role
+                    vm.role = response.data.response.role
 
-                     // Reset totalOrders object before populating it
-                vm.totalOrders = {
-                    totalOrders: 0,
-                    orderCollection: 0,
-                    inventoryManager: 0,
-                    qcManager: 0,
-                    packing: 0,
-                    audit: 0,
-                    underReview: 0,
-                    rejected: 0,
-                    dispatched : 0,
-                    delivered : 0,
-                    returned : 0,
-                    returnedToStock : 0
-                };
+                    // Reset totalOrders object before populating it
+                    vm.totalOrders = {
+                        totalOrders: 0,
+                        orderCollection: 0,
+                        inventoryManager: 0,
+                        qcManager: 0,
+                        packing: 0,
+                        audit: 0,
+                        underReview: 0,
+                        rejected: 0,
+                        dispatched: 0,
+                        delivered: 0,
+                        returned: 0,
+                        returnedToStock: 0
+                    };
 
-                // Process orders and calculate total counts based on the status
-                vm.orders.forEach((order) => {
-                    vm.totalOrders.totalOrders++;
-                    switch (order.status) {
-                        case 0: // Order Collection
-                            vm.totalOrders.orderCollection++;
-                            break;
-                        case 1: // Inventory Manager
-                            vm.totalOrders.inventoryManager++;
-                            break;
-                        case 2: // QA Manager
-                            vm.totalOrders.qcManager++;
-                            break;
-                        case 3: // Packing/Dispatch
-                            vm.totalOrders.packing++;
-                            break;
-                        case 4: // Auditor
-                            vm.totalOrders.audit++;
-                            break;
-                        case 5: // Dispatched
-                            vm.totalOrders.dispatched++;
-                            break;
-                        case 6: // Under Review
-                            vm.totalOrders.underReview++;
-                            break;
-                        case 7: // Rejected
-                            vm.totalOrders.rejected++;
-                            break;
-                        case 8: // Delivered
-                            vm.totalOrders.delivered++;
-                            break;
-                        case 9: // Returned
-                            vm.totalOrders.returned++;
-                            break;
-                        case 10: // Returned
-                            vm.totalOrders.returnedToStock++;
-                            break;
-                    }
+                    // Process orders and calculate total counts based on the status
+                    vm.orders.forEach((order) => {
+                        vm.totalOrders.totalOrders++;
+                        switch (order.status) {
+                            case 0: // Order Collection
+                                vm.totalOrders.orderCollection++;
+                                break;
+                            case 1: // Inventory Manager
+                                vm.totalOrders.inventoryManager++;
+                                break;
+                            case 2: // QA Manager
+                                vm.totalOrders.qcManager++;
+                                break;
+                            case 3: // Packing/Dispatch
+                                vm.totalOrders.packing++;
+                                break;
+                            case 4: // Auditor
+                                vm.totalOrders.audit++;
+                                break;
+                            case 5: // Dispatched
+                                vm.totalOrders.dispatched++;
+                                break;
+                            case 6: // Under Review
+                                vm.totalOrders.underReview++;
+                                break;
+                            case 7: // Rejected
+                                vm.totalOrders.rejected++;
+                                break;
+                            case 8: // Delivered
+                                vm.totalOrders.delivered++;
+                                break;
+                            case 9: // Returned
+                                vm.totalOrders.returned++;
+                                break;
+                            case 10: // Returned
+                                vm.totalOrders.returnedToStock++;
+                                break;
+                        }
+                    });
                 });
-            });
         },
         fetchDetail(id) {
             let vm = this;
@@ -550,85 +671,85 @@ export default {
                     vm.details = response.data.response[0]
                 });
         },
-        fetchDropshipperDetails( data ){
+        fetchDropshipperDetails(data) {
             let vm = this;
             axios
-            .post(this.api_url + "dropshippers/details", { id : data.id })
-            .then((response) => {
+                .post(this.api_url + "dropshippers/details", { id: data.id })
+                .then((response) => {
                     vm.dropShipperDetails = response.data.response[0]
-             });
+                });
 
         },
-        forward( data ){
+        forward(data) {
             let vm = this;
             vm.commentLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-status", data)
-            .then((response) => {
+                .then((response) => {
 
-            vm.fetchOrders();
-            vm.commentLoader = false;
-            vm.$emit('commentAdded', true);
-            setTimeout( () => {
-                $("#ticket").modal('hide');
-            },2000)
-            return swal({
-                title: "Success",
-                text: "Forwarded successfully",
-                icon: "success",
-                timer: 3000,
-            });
-            })
-            .catch((err) => {
-                vm.commentLoader = false;
-            });
+                    vm.fetchOrders();
+                    vm.commentLoader = false;
+                    vm.$emit('commentAdded', true);
+                    setTimeout(() => {
+                        $("#ticket").modal('hide');
+                    }, 2000)
+                    return swal({
+                        title: "Success",
+                        text: "Forwarded successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.commentLoader = false;
+                });
         },
-        reject( data ){
+        reject(data) {
             let vm = this;
             vm.rejectLoader = true;
             axios.post(this.api_url + "inventory/products/orders/reject", data)
-            .then((response) => {
+                .then((response) => {
 
-            vm.fetchOrders();
-            vm.rejectLoader = false;
+                    vm.fetchOrders();
+                    vm.rejectLoader = false;
 
-            setTimeout( () => {
-                $("#ticket").modal('hide');
-            },2000);
+                    setTimeout(() => {
+                        $("#ticket").modal('hide');
+                    }, 2000);
 
-            return swal({
-                title: "Success",
-                text: "Order Rejected Successfully",
-                icon: "success",
-                timer: 3000,
-            });
-            })
-            .catch((err) => {
-                vm.rejectLoader = false;
-            });
+                    return swal({
+                        title: "Success",
+                        text: "Order Rejected Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.rejectLoader = false;
+                });
         },
-        revert( data ){
+        revert(data) {
             let vm = this;
             vm.revertLoader = true;
             axios.post(this.api_url + "inventory/products/orders/revert", data)
-            .then((response) => {
+                .then((response) => {
 
-            vm.fetchOrders();
-            vm.revertLoader = false;
+                    vm.fetchOrders();
+                    vm.revertLoader = false;
 
-            setTimeout( () => {
-                $("#ticket").modal('hide');
-            },2000);
+                    setTimeout(() => {
+                        $("#ticket").modal('hide');
+                    }, 2000);
 
-            return swal({
-                title: "Success",
-                text: "Order Revert Successfully",
-                icon: "success",
-                timer: 3000,
-            });
-            })
-            .catch((err) => {
-                vm.revertLoader = false;
-            });
+                    return swal({
+                        title: "Success",
+                        text: "Order Revert Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.revertLoader = false;
+                });
         },
         addComment(data) {
             let vm = this;
@@ -674,7 +795,7 @@ export default {
             setTimeout(() => {
                 $("#moq_table").DataTable({
                     dom: "Bfrtip",
-                    buttons: ["copy","csv","excel"],
+                    buttons: ["copy", "csv", "excel"],
                 });
             }, 300);
         },
