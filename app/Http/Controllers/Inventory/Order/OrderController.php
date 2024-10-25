@@ -20,6 +20,7 @@ use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
+use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -44,6 +45,14 @@ class OrderController extends Controller
 
 
         if ($userRole == 'admin' || $userRole == 'supervisor') {
+            $dropshipper = null;
+
+            if( $request->droshipper != 0 ){
+                $dropshipper = $request->droshipper;
+                $dropshipper = DropShipper::where('id', $dropshipper )->first();
+                $dropshipper = $dropshipper->user_id ?? 0;
+            }
+
             $orders = Order::with('user', 'shop')
                 ->orderBy('id', 'desc')
                 // Apply status filter when provided
@@ -56,6 +65,12 @@ class OrderController extends Controller
                 })
                 ->when($request->to, function ($query, $to) {
                     return $query->whereDate('created_at', '<=', $to);
+                })
+                ->when($request->type, function ($query, $type) {
+                    return $query->where('type', $type);
+                })
+                ->when($dropshipper, function ($query, $dropshipper) {
+                    return $query->where('belongs_to', $dropshipper);
                 })
                 ->get();
         }else {

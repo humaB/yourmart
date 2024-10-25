@@ -343,6 +343,19 @@
 
                         <form @submit.prevent="applyFilter" class="row col-md-12 mb-3">
                             <div class="col-md-3">
+                                <label for="">Dropshipper</label>
+                                <v-select :options="dropshippers" v-model="filter.dropshipper"></v-select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="">Order Type</label>
+                                <select v-model="filter.type" class="form-control">
+                                    <option value="">Select from the following</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Daraz">Daraz</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
                                 <label for="">Select Status</label>
                                 <select v-model="filter.status" class="form-control">
                                     <option value="">Select from the following</option>
@@ -359,15 +372,15 @@
                                     <option value="10">Returned to store</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="">From</label>
                                 <input type="date" v-model="filter.from" class="form-control">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="">To</label>
                                 <input type="date" v-model="filter.to" class="form-control">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-1">
                                 <label for="">Action</label><br>
                                 <button class="btn btn-primary mr-2" @click="applyFilter">Filter</button>
                                 <button class="btn btn-danger" @click="resetFilter">Reset</button>
@@ -559,13 +572,16 @@ export default {
                 returnedToStock: 0
             },
             filter: {
+                dropshipper : { code : 0 , label : 'Select from the following'},
+                type : '',
                 status: '',
                 from: '',
                 to: '',
             },
             trackingDetails: [],
             orderID: '',
-            markasReplacementLoader: false
+            markasReplacementLoader: false,
+            dropshippers : []
         };
     },
     computed: {
@@ -776,8 +792,16 @@ export default {
 
     created() {
         this.fetchOrders();
+        this.fetchDropshippers();
     },
     methods: {
+        fetchDropshippers() {
+            axios.get(this.api_url + "dropshippers/drop-down")
+                .then((res) => {
+                    const results = res.data.response;
+                    this.dropshippers = results;
+                });
+        },
         markasReplacement(data) {
             this.orderID = data.id
         },
@@ -814,6 +838,8 @@ export default {
         resetFilter() {
             let vm = this;
             vm.filter = {
+                type : '',
+                dropshipper : { code : 0 , label : 'Select from the following'},
                 status: '',
                 from: '',
                 to: ''
@@ -890,10 +916,14 @@ export default {
         fetchOrders() {
             let vm = this;
 
-            vm.loader = false;
+            vm.loader = true;
+            this.clearDataTable();
+            
             axios
                 .get(this.api_url + "inventory/products/orders", {
                     params: {
+                        droshipper : vm.filter.dropshipper.code,
+                        type : vm.filter.type,
                         status: vm.filter.status,
                         from: vm.filter.from,
                         to: vm.filter.to,
@@ -958,6 +988,8 @@ export default {
                                 break;
                         }
                     });
+
+                    vm.loader = false;
                 });
         },
         fetchDetail(id) {

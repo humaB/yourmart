@@ -3493,13 +3493,19 @@ __webpack_require__.r(__webpack_exports__);
         returnedToStock: 0
       },
       filter: {
+        dropshipper: {
+          code: 0,
+          label: 'Select from the following'
+        },
+        type: '',
         status: '',
         from: '',
         to: ''
       },
       trackingDetails: [],
       orderID: '',
-      markasReplacementLoader: false
+      markasReplacementLoader: false,
+      dropshippers: []
     };
   },
   computed: {
@@ -3700,13 +3706,21 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.fetchOrders();
+    this.fetchDropshippers();
   },
   methods: {
+    fetchDropshippers: function fetchDropshippers() {
+      var _this = this;
+      axios.get(this.api_url + "dropshippers/drop-down").then(function (res) {
+        var results = res.data.response;
+        _this.dropshippers = results;
+      });
+    },
     markasReplacement: function markasReplacement(data) {
       this.orderID = data.id;
     },
     markasReplacementConfirmation: function markasReplacementConfirmation() {
-      var _this = this;
+      var _this2 = this;
       var vm = this;
       vm.markasReplacementLoader = true;
       axios.post(this.api_url + "inventory/products/orders/mark-as-replacement", {
@@ -3714,7 +3728,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         vm.markasReplacementLoader = false;
         $("#markasReplacement").modal('hide');
-        _this.fetchDetail(_this.orderID);
+        _this2.fetchDetail(_this2.orderID);
         return swal({
           title: "Success",
           text: "Marked as Replacement Successfully",
@@ -3738,6 +3752,11 @@ __webpack_require__.r(__webpack_exports__);
     resetFilter: function resetFilter() {
       var vm = this;
       vm.filter = {
+        type: '',
+        dropshipper: {
+          code: 0,
+          label: 'Select from the following'
+        },
         status: '',
         from: '',
         to: ''
@@ -3757,11 +3776,11 @@ __webpack_require__.r(__webpack_exports__);
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
     updatePaidAmount: function updatePaidAmount(data) {
-      var _this2 = this;
+      var _this3 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data).then(function (response) {
-        _this2.fetchDetail(data.id);
+        _this3.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -3780,11 +3799,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updatePackagingAmount: function updatePackagingAmount(data) {
-      var _this3 = this;
+      var _this4 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data).then(function (response) {
-        _this3.fetchDetail(data.id);
+        _this4.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -3804,9 +3823,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     fetchOrders: function fetchOrders() {
       var vm = this;
-      vm.loader = false;
+      vm.loader = true;
+      this.clearDataTable();
       axios.get(this.api_url + "inventory/products/orders", {
         params: {
+          droshipper: vm.filter.dropshipper.code,
+          type: vm.filter.type,
           status: vm.filter.status,
           from: vm.filter.from,
           to: vm.filter.to
@@ -3881,6 +3903,7 @@ __webpack_require__.r(__webpack_exports__);
               break;
           }
         });
+        vm.loader = false;
       });
     },
     fetchDetail: function fetchDetail(id) {
@@ -12476,6 +12499,64 @@ var render = function render() {
     attrs: {
       "for": ""
     }
+  }, [_vm._v("Dropshipper")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.dropshippers
+    },
+    model: {
+      value: _vm.filter.dropshipper,
+      callback: function callback($$v) {
+        _vm.$set(_vm.filter, "dropshipper", $$v);
+      },
+      expression: "filter.dropshipper"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-2"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Order Type")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.type,
+      expression: "filter.type"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Normal"
+    }
+  }, [_vm._v("Normal")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Cash"
+    }
+  }, [_vm._v("Cash")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Daraz"
+    }
+  }, [_vm._v("Daraz")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-2"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
   }, [_vm._v("Select Status")]), _vm._v(" "), _c("select", {
     directives: [{
       name: "model",
@@ -12544,7 +12625,7 @@ var render = function render() {
       value: "10"
     }
   }, [_vm._v("Returned to store")])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": ""
@@ -12570,7 +12651,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": ""
@@ -12596,7 +12677,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-1"
   }, [_c("label", {
     attrs: {
       "for": ""
