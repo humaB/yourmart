@@ -70,6 +70,7 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::post('/delete',  [ UserController::class , 'delete']);
 
     Route::get('/dashboard',  [ DashboardController::class , 'fetchData']);
+    Route::get('/dashboard/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
 });
 
 Route::group(['prefix' => 'tickets'], function(){

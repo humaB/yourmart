@@ -513,20 +513,23 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Top 10 Selling Products</h4>
+                        <h4>Top Selling Products</h4>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover mb-0">
+                            <table class="table table-hover mb-0" id="topSellingProductTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Product</th>
                                         <th>SKU #</th>
                                         <th>Item Sold</th>
+                                        <th>Buying Avg Price</th>
                                         <th>Buying Cost</th>
+                                        <th>Selling Avg Price</th>
                                         <th>Selling Cost</th>
                                         <th>Net Profit</th>
+                                        <th>Percentage</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -535,11 +538,13 @@
                                         <td>{{ item.variation ? item.variation.product.title : '' }}</td>
                                         <td>{{ item.variation ? item.variation.sku : '' }}</td>
                                         <td>{{ item.total_quantity }}</td>
+                                        <td>{{ item.variation.avg_price }}</td>
                                         <td>{{ formatPrice(item.variation.avg_price * item.total_quantity) }}</td>
+                                        <td>{{ (item.selling_price / item.total_quantity).toFixed(2) }}</td>
                                         <td>{{ formatPrice(item.selling_price) }}</td>
 
                                         <td>{{ formatPrice(parseFloat(item.selling_price) - ( parseFloat(item.total_quantity)  * parseFloat(item.variation.avg_price) ) )  }}</td>
-
+                                        <td>{{ ((parseFloat(item.selling_price) - ( parseFloat(item.total_quantity)  * parseFloat(item.variation.avg_price) ) ) / ( parseFloat(item.total_quantity)  * parseFloat(item.variation.avg_price) ) * 100).toFixed(2)}}%</td>
                                     </tr>
 
                                 </tbody>
@@ -579,7 +584,7 @@
                                         <td>{{ item.total_price }}</td>
                                         <td>{{ item.total_courier_cost }}</td>
                                         <td>{{ item.total_packaging_cost }}</td>
-                                        <td>{{ (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost) ) }}</td>
+                                        <td>{{ (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost) ).toFixed() }}</td>
                                         <td>{{ item.total_sell_price }}</td>
                                         <td>{{ parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost) ) }}</td>
                                     </tr>
@@ -801,6 +806,7 @@ export default {
   },
   created() {
     this.fetchData();
+    this.top10SellingProducts();
   },
   methods: {
     fetchData(){
@@ -809,8 +815,19 @@ export default {
             .get(this.api_url + "users/dashboard")
             .then((response) => {
                     const results = response.data.response;
-                    vm.topTenProducts = results.top10SellingProducts;
+                })
 
+    },
+    top10SellingProducts(){
+        let vm = this;
+        axios
+            .get(this.api_url + "users/dashboard/top-selling-products")
+            .then((response) => {
+                    const results = response.data.response;
+                    vm.topTenProducts = results;
+                    setTimeout(() => {
+                        vm.topSellingProductTable();
+                    },300)
                 })
 
     },
@@ -825,6 +842,12 @@ export default {
             return string
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    topSellingProductTable(){
+        $("#topSellingProductTable").DataTable({
+            dom: "Bfrtip",
+            buttons: ["copy", "csv", "excel"],
+        });
     },
     getPercentage(statusCount) {
             if (this.totalTicketSum.total_tickets === 0) return 0;
