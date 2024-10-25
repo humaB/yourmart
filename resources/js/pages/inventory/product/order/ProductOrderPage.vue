@@ -576,7 +576,7 @@ export default {
             return this.orders.reduce((totals, order) => {
                 let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
 
-                if (orderDate === today && order.status <= 4) {
+                if (orderDate === today && order.status <= 5) {
                     totals.totalOrders++;
                     totals.productPrice += parseFloat(order.total_bill || 0);
                     totals.courier += parseFloat(order.courier_service_price || 0);
@@ -601,7 +601,7 @@ export default {
         // Calculate overall summary
         overallSummary() {
             return this.orders.reduce((totals, order) => {
-                if (order.status <= 4) {
+                if (order.status <= 5) {
                     totals.totalOrders++;
                     totals.productPrice += parseFloat(order.total_bill || 0);
                     totals.courier += parseFloat(order.courier_service_price || 0);
@@ -624,11 +624,14 @@ export default {
 
                  // Calculate summary for "Normal" type
     normalToday() {
+
         let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
 
         return this.orders.reduce((totals, order) => {
             let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-            if (orderDate === today && order.type === 'Normal' && order.status <= 4) {
+
+            if (orderDate === today && order.type === 'Normal' && order.status <= 5) {
+
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -651,7 +654,7 @@ export default {
           // Calculate summary for "Normal" type
     normalSummary() {
         return this.orders.reduce((totals, order) => {
-            if (order.type === 'Normal' && order.status <= 4) {
+            if (order.type === 'Normal' && order.status <= 5) {
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -676,7 +679,7 @@ export default {
     let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
         return this.orders.reduce((totals, order) => {
             let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-            if (orderDate === today && order.type === 'Daraz' && order.status <= 4) {
+            if (orderDate === today && order.type === 'Daraz' && order.status <= 5) {
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -700,7 +703,7 @@ export default {
     // Calculate summary for "Daraz" type
     darazSummary() {
         return this.orders.reduce((totals, order) => {
-            if (order.type === 'Daraz' && order.status <= 4) {
+            if (order.type === 'Daraz' && order.status <= 5) {
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -726,7 +729,7 @@ export default {
         let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
         return this.orders.reduce((totals, order) => {
             let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-            if (orderDate === today && order.type === 'Cash' && order.status <= 4) {
+            if (orderDate === today && order.type === 'Cash' && order.status <= 5) {
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -749,7 +752,7 @@ export default {
     // Calculate summary for "Cash" type
     cashSummary() {
         return this.orders.reduce((totals, order) => {
-            if (order.type === 'Cash' && order.status <= 4) {
+            if (order.type === 'Cash' && order.status <= 5) {
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -824,7 +827,7 @@ export default {
             return Math.round((statusCount / this.totalOrders.totalOrders) * 100);
         },
         formatDate(date) {
-            return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
+            return date ? moment.utc(date).format('DD-MMM-YYYY') : 'N/A';
         },
         formatPrice(price) {
             var string = parseFloat(price).toString();

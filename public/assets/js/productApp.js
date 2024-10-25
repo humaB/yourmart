@@ -3509,7 +3509,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.orders.reduce(function (totals, order) {
         var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-        if (orderDate === today && order.status <= 4) {
+        if (orderDate === today && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3532,7 +3532,7 @@ __webpack_require__.r(__webpack_exports__);
     // Calculate overall summary
     overallSummary: function overallSummary() {
       return this.orders.reduce(function (totals, order) {
-        if (order.status <= 4) {
+        if (order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3558,7 +3558,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.orders.reduce(function (totals, order) {
         var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-        if (orderDate === today && order.type === 'Normal' && order.status <= 4) {
+        if (orderDate === today && order.type === 'Normal' && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3581,7 +3581,7 @@ __webpack_require__.r(__webpack_exports__);
     // Calculate summary for "Normal" type
     normalSummary: function normalSummary() {
       return this.orders.reduce(function (totals, order) {
-        if (order.type === 'Normal' && order.status <= 4) {
+        if (order.type === 'Normal' && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3606,7 +3606,7 @@ __webpack_require__.r(__webpack_exports__);
       var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
       return this.orders.reduce(function (totals, order) {
         var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-        if (orderDate === today && order.type === 'Daraz' && order.status <= 4) {
+        if (orderDate === today && order.type === 'Daraz' && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3629,7 +3629,7 @@ __webpack_require__.r(__webpack_exports__);
     // Calculate summary for "Daraz" type
     darazSummary: function darazSummary() {
       return this.orders.reduce(function (totals, order) {
-        if (order.type === 'Daraz' && order.status <= 4) {
+        if (order.type === 'Daraz' && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3654,7 +3654,7 @@ __webpack_require__.r(__webpack_exports__);
       var today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
       return this.orders.reduce(function (totals, order) {
         var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-        if (orderDate === today && order.type === 'Cash' && order.status <= 4) {
+        if (orderDate === today && order.type === 'Cash' && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3677,7 +3677,7 @@ __webpack_require__.r(__webpack_exports__);
     // Calculate summary for "Cash" type
     cashSummary: function cashSummary() {
       return this.orders.reduce(function (totals, order) {
-        if (order.type === 'Cash' && order.status <= 4) {
+        if (order.type === 'Cash' && order.status <= 5) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3750,7 +3750,7 @@ __webpack_require__.r(__webpack_exports__);
       return Math.round(statusCount / this.totalOrders.totalOrders * 100);
     },
     formatDate: function formatDate(date) {
-      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).format('DD-MMM-YYYY') : 'N/A';
     },
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
