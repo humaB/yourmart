@@ -535,10 +535,10 @@
                                         <td>{{ item.variation ? item.variation.product.title : '' }}</td>
                                         <td>{{ item.variation ? item.variation.sku : '' }}</td>
                                         <td>{{ item.total_quantity }}</td>
-                                        <td>{{ item.variation.avg_price * item.total_quantity }}</td>
-                                        <td>{{ item.selling_price }}</td>
+                                        <td>{{ formatPrice(item.variation.avg_price * item.total_quantity) }}</td>
+                                        <td>{{ formatPrice(item.selling_price) }}</td>
 
-                                        <td>{{ parseFloat(item.selling_price) - ( parseFloat(item.total_quantity)  * parseFloat(item.variation.avg_price) )  }}</td>
+                                        <td>{{ formatPrice(parseFloat(item.selling_price) - ( parseFloat(item.total_quantity)  * parseFloat(item.variation.avg_price) ) )  }}</td>
 
                                     </tr>
 
