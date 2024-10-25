@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use App\Models\CustomerBank;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,6 +45,10 @@ class DropShipper extends Model
         'status', // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
         'user_id',
     ];
+
+    public function user(){
+        return $this->belongsTo(User::class ,'user_id','id');
+    }
 
     public function city(){
         return $this->hasOne(City::class ,'id','city_id');

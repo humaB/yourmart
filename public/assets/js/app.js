@@ -2305,6 +2305,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       topTenProducts: [],
       dropshipper: {},
+      topDropshippers: [],
       totalOrders: 0,
       totalTicketSum: {
         total_tickets: 0,
@@ -2320,8 +2321,36 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.fetchData();
     this.top10SellingProducts();
+    this.top10Dropshippers();
   },
   methods: {
+    calculateHealth: function calculateHealth(item) {
+      var deliveredCount = item.total_orders; // Count of delivered orders
+      var returnedCount = item.total_returns; // Count of returned orders
+
+      // You can now use these counts for further logic, e.g., calculating account health
+      var totalOrders = deliveredCount + returnedCount;
+      var accountHealth = 0;
+      if (totalOrders > 0) {
+        accountHealth = deliveredCount / totalOrders * 100;
+      }
+      return accountHealth.toFixed(2);
+    },
+    calculateDeliveredSales: function calculateDeliveredSales(deliveredOrders) {
+      return deliveredOrders.reduce(function (sum, order) {
+        return sum + parseFloat(order.selling_price) + parseFloat(order.advance_amount);
+      }, 0);
+    },
+    calculateProfit: function calculateProfit(deliveredOrders) {
+      return deliveredOrders.reduce(function (sum, order) {
+        return sum + parseFloat(order.total_bill) - parseFloat(order.courier_service_price) - parseFloat(order.packaging_price);
+      }, 0);
+    },
+    calculateTotalCost: function calculateTotalCost(deliveredOrders) {
+      return deliveredOrders.reduce(function (sum, order) {
+        return sum + parseFloat(order.courier_service_price) + parseFloat(order.packaging_price);
+      }, 0);
+    },
     fetchData: function fetchData() {
       var vm = this;
       axios.get(this.api_url + "users/dashboard").then(function (response) {
@@ -2338,6 +2367,16 @@ __webpack_require__.r(__webpack_exports__);
         }, 300);
       });
     },
+    top10Dropshippers: function top10Dropshippers() {
+      var vm = this;
+      axios.get(this.api_url + "users/dashboard/top-10-dropshippers").then(function (response) {
+        var results = response.data.response;
+        vm.topDropshippers = results.dropshippers;
+        setTimeout(function () {
+          vm.topDropshipperTable();
+        }, 300);
+      });
+    },
     applyFilter: function applyFilter() {},
     resetFilter: function resetFilter() {},
     formatPrice: function formatPrice(price) {
@@ -2346,6 +2385,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     topSellingProductTable: function topSellingProductTable() {
       $("#topSellingProductTable").DataTable({
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel"]
+      });
+    },
+    topDropshipperTable: function topDropshipperTable() {
+      $("#topDropshipperTable").DataTable({
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel"]
       });
@@ -10405,7 +10450,7 @@ var render = function render() {
     staticClass: "font-15"
   }, [_vm._v("Payable Amount")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                                      " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_payable)) + "\n                                                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_payable)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10432,7 +10477,7 @@ var render = function render() {
     staticClass: "font-15"
   }, [_vm._v("Paid Amount")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                                      " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_paid)) + "\n                                                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_paid)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10457,9 +10502,9 @@ var render = function render() {
     staticClass: "card-content"
   }, [_c("h5", {
     staticClass: "font-15"
-  }, [_vm._v("\n                                                      Remaining Payable's\n                                                  ")]), _vm._v(" "), _c("h2", {
+  }, [_vm._v("\n                                                        Remaining Payable's\n                                                    ")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                                      " + _vm._s(_vm.formatPrice(_vm.dropshipper.remaining_amount)) + "\n                                                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.dropshipper.remaining_amount)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10490,7 +10535,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Total Order")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10509,7 +10554,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("In Process")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10528,7 +10573,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Out For Delivery")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10547,7 +10592,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Delivered")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10566,7 +10611,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Return")])])])])])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
@@ -10599,7 +10644,7 @@ var render = function render() {
     staticClass: "font-15"
   }, [_vm._v("Payable Amount")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                                      " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_payable)) + "\n                                                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_payable)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10626,7 +10671,7 @@ var render = function render() {
     staticClass: "font-15"
   }, [_vm._v("Paid Amount")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                                      " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_paid)) + "\n                                                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.dropshipper.total_paid)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10651,9 +10696,9 @@ var render = function render() {
     staticClass: "card-content"
   }, [_c("h5", {
     staticClass: "font-15"
-  }, [_vm._v("\n                                                      Remaining Payable's\n                                                  ")]), _vm._v(" "), _c("h2", {
+  }, [_vm._v("\n                                                        Remaining Payable's\n                                                    ")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                                      " + _vm._s(_vm.formatPrice(_vm.dropshipper.remaining_amount)) + "\n                                                  ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.dropshipper.remaining_amount)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10683,7 +10728,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Total Purchase Orders")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10701,7 +10746,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Pending")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10719,7 +10764,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Approved")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -10737,7 +10782,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                                  ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Rejected")])])])])])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
@@ -10753,7 +10798,7 @@ var render = function render() {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                      " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "%\n                                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -10763,11 +10808,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply) + "%"
     }
-  })]), _vm._v("\n                                  " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "\n                              ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                      " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_yourmart_reply)) + "%\n                                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_yourmart_reply)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -10777,11 +10822,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.awaiting_yourmart_reply) + "%"
     }
-  })]), _vm._v("\n                                  " + _vm._s(_vm.totalTicketSum.awaiting_yourmart_reply) + "\n                              ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.awaiting_yourmart_reply) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                      " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.closed)) + "%\n                                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.closed)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -10791,11 +10836,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.closed) + "%"
     }
-  })]), _vm._v("\n                                  " + _vm._s(_vm.totalTicketSum.closed) + "\n                              ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.closed) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                      " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.expired)) + "%\n                                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.expired)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -10805,11 +10850,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.expired) + "%"
     }
-  })]), _vm._v("\n                                  " + _vm._s(_vm.totalTicketSum.expired) + "\n                              ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.expired) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                      " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.reviewed)) + "%\n                                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.reviewed)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -10819,11 +10864,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.reviewed) + "%"
     }
-  })]), _vm._v("\n                                  " + _vm._s(_vm.totalTicketSum.reviewed) + "\n                              ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.reviewed) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                      " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.in_process)) + "%\n                                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.in_process)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -10833,7 +10878,7 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.in_process) + "%"
     }
-  })]), _vm._v("\n                                  " + _vm._s(_vm.totalTicketSum.in_process) + "\n                              ")])])])])])])]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.in_process) + "\n                                ")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
@@ -10859,11 +10904,15 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
-    staticClass: "table table-hover mb-0"
-  }, [_vm._m(14), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
+    staticClass: "table table-hover mb-0",
+    attrs: {
+      id: "topDropshipperTable"
+    }
+  }, [_vm._m(14), _vm._v(" "), _c("tbody", _vm._l(_vm.topDropshippers, function (item, index) {
+    var _item$dropshipper$sho;
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s((parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost)).toFixed()))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost))))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(((_item$dropshipper$sho = item.dropshipper.shops) === null || _item$dropshipper$sho === void 0 ? void 0 : _item$dropshipper$sho.length) || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_orders))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_returns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.calculateHealth(item)) + "%")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateDeliveredSales(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateTotalCost(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.remaining_amount)))])]);
   }), 0)])])])])]), _vm._v(" "), _vm._m(15), _vm._v(" "), _vm._m(16), _vm._v(" "), _vm._m(17), _vm._v(" "), _vm._m(18)])]);
 };
 var staticRenderFns = [function () {
@@ -10967,7 +11016,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Stores")]), _vm._v(" "), _c("th", [_vm._v("Success Rate")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("Items Sold")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Profit")]), _vm._v(" "), _c("th", [_vm._v("Account Health")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Stores")]), _vm._v(" "), _c("th", [_vm._v("Orders")]), _vm._v(" "), _c("th", [_vm._v("Returned Orders")]), _vm._v(" "), _c("th", [_vm._v("Success Rate")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("COGS")]), _vm._v(" "), _c("th", [_vm._v("Packing & Labeling")]), _vm._v(" "), _c("th", [_vm._v("Payable")]), _vm._v(" "), _c("th", [_vm._v("Withdraw")]), _vm._v(" "), _c("th", [_vm._v("Balance")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -11201,7 +11250,7 @@ var staticRenderFns = [function () {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" 4,000,0\n                                              ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" 4,000,0\n                                            ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Stock Value")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
@@ -11221,7 +11270,7 @@ var staticRenderFns = [function () {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" 15\n                                              ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" 15\n                                            ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("High Stock")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
@@ -11241,7 +11290,7 @@ var staticRenderFns = [function () {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v("10\n                                              ")]), _vm._v(" "), _c("span", {
+  }), _vm._v("10\n                                            ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Low Stock")])])])])])])])])])]);
 }, function () {
@@ -11253,7 +11302,7 @@ var staticRenderFns = [function () {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header"
-  }, [_vm._v("\n                      Courier Performance (Last 30 days)\n                  ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                    Courier Performance (Last 30 days)\n                ")]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "card-body"

@@ -8,6 +8,8 @@ use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
+use App\Models\User;
+use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,5 +33,24 @@ class DashboardController extends Controller
            return (new ResponseCollection($top10SellingProducts))
                ->response()
                ->setStatusCode(200);
+    }
+
+    public function topTenDropshipper(){
+
+        $dropshippers = User::withCount('deliveredOrders as total_orders')
+        ->withCount('returnedOrders as total_returns')
+        ->with('deliveredOrders')
+        ->with('dropshipper.shops')
+        ->orderBy('total_orders', 'desc')
+        ->take(10)
+        ->get();
+
+        $data = [
+            'dropshippers' => $dropshippers
+        ];
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
     }
 }

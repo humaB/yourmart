@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Inventory\Order\Order;
 use App\Models\User\DropShipper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -48,5 +49,13 @@ class User extends Authenticatable
 
     public function dropshipper(){
         return $this->hasOne(DropShipper::class, 'user_id', 'id');
+    }
+
+    public function deliveredOrders() {
+        return $this->hasMany(Order::class, 'belongs_to', 'id')->where('status' , '8');
+    }
+
+    public function returnedOrders() {
+        return $this->hasMany(Order::class, 'belongs_to', 'id')->whereIn('status' , ['9', '10']);
     }
 }
