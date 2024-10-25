@@ -523,27 +523,23 @@
                                         <th>#</th>
                                         <th>Product</th>
                                         <th>SKU #</th>
-                                        <th>Product Price</th>
-                                        <th>Courier Price</th>
-                                        <th>Packaging Price</th>
-                                        <th>Total Cost</th>
-                                        <th>Selling Price</th>
-                                        <th>Net Profit</th>
                                         <th>Item Sold</th>
+                                        <th>Buying Cost</th>
+                                        <th>Selling Cost</th>
+                                        <th>Net Profit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in topFiveProducts" :key="index">
+                                    <tr v-for="(item, index) in topTenProducts" :key="index">
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.variation ? item.variation.product.title : '' }}</td>
                                         <td>{{ item.variation ? item.variation.sku : '' }}</td>
-                                        <td>{{ item.total_price }}</td>
-                                        <td>{{ item.total_courier_cost }}</td>
-                                        <td>{{ item.total_packaging_cost }}</td>
-                                        <td>{{ (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost) ) }}</td>
-                                        <td>{{ item.total_sell_price }}</td>
-                                        <td>{{ parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost) ) }}</td>
                                         <td>{{ item.total_quantity }}</td>
+                                        <td>{{ item.total_price }}</td>
+                                        <td>{{ item.selling_price }}</td>
+
+                                        <td>{{ parseFloat(item.selling_price) + parseFloat(item.total_price) }}</td>
+
                                     </tr>
 
                                 </tbody>
@@ -789,6 +785,7 @@ export default {
         from: '',
         to: '',
       },
+      topTenProducts : [],
       dropshipper : {},
       totalOrders : 0,
       totalTicketSum: {
@@ -803,9 +800,20 @@ export default {
     };
   },
   created() {
-
+    this.fetchData();
   },
   methods: {
+    fetchData(){
+        let vm = this;
+        axios
+            .get(this.api_url + "users/dashboard")
+            .then((response) => {
+                    const results = response.data.response;
+                    vm.topTenProducts = results.top10SellingProducts;
+
+                })
+
+    },
     applyFilter(){
 
     },

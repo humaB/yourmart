@@ -34,6 +34,7 @@ use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
+use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\DropshipperPreviewController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -67,6 +68,8 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::post('/',  [ UserController::class , 'store']);
     Route::post('/update',  [ UserController::class , 'update']);
     Route::post('/delete',  [ UserController::class , 'delete']);
+
+    Route::get('/dashboard',  [ DashboardController::class , 'fetchData']);
 });
 
 Route::group(['prefix' => 'tickets'], function(){
