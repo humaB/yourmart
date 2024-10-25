@@ -10830,7 +10830,7 @@ var render = function render() {
   }, [_vm._m(12), _vm._v(" "), _c("tbody", _vm._l(_vm.topTenProducts, function (item, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.selling_price) + parseFloat(item.total_price)))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.avg_price * item.total_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.selling_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.selling_price) - parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price)))])]);
   }), 0)])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
