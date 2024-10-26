@@ -2353,7 +2353,7 @@ __webpack_require__.r(__webpack_exports__);
         return sum + parseFloat(order.selling_price) + parseFloat(order.advance_amount);
       }, 0);
     },
-    calculateProfit: function calculateProfit(deliveredOrders) {
+    calculateProductCost: function calculateProductCost(deliveredOrders) {
       return deliveredOrders.reduce(function (sum, order) {
         return sum + parseFloat(order.total_bill) - parseFloat(order.courier_service_price) - parseFloat(order.packaging_price);
       }, 0);
@@ -2361,6 +2361,11 @@ __webpack_require__.r(__webpack_exports__);
     calculateTotalCost: function calculateTotalCost(deliveredOrders) {
       return deliveredOrders.reduce(function (sum, order) {
         return sum + parseFloat(order.courier_service_price) + parseFloat(order.packaging_price);
+      }, 0);
+    },
+    calculateProfit: function calculateProfit(deliveredOrders) {
+      return deliveredOrders.reduce(function (sum, order) {
+        return sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) + parseFloat(order.total_bill);
       }, 0);
     },
     fetchData: function fetchData() {
@@ -10727,7 +10732,7 @@ var render = function render() {
       style: {
         width: _vm.calculateHealth(item) + "%"
       }
-    })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateDeliveredSales(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateTotalCost(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.remaining_amount)))])]);
+    })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateDeliveredSales(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProductCost(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateTotalCost(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.remaining_amount)))])]);
   }), 0)])])])])]), _vm._v(" "), _vm._m(14), _vm._v(" "), _vm._m(15), _vm._v(" "), _vm._m(16), _vm._v(" "), _vm._m(17)]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
       details: _vm.dropShipperDetails
@@ -11056,7 +11061,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Stores")]), _vm._v(" "), _c("th", [_vm._v("Orders")]), _vm._v(" "), _c("th", [_vm._v("Returned Orders")]), _vm._v(" "), _c("th", [_vm._v("Success Rate")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("COGS")]), _vm._v(" "), _c("th", [_vm._v("Packing & Labeling")]), _vm._v(" "), _c("th", [_vm._v("Payable")]), _vm._v(" "), _c("th", [_vm._v("Withdraw")]), _vm._v(" "), _c("th", [_vm._v("Balance")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Stores")]), _vm._v(" "), _c("th", [_vm._v("Orders")]), _vm._v(" "), _c("th", [_vm._v("Returned Orders")]), _vm._v(" "), _c("th", [_vm._v("Success Rate")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("COGS")]), _vm._v(" "), _c("th", [_vm._v("Packing & Labeling")]), _vm._v(" "), _c("th", [_vm._v("Profit")]), _vm._v(" "), _c("th", [_vm._v("Payable")]), _vm._v(" "), _c("th", [_vm._v("Withdraw")]), _vm._v(" "), _c("th", [_vm._v("Balance")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

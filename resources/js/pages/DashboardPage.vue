@@ -545,6 +545,7 @@
                                         <th>Sales</th>
                                         <th>COGS</th>
                                         <th>Packing & Labeling</th>
+                                        <th>Profit</th>
                                         <th>Payable</th>
                                         <th>Withdraw</th>
                                         <th>Balance</th>
@@ -569,8 +570,9 @@
                                         </td>
 
                                         <td>{{ formatPrice(calculateDeliveredSales(item.delivered_orders)) }}</td>
-                                        <td>{{ formatPrice(calculateProfit(item.delivered_orders)) }}</td>
+                                        <td>{{ formatPrice(calculateProductCost(item.delivered_orders)) }}</td>
                                         <td>{{ formatPrice(calculateTotalCost(item.delivered_orders)) }}</td>
+                                        <td>{{ formatPrice(calculateProfit(item.delivered_orders)) }}</td>
                                         <td>{{ formatPrice(item.dropshipper.total_payable) }}</td>
                                         <td>{{ formatPrice(item.dropshipper.total_paid) }}</td>
                                         <td>{{ formatPrice(item.dropshipper.remaining_amount) }}</td>
@@ -826,11 +828,14 @@ export default {
         calculateDeliveredSales(deliveredOrders) {
             return deliveredOrders.reduce((sum, order) => sum + parseFloat(order.selling_price) + parseFloat(order.advance_amount), 0);
         },
-        calculateProfit(deliveredOrders) {
+        calculateProductCost(deliveredOrders) {
             return deliveredOrders.reduce((sum, order) => sum + parseFloat(order.total_bill) - parseFloat(order.courier_service_price) - parseFloat(order.packaging_price), 0);
         },
         calculateTotalCost(deliveredOrders) {
             return deliveredOrders.reduce((sum, order) => sum + parseFloat(order.courier_service_price) + parseFloat(order.packaging_price), 0);
+        },
+        calculateProfit(deliveredOrders) {
+            return deliveredOrders.reduce((sum, order) => sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) + parseFloat(order.total_bill), 0);
         },
         fetchData() {
             let vm = this;
