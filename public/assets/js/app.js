@@ -2365,7 +2365,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     calculateProfit: function calculateProfit(deliveredOrders) {
       return deliveredOrders.reduce(function (sum, order) {
-        return sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) + (parseFloat(order.total_bill) - (parseFloat(order.courier_service_price) + parseFloat(order.packaging_price)));
+        return sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) - (parseFloat(order.total_bill) - (parseFloat(order.courier_service_price) + parseFloat(order.packaging_price)));
       }, 0);
     },
     fetchData: function fetchData() {
