@@ -278,7 +278,7 @@ class OrderController extends Controller
                 $leopardApi = new LeopardApiHelper();
                 $city = City::where('id', $order->city_id)->first();
                 $range = CourierCategoryRange::where('id', $order->range_id)->first();
-                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+                return $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
 
                 $order->update([
                     'tracking_number'       => $leopardData['track_number'],
