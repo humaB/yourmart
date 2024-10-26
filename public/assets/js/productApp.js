@@ -3940,6 +3940,12 @@ __webpack_require__.r(__webpack_exports__);
         });
       })["catch"](function (err) {
         vm.commentLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
       });
     },
     reject: function reject(data) {

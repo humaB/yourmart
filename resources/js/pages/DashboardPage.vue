@@ -69,7 +69,7 @@
                                                     <div class="card-content">
                                                         <h5 class="font-15">Payable Amount</h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(dropshipper.total_payable) }}
+
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -92,7 +92,7 @@
                                                     <div class="card-content text-white">
                                                         <h5 class="font-15">Paid Amount</h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(dropshipper.total_paid) }}
+
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -117,7 +117,7 @@
                                                             Remaining Payable's
                                                         </h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(dropshipper.remaining_amount) }}
+
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -143,7 +143,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ totalOrders }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Total Order</span>
                                                     </div>
@@ -160,8 +160,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ inProcessOrder
-                                                            }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">In Process</span>
                                                     </div>
@@ -178,8 +177,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{
-                                                            outFordeliveredOrders }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Out For Delivery</span>
                                                     </div>
@@ -196,8 +194,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ deliveredOrders
-                                                            }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Delivered</span>
                                                     </div>
@@ -214,7 +211,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ failedOrder }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Return</span>
                                                     </div>
@@ -247,7 +244,7 @@
                                                     <div class="card-content">
                                                         <h5 class="font-15">Payable Amount</h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(dropshipper.total_payable) }}
+
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -270,7 +267,7 @@
                                                     <div class="card-content text-white">
                                                         <h5 class="font-15">Paid Amount</h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(dropshipper.total_paid) }}
+
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -295,7 +292,7 @@
                                                             Remaining Payable's
                                                         </h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(dropshipper.remaining_amount) }}
+
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -321,7 +318,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ totalOrders }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Total Purchase Orders</span>
                                                     </div>
@@ -338,8 +335,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ inProcessOrder
-                                                            }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Pending</span>
                                                     </div>
@@ -356,8 +352,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{
-                                                            outFordeliveredOrders }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Approved</span>
                                                     </div>
@@ -374,8 +369,7 @@
                                                 <div class="padding-20">
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i> {{ deliveredOrders
-                                                            }}
+                                                            <i class="ti-arrow-up text-success"></i>
                                                         </h3>
                                                         <span class="text-muted">Rejected</span>
                                                     </div>
@@ -559,11 +553,21 @@
                                 <tbody>
                                     <tr v-for="(item, index) in topDropshippers" :key="index">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ item.name }}</td>
+                                        <td><a href="#" @click="fetchDropshipperDetails(item.dropshipper.id)" data-toggle="modal" data-target="#dropShipperDetail">{{ item.name }}</a></td>
                                         <td>{{ item.dropshipper.shops?.length || 0 }}</td>
                                         <td>{{ item.total_orders }}</td>
                                         <td>{{ item.total_returns }}</td>
-                                        <td>{{ calculateHealth(item) }}%</td>
+                                        <td class="align-middle" width="30%">
+                                            <div class="progress-text text-right">
+                                                {{ calculateHealth(item) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div  :class="['progress-bar', calculateHealth(item) > 90 ? 'bg-success' : 'bg-primary']"
+                                                    :style="{ width: calculateHealth(item) + '%' }">
+                                                </div>
+                                            </div>
+                                        </td>
+
                                         <td>{{ formatPrice(calculateDeliveredSales(item.delivered_orders)) }}</td>
                                         <td>{{ formatPrice(calculateProfit(item.delivered_orders)) }}</td>
                                         <td>{{ formatPrice(calculateTotalCost(item.delivered_orders)) }}</td>
@@ -753,15 +757,19 @@
                     </div>
                 </div>
             </div>
-
         </div>
+        <DropshipperDetails :details="dropShipperDetails" />
     </div>
 </template>
 
 <script>
-import { filter } from 'lodash';
+import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
 
 export default {
+    name : 'DashboardPage',
+    components : {
+        DropshipperDetails
+    },
     data() {
         return {
             api_url: process.env.MIX_API_URL,
@@ -785,6 +793,7 @@ export default {
                 reviewed: 0,
                 in_process: 0,
             },
+            dropShipperDetails : {}
         };
     },
     created() {
@@ -793,6 +802,15 @@ export default {
         this.top10Dropshippers();
     },
     methods: {
+        fetchDropshipperDetails(id) {
+            let vm = this;
+            axios
+                .post(this.api_url + "dropshippers/details", { id })
+                .then((response) => {
+                    vm.dropShipperDetails = response.data.response[0]
+                });
+
+        },
         calculateHealth( item ){
             const  deliveredCount = item.total_orders; // Count of delivered orders
             const returnedCount = item.total_returns;   // Count of returned orders
@@ -803,7 +821,7 @@ export default {
             if (totalOrders > 0) {
                 accountHealth = (deliveredCount / totalOrders) * 100;
             }
-            return accountHealth.toFixed(2);
+            return Math.round(accountHealth);
         },
         calculateDeliveredSales(deliveredOrders) {
             return deliveredOrders.reduce((sum, order) => sum + parseFloat(order.selling_price) + parseFloat(order.advance_amount), 0);

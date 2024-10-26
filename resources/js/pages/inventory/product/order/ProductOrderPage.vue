@@ -510,6 +510,7 @@
             @forward="forward($event)" @reject="reject($event)" @revert="revert($event)"
             @fetchDropshipperDetails="fetchDropshipperDetails($event)" @updatePaidAmount="updatePaidAmount($event)"
             @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)" />
+            
         <DropshipperDetails :details="dropShipperDetails" />
 
         <TrackingDetailPopup :trackingDetails="trackingDetails" />
@@ -918,7 +919,7 @@ export default {
 
             vm.loader = true;
             this.clearDataTable();
-            
+
             axios
                 .get(this.api_url + "inventory/products/orders", {
                     params: {
@@ -1030,6 +1031,13 @@ export default {
                 })
                 .catch((err) => {
                     vm.commentLoader = false;
+
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
         },
         reject(data) {

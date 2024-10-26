@@ -6,6 +6,7 @@ use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Resources\ResponseCollection;
+use App\Http\Resources\ValidationCollection;
 use App\Models\Account\AccountTransaction;
 use App\Models\City;
 use App\Models\Inventory\Courier\CourierCategoryRange;
@@ -278,7 +279,13 @@ class OrderController extends Controller
                 $leopardApi = new LeopardApiHelper();
                 $city = City::where('id', $order->city_id)->first();
                 $range = CourierCategoryRange::where('id', $order->range_id)->first();
-                return $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+
+                if($leopardData['error'] && $leopardData['error'] != ''){
+                    return (new ValidationCollection([$leopardData['error']]))
+                    ->response()
+                    ->setStatusCode(421);
+                }
 
                 $order->update([
                     'tracking_number'       => $leopardData['track_number'],

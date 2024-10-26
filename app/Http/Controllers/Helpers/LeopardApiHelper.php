@@ -121,7 +121,7 @@ class LeopardApiHelper
         $weight_in_kg = $weight; // Assuming $weight is in kilograms
         $weight_in_grams = $weight_in_kg * 1000;
 
-        return $response = Http::withHeaders([
+        $response = Http::withHeaders([
             'Content-Type' => 'application/json',
         ])->post('https://merchantapi.leopardscourier.com/api/bookPacket/format/json/', [
             'api_key' => $this->apiKey,
@@ -155,6 +155,7 @@ class LeopardApiHelper
             $data = $response->json();
             // Process the response data
             $data = [
+                'error'        =>  $data['error'],
                 'track_number' =>  $data['track_number'],
                 'slip_link'    =>  $data['slip_link'],
             ];
