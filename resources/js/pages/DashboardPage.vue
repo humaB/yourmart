@@ -864,8 +864,21 @@ export default {
         this.fetchData();
         this.top10SellingProducts();
         this.top10Dropshippers();
+        this.fetchTicketStatusCounts();
     },
     methods: {
+        fetchTicketStatusCounts() {
+            axios.get(this.api_url + 'tickets/status-counts').then((response) => {
+                const data = response.data;
+                this.totalTicketSum.total_tickets = data.total_tickets;
+                this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
+                this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
+                this.totalTicketSum.closed = data.closed;
+                this.totalTicketSum.expired = data.expired;
+                this.totalTicketSum.reviewed = data.reviewed;
+                this.totalTicketSum.in_process = data.in_process;
+            });
+        },
         fetchDropshipperDetails(id) {
             let vm = this;
             axios

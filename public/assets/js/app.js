@@ -2340,8 +2340,22 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchData();
     this.top10SellingProducts();
     this.top10Dropshippers();
+    this.fetchTicketStatusCounts();
   },
   methods: {
+    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
+      var _this = this;
+      axios.get(this.api_url + 'tickets/status-counts').then(function (response) {
+        var data = response.data;
+        _this.totalTicketSum.total_tickets = data.total_tickets;
+        _this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
+        _this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
+        _this.totalTicketSum.closed = data.closed;
+        _this.totalTicketSum.expired = data.expired;
+        _this.totalTicketSum.reviewed = data.reviewed;
+        _this.totalTicketSum.in_process = data.in_process;
+      });
+    },
     fetchDropshipperDetails: function fetchDropshipperDetails(id) {
       var vm = this;
       axios.post(this.api_url + "dropshippers/details", {
@@ -2399,7 +2413,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     top10Dropshippers: function top10Dropshippers() {
-      var _this = this;
+      var _this2 = this;
       var vm = this;
       axios.get(this.api_url + "users/dashboard/top-10-dropshippers").then(function (response) {
         var results = response.data.response;
@@ -2425,10 +2439,10 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         // Update applications for dropshippers and suppliers
-        _this.applications.dropshippers.total = results.dropshipperApplication.length;
-        _this.applications.dropshippers.approved = dropshipperApproved;
-        _this.applications.dropshippers.reject = dropshipperRejected;
-        _this.applications.dropshippers.pending = dropshipperPending;
+        _this2.applications.dropshippers.total = results.dropshipperApplication.length;
+        _this2.applications.dropshippers.approved = dropshipperApproved;
+        _this2.applications.dropshippers.reject = dropshipperRejected;
+        _this2.applications.dropshippers.pending = dropshipperPending;
         results.shipperApplication.forEach(function (item) {
           if (item.status === 1) {
             supplierApproved++;
@@ -2438,10 +2452,10 @@ __webpack_require__.r(__webpack_exports__);
             supplierPending++;
           }
         });
-        _this.applications.supplier.total = results.shipperApplication.length;
-        _this.applications.supplier.approved = supplierApproved;
-        _this.applications.supplier.reject = supplierRejected;
-        _this.applications.supplier.pending = supplierPending;
+        _this2.applications.supplier.total = results.shipperApplication.length;
+        _this2.applications.supplier.approved = supplierApproved;
+        _this2.applications.supplier.reject = supplierRejected;
+        _this2.applications.supplier.pending = supplierPending;
         setTimeout(function () {
           vm.topDropshipperTable();
         }, 300);
