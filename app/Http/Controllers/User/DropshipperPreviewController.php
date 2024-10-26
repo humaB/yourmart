@@ -23,7 +23,7 @@ class DropshipperPreviewController extends Controller
         $totalPaid = $dropshipper->total_paid;
 
         $orders = Order::where('belongs_to', $dropshipper->user_id)
-            ->whereNotIn('status', [9, 10, 7])
+            ->whereNotIn('status', [7])
             ->where('is_replacement', '0')
             ->get();
 
