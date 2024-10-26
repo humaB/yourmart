@@ -835,7 +835,7 @@ export default {
             return deliveredOrders.reduce((sum, order) => sum + parseFloat(order.courier_service_price) + parseFloat(order.packaging_price), 0);
         },
         calculateProfit(deliveredOrders) {
-            return deliveredOrders.reduce((sum, order) => sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) - (parseFloat(order.total_bill) - (parseFloat(order.courier_service_price) + parseFloat(order.packaging_price))), 0);
+            return deliveredOrders.reduce((sum, order) => sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) - (parseFloat(order.total_bill)), 0);
         },
         fetchData() {
             let vm = this;
