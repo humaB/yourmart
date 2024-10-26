@@ -279,6 +279,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::get('/',  [ InventoryPurchaseOrderController::class , 'fetchRecord']);
             Route::post('/',  [ InventoryPurchaseOrderController::class , 'store']);
             Route::post('/decisions',  [ InventoryPurchaseOrderController::class , 'decisions']);
+
+            Route::get('/status-counts',  [ InventoryPurchaseOrderController::class , 'statusCounts']);
         });
 
         Route::group(['prefix' => 'gate'], function(){

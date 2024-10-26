@@ -245,6 +245,7 @@
             this.csrf = $('meta[name=csrf-token]').attr('content');
             this.fetchPurchaseOrders();
             this.fetchSuppilers();
+            this.fetchPurchaseOrderStats();
         },
         methods : {
             printPurchaseOrder( id ){
@@ -296,6 +297,23 @@
                     },300)
                 })
                 .catch((err) => this.fetchPurchaseOrders());
+            },
+            fetchPurchaseOrderStats(){
+                let vm = this;
+                axios
+                .get(this.api_url + "inventory/products/purchase-orders/status-counts")
+                .then((response) => {
+                    const results = response.data.response[0];
+
+                    vm.role = results.role;
+                    vm.totalPo = results.totalPo;
+                    vm.approved = results.approved;
+                    vm.pending = results.pending;
+                    vm.totalAmount = results.totalAmount;
+                    vm.remaining = results.remaining;
+                    vm.paid = vm.totalAmount - vm.remaining;
+                })
+                .catch((err) => this.fetchPurchaseOrderStats());
             },
             formatPrice(price) {
                 var string = parseFloat(price).toString();

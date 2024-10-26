@@ -2333,6 +2333,15 @@ __webpack_require__.r(__webpack_exports__);
           approved: 0,
           reject: 0
         }
+      },
+      po: {
+        totalPo: 0,
+        approved: 0,
+        pending: 0,
+        rejected: 0,
+        totalAmount: 0,
+        remaining: 0,
+        paid: 0
       }
     };
   },
@@ -2341,19 +2350,36 @@ __webpack_require__.r(__webpack_exports__);
     this.top10SellingProducts();
     this.top10Dropshippers();
     this.fetchTicketStatusCounts();
+    this.fetchPurchaseOrders();
   },
   methods: {
-    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
+    fetchPurchaseOrders: function fetchPurchaseOrders() {
       var _this = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/purchase-orders/status-counts").then(function (response) {
+        var results = response.data.response[0];
+        vm.po.totalPo = results.totalPo;
+        vm.po.approved = results.approved;
+        vm.po.pending = results.pending;
+        vm.po.rejected = results.rejected;
+        vm.po.totalAmount = results.totalAmount;
+        vm.po.remaining = results.remaining;
+        vm.po.paid = vm.po.totalAmount - vm.po.remaining;
+      })["catch"](function (err) {
+        return _this.fetchPurchaseOrders();
+      });
+    },
+    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
+      var _this2 = this;
       axios.get(this.api_url + 'tickets/status-counts').then(function (response) {
         var data = response.data;
-        _this.totalTicketSum.total_tickets = data.total_tickets;
-        _this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
-        _this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
-        _this.totalTicketSum.closed = data.closed;
-        _this.totalTicketSum.expired = data.expired;
-        _this.totalTicketSum.reviewed = data.reviewed;
-        _this.totalTicketSum.in_process = data.in_process;
+        _this2.totalTicketSum.total_tickets = data.total_tickets;
+        _this2.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
+        _this2.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
+        _this2.totalTicketSum.closed = data.closed;
+        _this2.totalTicketSum.expired = data.expired;
+        _this2.totalTicketSum.reviewed = data.reviewed;
+        _this2.totalTicketSum.in_process = data.in_process;
       });
     },
     fetchDropshipperDetails: function fetchDropshipperDetails(id) {
@@ -2413,7 +2439,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     top10Dropshippers: function top10Dropshippers() {
-      var _this2 = this;
+      var _this3 = this;
       var vm = this;
       axios.get(this.api_url + "users/dashboard/top-10-dropshippers").then(function (response) {
         var results = response.data.response;
@@ -2439,10 +2465,10 @@ __webpack_require__.r(__webpack_exports__);
         });
 
         // Update applications for dropshippers and suppliers
-        _this2.applications.dropshippers.total = results.dropshipperApplication.length;
-        _this2.applications.dropshippers.approved = dropshipperApproved;
-        _this2.applications.dropshippers.reject = dropshipperRejected;
-        _this2.applications.dropshippers.pending = dropshipperPending;
+        _this3.applications.dropshippers.total = results.dropshipperApplication.length;
+        _this3.applications.dropshippers.approved = dropshipperApproved;
+        _this3.applications.dropshippers.reject = dropshipperRejected;
+        _this3.applications.dropshippers.pending = dropshipperPending;
         results.shipperApplication.forEach(function (item) {
           if (item.status === 1) {
             supplierApproved++;
@@ -2452,10 +2478,10 @@ __webpack_require__.r(__webpack_exports__);
             supplierPending++;
           }
         });
-        _this2.applications.supplier.total = results.shipperApplication.length;
-        _this2.applications.supplier.approved = supplierApproved;
-        _this2.applications.supplier.reject = supplierRejected;
-        _this2.applications.supplier.pending = supplierPending;
+        _this3.applications.supplier.total = results.shipperApplication.length;
+        _this3.applications.supplier.approved = supplierApproved;
+        _this3.applications.supplier.reject = supplierRejected;
+        _this3.applications.supplier.pending = supplierPending;
         setTimeout(function () {
           vm.topDropshipperTable();
         }, 300);
@@ -10601,7 +10627,15 @@ var render = function render() {
     staticClass: "align-items-center justify-content-between"
   }, [_c("div", {
     staticClass: "row"
-  }, [_vm._m(4), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("Payable Amount")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.po.totalAmount)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10620,7 +10654,15 @@ var render = function render() {
     staticClass: "align-items-center justify-content-between"
   }, [_c("div", {
     staticClass: "row"
-  }, [_vm._m(5), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content text-white"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("Paid Amount")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.po.paid)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10639,7 +10681,15 @@ var render = function render() {
     staticClass: "align-items-center justify-content-between"
   }, [_c("div", {
     staticClass: "row"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("\n                                                        Remaining Payable's\n                                                    ")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                                        " + _vm._s(_vm.formatPrice(_vm.po.remaining)) + "\n                                                    ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -10648,7 +10698,84 @@ var render = function render() {
       src: _vm.public_url + "/assets2/img/banner/1.png",
       alt: ""
     }
-  })])])])])])])]), _vm._v(" "), _vm._m(7)])])])]), _vm._v(" "), _c("div", {
+  })])])])])])])]), _vm._v(" "), _c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                        " + _vm._s(_vm.po.totalPo) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Purchase Orders")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                        " + _vm._s(_vm.po.pending) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Pending")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                        " + _vm._s(_vm.po.approved) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Approved")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                        " + _vm._s(_vm.po.rejected) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Rejected")])])])])])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
@@ -11143,135 +11270,34 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
-  }, [_c("div", {
-    staticClass: "card-content"
-  }, [_c("h5", {
-    staticClass: "font-15"
-  }, [_vm._v("Payable Amount")]), _vm._v(" "), _c("h2", {
-    staticClass: "mb-3 font-18"
-  })])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
-  }, [_c("div", {
-    staticClass: "card-content text-white"
-  }, [_c("h5", {
-    staticClass: "font-15"
-  }, [_vm._v("Paid Amount")]), _vm._v(" "), _c("h2", {
-    staticClass: "mb-3 font-18"
-  })])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
-  }, [_c("div", {
-    staticClass: "card-content"
-  }, [_c("h5", {
-    staticClass: "font-15"
-  }, [_vm._v("\n                                                        Remaining Payable's\n                                                    ")]), _vm._v(" "), _c("h2", {
-    staticClass: "mb-3 font-18"
-  })])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("table", {
-    staticStyle: {
-      "table-layout": "fixed",
-      width: "100%"
-    }
-  }, [_c("tr", [_c("td", {
-    staticStyle: {
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_c("div", {
     staticClass: "card-icon l-bg-cyan"
   }, [_c("i", {
     staticClass: "fa fa-check-circle"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Total Purchase Orders")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_c("div", {
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "card-icon l-bg-orange"
   }, [_c("i", {
     staticClass: "fas fa-clock"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Pending")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_c("div", {
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "card-icon l-bg-purple"
   }, [_c("i", {
     staticClass: "fa fa-thumbs-up"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Approved")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_c("div", {
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "card-icon l-bg-green"
   }, [_c("i", {
     staticClass: "fa fa-thumbs-down"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Rejected")])])])])])])])]);
+  })]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

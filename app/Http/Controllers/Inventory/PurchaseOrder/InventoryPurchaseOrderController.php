@@ -40,15 +40,27 @@ class InventoryPurchaseOrderController extends Controller
 
         $data = [
             'purchase_orders' => $purchaseOrders,
-            'role' => auth()->user()->role,
-            'totalPo' => $purchaseOrders->count(),
-            'approved' => $purchaseOrders->where('status', '1')->count(),
-            'pending'  => $purchaseOrders->where('status', '0')->count(),
-            'totalAmount'  => $purchaseOrders->where('status', '1')->sum('total_amount'),
-            'remaining'  => $purchaseOrders->where('status', '1')->sum('remaining_amount'),
+            'role' => auth()->user()->role
         ];
 
         return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function statusCounts()
+    {
+        $data = PurchaseOrder::selectRaw("
+                COUNT(*) as totalPo,
+                SUM(CASE WHEN status = '1' THEN 1 ELSE 0 END) as approved,
+                SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as pending,
+                 SUM(CASE WHEN status = '2' THEN 1 ELSE 0 END) as rejected,
+                SUM(CASE WHEN status = '1' THEN total_amount ELSE 0 END) as totalAmount,
+                SUM(CASE WHEN status = '1' THEN remaining_amount ELSE 0 END) as remaining
+            ")
+            ->first();
+
+        return (new ResponseCollection([$data]))
             ->response()
             ->setStatusCode(200);
     }

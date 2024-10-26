@@ -244,7 +244,7 @@
                                                     <div class="card-content">
                                                         <h5 class="font-15">Payable Amount</h5>
                                                         <h2 class="mb-3 font-18">
-
+                                                            {{ formatPrice(po.totalAmount) }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -267,7 +267,7 @@
                                                     <div class="card-content text-white">
                                                         <h5 class="font-15">Paid Amount</h5>
                                                         <h2 class="mb-3 font-18">
-
+                                                            {{ formatPrice(po.paid) }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -292,7 +292,7 @@
                                                             Remaining Payable's
                                                         </h5>
                                                         <h2 class="mb-3 font-18">
-
+                                                            {{ formatPrice(po.remaining) }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -319,6 +319,7 @@
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
                                                             <i class="ti-arrow-up text-success"></i>
+                                                            {{ po.totalPo }}
                                                         </h3>
                                                         <span class="text-muted">Total Purchase Orders</span>
                                                     </div>
@@ -336,6 +337,7 @@
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
                                                             <i class="ti-arrow-up text-success"></i>
+                                                            {{ po.pending }}
                                                         </h3>
                                                         <span class="text-muted">Pending</span>
                                                     </div>
@@ -353,6 +355,7 @@
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
                                                             <i class="ti-arrow-up text-success"></i>
+                                                            {{ po.approved }}
                                                         </h3>
                                                         <span class="text-muted">Approved</span>
                                                     </div>
@@ -370,6 +373,7 @@
                                                     <div class="text-right">
                                                         <h3 class="font-light mb-0">
                                                             <i class="ti-arrow-up text-success"></i>
+                                                            {{ po.rejected }}
                                                         </h3>
                                                         <span class="text-muted">Rejected</span>
                                                     </div>
@@ -857,6 +861,15 @@ export default {
                     approved: 0,
                     reject: 0
                 },
+            },
+            po : {
+                totalPo : 0,
+                approved : 0,
+                pending : 0,
+                rejected : 0,
+                totalAmount : 0,
+                remaining : 0,
+                paid : 0
             }
         };
     },
@@ -865,8 +878,26 @@ export default {
         this.top10SellingProducts();
         this.top10Dropshippers();
         this.fetchTicketStatusCounts();
+        this.fetchPurchaseOrders();
     },
     methods: {
+        fetchPurchaseOrders(){
+                let vm = this;
+                axios
+                .get(this.api_url + "inventory/products/purchase-orders/status-counts")
+                .then((response) => {
+                    const results = response.data.response[0];
+
+                    vm.po.totalPo = results.totalPo;
+                    vm.po.approved = results.approved;
+                    vm.po.pending = results.pending;
+                    vm.po.rejected = results.rejected;
+                    vm.po.totalAmount = results.totalAmount;
+                    vm.po.remaining = results.remaining;
+                    vm.po.paid = vm.po.totalAmount - vm.po.remaining;
+                })
+                .catch((err) => this.fetchPurchaseOrders());
+            },
         fetchTicketStatusCounts() {
             axios.get(this.api_url + 'tickets/status-counts').then((response) => {
                 const data = response.data;

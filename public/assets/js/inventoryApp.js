@@ -561,6 +561,7 @@ __webpack_require__.r(__webpack_exports__);
     this.csrf = $('meta[name=csrf-token]').attr('content');
     this.fetchPurchaseOrders();
     this.fetchSuppilers();
+    this.fetchPurchaseOrderStats();
   },
   methods: {
     printPurchaseOrder: function printPurchaseOrder(id) {
@@ -610,6 +611,22 @@ __webpack_require__.r(__webpack_exports__);
         return _this2.fetchPurchaseOrders();
       });
     },
+    fetchPurchaseOrderStats: function fetchPurchaseOrderStats() {
+      var _this3 = this;
+      var vm = this;
+      axios.get(this.api_url + "inventory/products/purchase-orders/status-counts").then(function (response) {
+        var results = response.data.response[0];
+        vm.role = results.role;
+        vm.totalPo = results.totalPo;
+        vm.approved = results.approved;
+        vm.pending = results.pending;
+        vm.totalAmount = results.totalAmount;
+        vm.remaining = results.remaining;
+        vm.paid = vm.totalAmount - vm.remaining;
+      })["catch"](function (err) {
+        return _this3.fetchPurchaseOrderStats();
+      });
+    },
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
@@ -653,11 +670,11 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     confimation: function confimation() {
-      var _this3 = this;
+      var _this4 = this;
       this.decisionLoader = true;
       axios.post(this.api_url + "inventory/products/purchase-orders/decisions", this.action).then(function (response) {
-        _this3.decisionLoader = false;
-        _this3.fetchPurchaseOrders();
+        _this4.decisionLoader = false;
+        _this4.fetchPurchaseOrders();
         $("#confirmation").modal('hide');
         return swal({
           title: "Success",
@@ -666,7 +683,7 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       })["catch"](function (err) {
-        _this3.decisionLoader = false;
+        _this4.decisionLoader = false;
       });
     }
   }
