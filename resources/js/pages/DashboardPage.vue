@@ -511,11 +511,11 @@
                                         <td>{{ formatPrice(item.selling_price) }}</td>
 
                                         <td>{{ formatPrice(parseFloat(item.selling_price) - (
-                                            parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price) ) )
+                                            parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price)))
                                             }}</td>
                                         <td>{{ ((parseFloat(item.selling_price) - (parseFloat(item.total_quantity) *
                                             parseFloat(item.variation.avg_price))) / (parseFloat(item.total_quantity)
-                                            * parseFloat(item.variation.avg_price) ) * 100).toFixed(2)}}%</td>
+                                                * parseFloat(item.variation.avg_price)) * 100).toFixed(2) }}%</td>
                                     </tr>
 
                                 </tbody>
@@ -554,7 +554,9 @@
                                 <tbody>
                                     <tr v-for="(item, index) in topDropshippers" :key="index">
                                         <td>{{ index + 1 }}</td>
-                                        <td><a href="#" @click="fetchDropshipperDetails(item.dropshipper.id)" data-toggle="modal" data-target="#dropShipperDetail">{{ item.name }}</a></td>
+                                        <td><a href="#" @click="fetchDropshipperDetails(item.dropshipper.id)"
+                                                data-toggle="modal" data-target="#dropShipperDetail">{{ item.name }}</a>
+                                        </td>
                                         <td>{{ item.dropshipper.shops?.length || 0 }}</td>
                                         <td>{{ item.total_orders }}</td>
                                         <td>{{ item.total_returns }}</td>
@@ -562,8 +564,8 @@
                                             <div class="progress-text text-right">
                                                 {{ calculateHealth(item) }}%
                                             </div>
-                                            <div class="progress" data-height="6">
-                                                <div  :class="['progress-bar', calculateHealth(item) > 90 ? 'bg-success' : 'bg-primary']"
+                                            <div class="progress" data-height="2">
+                                                <div :class="['progress-bar', calculateHealth(item) > 90 ? 'bg-success' : 'bg-primary']"
                                                     :style="{ width: calculateHealth(item) + '%' }">
                                                 </div>
                                             </div>
@@ -591,35 +593,57 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">2,675</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.dropshippers.total }}</div>
                             <div class="font-weight-bold">Applications</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-purple" role="progressbar" data-width="80%"
-                                    aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar l-bg-purple" role="progressbar"
+                                    :style="{ width: applications.dropshippers.total + '%' }"
+                                    :aria-valuenow="applications.dropshippers.total" aria-valuemin="0"
+                                    aria-valuemax="100">
+                                </div>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">1,753</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.dropshippers.approved }}</div>
                             <div class="font-weight-bold">Approved</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-green" role="progressbar" data-width="67%"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar bg-success"
+                                    :style="{ width: getApplicationPercentage(applications.dropshippers.approved, applications.dropshippers.total) + '%' }"
+                                    :aria-valuenow="getApplicationPercentage(applications.dropshippers.approved, applications.dropshippers.total)"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    {{ getApplicationPercentage(applications.dropshippers.approved,
+                                    applications.dropshippers.total) }}% </div>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">1,254</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.dropshippers.reject }}</div>
                             <div class="font-weight-bold">Rejected</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-orange" role="progressbar" data-width="58%"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar bg-orange"
+                                    :style="{ width: getApplicationPercentage(applications.dropshippers.reject, applications.dropshippers.total) + '%' }"
+                                    :aria-valuenow="getApplicationPercentage(applications.dropshippers.reject, applications.dropshippers.total)"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    {{ getApplicationPercentage(applications.dropshippers.reject,
+                                    applications.dropshippers.total) }}% </div>
                             </div>
+
                         </div>
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">984</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.dropshippers.pending }}</div>
                             <div class="font-weight-bold">In-Process</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-yellow" role="progressbar" data-width="36%"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar l-bg-yellow" role="progressbar"
+                                    :style="{ width: getApplicationPercentage(applications.dropshippers.pending, applications.dropshippers.total) + '%' }"
+                                    :aria-valuenow="getApplicationPercentage(applications.dropshippers.pending, applications.dropshippers.total)"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    {{ getApplicationPercentage(applications.dropshippers.pending,
+                                    applications.dropshippers.total) }}%
+                                </div>
                             </div>
                         </div>
 
@@ -627,44 +651,68 @@
                 </div>
             </div>
 
+
             <div class="col-lg-6 col-md-6 col-12 col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Suppliers Applications Status</h4>
+                        <h4>Supplier Applications Status</h4>
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">2,675</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.supplier.total }}</div>
                             <div class="font-weight-bold">Applications</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-purple" role="progressbar" data-width="80%"
-                                    aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar l-bg-purple" role="progressbar"
+                                    data-width="100%"
+                                    aria-valuenow="100" aria-valuemin="0"
+                                    aria-valuemax="100">
+                                </div>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">1,753</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.supplier.approved }}</div>
                             <div class="font-weight-bold">Approved</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-green" role="progressbar" data-width="67%"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar bg-success"
+                                    :style="{ width: getApplicationPercentage(applications.supplier.approved, applications.supplier.total) + '%' }"
+                                    :aria-valuenow="getApplicationPercentage(applications.supplier.approved, applications.supplier.total)"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    {{ getApplicationPercentage(applications.supplier.approved,
+                                    applications.supplier.total) }}% </div>
                             </div>
                         </div>
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">1,254</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.supplier.reject }}</div>
                             <div class="font-weight-bold">Rejected</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-orange" role="progressbar" data-width="58%"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar bg-orange"
+                                    :style="{ width: getApplicationPercentage(applications.supplier.reject, applications.supplier.total) + '%' }"
+                                    :aria-valuenow="getApplicationPercentage(applications.supplier.reject, applications.supplier.total)"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    {{ getApplicationPercentage(applications.supplier.reject,
+                                    applications.supplier.total) }}% </div>
                             </div>
+
                         </div>
                         <div class="mb-4">
-                            <div class="text-small float-right font-weight-bold text-muted">984</div>
+                            <div class="text-small float-right font-weight-bold text-muted">{{
+                                applications.supplier.pending }}</div>
                             <div class="font-weight-bold">In-Process</div>
-                            <div class="progress" data-height="5">
-                                <div class="progress-bar l-bg-yellow" role="progressbar" data-width="36%"
-                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress" data-height="15">
+                                <div class="progress-bar l-bg-yellow" role="progressbar"
+                                    :style="{ width: getApplicationPercentage(applications.supplier.pending, applications.supplier.total) + '%' }"
+                                    :aria-valuenow="getApplicationPercentage(applications.supplier.pending, applications.supplier.total)"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    {{ getApplicationPercentage(applications.supplier.pending,
+                                    applications.supplier.total) }}%
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -768,8 +816,8 @@
 import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
 
 export default {
-    name : 'DashboardPage',
-    components : {
+    name: 'DashboardPage',
+    components: {
         DropshipperDetails
     },
     data() {
@@ -784,7 +832,7 @@ export default {
             },
             topTenProducts: [],
             dropshipper: {},
-            topDropshippers : [],
+            topDropshippers: [],
             totalOrders: 0,
             totalTicketSum: {
                 total_tickets: 0,
@@ -795,7 +843,21 @@ export default {
                 reviewed: 0,
                 in_process: 0,
             },
-            dropShipperDetails : {}
+            dropShipperDetails: {},
+            applications: {
+                dropshippers: {
+                    total: 0,
+                    pending: 0,
+                    approved: 0,
+                    reject: 0
+                },
+                supplier: {
+                    total: 0,
+                    pending: 0,
+                    approved: 0,
+                    reject: 0
+                },
+            }
         };
     },
     created() {
@@ -813,13 +875,13 @@ export default {
                 });
 
         },
-        calculateHealth( item ){
-            const  deliveredCount = item.total_orders; // Count of delivered orders
+        calculateHealth(item) {
+            const deliveredCount = item.total_orders; // Count of delivered orders
             const returnedCount = item.total_returns;   // Count of returned orders
 
             // You can now use these counts for further logic, e.g., calculating account health
             const totalOrders = deliveredCount + returnedCount;
-            let  accountHealth = 0;
+            let accountHealth = 0;
             if (totalOrders > 0) {
                 accountHealth = (deliveredCount / totalOrders) * 100;
             }
@@ -866,6 +928,48 @@ export default {
                 .then((response) => {
                     const results = response.data.response;
                     vm.topDropshippers = results.dropshippers;
+
+                    // Initialize counters
+                    let dropshipperApproved = 0;
+                    let dropshipperRejected = 0;
+                    let dropshipperPending = 0;
+
+                    let supplierApproved = 0;
+                    let supplierRejected = 0;
+                    let supplierPending = 0;
+
+                    // Count each status
+                    results.dropshipperApplication.forEach(item => {
+                        if (item.status === 1) {
+                            dropshipperApproved++;
+                        } else if (item.status === 2) {
+                            dropshipperRejected++;
+                        } else if (item.status === 0) {
+                            dropshipperPending++;
+                        }
+                    });
+
+                    // Update applications for dropshippers and suppliers
+                    this.applications.dropshippers.total = results.dropshipperApplication.length;
+                    this.applications.dropshippers.approved = dropshipperApproved;
+                    this.applications.dropshippers.reject = dropshipperRejected;
+                    this.applications.dropshippers.pending = dropshipperPending;
+
+                    results.shipperApplication.forEach(item => {
+                        if (item.status === 1) {
+                            supplierApproved++;
+                        } else if (item.status === 2) {
+                            supplierRejected++;
+                        } else if (item.status === 0) {
+                            supplierPending++;
+                        }
+                    });
+
+                    this.applications.supplier.total = results.shipperApplication.length;
+                    this.applications.supplier.approved = supplierApproved;
+                    this.applications.supplier.reject = supplierRejected;
+                    this.applications.supplier.pending = supplierPending;
+
                     setTimeout(() => {
                         vm.topDropshipperTable();
                     }, 300)
@@ -900,6 +1004,12 @@ export default {
             if (this.totalTicketSum.total_tickets === 0) return 0;
             return Math.round((statusCount / this.totalTicketSum.total_tickets) * 100);
         },
+        getApplicationPercentage(count, total) {
+            if (count === 0) return 0; // Correct check to prevent division by zero
+            const percentage = Math.round((count / total) * 100);
+            return percentage;
+        }
+
     },
 };
 </script>

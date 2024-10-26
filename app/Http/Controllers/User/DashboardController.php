@@ -10,6 +10,7 @@ use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\User;
 use App\Models\User\DropShipper;
+use App\Models\User\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -46,7 +47,9 @@ class DashboardController extends Controller
         ->get();
 
         $data = [
-            'dropshippers' => $dropshippers
+            'dropshippers' => $dropshippers,
+            'dropshipperApplication' => DropShipper::select('status')->get(),
+            'shipperApplication'     => Supplier::select('status')->get(),
         ];
 
         return (new ResponseCollection($data))

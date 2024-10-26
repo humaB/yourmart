@@ -2319,7 +2319,21 @@ __webpack_require__.r(__webpack_exports__);
         reviewed: 0,
         in_process: 0
       },
-      dropShipperDetails: {}
+      dropShipperDetails: {},
+      applications: {
+        dropshippers: {
+          total: 0,
+          pending: 0,
+          approved: 0,
+          reject: 0
+        },
+        supplier: {
+          total: 0,
+          pending: 0,
+          approved: 0,
+          reject: 0
+        }
+      }
     };
   },
   created: function created() {
@@ -2385,10 +2399,49 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     top10Dropshippers: function top10Dropshippers() {
+      var _this = this;
       var vm = this;
       axios.get(this.api_url + "users/dashboard/top-10-dropshippers").then(function (response) {
         var results = response.data.response;
         vm.topDropshippers = results.dropshippers;
+
+        // Initialize counters
+        var dropshipperApproved = 0;
+        var dropshipperRejected = 0;
+        var dropshipperPending = 0;
+        var supplierApproved = 0;
+        var supplierRejected = 0;
+        var supplierPending = 0;
+
+        // Count each status
+        results.dropshipperApplication.forEach(function (item) {
+          if (item.status === 1) {
+            dropshipperApproved++;
+          } else if (item.status === 2) {
+            dropshipperRejected++;
+          } else if (item.status === 0) {
+            dropshipperPending++;
+          }
+        });
+
+        // Update applications for dropshippers and suppliers
+        _this.applications.dropshippers.total = results.dropshipperApplication.length;
+        _this.applications.dropshippers.approved = dropshipperApproved;
+        _this.applications.dropshippers.reject = dropshipperRejected;
+        _this.applications.dropshippers.pending = dropshipperPending;
+        results.shipperApplication.forEach(function (item) {
+          if (item.status === 1) {
+            supplierApproved++;
+          } else if (item.status === 2) {
+            supplierRejected++;
+          } else if (item.status === 0) {
+            supplierPending++;
+          }
+        });
+        _this.applications.supplier.total = results.shipperApplication.length;
+        _this.applications.supplier.approved = supplierApproved;
+        _this.applications.supplier.reject = supplierRejected;
+        _this.applications.supplier.pending = supplierPending;
         setTimeout(function () {
           vm.topDropshipperTable();
         }, 300);
@@ -2415,6 +2468,11 @@ __webpack_require__.r(__webpack_exports__);
     getPercentage: function getPercentage(statusCount) {
       if (this.totalTicketSum.total_tickets === 0) return 0;
       return Math.round(statusCount / this.totalTicketSum.total_tickets * 100);
+    },
+    getApplicationPercentage: function getApplicationPercentage(count, total) {
+      if (count === 0) return 0; // Correct check to prevent division by zero
+      var percentage = Math.round(count / total * 100);
+      return percentage;
     }
   }
 });
@@ -10725,7 +10783,7 @@ var render = function render() {
     }, [_vm._v("\n                                            " + _vm._s(_vm.calculateHealth(item)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
       staticClass: "progress",
       attrs: {
-        "data-height": "6"
+        "data-height": "2"
       }
     }, [_c("div", {
       "class": ["progress-bar", _vm.calculateHealth(item) > 90 ? "bg-success" : "bg-primary"],
@@ -10733,7 +10791,175 @@ var render = function render() {
         width: _vm.calculateHealth(item) + "%"
       }
     })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateDeliveredSales(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProductCost(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateTotalCost(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item.delivered_orders))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.dropshipper.remaining_amount)))])]);
-  }), 0)])])])])]), _vm._v(" "), _vm._m(14), _vm._v(" "), _vm._m(15), _vm._v(" "), _vm._m(16), _vm._v(" "), _vm._m(17)]), _vm._v(" "), _c("DropshipperDetails", {
+  }), 0)])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-6 col-md-6 col-12 col-sm-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(14), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.dropshippers.total))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("Applications")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar l-bg-purple",
+    style: {
+      width: _vm.applications.dropshippers.total + "%"
+    },
+    attrs: {
+      role: "progressbar",
+      "aria-valuenow": _vm.applications.dropshippers.total,
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.dropshippers.approved))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("Approved")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-success",
+    style: {
+      width: _vm.getApplicationPercentage(_vm.applications.dropshippers.approved, _vm.applications.dropshippers.total) + "%"
+    },
+    attrs: {
+      "aria-valuenow": _vm.getApplicationPercentage(_vm.applications.dropshippers.approved, _vm.applications.dropshippers.total),
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getApplicationPercentage(_vm.applications.dropshippers.approved, _vm.applications.dropshippers.total)) + "% ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.dropshippers.reject))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("Rejected")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-orange",
+    style: {
+      width: _vm.getApplicationPercentage(_vm.applications.dropshippers.reject, _vm.applications.dropshippers.total) + "%"
+    },
+    attrs: {
+      "aria-valuenow": _vm.getApplicationPercentage(_vm.applications.dropshippers.reject, _vm.applications.dropshippers.total),
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getApplicationPercentage(_vm.applications.dropshippers.reject, _vm.applications.dropshippers.total)) + "% ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.dropshippers.pending))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("In-Process")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar l-bg-yellow",
+    style: {
+      width: _vm.getApplicationPercentage(_vm.applications.dropshippers.pending, _vm.applications.dropshippers.total) + "%"
+    },
+    attrs: {
+      role: "progressbar",
+      "aria-valuenow": _vm.getApplicationPercentage(_vm.applications.dropshippers.pending, _vm.applications.dropshippers.total),
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getApplicationPercentage(_vm.applications.dropshippers.pending, _vm.applications.dropshippers.total)) + "%\n                            ")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-6 col-md-6 col-12 col-sm-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(15), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.supplier.total))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("Applications")]), _vm._v(" "), _vm._m(16)]), _vm._v(" "), _c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.supplier.approved))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("Approved")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-success",
+    style: {
+      width: _vm.getApplicationPercentage(_vm.applications.supplier.approved, _vm.applications.supplier.total) + "%"
+    },
+    attrs: {
+      "aria-valuenow": _vm.getApplicationPercentage(_vm.applications.supplier.approved, _vm.applications.supplier.total),
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getApplicationPercentage(_vm.applications.supplier.approved, _vm.applications.supplier.total)) + "% ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.supplier.reject))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("Rejected")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-orange",
+    style: {
+      width: _vm.getApplicationPercentage(_vm.applications.supplier.reject, _vm.applications.supplier.total) + "%"
+    },
+    attrs: {
+      "aria-valuenow": _vm.getApplicationPercentage(_vm.applications.supplier.reject, _vm.applications.supplier.total),
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getApplicationPercentage(_vm.applications.supplier.reject, _vm.applications.supplier.total)) + "% ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-4"
+  }, [_c("div", {
+    staticClass: "text-small float-right font-weight-bold text-muted"
+  }, [_vm._v(_vm._s(_vm.applications.supplier.pending))]), _vm._v(" "), _c("div", {
+    staticClass: "font-weight-bold"
+  }, [_vm._v("In-Process")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "15"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar l-bg-yellow",
+    style: {
+      width: _vm.getApplicationPercentage(_vm.applications.supplier.pending, _vm.applications.supplier.total) + "%"
+    },
+    attrs: {
+      role: "progressbar",
+      "aria-valuenow": _vm.getApplicationPercentage(_vm.applications.supplier.pending, _vm.applications.supplier.total),
+      "aria-valuemin": "0",
+      "aria-valuemax": "100"
+    }
+  }, [_vm._v("\n                                " + _vm._s(_vm.getApplicationPercentage(_vm.applications.supplier.pending, _vm.applications.supplier.total)) + "%\n                            ")])])])])])]), _vm._v(" "), _vm._m(17), _vm._v(" "), _vm._m(18)]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
       details: _vm.dropShipperDetails
     }
@@ -11066,186 +11292,32 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-lg-6 col-md-6 col-12 col-sm-12"
-  }, [_c("div", {
-    staticClass: "card"
-  }, [_c("div", {
     staticClass: "card-header"
-  }, [_c("h4", [_vm._v("DS Applications Status")])]), _vm._v(" "), _c("div", {
-    staticClass: "card-body"
-  }, [_c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("2,675")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Applications")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-purple",
-    attrs: {
-      role: "progressbar",
-      "data-width": "80%",
-      "aria-valuenow": "80",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("1,753")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Approved")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-green",
-    attrs: {
-      role: "progressbar",
-      "data-width": "67%",
-      "aria-valuenow": "25",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("1,254")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Rejected")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-orange",
-    attrs: {
-      role: "progressbar",
-      "data-width": "58%",
-      "aria-valuenow": "25",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("984")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("In-Process")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-yellow",
-    attrs: {
-      role: "progressbar",
-      "data-width": "36%",
-      "aria-valuenow": "25",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])])])])]);
+  }, [_c("h4", [_vm._v("DS Applications Status")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-lg-6 col-md-6 col-12 col-sm-12"
-  }, [_c("div", {
-    staticClass: "card"
-  }, [_c("div", {
     staticClass: "card-header"
-  }, [_c("h4", [_vm._v("Suppliers Applications Status")])]), _vm._v(" "), _c("div", {
-    staticClass: "card-body"
-  }, [_c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("2,675")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Applications")]), _vm._v(" "), _c("div", {
+  }, [_c("h4", [_vm._v("Supplier Applications Status")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
     staticClass: "progress",
     attrs: {
-      "data-height": "5"
+      "data-height": "15"
     }
   }, [_c("div", {
     staticClass: "progress-bar l-bg-purple",
     attrs: {
       role: "progressbar",
-      "data-width": "80%",
-      "aria-valuenow": "80",
+      "data-width": "100%",
+      "aria-valuenow": "100",
       "aria-valuemin": "0",
       "aria-valuemax": "100"
     }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("1,753")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Approved")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-green",
-    attrs: {
-      role: "progressbar",
-      "data-width": "67%",
-      "aria-valuenow": "25",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("1,254")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("Rejected")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-orange",
-    attrs: {
-      role: "progressbar",
-      "data-width": "58%",
-      "aria-valuenow": "25",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])]), _vm._v(" "), _c("div", {
-    staticClass: "mb-4"
-  }, [_c("div", {
-    staticClass: "text-small float-right font-weight-bold text-muted"
-  }, [_vm._v("984")]), _vm._v(" "), _c("div", {
-    staticClass: "font-weight-bold"
-  }, [_vm._v("In-Process")]), _vm._v(" "), _c("div", {
-    staticClass: "progress",
-    attrs: {
-      "data-height": "5"
-    }
-  }, [_c("div", {
-    staticClass: "progress-bar l-bg-yellow",
-    attrs: {
-      role: "progressbar",
-      "data-width": "36%",
-      "aria-valuenow": "25",
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
-    }
-  })])])])])]);
+  })]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
