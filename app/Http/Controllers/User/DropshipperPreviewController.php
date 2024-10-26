@@ -39,10 +39,12 @@ class DropshipperPreviewController extends Controller
 
         $outFordeliveredOrders  = Order::where('belongs_to', $dropshipper->user_id)->where('is_replacement', '0')->where('status', '11')->count();
         $deliveredOrders  = Order::where('belongs_to', $dropshipper->user_id)->where('is_replacement', '0')->where('status', '8')->count();
+
         $inProcessOrder   = Order::where('belongs_to', $dropshipper->user_id)
-            ->whereNotIn('status', [9, 10, 7, 8])
+            ->where('status', '<', '6' )
             ->where('is_replacement', '0')
             ->count();
+
         $failedOrder  = Order::where('belongs_to', $dropshipper->user_id)->where('is_replacement', '0')->whereIn('status', [9, 10])->count();
 
         $revenueGraphData = [
