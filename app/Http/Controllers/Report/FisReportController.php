@@ -22,7 +22,7 @@ class FisReportController extends Controller
     {
 
         $data = Product::with([
-            'variation:id,product_id,avg_price',
+            'variation:id,product_id,avg_price,sku',
             'opening_stock' => function ($q) use ($request) {
                 $q->whereDate('created_at', '<', $request->from)
                     ->select(
