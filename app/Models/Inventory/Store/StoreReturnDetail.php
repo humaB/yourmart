@@ -2,6 +2,7 @@
 
 namespace App\Models\Inventory\Store;
 
+use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,15 +15,15 @@ class StoreReturnDetail extends Model
 
     protected $fillable = [
         'srn_id',
-        'product_id', // This is product variation id
+        'product_id',
         'quantity',
         'price',
         'total',
         'added_by',
     ];
 
-    public function variation(){
-        return $this->belongsTo(ProductVariation::class, 'product_id', 'id');
+    public function product(){
+        return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
     public function srn(){

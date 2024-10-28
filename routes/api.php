@@ -34,6 +34,7 @@ use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
+use App\Http\Controllers\Report\FisReportController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\DropshipperPreviewController;
 use Illuminate\Http\Request;
@@ -152,6 +153,17 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::post('/categories/update', [CourierController::class, 'updateCategory']);
 
     Route::post('/categories/ranges', [CourierController::class, 'fetchCategoryRanges']);
+});
+
+//Reports
+Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
+    Route::group(['prefix' => 'fis'], function(){
+        Route::post('/inventory-control-register',  [ FisReportController::class , 'inventoryControlRegister']);
+        Route::post('/good-received',  [ FisReportController::class , 'goodReceivedRegister']);
+        Route::post('/good-issued',  [ FisReportController::class , 'goodIssuedRegister']);
+        Route::post('/good-returns',  [ FisReportController::class , 'goodReturnRegister']);
+
+    });
 });
 
 Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(){

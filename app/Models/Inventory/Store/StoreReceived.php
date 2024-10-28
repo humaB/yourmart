@@ -3,6 +3,7 @@
 namespace App\Models\Inventory\Store;
 
 use App\Models\Inventory\Product\Variation\Product;
+use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,6 +20,10 @@ class StoreReceived extends Model
 
     public function details(){
         return $this->hasMany(StoreReceivedDetail::class, 'grn_id', 'id');
+    }
+
+    public function purchase_order(){
+        return $this->belongsTo(PurchaseOrder::class, 'po_id', 'id');
     }
 
 }

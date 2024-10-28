@@ -40,6 +40,10 @@ Vue.component('help-center-setting-page', require('./pages/pages/HelpCenterSetti
 Vue.component('ticket-page', require('./pages/TicketPage.vue').default );
 Vue.component('profile-setting-page', require('./pages/setting/ProfileSettingPage.vue').default );
 
+//Reports
+Vue.component('fis-report-page', require('./pages/reports/FisReportsPage.vue').default );
+
+
 
 const app = new Vue({
     el: '#app',

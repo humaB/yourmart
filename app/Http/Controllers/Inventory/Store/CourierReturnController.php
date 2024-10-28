@@ -67,9 +67,10 @@ class CourierReturnController extends Controller
         ]);
 
         foreach ($order->items as $product) {
+            $variation = ProductVariation::where('id', $product->product_variation_id)->first();
             StoreReturnDetail::create([
                 'srn_id'     => $srn->id,
-                'product_id' => $product->product_variation_id,
+                'product_id' => $variation->product_id,
                 'quantity'   => $product->quantity,
                 'price'      => $product->price,
                 'total'      => (float)$product->quantity * (float)$product->price,

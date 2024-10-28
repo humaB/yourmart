@@ -28,6 +28,9 @@ use App\Http\Controllers\Account\pdf\TransactionPdfController;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
+use App\Http\Controllers\Report\FisReportController;
+use App\Models\Inventory\Product\Variation\ProductVariation;
+use App\Models\Inventory\Store\StoreReturnDetail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -60,6 +63,13 @@ Route::group(['prefix' => '/users', 'middleware' => 'auth'], function () {
     Route::get('/', [UserController::class, 'index'])->name('user');
     Route::get('/create', [UserController::class, 'create'])->name('user.add');
     Route::post('/store', [UserController::class, 'store'])->name('user.store');
+});
+
+//*******************************************
+//            Reports
+//*******************************************
+Route::group(['prefix' => '/reports', 'middleware' => 'auth'], function () {
+    Route::get('/fis', [FisReportController::class, 'index'])->name('reports.fis');
 });
 
 Route::group(['prefix' => '/tickets', 'middleware' => 'auth'], function () {
@@ -181,11 +191,14 @@ Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
 
 
 Route::get('/test', function(){
-     $amountToPay = min(-60, 725);
-      // Only proceed if there is an amount to pay
-      if (-60 > 0) {
-        return "asd";
-      }
+     $returns = StoreReturnDetail::get();
+
+     foreach( $returns as $return ){
+        $variation =  ProductVariation::where('id', $return->product_id)->first();
+        $return->update([
+            'product_id' => $variation->product_id
+        ]);
+     }
 });
 
 

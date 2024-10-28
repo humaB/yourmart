@@ -63,7 +63,7 @@
                         <i data-feather="file-text"></i>Record</a></li>
                 </ul>
     </li>
-    
+
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                 class="fa fa-warehouse"></i><span>Inventory</span></a>
@@ -132,13 +132,6 @@
                 </li>
             </ul>
         </li>
-        <li class="dropdown">
-            <a href="#" class="has-dropdown"><i class="far fa-file-alt"></i><span>Reports</span></a>
-            <ul class="dropdown-menu">
-                <li><a href="{{route('account.report.finance')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Finance</span></a>
-                </li>
-            </ul>
-        </li>
     </ul>
     </li>
 
@@ -162,6 +155,18 @@
                     <li><a class="nav-link" href="{{ route('inventory.products.other_charges') }}">
                         <i data-feather="file-text"></i>Other Charges</a></li>
                     <li>
+                </ul>
+    </li>
+
+    <li class="dropdown">
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                class="fas fa-tachometer-alt"></i><span>Report's</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('reports.fis') }}">
+                        <i data-feather="file-text"></i>FIS</a></li>
+                    <li><a href="{{route('account.report.finance')}}" class="nav-link">
+                        <i data-feather="file-text"></i><span>Finance</span></a>
+                        </li>
                 </ul>
     </li>
 </ul>

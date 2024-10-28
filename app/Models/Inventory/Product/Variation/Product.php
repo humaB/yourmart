@@ -6,6 +6,10 @@ use App\Models\Inventory\Product\Brand;
 use App\Models\Inventory\Product\Category;
 use App\Models\Inventory\Product\Setting\PackagingClass;
 use App\Models\Inventory\Product\Setting\ShippingClass;
+use App\Models\Inventory\Store\StoreIssuanceDetail;
+use App\Models\Inventory\Store\StoreReceived;
+use App\Models\Inventory\Store\StoreReceivedDetail;
+use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -97,5 +101,29 @@ class Product extends Model
         return $this->hasMany(ProductVariationImage::class, 'product_id', 'id');
     }
 
+    public function good_receive(){
+        return $this->hasMany( StoreReceivedDetail::class, 'product_id' , 'id' );
+    }
+
+    public function issuance(){
+        return $this->hasMany( StoreIssuanceDetail::class, 'product_id' , 'id' );
+    }
+
+    public function return(){
+        return $this->hasMany( StoreReturnDetail::class, 'product_id' , 'id' );
+    }
+
+
+    public function opening_stock(){
+        return $this->hasMany( StoreReceivedDetail::class, 'product_id' , 'id' );
+    }
+
+    public function opening_issuance(){
+        return $this->hasMany( StoreIssuanceDetail::class, 'product_id' , 'id' );
+    }
+
+    public function opening_returns(){
+        return $this->hasMany( StoreReturnDetail::class, 'product_id' , 'id' );
+    }
 
 }
