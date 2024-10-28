@@ -191,14 +191,7 @@ Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
 
 
 Route::get('/test', function(){
-     $returns = StoreReturnDetail::get();
 
-     foreach( $returns as $return ){
-        $variation =  ProductVariation::where('id', $return->product_id)->first();
-        $return->update([
-            'product_id' => $variation->product_id
-        ]);
-     }
 });
 
 
