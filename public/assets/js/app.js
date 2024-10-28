@@ -10823,7 +10823,7 @@ var render = function render() {
   }, [_vm._m(2), _vm._v(" "), _c("tbody", [_vm._l(_vm.data, function (item, index) {
     return [item.good_receive[0] || item.issuance[0] || item.opening_stock[0] ? _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.title) + "\n                                     || Current Average Rate "), _c("b", [_vm._v(_vm._s(item.variation.avg_price))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.opening_stock[0] ? _vm.formatPrice(item.opening_stock[0].rate) : "-"))]), _vm._v(" "), _c("td", [item.opening_stock[0] ? _c("a", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.title) + "\n                                     || Current Average Rate "), _c("b", [_vm._v(_vm._s(item.variation.avg_price))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.opening_stock[0] ? _vm.formatPrice(item.opening_stock[0].rate) : "-"))]), _vm._v(" "), _c("td", [item.opening_stock[0] ? _c("a", {
       attrs: {
         href: "#",
         "data-toggle": "modal",
@@ -10891,7 +10891,7 @@ var staticRenderFns = [function () {
     attrs: {
       colspan: "3"
     }
-  }, [_vm._v("Balance")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", {
+  }, [_vm._v("Balance")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", {
     staticClass: "border-left"
   }, [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate")]), _vm._v(" "), _c("th", [_vm._v("Qty")]), _vm._v(" "), _c("th", {
     staticClass: "border-left"

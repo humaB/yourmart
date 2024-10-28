@@ -53,6 +53,7 @@
                                     </tr>
                                     <tr>
                                         <th>Sr #</th>
+                                        <th>SKU</th>
                                         <th class="border-left">Product Name </th>
 
                                         <th>Rate</th>
@@ -76,6 +77,7 @@
                                   <template v-for="(item , index) in data" >
                                   <tr v-if="item.good_receive[0] || item.issuance[0] || item.opening_stock[0]" :key="item.id">
                                       <td>{{ index + 1 }}</td>
+                                      <td>{{ item.variation.sku }}</td>
                                       <td>{{ item.title }}
                                          || Current Average Rate <b>{{ item.variation.avg_price}}</b>
                                       </td>
