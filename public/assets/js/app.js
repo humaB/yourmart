@@ -10869,7 +10869,7 @@ var staticRenderFns = [function () {
   return _c("thead", [_c("tr", [_c("th", {
     staticClass: "border h5",
     attrs: {
-      colspan: "2"
+      colspan: "3"
     }
   }, [_vm._v("Item Description")]), _vm._v(" "), _c("th", {
     staticClass: "border h5",

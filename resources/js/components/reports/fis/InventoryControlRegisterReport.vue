@@ -44,7 +44,7 @@
                             <table class="table table-bordered" id="inventory_control_register" v-else>
                                 <thead>
                                     <tr >
-                                        <th colspan="2" class="border h5">Item Description</th>
+                                        <th colspan="3" class="border h5">Item Description</th>
                                         <th colspan="3" class="border h5">Opening</th>
                                         <th colspan="3" class="border h5">Purchase</th>
                                         <th colspan="3" class="border h5">Issuance</th>
