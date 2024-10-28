@@ -29,7 +29,7 @@ class StoreInwardController extends Controller
 
     public function record()
     {
-        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager'){
+        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor'){
             abort(401);
         }
         return view('inventory.store.store_inward_record');
@@ -37,7 +37,7 @@ class StoreInwardController extends Controller
 
     public function stock()
     {
-        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager'){
+        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor'){
             abort(401);
         }
         return view('inventory.store.stock');

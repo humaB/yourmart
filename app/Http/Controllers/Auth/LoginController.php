@@ -16,7 +16,10 @@ class LoginController extends Controller
     public function index(){
 
         if ( Auth::check() ) {
-            return view('dashboard');
+            if(auth()->user()->role == 'admin' || auth()->user()->role == 'supervisor'){
+                return view('dashboard');
+            }
+            return view('dashboard2');
         }
 
         return view('auth.login');

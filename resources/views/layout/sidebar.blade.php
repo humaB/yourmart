@@ -10,7 +10,7 @@
 
         <ul class="sidebar-menu">
             <li class="menu-header">Main</li>
-            @if (auth()->user()->role == 'admin')
+            @if (auth()->user()->role == 'admin' || auth()->user()->role == 'supervisor')
                 <li class="dropdown {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}" class="nav-link"><i
                             data-feather="monitor"></i><span>Dashboard</span></a>
