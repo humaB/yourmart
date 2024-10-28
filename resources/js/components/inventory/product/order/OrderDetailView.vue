@@ -166,8 +166,9 @@
                                                             <tr>
                                                                 <th></th>
                                                                 <th>Product</th>
+                                                                <th>Item Price</th>
                                                                 <th>Quantity</th>
-                                                                <th>Price</th>
+                                                                <th>Total Price</th>
                                                                 <th>Packing Price</th>
                                                                 <th>Shipping</th>
                                                                 <th>Total Cost</th>
@@ -194,6 +195,7 @@
                                                                     <b>Color : </b>{{ item.variation.color ?item.variation.color.name : '-'  }}<br>
                                                                     <b>Size : </b>{{ item.variation.size ?item.variation.size.name : '-'  }}
                                                                 </td>
+                                                                <td>{{ parseFloat(item.price) }}</td>
                                                                 <td>{{ item.quantity }}</td>
                                                                 <td>{{ parseFloat(item.quantity) *( parseFloat(item.price) )  }}</td>
                                                                 <td>{{ item.packaging_cost }}</td>
@@ -235,6 +237,7 @@
                                                             <tr>
                                                                 <td></td>
                                                                 <td><b>Total</b></td>
+                                                                <td><!-- Total quantity (if needed) --></td>
                                                                 <td><!-- Total quantity (if needed) --></td>
                                                                 <td class="h5">{{ totalPrice }}</td>
                                                                 <td class="h5">{{ totalPackagingCost }}</td>
