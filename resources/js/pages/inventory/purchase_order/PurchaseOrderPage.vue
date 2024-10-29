@@ -28,7 +28,7 @@
                                     <tr v-for="(item,index) in purchaseOrders" :key="item.id">
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.id }}</td>
-                                        <td>{{ item.supplier.full_name }}</td>
+                                        <td>{{ item.supplier ? item.supplier.full_name : '' }}</td>
                                         <td>{{ item.total_amount }}</td>
                                         <td>{{ item.remaining_amount }}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
@@ -138,7 +138,7 @@
                 .get(this.api_url + "inventory/products/purchase-orders")
                 .then((response) => {
                     const results = response.data.response;
-                    vm.purchaseOrders = results;
+                    vm.purchaseOrders = results.purchase_orders;
                 })
                 .catch((err) => this.fetchPurchaseOrders());
             },

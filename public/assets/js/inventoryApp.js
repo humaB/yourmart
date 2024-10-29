@@ -1046,7 +1046,7 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       axios.get(this.api_url + "inventory/products/purchase-orders").then(function (response) {
         var results = response.data.response;
-        vm.purchaseOrders = results;
+        vm.purchaseOrders = results.purchase_orders;
       })["catch"](function (err) {
         return _this2.fetchPurchaseOrders();
       });
@@ -3540,7 +3540,7 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.purchaseOrders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.remaining_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier ? item.supplier.full_name : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.remaining_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
       staticClass: "badge badge-success"
