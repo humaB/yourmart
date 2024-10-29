@@ -57,7 +57,7 @@
                                         </td>
                                         <td class="h5">
                                             <a @click="printOrderDetails(item.sin.order_id)" href="#">
-                                                {{ item.sin.order && item.sin.order.shop && item.sin.order.shop.store_name ? item.sin.order.shop.store_name.substring(0, 3) + '-' + item.sin.order.order_no : item.sin.order.order_no }}
+                                                {{ item.sin.order && item.sin.order.shop && item.sin.order.shop.store_name ? item.sin.order.shop.store_name.substring(0, 3) + '-' + item.sin.order.order_no : (item.sin.order ? item.sin.order.order_no : '') }}
                                             </a>
                                         </td>
 

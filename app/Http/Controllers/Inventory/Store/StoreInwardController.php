@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Models\Inventory\Product\ProductQrCode;
+use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrderDetail;
+use App\Models\Inventory\Store\StoreIssuance;
+use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceived;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturnDetail;
@@ -110,6 +113,78 @@ class StoreInwardController extends Controller
         return (new ResponseCollection($data))
         ->response()
         ->setStatusCode(200);
+    }
+
+    public function adjustStock( Request $request ){
+        if(auth()->user()->role != 'admin'){
+            return response()->json([
+                'message' => 'Unauthorized access'
+            ], 401);
+        }
+
+        // Check if increments are available in the request
+        if ($request->has('increments') && is_array($request->increments)) {
+
+            $grn = StoreReceived::create([
+                'po_id'    => 0,
+                'added_by' => auth()->user()->id,
+            ]);
+
+            foreach ($request->increments as $increment) {
+                // Process each increment item
+                // Example: Update inventory or perform desired actions
+                $product = Product::find($increment['id']);
+                if ($product) {
+                    $variation = ProductVariation::where('product_id', $increment['id'])->first();
+                    $variation->increment('stock', $increment['quantity']);
+
+                    StoreReceivedDetail::create([
+                        'grn_id'     => $grn->id,
+                        'product_id' => $increment['id'],
+                        'quantity'   => $increment['quantity'],
+                        'price'      => $variation->avg_price,
+                        'tax'        => 0,
+                        'delivery_charges' => 0,
+                        'discount'   => 0,
+                        'total'      => (float)$increment['quantity'] * (float)$variation->avg_price,
+                        'remarks'    =>  $increment['remark'] ?? '',
+                        'added_by' => auth()->user()->id,
+                    ]);
+                }
+            }
+        }
+
+        // Check if decrements are available in the request
+        if ($request->has('decrements') && is_array($request->decrements)) {
+
+            $issuance = StoreIssuance::create([
+                'order_id'  => 0,
+                'added_by'  => auth()->user()->id,
+            ]);
+
+            foreach ($request->decrements as $decrement) {
+                // Process each decrement item
+                // Example: Update inventory or perform desired actions
+                $product = Product::find($decrement['id']);
+                if ($product) {
+                    $variation = ProductVariation::where('product_id', $decrement['id'])->first();
+                    $variation->decrement('stock', $decrement['quantity']);
+
+                    StoreIssuanceDetail::create([
+                        'sin_id'     => $issuance->id,
+                        'product_id' => $decrement['id'],
+                        'quantity'   => $decrement['quantity'],
+                        'price'      => $variation->avg_price,
+                        'total'      => (float)$decrement['quantity'] * (float)$variation->avg_price,
+                        'remarks'    =>  $decrement['remark'] ?? '',
+                        'added_by' => auth()->user()->id,
+                    ]);
+                }
+            }
+        }
+
+        // Return a response indicating the operation was successful
+        return response()->json(['message' => 'Inventory updated successfully'], 200);
     }
 
     public function updateBarcode( Request $request ){

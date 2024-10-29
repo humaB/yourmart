@@ -21,6 +21,7 @@ class StoreReceivedDetail extends Model
         'delivery_charges',
         'discount',
         'total',
+        'remarks',
         'added_by',
     ];
 

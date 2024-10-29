@@ -18,6 +18,7 @@ class StoreIssuanceDetail extends Model
         'quantity',
         'price',
         'total',
+        'remarks',
         'added_by',
     ];
 

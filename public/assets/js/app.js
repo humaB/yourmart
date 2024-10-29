@@ -11042,7 +11042,7 @@ var render = function render() {
           return _vm.printOrderDetails(item.sin.order_id);
         }
       }
-    }, [_vm._v("\n                                            " + _vm._s(item.sin.order && item.sin.order.shop && item.sin.order.shop.store_name ? item.sin.order.shop.store_name.substring(0, 3) + "-" + item.sin.order.order_no : item.sin.order.order_no) + "\n                                        ")])]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                                            " + _vm._s(item.sin.order && item.sin.order.shop && item.sin.order.shop.store_name ? item.sin.order.shop.store_name.substring(0, 3) + "-" + item.sin.order.order_no : item.sin.order ? item.sin.order.order_no : "") + "\n                                        ")])]), _vm._v(" "), _c("td", {
       staticClass: "h5"
     }, [_vm._v(_vm._s(item.product ? item.product.title : ""))]), _vm._v(" "), _c("td", {
       staticClass: "h5"

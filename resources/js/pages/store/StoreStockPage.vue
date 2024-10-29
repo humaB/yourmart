@@ -2,8 +2,13 @@
     <div>
         <div class="row">
             <div class="col-md-12 card">
-                <div class="card-header">
-                    <h5>Insight's</h5>
+                <div class="card-header d-flex justify-content-between">
+                    <div>
+                        <h5>Insight's</h5>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#adjustStock">Adjust Stock</button>
+                    </div>
                 </div>
                 <div class="card-body row">
                     <div class="col-md-12">
@@ -160,17 +165,26 @@
           </div>
           </div>
 
+          <AdjustStock
+            :productsDropdown="productsDropdown"
+            :loader="adjustStockLoader"
+            @adjustStock="adjustStockFun( $event )"
+          />
+
     </div>
 </template>
 <script>
 
-  import TableHeader from "../../components/table/TableHeaderComponent.vue";
+  import AdjustStock from "../../components/store/AdjustStock.vue";
+import TableHeader from "../../components/table/TableHeaderComponent.vue";
   import { BulletListLoader } from "vue-content-loader";
+
     export default {
         name : 'StoreStockPage',
         components: {
             TableHeader,
-            BulletListLoader
+            BulletListLoader,
+            AdjustStock
         },
         data() {
             return {
@@ -186,13 +200,51 @@
                 outOfStock : 0,
                 lowStock : 0,
                 withoutBarcode : 0,
-                highStock: 0
+                highStock: 0,
+                productsDropdown : [],
+                adjustStockLoader : false
             };
         },
         created(){
             this.fetchStock();
+            this.fetchProducts();
         },
         methods : {
+            adjustStockFun(data){
+                let vm = this;
+                vm.clearDataTable();
+                vm.adjustStockLoader = true;
+                axios.post(this.api_url + "inventory/products/store/stocks/adjust" , data)
+                .then((res) => {
+                    this.fetchStock();
+                    vm.adjustStockLoader = false;
+
+                    $("#adjustStock").modal('hide')
+                    return swal({
+                        title: "Success",
+                        text: 'Stock updated successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch( (err) => {
+                    vm.adjustStockLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: 'You are unauthorized',
+                        icon: "error",
+                        timer: 3000,
+                    });
+                })
+
+            },
+            fetchProducts(){
+                axios.get(this.api_url + "inventory/products/complete-drop-down")
+                    .then((res) => {
+                        const results = res.data.response;
+                        this.productsDropdown = results;
+                    });
+            },
             filterStock( filter ){
                 let vm = this;
                 vm.clearDataTable()
