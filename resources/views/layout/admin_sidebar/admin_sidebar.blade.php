@@ -37,19 +37,59 @@
                 class="fas fa-user-alt"></i><span>Users</span></a>
     </li>
 
+    @php
+       $tickets = DB::table('tickets')
+        ->where('status', '!=', 'Closed')
+        ->orWhere('status', '=', 'Expired')
+        ->count();
+    @endphp
     <li class="dropdown" >
         <a href="{{ route('tickets') }}" class="nav-link"><i
-                class="fas fa-ticket-alt"></i><span>Tickets</span></a>
+                class="fas fa-ticket-alt"></i><span>Tickets</span>
+                @if ( $tickets > 0)
+                <span class="badge headerBadge1"
+                    style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                    {{ $tickets }}
+                </span>
+            @endif
+            </a>
     </li>
 
+    @php
+        $dropshippers = DB::table('drop_shippers')->where('status', '0')->count();
+        $supplier = DB::table('suppliers')->where('status', '0')->count();
+
+        $requests = $dropshippers +  $supplier;
+    @endphp
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                class="fa fa-bell"></i><span>Request's</span></a>
+                class="fa fa-bell"></i><span>Request's</span>
+             @if ( $requests > 0)
+                <span class="badge headerBadge1"
+                    style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                    {{ $requests }}
+                </span>
+            @endif
+            </a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('request.dropshipper') }}">
-                        <i data-feather="file-text"></i>Dropshippers</a></li>
+                        <i data-feather="file-text"></i>Dropshippers
+                        @if ( $dropshippers > 0)
+                            <span class="badge headerBadge1"
+                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                                {{ $dropshippers }}
+                            </span>
+                        @endif
+                    </a></li>
                     <li><a class="nav-link" href="{{ route('request.supplier') }}">
-                        <i data-feather="file-text"></i>Suppliers</a></li>
+                        <i data-feather="file-text"></i>Suppliers
+                        @if ( $supplier > 0)
+                            <span class="badge headerBadge1"
+                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                                {{ $supplier }}
+                            </span>
+                        @endif
+                    </a></li>
                 </ul>
     </li>
 
@@ -64,12 +104,29 @@
                 </ul>
     </li>
 
+    @php
+        $purchase_orders =  DB::table('inventory_purchase_orders')->where('status', '0')->count();
+    @endphp
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                class="fa fa-warehouse"></i><span>Inventory</span></a>
+                class="fa fa-warehouse"></i><span>Inventory</span>
+                @if ( $purchase_orders > 0)
+                    <span class="badge headerBadge1"
+                        style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                        {{ $purchase_orders }}
+                    </span>
+                @endif
+            </a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('inventory.products.purchase_orders.requests') }}">
-                        <i data-feather="file-text"></i>Purchase Order's</a></li>
+                        <i data-feather="file-text"></i>Purchase Order's
+                        @if ( $purchase_orders > 0)
+                            <span class="badge headerBadge1"
+                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                                {{ $purchase_orders }}
+                            </span>
+                        @endif
+                    </a></li>
 
 
 

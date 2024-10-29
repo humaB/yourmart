@@ -17,7 +17,7 @@ class Ticket extends Model
         'message',
         'expected_result',
         'file_path',
-        'status',
+        'status', // Closed || In-Process || 
         'added_by',
         'updated_by',
     ];
