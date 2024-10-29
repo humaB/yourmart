@@ -1,29 +1,31 @@
 <template>
     <div>
 
-        <div class="modal fade" id="cloneProductConfirmation" tabindex="-1" role="dialog" aria-labelledby="cloneProductConfirmationTitle" aria-hidden="true">
+        <div class="modal fade" id="cloneProductConfirmation" tabindex="-1" role="dialog"
+            aria-labelledby="cloneProductConfirmationTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body row">
-                  <div class="col-md-12">
-                    Are you sure you want to clone <b>{{ cloneProductData.title }}</b> ?
-                  </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click="yesClone()" v-if="!btnLoader">Yes, Clone</button>
-                    <button type="button" class="btn btn-primary btn-progress disabled" v-else>Yes, Clone</button>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Confirmation</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body row">
+                        <div class="col-md-12">
+                            Are you sure you want to clone <b>{{ cloneProductData.title }}</b> ?
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" @click="yesClone()" v-if="!btnLoader">Yes,
+                            Clone</button>
+                        <button type="button" class="btn btn-primary btn-progress disabled" v-else>Yes, Clone</button>
 
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+        </div>
 
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
@@ -52,8 +54,10 @@
                         </div>
                         <div class="col-md-3">
                             <label for=""><b>Action</b></label><br>
-                            <button class="btn btn-primary mr-2" :class="btnLoader ? 'btn-progress disabled' : ''" @click="filterData()"><i class="fa fa-filter mr-1"></i>Filter</button>
-                            <button class="btn btn-danger" @click="fetchProducts()"><i class="far fa-window-close mr-1"></i>Reset</button>
+                            <button class="btn btn-primary mr-2" :class="btnLoader ? 'btn-progress disabled' : ''"
+                                @click="filterData()"><i class="fa fa-filter mr-1"></i>Filter</button>
+                            <button class="btn btn-danger" @click="fetchProducts()"><i
+                                    class="far fa-window-close mr-1"></i>Reset</button>
                         </div>
 
                         <div class="col-md-6 mt-2">
@@ -67,7 +71,8 @@
                         </div>
                         <div class="col-md-6 mt-2">
                             <label for=""><b>Action</b></label><br>
-                            <button class="btn btn-primary w-100" @click="multipleActionFunc()" v-if="!btnLoader">Perform Action</button>
+                            <button class="btn btn-primary w-100" @click="multipleActionFunc()"
+                                v-if="!btnLoader">Perform Action</button>
                             <button class="btn btn-primary w-100 btn-progress disabled" v-else>Perform Action</button>
                         </div>
 
@@ -78,31 +83,57 @@
                                         <div class="col-md-12 mb-5 card p-3">
                                             <h5>Active Product's Insights</h5>
                                             <nav>
-                                              <ul class="nav">
-                                                <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a href="#">Total Products ({{ productInsights.total }})</a> </li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(0)"><a href="#">⁠Airpods & Headsets ({{ productInsights.airpod }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(1)"><a href="#">⁠Kids ({{ productInsights.kids }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">Smart Gadgets ({{ productInsights.smartGadget }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">⁠Personal Care & Gadgets ({{ productInsights.personalCare }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">Home, Kitchen & Lifestyle ({{ productInsights.home }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)"><a href="#">Decore ({{ productInsights.decor }})</a></li> ||
-                                                <li class="nav-item ml-2" @click="changeProductFetchStatus(3)"><a href="#">⁠Smart Watches ({{ productInsights.smartWatch }})</a></li>
+                                                <ul class="nav">
+                                                    <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a
+                                                            href="#">Total Products ({{ productInsights.total }})</a>
+                                                    </li> ||
+                                                    <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(0)">
+                                                        <a href="#">⁠Airpods & Headsets ({{ productInsights.airpod
+                                                            }})</a></li> ||
+                                                    <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(1)">
+                                                        <a href="#">⁠Kids ({{ productInsights.kids }})</a></li> ||
+                                                    <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)">
+                                                        <a href="#">Smart Gadgets ({{ productInsights.smartGadget
+                                                            }})</a></li> ||
+                                                    <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)">
+                                                        <a href="#">⁠Personal Care & Gadgets ({{
+                                                            productInsights.personalCare }})</a></li> ||
+                                                    <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)">
+                                                        <a href="#">Home, Kitchen & Lifestyle ({{ productInsights.home
+                                                            }})</a></li> ||
+                                                    <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(3)">
+                                                        <a href="#">Decore ({{ productInsights.decor }})</a></li> ||
+                                                    <li class="nav-item ml-2" @click="changeProductFetchStatus(3)"><a
+                                                            href="#">⁠Smart Watches ({{ productInsights.smartWatch
+                                                            }})</a></li>
 
 
-                                              </ul>
+                                                </ul>
                                             </nav>
-                                          </div>
+                                        </div>
 
-                                        <div class="col-md-12">
-                                            <nav>
-                                              <ul class="nav">
-                                                <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a href="#">All ({{ allProductCount }})</a> </li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(0)"><a href="#">Published ({{ publishedProductCount }})</a></li> ||
-                                                <li class="nav-item ml-2 mr-2" @click="changeProductFetchStatus(1)"><a href="#">Drafts ({{ draftProductCount }})</a></li> ||
-                                                <li class="nav-item ml-2" @click="changeProductFetchStatus(3)"><a href="#">Trash ({{ trashProductCount }})</a></li>
-                                              </ul>
-                                            </nav>
-                                          </div>
+                                        <div class="col-md-12 row mb-3">
+                                            <div class="col-md-10">
+                                                <nav>
+                                                    <ul class="nav">
+                                                        <li class="nav-item mr-2" @click="changeProductFetchStatus()"><a
+                                                                href="#">All ({{ allProductCount }})</a> </li> ||
+                                                        <li class="nav-item ml-2 mr-2"
+                                                            @click="changeProductFetchStatus(0)"><a href="#">Published
+                                                                ({{ publishedProductCount }})</a></li> ||
+                                                        <li class="nav-item ml-2 mr-2"
+                                                            @click="changeProductFetchStatus(1)"><a href="#">Drafts ({{
+                                                                draftProductCount }})</a></li> ||
+                                                        <li class="nav-item ml-2" @click="changeProductFetchStatus(3)">
+                                                            <a href="#">Trash ({{ trashProductCount }})</a></li>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-success" @click="exportExcel()"><i
+                                                        class="fas fa-file-excel"></i> Download Excel</button>
+                                            </div>
+                                        </div>
 
 
 
@@ -114,12 +145,10 @@
                                                             <th>Sr #</th>
                                                             <th></th>
                                                             <th>
-                                                                <input
-                                                                    type="checkbox"
+                                                                <input type="checkbox"
                                                                     class="form-control custom-checkbox"
                                                                     v-model="checkedAllProducts"
-                                                                    @change="toggleAllProducts"
-                                                                >
+                                                                    @change="toggleAllProducts">
                                                             </th>
                                                             <th class="width:22%">Product Title</th>
                                                             <th>SKU</th>
@@ -136,40 +165,46 @@
                                                             <td>{{ index + 1 }}</td>
                                                             <td class="text-truncate">
                                                                 <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                                  <li class="team-member team-member-sm">
-                                                                    <a :href="getImageUrl(item.hero_image)" target="_blank">
-                                                                      <img class="rounded-circle" :src="getImageUrl(item.hero_image)">
-                                                                    </a>
-                                                                  </li>
+                                                                    <li class="team-member team-member-sm">
+                                                                        <a :href="getImageUrl(item.hero_image)"
+                                                                            target="_blank">
+                                                                            <img class="rounded-circle"
+                                                                                :src="getImageUrl(item.hero_image)">
+                                                                        </a>
+                                                                    </li>
                                                                 </ul>
-                                                              </td>
+                                                            </td>
 
                                                             <td>
 
-                                                                    <div class="pretty p-default p-round p-thick">
-                                                                        <input
-                                                                        type="checkbox"
+                                                                <div class="pretty p-default p-round p-thick">
+                                                                    <input type="checkbox"
                                                                         class="form-control custom-checkbox"
-                                                                        v-model="selectedProducts"
-                                                                        :value="item.id"
-                                                                    >
-                                                                        <div class="state p-primary-o">
+                                                                        v-model="selectedProducts" :value="item.id">
+                                                                    <div class="state p-primary-o">
 
-                                                                        </div>
-                                                                      </div>
+                                                                    </div>
+                                                                </div>
 
                                                             </td>
                                                             <td style="width:22%">
-                                                                <span class="badge badge-sm badge-success" v-if="item.status == 0 && !item.deleted_at">Published</span>
-                                                                <span class="badge badge-sm badge-warning" v-if="item.status == 1 && !item.deleted_at">Saved in Draft</span>
-                                                                <span class="badge badge-sm badge-danger" v-if="item.deleted_at">In Trash</span>
+                                                                <span class="badge badge-sm badge-success"
+                                                                    v-if="item.status == 0 && !item.deleted_at">Published</span>
+                                                                <span class="badge badge-sm badge-warning"
+                                                                    v-if="item.status == 1 && !item.deleted_at">Saved in
+                                                                    Draft</span>
+                                                                <span class="badge badge-sm badge-danger"
+                                                                    v-if="item.deleted_at">In Trash</span>
                                                                 <br>
                                                                 {{ item.title }}
                                                             </td>
                                                             <td>{{ item.variation.sku }}</td>
                                                             <td>
-                                                                <p class="text-success" v-if="item.variation.stock > 0 ">In stock {{ item.variation.stock }}</p>
-                                                                <p class="text-danger" v-if="item.variation.stock == 0 ">Out of stock</p>
+                                                                <p class="text-success"
+                                                                    v-if="item.variation.stock > 0">In stock {{
+                                                                    item.variation.stock }}</p>
+                                                                <p class="text-danger"
+                                                                    v-if="item.variation.stock == 0">Out of stock</p>
                                                             </td>
                                                             <td>
                                                                 <del>PKR {{ item.variation.regular_price }}</del><br>
@@ -194,11 +229,12 @@
                                                                     title="View Details"><i
                                                                         class="fa fa-eye"></i></button>
 
-                                                                        <button data-toggle="modal"
-                                                                        data-target="#cloneProductConfirmation"
-                                                                        class="btn btn-warning ml-1" @click="cloneProduct(item.id, item.title)"
-                                                                        title="View Details"><i
-                                                                            class="fa fa-clone"></i></button>
+                                                                <button data-toggle="modal"
+                                                                    data-target="#cloneProductConfirmation"
+                                                                    class="btn btn-warning ml-1"
+                                                                    @click="cloneProduct(item.id, item.title)"
+                                                                    title="View Details"><i
+                                                                        class="fa fa-clone"></i></button>
                                                             </td>
 
                                                         </tr>
@@ -206,19 +242,31 @@
                                                 </table>
                                                 <div class="card-footer text-right">
                                                     <nav class="d-inline-block">
-                                                      <ul class="pagination mb-0">
-                                                        <li class="page-item" :class="{ disabled: page === 1 }">
-                                                          <a class="page-link" href="#" @click="fetchProducts(status, page - 1)" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
-                                                        </li>
-                                                        <li class="page-item" v-for="pageNumber in pagination.last_page" :key="pageNumber" :class="{ active: page === pageNumber }">
-                                                          <a class="page-link" href="#" @click="fetchProducts(status, pageNumber)">{{ pageNumber }} <span class="sr-only">(current)</span></a>
-                                                        </li>
-                                                        <li class="page-item" :class="{ disabled: page === pagination.last_page }">
-                                                          <a class="page-link" href="#" @click="fetchProducts(status, page + 1)"><i class="fas fa-chevron-right"></i></a>
-                                                        </li>
-                                                      </ul>
+                                                        <ul class="pagination mb-0">
+                                                            <li class="page-item" :class="{ disabled: page === 1 }">
+                                                                <a class="page-link" href="#"
+                                                                    @click="fetchProducts(status, page - 1)"
+                                                                    tabindex="-1"><i
+                                                                        class="fas fa-chevron-left"></i></a>
+                                                            </li>
+                                                            <li class="page-item"
+                                                                v-for="pageNumber in pagination.last_page"
+                                                                :key="pageNumber"
+                                                                :class="{ active: page === pageNumber }">
+                                                                <a class="page-link" href="#"
+                                                                    @click="fetchProducts(status, pageNumber)">{{
+                                                                    pageNumber }} <span
+                                                                        class="sr-only">(current)</span></a>
+                                                            </li>
+                                                            <li class="page-item"
+                                                                :class="{ disabled: page === pagination.last_page }">
+                                                                <a class="page-link" href="#"
+                                                                    @click="fetchProducts(status, page + 1)"><i
+                                                                        class="fas fa-chevron-right"></i></a>
+                                                            </li>
+                                                        </ul>
                                                     </nav>
-                                                  </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -231,23 +279,11 @@
                 </div>
             </div>
         </div>
-        <AddProductPopup
-            :loader="btnLoader"
-            :images="selectedImages"
-            :heroImage="selectedHeroImage"
-            :attributes="attributes"
-            :brands="brandsDropDown"
-            :categories="categoriesDropDown"
-            :colors="colors"
-            :sizes="sizes"
-            :tags="tags"
-            :packagingOptions="packagingOptions"
-            :productOptions="productsDropDown"
-            @color="colorGallery($event)"
-            @submitProduct="submitProduct($event)"
-            @searchProduct="searchProduct($event)"
-            @close="closeProduct($event)"
-        />
+        <AddProductPopup :loader="btnLoader" :images="selectedImages" :heroImage="selectedHeroImage"
+            :attributes="attributes" :brands="brandsDropDown" :categories="categoriesDropDown" :colors="colors"
+            :sizes="sizes" :tags="tags" :packagingOptions="packagingOptions" :productOptions="productsDropDown"
+            @color="colorGallery($event)" @submitProduct="submitProduct($event)" @searchProduct="searchProduct($event)"
+            @close="closeProduct($event)" />
 
         <AddBrand :loader="btnLoader" :brands="brands" @addNewBrand="addNewBrand($event)"
             @editNewBrand="editNewBrand($event)" />
@@ -261,60 +297,28 @@
         <AddTag :loader="btnLoader" :tags="tags" @addNewTag="addNewTag($event)" @editTag="editTag($event)" />
 
 
-        <ProductDetailView
-            :product="details"
-            :attributes="attributesDropDown"
-            :brands="brandsDropDown"
-            :categories="categoriesDropDown"
-            :tags="tagsDropDown"
-            :packagingOptions="packagingOptions"
-            :productNotUpdated="productNotUpdated"
-            :productOptions="productsDropDown"
-            @updateProduct="updateProduct( $event )"
-            @editProductVariant="editProductVariantFun($event)"
-            @updateDimensions="updateDimensions($event)"
-            @updateDiscount="updateDiscount( $event )"
-            @searchProduct="searchProduct($event)"
-            @updateUpSell="updateUpSell( $event )"
-            @updateTags="updateTags( $event )"
-            @removeTag="removeTag( $event )"
-            @changeStatus="changeStatus( $event )"
-            @changeImage="changeHeroImage( $event )"
-        />
+        <ProductDetailView :product="details" :attributes="attributesDropDown" :brands="brandsDropDown"
+            :categories="categoriesDropDown" :tags="tagsDropDown" :packagingOptions="packagingOptions"
+            :productNotUpdated="productNotUpdated" :productOptions="productsDropDown"
+            @updateProduct="updateProduct($event)" @editProductVariant="editProductVariantFun($event)"
+            @updateDimensions="updateDimensions($event)" @updateDiscount="updateDiscount($event)"
+            @searchProduct="searchProduct($event)" @updateUpSell="updateUpSell($event)"
+            @updateTags="updateTags($event)" @removeTag="removeTag($event)" @changeStatus="changeStatus($event)"
+            @changeImage="changeHeroImage($event)" />
 
-        <EditProductVariant
-            :loader="btnLoader"
-            :colors="colorsDropDown"
-            :sizes="sizesDropDown"
-            :details="editProductVariantData"
-            :activeStatus="activeProductVariantStatus"
-            @updateProductVariant="updateProductVariant($event)"
-            @removeVariationImage="removeVariationImage($event)"
-            @changeProductVariantStatus="changeProductVariantStatus( $event )"
-        />
+        <EditProductVariant :loader="btnLoader" :colors="colorsDropDown" :sizes="sizesDropDown"
+            :details="editProductVariantData" :activeStatus="activeProductVariantStatus"
+            @updateProductVariant="updateProductVariant($event)" @removeVariationImage="removeVariationImage($event)"
+            @changeProductVariantStatus="changeProductVariantStatus($event)" />
 
-        <AddShippingClass
-            :loader="btnLoader"
-            :addPackagingData="addPackagingData"
-            @add="addNewClass()"
-        />
+        <AddShippingClass :loader="btnLoader" :addPackagingData="addPackagingData" @add="addNewClass()" />
 
-        <AddProductImage
-            :loader="btnLoader"
-            :colorId="colorId"
-            :type='selectedType'
-            :selectedColor="selectedColor"
-            :colors="colors"
-            :attachments="attachments"
-            :imageAlt="imageAlt"
-            @updateImageData="updateImageData( $event )"
-            @deleteImage="deleteImage( $event )"
-            @addSelectedImages="addSelectedImages($event)"
-            @addMoreSelectedImages="addMoreSelectedImages($event)"
-            @addSelectedHeroImages="addSelectedHeroImages($event)"
-            @uploadAttachment="uploadAttachment($event)"
-            @changeSelectedHeroImage="changeSelectedHeroImage( $event )"
-        />
+        <AddProductImage :loader="btnLoader" :colorId="colorId" :type='selectedType' :selectedColor="selectedColor"
+            :colors="colors" :attachments="attachments" :imageAlt="imageAlt"
+            @updateImageData="updateImageData($event)" @deleteImage="deleteImage($event)"
+            @addSelectedImages="addSelectedImages($event)" @addMoreSelectedImages="addMoreSelectedImages($event)"
+            @addSelectedHeroImages="addSelectedHeroImages($event)" @uploadAttachment="uploadAttachment($event)"
+            @changeSelectedHeroImage="changeSelectedHeroImage($event)" />
     </div>
 </template>
 <script>
@@ -378,9 +382,9 @@ export default {
                 tag: { code: 0, label: "Select from the following" },
                 product: "",
             },
-            cloneProductData  : {
-                id : '',
-                title : ''
+            cloneProductData: {
+                id: '',
+                title: ''
             },
             selectedImages: [],
             selectedColor: '',
@@ -434,30 +438,30 @@ export default {
                     // More variations...
                 ]
             },
-            productNotUpdated : false,
-            editProductVariantData : {},
-            activeProductVariantStatus : '',
-            selectedType : '',
-            colorId : '',
-            imageAlt : '',
-            selectedProducts : [],
-            multipleAction : '',
+            productNotUpdated: false,
+            editProductVariantData: {},
+            activeProductVariantStatus: '',
+            selectedType: '',
+            colorId: '',
+            imageAlt: '',
+            selectedProducts: [],
+            multipleAction: '',
             checkedAllProducts: false, // Boolean to manage "Check All" state
-            allProductCount : 0,
-            publishedProductCount : 0,
-            draftProductCount : 0,
-            trashProductCount : 0,
+            allProductCount: 0,
+            publishedProductCount: 0,
+            draftProductCount: 0,
+            trashProductCount: 0,
             page: 1,
             pagination: {},
-            productInsights : {
-                total : 0,
-                airpod : 0,
-                kids : 0,
-                smartGadget : 0,
-                personalCare : 0,
-                smartWatch : 0,
-                decor : 0,
-                home : 0
+            productInsights: {
+                total: 0,
+                airpod: 0,
+                kids: 0,
+                smartGadget: 0,
+                personalCare: 0,
+                smartWatch: 0,
+                decor: 0,
+                home: 0
             }
         };
     },
@@ -475,73 +479,97 @@ export default {
         this.addPackagingDataReset = JSON.parse(JSON.stringify(this.addPackagingData));
     },
     methods: {
-        getImageUrl(imageId) {
-            // Check if the image is null
-            if (!imageId) {
-                return this.public_url + 'assets/img/blank_image.jpg';
-            }
-            return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
-        },
-        formattedTags(tags) {
-            return tags.map(tag => tag.tag.name).join(', ');
-        },
-        dataTable() {
-            if ($.fn.DataTable.isDataTable("#product_table")) {
-                $('#product_table').DataTable().destroy();
-            }
-            setTimeout(function () {
-                $("#product_table").DataTable({
-                    "paging": false,
-                    "pageLength": 20,
-                    "lengthChange": false,
-                    "searching": true,
-                    "ordering": true,
-                    "info": false,
-                    "autoWidth": false,
+        async exportExcel() {
+            try {
+                const response = await axios.get(this.api_url+'inventory/products/export', {
+                    responseType: 'blob', // Important to handle binary data
                 });
-            }, 300);
-        },
-        clearDataTable() {
-            const table = $("#product_table").DataTable();
-            table.destroy();
-        },
-        formatDate(date) {
-            return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
-        },
-        addSelectedImages(data) {
-            this.selectedImages = data
-        },
-        cloneProduct( id, title ){
-            this.cloneProductData.id = id;
-            this.cloneProductData.title = title;
-        },
-        toggleAllProducts() {
-            if (this.checkedAllProducts) {
-                // If "Check All" is checked, select all products
-                this.selectedProducts = this.products.map(product => product.id);
-            } else {
-                // If "Check All" is unchecked, deselect all products
-                this.selectedProducts = [];
-            }
-        },
-        multipleActionFunc(){
-            let vm = this;
-            if( vm.multipleAction == ''){
-                return swal({
-                    title: "Required",
-                    text: 'Please select some action first',
-                    icon: "error",
-                    timer: 3000,
-                });
-            }
 
-            const data = {
-                products :  vm.selectedProducts,
-                action   : vm.multipleAction
+                // Create a Blob from the response data
+                const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+                const url = window.URL.createObjectURL(blob);
+
+                // Create a temporary link to trigger download
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'products.xlsx'); // Set file name
+                document.body.appendChild(link);
+                link.click();
+
+                // Cleanup
+                link.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error("Error exporting products:", error);
             }
-            vm.btnLoader = true;
-           axios
-            .post(this.api_url + "inventory/products/change-statuses", data )
+    },
+    getImageUrl(imageId) {
+        // Check if the image is null
+        if (!imageId) {
+            return this.public_url + 'assets/img/blank_image.jpg';
+        }
+        return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+    },
+    formattedTags(tags) {
+        return tags.map(tag => tag.tag.name).join(', ');
+    },
+    dataTable() {
+        if ($.fn.DataTable.isDataTable("#product_table")) {
+            $('#product_table').DataTable().destroy();
+        }
+        setTimeout(function () {
+            $("#product_table").DataTable({
+                "paging": false,
+                "pageLength": 20,
+                "lengthChange": false,
+                "searching": true,
+                "ordering": true,
+                "info": false,
+                "autoWidth": false,
+            });
+        }, 300);
+    },
+    clearDataTable() {
+        const table = $("#product_table").DataTable();
+        table.destroy();
+    },
+    formatDate(date) {
+        return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
+    },
+    addSelectedImages(data) {
+        this.selectedImages = data
+    },
+    cloneProduct(id, title) {
+        this.cloneProductData.id = id;
+        this.cloneProductData.title = title;
+    },
+    toggleAllProducts() {
+        if (this.checkedAllProducts) {
+            // If "Check All" is checked, select all products
+            this.selectedProducts = this.products.map(product => product.id);
+        } else {
+            // If "Check All" is unchecked, deselect all products
+            this.selectedProducts = [];
+        }
+    },
+    multipleActionFunc() {
+        let vm = this;
+        if (vm.multipleAction == '') {
+            return swal({
+                title: "Required",
+                text: 'Please select some action first',
+                icon: "error",
+                timer: 3000,
+            });
+        }
+
+        const data = {
+            products: vm.selectedProducts,
+            action: vm.multipleAction
+        }
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/change-statuses", data)
             .then((response) => {
                 vm.btnLoader = false;
                 vm.fetchProducts()
@@ -562,22 +590,22 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        filterData(){
-            let vm = this;
-            if( vm.filter.category.code == 0 && vm.filter.tag.code == 0 && vm.filter.product == ""){
-                return swal({
-                    title: "Required",
-                    text: 'Please select some filter first',
-                    icon: "error",
-                    timer: 3000,
-                });
-            }
+    },
+    filterData() {
+        let vm = this;
+        if (vm.filter.category.code == 0 && vm.filter.tag.code == 0 && vm.filter.product == "") {
+            return swal({
+                title: "Required",
+                text: 'Please select some filter first',
+                icon: "error",
+                timer: 3000,
+            });
+        }
 
-            vm.clearDataTable()
-            vm.btnLoader = true;
-           axios
-            .post(this.api_url + "inventory/products/filter-data", vm.filter )
+        vm.clearDataTable()
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/filter-data", vm.filter)
             .then((response) => {
                 vm.btnLoader = false;
                 const results = response.data.response;
@@ -592,12 +620,12 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        yesClone(){
-            let vm = this;
-            vm.btnLoader = true;
-           axios
-            .post(this.api_url + "inventory/products/clone", vm.cloneProductData )
+    },
+    yesClone() {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/clone", vm.cloneProductData)
             .then((response) => {
                 vm.btnLoader = false;
                 vm.fetchProducts()
@@ -616,19 +644,19 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        addMoreSelectedImages(data){
-            let vm = this;
-           if( !data ){
+    },
+    addMoreSelectedImages(data) {
+        let vm = this;
+        if (!data) {
             return swal({
-                    title: "Required",
-                    text: 'Please select image first',
-                    icon: "Success",
-                    timer: 3000,
-                });
-           }
-           axios
-            .post(this.api_url + "inventory/products/color-images/changed", data )
+                title: "Required",
+                text: 'Please select image first',
+                icon: "Success",
+                timer: 3000,
+            });
+        }
+        axios
+            .post(this.api_url + "inventory/products/color-images/changed", data)
             .then((response) => {
                 vm.fetchDetail(this.details.id)
             }).catch((err) => {
@@ -640,25 +668,25 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        changeSelectedHeroImage(data) {
-            let vm = this;
-           if( !data ){
+    },
+    changeSelectedHeroImage(data) {
+        let vm = this;
+        if (!data) {
             return swal({
-                    title: "Required",
-                    text: 'Please select image first',
-                    icon: "Success",
-                    timer: 3000,
-                });
-           }
+                title: "Required",
+                text: 'Please select image first',
+                icon: "Success",
+                timer: 3000,
+            });
+        }
 
-           const product = {
-                'attachment' : data.attachment,
-                'id'  : this.details.id
-           }
+        const product = {
+            'attachment': data.attachment,
+            'id': this.details.id
+        }
 
-           axios
-            .post(this.api_url + "inventory/products/hero-image/changed", product )
+        axios
+            .post(this.api_url + "inventory/products/hero-image/changed", product)
             .then((response) => {
                 vm.fetchDetail(this.details.id)
             }).catch((err) => {
@@ -670,30 +698,30 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        addSelectedHeroImages(data) {
-            this.selectedHeroImage = data
-        },
-        colorGallery(data) {
-            this.selectedColor = data.color;
-            this.imageAlt = data.alt;
-        },
-        changeHeroImage(data) {
-            this.selectedColor = data.image;
-            this.selectedType = data.type;
-            this.colorId = data.id;
-            this.imageAlt = data.title
-        },
-        editProductVariantFun(data){
-            this.editProductVariantData = data;
-            this.activeProductVariantStatus = data.status;
-            console.log(this.editProductVariantData);
+    },
+    addSelectedHeroImages(data) {
+        this.selectedHeroImage = data
+    },
+    colorGallery(data) {
+        this.selectedColor = data.color;
+        this.imageAlt = data.alt;
+    },
+    changeHeroImage(data) {
+        this.selectedColor = data.image;
+        this.selectedType = data.type;
+        this.colorId = data.id;
+        this.imageAlt = data.title
+    },
+    editProductVariantFun(data) {
+        this.editProductVariantData = data;
+        this.activeProductVariantStatus = data.status;
+        console.log(this.editProductVariantData);
 
-        },
-        changeStatus( data ){
-            let vm = this;
-             axios
-            .post(this.api_url + "inventory/products/status/changed", data )
+    },
+    changeStatus(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/status/changed", data)
             .then((response) => {
                 vm.fetchProducts();
                 return swal({
@@ -711,11 +739,11 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        updateUpSell( data ){
-            let vm = this;
-             axios
-            .post(this.api_url + "inventory/products/up-sells/changed", data )
+    },
+    updateUpSell(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/up-sells/changed", data)
             .then((response) => {
                 vm.fetchDetail(data.id)
             }).catch((err) => {
@@ -727,11 +755,11 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        updateTags( data ){
-            let vm = this;
-             axios
-            .post(this.api_url + "inventory/products/tags/changed", data )
+    },
+    updateTags(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/tags/changed", data)
             .then((response) => {
                 vm.fetchDetail(data.id)
             }).catch((err) => {
@@ -743,11 +771,11 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        removeTag( data ){
-            let vm = this;
-             axios
-            .post(this.api_url + "inventory/products/tags/removes", data )
+    },
+    removeTag(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/tags/removes", data)
             .then((response) => {
                 vm.fetchDetail(data.id)
             }).catch((err) => {
@@ -758,11 +786,11 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        updateDiscount(data){
-            let vm = this;
-             axios
-            .post(this.api_url + "inventory/products/discounts/changed", data )
+    },
+    updateDiscount(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/discounts/changed", data)
             .then((response) => {
 
             }).catch((err) => {
@@ -774,11 +802,11 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        updateDimensions(data){
-            let vm = this;
-             axios
-            .post(this.api_url + "inventory/products/dimensions/changed", data )
+    },
+    updateDimensions(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/dimensions/changed", data)
             .then((response) => {
 
             }).catch((err) => {
@@ -790,733 +818,736 @@ export default {
                     timer: 3000,
                 });
             });
-        },
-        updateProductVariant(data){
-            let vm = this;
-            vm.btnLoader = true;
-            vm.clearDataTable();
-            axios
-                .post(this.api_url + "inventory/products/variations/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-                    vm.fetchDetail(data.details.product_id)
-                    return swal({
-                        title: "Success",
-                        text: 'Product Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                }).catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        removeVariationImage(data){
-            let vm = this;
-            vm.btnLoader = true;
-
-            axios
-                .post(this.api_url + "inventory/products/variations/delete-images", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-                    vm.fetchDetail(data.product)
-
-                    return swal({
-                        title: "Success",
-                        text: 'Image Removed Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                }).catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        changeProductVariantStatus( data ){
-                let vm = this;
-                axios
-                .post(this.api_url + "inventory/products/variations/change-status", data )
-                .then((response) => {
-                   vm.activeProductVariantStatus = !vm.activeProductVariantStatus;
-                }).catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: 'Oops, Something went wrong please try again',
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-            },
-        closeProduct( data ){
-            if( data ){
-                this.selectedHeroImage = {}
-                this.$emit('closeProduct', true);
-            }
-        },
-        changeProductFetchStatus(newStatus) {
-            this.status = newStatus;
-            this.page = 1; // Reset page to 1
-            this.fetchProducts(this.status);
-        },
-        fetchProducts(status = null, page = 1) {
-            let vm = this;
-
-            // Reset filter
-            vm.filter = {
-                category: { code: 0, label: "Select from the following" },
-                tag: { code: 0, label: "Select from the following" },
-                product: "",
-            };
-            vm.page = page;
-            let url = this.api_url + "inventory/products";
-            if (this.status !== null) {
-                url += "?status=" + status;
-            }
-
-            if (page !== 1) {
-                url += "&page=" + page;
-            }
-
-            axios
-                .get(url)
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.products = results.products.data;
-                    vm.allProductCount = results.allProductCount;
-                    vm.publishedProductCount = results.publishedProductCount;
-                    vm.draftProductCount = results.draftProductCount;
-                    vm.trashProductCount = results.trashProductCount;
-
-                    vm.productInsights = {
-                        total : results.productInsights.total,
-                        airpod : results.productInsights.airpod,
-                        kids : results.productInsights.kids,
-                        smartGadget :  results.productInsights.smartGadget,
-                        personalCare : results.productInsights.personalCare,
-                        smartWatch :  results.productInsights.smartWatch,
-                        decor :  results.productInsights.decor,
-                        home :  results.productInsights.home,
-                    }
-                    vm.pagination = results.pagination;
-
-                vm.dataTable();
-                })
-                .catch((err) => console.log(err)
-                );
-            },
-        searchProduct( data ) {
-            let vm = this;
-            axios
-                .post(this.api_url + "inventory/products/drop-down", data)
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.productsDropDown = results;
-                });
-        },
-        fetchDetail(id) {
-            let vm = this;
-            axios
-                .post(this.api_url + "inventory/products/details", { id })
-                .then((response) => {
-                    vm.details = response.data.response[0]
-                });
-        },
-        submitProduct(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            vm.clearDataTable();
-            axios
-                .post(this.api_url + "inventory/products", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-                    vm.fetchProducts();
-                    vm.$emit('productAdded', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Product Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                }).catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        updateProduct(data) {
-            let vm = this;
-            axios
-                .post(this.api_url + "inventory/products/update", data)
-                .then((response) => {
-                    vm.productNotUpdated = false
-                }).catch((err) => {
-                    vm.productNotUpdated = true;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        fetchShippingOptions() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/settings/shipping-classes/drop-down")
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.shippingOptions = results;
-                }).catch((err) => this.fetchShippingOptions());
-        },
-        fetchPackagingOptions() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/settings/packaging-classes/drop-down")
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.packagingOptions = results;
-                }).catch((err) => this.fetchPackagingOptions());
-        },
-        fetchAttachments() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/attachments")
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.attachments = results;
-                }).catch((err) => this.fetchAttachments());
-        },
-        updateImageData( data ){
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/attachments/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-                    vm.fetchAttachments();
-                    vm.$emit('attachmentSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Media File Updated',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        deleteImage( data ){
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/attachments/delete", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-                    vm.fetchAttachments();
-                    vm.$emit('attachmentSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Media File Deleted',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        uploadAttachment(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/attachments", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-                    vm.fetchAttachments();
-                    vm.$emit('attachmentSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Media File Uploaded',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        fetchBrands() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/brands")
-                .then((response) => {
-                    vm.brands = response.data.response.record.map(item => ({
-                        ...item,
-                        editable: false, // Add the editable property here,
-                        originalData: { ...item } // Keep a copy of the original data
-                    }));
-                    vm.brandsDropDown = response.data.response.dropdown;
-                }).catch((err) => this.fetchBrands());
-        },
-        addNewBrand(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/brands", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchBrands();
-                    vm.$emit('brandSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'New Brand Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        editNewBrand(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/brands/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchBrands();
-                    vm.$emit('brandSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Brand Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        fetchAttributes() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/attributes")
-                .then((response) => {
-                    vm.attributesDropDown = response.data.response.dropdown;
-                    vm.attributes = response.data.response.record.map(item => ({
-                        ...item,
-                        editable: false, // Add the editable property here,
-                        originalData: { ...item } // Keep a copy of the original data
-                    }));
-                    vm.parentAttributes = response.data.response.parent;
-                }).catch((err) => this.fetchAttributes());
-        },
-        addNewClass(){
-            if (!this.addPackagingData.name || !this.addPackagingData.price) {
+    },
+    updateProductVariant(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        vm.clearDataTable();
+        axios
+            .post(this.api_url + "inventory/products/variations/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchDetail(data.details.product_id)
                 return swal({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Class Name and Price fields are required',
+                    title: "Success",
+                    text: 'Product Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
                 });
-            }
-
-            this.btnLoading = true;
-
-            axios.post(this.api_url + "inventory/products/settings/packaging-classes/add", this.addPackagingData)
-                .then((response) => {
-                    this.addPackagingData = JSON.parse(JSON.stringify(this.addPackagingDataReset)); // Reset form data
-                    this.fetchPackagingOptions(); // Method to refresh or reload product list
-                    return swal({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Successfully Added',
-                    });
-                })
-                .catch((err) => {
-                    console.error(err); // Handle errors
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
                 });
+            });
+    },
+    removeVariationImage(data) {
+        let vm = this;
+        vm.btnLoader = true;
 
-            this.btnLoading = false;
-            },
-        addNewAttribute(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/attributes", data)
-                .then((response) => {
-                    vm.btnLoader = false;
+        axios
+            .post(this.api_url + "inventory/products/variations/delete-images", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchDetail(data.product)
 
-                    vm.fetchAttributes();
-                    vm.$emit('attributeSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'New Attribute Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
+                return swal({
+                    title: "Success",
+                    text: 'Image Removed Successfully',
+                    icon: "success",
+                    timer: 3000,
                 });
-        },
-        editAttribute(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/attributes/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchAttributes();
-                    vm.$emit('attributeSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Attribute Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
                 });
-        },
-        fetchCategories() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/categories")
-                .then((response) => {
-                    vm.categoriesDropDown = response.data.response.dropdown;
-                    vm.categories = response.data.response.record.map(item => ({
-                        ...item,
-                        editable: false, // Add the editable property here,
-                        originalData: { ...item } // Keep a copy of the original data
-                    }));
-                    vm.parentCategories = response.data.response.parent;
-                }).catch((err) => this.fetchCategories());
-        },
-        addNewCategory(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/categories", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchCategories();
-                    vm.$emit('categorySaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'New Category Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
+            });
+    },
+    changeProductVariantStatus(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/variations/change-status", data)
+            .then((response) => {
+                vm.activeProductVariantStatus = !vm.activeProductVariantStatus;
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
                 });
-        },
-        editCategory(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/categories/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchCategories();
-                    vm.$emit('categorySaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Category Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        fetchColors() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/colors")
-                .then((response) => {
-                    vm.colorsDropDown = response.data.response.dropdown;
-                    vm.colors = response.data.response.record.map(item => ({
-                        ...item,
-                        editable: false, // Add the editable property here,
-                        originalData: { ...item } // Keep a copy of the original data
-                    }));
-                }).catch((err) => this.fetchColors());
-        },
-        addNewColor(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/colors", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchColors();
-                    vm.$emit('colorSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'New Color Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        editColor(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/colors/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchColors();
-                    vm.$emit('colorSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Color Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        fetchSizes() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/sizes")
-                .then((response) => {
-                    vm.sizesDropDown = response.data.response.dropdown;
-                    vm.sizes = response.data.response.record.map(item => ({
-                        ...item,
-                        editable: false, // Add the editable property here,
-                        originalData: { ...item } // Keep a copy of the original data
-                    }));
-                }).catch((err) => this.fetchSizes());
-        },
-        addNewSize(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/sizes", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchSizes();
-                    vm.$emit('sizeSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'New Size Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        editSize(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/sizes/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchSizes();
-                    vm.$emit('sizeSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Size Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        fetchTags() {
-            let vm = this;
-            axios
-                .get(this.api_url + "inventory/products/tags")
-                .then((response) => {
-                    vm.tagsDropDown = response.data.response.dropdown;
-                    vm.tags = response.data.response.record.map(item => ({
-                        ...item,
-                        editable: false, // Add the editable property here,
-                        originalData: { ...item } // Keep a copy of the original data
-                    }));
-                }).catch((err) => this.fetchTags());
-        },
-        addNewTag(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/tags", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchTags();
-                    vm.$emit('tagSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'New Tag Added Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
-        },
-        editTag(data) {
-            let vm = this;
-            vm.btnLoader = true;
-            axios
-                .post(this.api_url + "inventory/products/tags/update", data)
-                .then((response) => {
-                    vm.btnLoader = false;
-
-                    vm.fetchTags();
-                    vm.$emit('tagSaved', true);
-                    return swal({
-                        title: "Success",
-                        text: 'Tag Updated Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
+            });
+    },
+    closeProduct(data) {
+        if (data) {
+            this.selectedHeroImage = {}
+            this.$emit('closeProduct', true);
         }
     },
+    changeProductFetchStatus(newStatus) {
+        this.status = newStatus;
+        this.page = 1; // Reset page to 1
+        this.fetchProducts(this.status);
+    },
+    fetchProducts(status = null, page = 1) {
+        let vm = this;
+
+        // Reset filter
+        vm.filter = {
+            category: { code: 0, label: "Select from the following" },
+            tag: { code: 0, label: "Select from the following" },
+            product: "",
+        };
+        vm.page = page;
+        let url = this.api_url + "inventory/products";
+        if (this.status !== null) {
+            url += "?status=" + status;
+        }
+
+        if (page !== 1) {
+            url += "&page=" + page;
+        }
+
+        axios
+            .get(url)
+            .then((response) => {
+                const results = response.data.response;
+                vm.products = results.products.data;
+                vm.allProductCount = results.allProductCount;
+                vm.publishedProductCount = results.publishedProductCount;
+                vm.draftProductCount = results.draftProductCount;
+                vm.trashProductCount = results.trashProductCount;
+
+                vm.productInsights = {
+                    total: results.productInsights.total,
+                    airpod: results.productInsights.airpod,
+                    kids: results.productInsights.kids,
+                    smartGadget: results.productInsights.smartGadget,
+                    personalCare: results.productInsights.personalCare,
+                    smartWatch: results.productInsights.smartWatch,
+                    decor: results.productInsights.decor,
+                    home: results.productInsights.home,
+                }
+                vm.pagination = results.pagination;
+
+                vm.dataTable();
+            })
+            .catch((err) => console.log(err)
+            );
+    },
+    searchProduct(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/drop-down", data)
+            .then((response) => {
+                const results = response.data.response;
+                vm.productsDropDown = results;
+            });
+    },
+    fetchDetail(id) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/details", { id })
+            .then((response) => {
+                vm.details = response.data.response[0]
+            });
+    },
+    submitProduct(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        vm.clearDataTable();
+        axios
+            .post(this.api_url + "inventory/products", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchProducts();
+                vm.$emit('productAdded', true);
+                return swal({
+                    title: "Success",
+                    text: 'Product Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    updateProduct(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/update", data)
+            .then((response) => {
+                vm.productNotUpdated = false
+            }).catch((err) => {
+                vm.productNotUpdated = true;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchShippingOptions() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/settings/shipping-classes/drop-down")
+            .then((response) => {
+                const results = response.data.response;
+                vm.shippingOptions = results;
+            }).catch((err) => this.fetchShippingOptions());
+    },
+    fetchPackagingOptions() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/settings/packaging-classes/drop-down")
+            .then((response) => {
+                const results = response.data.response;
+                vm.packagingOptions = results;
+            }).catch((err) => this.fetchPackagingOptions());
+    },
+    fetchAttachments() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/attachments")
+            .then((response) => {
+                const results = response.data.response;
+                vm.attachments = results;
+            }).catch((err) => this.fetchAttachments());
+    },
+    updateImageData(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/attachments/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchAttachments();
+                vm.$emit('attachmentSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Media File Updated',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    deleteImage(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/attachments/delete", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchAttachments();
+                vm.$emit('attachmentSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Media File Deleted',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    uploadAttachment(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/attachments", data)
+            .then((response) => {
+                vm.btnLoader = false;
+                vm.fetchAttachments();
+                vm.$emit('attachmentSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Media File Uploaded',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchBrands() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/brands")
+            .then((response) => {
+                vm.brands = response.data.response.record.map(item => ({
+                    ...item,
+                    editable: false, // Add the editable property here,
+                    originalData: { ...item } // Keep a copy of the original data
+                }));
+                vm.brandsDropDown = response.data.response.dropdown;
+            }).catch((err) => this.fetchBrands());
+    },
+    addNewBrand(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/brands", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchBrands();
+                vm.$emit('brandSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'New Brand Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    editNewBrand(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/brands/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchBrands();
+                vm.$emit('brandSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Brand Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchAttributes() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/attributes")
+            .then((response) => {
+                vm.attributesDropDown = response.data.response.dropdown;
+                vm.attributes = response.data.response.record.map(item => ({
+                    ...item,
+                    editable: false, // Add the editable property here,
+                    originalData: { ...item } // Keep a copy of the original data
+                }));
+                vm.parentAttributes = response.data.response.parent;
+            }).catch((err) => this.fetchAttributes());
+    },
+    addNewClass() {
+        if (!this.addPackagingData.name || !this.addPackagingData.price) {
+            return swal({
+                icon: 'error',
+                title: 'Error',
+                text: 'Class Name and Price fields are required',
+            });
+        }
+
+        this.btnLoading = true;
+
+        axios.post(this.api_url + "inventory/products/settings/packaging-classes/add", this.addPackagingData)
+            .then((response) => {
+                this.addPackagingData = JSON.parse(JSON.stringify(this.addPackagingDataReset)); // Reset form data
+                this.fetchPackagingOptions(); // Method to refresh or reload product list
+                return swal({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Successfully Added',
+                });
+            })
+            .catch((err) => {
+                console.error(err); // Handle errors
+            });
+
+        this.btnLoading = false;
+    },
+    addNewAttribute(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/attributes", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchAttributes();
+                vm.$emit('attributeSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'New Attribute Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    editAttribute(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/attributes/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchAttributes();
+                vm.$emit('attributeSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Attribute Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchCategories() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/categories")
+            .then((response) => {
+                vm.categoriesDropDown = response.data.response.dropdown;
+                vm.categories = response.data.response.record.map(item => ({
+                    ...item,
+                    editable: false, // Add the editable property here,
+                    originalData: { ...item } // Keep a copy of the original data
+                }));
+                vm.parentCategories = response.data.response.parent;
+            }).catch((err) => this.fetchCategories());
+    },
+    addNewCategory(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/categories", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchCategories();
+                vm.$emit('categorySaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'New Category Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    editCategory(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/categories/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchCategories();
+                vm.$emit('categorySaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Category Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchColors() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/colors")
+            .then((response) => {
+                vm.colorsDropDown = response.data.response.dropdown;
+                vm.colors = response.data.response.record.map(item => ({
+                    ...item,
+                    editable: false, // Add the editable property here,
+                    originalData: { ...item } // Keep a copy of the original data
+                }));
+            }).catch((err) => this.fetchColors());
+    },
+    addNewColor(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/colors", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchColors();
+                vm.$emit('colorSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'New Color Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    editColor(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/colors/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchColors();
+                vm.$emit('colorSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Color Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchSizes() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/sizes")
+            .then((response) => {
+                vm.sizesDropDown = response.data.response.dropdown;
+                vm.sizes = response.data.response.record.map(item => ({
+                    ...item,
+                    editable: false, // Add the editable property here,
+                    originalData: { ...item } // Keep a copy of the original data
+                }));
+            }).catch((err) => this.fetchSizes());
+    },
+    addNewSize(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/sizes", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchSizes();
+                vm.$emit('sizeSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'New Size Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    editSize(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/sizes/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchSizes();
+                vm.$emit('sizeSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Size Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    fetchTags() {
+        let vm = this;
+        axios
+            .get(this.api_url + "inventory/products/tags")
+            .then((response) => {
+                vm.tagsDropDown = response.data.response.dropdown;
+                vm.tags = response.data.response.record.map(item => ({
+                    ...item,
+                    editable: false, // Add the editable property here,
+                    originalData: { ...item } // Keep a copy of the original data
+                }));
+            }).catch((err) => this.fetchTags());
+    },
+    addNewTag(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/tags", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchTags();
+                vm.$emit('tagSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'New Tag Added Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    editTag(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        axios
+            .post(this.api_url + "inventory/products/tags/update", data)
+            .then((response) => {
+                vm.btnLoader = false;
+
+                vm.fetchTags();
+                vm.$emit('tagSaved', true);
+                return swal({
+                    title: "Success",
+                    text: 'Tag Updated Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    }
+},
 }
 </script>
 <style scoped>
 .custom-checkbox {
-    width: 16px;  /* Adjust the width as needed */
-    height: 16px; /* Adjust the height as needed */
-    transform: scale(0.8); /* You can also use scale to adjust the size */
+    width: 16px;
+    /* Adjust the width as needed */
+    height: 16px;
+    /* Adjust the height as needed */
+    transform: scale(0.8);
+    /* You can also use scale to adjust the size */
 }
 </style>

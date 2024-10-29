@@ -201,6 +201,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
         Route::post('/tags/removes', [ ProductController::class , 'removeTag']);
 
+        Route::get('/export', [ProductController::class, 'exportExcel']);
+
+
         Route::group(['prefix' => 'attachments'], function(){
             Route::get('/',  [ AttachmentController::class , 'fetchAttachments']);
             Route::post('/',  [ AttachmentController::class , 'store']);

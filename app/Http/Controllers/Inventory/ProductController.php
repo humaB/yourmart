@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Inventory;
 
+use App\Exports\ProductExport;
 use App\Helpers\SlugHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
@@ -20,6 +21,7 @@ use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Product\Variation\ProductVariationImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ProductController extends Controller
 {
@@ -872,6 +874,10 @@ class ProductController extends Controller
 
         ProductTag::where('product_id', $request->id)->where('id', $request->tag)->delete();
         return response()->json(['message' => 'Tags Removed Successfully'], 200);
+    }
+
+    public function exportExcel(){
+        return Excel::download(new ProductExport, 'products.xlsx');
     }
 
     private function validation($validator)
