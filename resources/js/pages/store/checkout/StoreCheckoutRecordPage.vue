@@ -27,7 +27,7 @@
                                 <tbody>
                                     <tr v-for="(item,index) in issuance" :key="item.id">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ item.order.type }}</td>
+                                        <td>{{ item.order ? item.order.type : '-' }}</td>
                                         <td>
                                             {{ item.order && item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + '-' + item.order.order_no : item.order.order_no }}
                                           </td>
