@@ -8811,7 +8811,7 @@ var render = function render() {
   }, [_vm._m(13), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
     return _c("tr", {
       key: item.id
-    }, [item.variation ? _c("td", {
+    }, [item.product.variation ? _c("td", {
       staticClass: "text-truncate"
     }, [_c("ul", {
       staticClass: "list-unstyled order-list m-b-0 m-b-0"
@@ -8819,15 +8819,15 @@ var render = function render() {
       staticClass: "team-member team-member-sm"
     }, [_c("a", {
       attrs: {
-        href: _vm.getImageUrl(item.variation.images[0].attachment.attachment),
+        href: _vm.getImageUrl(item.product.variation.images[0].attachment.attachment),
         target: "_blank"
       }
     }, [_c("img", {
       staticClass: "rounded-circle",
       attrs: {
-        src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
+        src: _vm.getImageUrl(item.product.variation.images[0].attachment.attachment)
       }
-    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))])]);
+    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.product.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.product.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.product.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.product.variation.color ? item.product.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.product.variation.size ? item.product.variation.size.name : "-") + "\n                                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))])]);
   }), 0)])])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
   }, [_c("p", [_c("span", [_c("i", {

@@ -275,21 +275,21 @@
                                                             </thead>
                                                             <tbody>
                                                                 <tr v-for="item in details.returns.details" :key="item.id">
-                                                                    <td class="text-truncate" v-if="item.variation">
+                                                                    <td class="text-truncate" v-if="item.product.variation">
                                                                         <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                                           <li class="team-member team-member-sm">
-                                                                            <a :href="getImageUrl(item.variation.images[0].attachment.attachment)" target="_blank">
-                                                                              <img class="rounded-circle" :src="getImageUrl(item.variation.images[0].attachment.attachment)">
+                                                                            <a :href="getImageUrl(item.product.variation.images[0].attachment.attachment)" target="_blank">
+                                                                              <img class="rounded-circle" :src="getImageUrl(item.product.variation.images[0].attachment.attachment)">
                                                                             </a>
                                                                           </li>
                                                                         </ul>
                                                                       </td>
                                                                     <td>
-                                                                        <b>SKU : </b>{{ item.variation.sku  }}<br>
-                                                                        <b>Title : </b>{{ item.variation.product.title }}<br>
-                                                                        <b>Description : </b>{{ item.variation.product.short_description }}<br>
-                                                                        <b>Color : </b>{{ item.variation.color ?item.variation.color.name : '-'  }}<br>
-                                                                        <b>Size : </b>{{ item.variation.size ?item.variation.size.name : '-'  }}
+                                                                        <b>SKU : </b>{{ item.product.variation.sku  }}<br>
+                                                                        <b>Title : </b>{{ item.product.variation.product.title }}<br>
+                                                                        <b>Description : </b>{{ item.product.variation.product.short_description }}<br>
+                                                                        <b>Color : </b>{{ item.product.variation.color ?item.product.variation.color.name : '-'  }}<br>
+                                                                        <b>Size : </b>{{ item.product.variation.size ?item.product.variation.size.name : '-'  }}
                                                                     </td>
                                                                     <td>{{ item.quantity }}</td>
                                                                     <td>{{ parseFloat(item.quantity) *( parseFloat(item.price)  ) }}</td>
