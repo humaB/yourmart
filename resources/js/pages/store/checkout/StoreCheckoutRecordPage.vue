@@ -30,8 +30,8 @@
                                         <td>{{ item.order ? item.order.type : '-' }}</td>
                                         <td>
                                             {{ item.order && item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + '-' + item.order.order_no : (item.order ? item.order.order_no : '-') }}
-                                          </td>
-                                          <td>{{ item.order.user ?item.order.user.name : '' }}</td>
+                                        </td>
+                                        <td>{{ item.order ? (item.order.user ?item.order.user.name : '') : '' }}</td>
                                         <td>{{ item.order.customer_name }}</td>
                                         <td>{{ item.id }}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
