@@ -168,6 +168,8 @@ class FisReportController extends Controller
                 'avg_price' => round($new_average_rate)
             ]);
 
+            $product->decrement('stock', $delete_quantity);
+
             StoreReceivedDetail::where('id', $request->id)->delete();
             return ['message' => 'Successfully Deleted'];
         }
