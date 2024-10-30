@@ -125,8 +125,8 @@ class OrderController extends Controller
             'items.variation.barcode',
             'items.variation.color',
             'items.variation.size',
-            'returns.details.variation.product',
-            'returns.details.variation.images.attachment',
+            'returns.details.product.product',
+            'returns.details.product.images.attachment',
 
             //For Daraz Order
             'daraz_labels'
@@ -415,7 +415,7 @@ class OrderController extends Controller
 
             foreach ($order->items as $product) {
                 $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                
+
                     StoreReturnDetail::create([
                     'srn_id'     => $srn->id,
                     'product_id' => $variation->product_id,
