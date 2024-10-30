@@ -163,6 +163,8 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
         Route::post('/good-issued',  [ FisReportController::class , 'goodIssuedRegister']);
         Route::post('/good-returns',  [ FisReportController::class , 'goodReturnRegister']);
 
+        Route::post('/good-received/delete',  [ FisReportController::class , 'goodReceivedDelete']);
+
     });
 });
 

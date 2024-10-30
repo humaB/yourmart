@@ -2459,7 +2459,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'InventoryGoodReceivedReport',
-  props: ['data', 'loader', 'products'],
+  props: ['data', 'loader', 'products', 'role'],
   components: {
     BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
   },
@@ -2476,11 +2476,20 @@ __webpack_require__.r(__webpack_exports__);
         to: new Date().toISOString().substr(0, 10)
       },
       grnID: '',
-      pid: ''
+      pid: '',
+      grnDetails: {}
     };
   },
   created: function created() {
     this.csrf = $('meta[name=csrf-token]').attr('content');
+  },
+  mounted: function mounted() {
+    var _this = this;
+    this.$parent.$on("GRNdeleted", function (value) {
+      if (value) {
+        _this.submitFunction();
+      }
+    });
   },
   methods: {
     formatDate: function formatDate(date) {
@@ -2512,6 +2521,9 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         form.submit();
       }, 500);
+    },
+    deleteGRN: function deleteGRN(data) {
+      this.$emit('deleteGRN', data);
     }
   },
   watch: {
@@ -5086,13 +5098,46 @@ __webpack_require__.r(__webpack_exports__);
       goodReceivedData: [],
       goodIssuedData: [],
       goodReturnData: [],
-      loader: false
+      loader: false,
+      deleteLoader: false,
+      role: null,
+      grnDetails: {
+        product: '',
+        id: ''
+      }
     };
   },
   created: function created() {
     this.fetchProducts();
   },
   methods: {
+    deleteGRNConfirmation: function deleteGRNConfirmation() {
+      var _this = this;
+      var vm = this;
+      vm.deleteLoader = true;
+      axios.post(this.api_url + "reports/fis/good-received/delete", this.grnDetails).then(function (response) {
+        vm.deleteLoader = false;
+        $('#deleteGRN').modal('hide');
+        _this.$emit('GRNdeleted', true);
+        return swal({
+          title: "Success",
+          text: 'Deleted Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.deleteLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    deleteGRN: function deleteGRN(data) {
+      this.grnDetails = data;
+    },
     fetchProducts: function fetchProducts() {
       var vm = this;
       axios.get(this.api_url + "inventory/products/complete-drop-down").then(function (response) {
@@ -5133,7 +5178,8 @@ __webpack_require__.r(__webpack_exports__);
       vm.loader = true;
       axios.post(vm.api_url + 'reports/fis/good-received', data).then(function (res) {
         var results = res.data.response;
-        vm.goodReceivedData = results;
+        vm.goodReceivedData = results.goods;
+        vm.role = results.role;
         vm.loader = false;
       });
     },
@@ -11242,7 +11288,7 @@ var render = function render() {
     attrs: {
       id: "inventory_good_received"
     }
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("GRN #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Received Qty")]), _vm._v(" "), _vm.role == "admin" ? _c("th", [_vm._v("Action")]) : _vm._e()])]), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", {
@@ -11277,7 +11323,20 @@ var render = function render() {
       staticClass: "h5"
     }, [_vm._v(_vm._s(_vm.formatPrice(item.price)))]), _vm._v(" "), _c("td", {
       staticClass: "h5"
-    }, [_vm._v(_vm._s(item.quantity))])]);
+    }, [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _vm.role == "admin" ? _c("td", [_c("button", {
+      staticClass: "btn btn-danger",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#deleteGRN"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.deleteGRN(item);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
+    })])]) : _vm._e()]);
   }), 0)])])])])])]), _vm._v(" "), _c("form", {
     ref: "requestForm",
     attrs: {
@@ -11340,10 +11399,6 @@ var staticRenderFns = [function () {
   }, [_c("button", {
     staticClass: "btn btn-block btn-primary"
   }, [_vm._v("Filter")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("GRN #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Received Qty")])])]);
 }];
 render._withStripped = true;
 
@@ -15756,7 +15811,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Control Register")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Control\n                                    Register")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                2.\n                                "), _c("a", {
     attrs: {
@@ -15769,7 +15824,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good Received")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Good\n                                    Received")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                3.\n                                "), _c("a", {
     attrs: {
@@ -15782,7 +15837,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good Issued")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Good\n                                    Issued")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                4.\n                                "), _c("a", {
     attrs: {
@@ -15795,7 +15850,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good Returns")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Inventory Good\n                                    Returns")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -15807,6 +15862,7 @@ var render = function render() {
     }
   }) : _vm._e(), _vm._v(" "), _vm.report == "good-received-report" ? _c("InventoryGoodReceivedReport", {
     attrs: {
+      role: _vm.role,
       products: _vm.products,
       data: _vm.goodReceivedData,
       loader: _vm.loader
@@ -15814,6 +15870,9 @@ var render = function render() {
     on: {
       inventoryGoodReceivedilter: function inventoryGoodReceivedilter($event) {
         return _vm.inventoryGoodReceivedilter($event);
+      },
+      deleteGRN: function deleteGRN($event) {
+        return _vm.deleteGRN($event);
       }
     }
   }) : _vm._e(), _vm._v(" "), _vm.report == "good-issued-report" ? _c("InventoryGoodIssuanceReport", {
@@ -15838,9 +15897,78 @@ var render = function render() {
         return _vm.inventoryGoodReturnFilter($event);
       }
     }
-  }) : _vm._e()], 1);
+  }) : _vm._e(), _vm._v(" "), _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "deleteGRN",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "deleteGRNTitle",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Are you sure you want to delete this " + _vm._s(_vm.grnDetails ? _vm.grnDetails.product.title : "") + "\n                            from GRN # " + _vm._s(_vm.grnDetails.id ? _vm.grnDetails.grn_id : "") + "?")]), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.deleteLoader ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.deleteGRNConfirmation();
+      }
+    }
+  }, [_vm._v("Yes,\n                        Proceed")]) : _c("button", {
+    staticClass: "btn btn-danger btn-progress danger",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Yes,\n                            Proceed")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])])], 1);
 };
-var staticRenderFns = [];
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Confirmation")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("ul", [_c("li", [_vm._v("This will have impact on average price of this product")]), _vm._v(" "), _c("li", [_vm._v("This will have impact on total and remaining amount of PO")]), _vm._v(" "), _c("li", [_vm._v("This will only be delete if PO amount is not and remaining amount is equal or\n                                greater than this product cost")])]);
+}];
 render._withStripped = true;
 
 

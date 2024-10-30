@@ -281,8 +281,8 @@ class StoreInwardController extends Controller
                          //Calculate Weigthed Average Rate
                         //Total Avail. Stock
                         //Total average rate = ( average_rate * stock ) + (new_qty * new_rate) / total_stock + new_qty
-
-                        $avg_price = ( ( (float)$variation->avg_price * (float)$variation->stock ) + ( (float)$receivedQty * (float)$data->price) ) / ( (float)$variation->stock + (float)$receivedQty);
+                        $totalCost = ($data->price * $receivedQty) - $discountForReceivedQty + ($taxForReceivedQty + $deliveryChargesForReceivedQty);
+                        $avg_price = ( ( (float)$variation->avg_price * (float)$variation->stock ) + $totalCost ) / ( (float)$variation->stock + (float)$receivedQty);
 
                         $variation->increment('stock', $receivedQty);
                         $variation->update(['avg_price' =>  round($avg_price) ]);

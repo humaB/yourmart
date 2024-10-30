@@ -51,6 +51,7 @@
                                         <th>Product Name </th>
                                         <th>Rate </th>
                                         <th>Received Qty</th>
+                                        <th v-if="role == 'admin'">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -74,6 +75,7 @@
                                         <td class="h5">{{ formatPrice(item.price) }}</td>
 
                                         <td class="h5">{{ item.quantity }}</td>
+                                        <td v-if="role == 'admin'"><button class="btn btn-danger" data-toggle="modal" data-target="#deleteGRN" @click="deleteGRN(item)"><i class="fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -103,7 +105,7 @@ import { BulletListLoader } from 'vue-content-loader';
 
 export default {
     name: 'InventoryGoodReceivedReport',
-    props: ['data', 'loader', 'products'],
+    props: ['data', 'loader', 'products', 'role'],
     components: {
         BulletListLoader
     },
@@ -117,11 +119,19 @@ export default {
                 to: new Date().toISOString().substr(0, 10),
             },
             grnID : '',
-            pid : ''
+            pid : '',
+            grnDetails : {}
         }
     },
     created() {
       this.csrf = $('meta[name=csrf-token]').attr('content');
+    },
+    mounted(){
+        this.$parent.$on("GRNdeleted", (value) => {
+            if (value) {
+                this.submitFunction();
+            }
+        });
     },
     methods: {
         formatDate(date) {
@@ -156,6 +166,9 @@ export default {
                 form.submit();
             }, 500)
         },
+        deleteGRN( data ){
+            this.$emit('deleteGRN', data);
+        }
     },
     watch: {
         data(newLedger) {
