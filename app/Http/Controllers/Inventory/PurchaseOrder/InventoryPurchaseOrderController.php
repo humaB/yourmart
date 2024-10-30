@@ -100,11 +100,11 @@ class InventoryPurchaseOrderController extends Controller
             // // Create the Purchase Order
             $po = PurchaseOrder::create([
                 'supplier_id' => $request->vendor,
-                'total_amount' => ($totalAmount + $request->tax + $request->deliveryCharges) - $request->discount,
-                'remaining_amount' => ($totalAmount + $request->tax + $request->deliveryCharges) - $request->discount,
-                'tax' => $request->tax,
-                'delivery_charges' => $request->deliveryCharges,
-                'discount' => $request->discount,
+                'total_amount' => round( ($totalAmount + $request->tax + $request->deliveryCharges) - $request->discount ),
+                'remaining_amount' => round( ($totalAmount + $request->tax + $request->deliveryCharges) - $request->discount ),
+                'tax' => round($request->tax),
+                'delivery_charges' => round($request->deliveryCharges),
+                'discount' => round($request->discount),
                 'payment_term_advance' => $request->advance,
                 'payment_term_after_delivery' => $request->delivery,
                 'status' => 0, // 0 => Pending || 1 => Approved || 2 => Rejected
