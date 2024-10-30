@@ -1289,6 +1289,10 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchProducts();
   },
   methods: {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
     adjustStockFun: function adjustStockFun(data) {
       var _this = this;
       var vm = this;
@@ -3979,7 +3983,7 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.barcode ? item.barcode.barcode : "-") + "\n                                    ")]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.avg_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.avg_price * item.stock)))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.barcode ? item.barcode.barcode : "-") + "\n                                    ")]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
@@ -4041,7 +4045,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Barcode")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total Value")]), _vm._v(" "), _c("th", [_vm._v("Barcode")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

@@ -126,6 +126,7 @@
                                         <th>Product</th>
                                         <th>Avg Price</th>
                                         <th>Quantity</th>
+                                        <th>Total Value</th>
                                         <th>Barcode</th>
                                         <th>Action</th>
                                     </tr>
@@ -138,6 +139,7 @@
                                         <td>{{ item.product ? item.product.title : '-'}}</td>
                                         <td>{{ item.avg_price || 0 }}</td>
                                         <td>{{ item.stock }}</td>
+                                        <td>{{ formatPrice( item.avg_price * item.stock ) }}</td>
                                         <td>
                                             {{ item.barcode ? item.barcode.barcode : '-' }}
                                         </td>
@@ -210,6 +212,12 @@ import TableHeader from "../../components/table/TableHeaderComponent.vue";
             this.fetchProducts();
         },
         methods : {
+            formatPrice: function formatPrice(price) {
+                var string = parseFloat(price).toString();
+                return string
+                    .replace(/,/g, "")
+                    .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+            },
             adjustStockFun(data){
                 let vm = this;
                 vm.clearDataTable();
