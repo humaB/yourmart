@@ -125,8 +125,8 @@ class OrderController extends Controller
             'items.variation.barcode',
             'items.variation.color',
             'items.variation.size',
-            'returns.details.product.product',
-            'returns.details.product.images.attachment',
+            'returns.details.product',
+            'returns.details.product.variation.images.attachment',
 
             //For Daraz Order
             'daraz_labels'
