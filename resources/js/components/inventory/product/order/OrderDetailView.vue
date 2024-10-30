@@ -286,8 +286,8 @@
                                                                       </td>
                                                                     <td>
                                                                         <b>SKU : </b>{{ item.product.variation.sku  }}<br>
-                                                                        <b>Title : </b>{{ item.product.variation.product.title }}<br>
-                                                                        <b>Description : </b>{{ item.product.variation.product.short_description }}<br>
+                                                                        <b>Title : </b>{{ item.product.title }}<br>
+                                                                        <b>Description : </b>{{ item.product.short_description }}<br>
                                                                         <b>Color : </b>{{ item.product.variation.color ?item.product.variation.color.name : '-'  }}<br>
                                                                         <b>Size : </b>{{ item.product.variation.size ?item.product.variation.size.name : '-'  }}
                                                                     </td>
