@@ -252,7 +252,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
 
         Route::group(['prefix' => 'orders'], function(){
-        Route::get('/',  [ OrderController::class , 'fetchOrders']);
+            Route::get('/',  [ OrderController::class , 'fetchOrders']);
+            Route::get('/records',  [ OrderController::class , 'fetchOrderRecord']);
+
             Route::post('/details',  [ OrderController::class , 'details']);
             Route::post('/comments',  [ OrderController::class , 'comment']);
 

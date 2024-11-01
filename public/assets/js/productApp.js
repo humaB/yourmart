@@ -1170,7 +1170,7 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "OrderDetailView",
-  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader'],
+  props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader', 'view'],
   data: function data() {
     return {
       public_url: window.location.origin + "",
@@ -4052,6 +4052,142 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(this.api_url + "inventory/products/settings/shipping-classes/change-status", data).then(function (response) {
         vm.fetchRecord();
         vm.activeStatus = !vm.activeStatus;
+      });
+    },
+    dataTable: function dataTable() {
+      $("#moq_table").DataTable();
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $("#moq_table").DataTable();
+      table.destroy();
+    }
+  },
+  watch: {
+    orders: function orders(newLedger) {
+      this.clearDataTable();
+      setTimeout(function () {
+        $("#moq_table").DataTable({
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel"]
+        });
+      }, 300);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=script&lang=js":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_inventory_product_order_OrderDetailView_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderDetailView.vue */ "./resources/js/components/inventory/product/order/OrderDetailView.vue");
+/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
+/* harmony import */ var _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/inventory/product/order/TrackingDetailPopup.vue */ "./resources/js/components/inventory/product/order/TrackingDetailPopup.vue");
+
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'ProductOrderPage',
+  components: {
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_5__.BulletListLoader,
+    OrderDetailView: _components_inventory_product_order_OrderDetailView_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    TrackingDetailPopup: _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  data: function data() {
+    return {
+      api_url: window.location.origin + "/public/api/",
+      tableHeader: {
+        heading: "All Orders"
+      },
+      th: ["Sr #", "Order #", "Belongs To", "Total Amount", "Paid Amount", "Remaining Amount", "Added Date", "Status", "Action"],
+      table_id: "moq_table",
+      btnLoader: false,
+      orders: [],
+      loader: true,
+      details: {},
+      commentLoader: false,
+      role: '',
+      dropShipperDetails: {},
+      trackingDetails: [],
+      orderID: ''
+    };
+  },
+  created: function created() {
+    this.fetchOrders();
+  },
+  methods: {
+    fetchTracking: function fetchTracking(id) {
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/orders/tracking", {
+        id: id
+      }).then(function (response) {
+        vm.trackingDetails = response.data.response;
+      });
+    },
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).format('DD-MMM-YYYY') : 'N/A';
+    },
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    fetchOrders: function fetchOrders() {
+      var vm = this;
+      vm.loader = true;
+      this.clearDataTable();
+      axios.get(this.api_url + "inventory/products/orders/records").then(function (response) {
+        vm.orders = response.data.response;
+        vm.loader = false;
+      });
+    },
+    fetchDetail: function fetchDetail(id) {
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/orders/details", {
+        id: id
+      }).then(function (response) {
+        vm.details = response.data.response[0];
+      });
+    },
+    fetchDropshipperDetails: function fetchDropshipperDetails(data) {
+      var vm = this;
+      axios.post(this.api_url + "dropshippers/details", {
+        id: data.id
+      }).then(function (response) {
+        vm.dropShipperDetails = response.data.response[0];
+      });
+    },
+    addComment: function addComment(data) {
+      var vm = this;
+      vm.commentLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/comments", data).then(function (response) {
+        vm.fetchDetail(vm.details.id);
+        vm.commentLoader = false;
+        vm.$emit('commentAdded', true);
+        return swal({
+          title: "Success",
+          text: "Your Comment added successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.commentLoader = false;
       });
     },
     dataTable: function dataTable() {
@@ -8844,7 +8980,7 @@ var render = function render() {
     }
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
+  }, [_vm._v("Update Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
     staticClass: "modal-footer"
   }, [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
@@ -8900,7 +9036,7 @@ var render = function render() {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("\n                        Close\n                    ")])]) : _vm.details.type == "Cash" ? _c("div", {
+  }, [_vm._v("\n                        Close\n                    ")])]) : _vm.view != "viewOnly" && _vm.details.type == "Cash" ? _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
@@ -12974,6 +13110,163 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Under Review")]), _vm._v(" "), _c("th", [_vm._v("Rejected")]), _vm._v(" "), _c("th", [_vm._v("Delivered")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Returned to store")])]);
 }, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Type")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Received")]), _vm._v(" "), _c("th", [_vm._v("Remaining")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=template&id=015b319c":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=template&id=015b319c ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card card-primary"
+  }, [_c("TableHeader", {
+    attrs: {
+      tableHeader: _vm.tableHeader
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("div", {
+    staticClass: "col-md-12 table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: _vm.table_id
+    }
+  }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "-"))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
+      attrs: {
+        href: "#",
+        "data-toggle": "modal",
+        "data-target": "#trackingInformation"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchTracking(item.id);
+        }
+      }
+    }, [_vm._v("\n                                                                " + _vm._s(item.tracking_number) + "\n                                                            ")])]) : _c("span", [_vm._v("\n                                                            " + _vm._s(item.type) + "\n                                                        ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(item.total_bill) - (parseFloat(item.courier_service_price) + parseFloat(item.packaging_price)))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_service_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid_profit)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+      staticClass: "badge badge-warning text-dark"
+    }, [_vm._v("Order Collection")]) : item.status == 1 ? _c("span", {
+      staticClass: "badge badge-info text-dark"
+    }, [_vm._v("Inventory Issuance")]) : item.status == 2 ? _c("span", {
+      staticClass: "badge badge-secondary"
+    }, [_vm._v("QC")]) : item.status == 3 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Packing/Dispatch")]) : item.status == 4 ? _c("span", {
+      staticClass: "badge badge-warning text-dark"
+    }, [_vm._v("Audit")]) : item.status == 5 ? _c("span", {
+      staticClass: "badge badge-succes"
+    }, [_vm._v("Dispatched")]) : item.status == 6 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Rejection Under\n                                                            Review")]) : item.status == 7 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Rejected")]) : item.status == 8 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Delivered")]) : item.status == 9 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Returned")]) : item.status == 10 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Returned To Stock")]) : item.status == 11 ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Out for delivery")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-info",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#ticket",
+        title: "View Details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetail(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })])])]);
+  }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("OrderDetailView", {
+    attrs: {
+      revertLoader: _vm.revertLoader,
+      rejectLoader: _vm.rejectLoader,
+      paidAmountLoader: _vm.paidAmountLoader,
+      view: "viewOnly",
+      details: _vm.details,
+      loader: _vm.commentLoader,
+      role: _vm.role
+    },
+    on: {
+      addComment: function addComment($event) {
+        return _vm.addComment($event);
+      },
+      forward: function forward($event) {
+        return _vm.forward($event);
+      },
+      reject: function reject($event) {
+        return _vm.reject($event);
+      },
+      revert: function revert($event) {
+        return _vm.revert($event);
+      },
+      fetchDropshipperDetails: function fetchDropshipperDetails($event) {
+        return _vm.fetchDropshipperDetails($event);
+      },
+      updatePaidAmount: function updatePaidAmount($event) {
+        return _vm.updatePaidAmount($event);
+      },
+      updatePackagingAmount: function updatePackagingAmount($event) {
+        return _vm.updatePackagingAmount($event);
+      },
+      markasReplacement: function markasReplacement($event) {
+        return _vm.markasReplacement($event);
+      }
+    }
+  }), _vm._v(" "), _c("DropshipperDetails", {
+    attrs: {
+      details: _vm.dropShipperDetails
+    }
+  }), _vm._v(" "), _c("TrackingDetailPopup", {
+    attrs: {
+      trackingDetails: _vm.trackingDetails
+    }
+  })], 1);
+};
+var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Type")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Received")]), _vm._v(" "), _c("th", [_vm._v("Remaining")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
@@ -39585,6 +39878,45 @@ component.options.__file = "resources/js/pages/inventory/product/order/ProductOr
 
 /***/ }),
 
+/***/ "./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ProductOrderRecordPage_vue_vue_type_template_id_015b319c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProductOrderRecordPage.vue?vue&type=template&id=015b319c */ "./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=template&id=015b319c");
+/* harmony import */ var _ProductOrderRecordPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProductOrderRecordPage.vue?vue&type=script&lang=js */ "./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ProductOrderRecordPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ProductOrderRecordPage_vue_vue_type_template_id_015b319c__WEBPACK_IMPORTED_MODULE_0__.render,
+  _ProductOrderRecordPage_vue_vue_type_template_id_015b319c__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue":
 /*!******************************************************************************************!*\
   !*** ./resources/js/pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue ***!
@@ -40093,6 +40425,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=script&lang=js":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=script&lang=js ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderRecordPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProductOrderRecordPage.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderRecordPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue?vue&type=script&lang=js":
 /*!******************************************************************************************************************!*\
   !*** ./resources/js/pages/inventory/product/setting/ProductMinimumOrderQuantityPage.vue?vue&type=script&lang=js ***!
@@ -40527,6 +40875,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderPage_vue_vue_type_template_id_655815aa__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderPage_vue_vue_type_template_id_655815aa__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProductOrderPage.vue?vue&type=template&id=655815aa */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderPage.vue?vue&type=template&id=655815aa");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=template&id=015b319c":
+/*!*************************************************************************************************************!*\
+  !*** ./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=template&id=015b319c ***!
+  \*************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderRecordPage_vue_vue_type_template_id_015b319c__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderRecordPage_vue_vue_type_template_id_015b319c__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProductOrderRecordPage_vue_vue_type_template_id_015b319c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProductOrderRecordPage.vue?vue&type=template&id=015b319c */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue?vue&type=template&id=015b319c");
 
 
 /***/ }),
@@ -61409,6 +61774,7 @@ Vue.component('product-other-charges-page', (__webpack_require__(/*! ./pages/inv
 Vue.component('product-shipping-classes-page', (__webpack_require__(/*! ./pages/inventory/product/setting/ProductShippingClassesPage.vue */ "./resources/js/pages/inventory/product/setting/ProductShippingClassesPage.vue")["default"]));
 Vue.component('product-packaging-classes-page', (__webpack_require__(/*! ./pages/inventory/product/setting/ProductPackagingClassesPage.vue */ "./resources/js/pages/inventory/product/setting/ProductPackagingClassesPage.vue")["default"]));
 Vue.component('product-order-page', (__webpack_require__(/*! ./pages/inventory/product/order/ProductOrderPage.vue */ "./resources/js/pages/inventory/product/order/ProductOrderPage.vue")["default"]));
+Vue.component('product-order-record-page', (__webpack_require__(/*! ./pages/inventory/product/order/ProductOrderRecordPage.vue */ "./resources/js/pages/inventory/product/order/ProductOrderRecordPage.vue")["default"]));
 var app = new Vue({
   el: '#app'
 });

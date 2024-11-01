@@ -32,6 +32,11 @@ class OrderController extends Controller
         return view('inventory.product.order.orders');
     }
 
+    public function record()
+    {
+        return view('inventory.product.order.order_record');
+    }
+
     public function fetchOrders(Request $request)
     {
         $userRole  = trim(auth()->user()->role);
@@ -86,6 +91,18 @@ class OrderController extends Controller
         ];
 
         return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function fetchOrderRecord()
+    {
+
+        $orders = Order::with('user', 'shop')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return (new ResponseCollection($orders))
             ->response()
             ->setStatusCode(200);
     }

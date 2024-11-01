@@ -97,6 +97,8 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
 
         Route::group(['prefix' => '/orders'], function () {
             Route::get('/', [OrderController::class, 'index'])->name('inventory.products.orders');
+            Route::get('/records', [OrderController::class, 'record'])->name('inventory.products.order_record');
+
         });
 
         Route::group(['prefix' => '/purchase-orders'], function () {

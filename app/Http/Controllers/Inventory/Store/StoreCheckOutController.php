@@ -227,7 +227,7 @@ class StoreCheckOutController extends Controller
         // Load the necessary font that supports Urdu
         // Replace with your Urdu-supporting font
 
-        $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
+        $dropshipper = DropShipper::where('user_id', $order->belongs_to ?? 0 )->first();
 
         $shop = DropShipperShop::with('dropshipper')->where('id', $order->shop_id)->first();
         $order_no = $order->order_no;

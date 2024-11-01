@@ -25,7 +25,7 @@ Vue.component('product-other-charges-page', require('./pages/inventory/product/s
 Vue.component('product-shipping-classes-page', require('./pages/inventory/product/setting/ProductShippingClassesPage.vue').default );
 Vue.component('product-packaging-classes-page', require('./pages/inventory/product/setting/ProductPackagingClassesPage.vue').default );
 Vue.component('product-order-page', require('./pages/inventory/product/order/ProductOrderPage.vue').default );
-
+Vue.component('product-order-record-page', require('./pages/inventory/product/order/ProductOrderRecordPage.vue').default );
 
 const app = new Vue({
     el: '#app',
