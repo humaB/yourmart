@@ -19,7 +19,7 @@ class TicketController extends Controller
     public function fetchTickets(Request $request)
     {
        // Start query with base conditions (fetching only tickets added by the authenticated user)
-       $query = Ticket::with('added_by_name');
+       $query = Ticket::with('added_by_name', 'order.shop');
 
        // Apply filters if they are provided in the request
 
@@ -40,7 +40,7 @@ class TicketController extends Controller
        }
 
        // Fetch filtered tickets
-       $tickets = $query->get();
+       $tickets = $query->orderBy('id', 'desc')->get();
 
        // Return the tickets as a response collection with a 200 status code
        return (new ResponseCollection($tickets))
@@ -71,7 +71,7 @@ class TicketController extends Controller
             'in_process' => $inProcess,
         ], 200);
     }
-    
+
     public function storeMessage(Request $request)
     {
         // Validate the incoming request
@@ -98,7 +98,7 @@ class TicketController extends Controller
 
         return response()->json(['message' => 'Message successfully added'], 201);
     }
-    
+
     public function getMessages(Request $request)
     {
         // Count tickets by each status
@@ -110,11 +110,11 @@ class TicketController extends Controller
             'user' => auth()->user(),
         ], 200);
     }
-    
+
     public function getTicket(Request $request)
     {
         // Count tickets by each status
-        $ticket = Ticket::where("id",$request->ticket_id)->first();
+        $ticket = Ticket::with('added_by_name', 'order.shop')->where("id",$request->ticket_id)->first();
 
         // Return the status counts as a JSON response
         return response()->json([
@@ -140,13 +140,13 @@ class TicketController extends Controller
 
         // Get the original filename with extension
         $filenameWithExt = $image->getClientOriginalName();
-        
+
         // Get just filename
         $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        
+
         // Get just extension
         $extension = $image->extension();
-        
+
         // Create a unique filename to store
         $nameToStore = str_replace(' ', '', $filename) . "_" . time() . "." . $extension;
 

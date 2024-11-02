@@ -171,7 +171,7 @@
             @fetchDropshipperDetails="fetchDropshipperDetails($event)"
             @updatePaidAmount="updatePaidAmount( $event )"
             @updatePackagingAmount="updatePackagingAmount( $event )"
-             @markasReplacement="markasReplacement($event)"
+            @markasReplacement="markasReplacement($event)"
         />
 
         <OrderMarkasReplacementConfirmation

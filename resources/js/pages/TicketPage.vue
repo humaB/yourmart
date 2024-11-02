@@ -132,6 +132,7 @@
                                     <th>Ticket Type</th>
                                     <th>Message</th>
                                     <th>Status</th>
+                                    <th>Belongs To</th>
                                     <th>Date</th>
                                     <th>Action</th>
                                 </tr>
@@ -139,10 +140,14 @@
                             <tbody>
                                 <tr v-for="ticket in tickets" :key="ticket.id">
                                     <td>{{ ticket.id }}</td>
-                                    <td>{{ ticket.order_no || 'N/A' }}</td>
+                                    <td>
+                                        {{ ticket.order_no ? ticket.order.shop ? `${ticket.order.shop.store_name.substring(0,
+                                            3)}-${ticket.order_no}` : ticket.order_no : 'N/A' }}
+                                    </td>
                                     <td>{{ ticket.ticket_type }}</td>
                                     <td>{{ ticket.message }}</td>
                                     <td>{{ ticket.status || 'Pending' }}</td>
+                                    <td>{{ ticket.added_by_name.name }}</td>
                                     <td>{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
                                     <td>
                                         <button @click="viewTicketDetails(ticket)" class="btn btn-info">View</button>
@@ -159,42 +164,73 @@
 
         <!-- Modal for Ticket Details -->
         <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-labelledby="ticketDetailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg"> <!-- Add 'modal-lg' for a larger modal -->
+            <div class="modal-dialog modal-xl"> <!-- Add 'modal-lg' for a larger modal -->
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Ticket Details</h5>
-                        <button type="button" class="btn-close" @click="closeModal" aria-label="Close"></button>
+                        <button type="button" class="close" data-dismiss="modal" @click="closeModal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+
                     </div>
                     <div class="modal-body">
+
                         <div class="row">
                             <div class="col-md-8">
-                                <div class="mb-3">
-                                    <p class="mb-1"><b>Ticket ID:</b></p>
-                                    <p class="mb-1">{{ selectedTicket.id }}</p>
+                                <div class="card p-3">
+                                    <h5 class="card-title mb-3"><b>Ticket Details</b></h5>
 
-                                    <p class="my-1"><b>Order Number:</b></p>
-                                    <p class="mb-1">{{ selectedTicket.order_no || 'N/A' }}</p>
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Ticket ID:</strong></p>
+                                        <p class="mb-1">{{ selectedTicket.id }}</p>
+                                    </div>
 
-                                    <p class="my-1"><b>Ticket Type:</b></p>
-                                    <p class="mb-1">{{ selectedTicket.ticket_type }}</p>
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Ticket Added By:</strong></p>
+                                        <p class="mb-1">{{ selectedTicket.added_by_name ? selectedTicket.added_by_name.name : 'N/A' }}</p>
+                                    </div>
 
-                                    <p class="my-1"><b>Message:</b></p>
-                                    <p class="mb-1">{{ selectedTicket.message }}</p>
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Order Number:</strong></p>
+                                        <p class="mb-1">
+                                            <a v-if="selectedTicket.order_no" href="#" data-toggle="modal" data-target="#ticket" @click="fetchOrderDetails(selectedTicket.order_no)">
+                                                {{ selectedTicket.order_no ? selectedTicket.order.shop ? `${selectedTicket.order.shop.store_name.substring(0, 3)}-${selectedTicket.order_no}` : selectedTicket.order_no : 'N/A' }}
+                                            </a>
+                                            <span v-else>N/A</span>
+                                        </p>
+                                    </div>
 
-                                    <p class="my-1"><b>Status:</b></p>
-                                    <p class="mb-1">{{ selectedTicket.status || 'Pending' }}</p>
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Ticket Type:</strong></p>
+                                        <p class="mb-1">{{ selectedTicket.ticket_type }}</p>
+                                    </div>
 
-                                    <p class="my-1"><b>Date:</b></p>
-                                    <p class="mb-1">{{ new Date(selectedTicket.created_at).toLocaleDateString() }}</p>
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Message:</strong></p>
+                                        <p class="mb-1">{{ selectedTicket.message }}</p>
+                                    </div>
+
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Status:</strong></p>
+                                        <p class="mb-1">{{ selectedTicket.status || 'Pending' }}</p>
+                                    </div>
+
+                                    <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Date:</strong></p>
+                                        <p class="mb-1">{{ new Date(selectedTicket.created_at).toLocaleDateString() }}</p>
+                                    </div>
                                 </div>
                             </div>
+
                             <div class="col-md-4">
-                                <div class="mb-3">
-                                    <strong>Image:</strong><br>
-                                    <img :src="web_url + 'storage/uploads/tickets/' + selectedTicket.file_path" alt="Ticket Image" class="img-fluid" style="max-width: 100%; height: auto;">
+                                <div class="card p-3" v-if="selectedTicket.file_path">
+                                    <h6 class="card-title mb-3"><strong>Image</strong></h6>
+                                    <img :src="web_url + 'storage/uploads/tickets/' + selectedTicket.file_path"
+                                         alt="Ticket Image" class="img-fluid rounded border" style="max-width: 100%; height: auto;">
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- Chat Box -->
                         <div>
@@ -218,7 +254,7 @@
                                 </div>
                             </div>
 
-                            
+
 
                             <!-- New Fields for Message, Attachment, and Status -->
                             <div class="mb-2 row">
@@ -249,17 +285,25 @@
             </div>
         </div>
 
+        <OrderDetailView
+            :details="orderDetails"
+            :loader="commentLoader"
+            :role="'admin'"
+        />
+
     </div>
 </template>
 <script>
 
 import { BulletListLoader } from "vue-content-loader";
 import moment from "moment";
+import OrderDetailView from "../components/inventory/product/order/OrderDetailView.vue";
 
 export default {
     name: 'TicketPage',
     components: {
         BulletListLoader,
+        OrderDetailView
     },
     data() {
         return {
@@ -292,6 +336,8 @@ export default {
                 selectedFile: null,
                 ticketId: null
             },
+            commentLoader : false,
+            orderDetails : {}
         };
     },
     created() {
@@ -398,7 +444,7 @@ export default {
         viewTicketDetails(ticket) {
             axios.post(this.api_url + 'tickets/particular',{ticket_id:ticket.id}).then((response) => {
                 this.selectedTicket = response.data.ticket;
-                this.selectedTicket.file_path = response.data.ticket.file_path ? response.data.ticket.file_path : 'empty.png';
+                this.selectedTicket.file_path = response.data.ticket.file_path ? response.data.ticket.file_path : 'blank_image.jpg';
                 this.postMessage.selectedStatus = ticket.status;
                 this.getMessages();
             });
@@ -417,6 +463,158 @@ export default {
         },
         timeFormat(time,format) {
             return moment(time).format(format)
+        },
+        fetchOrderDetails(id) {
+            let vm = this;
+            axios
+                .post(this.api_url + "inventory/products/orders/details", { id })
+                .then((response) => {
+                    vm.orderDetails = response.data.response[0]
+                });
+        },
+        addComment(data) {
+            let vm = this;
+            vm.commentLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/comments", data)
+                .then((response) => {
+
+                    vm.fetchDetail(vm.details.id);
+                    vm.commentLoader = false;
+                    vm.$emit('commentAdded', true);
+                    return swal({
+                        title: "Success",
+                        text: "Your Comment added successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.commentLoader = false;
+                });
+        },
+        forward( data ){
+            let vm = this;
+            vm.commentLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-status", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.commentLoader = false;
+            vm.$emit('commentAdded', true);
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000)
+            return swal({
+                title: "Success",
+                text: "Forwarded successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.commentLoader = false;
+            });
+        },
+        reject( data ){
+            let vm = this;
+            vm.rejectLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/reject", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.rejectLoader = false;
+
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000);
+
+            return swal({
+                title: "Success",
+                text: "Order Rejected Successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.rejectLoader = false;
+            });
+        },
+        revert( data ){
+            let vm = this;
+            vm.revertLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/revert", data)
+            .then((response) => {
+
+            vm.fetchOrders();
+            vm.revertLoader = false;
+
+            setTimeout( () => {
+                $("#ticket").modal('hide');
+            },2000);
+
+            return swal({
+                title: "Success",
+                text: "Order Revert Successfully",
+                icon: "success",
+                timer: 3000,
+            });
+            })
+            .catch((err) => {
+                vm.revertLoader = false;
+            });
+        },
+        updatePaidAmount( data ){
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data)
+            .then((response) => {
+
+            this.fetchDetail(data.id);
+
+            vm.paidAmountLoader = false;
+                return swal({
+                    title: "Success",
+                    text: "Amount Updated Successfully",
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.paidAmountLoader = false;
+                return swal({
+                    title: "Error",
+                    text: "Oops.. Something went wrong",
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+        },
+        updatePackagingAmount( data ){
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data)
+            .then((response) => {
+
+            this.fetchDetail(data.id);
+
+            vm.paidAmountLoader = false;
+                return swal({
+                    title: "Success",
+                    text: "Amount Updated Successfully",
+                    icon: "success",
+                    timer: 3000,
+                });
+            })
+            .catch((err) => {
+                vm.paidAmountLoader = false;
+                return swal({
+                    title: "Error",
+                    text: "Oops.. Something went wrong",
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
         },
     },
     mounted() {
