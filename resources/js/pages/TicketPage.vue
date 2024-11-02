@@ -211,6 +211,11 @@
                                     </div>
 
                                     <div class="mb-2 d-flex justify-content-between">
+                                        <p class="mb-1"><strong>Expected Result:</strong></p>
+                                        <p class="mb-1">{{ selectedTicket.expected_result }}</p>
+                                    </div>
+
+                                    <div class="mb-2 d-flex justify-content-between">
                                         <p class="mb-1"><strong>Status:</strong></p>
                                         <p class="mb-1">{{ selectedTicket.status || 'Pending' }}</p>
                                     </div>

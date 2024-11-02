@@ -13270,15 +13270,19 @@ var render = function render() {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(11), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
-  }, [_vm._v(_vm._s(_vm.selectedTicket.status || "Pending"))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.selectedTicket.expected_result))])]), _vm._v(" "), _c("div", {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(12), _vm._v(" "), _c("p", {
+    staticClass: "mb-1"
+  }, [_vm._v(_vm._s(_vm.selectedTicket.status || "Pending"))])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-2 d-flex justify-content-between"
+  }, [_vm._m(13), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
   }, [_vm._v(_vm._s(new Date(_vm.selectedTicket.created_at).toLocaleDateString()))])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4"
   }, [_vm.selectedTicket.file_path ? _c("div", {
     staticClass: "card p-3"
-  }, [_vm._m(13), _vm._v(" "), _c("img", {
+  }, [_vm._m(14), _vm._v(" "), _c("img", {
     staticClass: "img-fluid rounded border",
     staticStyle: {
       "max-width": "100%",
@@ -13499,6 +13503,12 @@ var staticRenderFns = [function () {
   return _c("p", {
     staticClass: "mb-1"
   }, [_c("strong", [_vm._v("Message:")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("p", {
+    staticClass: "mb-1"
+  }, [_c("strong", [_vm._v("Expected Result:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
