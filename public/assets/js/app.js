@@ -13189,7 +13189,7 @@ var render = function render() {
   }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.tickets, function (ticket) {
     return _c("tr", {
       key: ticket.id
-    }, [_c("td", [_vm._v(_vm._s(ticket.id))]), _vm._v(" "), _c("td", [_vm._v("\n                                    " + _vm._s(ticket.order_no ? ticket.order.shop ? "".concat(ticket.order.shop.store_name.substring(0, 3), "-").concat(ticket.order_no) : ticket.order_no : "N/A") + "\n                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.ticket_type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.message))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.status || "Pending"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.added_by_name.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(new Date(ticket.created_at).toLocaleDateString()))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(ticket.id))]), _vm._v(" "), _c("td", [_vm._v("\n                                    " + _vm._s(ticket.order_no ? ticket.order.shop ? "".concat(ticket.order.shop.store_name.substring(0, 3), "-").concat(ticket.order.order_no) : ticket.order_no : "N/A") + "\n                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.ticket_type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.message))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.status || "Pending"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.added_by_name.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(new Date(ticket.created_at).toLocaleDateString()))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       on: {
         click: function click($event) {

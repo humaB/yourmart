@@ -142,7 +142,7 @@
                                     <td>{{ ticket.id }}</td>
                                     <td>
                                         {{ ticket.order_no ? ticket.order.shop ? `${ticket.order.shop.store_name.substring(0,
-                                            3)}-${ticket.order_no}` : ticket.order_no : 'N/A' }}
+                                            3)}-${ticket.order.order_no}` : ticket.order_no : 'N/A' }}
                                     </td>
                                     <td>{{ ticket.ticket_type }}</td>
                                     <td>{{ ticket.message }}</td>
