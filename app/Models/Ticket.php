@@ -28,7 +28,7 @@ class Ticket extends Model
     }
 
     public function order(){
-        return $this->hasOne(Order::class, 'order_no', 'id');
+        return $this->hasOne(Order::class, 'id', 'order_no');
     }
 
 }
