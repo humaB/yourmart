@@ -3842,9 +3842,18 @@ var render = function render() {
     staticClass: "col"
   }, [_c("h6", {
     staticClass: "text-muted mb-0"
-  }, [_vm._v("Products")]), _vm._v(" "), _c("span", {
+  }, [_vm._v("Products")]), _vm._v(" "), _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.fetchProducts();
+      }
+    }
+  }, [_c("span", {
     staticClass: "font-weight-bold mb-0"
-  }, [_vm._v(_vm._s(_vm.totalProducts))])])])])])]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.totalProducts))])])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
       padding: "5px"
     }
