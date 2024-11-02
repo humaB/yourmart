@@ -194,7 +194,7 @@
                                         <p class="mb-1"><strong>Order Number:</strong></p>
                                         <p class="mb-1">
                                             <a v-if="selectedTicket.order_no" href="#" data-toggle="modal" data-target="#ticket" @click="fetchOrderDetails(selectedTicket.order_no)">
-                                                {{ selectedTicket.order_no ? selectedTicket.order.shop ? `${selectedTicket.order.shop.store_name.substring(0, 3)}-${selectedTicket.order_no}` : selectedTicket.order_no : 'N/A' }}
+                                                {{ selectedTicket.order_no ? selectedTicket.order.shop ? `${selectedTicket.order.shop.store_name.substring(0, 3)}-${selectedTicket.order.order_no}` : selectedTicket.order_no : 'N/A' }}
                                             </a>
                                             <span v-else>N/A</span>
                                         </p>

@@ -13258,7 +13258,7 @@ var render = function render() {
         return _vm.fetchOrderDetails(_vm.selectedTicket.order_no);
       }
     }
-  }, [_vm._v("\n                                            " + _vm._s(_vm.selectedTicket.order_no ? _vm.selectedTicket.order.shop ? "".concat(_vm.selectedTicket.order.shop.store_name.substring(0, 3), "-").concat(_vm.selectedTicket.order_no) : _vm.selectedTicket.order_no : "N/A") + "\n                                        ")]) : _c("span", [_vm._v("N/A")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.selectedTicket.order_no ? _vm.selectedTicket.order.shop ? "".concat(_vm.selectedTicket.order.shop.store_name.substring(0, 3), "-").concat(_vm.selectedTicket.order.order_no) : _vm.selectedTicket.order_no : "N/A") + "\n                                        ")]) : _c("span", [_vm._v("N/A")])])]), _vm._v(" "), _c("div", {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(9), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
