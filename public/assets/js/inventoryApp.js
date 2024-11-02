@@ -3848,7 +3848,7 @@ var render = function render() {
     },
     on: {
       click: function click($event) {
-        return _vm.fetchProducts();
+        return _vm.fetchStock();
       }
     }
   }, [_c("span", {

@@ -20,7 +20,7 @@
                                       <div class="row">
                                         <div class="col">
                                           <h6 class="text-muted mb-0">Products</h6>
-                                          <a href="#" @click="fetchProducts()"><span class="font-weight-bold mb-0">{{ totalProducts }}</span></a>
+                                          <a href="#" @click="fetchStock()"><span class="font-weight-bold mb-0">{{ totalProducts }}</span></a>
                                         </div>
 
                                       </div>
