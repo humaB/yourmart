@@ -1345,6 +1345,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
       var vm = this;
       vm.loader = true;
+      vm.clearDataTable();
       axios.get(this.api_url + "inventory/products/store/stocks").then(function (response) {
         var results = response.data.response;
         vm.products = results.stock;

@@ -273,6 +273,7 @@ import TableHeader from "../../components/table/TableHeaderComponent.vue";
             fetchStock(){
                 let vm = this;
                 vm.loader = true;
+                vm.clearDataTable();
                 axios
                 .get(this.api_url + "inventory/products/store/stocks")
                 .then((response) => {
