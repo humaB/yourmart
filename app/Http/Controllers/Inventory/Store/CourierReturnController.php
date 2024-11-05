@@ -55,7 +55,7 @@ class CourierReturnController extends Controller
 
         $order = Order::where('id', $request->id)->first();
         $order->update([
-            'status' => 10
+            'status' => '10'
         ]);
 
         $srn = StoreReturn::create([
