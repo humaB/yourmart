@@ -36,8 +36,8 @@
                                 </div>
                               </form>
                         </div>
-                        <div class="col-md-12">
-                            <div class="card-body table-responsive" v-if="loader">
+                        <div class="col-md-12 table-responsive">
+                            <div class="card-body" v-if="loader">
                                 <bullet-list-loader  :width="250" >
                                 </bullet-list-loader>
                               </div>
@@ -48,7 +48,7 @@
                                         <th colspan="3" class="border h5">Opening</th>
                                         <th colspan="3" class="border h5">Purchase</th>
                                         <th colspan="3" class="border h5">Issuance</th>
-                                        <th colspan="3" class="border h5">Balance</th>
+                                        <th colspan="4" class="border h5">Balance</th>
 
                                     </tr>
                                     <tr>
@@ -71,6 +71,7 @@
                                         <th>Returned</th>
                                         <th>Balance Quantity</th>
                                         <th>Closing Balance</th>
+                                        <th>Gross Profit</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -112,6 +113,7 @@
                                       <td>{{ calculateClosingBalance(item) }}</td>
                                       <!-- Closing Balance -->
                                       <td>{{ formatPrice(calculateClosingBalance(item) * item.variation.avg_price) }}</td>
+                                      <td>{{ formatPrice(calculateGrossProfite(item)) }}</td>
                                     </tr>
                                   </template>
                                 </tbody>
@@ -190,6 +192,21 @@ export default {
 
             // Calculate Closing Balance
             return openingBalance + currentBalance;
+        },
+        calculateGrossProfite(item) {
+
+            const issuanceQty = item.issuance && item.issuance[0]
+                ? parseFloat(item.issuance[0].quantity)
+                : 0;
+
+            const issuanceRate = item.issuance && item.issuance[0]
+                ? parseFloat(item.issuance[0].rate)
+                : 0;
+
+            const purchaseRate = item.variation.avg_price;
+            const profit = (issuanceQty * issuanceRate) - (issuanceQty * purchaseRate);
+            // Calculate Closing Balance
+            return profit;
         },
         formatPrice: function formatPrice(price) {
         const value = parseFloat(price).toFixed(2)

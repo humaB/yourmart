@@ -141,8 +141,10 @@
                                 <tr v-for="ticket in tickets" :key="ticket.id">
                                     <td>{{ ticket.id }}</td>
                                     <td>
-                                        {{ ticket.order_no ? ticket.order.shop ? `${ticket.order.shop.store_name.substring(0,
-                                            3)}-${ticket.order.order_no}` : ticket.order_no : 'N/A' }}
+                                        <a v-if="ticket.order" href="#" data-toggle="modal" data-target="#ticket" @click="fetchOrderDetails(ticket.order_no)">
+                                            {{ ticket.order_no ? ticket.order.shop ? `${ticket.order.shop.store_name.substring(0, 3)}-${ticket.order.order_no}` : ticket.order_no : 'N/A' }}
+                                        </a>
+                                        <span v-else>N/A</span>
                                     </td>
                                     <td>{{ ticket.ticket_type }}</td>
                                     <td>{{ ticket.message }}</td>

@@ -2049,7 +2049,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateTags: function updateTags(type) {
       // Access the dynamic property based on the 'type' value
-      var dataToSend = this[type];
+      var dataToSend = '';
+      if (type == 'tags') {
+        dataToSend = this.selectedTags;
+      } else {
+        dataToSend = this.selectedAttributes;
+      }
       this.$emit('updateTags', {
         id: this.product.id,
         products: dataToSend,

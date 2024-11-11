@@ -110,7 +110,7 @@ class OrderController extends Controller
 
     public function trackingDetails( Request $request ){
 
-        $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('id', 'desc')->get();
+        $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('updated_at', 'desc')->get();
 
             return (new ResponseCollection($orders))
                 ->response()

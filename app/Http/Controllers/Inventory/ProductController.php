@@ -818,7 +818,6 @@ class ProductController extends Controller
 
     public function updateTags(Request $request)
     {
-
         $request->validate([
             'id'       => 'required|integer',
             'products' => 'required|array',

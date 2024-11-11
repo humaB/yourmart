@@ -2317,6 +2317,14 @@ __webpack_require__.r(__webpack_exports__);
       // Calculate Closing Balance
       return openingBalance + currentBalance;
     },
+    calculateGrossProfite: function calculateGrossProfite(item) {
+      var issuanceQty = item.issuance && item.issuance[0] ? parseFloat(item.issuance[0].quantity) : 0;
+      var issuanceRate = item.issuance && item.issuance[0] ? parseFloat(item.issuance[0].rate) : 0;
+      var purchaseRate = item.variation.avg_price;
+      var profit = issuanceQty * issuanceRate - issuanceQty * purchaseRate;
+      // Calculate Closing Balance
+      return profit;
+    },
     formatPrice: function formatPrice(price) {
       var value = parseFloat(price).toFixed(2);
       var string = value.toString();
@@ -10988,9 +10996,9 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
+    staticClass: "col-md-12 table-responsive"
   }, [_vm.loader ? _c("div", {
-    staticClass: "card-body table-responsive"
+    staticClass: "card-body"
   }, [_c("bullet-list-loader", {
     attrs: {
       width: 250
@@ -11026,7 +11034,7 @@ var render = function render() {
         "data-toggle": "modal",
         "data-target": "#sinDetailPopup"
       }
-    }, [_vm._v(_vm._s(item.issuance[0].quantity))]) : _c("span", [_vm._v("-")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.issuance[0] ? _vm.formatPrice(parseFloat(item.issuance[0].quantity) * parseFloat(item.issuance[0].rate)) : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["return"][0] ? _vm.formatPrice(parseFloat(item["return"][0].quantity)) : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.calculateClosingBalance(item)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateClosingBalance(item) * item.variation.avg_price)))])]) : _vm._e()];
+    }, [_vm._v(_vm._s(item.issuance[0].quantity))]) : _c("span", [_vm._v("-")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.issuance[0] ? _vm.formatPrice(parseFloat(item.issuance[0].quantity) * parseFloat(item.issuance[0].rate)) : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["return"][0] ? _vm.formatPrice(parseFloat(item["return"][0].quantity)) : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.calculateClosingBalance(item)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateClosingBalance(item) * item.variation.avg_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateGrossProfite(item))))])]) : _vm._e()];
   })], 2)])])])])])])]);
 };
 var staticRenderFns = [function () {
@@ -11069,7 +11077,7 @@ var staticRenderFns = [function () {
   }, [_vm._v("Issuance")]), _vm._v(" "), _c("th", {
     staticClass: "border h5",
     attrs: {
-      colspan: "3"
+      colspan: "4"
     }
   }, [_vm._v("Balance")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", {
     staticClass: "border-left"
@@ -11079,7 +11087,7 @@ var staticRenderFns = [function () {
     staticClass: "border-left"
   }, [_vm._v("Total Value")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Issued")]), _vm._v(" "), _c("th", {
     staticClass: "border-left"
-  }, [_vm._v("Total Cost of Issuance")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Balance Quantity")]), _vm._v(" "), _c("th", [_vm._v("Closing Balance")])])]);
+  }, [_vm._v("Total Cost of Issuance")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Balance Quantity")]), _vm._v(" "), _c("th", [_vm._v("Closing Balance")]), _vm._v(" "), _c("th", [_vm._v("Gross Profit")])])]);
 }];
 render._withStripped = true;
 
@@ -13189,7 +13197,18 @@ var render = function render() {
   }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.tickets, function (ticket) {
     return _c("tr", {
       key: ticket.id
-    }, [_c("td", [_vm._v(_vm._s(ticket.id))]), _vm._v(" "), _c("td", [_vm._v("\n                                    " + _vm._s(ticket.order_no ? ticket.order.shop ? "".concat(ticket.order.shop.store_name.substring(0, 3), "-").concat(ticket.order.order_no) : ticket.order_no : "N/A") + "\n                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.ticket_type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.message))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.status || "Pending"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.added_by_name.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(new Date(ticket.created_at).toLocaleDateString()))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(ticket.id))]), _vm._v(" "), _c("td", [ticket.order ? _c("a", {
+      attrs: {
+        href: "#",
+        "data-toggle": "modal",
+        "data-target": "#ticket"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchOrderDetails(ticket.order_no);
+        }
+      }
+    }, [_vm._v("\n                                        " + _vm._s(ticket.order_no ? ticket.order.shop ? "".concat(ticket.order.shop.store_name.substring(0, 3), "-").concat(ticket.order.order_no) : ticket.order_no : "N/A") + "\n                                    ")]) : _c("span", [_vm._v("N/A")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.ticket_type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.message))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.status || "Pending"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.added_by_name.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(new Date(ticket.created_at).toLocaleDateString()))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       on: {
         click: function click($event) {
