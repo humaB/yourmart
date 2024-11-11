@@ -175,7 +175,7 @@ class LeopardApiHelper
         foreach( $data as $order ){
 
             $detail = Order::with('range')->where('tracking_number', $order['cn_number'])->first();
-            if (isset($this->shipmentStatuses[$order['status']]) && $detail ) {
+            if (isset($this->shipmentStatuses[$order['status']]) && $detail && $detail->status != 8 && $detail->status != 9 ) {
                 $status = $this->shipmentStatuses[$order['status']];
 
                 OrderLeopardStatus::updateOrCreate(
