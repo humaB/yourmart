@@ -509,8 +509,10 @@
             :details="details" :loader="commentLoader" :role="role" @addComment="addComment($event)"
             @forward="forward($event)" @reject="reject($event)" @revert="revert($event)"
             @fetchDropshipperDetails="fetchDropshipperDetails($event)" @updatePaidAmount="updatePaidAmount($event)"
-            @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)" />
-            
+            @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)"
+            @addDiscount="addDiscount($event)"
+            />
+
         <DropshipperDetails :details="dropShipperDetails" />
 
         <TrackingDetailPopup :trackingDetails="trackingDetails" />
@@ -874,6 +876,32 @@ export default {
                     return swal({
                         title: "Success",
                         text: "Amount Updated Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: "Oops.. Something went wrong",
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        addDiscount(data) {
+            let vm = this;
+            vm.paidAmountLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/add-discount", data)
+                .then((response) => {
+
+                    this.fetchDetail(data.id);
+
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: "Discount added Successfully",
                         icon: "success",
                         timer: 3000,
                     });

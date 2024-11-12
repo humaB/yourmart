@@ -491,6 +491,21 @@
                                 </div>
                             </div>
 
+                            <div class="card" v-if="(role == 'admin') && details.status == 0">
+                                <div class="card-body row">
+                                    <div class="col-md-12">
+                                        <h5>Add Discount Amount</h5>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" @keypress="onlyNumber" v-model="discount">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-primary" v-if="!paidAmountLoader" @click="addDiscount()">Add Discount</button>
+                                        <button class="btn btn-primary btn-progress disabled" v-else>Update Amount</button>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="card" v-if="(role == 'order collection manager' || role == 'admin') && details.status < 7 && details.type == 'Daraz'">
                                 <div class="card-body row">
                                     <div class="col-md-12">
@@ -594,7 +609,8 @@ export default {
             web_url : process.env.MIX_WEB_URL,
             scannedTrackingNumber: '', // Store the scanned QR code for tracking number
             paidAmount : '',
-            packagingAmount : ''
+            packagingAmount : '',
+            discount : ''
         }
     },
     mounted() {
@@ -687,6 +703,18 @@ export default {
         },
         updatePaidAmount(){
             this.$emit('updatePaidAmount', { id : this.details.id, amount : this.paidAmount });
+        },
+        addDiscount(){
+            if( this.discount == '' || this.discount == '0'){
+                return swal({
+                    title: "Error",
+                    text: `Please add discount amount first`,
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+            this.$emit('addDiscount', { id : this.details.id, amount : this.discount });
+            this.discount = ''
         },
         updatePackagingAmount(){
             this.$emit('updatePackagingAmount', { id : this.details.id, amount : this.packagingAmount });

@@ -1390,7 +1390,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       scannedTrackingNumber: '',
       // Store the scanned QR code for tracking number
       paidAmount: '',
-      packagingAmount: ''
+      packagingAmount: '',
+      discount: ''
     };
   },
   mounted: function mounted() {
@@ -1483,6 +1484,21 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         id: this.details.id,
         amount: this.paidAmount
       });
+    },
+    addDiscount: function addDiscount() {
+      if (this.discount == '' || this.discount == '0') {
+        return swal({
+          title: "Error",
+          text: "Please add discount amount first",
+          icon: "error",
+          timer: 3000
+        });
+      }
+      this.$emit('addDiscount', {
+        id: this.details.id,
+        amount: this.discount
+      });
+      this.discount = '';
     },
     updatePackagingAmount: function updatePackagingAmount() {
       this.$emit('updatePackagingAmount', {
@@ -9348,11 +9364,49 @@ var render = function render() {
     }
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update Amount")])])])]) : _vm._e(), _vm._v(" "), (_vm.role == "order collection manager" || _vm.role == "admin") && _vm.details.status < 7 && _vm.details.type == "Daraz" ? _c("div", {
+  }, [_vm._v("Update Amount")])])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" && _vm.details.status == 0 ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
   }, [_vm._m(18), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.discount,
+      expression: "discount"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.discount
+    },
+    on: {
+      keypress: _vm.onlyNumber,
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.discount = $event.target.value;
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [!_vm.paidAmountLoader ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.addDiscount();
+      }
+    }
+  }, [_vm._v("Add Discount")]) : _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled"
+  }, [_vm._v("Update Amount")])])])]) : _vm._e(), _vm._v(" "), (_vm.role == "order collection manager" || _vm.role == "admin") && _vm.details.status < 7 && _vm.details.type == "Daraz" ? _c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body row"
+  }, [_vm._m(19), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9587,6 +9641,12 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Confirm Paid Amount")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Add Discount Amount")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

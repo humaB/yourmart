@@ -53,9 +53,9 @@ class OrderController extends Controller
         if ($userRole == 'admin' || $userRole == 'supervisor') {
             $dropshipper = null;
 
-            if( $request->droshipper != 0 ){
+            if ($request->droshipper != 0) {
                 $dropshipper = $request->droshipper;
-                $dropshipper = DropShipper::where('id', $dropshipper )->first();
+                $dropshipper = DropShipper::where('id', $dropshipper)->first();
                 $dropshipper = $dropshipper->user_id ?? 0;
             }
 
@@ -79,7 +79,7 @@ class OrderController extends Controller
                     return $query->where('belongs_to', $dropshipper);
                 })
                 ->get();
-        }else {
+        } else {
             $orders = Order::with('user', 'shop')->where('status', $statusMap[$userRole])
                 ->orderBy('id', 'desc')
                 ->get();
@@ -108,18 +108,20 @@ class OrderController extends Controller
     }
 
 
-    public function trackingDetails( Request $request ){
+    public function trackingDetails(Request $request)
+    {
 
         $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('updated_at', 'desc')->get();
 
-            return (new ResponseCollection($orders))
-                ->response()
-                ->setStatusCode(200);
+        return (new ResponseCollection($orders))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function markasReplacement( Request $request ){
+    public function markasReplacement(Request $request)
+    {
 
-        Order::where('id', $request->id )->update([
+        Order::where('id', $request->id)->update([
             'is_replacement' => '1'
         ]);
 
@@ -176,22 +178,71 @@ class OrderController extends Controller
         $order->update([
             'packaging_price'  => $request->amount,
             'total_bill'       => (float)$previousTotal + (float)$request->amount,
-            'remaining_amount' => ( (float)$previousTotal + (float)$request->amount) - $order->paid_amount,
+            'remaining_amount' => ((float)$previousTotal + (float)$request->amount) - $order->paid_amount,
         ]);
 
         $items = OrderItem::where('order_id', $order->id)->get();
-        foreach( $items as $item ){
+        foreach ($items as $item) {
             $quantity = $item->quantity;
             $singlePrice = $item->price;
 
             $totalItemPrice = $singlePrice * $quantity;
-             //Calculate Packaging
-             $extraPackagingCharges = ((float)$request->amount / (float)$previousTotal) * (float)$totalItemPrice;
+            //Calculate Packaging
+            $extraPackagingCharges = ((float)$request->amount / (float)$previousTotal) * (float)$totalItemPrice;
 
             $item->update([
                 'packaging_cost'  => round($extraPackagingCharges),
-                'sell_price'     => round( $totalItemPrice + $extraPackagingCharges),
+                'sell_price'     => round($totalItemPrice + $extraPackagingCharges),
             ]);
+        }
+
+        return response()->json(['message' => 'Order packaging amount updated successfully.'], 200);
+    }
+
+    public function addDiscount(Request $request)
+    {
+        $order = Order::find($request->id);
+
+        //Calculate Discount
+        $subTotal = $order->total_bill - ((float)$order->packaging_price + (float)$order->courier_service_price);
+        $afterDiscountAmount = $subTotal - $request->amount;
+        $newTotal = $afterDiscountAmount + ((float)$order->packaging_price + (float)$order->courier_service_price);
+        $paidAmount = $order->total_bill - $order->remaining_amount;
+
+        $order->update([
+            'total_bill'       => $newTotal,
+            'remaining_amount' => $newTotal - $paidAmount,
+        ]);
+
+        $totalCourierAmount = $order->courier_service_price;
+        $totalPackagePrice  = $order->packaging_price;
+
+        $items = OrderItem::where('order_id', $order->id)->get();
+        $totalSellPrice  = $items->sum('sell_price');
+        foreach ($items as $item) {
+
+            $quantity = $item->quantity;
+            $singlePrice = $item->price;
+
+            $totalItemPrice = $singlePrice * $quantity;
+
+           $discount =  ((float)$request->amount / (float)$subTotal) * (float)$totalItemPrice;
+            //Calculate Courier
+            $extraCourierCharges = ((float)$totalCourierAmount / (float)$subTotal) * (float)$totalItemPrice;
+            //Calculate Packaging
+            $extraPackagingCharges = ((float)$totalPackagePrice / (float)$subTotal) * (float)$totalItemPrice;
+            //Calculate Selling Price
+            $sellPrice = ((float)$totalSellPrice / (float)$subTotal) * (float)$totalItemPrice;
+
+            $buyPrice = $singlePrice - $discount;
+
+            // Update the order item in the database
+            $item->update([
+                    'price'          => round($buyPrice),
+                    'sell_price'     => round($sellPrice),
+                    'courier_cost'   => round($extraCourierCharges),
+                    'packaging_cost' => round($extraPackagingCharges),
+                ]);
         }
 
         return response()->json(['message' => 'Order packaging amount updated successfully.'], 200);
@@ -283,8 +334,7 @@ class OrderController extends Controller
                     ]);
                 }
             }
-        }
-        else if ($userRole == 'admin') {
+        } else if ($userRole == 'admin') {
 
             if ($order->status == '0' && $order->type == 'Normal') {
 
@@ -298,10 +348,10 @@ class OrderController extends Controller
                 $range = CourierCategoryRange::where('id', $order->range_id)->first();
                 $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
 
-                if($leopardData['error'] && $leopardData['error'] != ''){
+                if ($leopardData['error'] && $leopardData['error'] != '') {
                     return (new ValidationCollection([$leopardData['error']]))
-                    ->response()
-                    ->setStatusCode(421);
+                        ->response()
+                        ->setStatusCode(421);
                 }
 
                 $order->update([
@@ -329,11 +379,10 @@ class OrderController extends Controller
                     ]);
                 }
             }
-
         }
-        if($order->type != 'Cash'){
+        if ($order->type != 'Cash') {
             $order->increment('status');
-        }else{
+        } else {
             $order->update([
                 'status' => '5'
             ]);
@@ -347,23 +396,23 @@ class OrderController extends Controller
         $order = Order::with('items')->find($request->id);
         if (auth()->user()->role == 'admin') {
 
-            if( $order->type == 'Cash'){
+            if ($order->type == 'Cash') {
                 $transactions = AccountTransaction::where('posting_type', 'order')
-                ->where(function($q){
-                    $q->where('type', 'CR')
-                    ->orWhere('type', 'BR');
-                })
-                ->where('posting_id', $order->id)
-                ->get()
-                ->map(function($transaction) {
-                    [$transaction->debit, $transaction->credit] = [$transaction->credit, $transaction->debit];
-                    return $transaction;
-                });
+                    ->where(function ($q) {
+                        $q->where('type', 'CR')
+                            ->orWhere('type', 'BR');
+                    })
+                    ->where('posting_id', $order->id)
+                    ->get()
+                    ->map(function ($transaction) {
+                        [$transaction->debit, $transaction->credit] = [$transaction->credit, $transaction->debit];
+                        return $transaction;
+                    });
 
                 $ledger = new AccountHeadHelper();
                 //Return Bank or Cash Entry
                 $document = $ledger->voucherType('JV');
-                foreach( $transactions as $transaction ){
+                foreach ($transactions as $transaction) {
                     $ledger->accountTransaction($transaction->account_head_id, $transaction->other_account_head_id, $transaction->debit, $transaction->credit, 'Order Reject and payment refund', $document, 'JV', 'order', $order->id, $approved = 1);
                 }
             }
@@ -422,7 +471,7 @@ class OrderController extends Controller
 
         $order = Order::with('items')->find($request->id);
 
-        if ( $order->status > 1) {
+        if ($order->status > 1) {
             $srn = StoreReturn::create([
                 'order_id'        => $order->id,
                 'dropshipper_id'  => $order->belongs_to,
@@ -433,7 +482,7 @@ class OrderController extends Controller
             foreach ($order->items as $product) {
                 $variation = ProductVariation::where('id', $product->product_variation_id)->first();
 
-                    StoreReturnDetail::create([
+                StoreReturnDetail::create([
                     'srn_id'     => $srn->id,
                     'product_id' => $variation->product_id,
                     'quantity'   => $product->quantity,
@@ -450,7 +499,7 @@ class OrderController extends Controller
 
         $order->decrement('status');
 
-       // Map roles to corresponding statuses
+        // Map roles to corresponding statuses
         $statusMap = [
             0 => 'order collection manager',   // Role for order collection
             1 => 'inventory manager',          // Role for inventory issuance
