@@ -511,6 +511,7 @@
             @fetchDropshipperDetails="fetchDropshipperDetails($event)" @updatePaidAmount="updatePaidAmount($event)"
             @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)"
             @addDiscount="addDiscount($event)"
+            @deleteComment="deleteComment($event)"
             />
 
         <DropshipperDetails :details="dropShipperDetails" />
@@ -1136,6 +1137,20 @@ export default {
                 .catch((err) => {
                     vm.commentLoader = false;
                 });
+        },
+        deleteComment(data) {
+            let vm = this;
+            axios.post(this.api_url + "inventory/products/orders/comments/delete", data)
+                .then((response) => {
+
+                    this.fetchDetail(data.id);
+                    return swal({
+                        title: "Success",
+                        text: "Comment deleted successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
         },
         changeStatus(data) {
             let vm = this;

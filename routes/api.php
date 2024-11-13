@@ -257,6 +257,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
             Route::post('/details',  [ OrderController::class , 'details']);
             Route::post('/comments',  [ OrderController::class , 'comment']);
+            Route::post('/comments/delete',  [ OrderController::class , 'deleteComment']);
 
             Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
             Route::post('/revert',  [ OrderController::class , 'revert']);

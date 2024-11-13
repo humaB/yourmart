@@ -1270,6 +1270,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
+    deleteComment: function deleteComment(comment) {
+      this.$emit('deleteComment', {
+        id: this.details.id,
+        comment: comment
+      });
+    },
     onlyNumber: function onlyNumber($event) {
       var keyCode = $event.keyCode ? $event.keyCode : $event.which;
       if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {
@@ -4089,6 +4095,19 @@ __webpack_require__.r(__webpack_exports__);
         });
       })["catch"](function (err) {
         vm.commentLoader = false;
+      });
+    },
+    deleteComment: function deleteComment(data) {
+      var _this6 = this;
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/orders/comments/delete", data).then(function (response) {
+        _this6.fetchDetail(data.id);
+        return swal({
+          title: "Success",
+          text: "Comment deleted successfully",
+          icon: "success",
+          timer: 3000
+        });
       });
     },
     changeStatus: function changeStatus(data) {
@@ -8813,7 +8832,16 @@ var render = function render() {
       staticClass: "text-muted"
     }, [_vm._v("Comment by "), _c("span", {
       staticClass: "font-weight-bold font-13"
-    }, [_vm._v(_vm._s(comment.user.name) + " ( " + _vm._s(comment.user.role) + " )")]), _vm._v("\n                                                   -" + _vm._s(_vm.formatDate(comment.created_at)))])])]);
+    }, [_vm._v(_vm._s(comment.user.name) + " ( " + _vm._s(comment.user.role) + " )")]), _vm._v("\n                                                   -" + _vm._s(_vm.formatDate(comment.created_at)))])]), _vm._v(" "), _vm.role == "admin" ? _c("button", {
+      staticClass: "btn btn-danger btn-sm",
+      on: {
+        click: function click($event) {
+          return _vm.deleteComment(comment.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
+    })]) : _vm._e()]);
   }), 0), _vm._v(" "), _c("div", {
     staticClass: "card-footer chat-form"
   }, [_c("form", {
@@ -13094,6 +13122,9 @@ var render = function render() {
       },
       addDiscount: function addDiscount($event) {
         return _vm.addDiscount($event);
+      },
+      deleteComment: function deleteComment($event) {
+        return _vm.deleteComment($event);
       }
     }
   }), _vm._v(" "), _c("DropshipperDetails", {

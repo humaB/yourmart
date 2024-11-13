@@ -405,7 +405,8 @@
                                                         class="font-weight-bold font-13">{{ comment.user.name }} ( {{
                                                         comment.user.role }} )</span>
                                                     &nbsp;&nbsp; -{{ formatDate(comment.created_at) }}</small>
-                                            </div>
+                                                </div>
+                                                <button class="btn btn-danger btn-sm" v-if="role == 'admin'" @click="deleteComment(comment.id)"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
                                     <div class="card-footer chat-form">
@@ -688,6 +689,9 @@ export default {
 
     },
     methods: {
+        deleteComment( comment ){
+            this.$emit('deleteComment', { id : this.details.id, comment });
+        },
         onlyNumber($event) {
             let keyCode = $event.keyCode ? $event.keyCode : $event.which;
             if ((keyCode < 48 || keyCode > 57) && keyCode !== 46) {

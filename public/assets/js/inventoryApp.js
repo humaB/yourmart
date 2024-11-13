@@ -1462,7 +1462,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       },
       shops: [],
       customerName: '',
-      customerPhone: ''
+      customerPhone: '',
+      discount: 0
     };
   },
   created: function created() {
@@ -1474,7 +1475,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     total: function total() {
       return this.products.reduce(function (acc, product) {
         return acc + parseFloat(product.total);
-      }, 0);
+      }, 0) - parseFloat(this.discount);
     },
     totalQuantity: function totalQuantity() {
       return this.products.reduce(function (acc, product) {
@@ -1700,6 +1701,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       fd.append('phone', vm.customerPhone);
       fd.append('dropshipper', vm.selectedDropshipper.code);
       fd.append('shop', vm.selectedShop.code);
+      fd.append('discount', vm.discount);
       fd.append('total', vm.total);
       axios.post(this.api_url + "inventory/products/direct-checkout", fd).then(function (res) {
         vm.loader = false;
@@ -4228,7 +4230,33 @@ var render = function render() {
   }, [_vm._v("Total Item Quantity:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6"
   }, [_vm._v(_vm._s(_vm.totalQuantity))])]), _vm._v(" "), _c("div", {
-    staticClass: "row"
+    staticClass: "row mt-3"
+  }, [_c("div", {
+    staticClass: "col-6"
+  }, [_vm._v("Discount:")]), _vm._v(" "), _c("div", {
+    staticClass: "col-6"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.discount,
+      expression: "discount"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.discount
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.discount = $event.target.value;
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-3"
   }, [_c("div", {
     staticClass: "col-6"
   }, [_vm._v("Subtotal:")]), _vm._v(" "), _c("div", {

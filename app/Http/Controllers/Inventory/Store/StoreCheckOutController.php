@@ -107,15 +107,22 @@ class StoreCheckOutController extends Controller
                 'belongs_to'               => $dropshipper
             ]);
 
-            foreach ($request->products as $item) {
+            foreach ($request->products as $index => $item) {
+                $quantity = $item['quantity'];
+                $singlePrice =  $item['price'];
+
+                $totalItemPrice = $singlePrice * $quantity;
+                $discount =  round( ((float)$request->discount / ((float)$request->total + (float)$request->discount)) * (float)$totalItemPrice );
+
+                $singlePrice = $singlePrice - ($discount / $quantity);
                 // Create OrderItem
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_variation_id' => $item['id'],
-                    'price' => $item['price'],
-                    'quantity' => $item['quantity'],
-                    'sell_price' => (float)$item['quantity'] * (float)$item['price'],
-                    'belongs_to' => auth()->user()->id ?? 0
+                    'price'                => $singlePrice,
+                    'quantity'             => $item['quantity'],
+                    'sell_price'           => (float)$item['quantity'] * (float)$singlePrice,
+                    'belongs_to'           => auth()->user()->id ?? 0
                 ]);
 
             }

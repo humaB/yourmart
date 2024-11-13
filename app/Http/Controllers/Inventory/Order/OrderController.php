@@ -234,7 +234,7 @@ class OrderController extends Controller
             //Calculate Selling Price
             $sellPrice = ((float)$totalSellPrice / (float)$subTotal) * (float)$totalItemPrice;
 
-            $buyPrice = $singlePrice - $discount;
+            $buyPrice = $singlePrice - ($discount / $quantity);
 
             // Update the order item in the database
             $item->update([
@@ -535,6 +535,15 @@ class OrderController extends Controller
         }
 
         return ['message' => 'Comment Added Successfully'];
+    }
+
+    public function deleteComment(Request $request)
+    {
+        if ($request->comment) {
+          OrderComment::where('id', $request->comment)->delete();
+        }
+
+        return ['message' => 'Comment deleted Successfully'];
     }
 
     public function commentAttachment($image)
