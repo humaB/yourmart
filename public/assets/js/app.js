@@ -2309,6 +2309,38 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
+  computed: {
+    totalIssuanceQuantity: function totalIssuanceQuantity() {
+      return this.data.reduce(function (total, item) {
+        var _item$issuance$;
+        return total + (((_item$issuance$ = item.issuance[0]) === null || _item$issuance$ === void 0 ? void 0 : _item$issuance$.quantity) || 0);
+      }, 0);
+    },
+    totalIssuancePurchased: function totalIssuancePurchased() {
+      return this.data.reduce(function (total, item) {
+        var _item$issuance$2, _item$variation;
+        var issuanceQuantity = parseFloat((_item$issuance$2 = item.issuance[0]) === null || _item$issuance$2 === void 0 ? void 0 : _item$issuance$2.quantity) || 0;
+        var avgPrice = parseFloat((_item$variation = item.variation) === null || _item$variation === void 0 ? void 0 : _item$variation.avg_price) || 0;
+        return total + issuanceQuantity * avgPrice;
+      }, 0);
+    },
+    totalReturnQuantity: function totalReturnQuantity() {
+      return this.data.reduce(function (total, item) {
+        var _item$return$, _item$variation2;
+        var returnQuantity = parseFloat((_item$return$ = item["return"][0]) === null || _item$return$ === void 0 ? void 0 : _item$return$.quantity) || 0;
+        var avgPrice = parseFloat((_item$variation2 = item.variation) === null || _item$variation2 === void 0 ? void 0 : _item$variation2.avg_price) || 0;
+        return total + returnQuantity * avgPrice;
+      }, 0);
+    },
+    totalSellingQuantity: function totalSellingQuantity() {
+      return this.data.reduce(function (total, item) {
+        var _item$issuance$3, _item$issuance$4;
+        var returnQuantity = parseFloat((_item$issuance$3 = item.issuance[0]) === null || _item$issuance$3 === void 0 ? void 0 : _item$issuance$3.quantity) || 0;
+        var avgPrice = parseFloat((_item$issuance$4 = item.issuance[0]) === null || _item$issuance$4 === void 0 ? void 0 : _item$issuance$4.rate) || 0;
+        return total + returnQuantity * avgPrice;
+      }, 0);
+    }
+  },
   methods: {
     calculateQuantityDifference: function calculateQuantityDifference(item) {
       // Get the quantity from opening_stock, defaulting to 0 if not available
@@ -11071,19 +11103,126 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12 table-responsive"
+    staticClass: "row col-md-12 table-responsive"
   }, [_vm.loader ? _c("div", {
     staticClass: "card-body"
   }, [_c("bullet-list-loader", {
     attrs: {
       width: 250
     }
-  })], 1) : _c("table", {
+  })], 1) : _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "row",
+    staticStyle: {
+      "margin-left": "-10px"
+    }
+  }, [_c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalIssuanceQuantity) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Products")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalIssuancePurchased) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Purchased")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "25%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalReturnQuantity) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Returns")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "22%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalSellingQuantity) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Selling")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalSellingQuantity - _vm.totalIssuancePurchased - _vm.totalReturnQuantity) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Profit")])])])])])])])])]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered",
     attrs: {
       id: "inventory_control_register"
     }
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", [_vm._l(_vm.data, function (item, index) {
+  }, [_vm._m(7), _vm._v(" "), _c("tbody", [_vm._l(_vm.data, function (item, index) {
     return [item.good_receive[0] || item.issuance[0] || item.opening_stock[0] ? _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.title) + "\n                                     || Current Average Rate "), _c("b", [_vm._v(_vm._s(item.variation.avg_price))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.opening_stock[0] ? _vm.formatPrice(item.opening_stock[0].rate) : "-"))]), _vm._v(" "), _c("td", [item.opening_stock[0] ? _c("a", {
@@ -11110,7 +11249,7 @@ var render = function render() {
         "data-target": "#sinDetailPopup"
       }
     }, [_vm._v(_vm._s(item.issuance[0].quantity))]) : _c("span", [_vm._v("-")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.issuance[0] ? _vm.formatPrice(parseFloat(item.issuance[0].quantity) * parseFloat(item.issuance[0].rate)) : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["return"][0] ? _vm.formatPrice(parseFloat(item["return"][0].quantity)) : "-"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.calculateClosingBalance(item)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateClosingBalance(item) * item.variation.avg_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateGrossProfite(item))))])]) : _vm._e()];
-  })], 2)])])])])])])]);
+  })], 2)])])])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -11126,6 +11265,46 @@ var staticRenderFns = [function () {
   }, [_c("button", {
     staticClass: "btn btn-block btn-primary"
   }, [_vm._v("Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-shopping-bag"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-undo"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-credit-card"
+  })]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

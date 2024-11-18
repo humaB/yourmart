@@ -36,12 +36,114 @@
                                 </div>
                               </form>
                         </div>
-                        <div class="col-md-12 table-responsive">
+                        <div class="row col-md-12 table-responsive">
                             <div class="card-body" v-if="loader">
                                 <bullet-list-loader  :width="250" >
                                 </bullet-list-loader>
                               </div>
-                            <table class="table table-bordered" id="inventory_control_register" v-else>
+                              <div class="col-md-12" v-else>
+
+                                        <div class="row" style="margin-left: -10px">
+                                            <!-- cards -->
+                                                <table style="table-layout: fixed; width: 100%;">
+                                                    <tr>
+                                                        <td style="width: 20%; padding : 10px">
+                                                            <div class="card card-statistic-1">
+                                                                <div class="card-icon l-bg-cyan">
+                                                                    <i class="fa fa-shopping-bag"></i>
+                                                                </div>
+                                                                <div class="card-wrap">
+                                                                    <div class="padding-20">
+                                                                        <div class="text-right">
+                                                                            <h3 class="font-light mb-0">
+                                                                                <i class="ti-arrow-up text-success"></i>
+                                                                                {{ totalIssuanceQuantity }}
+                                                                            </h3>
+                                                                            <span class="text-muted">Products</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 20%;padding : 10px">
+                                                            <div class="card card-statistic-1">
+                                                                <div class="card-icon l-bg-orange">
+                                                                    <i class="fas fa-clock"></i>
+                                                                </div>
+                                                                <div class="card-wrap">
+                                                                    <div class="padding-20">
+                                                                        <div class="text-right">
+                                                                            <h3 class="font-light mb-0">
+                                                                                <i class="ti-arrow-up text-success"></i>
+                                                                                {{ totalIssuancePurchased }}
+                                                                            </h3>
+                                                                            <span class="text-muted">Purchased</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 25%;padding : 10px">
+                                                            <div class="card card-statistic-1">
+                                                                <div class="card-icon l-bg-purple">
+                                                                    <i class="fas fa-undo"></i>
+                                                                </div>
+                                                                <div class="card-wrap">
+                                                                    <div class="padding-20">
+                                                                        <div class="text-right">
+                                                                            <h3 class="font-light mb-0">
+                                                                                <i class="ti-arrow-up text-success"></i>
+                                                                                {{ totalReturnQuantity }}
+                                                                            </h3>
+                                                                            <span class="text-muted">Returns</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 22%;padding : 10px">
+                                                            <div class="card card-statistic-1">
+                                                                <div class="card-icon l-bg-green">
+                                                                    <i class="fas fa-boxes"></i>
+                                                                </div>
+                                                                <div class="card-wrap">
+                                                                    <div class="padding-20">
+                                                                        <div class="text-right">
+                                                                            <h3 class="font-light mb-0">
+                                                                                <i class="ti-arrow-up text-success"></i>
+                                                                                {{  totalSellingQuantity }}
+                                                                            </h3>
+                                                                            <span class="text-muted">Selling</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td style="width: 20%;padding : 10px">
+                                                            <div class="card card-statistic-1">
+                                                                <div class="card-icon l-bg-cyan">
+                                                                    <i class="fas fa-credit-card"></i>
+                                                                </div>
+                                                                <div class="card-wrap">
+                                                                    <div class="padding-20">
+                                                                        <div class="text-right">
+                                                                            <h3 class="font-light mb-0">
+                                                                                <i class="ti-arrow-up text-success"></i>
+                                                                                {{ totalSellingQuantity - totalIssuancePurchased - totalReturnQuantity }}
+                                                                            </h3>
+                                                                            <span class="text-muted">Profit</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+
+
+
+                            <table class="table table-bordered" id="inventory_control_register">
                                 <thead>
                                     <tr >
                                         <th colspan="3" class="border h5">Item Description</th>
@@ -118,6 +220,7 @@
                                   </template>
                                 </tbody>
                               </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -142,6 +245,34 @@ export default {
                 to: new Date().toISOString().substr(0, 10),
             },
         }
+    },
+    computed: {
+        totalIssuanceQuantity() {
+            return this.data.reduce((total, item) => {
+                return total + (item.issuance[0]?.quantity || 0);
+            }, 0);
+        },
+        totalIssuancePurchased() {
+            return this.data.reduce((total, item) => {
+                const issuanceQuantity = parseFloat(item.issuance[0]?.quantity) || 0;
+                const avgPrice = parseFloat(item.variation?.avg_price) || 0;
+                return total + issuanceQuantity * avgPrice;
+            }, 0);
+        },
+        totalReturnQuantity() {
+            return this.data.reduce((total, item) => {
+                const returnQuantity = parseFloat(item.return[0]?.quantity) || 0;
+                const avgPrice = parseFloat(item.variation?.avg_price) || 0;
+                return total + returnQuantity * avgPrice;
+            }, 0);
+        },
+        totalSellingQuantity() {
+            return this.data.reduce((total, item) => {
+                const returnQuantity = parseFloat(item.issuance[0]?.quantity) || 0;
+                const avgPrice = parseFloat(item.issuance[0]?.rate) || 0;
+                return total + returnQuantity * avgPrice;
+            }, 0);
+        },
     },
     methods : {
         calculateQuantityDifference(item) {
