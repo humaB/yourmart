@@ -8,6 +8,7 @@ use App\Http\Resources\ValidationCollection;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
+use App\Models\Inventory\PurchaseOrder\PurchaseOrderDetail;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturnDetail;
@@ -129,7 +130,7 @@ class FisReportController extends Controller
     public function goodReceivedDelete(Request $request)
     {
         //First case check PO amount
-        $total = $request->total;
+       $total = $request->total;
         $po = PurchaseOrder::where('id', $request->grn['po_id'])->first();
         if ($po) {
             if ($total > $po->remaining_amount) {
@@ -137,6 +138,43 @@ class FisReportController extends Controller
                     ->response()
                     ->setStatusCode(422);
             }
+
+             //If GRN is created from adjustment module then direct delete and update average price
+            //Total average rate = ( average_rate * stock ) + (new_qty * new_rate) / total_stock + new_qty
+            // Calculate new average price after deletion
+            $product = ProductVariation::where('product_id', $request->product_id)->first();
+            $grns = StoreReceivedDetail::where('product_id', $request->product_id)->get();
+            // Calculate new average price after deletion
+            $current_total_quantity = $grns->sum('quantity');
+            $current_total_cost = $grns->sum(function ($grn) {
+                    return $grn->total;
+                });
+
+            // Stock to delete
+            $delete_quantity = $request->quantity;
+            $delete_rate = $request->price;
+
+            // Adjust total quantity
+            $new_total_quantity = $current_total_quantity - $delete_quantity;
+
+            // Adjust total cost by removing deleted stock's cost
+            $deleted_stock_cost = $delete_rate * $delete_quantity;
+            $adjusted_total_cost = $current_total_cost - $deleted_stock_cost;
+
+            // Calculate new average rate
+            $new_average_rate = $adjusted_total_cost / $new_total_quantity;
+
+            // Round and return new average rate
+            $product->update([
+                'avg_price' => round($new_average_rate)
+            ]);
+
+            $product->decrement('stock', $delete_quantity);
+
+            StoreReceivedDetail::where('id', $request->id)->delete();
+            PurchaseOrderDetail::where('po_id', $po->id)->delete();
+            $po->delete();
+            return ['message' => 'Successfully Deleted'];
         } else if ($request->grn['po_id'] == 0) {
             //If GRN is created from adjustment module then direct delete and update average price
             //Total average rate = ( average_rate * stock ) + (new_qty * new_rate) / total_stock + new_qty

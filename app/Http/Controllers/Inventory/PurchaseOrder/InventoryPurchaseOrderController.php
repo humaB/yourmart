@@ -66,7 +66,7 @@ class InventoryPurchaseOrderController extends Controller
     }
 
     public function decisions( Request $request ){
-        $decision = $request->decision == 'reject' ? '2' : '1';
+        $decision = $request->decision == 'Reject' ? '2' : '1';
 
         PurchaseOrder::where('id', $request->id)->update([
             'status' => $decision
