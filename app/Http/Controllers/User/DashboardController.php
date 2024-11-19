@@ -110,20 +110,61 @@ class DashboardController extends Controller
                ->setStatusCode(200);
     }
 
-    public function topTenDropshipper(){
+    public function topTenDropshipper( Request $request ){
 
         $dropshippers = User::withCount('deliveredOrders as total_orders')
-        ->withCount('returnedOrders as total_returns')
-        ->with('deliveredOrders')
-        ->with('dropshipper.shops')
-        ->orderBy('total_orders', 'desc')
-        ->take(10)
+            ->withCount('returnedOrders as total_returns')
+            ->with('deliveredOrders')
+            ->with('dropshipper.shops')
+            ->orderBy('total_orders', 'desc')
+            ->take(10)
+        ->when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->get();
+
+        $orders = Order::when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->whereIn('status', ['8','9','10'])
         ->get();
 
         $data = [
             'dropshippers' => $dropshippers,
-            'dropshipperApplication' => DropShipper::select('status')->get(),
-            'shipperApplication'     => Supplier::select('status')->get(),
+
+            'dropshipperPayouts' => [
+                'total' => $orders->sum('total_profit'),
+                'paid' => $orders->sum('total_paid_profit'),
+                'remaining' => $orders->sum('total_profit') - $orders->sum('total_paid_profit'),
+                'total_sellers' => DropShipper::
+                    when($request->from, function ($q) use ($request) {
+                        $q->whereDate('created_at', '>=', $request->from);
+                    })
+                    ->when($request->to, function ($q) use ($request) {
+                        $q->whereDate('created_at', '<=', $request->to);
+                    })->select('status')->count()
+            ],
+
+            'dropshipperApplication' => DropShipper::
+                when($request->from, function ($q) use ($request) {
+                    $q->whereDate('created_at', '>=', $request->from);
+                })
+                ->when($request->to, function ($q) use ($request) {
+                    $q->whereDate('created_at', '<=', $request->to);
+                })->select('status')->get(),
+
+            'shipperApplication' => Supplier::when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })->select('status')->get(),
         ];
 
         return (new ResponseCollection($data))

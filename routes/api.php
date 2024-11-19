@@ -73,7 +73,7 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::group(['prefix' => 'dashboard'], function(){
         Route::post('/',  [ DashboardController::class , 'fetchData']);
         Route::get('/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
-        Route::get('/top-10-dropshippers',  [ DashboardController::class , 'topTenDropshipper']);
+        Route::post('/top-10-dropshippers',  [ DashboardController::class , 'topTenDropshipper']);
     });
 });
 
