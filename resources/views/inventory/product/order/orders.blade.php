@@ -22,7 +22,7 @@
  <script src="{{ asset('assets/bundles/datatables/DataTables-1.10.16/js/dataTables.bootstrap4.min.js') }}"></script>
 
 
- <script src="{{ asset('assets/js/productApp.js') }}"></script>
+ <script src="{{ mix('assets/js/productApp.js') }}"></script>
  <script src="{{ asset('assets/js/page/chat.js') }}"></script>
 
 @endpush

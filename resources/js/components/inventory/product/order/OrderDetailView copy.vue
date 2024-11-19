@@ -183,43 +183,59 @@
                                                                             <td><strong>#</strong></td>
                                                                             <td><strong>Receivable</strong></td>
                                                                             <td><strong>Received</strong></td>
-                                                                            <td ><strong>Remaining</strong></td>
+                                                                            <td><strong>Remaining</strong></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Advance</strong></td>
-                                                                            <td class="text-right">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))}}</td>
+                                                                            <td>{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))}}</td>
                                                                             <td class="text-right">{{formatPrice(details.advance_amount) }}</td>
-                                                                            <td class="text-right">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount }}</td>
+                                                                            <td>{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount }}</td>
                                                                         </tr>
 
 
                                                                         <tr>
                                                                             <td><strong>COD</strong></td>
-                                                                            <td class="text-right">{{ formatPrice(details.selling_price) }}</td>
+                                                                            <td>{{ formatPrice(details.selling_price) }}</td>
                                                                             <td class="text-right">{{ formatPrice(details.paid_amount - details.advance_amount) }}</td>
-                                                                            <td class="text-right">{{ formatPrice((details.selling_price - details.paid_amount) + parseFloat(details.advance_amount)) }}</td>
+                                                                            <td>{{ formatPrice(details.remaining_amount) }}</td>
                                                                         </tr>
 
-
-                                                                    </tbody>
-                                                                    <tfoot>
                                                                         <tr>
-                                                                            <td><strong>Total</strong></td>
-                                                                            <td class="text-right h5">
-                                                                                <!-- Total Receivable: Sum of all receivable values -->
-                                                                                {{ formatPrice(parseFloat(details.courier_service_price) + parseFloat(details.packaging_price) + parseFloat(details.selling_price)) }}
-                                                                            </td>
-                                                                            <td class="text-right h5">
-                                                                                <!-- Total Received: Sum of all received amounts -->
-                                                                                {{ formatPrice(details.advance_amount + (details.paid_amount - details.advance_amount)) }}
-                                                                            </td>
-                                                                            <td class="text-right h5">
-                                                                                <!-- Total Remaining: Sum of all remaining amounts -->
-                                                                                {{ formatPrice(((parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount) +
-                                                                                               ((details.selling_price - details.paid_amount) + parseFloat(details.advance_amount))) }}
+                                                                            <td><strong>Remaining Amount:</strong></td>
+                                                                            <td class="text-right">
+                                                                                <span
+                                                                                    v-if="details.is_replacement == 1">0</span>
+                                                                                <span v-else>{{
+                                                                                    formatPrice(details.remaining_amount)
+                                                                                    }}</span>
                                                                             </td>
                                                                         </tr>
-                                                                    </tfoot>
+
+                                                                        <!-- For Normal Type -->
+                                                                        <tr v-if="details.type == 'Normal'">
+                                                                            <td><strong>COD Amount:</strong></td>
+                                                                            <td class="text-right">{{
+                                                                                formatPrice(details.selling_price) }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr v-if="details.type == 'Normal'">
+                                                                            <td><strong>Advance Amount:</strong></td>
+                                                                            <td class="text-right">{{
+                                                                                formatPrice(details.advance_amount) }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr v-if="details.type == 'Normal'">
+                                                                            <td><strong>Final Total After Delivery
+                                                                                    (Advance included):</strong></td>
+                                                                            <td class="text-right">
+                                                                                <span
+                                                                                    v-if="details.is_replacement == 1">0</span>
+                                                                                <span v-else>{{
+                                                                                    formatPrice(totalSellPrice)
+                                                                                    }}</span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
                                                                 </table>
                                                             </div>
 

@@ -8497,9 +8497,9 @@ var render = function render() {
     staticClass: "d-flex"
   }, [_c("h5", [_vm.details.status == 0 ? _c("span", {
     staticClass: "badge badge-warning text-dark"
-  }, [_vm._v("Order Collection")]) : _vm.details.status == 1 ? _c("span", {
+  }, [_vm._v("Order\n                                Collection")]) : _vm.details.status == 1 ? _c("span", {
     staticClass: "badge badge-info text-dark"
-  }, [_vm._v("Inventory Issuance")]) : _vm.details.status == 2 ? _c("span", {
+  }, [_vm._v("Inventory\n                                Issuance")]) : _vm.details.status == 2 ? _c("span", {
     staticClass: "badge badge-secondary"
   }, [_vm._v("QC")]) : _vm.details.status == 3 ? _c("span", {
     staticClass: "badge badge-success"
@@ -8509,7 +8509,7 @@ var render = function render() {
     staticClass: "badge badge-succes"
   }, [_vm._v("Dispatched")]) : _vm.details.status == 6 ? _c("span", {
     staticClass: "badge badge-danger"
-  }, [_vm._v("Rejection Under Review")]) : _vm.details.status == 7 ? _c("span", {
+  }, [_vm._v("Rejection Under\n                                Review")]) : _vm.details.status == 7 ? _c("span", {
     staticClass: "badge badge-danger"
   }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c("div", {
     staticClass: "modal-body row"
@@ -8533,7 +8533,7 @@ var render = function render() {
     staticClass: "card-body row"
   }, [_c("div", {
     staticClass: "col-md-8"
-  }, [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
+  }, [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number) + "\n                                                    ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2) + "\n                                                    ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
     staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "card author-box"
@@ -8565,57 +8565,73 @@ var render = function render() {
     }
   }, [_vm._v(_vm._s(_vm.details.user.dropshipper.full_name))]), _vm._v(" "), _c("div", {
     staticClass: "author-box-job"
-  }, [_vm._v(_vm._s(_vm.details.user.dropshipper.whatsapp_number))])])])])])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.user.dropshipper.whatsapp_number) + "\n                                                                    ")])])])])])]) : _vm._e()])]), _vm._v(" "), _c("div", {
     staticClass: "card mb-3"
   }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("h5", {
     staticClass: "d-flex justify-content-between align-items-center"
-  }, [_c("span", [_vm._v("Order # " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name.substring(0, 3) + "-" : "") + _vm._s(_vm.details.order_no))]), _vm._v(" "), _c("span", [_vm._v("Date/Time : " + _vm._s(_vm.formatNormalDate(_vm.details.created_at)))])]), _vm._v(" "), _vm.details.type == "Normal" ? _c("h5", [_vm._v("Tracking # " + _vm._s(_vm.details.tracking_number))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("a", {
+  }, [_c("span", [_vm._v("Order # " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name.substring(0, 3) + "-" : "") + _vm._s(_vm.details.order_no))]), _vm._v(" "), _c("span", [_vm._v("Date/Time : " + _vm._s(_vm.formatNormalDate(_vm.details.created_at)))])]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-3"
+  }, [_c("div", {
+    staticClass: "col-md-8"
+  }, [_vm.details.type == "Normal" ? _c("h5", [_vm._v("Tracking # " + _vm._s(_vm.details.tracking_number))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("a", {
     attrs: {
       href: _vm.details.slip_link,
       target: "_blank"
     }
   }, [_vm._v("Press to Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", {
     staticClass: "mt-2"
-  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions))]) : _vm._e(), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Courier\n                                                                Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                        ")]) : _vm._e()]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 text-right"
+  }, [_c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Order Notes:")]), _vm._v(" " + _vm._s(_vm.details.order_note) + "\n                                                        ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("No of labels:")]), _vm._v(" " + _vm._s(_vm.details.no_of_labels) + "\n                                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6"
-  }, [_c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Order Notes:")]), _vm._v(" " + _vm._s(_vm.details.order_note))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("No of labels:")]), _vm._v(" " + _vm._s(_vm.details.no_of_labels))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 text-right"
-  }, [_c("p", [_c("strong", [_vm._v("Sub Total:")]), _vm._v(" " + _vm._s(parseFloat(_vm.details.total_bill) - (parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price))))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Courier Charges :")]), _vm._v(" " + _vm._s(_vm.details.courier_service_price))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Packing Charges :")]), _vm._v(" " + _vm._s(_vm.details.packaging_price))])])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
-    staticClass: "row"
+    staticClass: "col-md-12 row"
   }, [_c("div", {
-    staticClass: "col-md-12 text-right row"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))])]), _vm._v(" "), _vm._m(4), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))])]), _vm._v(" "), _vm._m(5), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
-  }, [_vm.details.is_replacement == 1 ? _c("h5", [_vm._v("0")]) : _c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.remaining_amount)))])]), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
-    staticClass: "col-md-6 border-top border-1"
-  }, [_vm._m(6)]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
-    staticClass: "col-md-6 border-top border-1"
-  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))])]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
-    staticClass: "col-md-6 border-top border-1"
-  }, [_vm._m(7)]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
-    staticClass: "col-md-6 border-top border-1"
-  }, [_c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))])]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
-    staticClass: "col-md-6"
-  }, [_vm._m(8)]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
-    staticClass: "col-md-6"
-  }, [_vm.details.is_replacement == 1 ? _c("h5", [_vm._v("0")]) : _c("h5", [_vm._v(_vm._s(_vm.formatPrice(_vm.totalSellPrice)))])]) : _vm._e()])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered table-sm"
+  }, [_c("tbody", [_c("tr", [_vm._m(3), _vm._v(" "), _c("td", {
+    staticClass: "text-left"
+  }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.total_bill) - (parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price)))))])]), _vm._v(" "), _c("tr", [_vm._m(4), _vm._v(" "), _c("td", {
+    staticClass: "text-left"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.courier_service_price)))])]), _vm._v(" "), _c("tr", [_vm._m(5), _vm._v(" "), _c("td", {
+    staticClass: "text-left"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.packaging_price)) + "\n                                                                        ")])]), _vm._v(" "), _c("tr", [_vm._m(6), _vm._v(" "), _c("td", {
+    staticClass: "text-left font-weight-bold"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h6", [_vm._v("Status")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered table-sm"
+  }, [_c("tbody", [_vm._m(7), _vm._v(" "), _c("tr", [_vm._m(8), _vm._v(" "), _c("td", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price) - _vm.details.advance_amount))])]), _vm._v(" "), _c("tr", [_vm._m(9), _vm._v(" "), _c("td", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount - _vm.details.advance_amount)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-right"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount))))])])]), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(10), _vm._v(" "), _c("td", {
+    staticClass: "text-right h5"
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price) + parseFloat(_vm.details.selling_price))) + "\n                                                                        ")]), _vm._v(" "), _c("td", {
+    staticClass: "text-right h5"
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.advance_amount + (_vm.details.paid_amount - _vm.details.advance_amount))) + "\n                                                                        ")]), _vm._v(" "), _c("td", {
+    staticClass: "text-right h5"
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price) - _vm.details.advance_amount + (_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount)))) + "\n                                                                        ")])])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
       id: "products_items_table"
     }
-  }, [_vm._m(10), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+  }, [_vm._m(12), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -8635,7 +8651,7 @@ var render = function render() {
         src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
       }
     })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))]), _vm._v(" "), _vm.details.is_replacement == 1 ? _c("td", [_vm._v("0")]) : _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _vm.details.is_replacement == 1 ? _c("td", [_vm._v("0")]) : _c("td", [_vm._v(_vm._s(parseFloat(item.sell_price) - (parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))))])]);
-  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(11), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(13), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -8649,11 +8665,11 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPaybale))])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
     staticClass: "card"
-  }, [_vm._m(12), _vm._v(" "), _c("div", {
+  }, [_vm._m(14), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(13), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
+  }, [_vm._m(15), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.product.variation ? _c("td", {
@@ -8672,7 +8688,7 @@ var render = function render() {
       attrs: {
         src: _vm.getImageUrl(item.product.variation.images[0].attachment.attachment)
       }
-    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.product.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.product.variation.color ? item.product.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.product.variation.size ? item.product.variation.size.name : "-") + "\n                                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))])]);
+    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.product.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.product.variation.color ? item.product.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.product.variation.size ? item.product.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))])]);
   }), 0)])])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "attachment-mail"
   }, [_c("p", [_c("span", [_c("i", {
@@ -8719,7 +8735,7 @@ var render = function render() {
         href: "".concat(_vm.web_url, "public/storage/uploads/labels/").concat(attachment.attachment),
         target: "_blank"
       }
-    }, [_vm._v("\n                                            " + _vm._s(_vm.truncatedAttachmentName(attachment.attachment)) + "\n                                            ")])]);
+    }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(attachment.attachment)) + "\n                                                ")])]);
   })], 2) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
   }, [_c("div", {
@@ -8755,7 +8771,7 @@ var render = function render() {
     return _c("li", {
       key: item.id,
       staticClass: "mb-0"
-    }, [_vm._v("\n                                                    " + _vm._s(item.activity) + " by " + _vm._s(item.user ? item.user.name : "") + "  - "), _c("small", {
+    }, [_vm._v("\n                                                    " + _vm._s(item.activity) + " by " + _vm._s(item.user ? item.user.name : "") + " -\n                                                    "), _c("small", {
       staticClass: "text-muted"
     }, [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])])]), _vm._v(" "), _c("div", {
@@ -8896,11 +8912,11 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(14), _vm._v(" "), _c("div", {
+  }, [_vm._m(16), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(15), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
+  }, [_vm._m(17), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
@@ -8952,7 +8968,7 @@ var render = function render() {
         }
       }
     })])]);
-  }), _vm._v(" "), _vm._m(16)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+  }), _vm._v(" "), _vm._m(18)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
@@ -8980,7 +8996,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(17), _vm._v(" "), _c("div", {
+  }, [_vm._m(19), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9014,11 +9030,11 @@ var render = function render() {
     }
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update Amount")])])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" && _vm.details.status == 0 ? _c("div", {
+  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" && _vm.details.status == 0 ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(18), _vm._v(" "), _c("div", {
+  }, [_vm._m(20), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9052,11 +9068,11 @@ var render = function render() {
     }
   }, [_vm._v("Add Discount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update Amount")])])])]) : _vm._e(), _vm._v(" "), (_vm.role == "order collection manager" || _vm.role == "admin") && _vm.details.status < 7 && _vm.details.type == "Daraz" ? _c("div", {
+  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e(), _vm._v(" "), (_vm.role == "order collection manager" || _vm.role == "admin") && _vm.details.status < 7 && _vm.details.type == "Daraz" ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(19), _vm._v(" "), _c("div", {
+  }, [_vm._m(21), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9090,7 +9106,7 @@ var render = function render() {
     }
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
+  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
     staticClass: "modal-footer"
   }, [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
@@ -9118,7 +9134,7 @@ var render = function render() {
     staticClass: "btn btn-danger btn-progress disabled"
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v("  Revert to Pre Step\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Revert to Pre Step\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
@@ -9127,9 +9143,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-paper-plane"
-  }), _vm._v("  Forward Order\n                    ")]) : _vm.loader ? _c("button", {
+  }), _vm._v(" Forward Order\n                    ")]) : _vm.loader ? _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("\n                     Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
+  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -9157,9 +9173,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-paper-plane"
-  }), _vm._v("  Forward Order\n                    ")]) : _vm.loader ? _c("button", {
+  }), _vm._v(" Forward Order\n                    ")]) : _vm.loader ? _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("\n                     Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
+  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -9168,9 +9184,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Reject Order\n                     ")]) : _vm.rejectLoader ? _c("button", {
+  }), _vm._v(" Reject Order\n                    ")]) : _vm.rejectLoader ? _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
-  }, [_vm._v("\n                         Forward\n                     ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -9216,33 +9232,37 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("h5", [_c("strong", [_vm._v("Total Order Amount:")])])]);
+  return _c("td", [_c("strong", [_vm._v("Product Cost:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("h5", [_c("strong", [_vm._v("Total Received Amount:")])])]);
+  return _c("td", [_c("strong", [_vm._v("Courier Charges:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("h5", [_c("strong", [_vm._v("Remaining Amount:")])])]);
+  return _c("td", [_c("strong", [_vm._v("Packing Charges:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("h5", [_c("strong", [_vm._v("COD Amount:")])]);
+  return _c("td", {
+    staticClass: "h6"
+  }, [_c("strong", [_vm._v("Total Order\n                                                                                Amount:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("h5", [_c("strong", [_vm._v("Advance Amount:")])]);
+  return _c("tr", [_c("td", [_c("strong", [_vm._v("#")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Receivable")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Received")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Remaining")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("h5", [_c("strong", [_vm._v("Final Total After Delivery (Advance included):")])]);
+  return _c("td", [_c("strong", [_vm._v("Advance")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", [_c("strong", [_vm._v("COD")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", [_c("strong", [_vm._v("Total")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
