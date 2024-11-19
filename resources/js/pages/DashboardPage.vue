@@ -56,10 +56,105 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="pl-4 pt-4">Orders & Pay-Outs</h4>
                     <div class="card-body">
                         <div class="row" style="margin-left: -10px">
                             <!-- cards -->
+
+                            <table style="table-layout: fixed; width: 100%;">
+                                <tr>
+                                    <td style="width: 20%; padding : 10px">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-cyan">
+                                                <i class="fa fa-shopping-bag"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i>
+                                                            {{ orders.totalOrder }}
+                                                        </h3>
+                                                        <span class="text-muted">Total Order</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20%;padding : 10px">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-orange">
+                                                <i class="fas fa-clock"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i>
+                                                            {{ orders.inProcess }}
+                                                        </h3>
+                                                        <span class="text-muted">In Process</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 25%;padding : 10px">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-purple">
+                                                <i class="fas fa-shopping-cart"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i>
+                                                            {{ orders.outOfDelivery }}
+                                                        </h3>
+                                                        <span class="text-muted">Out For Delivery</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 22%;padding : 10px">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-green">
+                                                <i class="fas fa-boxes"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i>
+                                                            {{ orders.delivered }}
+                                                        </h3>
+                                                        <span class="text-muted">Delivered</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 20%;padding : 10px">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-cyan">
+                                                <i class="fas fa-undo"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i>
+                                                            {{ orders.returns }}
+                                                        </h3>
+                                                        <span class="text-muted">Return</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
                             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                 <div class="card bg-info">
                                     <div class="card-statistic-4 text-white">
@@ -67,9 +162,9 @@
                                             <div class="row">
                                                 <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
                                                     <div class="card-content">
-                                                        <h5 class="font-15">Payable Amount</h5>
+                                                        <h5 class="font-15">Normal / COD</h5>
                                                         <h2 class="mb-3 font-18">
-
+                                                            {{ orders.normalOrders }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -90,9 +185,9 @@
                                             <div class="row">
                                                 <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
                                                     <div class="card-content text-white">
-                                                        <h5 class="font-15">Paid Amount</h5>
+                                                        <h5 class="font-15">Daraz</h5>
                                                         <h2 class="mb-3 font-18">
-
+                                                            {{ orders.darazOrders }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -114,10 +209,10 @@
                                                 <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
                                                     <div class="card-content">
                                                         <h5 class="font-15">
-                                                            Remaining Payable's
+                                                            Direct Sales
                                                         </h5>
                                                         <h2 class="mb-3 font-18">
-
+                                                            {{ orders.cashOrders }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -132,97 +227,41 @@
                                 </div>
                             </div>
 
-                            <table style="table-layout: fixed; width: 100%;">
-                                <tr>
-                                    <td style="width: 20%; padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-cyan">
-                                                <i class="fa fa-shopping-bag"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                        </h3>
-                                                        <span class="text-muted">Total Order</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 20%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-orange">
-                                                <i class="fas fa-clock"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                        </h3>
-                                                        <span class="text-muted">In Process</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 25%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-purple">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                        </h3>
-                                                        <span class="text-muted">Out For Delivery</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 22%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-green">
-                                                <i class="fas fa-boxes"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                        </h3>
-                                                        <span class="text-muted">Delivered</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 20%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-cyan">
-                                                <i class="fas fa-undo"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                        </h3>
-                                                        <span class="text-muted">Return</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr class="table-header">
+                                        <th colspan="5" class="h5">Sales Stats</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Gross Sales</th>
+                                        <th>Item Sold</th>
+                                        <th>Products</th>
+                                        <th>Packing</th>
+                                        <th>Courier</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-end h6">{{ formatPrice(orders.grossSales) }}</td>
+                                        <td class="text-end h6">{{ formatPrice(orders.itemSolds) }}</td>
+                                        <td class="text-end h6">{{ formatPrice(orders.productCost) }}</td>
+                                        <td class="text-end h6">
+                                            <span><strong>Overall</strong> {{ formatPrice(orders.packing) }}</span><br>
+                                            <span><strong>Ours</strong> {{ formatPrice(orders.packingProfit) }}</span>
+                                        </td>
+                                        <td class="text-end h6">
+                                            <span><strong>Overall</strong> {{ formatPrice(orders.courier) }}</span><br>
+                                            <span><strong>Ours</strong> {{ formatPrice(orders.courierProfit) }}</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="0">Cost of Goods Sold </th>
+                                        <th colspan="2" class="h6"> {{ formatPrice(orders.costOfGood) }}</th>
+                                        <th colspan="0">Gross Profit</th>
+                                        <th colspan="2" class="h6"> {{ formatPrice(orders.grossProfit) }}</th>
+                                    </tr>
+                                </tbody>
                             </table>
-
-
                         </div>
                     </div>
 
@@ -831,8 +870,8 @@ export default {
             filter: {
                 dropshipper: 0,
                 shop: 0,
-                from: '',
-                to: '',
+                from: new Date().toISOString().substr(0, 10),
+                to: new Date().toISOString().substr(0, 10),
             },
             topTenProducts: [],
             dropshipper: {},
@@ -870,11 +909,30 @@ export default {
                 totalAmount : 0,
                 remaining : 0,
                 paid : 0
+            },
+            orders : {
+                totalOrder: 0,
+                inProcess: 0,
+                outOfDelivery: 0,
+                delivered: 0,
+                returns: 0,
+                normalOrders: 0,
+                darazOrders: 0,
+                cashOrders: 0,
+                grossSales : 0,
+                itemSolds : 0,
+                productCost : 0,
+                packing : 0,
+                packingProfit : 0,
+                courier : 0,
+                courierProfit : 0,
+                costOfGood : 0,
+                grossProfit : 0
             }
         };
     },
     created() {
-        this.fetchData();
+        this.fetchData(this.filter);
         this.top10SellingProducts();
         this.top10Dropshippers();
         this.fetchTicketStatusCounts();
@@ -943,12 +1001,31 @@ export default {
         calculateProfit(deliveredOrders) {
             return deliveredOrders.reduce((sum, order) => sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) - (parseFloat(order.total_bill)), 0);
         },
-        fetchData() {
+        fetchData( data ) {
             let vm = this;
             axios
-                .get(this.api_url + "users/dashboard")
+                .post(this.api_url + "users/dashboard", data)
                 .then((response) => {
                     const results = response.data.response;
+                    vm.orders = {
+                        totalOrder: results.totalOrder,
+                        inProcess: results.inProcess,
+                        outOfDelivery: results.outOfDelivery,
+                        delivered: results.delivered,
+                        returns: results.returns,
+                        normalOrders: results.normalOrders,
+                        darazOrders: results.darazOrders,
+                        cashOrders: results.cashOrders,
+                        grossSales : results.grossSales,
+                        itemSolds : results.itemSolds,
+                        productCost : results.productCost,
+                        packing : results.packing,
+                        packingProfit : results.packingProfit,
+                        courier : results.courier,
+                        courierProfit : results.courierProfit,
+                        costOfGood : results.costOfGood,
+                        grossProfit : results.grossProfit,
+                    }
                 })
 
         },
@@ -1021,7 +1098,7 @@ export default {
 
         },
         applyFilter() {
-
+            this.fetchData( this.filter );
         },
         resetFilter() {
 

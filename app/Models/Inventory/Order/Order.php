@@ -27,6 +27,7 @@ class Order extends Model
         'courier_service_id',
         'range_id',
         'courier_service_price',
+        'courier_service_internal_price',// Amount Received by YourMart
         'shop_id',
         'instructions',
         'order_note',

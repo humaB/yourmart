@@ -8,6 +8,8 @@ use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
+use App\Models\Inventory\Store\StoreIssuanceDetail;
+use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\Supplier;
@@ -16,8 +18,80 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function fetchData(){
+    public function fetchData(Request $request){
 
+        $orders = Order::when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })->get();
+
+        $items = OrderItem::whereIn('order_id', $orders->where('status', '8')->pluck('id'))->get();
+
+        // Calculate product code (quantity * avg_price)
+        $itemsWithProductCost = $items->map(function ($item) {
+            $quantity = $item->quantity;
+            $avgPrice = $item->variation->avg_price ?? 0; // Use 0 if avg_price is null
+            $productCost = $quantity * $avgPrice;
+
+            // Add the product code to each item for reference
+            $item->product_cost = $productCost;
+
+            return $item;
+        });
+
+        // Sum up the product_cost values
+        $totalProductCostSum = $itemsWithProductCost->sum('product_cost');
+
+        $grossSales = $items->map(function ($item) {
+            $quantity = $item->quantity;
+            $avgPrice = $item->price ?? 0; // Use 0 if avg_price is null
+            $productCost = $quantity * $avgPrice;
+
+            // Add the product code to each item for reference
+            $item->gross_sale = $productCost;
+
+            return $item;
+        });
+
+        // Sum up the product_cost values
+        $totalGrossSale = $itemsWithProductCost->sum('gross_sale');
+
+        $packingCharges = $orders->where('status', '8')->sum('packaging_price');
+        $packingChargeProfit = $orders->where('status', '8')->sum('packaging_price') * 0.15;
+
+        $courier = $orders->where('status', '8')->sum('courier_service_price');
+        $courierProfit = $orders->where('status', '8')->sum('courier_service_internal_price');
+
+        $totalCost   = $totalProductCostSum + ($packingCharges - $packingChargeProfit) + ($courier - $courierProfit);
+        $grossProfit = $totalGrossSale - $totalCost;
+
+        $data = [
+            'totalOrder'    => $orders->count(),
+            'inProcess'     => $orders->whereNotIn('status', [9, 10, 7, 8])->count(),
+            'outOfDelivery' => $orders->where('status', '11')->count(),
+            'delivered'     => $orders->where('status', '8')->count(),
+            'returns'       => $orders->whereIn('status', [9, 10])->count(),
+
+            'normalOrders'  => $orders->where('type', 'Normal')->count(),
+            'darazOrders'   => $orders->where('type', 'Daraz')->count(),
+            'cashOrders'    => $orders->where('type', 'Cash')->count(),
+
+            'grossSales'    => $totalGrossSale,
+            'itemSolds'     => $items->sum('quantity'),
+            'productCost'   => $totalProductCostSum,
+            'packing'       => $packingCharges,
+            'packingProfit' => $packingChargeProfit,
+            'courier'       => $courier,
+            'courierProfit' => $courierProfit,
+            'costOfGood'    => $totalCost,
+            'grossProfit'   => $grossProfit
+        ];
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function topSellingProduct(){

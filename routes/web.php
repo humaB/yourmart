@@ -29,6 +29,7 @@ use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
 use App\Http\Controllers\Report\FisReportController;
+use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use Illuminate\Support\Facades\Hash;
@@ -193,7 +194,15 @@ Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
 
 
 Route::get('/test', function(){
+        $orders = Order::where('type', 'Normal')->orderBy('id', 'desc')->with('range')->get();
 
+        foreach( $orders as $order ){
+            if( $order->range ){
+                $order->update([
+                    'courier_service_internal_price' => $order->range->our_charges ?? 0
+                ]);
+            }
+        }
 });
 
 

@@ -37,6 +37,13 @@
                                         Returns</a>
                                 </h6>
                             </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    4.
+                                    <a href="#" @click="deliveredOrder()"><i class="fas fa-fax"></i> Delivered Order Detail</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,6 +62,9 @@
 
         <InventoryGoodReturnReport v-if="report == 'good-return-report'" :products="products" :data="goodReturnData"
             :loader="loader" @inventoryGoodReturnFilter="inventoryGoodReturnFilter($event)" />
+
+        <DeliveredOrderDetailsReport v-if="report == 'delivered-order-report'" :data="deliveredOrderData"
+            :loader="loader" @deliveredOrderFilter="deliveredOrderFilter($event)" />
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -94,10 +104,12 @@
     </div>
 </template>
 <script>
+import DeliveredOrderDetailsReport from '../../components/reports/fis/DeliveredOrderDetailsReport.vue';
 import InventoryControlRegisterReport from '../../components/reports/fis/InventoryControlRegisterReport.vue';
 import InventoryGoodIssuanceReport from '../../components/reports/fis/InventoryGoodIssuanceReport.vue';
 import InventoryGoodReceivedReport from '../../components/reports/fis/InventoryGoodReceivedReport.vue';
 import InventoryGoodReturnReport from '../../components/reports/fis/InventoryGoodReturnReport.vue';
+
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
 export default {
@@ -107,7 +119,8 @@ export default {
         InventoryControlRegisterReport,
         InventoryGoodReceivedReport,
         InventoryGoodIssuanceReport,
-        InventoryGoodReturnReport
+        InventoryGoodReturnReport,
+        DeliveredOrderDetailsReport
     },
     data() {
         return {
@@ -122,6 +135,7 @@ export default {
             goodReceivedData: [],
             goodIssuedData: [],
             goodReturnData: [],
+            deliveredOrderData : [],
             loader: false,
             deleteLoader : false,
             role: null,
@@ -135,6 +149,19 @@ export default {
         this.fetchProducts();
     },
     methods: {
+        deliveredOrder() {
+            this.report = 'delivered-order-report'
+        },
+        deliveredOrderFilter(data) {
+            let vm = this;
+            vm.loader = true;
+            axios.post(vm.api_url + 'reports/fis/delivered-order-details', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.deliveredOrderData = results;
+                    vm.loader = false;
+                })
+        },
         deleteGRNConfirmation() {
             let vm = this;
             vm.deleteLoader = true;

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Report;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
+use App\Models\Inventory\Order\Order;
+use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
@@ -248,6 +250,25 @@ class FisReportController extends Controller
                 });
             })
             ->get();
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function deliveredOrders(Request $request)
+    {
+        $orders = Order::when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->where('type', 'Normal')
+        ->where('status', '8')
+        ->pluck('id');
+
+        $data = OrderItem::with('variation.product')->whereIn('order_id', $orders)->get();
 
         return (new ResponseCollection($data))
             ->response()
