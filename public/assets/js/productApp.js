@@ -8604,13 +8604,15 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("h6", [_vm._v(_vm._s(_vm.details.type) + " Order")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered table-sm"
-  }, [_c("tbody", [_vm._m(7), _vm._v(" "), _c("tr", [_vm._m(8), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price) - _vm.details.advance_amount))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()]), _vm._v(" "), _c("tr", [_vm._m(9), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount - _vm.details.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount))))])])]), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(10), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
+  }, [_c("tbody", [_vm._m(7), _vm._v(" "), _c("tr", [_vm._m(8), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.total_bill) - parseFloat(_vm.details.advance_amount))))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()])])]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered table-sm"
+  }, [_c("tbody", [_vm._m(9), _vm._v(" "), _c("tr", [_vm._m(10), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v("0")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()]), _vm._v(" "), _c("tr", [_vm._m(11), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount - _vm.details.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount))))])])]), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(12), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
     staticClass: "h5"
   }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.advance_amount) + parseFloat(_vm.details.selling_price))) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
     staticClass: "h5"
   }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.paid_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
     staticClass: "h5"
-  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.courier_service_price) + parseFloat(_vm.details.packaging_price) - _vm.details.advance_amount + (_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount)))) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount) - parseFloat(_vm.details.paid_amount))) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
     staticClass: "h5"
@@ -8620,22 +8622,22 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("h6", [_vm._v("Overall Stats")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered table-sm"
-  }, [_c("tbody", [_c("tr", [_vm._m(11), _vm._v(" "), _c("td", {
+  }, [_c("tbody", [_c("tr", [_vm._m(13), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount))))]), _vm._v(" "), _vm._m(12), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount))))]), _vm._v(" "), _vm._m(14), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]), _vm._v(" "), _vm._m(13), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]), _vm._v(" "), _vm._m(15), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount) - parseFloat(_vm.details.total_bill))))])])])])]) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
-  }, [_vm._m(14), _vm._v(" "), _c("div", {
+  }, [_vm._m(16), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
       id: "products_items_table"
     }
-  }, [_vm._m(15), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
+  }, [_vm._m(17), _vm._v(" "), _c("tbody", _vm._l(_vm.details.items, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.variation ? _c("td", {
@@ -8655,7 +8657,7 @@ var render = function render() {
         src: _vm.getImageUrl(item.variation.images[0].attachment.attachment)
       }
     })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Description : ")]), _vm._v(_vm._s(item.variation.product.short_description)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Color : ")]), _vm._v(_vm._s(item.variation.color ? item.variation.color.name : "-")), _c("br"), _vm._v(" "), _c("b", [_vm._v("Size : ")]), _vm._v(_vm._s(item.variation.size ? item.variation.size.name : "-") + "\n                                                            ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost))))]), _vm._v(" "), _vm.details.is_replacement == 1 ? _c("td", [_vm._v("0")]) : _c("td", [_vm._v(_vm._s(item.sell_price))]), _vm._v(" "), _vm.details.is_replacement == 1 ? _c("td", [_vm._v("0")]) : _c("td", [_vm._v(_vm._s(parseFloat(item.sell_price) - (parseFloat(item.quantity) * parseFloat(item.price) + (parseFloat(item.packaging_cost) + parseFloat(item.courier_cost)))))])]);
-  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(16), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", [_c("td"), _vm._v(" "), _vm._m(18), _vm._v(" "), _c("td"), _vm._v(" "), _c("td"), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPrice))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -8669,11 +8671,11 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.totalPaybale))])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
     staticClass: "card"
-  }, [_vm._m(17), _vm._v(" "), _c("div", {
+  }, [_vm._m(19), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(18), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
+  }, [_vm._m(20), _vm._v(" "), _c("tbody", _vm._l(_vm.details.returns.details, function (item) {
     return _c("tr", {
       key: item.id
     }, [item.product.variation ? _c("td", {
@@ -8916,11 +8918,11 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(19), _vm._v(" "), _c("div", {
+  }, [_vm._m(21), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(20), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
+  }, [_vm._m(22), _vm._v(" "), _c("tbody", [_vm._l(_vm.details.items, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_c("input", {
@@ -8972,7 +8974,7 @@ var render = function render() {
         }
       }
     })])]);
-  }), _vm._v(" "), _vm._m(21)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
+  }), _vm._v(" "), _vm._m(23)], 2)])])])]) : _vm._e(), _vm._v(" "), _vm.role == "packing & dispatch manager" ? _c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
@@ -9000,7 +9002,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(22), _vm._v(" "), _c("div", {
+  }, [_vm._m(24), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9038,7 +9040,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(23), _vm._v(" "), _c("div", {
+  }, [_vm._m(25), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9076,7 +9078,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body row"
-  }, [_vm._m(24), _vm._v(" "), _c("div", {
+  }, [_vm._m(26), _vm._v(" "), _c("div", {
     staticClass: "col-md-6"
   }, [_c("input", {
     directives: [{
@@ -9254,7 +9256,15 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("td", [_c("strong", [_vm._v("#")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Receivable")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Received")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Remaining")])])]);
+  return _c("tr", [_c("td", [_c("strong", [_vm._v("Your Mart")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Receivable")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Received")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Remaining")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", [_c("strong")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("td", [_c("strong", [_vm._v("Dropshipper")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Receivable")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Received")])]), _vm._v(" "), _c("td", [_c("strong", [_vm._v("Remaining")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

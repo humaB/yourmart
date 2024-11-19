@@ -180,16 +180,38 @@
                                                                 <table class="table table-bordered table-sm">
                                                                     <tbody>
                                                                         <tr>
-                                                                            <td><strong>#</strong></td>
+                                                                            <td><strong>Your Mart</strong></td>
+                                                                            <td><strong>Receivable</strong></td>
+                                                                            <td><strong>Received</strong></td>
+                                                                            <td ><strong>Remaining</strong></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong></strong></td>
+                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(details.total_bill) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">{{formatPrice(details.advance_amount) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(parseFloat(details.total_bill) - parseFloat(details.advance_amount)) }}</td>
+
+                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
+                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
+                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill - details.paid_amount) }}</td>
+                                                                        </tr>
+
+                                                                    </tbody>
+
+                                                                </table>
+                                                                <table class="table table-bordered table-sm">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td><strong>Dropshipper</strong></td>
                                                                             <td><strong>Receivable</strong></td>
                                                                             <td><strong>Received</strong></td>
                                                                             <td ><strong>Remaining</strong></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Advance</strong></td>
-                                                                            <td v-if="details.type == 'Normal'">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))}}</td>
-                                                                            <td v-if="details.type == 'Normal'">{{formatPrice(details.advance_amount) }}</td>
-                                                                            <td v-if="details.type == 'Normal'">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount }}</td>
+                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(details.advance_amount) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(details.advance_amount) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">0</td>
 
                                                                             <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
                                                                             <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
@@ -219,8 +241,7 @@
                                                                             </td>
                                                                             <td class="h5" v-if="details.type == 'Normal'">
                                                                                 <!-- Total Remaining: Sum of all remaining amounts -->
-                                                                                {{ formatPrice(((parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount) +
-                                                                                               ((details.selling_price - details.paid_amount) + parseFloat(details.advance_amount))) }}
+                                                                                {{ formatPrice( parseFloat(details.selling_price) + parseFloat(details.advance_amount) - parseFloat(details.paid_amount) ) }}
                                                                             </td>
 
 
