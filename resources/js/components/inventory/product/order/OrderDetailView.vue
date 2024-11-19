@@ -176,7 +176,7 @@
                                                             </div>
 
                                                             <div class="col-md-12">
-                                                                <h6>Status</h6>
+                                                                <h6>{{ details.type }} Order</h6>
                                                                 <table class="table table-bordered table-sm">
                                                                     <tbody>
                                                                         <tr>
@@ -187,9 +187,13 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Advance</strong></td>
-                                                                            <td class="text-right">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))}}</td>
-                                                                            <td class="text-right">{{formatPrice(details.advance_amount) }}</td>
-                                                                            <td class="text-right">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount }}</td>
+                                                                            <td class="text-right" v-if="details.type == 'Normal'">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))}}</td>
+                                                                            <td class="text-right" v-if="details.type == 'Normal'">{{formatPrice(details.advance_amount) }}</td>
+                                                                            <td class="text-right" v-if="details.type == 'Normal'">{{ (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount }}</td>
+
+                                                                            <td class="text-right" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
+                                                                            <td class="text-right" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
+                                                                            <td class="text-right" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill - details.paid_amount) }}</td>
                                                                         </tr>
 
 
@@ -205,19 +209,30 @@
                                                                     <tfoot>
                                                                         <tr>
                                                                             <td><strong>Total</strong></td>
-                                                                            <td class="text-right h5">
+                                                                            <td class="text-right h5" v-if="details.type == 'Normal'">
                                                                                 <!-- Total Receivable: Sum of all receivable values -->
                                                                                 {{ formatPrice(parseFloat(details.courier_service_price) + parseFloat(details.packaging_price) + parseFloat(details.selling_price)) }}
                                                                             </td>
-                                                                            <td class="text-right h5">
+                                                                            <td class="text-right h5" v-if="details.type == 'Normal'">
                                                                                 <!-- Total Received: Sum of all received amounts -->
                                                                                 {{ formatPrice(details.advance_amount + (details.paid_amount - details.advance_amount)) }}
                                                                             </td>
-                                                                            <td class="text-right h5">
+                                                                            <td class="text-right h5" v-if="details.type == 'Normal'">
                                                                                 <!-- Total Remaining: Sum of all remaining amounts -->
                                                                                 {{ formatPrice(((parseFloat(details.courier_service_price) + parseFloat(details.packaging_price)) - details.advance_amount) +
                                                                                                ((details.selling_price - details.paid_amount) + parseFloat(details.advance_amount))) }}
                                                                             </td>
+
+
+                                                                            <td class="text-right h5" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
+                                                                            <td class="text-right h5" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
+                                                                            <td class="text-right h5" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill - details.paid_amount) }}</td>
+                                                                        </tr>
+
+                                                                        <tr>
+
+                                                                            <td><strong>Payable to dropshipper after delivery : </strong></td>
+                                                                            <td colspan="3" class="h5 text-right">{{ formatPrice(details.total_profit) }}</td>
                                                                         </tr>
                                                                     </tfoot>
                                                                 </table>
