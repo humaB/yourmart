@@ -118,12 +118,6 @@ class DashboardController extends Controller
             ->with('dropshipper.shops')
             ->orderBy('total_orders', 'desc')
             ->take(10)
-        ->when($request->from, function ($q) use ($request) {
-            $q->whereDate('created_at', '>=', $request->from);
-        })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })
         ->get();
 
         $orders = Order::when($request->from, function ($q) use ($request) {
