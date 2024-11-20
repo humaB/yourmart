@@ -2794,7 +2794,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
-    return _defineProperty({
+    return _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty({
       api_url: "/public/api/",
       public_url: window.location.origin + "",
       filter: {
@@ -2864,30 +2864,71 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       paid: 0,
       remaining: 0,
       total_sellers: 0
-    });
+    }), "inventoryStatus", {
+      numberOfItemsInStock: 0,
+      stockValue: 0,
+      totalItemInReturn: 0,
+      totalReturnValue: 0,
+      grossStockValue: 0,
+      numberOfProductInStock: 0,
+      outOfStock: 0,
+      publishedProducts: 0,
+      draftProducts: 0,
+      trashedProducts: 0
+    }), "categoryWiseProducts", []), "tagWiseProducts", []), "fastMovingProducts", []), "slowMovingProducts", []), "lowStock", []), "highStock", []);
   },
   created: function created() {
     this.fetchData(this.filter);
     this.top10SellingProducts();
     this.top10Dropshippers(this.filter);
     this.fetchTicketStatusCounts();
-    this.fetchPurchaseOrders();
+    this.fetchPurchaseOrders(this.filter);
+    this.fetchCategoryandTagWiseProducts();
   },
   methods: {
-    fetchPurchaseOrders: function fetchPurchaseOrders() {
+    fetchPurchaseOrders: function fetchPurchaseOrders(data) {
       var _this = this;
       var vm = this;
-      axios.get(this.api_url + "inventory/products/purchase-orders/status-counts").then(function (response) {
+      axios.post(this.api_url + "inventory/products/purchase-orders/status-counts", data).then(function (response) {
         var results = response.data.response[0];
-        vm.po.totalPo = results.totalPo;
-        vm.po.approved = results.approved;
-        vm.po.pending = results.pending;
-        vm.po.rejected = results.rejected;
-        vm.po.totalAmount = results.totalAmount;
-        vm.po.remaining = results.remaining;
+        vm.po.totalPo = results.purchaseOrders.totalPo;
+        vm.po.approved = results.purchaseOrders.approved;
+        vm.po.pending = results.purchaseOrders.pending;
+        vm.po.rejected = results.purchaseOrders.rejected;
+        vm.po.totalAmount = results.purchaseOrders.totalAmount;
+        vm.po.remaining = results.purchaseOrders.remaining;
         vm.po.paid = vm.po.totalAmount - vm.po.remaining;
+        vm.inventoryStatus = {
+          numberOfItemsInStock: results.numberOfItemsInStock,
+          stockValue: results.stockValue,
+          totalItemInReturn: results.totalItemInReturn,
+          totalReturnValue: results.totalReturnValue,
+          grossStockValue: results.grossStockValue,
+          numberOfProductInStock: results.numberOfProductInStock,
+          outOfStock: results.outOfStock,
+          publishedProducts: results.publishedProducts,
+          draftProducts: results.draftProducts,
+          trashedProducts: results.trashedProducts,
+          categoryWiseProducts: results.categoryWiseProducts,
+          tagWiseProducts: results.tagWiseProducts
+        };
       })["catch"](function (err) {
         return _this.fetchPurchaseOrders();
+      });
+    },
+    fetchCategoryandTagWiseProducts: function fetchCategoryandTagWiseProducts() {
+      var vm = this;
+      axios.get(this.api_url + "users/dashboard/product-wise-count").then(function (response) {
+        var results = response.data.response;
+        vm.categoryWiseProducts = results.categoryWiseProducts, vm.tagWiseProducts = results.tagWiseProducts;
+        vm.fastMovingProducts = results.fastMovingProducts;
+        vm.slowMovingProducts = results.slowMovingProducts;
+        vm.lowStock = results.lowStock;
+        vm.highStock = results.highStock;
+        setTimeout(function () {
+          vm.tagWiseTable();
+          vm.categoryWiseTable();
+        }, 300);
       });
     },
     fetchTicketStatusCounts: function fetchTicketStatusCounts() {
@@ -3032,6 +3073,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.fetchData(this.filter);
       this.clearDatatable();
       this.top10Dropshippers(this.filter);
+      this.fetchPurchaseOrders(this.filter);
     },
     clearDatatable: function clearDatatable() {
       var table = $('#topDropshipperTable').DataTable();
@@ -3053,6 +3095,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         dom: "Bfrtip",
         buttons: ["copy", "csv", "excel"]
       });
+    },
+    tagWiseTable: function tagWiseTable() {
+      $("#tagWiseTable").DataTable();
+    },
+    categoryWiseTable: function categoryWiseTable() {
+      $("#categoryWiseTable").DataTable();
     },
     getPercentage: function getPercentage(statusCount) {
       if (this.totalTicketSum.total_tickets === 0) return 0;
@@ -13059,7 +13107,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("h4", {
     staticClass: "pl-4 pt-4"
-  }, [_vm._v("Purchase Orders & Pay-Outs")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Purchase Orders & Inventory")]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row",
@@ -13224,17 +13272,133 @@ var render = function render() {
     staticClass: "ti-arrow-up text-success"
   }), _vm._v("\n                                                        " + _vm._s(_vm.po.rejected) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Rejected")])])])])])])])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Rejected")])])])])])])])]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(19), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", {
+    staticClass: "text-end h6"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.inventoryStatus.grossStockValue)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-end h6"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.inventoryStatus.numberOfItemsInStock)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-end h6"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.inventoryStatus.stockValue)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-end h6"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.inventoryStatus.totalItemInReturn)))]), _vm._v(" "), _c("td", {
+    staticClass: "text-end h6",
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.inventoryStatus.totalReturnValue)))])]), _vm._v(" "), _c("tr", [_c("th", {
+    attrs: {
+      colspan: "0"
+    }
+  }, [_vm._v("Number of Products in Stock ")]), _vm._v(" "), _c("th", {
+    staticClass: "h6",
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v(" " + _vm._s(_vm.formatPrice(_vm.inventoryStatus.numberOfProductInStock)))]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "0"
+    }
+  }, [_vm._v("Out of stock")]), _vm._v(" "), _c("th", {
+    staticClass: "h6",
+    attrs: {
+      colspan: "3"
+    }
+  }, [_vm._v(" " + _vm._s(_vm.formatPrice(_vm.inventoryStatus.outOfStock)))])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Published ")]), _vm._v(" "), _c("th", {
+    staticClass: "h6"
+  }, [_vm._v(" " + _vm._s(_vm.formatPrice(_vm.inventoryStatus.publishedProducts)))]), _vm._v(" "), _c("th", [_vm._v("Draft")]), _vm._v(" "), _c("th", {
+    staticClass: "h6"
+  }, [_vm._v(" " + _vm._s(_vm.formatPrice(_vm.inventoryStatus.draftProducts)))]), _vm._v(" "), _c("th", [_vm._v("Trash")]), _vm._v(" "), _c("th", {
+    staticClass: "h6"
+  }, [_vm._v(" " + _vm._s(_vm.formatPrice(_vm.inventoryStatus.trashedProducts)))])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-5"
+  }, [_c("h6", [_vm._v("Categories-Wise Published Products")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "categoryWiseTable"
+    }
+  }, [_vm._m(20), _vm._v(" "), _c("tbody", _vm._l(_vm.categoryWiseProducts, function (category) {
+    return _c("tr", {
+      key: category.id
+    }, [_c("td", [_vm._v(_vm._s(category.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(category.product_count))])]);
+  }), 0)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-5"
+  }, [_c("h6", [_vm._v("Tag-Wise Published Products")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "tagWiseTable"
+    }
+  }, [_vm._m(21), _vm._v(" "), _c("tbody", _vm._l(_vm.tagWiseProducts, function (tag) {
+    return _c("tr", {
+      key: tag.id
+    }, [_c("td", [_vm._v(_vm._s(tag.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(tag.tagged_count))])]);
+  }), 0)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-5"
+  }, [_c("h6", [_vm._v("Fast Moving Products (Top 10)")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(22), _vm._v(" "), _c("tbody", _vm._l(_vm.fastMovingProducts, function (product) {
+    return _c("tr", {
+      key: product.id
+    }, [_c("td", [_vm._v(_vm._s(product.title))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.variation.sku || ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.issuance_sum_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(product.issuance_sum_total)))])]);
+  }), 0)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-5"
+  }, [_c("h6", [_vm._v("Slow Moving Products (Top 10)")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(23), _vm._v(" "), _c("tbody", _vm._l(_vm.slowMovingProducts, function (product) {
+    return _c("tr", {
+      key: product.id
+    }, [_c("td", [_vm._v(_vm._s(product.title))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.variation.sku || ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.issuance_sum_quantity || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(product.issuance_sum_total || 0)))])]);
+  }), 0)])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(19), _vm._v(" "), _c("div", {
+  }, [_vm._m(24), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-hover mb-0",
+    attrs: {
+      id: "topSellingProductTable"
+    }
+  }, [_vm._m(25), _vm._v(" "), _c("tbody", _vm._l(_vm.topTenProducts, function (item, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.avg_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.variation.avg_price * item.total_quantity)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s((item.selling_price / item.total_quantity).toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(item.selling_price) - parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(((parseFloat(item.selling_price) - parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price)) / (parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price)) * 100).toFixed(2)) + "%")])]);
+  }), 0)])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-6 mt-5"
+  }, [_c("h6", [_vm._v("Low Stock Products")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(26), _vm._v(" "), _c("tbody", _vm._l(_vm.lowStock, function (product) {
+    return _c("tr", {
+      key: product.id
+    }, [_c("td", [_vm._v(_vm._s(product.title))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.variation.sku || ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.issuance_sum_quantity || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(product.issuance_sum_total || 0)))])]);
+  }), 0)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6 mt-5"
+  }, [_c("h6", [_vm._v("High Stock Products")]), _vm._v(" "), _c("table", {
+    staticClass: "table table-bordered"
+  }, [_vm._m(27), _vm._v(" "), _c("tbody", _vm._l(_vm.highStock, function (product) {
+    return _c("tr", {
+      key: product.id
+    }, [_c("td", [_vm._v(_vm._s(product.title))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.variation.sku || ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.issuance_sum_quantity || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(product.issuance_sum_total || 0)))])]);
+  }), 0)])])])])]), _vm._v(" "), _vm._m(28), _vm._v(" "), _vm._m(29), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(30), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_vm._m(20), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalTicketSum.total_tickets))]), _vm._v(" "), _c("td", {
+  }, [_vm._m(31), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalTicketSum.total_tickets))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
@@ -13318,24 +13482,7 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.in_process) + "%"
     }
-  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.in_process) + "\n                                ")])])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("div", {
-    staticClass: "card"
-  }, [_vm._m(21), _vm._v(" "), _c("div", {
-    staticClass: "card-body"
-  }, [_c("div", {
-    staticClass: "table-responsive"
-  }, [_c("table", {
-    staticClass: "table table-hover mb-0",
-    attrs: {
-      id: "topSellingProductTable"
-    }
-  }, [_vm._m(22), _vm._v(" "), _c("tbody", _vm._l(_vm.topTenProducts, function (item, index) {
-    return _c("tr", {
-      key: index
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.avg_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.variation.avg_price * item.total_quantity)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s((item.selling_price / item.total_quantity).toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(item.selling_price) - parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(((parseFloat(item.selling_price) - parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price)) / (parseFloat(item.total_quantity) * parseFloat(item.variation.avg_price)) * 100).toFixed(2)) + "%")])]);
-  }), 0)])])])])]), _vm._v(" "), _vm._m(23), _vm._v(" "), _vm._m(24)]), _vm._v(" "), _c("DropshipperDetails", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.in_process) + "\n                                ")])])])])])])])]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
       details: _vm.dropShipperDetails
     }
@@ -13499,13 +13646,23 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-header"
-  }, [_c("h4", [_vm._v("Tickets Status")])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Gross Current Stock")]), _vm._v(" "), _c("th", [_vm._v("Item in Stock")]), _vm._v(" "), _c("th", [_vm._v("Stock Value")]), _vm._v(" "), _c("th", [_vm._v("Items in Return")]), _vm._v(" "), _c("th", [_vm._v("Return Value")]), _vm._v(" "), _c("th")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("th", [_vm._v("Total Tickets")]), _vm._v(" "), _c("th", [_vm._v("Awaiting Your Reply")]), _vm._v(" "), _c("th", [_vm._v("Awaiting YourMart Reply")]), _vm._v(" "), _c("th", [_vm._v("Closed")]), _vm._v(" "), _c("th", [_vm._v("Expired")]), _vm._v(" "), _c("th", [_vm._v("Reviewed")]), _vm._v(" "), _c("th", [_vm._v("In-Process")])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("No. of products")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Tag")]), _vm._v(" "), _c("th", [_vm._v("No. of products")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("QTY SOLD")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("QTY SOLD")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -13516,6 +13673,14 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("SKU #")]), _vm._v(" "), _c("th", [_vm._v("Item Sold")]), _vm._v(" "), _c("th", [_vm._v("Buying Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Buying Cost")]), _vm._v(" "), _c("th", [_vm._v("Selling Avg Price")]), _vm._v(" "), _c("th", [_vm._v("Selling Cost")]), _vm._v(" "), _c("th", [_vm._v("Net Profit")]), _vm._v(" "), _c("th", [_vm._v("Percentage")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("QTY SOLD")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("QTY SOLD")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -13627,6 +13792,16 @@ var staticRenderFns = [function () {
       height: "80"
     }
   })])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Tickets Status")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("tr", [_c("th", [_vm._v("Total Tickets")]), _vm._v(" "), _c("th", [_vm._v("Awaiting Your Reply")]), _vm._v(" "), _c("th", [_vm._v("Awaiting YourMart Reply")]), _vm._v(" "), _c("th", [_vm._v("Closed")]), _vm._v(" "), _c("th", [_vm._v("Expired")]), _vm._v(" "), _c("th", [_vm._v("Reviewed")]), _vm._v(" "), _c("th", [_vm._v("In-Process")])]);
 }];
 render._withStripped = true;
 

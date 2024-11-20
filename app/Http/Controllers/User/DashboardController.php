@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
+use App\Models\Inventory\Product\Category;
+use App\Models\Inventory\Product\Tag;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
@@ -92,6 +94,57 @@ class DashboardController extends Controller
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function categoryTagWiseProduct(){
+
+        $categoryWiseProducts = Category::withCount('product')->where('parent_id', '0')->get();
+
+        $tagWiseProducts = Tag::withCount('tagged')->get();
+
+        $fastMovingProducts = Product::with('variation')
+            ->withSum('issuance', 'total')
+            ->withSum('issuance', 'quantity')
+            ->orderBy('issuance_sum_quantity', 'desc')
+            ->limit(10)
+            ->get();
+
+        $slowMovingProducts = Product::with('variation')
+            ->withSum('issuance', 'total')
+            ->withSum('issuance', 'quantity')
+            ->orderBy('issuance_sum_quantity', 'asc')
+            ->limit(10)
+            ->get();
+
+        $lowStock = Product::with('variation')
+            ->withSum('issuance', 'total')
+            ->withSum('issuance', 'quantity')
+            ->withSum('variation', 'stock')
+            ->orderBy('variation_sum_stock', 'asc')
+            ->limit(10)
+            ->get();
+
+        $highStock = Product::with('variation')
+            ->withSum('issuance', 'total')
+            ->withSum('issuance', 'quantity')
+            ->withSum('variation', 'stock')
+            ->orderBy('variation_sum_stock', 'desc')
+            ->limit(10)
+            ->get();
+
+
+        $data = [
+            'categoryWiseProducts' => $categoryWiseProducts,
+            'tagWiseProducts'      => $tagWiseProducts,
+            'fastMovingProducts'   => $fastMovingProducts,
+            'slowMovingProducts'   => $slowMovingProducts,
+            'lowStock'            => $lowStock,
+            'highStock'            => $highStock
+        ];
+        return (new ResponseCollection($data))
+        ->response()
+        ->setStatusCode(200);
+
     }
 
     public function topSellingProduct(){

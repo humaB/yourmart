@@ -5,7 +5,12 @@ namespace App\Http\Controllers\Inventory\PurchaseOrder;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
+use App\Models\Inventory\Order\Order;
+use App\Models\Inventory\Order\OrderItem;
+use App\Models\Inventory\Product\Category;
+use App\Models\Inventory\Product\Tag;
 use App\Models\Inventory\Product\Variation\Product;
+use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrderDetail;
 use Illuminate\Http\Request;
@@ -48,9 +53,9 @@ class InventoryPurchaseOrderController extends Controller
             ->setStatusCode(200);
     }
 
-    public function statusCounts()
+    public function statusCounts( Request $request )
     {
-        $data = PurchaseOrder::selectRaw("
+        $purchaseOrders = PurchaseOrder::selectRaw("
                 COUNT(*) as totalPo,
                 SUM(CASE WHEN status = '1' THEN 1 ELSE 0 END) as approved,
                 SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as pending,
@@ -58,7 +63,60 @@ class InventoryPurchaseOrderController extends Controller
                 SUM(CASE WHEN status = '1' THEN total_amount ELSE 0 END) as totalAmount,
                 SUM(CASE WHEN status = '1' THEN remaining_amount ELSE 0 END) as remaining
             ")
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
             ->first();
+
+            $numberOfItemsInStock = ProductVariation::sum('stock');
+            $stockValue = ProductVariation::all()
+            ->sum(function ($variation) {
+                return $variation->avg_price * $variation->stock;
+            });
+
+            $beingReturnOrders = Order::where('status', '9')
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->pluck('id');
+
+            $totalItemInReturn =  OrderItem::whereIn('order_id', $beingReturnOrders)->sum('quantity');
+            $totalReturnValue = OrderItem::with('variation')
+                ->whereIn('order_id', $beingReturnOrders)
+                ->get()
+                ->sum(function ($orderItem) {
+                    return $orderItem->quantity * ($orderItem->variation->avg_price ?? 0);
+                });
+
+            $grossStockValue =  $stockValue + $totalReturnValue;
+            $numberOfProductInStock = ProductVariation::where('stock', '>', 0)->count();
+            $outOfStock = ProductVariation::where('stock', '<=', '0')->count();
+
+            $productCounts = Product::selectRaw("
+                COUNT(CASE WHEN status = '0' THEN 1 END) as published_products,
+                COUNT(CASE WHEN status = '1' THEN 1 END) as draft_products,
+                COUNT(CASE WHEN deleted_at IS NOT NULL THEN 1 END) as trashed_products
+            ")->first();
+
+            $data = [
+                'numberOfItemsInStock'    => $numberOfItemsInStock,
+                'stockValue'              => $stockValue,
+                'totalItemInReturn'       => $totalItemInReturn,
+                'totalReturnValue'        => $totalReturnValue,
+                'grossStockValue'         => $grossStockValue,
+                'numberOfProductInStock'  => $numberOfProductInStock,
+                'outOfStock'              => $outOfStock,
+                'publishedProducts'       => $productCounts->published_products,
+                'draftProducts'           => $productCounts->draft_products,
+                'trashedProducts'         => $productCounts->trashed_products,
+                'purchaseOrders'          => $purchaseOrders, // Assuming $purchaseOrders is already defined
+            ];
 
         return (new ResponseCollection([$data]))
             ->response()

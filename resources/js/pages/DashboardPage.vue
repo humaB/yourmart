@@ -533,7 +533,7 @@
 
             <div class="col-md-12">
                 <div class="card">
-                    <h4 class="pl-4 pt-4">Purchase Orders & Pay-Outs</h4>
+                    <h4 class="pl-4 pt-4">Purchase Orders & Inventory</h4>
                     <div class="card-body">
                         <div class="row" style="margin-left: -10px">
                             <!-- cards -->
@@ -546,7 +546,7 @@
                                                     <div class="card-content">
                                                         <h5 class="font-15">Payable Amount</h5>
                                                         <h2 class="mb-3 font-18">
-                                                            {{ formatPrice(po.totalAmount) }}
+                                                            {{ formatPrice( po.totalAmount) }}
                                                         </h2>
                                                     </div>
                                                 </div>
@@ -687,101 +687,127 @@
                                 </tr>
                             </table>
 
-
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h4>Tickets Status</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <tr>
-                                    <th>Total Tickets</th>
-                                    <th>Awaiting Your Reply</th>
-                                    <th>Awaiting YourMart Reply</th>
-                                    <th>Closed</th>
-                                    <th>Expired</th>
-                                    <th>Reviewed</th>
-                                    <th>In-Process</th>
-                                </tr>
-                                <tr>
-                                    <td>{{ totalTicketSum.total_tickets }}</td>
-                                    <td class="align-middle">
-                                        <div class="progress-text text-right text-secondary">
-                                            {{ getPercentage(totalTicketSum.awaiting_your_reply) }}%
-                                        </div>
-                                        <div class="progress" data-height="6">
-                                            <div class="progress-bar bg-success"
-                                                :style="{ width: getPercentage(totalTicketSum.awaiting_your_reply) + '%' }">
-                                            </div>
-                                        </div>
-                                        {{ getPercentage(totalTicketSum.awaiting_your_reply) }}
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text text-right text-secondary">
-                                            {{ getPercentage(totalTicketSum.awaiting_yourmart_reply) }}%
-                                        </div>
-                                        <div class="progress" data-height="6">
-                                            <div class="progress-bar bg-primary"
-                                                :style="{ width: getPercentage(totalTicketSum.awaiting_yourmart_reply) + '%' }">
-                                            </div>
-                                        </div>
-                                        {{ totalTicketSum.awaiting_yourmart_reply }}
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text text-right text-secondary">
-                                            {{ getPercentage(totalTicketSum.closed) }}%
-                                        </div>
-                                        <div class="progress" data-height="6">
-                                            <div class="progress-bar bg-danger"
-                                                :style="{ width: getPercentage(totalTicketSum.closed) + '%' }"></div>
-                                        </div>
-                                        {{ totalTicketSum.closed }}
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text text-right text-secondary">
-                                            {{ getPercentage(totalTicketSum.expired) }}%
-                                        </div>
-                                        <div class="progress" data-height="6">
-                                            <div class="progress-bar bg-success"
-                                                :style="{ width: getPercentage(totalTicketSum.expired) + '%' }"></div>
-                                        </div>
-                                        {{ totalTicketSum.expired }}
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text text-right text-secondary">
-                                            {{ getPercentage(totalTicketSum.reviewed) }}%
-                                        </div>
-                                        <div class="progress" data-height="6">
-                                            <div class="progress-bar bg-info"
-                                                :style="{ width: getPercentage(totalTicketSum.reviewed) + '%' }"></div>
-                                        </div>
-                                        {{ totalTicketSum.reviewed }}
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="progress-text text-right text-secondary">
-                                            {{ getPercentage(totalTicketSum.in_process) }}%
-                                        </div>
-                                        <div class="progress" data-height="6">
-                                            <div class="progress-bar bg-info"
-                                                :style="{ width: getPercentage(totalTicketSum.in_process) + '%' }">
-                                            </div>
-                                        </div>
-                                        {{ totalTicketSum.in_process }}
-                                    </td>
-                                </tr>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Gross Current Stock</th>
+                                        <th>Item in Stock</th>
+                                        <th>Stock Value</th>
+                                        <th>Items in Return</th>
+                                        <th>Return Value</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.grossStockValue) }}</td>
+                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.numberOfItemsInStock) }}</td>
+                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.stockValue) }}</td>
+                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.totalItemInReturn) }}</td>
+                                        <td colspan="2"class="text-end h6">{{ formatPrice(inventoryStatus.totalReturnValue) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="0">Number of Products in Stock </th>
+                                        <th colspan="2" class="h6"> {{ formatPrice(inventoryStatus.numberOfProductInStock) }}</th>
+                                        <th colspan="0">Out of stock</th>
+                                        <th colspan="3" class="h6"> {{ formatPrice(inventoryStatus.outOfStock) }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Published </th>
+                                        <th class="h6"> {{ formatPrice(inventoryStatus.publishedProducts) }}</th>
+                                        <th>Draft</th>
+                                        <th class="h6"> {{ formatPrice(inventoryStatus.draftProducts) }}</th>
+                                        <th>Trash</th>
+                                        <th class="h6"> {{ formatPrice(inventoryStatus.trashedProducts) }}</th>
+                                    </tr>
+                                </tbody>
                             </table>
+
+                            <div class="col-md-6 mt-5">
+                                <h6>Categories-Wise Published Products</h6>
+                                <table class="table table-bordered" id="categoryWiseTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>No. of products</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="category in categoryWiseProducts" :key="category.id">
+                                            <td>{{ category.name }}</td>
+                                            <td>{{ category.product_count }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6 mt-5">
+                                <h6>Tag-Wise Published Products</h6>
+                                <table class="table table-bordered" id="tagWiseTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Tag</th>
+                                            <th>No. of products</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="tag in tagWiseProducts" :key="tag.id">
+                                            <td>{{ tag.name }}</td>
+                                            <td>{{ tag.tagged_count }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-6 mt-5">
+                                <h6>Fast Moving Products (Top 10)</h6>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>SKU</th>
+                                            <th>QTY SOLD</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="product in fastMovingProducts" :key="product.id">
+                                            <td>{{ product.title }}</td>
+                                            <td>{{ product.variation.sku || '' }}</td>
+                                            <td>{{ product.issuance_sum_quantity }}</td>
+                                            <td>{{ formatPrice( product.issuance_sum_total ) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6 mt-5">
+                                <h6>Slow Moving Products (Top 10)</h6>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>SKU</th>
+                                            <th>QTY SOLD</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="product in slowMovingProducts" :key="product.id">
+                                            <td>{{ product.title }}</td>
+                                            <td>{{ product.variation.sku || '' }}</td>
+                                            <td>{{ product.issuance_sum_quantity || 0 }}</td>
+                                            <td>{{ formatPrice( product.issuance_sum_total || 0 ) }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                         </div>
                     </div>
+
                 </div>
             </div>
+
+
 
             <div class="col-md-12">
                 <div class="card">
@@ -824,6 +850,55 @@
                                                 * parseFloat(item.variation.avg_price)) * 100).toFixed(2) }}%</td>
                                     </tr>
 
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body row">
+                        <div class="col-md-6 mt-5">
+                            <h6>Low Stock Products</h6>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>SKU</th>
+                                        <th>QTY SOLD</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="product in lowStock" :key="product.id">
+                                        <td>{{ product.title }}</td>
+                                        <td>{{ product.variation.sku || '' }}</td>
+                                        <td>{{ product.issuance_sum_quantity || 0 }}</td>
+                                        <td>{{ formatPrice( product.issuance_sum_total || 0 ) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6 mt-5">
+                            <h6>High Stock Products</h6>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>SKU</th>
+                                        <th>QTY SOLD</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="product in highStock" :key="product.id">
+                                        <td>{{ product.title }}</td>
+                                        <td>{{ product.variation.sku || '' }}</td>
+                                        <td>{{ product.issuance_sum_quantity || 0 }}</td>
+                                        <td>{{ formatPrice( product.issuance_sum_total || 0 ) }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -921,6 +996,95 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Tickets Status</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Total Tickets</th>
+                                    <th>Awaiting Your Reply</th>
+                                    <th>Awaiting YourMart Reply</th>
+                                    <th>Closed</th>
+                                    <th>Expired</th>
+                                    <th>Reviewed</th>
+                                    <th>In-Process</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ totalTicketSum.total_tickets }}</td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.awaiting_your_reply) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-success"
+                                                :style="{ width: getPercentage(totalTicketSum.awaiting_your_reply) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ getPercentage(totalTicketSum.awaiting_your_reply) }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.awaiting_yourmart_reply) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-primary"
+                                                :style="{ width: getPercentage(totalTicketSum.awaiting_yourmart_reply) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ totalTicketSum.awaiting_yourmart_reply }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.closed) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-danger"
+                                                :style="{ width: getPercentage(totalTicketSum.closed) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.closed }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.expired) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-success"
+                                                :style="{ width: getPercentage(totalTicketSum.expired) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.expired }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.reviewed) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-info"
+                                                :style="{ width: getPercentage(totalTicketSum.reviewed) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.reviewed }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.in_process) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-info"
+                                                :style="{ width: getPercentage(totalTicketSum.in_process) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ totalTicketSum.in_process }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <DropshipperDetails :details="dropShipperDetails" />
     </div>
@@ -1005,7 +1169,25 @@ export default {
                 paid : 0,
                 remaining : 0,
                 total_sellers : 0
-            }
+            },
+            inventoryStatus : {
+                numberOfItemsInStock  : 0,
+                stockValue            : 0,
+                totalItemInReturn     : 0,
+                totalReturnValue      : 0,
+                grossStockValue       : 0,
+                numberOfProductInStock : 0,
+                outOfStock            : 0,
+                publishedProducts     : 0,
+                draftProducts         : 0,
+                trashedProducts       : 0,
+            },
+            categoryWiseProducts : [],
+            tagWiseProducts : [],
+            fastMovingProducts : [],
+            slowMovingProducts : [],
+            lowStock : [],
+            highStock : []
         };
     },
     created() {
@@ -1013,26 +1195,65 @@ export default {
         this.top10SellingProducts();
         this.top10Dropshippers(this.filter);
         this.fetchTicketStatusCounts();
-        this.fetchPurchaseOrders();
+        this.fetchPurchaseOrders( this.filter );
+        this.fetchCategoryandTagWiseProducts();
     },
     methods: {
-        fetchPurchaseOrders(){
+        fetchPurchaseOrders( data ){
                 let vm = this;
                 axios
-                .get(this.api_url + "inventory/products/purchase-orders/status-counts")
+                .post(this.api_url + "inventory/products/purchase-orders/status-counts", data)
                 .then((response) => {
                     const results = response.data.response[0];
 
-                    vm.po.totalPo = results.totalPo;
-                    vm.po.approved = results.approved;
-                    vm.po.pending = results.pending;
-                    vm.po.rejected = results.rejected;
-                    vm.po.totalAmount = results.totalAmount;
-                    vm.po.remaining = results.remaining;
+                    vm.po.totalPo = results.purchaseOrders.totalPo;
+                    vm.po.approved = results.purchaseOrders.approved;
+                    vm.po.pending = results.purchaseOrders.pending;
+                    vm.po.rejected = results.purchaseOrders.rejected;
+                    vm.po.totalAmount = results.purchaseOrders.totalAmount;
+                    vm.po.remaining = results.purchaseOrders.remaining;
                     vm.po.paid = vm.po.totalAmount - vm.po.remaining;
+
+                    vm.inventoryStatus = {
+                        numberOfItemsInStock  : results.numberOfItemsInStock,
+                        stockValue            : results.stockValue,
+                        totalItemInReturn     : results.totalItemInReturn,
+                        totalReturnValue      : results.totalReturnValue,
+                        grossStockValue       : results.grossStockValue,
+                        numberOfProductInStock : results.numberOfProductInStock,
+                        outOfStock            : results.outOfStock,
+                        publishedProducts     : results.publishedProducts,
+                        draftProducts         : results.draftProducts,
+                        trashedProducts       : results.trashedProducts,
+
+                        categoryWiseProducts  : results.categoryWiseProducts,
+                        tagWiseProducts       : results.tagWiseProducts
+                    }
                 })
                 .catch((err) => this.fetchPurchaseOrders());
             },
+        fetchCategoryandTagWiseProducts(){
+            let vm = this;
+                axios
+                .get(this.api_url + "users/dashboard/product-wise-count")
+                .then((response) => {
+
+                    const results = response.data.response;
+                    vm.categoryWiseProducts  = results.categoryWiseProducts,
+                    vm.tagWiseProducts       = results.tagWiseProducts
+                    vm.fastMovingProducts    = results.fastMovingProducts
+                    vm.slowMovingProducts    = results.slowMovingProducts
+
+                    vm.lowStock    = results.lowStock
+                    vm.highStock    = results.highStock
+
+                    setTimeout(() => {
+                        vm.tagWiseTable();
+                        vm.categoryWiseTable();
+                    },300)
+
+                })
+        },
         fetchTicketStatusCounts() {
             axios.get(this.api_url + 'tickets/status-counts').then((response) => {
                 const data = response.data;
@@ -1181,6 +1402,7 @@ export default {
             this.fetchData( this.filter );
             this.clearDatatable();
             this.top10Dropshippers(this.filter);
+            this.fetchPurchaseOrders( this.filter );
         },
         clearDatatable(){
             const table = $('#topDropshipperTable').DataTable();
@@ -1206,6 +1428,12 @@ export default {
                 dom: "Bfrtip",
                 buttons: ["copy", "csv", "excel"],
             });
+        },
+        tagWiseTable() {
+            $("#tagWiseTable").DataTable();
+        },
+        categoryWiseTable() {
+            $("#categoryWiseTable").DataTable();
         },
         getPercentage(statusCount) {
             if (this.totalTicketSum.total_tickets === 0) return 0;

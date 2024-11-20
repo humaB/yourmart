@@ -74,6 +74,8 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
         Route::post('/',  [ DashboardController::class , 'fetchData']);
         Route::get('/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
         Route::post('/top-10-dropshippers',  [ DashboardController::class , 'topTenDropshipper']);
+
+        Route::get('/product-wise-count',  [ DashboardController::class , 'categoryTagWiseProduct']);
     });
 });
 
@@ -302,7 +304,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/',  [ InventoryPurchaseOrderController::class , 'store']);
             Route::post('/decisions',  [ InventoryPurchaseOrderController::class , 'decisions']);
 
-            Route::get('/status-counts',  [ InventoryPurchaseOrderController::class , 'statusCounts']);
+            Route::post('/status-counts',  [ InventoryPurchaseOrderController::class , 'statusCounts']);
         });
 
         Route::group(['prefix' => 'gate'], function(){

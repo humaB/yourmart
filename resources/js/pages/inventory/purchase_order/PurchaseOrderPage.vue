@@ -115,13 +115,13 @@
             },
             searchProduct( data ) {
             let vm = this;
-            axios
-                .post(this.api_url + "inventory/products/drop-down", data)
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.products = results;
-                });
-            },
+                axios
+                    .post(this.api_url + "inventory/products/drop-down", data)
+                    .then((response) => {
+                        const results = response.data.response;
+                        vm.products = results;
+                    });
+                },
             fetchSuppilers(){
                 let vm = this;
                 axios
