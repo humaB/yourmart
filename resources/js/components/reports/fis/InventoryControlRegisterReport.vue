@@ -261,11 +261,12 @@ export default {
         },
         totalReturnQuantity() {
             return this.data.reduce((total, item) => {
-                if(item.good_receive[0] || item.issuance[0]){
-                    const returnQuantity = parseFloat(item.return[0]?.quantity) || 0;
-                    const avgPrice = parseFloat(item.variation?.avg_price) || 0;
-                    return total + returnQuantity * avgPrice;
+                if (item.good_receive && item.good_receive.length > 0 || item.issuance && item.issuance.length > 0) {
+                const returnQuantity = parseFloat(item.return && item.return.length > 0 ? item.return[0].quantity : 0) || 0;
+                const avgPrice = parseFloat(item.variation ? item.variation.avg_price : 0) || 0;
+                return total + returnQuantity * avgPrice;
                 }
+                return total; // This line was missing
             }, 0);
         },
         totalSellingQuantity() {
