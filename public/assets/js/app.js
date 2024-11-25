@@ -11582,7 +11582,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalSellingQuantity - _vm.totalIssuancePurchased - _vm.totalReturnQuantity) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                                                            " + _vm._s((_vm.totalSellingQuantity - _vm.totalIssuancePurchased - _vm.totalReturnQuantity).toFixed(0)) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Profit")])])])])])])])])]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered",
@@ -11590,7 +11590,7 @@ var render = function render() {
       id: "inventory_control_register"
     }
   }, [_vm._m(7), _vm._v(" "), _c("tbody", [_vm._l(_vm.data, function (item, index) {
-    return [item.good_receive[0] || item.issuance[0] || item.opening_stock[0] ? _c("tr", {
+    return [item.good_receive[0] || item.issuance[0] ? _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.title) + "\n                                     || Current Average Rate "), _c("b", [_vm._v(_vm._s(item.variation.avg_price))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.opening_stock[0] ? _vm.formatPrice(item.opening_stock[0].rate) : "-"))]), _vm._v(" "), _c("td", [item.opening_stock[0] ? _c("a", {
       attrs: {

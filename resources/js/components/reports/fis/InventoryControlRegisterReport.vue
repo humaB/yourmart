@@ -129,7 +129,7 @@
                                                                         <div class="text-right">
                                                                             <h3 class="font-light mb-0">
                                                                                 <i class="ti-arrow-up text-success"></i>
-                                                                                {{ totalSellingQuantity - totalIssuancePurchased - totalReturnQuantity }}
+                                                                                {{ (totalSellingQuantity - totalIssuancePurchased - totalReturnQuantity).toFixed(0) }}
                                                                             </h3>
                                                                             <span class="text-muted">Profit</span>
                                                                         </div>
@@ -178,7 +178,7 @@
                                 </thead>
                                 <tbody>
                                   <template v-for="(item , index) in data" >
-                                  <tr v-if="item.good_receive[0] || item.issuance[0] || item.opening_stock[0]" :key="item.id">
+                                    <tr v-if="item.good_receive[0] || item.issuance[0]" :key="item.id">
                                       <td>{{ index + 1 }}</td>
                                       <td>{{ item.variation.sku }}</td>
                                       <td>{{ item.title }}
