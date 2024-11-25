@@ -11563,7 +11563,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalSellingQuantity) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                                                            " + _vm._s(_vm.totalSellingQuantity.toFixed(0)) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Selling")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {

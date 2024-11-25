@@ -111,7 +111,7 @@
                                                                         <div class="text-right">
                                                                             <h3 class="font-light mb-0">
                                                                                 <i class="ti-arrow-up text-success"></i>
-                                                                                {{  totalSellingQuantity }}
+                                                                                {{  totalSellingQuantity.toFixed(0) }}
                                                                             </h3>
                                                                             <span class="text-muted">Selling</span>
                                                                         </div>
