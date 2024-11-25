@@ -2396,10 +2396,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalReturnQuantity: function totalReturnQuantity() {
       return this.data.reduce(function (total, item) {
-        var _item$return$, _item$variation2;
-        var returnQuantity = parseFloat((_item$return$ = item["return"][0]) === null || _item$return$ === void 0 ? void 0 : _item$return$.quantity) || 0;
-        var avgPrice = parseFloat((_item$variation2 = item.variation) === null || _item$variation2 === void 0 ? void 0 : _item$variation2.avg_price) || 0;
-        return total + returnQuantity * avgPrice;
+        if (item.good_receive[0] || item.issuance[0]) {
+          var _item$return$, _item$variation2;
+          var returnQuantity = parseFloat((_item$return$ = item["return"][0]) === null || _item$return$ === void 0 ? void 0 : _item$return$.quantity) || 0;
+          var avgPrice = parseFloat((_item$variation2 = item.variation) === null || _item$variation2 === void 0 ? void 0 : _item$variation2.avg_price) || 0;
+          return total + returnQuantity * avgPrice;
+        }
       }, 0);
     },
     totalSellingQuantity: function totalSellingQuantity() {

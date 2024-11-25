@@ -261,9 +261,11 @@ export default {
         },
         totalReturnQuantity() {
             return this.data.reduce((total, item) => {
-                const returnQuantity = parseFloat(item.return[0]?.quantity) || 0;
-                const avgPrice = parseFloat(item.variation?.avg_price) || 0;
-                return total + returnQuantity * avgPrice;
+                if(item.good_receive[0] || item.issuance[0]){
+                    const returnQuantity = parseFloat(item.return[0]?.quantity) || 0;
+                    const avgPrice = parseFloat(item.variation?.avg_price) || 0;
+                    return total + returnQuantity * avgPrice;
+                }
             }, 0);
         },
         totalSellingQuantity() {
