@@ -2406,10 +2406,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalSellingQuantity: function totalSellingQuantity() {
       return this.data.reduce(function (total, item) {
-        var _item$issuance$3, _item$issuance$4;
-        var returnQuantity = parseFloat((_item$issuance$3 = item.issuance[0]) === null || _item$issuance$3 === void 0 ? void 0 : _item$issuance$3.quantity) || 0;
-        var avgPrice = parseFloat((_item$issuance$4 = item.issuance[0]) === null || _item$issuance$4 === void 0 ? void 0 : _item$issuance$4.rate) || 0;
-        return total + returnQuantity * avgPrice;
+        if (item.issuance && item.issuance.length > 0) {
+          var sellQuantity = parseFloat(item.issuance[0].quantity) || 0;
+          var avgPrice = parseFloat(item.issuance[0].rate) || 0;
+          return total + sellQuantity * avgPrice;
+        }
+        return total; // Return total for cases where condition is not met
       }, 0);
     }
   },
@@ -11584,7 +11586,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v("\n                                                                            " + _vm._s((_vm.totalSellingQuantity - _vm.totalIssuancePurchased - _vm.totalReturnQuantity).toFixed(0)) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                                                            " + _vm._s((_vm.totalSellingQuantity - (_vm.totalIssuancePurchased + _vm.totalReturnQuantity)).toFixed(0)) + "\n                                                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Profit")])])])])])])])])]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered",

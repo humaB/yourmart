@@ -129,7 +129,7 @@
                                                                         <div class="text-right">
                                                                             <h3 class="font-light mb-0">
                                                                                 <i class="ti-arrow-up text-success"></i>
-                                                                                {{ (totalSellingQuantity - totalIssuancePurchased - totalReturnQuantity).toFixed(0) }}
+                                                                                {{ (totalSellingQuantity - (totalIssuancePurchased + totalReturnQuantity)).toFixed(0) }}
                                                                             </h3>
                                                                             <span class="text-muted">Profit</span>
                                                                         </div>
@@ -270,12 +270,15 @@ export default {
             }, 0);
         },
         totalSellingQuantity() {
-            return this.data.reduce((total, item) => {
-                const returnQuantity = parseFloat(item.issuance[0]?.quantity) || 0;
-                const avgPrice = parseFloat(item.issuance[0]?.rate) || 0;
-                return total + returnQuantity * avgPrice;
-            }, 0);
-        },
+        return this.data.reduce((total, item) => {
+            if (item.issuance && item.issuance.length > 0) {
+                const sellQuantity = parseFloat(item.issuance[0].quantity) || 0;
+                const avgPrice = parseFloat(item.issuance[0].rate) || 0;
+                return total + sellQuantity * avgPrice;
+            }
+            return total; // Return total for cases where condition is not met
+        }, 0);
+        }
     },
     methods : {
         calculateQuantityDifference(item) {
