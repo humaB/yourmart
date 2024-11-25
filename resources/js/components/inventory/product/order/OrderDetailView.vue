@@ -312,7 +312,10 @@
                                                                         </li>
                                                                     </ul>
                                                                 </td>
-                                                                <td>
+                                                                <td v-else>
+                                                                    -
+                                                                </td>
+                                                                <td v-if="item.variation">
                                                                     <b>SKU : </b>{{ item.variation.sku }}<br>
                                                                     <b>Title : </b>{{ item.variation.product.title
                                                                     }}<br>
@@ -323,6 +326,10 @@
                                                                     <b>Size : </b>{{ item.variation.size
                                                                     ?item.variation.size.name : '-' }}
                                                                 </td>
+                                                                <td v-else>
+                                                                    Packing Only
+                                                                </td>
+
                                                                 <td>{{ parseFloat(item.price) }}</td>
                                                                 <td>{{ item.quantity }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * (

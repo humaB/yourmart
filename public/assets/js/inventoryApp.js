@@ -1463,7 +1463,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       shops: [],
       customerName: '',
       customerPhone: '',
-      discount: 0
+      discount: 0,
+      packingQuantity: 0,
+      packingAmount: 0
     };
   },
   created: function created() {
@@ -1473,9 +1475,10 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   computed: {
     total: function total() {
+      var _this$packingAmount, _this$packingQuantity;
       return this.products.reduce(function (acc, product) {
         return acc + parseFloat(product.total);
-      }, 0) - parseFloat(this.discount);
+      }, 0) + parseFloat((_this$packingAmount = this.packingAmount) !== null && _this$packingAmount !== void 0 ? _this$packingAmount : 0) * parseFloat((_this$packingQuantity = this.packingQuantity) !== null && _this$packingQuantity !== void 0 ? _this$packingQuantity : 0) - parseFloat(this.discount);
     },
     totalQuantity: function totalQuantity() {
       return this.products.reduce(function (acc, product) {
@@ -1642,24 +1645,15 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     checkOut: function checkOut() {
       var vm = this;
-      if (vm.products.length == 0) {
-        return swal({
-          title: "Required",
-          text: 'Please add some products in cart first',
-          icon: "error",
-          timer: 3000
-        });
-      }
-      if (vm.selectedDropshipper.code != 0) {
-        if (vm.selectedShop.code == 0) {
-          return swal({
-            title: "Required",
-            text: 'Please select shop first',
-            icon: "error",
-            timer: 3000
-          });
-        }
-      }
+      // if (vm.products.length == 0) {
+      //     return swal({
+      //         title: "Required",
+      //         text: 'Please add some products in cart first',
+      //         icon: "error",
+      //         timer: 3000,
+      //     });
+      // }
+
       if (vm.totalPayment != vm.total) {
         return swal({
           title: "Required",
@@ -1688,11 +1682,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       vm.loader = true;
       var fd = new FormData();
-      vm.products.forEach(function (product, index) {
-        Object.keys(product).forEach(function (key) {
-          fd.append("products[".concat(index, "][").concat(key, "]"), product[key]);
+      if (vm.products.length != 0) {
+        vm.products.forEach(function (product, index) {
+          Object.keys(product).forEach(function (key) {
+            fd.append("products[".concat(index, "][").concat(key, "]"), product[key]);
+          });
         });
-      });
+      }
       fd.append('paymentAttachment', vm.proofOfPayment);
       fd.append('cash', vm.cashPayment);
       fd.append('bank', vm.bankPayment);
@@ -1702,6 +1698,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       fd.append('dropshipper', vm.selectedDropshipper.code);
       fd.append('shop', vm.selectedShop.code);
       fd.append('discount', vm.discount);
+      fd.append('packing', parseFloat(vm.packingAmount) * parseFloat(vm.packingQuantity));
+      fd.append('packingQuantity', vm.packingQuantity);
       fd.append('total', vm.total);
       axios.post(this.api_url + "inventory/products/direct-checkout", fd).then(function (res) {
         vm.loader = false;
@@ -1719,6 +1717,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         };
         vm.customerName = "";
         vm.customerPhone = "";
+        vm.packingAmount = 0;
+        vm.packingQuantity = 0;
+        vm.discount = 0;
         vm.products = [];
         $("input[type=file]").val('');
         return swal({
@@ -4231,6 +4232,52 @@ var render = function render() {
     staticClass: "col-6"
   }, [_vm._v(_vm._s(_vm.totalQuantity))])]), _vm._v(" "), _c("div", {
     staticClass: "row mt-3"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "col-6"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.packingQuantity,
+      expression: "packingQuantity"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Packing QTY"
+    },
+    domProps: {
+      value: _vm.packingQuantity
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.packingQuantity = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.packingAmount,
+      expression: "packingAmount"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Packing Amount"
+    },
+    domProps: {
+      value: _vm.packingAmount
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.packingAmount = $event.target.value;
+      }
+    }
+  })])]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-3"
   }, [_c("div", {
     staticClass: "col-6"
   }, [_vm._v("Discount:")]), _vm._v(" "), _c("div", {
@@ -4261,7 +4308,7 @@ var render = function render() {
     staticClass: "col-6"
   }, [_vm._v("Subtotal:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.total)))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.total)))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6"
@@ -4358,7 +4405,7 @@ var render = function render() {
     on: {
       change: _vm.uploadProof
     }
-  })]), _vm._v(" "), _vm._m(4)]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _vm._m(5)]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-6 h5"
@@ -4409,6 +4456,16 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _c("th")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-6"
+  }, [_c("span", {
+    staticClass: "mt-3"
+  }, [_vm._v("Packing Qty:")]), _c("br"), _c("br"), _vm._v(" "), _c("span", {
+    staticClass: "mt-3"
+  }, [_vm._v("Packing Amount:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

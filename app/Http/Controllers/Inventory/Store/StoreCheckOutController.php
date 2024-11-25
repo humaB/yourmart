@@ -100,31 +100,49 @@ class StoreCheckOutController extends Controller
                 'payment_method'     => ucwords('COD'), // COD || Advance Payment || Partial Payment
                 'payment_proof_attachment' =>  $request->file('paymentAttachment') ? $this->attachment($request->file('paymentAttachment')) : null,
                 'selling_price'            => 0,
-                'packaging_price'          => 0,
+                'packaging_price'          => $request->packing ?? 0,
+                'no_of_labels'             => $request->packingQuantity ?? 0,
                 'advance_amount'           => $request->total,
                 'status'                   => '1',
                 'total_weight'             => 0,
                 'belongs_to'               => $dropshipper
             ]);
 
-            foreach ($request->products as $index => $item) {
-                $quantity = $item['quantity'];
-                $singlePrice =  $item['price'];
+            $subTotal = ( $request->total + (float)$request->discount) - (float)$request->packing ?? 0;
 
-                $totalItemPrice = $singlePrice * $quantity;
-                $discount =  round( ((float)$request->discount / ((float)$request->total + (float)$request->discount)) * (float)$totalItemPrice );
+            if($request->products){
+                foreach ($request->products as $index => $item) {
+                    $quantity = $item['quantity'];
+                    $singlePrice =  $item['price'];
 
-                $singlePrice = $singlePrice - ($discount / $quantity);
-                // Create OrderItem
+                    $totalItemPrice = $singlePrice * $quantity;
+                    $discount =  round( ((float)$request->discount /  $subTotal) * (float)$totalItemPrice );
+                    $packagingCost =  round( ((float)$request->packing /  $subTotal) * (float)$totalItemPrice );
+
+                    $singlePrice = $singlePrice - ($discount / $quantity);
+                    // Create OrderItem
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_variation_id' => $item['id'],
+                        'price'                => round($singlePrice),
+                        'quantity'             => $item['quantity'],
+                        'sell_price'           => round( ((float)$item['quantity'] * (float)$singlePrice) + $packagingCost),
+                        'packaging_cost'       => $packagingCost,
+                        'belongs_to'           => auth()->user()->id ?? 0
+                    ]);
+
+                }
+            }
+            else{
                 OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_variation_id' => $item['id'],
-                    'price'                => $singlePrice,
-                    'quantity'             => $item['quantity'],
-                    'sell_price'           => (float)$item['quantity'] * (float)$singlePrice,
+                    'order_id'             => $order->id,
+                    'product_variation_id' => 0,
+                    'price'                => 0,
+                    'quantity'             => $request->packingQuantity,
+                    'packaging_cost'       => $request->packing,
+                    'sell_price'           => $request->packing ?? 0,
                     'belongs_to'           => auth()->user()->id ?? 0
                 ]);
-
             }
 
         $ledger = new AccountHeadHelper();

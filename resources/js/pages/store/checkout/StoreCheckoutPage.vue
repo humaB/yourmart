@@ -102,6 +102,17 @@
                                                             <div class="col-6">{{ totalQuantity }}</div>
                                                         </div>
                                                         <div class="row mt-3">
+                                                            <div class="col-6">
+                                                                <span class="mt-3">Packing Qty:</span><br><br>
+                                                                <span class="mt-3">Packing Amount:</span>
+                                                            </div>
+                                                            <div class="col-6">
+                                                                <input type="text" v-model="packingQuantity" class="form-control" placeholder="Packing QTY">
+                                                                <input type="text" v-model="packingAmount" class="form-control" placeholder="Packing Amount">
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="row mt-3">
                                                             <div class="col-6">Discount:</div>
                                                             <div class="col-6"><input type="text" v-model="discount" class="form-control"></div>
                                                         </div>
@@ -211,7 +222,9 @@ export default {
             shops : [],
             customerName : '',
             customerPhone : '',
-            discount : 0
+            discount : 0,
+            packingQuantity : 0,
+            packingAmount : 0
         };
     },
     created() {
@@ -221,7 +234,7 @@ export default {
     },
     computed: {
         total() {
-            return this.products.reduce((acc, product) => acc + parseFloat(product.total), 0) - parseFloat(this.discount);
+            return this.products.reduce((acc, product) => acc + parseFloat(product.total), 0) + ( parseFloat(this.packingAmount ?? 0)  * parseFloat(this.packingQuantity ?? 0) ) - parseFloat(this.discount);
         },
         totalQuantity() {
             return this.products.reduce((acc, product) => acc + parseFloat(product.quantity), 0);
@@ -384,25 +397,15 @@ export default {
         },
         checkOut() {
             let vm = this;
-            if (vm.products.length == 0) {
-                return swal({
-                    title: "Required",
-                    text: 'Please add some products in cart first',
-                    icon: "error",
-                    timer: 3000,
-                });
-            }
+            // if (vm.products.length == 0) {
+            //     return swal({
+            //         title: "Required",
+            //         text: 'Please add some products in cart first',
+            //         icon: "error",
+            //         timer: 3000,
+            //     });
+            // }
 
-            if( vm.selectedDropshipper.code != 0){
-                if(vm.selectedShop.code == 0){
-                    return swal({
-                        title: "Required",
-                        text: 'Please select shop first',
-                        icon: "error",
-                        timer: 3000,
-                    });
-                }
-            }
 
             if (vm.totalPayment != vm.total) {
                 return swal({
@@ -434,11 +437,15 @@ export default {
 
             vm.loader = true;
             const fd = new FormData();
-            vm.products.forEach((product, index) => {
-                Object.keys(product).forEach((key) => {
-                    fd.append(`products[${index}][${key}]`, product[key]);
+
+            if(vm.products.length != 0){
+                vm.products.forEach((product, index) => {
+                    Object.keys(product).forEach((key) => {
+                        fd.append(`products[${index}][${key}]`, product[key]);
+                    });
                 });
-            });
+            }
+
             fd.append('paymentAttachment', vm.proofOfPayment);
             fd.append('cash', vm.cashPayment);
             fd.append('bank', vm.bankPayment);
@@ -450,6 +457,8 @@ export default {
             fd.append('shop', vm.selectedShop.code);
 
             fd.append('discount', vm.discount)
+            fd.append('packing', parseFloat(vm.packingAmount) * parseFloat(vm.packingQuantity) );
+            fd.append('packingQuantity', vm.packingQuantity);
             fd.append('total', vm.total);
 
             axios.post(this.api_url + "inventory/products/direct-checkout", fd)
@@ -465,6 +474,9 @@ export default {
                     vm.selectedShop = { code : 0 , label : 'Select from the following'};
                     vm.customerName = "";
                     vm.customerPhone = "";
+                    vm.packingAmount = 0;
+                    vm.packingQuantity = 0;
+                    vm.discount = 0;
 
                     vm.products = [];
                     $("input[type=file]").val('');
