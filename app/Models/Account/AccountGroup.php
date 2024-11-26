@@ -30,4 +30,8 @@ class AccountGroup extends Model
     public function level_three(){
         return $this->belongsTo( AccountGroup::class, 'parent_id', 'id');
     }
+
+    public function dropshipper_shop_ledger(){
+        return $this->hasOne( AccountHead::class, 'group_id', 'id');
+    }
 }

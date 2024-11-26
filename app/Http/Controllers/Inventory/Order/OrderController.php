@@ -49,11 +49,12 @@ class OrderController extends Controller
             'auditor'                   => 4    // Autidor
         ];
 
+        $status = $request->status;
 
         if ($userRole == 'admin' || $userRole == 'supervisor') {
             $dropshipper = null;
 
-            if ($request->droshipper != 0) {
+            if ($request->droshipper != 0 ) {
                 $dropshipper = $request->droshipper;
                 $dropshipper = DropShipper::where('id', $dropshipper)->first();
                 $dropshipper = $dropshipper->user_id ?? 0;
@@ -62,8 +63,8 @@ class OrderController extends Controller
             $orders = Order::with('user', 'shop')
                 ->orderBy('id', 'desc')
                 // Apply status filter when provided
-                ->when($request->status, function ($query, $status) {
-                    return $query->where('status', $status);
+                ->when( $status != '', function ($query) use ( $status ) {
+                    return $query->where('status', "$status");
                 })
                 // Apply date range filters when provided
                 ->when($request->from, function ($query, $from) {

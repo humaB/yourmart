@@ -44,6 +44,13 @@
                                     <a href="#" @click="deliveredOrder()"><i class="fas fa-fax"></i> Delivered Order Detail</a>
                                 </h6>
                             </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    5.
+                                    <a href="#" @click="leopardReturnReceived()"><i class="fas fa-fax"></i> Leopard Returns Received</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -65,6 +72,10 @@
 
         <DeliveredOrderDetailsReport v-if="report == 'delivered-order-report'" :data="deliveredOrderData"
             :loader="loader" @deliveredOrderFilter="deliveredOrderFilter($event)" />
+
+
+        <LeopardReturnReceivedReport v-if="report == 'leopard-return-received'" :data="leopardReturnReceivedData"
+            :loader="loader" @leopardReturnReceivedFilter="leopardReturnReceivedFilter($event)" />
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -109,6 +120,7 @@ import InventoryControlRegisterReport from '../../components/reports/fis/Invento
 import InventoryGoodIssuanceReport from '../../components/reports/fis/InventoryGoodIssuanceReport.vue';
 import InventoryGoodReceivedReport from '../../components/reports/fis/InventoryGoodReceivedReport.vue';
 import InventoryGoodReturnReport from '../../components/reports/fis/InventoryGoodReturnReport.vue';
+import LeopardReturnReceivedReport from '../../components/reports/fis/LeopardReturnReceivedReport.vue';
 
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
@@ -120,7 +132,8 @@ export default {
         InventoryGoodReceivedReport,
         InventoryGoodIssuanceReport,
         InventoryGoodReturnReport,
-        DeliveredOrderDetailsReport
+        DeliveredOrderDetailsReport,
+        LeopardReturnReceivedReport
     },
     data() {
         return {
@@ -136,6 +149,7 @@ export default {
             goodIssuedData: [],
             goodReturnData: [],
             deliveredOrderData : [],
+            leopardReturnReceivedData : [],
             loader: false,
             deleteLoader : false,
             role: null,
@@ -149,6 +163,19 @@ export default {
         this.fetchProducts();
     },
     methods: {
+        leopardReturnReceived() {
+            this.report = 'leopard-return-received'
+        },
+        leopardReturnReceivedFilter(data) {
+            let vm = this;
+            vm.loader = true;
+            axios.post(vm.api_url + 'reports/fis/leopard-return-receiveds', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.leopardReturnReceivedData = results;
+                    vm.loader = false;
+                })
+        },
         deliveredOrder() {
             this.report = 'delivered-order-report'
         },

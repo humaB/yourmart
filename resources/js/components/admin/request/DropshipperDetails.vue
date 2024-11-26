@@ -104,8 +104,8 @@
                         <div class="col-md-3 col-6">
                           <strong>Bank Name:</strong>
                           <br>
-                          <p class="text-muted">{{ details.bank ? details.bank.name : '-' }}</p>
-
+                          <p class="text-muted" v-if="!editMode">{{ details.bank ? details.bank.name : '-' }}</p>
+                          <v-select :options="banks" v-model="details.bank.name" v-else></v-select>
                         </div>
 
                         <div class="col-md-3 col-6">
@@ -180,6 +180,8 @@
 </template>
 
 <script>
+import { Banks } from '../../../data/banks';
+
 export default {
     name: 'DropshipperDetails',
     props: ['details', 'loader'],
@@ -188,6 +190,8 @@ export default {
               public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
               web_url : process.env.MIX_WEB_URL,
               editMode: false,  // This controls whether the user is in edit mode
+              banks : Banks,
+              selectedBank: 'Select from the following',
           };
       },
     methods : {

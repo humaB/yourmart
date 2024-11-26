@@ -29,24 +29,32 @@ class AccountHead extends Model
     public function level_two(){
         return $this->belongsTo( Account::class, 'account_id', 'id');
     }
-    
+
     public function level_three(){
         return $this->belongsTo( AccountGroup::class, 'parent_group_id', 'id');
     }
-    
+
     public function level_four(){
         return $this->belongsTo( AccountGroup::class, 'group_id', 'id');
     }
-    
+
     public function head_bank(){
         return $this->hasOne( Bank::class, 'account_head_id', 'id');
     }
-    
+
     public function head_cash(){
         return $this->hasOne( Cash::class, 'account_head_id', 'id');
     }
-    
+
     public function transactions(){
         return $this->hasMany( AccountTransaction::class, 'account_head_id', 'id');
+    }
+
+    public function dropshipper_last_paid_voucher(){
+        return $this->hasOne( AccountTransaction::class, 'account_head_id', 'id')->where('debit', '!=', '0')
+        ->where(function( $q ){
+            return $q->where('type', 'BP')->orWhere('type', 'CP');
+        })
+        ->orderBy('id', 'desc');
     }
 }

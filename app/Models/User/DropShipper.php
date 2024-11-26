@@ -2,6 +2,8 @@
 
 namespace App\Models\User;
 
+use App\Models\Account\AccountGroup;
+use App\Models\Account\AccountTransaction;
 use App\Models\CustomerBank;
 use App\Models\City;
 use App\Models\User;
@@ -64,6 +66,10 @@ class DropShipper extends Model
 
     public function shops(){
         return $this->hasMany(DropShipperShop::class,'dropshipper_id','id');
+    }
+
+    public function general_ledger(){
+        return $this->hasOne(AccountGroup::class, 'id', 'group_id');
     }
 
 }

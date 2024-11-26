@@ -72,6 +72,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _data_banks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../data/banks */ "./resources/js/data/banks.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperDetails',
   props: ['details', 'loader'],
@@ -79,7 +81,10 @@ __webpack_require__.r(__webpack_exports__);
     return {
       public_url: window.location.origin + "",
       web_url: "https://yourmart.pk/",
-      editMode: false // This controls whether the user is in edit mode
+      editMode: false,
+      // This controls whether the user is in edit mode
+      banks: _data_banks__WEBPACK_IMPORTED_MODULE_0__.Banks,
+      selectedBank: 'Select from the following'
     };
   },
   methods: {
@@ -5075,9 +5080,20 @@ var render = function render() {
     })])]);
   }), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
-  }, [_c("strong", [_vm._v("Bank Name:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+  }, [_c("strong", [_vm._v("Bank Name:")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))]) : _c("v-select", {
+    attrs: {
+      options: _vm.banks
+    },
+    model: {
+      value: _vm.details.bank.name,
+      callback: function callback($$v) {
+        _vm.$set(_vm.details.bank, "name", $$v);
+      },
+      expression: "details.bank.name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Account Title")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
     staticClass: "text-muted"
@@ -12966,7 +12982,7 @@ var render = function render() {
     }
   }, [_vm._v("Auditor")]), _vm._v(" "), _c("option", {
     attrs: {
-      value: "5"
+      value: "6"
     }
   }, [_vm._v("Under Review")]), _vm._v(" "), _c("option", {
     attrs: {
@@ -13983,6 +13999,21 @@ var render = function render() {
 var staticRenderFns = [];
 render._withStripped = true;
 
+
+/***/ }),
+
+/***/ "./resources/js/data/banks.js":
+/*!************************************!*\
+  !*** ./resources/js/data/banks.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Banks: () => (/* binding */ Banks)
+/* harmony export */ });
+var Banks = ['Al Baraka Islamic Bank Limited', 'Allied Bank Limited', 'Apna Microfinance Bank', 'Askari Commercial Bank Limited', 'Bank AL Habib Limited', 'Bank Alfalah Limited', 'Bank of Khyber', 'Bank of Punjab', 'BankIslami Pakistan Limited', 'Burj Bank Limited', 'Citi Bank', 'Dubai Islamic Bank Pakistan Limited', 'Easypaisa / Telenor Microfinance Bank', 'Faysal Bank Limited', 'FINCA Microfinance Bank', 'FINJA EMI', 'First Women Bank', 'FirstPay / HBL MFB', 'Habib Bank Limited', 'Habib Metropolitan Bank Limited', 'ICBC', 'Js Bank', 'KASA Bank Limited', 'KEENU', 'MCB Bank Limited', 'MCB Islamic', 'MCB-Arif Habib Savings', 'Meezan Bank Limited', 'Mobilink Microfinance Bank Ltd / Jazzcash', 'National Bank of Pakistan', 'NAYAPAY', 'SadaPay', 'Silk Bank', 'Sindh Bank', 'Soneri Bank Limited', 'Standard Chartered Bank', 'Summit Bank', 'UBank / UPaisa', 'United Bank Limited', 'Zarai Taraqiati Bank Limited (ZTBL)'];
 
 /***/ }),
 

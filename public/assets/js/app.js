@@ -72,6 +72,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _data_banks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../data/banks */ "./resources/js/data/banks.js");
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperDetails',
   props: ['details', 'loader'],
@@ -79,7 +81,10 @@ __webpack_require__.r(__webpack_exports__);
     return {
       public_url: window.location.origin + "",
       web_url: "https://yourmart.pk/",
-      editMode: false // This controls whether the user is in edit mode
+      editMode: false,
+      // This controls whether the user is in edit mode
+      banks: _data_banks__WEBPACK_IMPORTED_MODULE_0__.Banks,
+      selectedBank: 'Select from the following'
     };
   },
   methods: {
@@ -2757,6 +2762,76 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'LeopardReturnReceivedReport',
+  props: ['data', 'loader'],
+  components: {
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
+  },
+  data: function data() {
+    return {
+      public_url: window.location.origin + "",
+      filter: {
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10)
+      }
+    };
+  },
+  methods: {
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price).toFixed(2);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    submitFunction: function submitFunction() {
+      this.clearDataTable();
+      this.$emit('leopardReturnReceivedFilter', this.filter);
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $('#leopard_return_received').DataTable();
+      table.destroy();
+    }
+  },
+  watch: {
+    data: function data(newLedger) {
+      setTimeout(function () {
+        $('#leopard_return_received').DataTable({
+          "bSort": false,
+          dom: 'Bfrtip',
+          buttons: [{
+            extend: 'copy',
+            title: 'Leopard Returns Received'
+          }, 'csv', {
+            extend: 'excel',
+            title: 'Leopard Returns Received'
+          }]
+        });
+      }, 300);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js ***!
@@ -4209,7 +4284,7 @@ __webpack_require__.r(__webpack_exports__);
       tableHeader: {
         heading: "Dropshipper Pay outs"
       },
-      th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+      th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
       table_id: "moq_table",
       btnLoader: false,
       records: [],
@@ -4264,6 +4339,22 @@ __webpack_require__.r(__webpack_exports__);
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
+    getNextDueDate: function getNextDueDate(voucherCreatedAt, paymentCycle) {
+      if (!voucherCreatedAt || !paymentCycle) return "N/A"; // Return 'N/A' if data is missing
+
+      var cycleDays = {
+        'Weekly': 7,
+        'Bi-Weekly': 14,
+        'Tri-Weekly': 21,
+        'Monthly': 30
+      };
+      var daysToAdd = cycleDays[paymentCycle];
+      if (!daysToAdd) return "N/A"; // Handle unsupported cycles
+
+      var createdDate = new Date(voucherCreatedAt);
+      var nextDueDate = new Date(createdDate.setDate(createdDate.getDate() + daysToAdd));
+      return nextDueDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+    },
     markasReplacement: function markasReplacement(data) {
       this.orderID = data.id;
     },
@@ -4337,7 +4428,19 @@ __webpack_require__.r(__webpack_exports__);
         vm.totalPaid = results.total_paid;
         vm.totalRemaining = results.total_remaining;
         vm.remainingDropshippers = results.remaining_dropshippers;
-        vm.records = results.dropshippers;
+
+        // Assuming `results.remaining_dropshippers` is the array of dropshipper data
+        vm.records = results.dropshippers.map(function (dropshipper) {
+          var _dropshipper$general_;
+          // Check if the structure and dropshipper_last_paid_voucher exist
+          if ((_dropshipper$general_ = dropshipper.general_ledger) !== null && _dropshipper$general_ !== void 0 && (_dropshipper$general_ = _dropshipper$general_.dropshipper_shop_ledger) !== null && _dropshipper$general_ !== void 0 && _dropshipper$general_.dropshipper_last_paid_voucher) {
+            dropshipper.voucher_created_at = dropshipper.general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher.created_at;
+          } else {
+            // If not available, set it to null
+            dropshipper.voucher_created_at = null;
+          }
+          return dropshipper;
+        });
       });
     },
     fetchDetail: function fetchDetail(id, status) {
@@ -5445,7 +5548,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodIssuanceReport.vue */ "./resources/js/components/reports/fis/InventoryGoodIssuanceReport.vue");
 /* harmony import */ var _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReceivedReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReceivedReport.vue");
 /* harmony import */ var _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReturnReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReturnReport.vue");
-/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/reports/fis/LeopardReturnReceivedReport.vue */ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue");
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+
 
 
 
@@ -5455,12 +5560,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FisReportsPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     InventoryGoodReturnReport: _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    DeliveredOrderDetailsReport: _components_reports_fis_DeliveredOrderDetailsReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    DeliveredOrderDetailsReport: _components_reports_fis_DeliveredOrderDetailsReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    LeopardReturnReceivedReport: _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
@@ -5476,6 +5582,7 @@ __webpack_require__.r(__webpack_exports__);
       goodIssuedData: [],
       goodReturnData: [],
       deliveredOrderData: [],
+      leopardReturnReceivedData: [],
       loader: false,
       deleteLoader: false,
       role: null,
@@ -5489,6 +5596,18 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchProducts();
   },
   methods: {
+    leopardReturnReceived: function leopardReturnReceived() {
+      this.report = 'leopard-return-received';
+    },
+    leopardReturnReceivedFilter: function leopardReturnReceivedFilter(data) {
+      var vm = this;
+      vm.loader = true;
+      axios.post(vm.api_url + 'reports/fis/leopard-return-receiveds', data).then(function (res) {
+        var results = res.data.response;
+        vm.leopardReturnReceivedData = results;
+        vm.loader = false;
+      });
+    },
     deliveredOrder: function deliveredOrder() {
       this.report = 'delivered-order-report';
     },
@@ -5952,9 +6071,20 @@ var render = function render() {
     })])]);
   }), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
-  }, [_c("strong", [_vm._v("Bank Name:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+  }, [_c("strong", [_vm._v("Bank Name:")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.bank ? _vm.details.bank.name : "-"))]) : _c("v-select", {
+    attrs: {
+      options: _vm.banks
+    },
+    model: {
+      value: _vm.details.bank.name,
+      callback: function callback($$v) {
+        _vm.$set(_vm.details.bank, "name", $$v);
+      },
+      expression: "details.bank.name"
+    }
+  })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Account Title")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
     staticClass: "text-muted"
@@ -12330,6 +12460,137 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18 ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-4 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "from"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "to"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "leopard_return_received"
+    }
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.order.shop ? "".concat(item.order.shop.store_name.substring(0, 3), "-").concat(item.order.order_no) : item.order.order_no) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.avg_price : "0"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.variation.avg_price * item.quantity)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.price * item.quantity)))])]);
+  }), 0)])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Leopard Returns Received")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-4 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Average Price ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total Price Cost")]), _vm._v(" "), _c("th", [_vm._v("Total Sell Cost")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/table/TableHeaderComponent.vue?vue&type=template&id=3f5befe4":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/table/TableHeaderComponent.vue?vue&type=template&id=3f5befe4 ***!
@@ -15883,7 +16144,7 @@ var render = function render() {
       width: 250
     }
   })], 1) : _c("div", {
-    staticClass: "col-md-12"
+    staticClass: "col-md-12 table-responsive"
   }, [_c("table", {
     ref: "datatable",
     staticClass: "table table-bordered",
@@ -15897,7 +16158,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
@@ -16973,7 +17234,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Delivered Order Detail")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Delivered Order Detail")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 col-6"
+  }, [_c("h6", [_vm._v("\n                                5.\n                                "), _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.leopardReturnReceived();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fax"
+  }), _vm._v(" Leopard Returns Received")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -17028,6 +17302,16 @@ var render = function render() {
     on: {
       deliveredOrderFilter: function deliveredOrderFilter($event) {
         return _vm.deliveredOrderFilter($event);
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), _vm.report == "leopard-return-received" ? _c("LeopardReturnReceivedReport", {
+    attrs: {
+      data: _vm.leopardReturnReceivedData,
+      loader: _vm.loader
+    },
+    on: {
+      leopardReturnReceivedFilter: function leopardReturnReceivedFilter($event) {
+        return _vm.leopardReturnReceivedFilter($event);
       }
     }
   }) : _vm._e(), _vm._v(" "), _c("div", {
@@ -17303,6 +17587,21 @@ var staticRenderFns = [function () {
 }];
 render._withStripped = true;
 
+
+/***/ }),
+
+/***/ "./resources/js/data/banks.js":
+/*!************************************!*\
+  !*** ./resources/js/data/banks.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Banks: () => (/* binding */ Banks)
+/* harmony export */ });
+var Banks = ['Al Baraka Islamic Bank Limited', 'Allied Bank Limited', 'Apna Microfinance Bank', 'Askari Commercial Bank Limited', 'Bank AL Habib Limited', 'Bank Alfalah Limited', 'Bank of Khyber', 'Bank of Punjab', 'BankIslami Pakistan Limited', 'Burj Bank Limited', 'Citi Bank', 'Dubai Islamic Bank Pakistan Limited', 'Easypaisa / Telenor Microfinance Bank', 'Faysal Bank Limited', 'FINCA Microfinance Bank', 'FINJA EMI', 'First Women Bank', 'FirstPay / HBL MFB', 'Habib Bank Limited', 'Habib Metropolitan Bank Limited', 'ICBC', 'Js Bank', 'KASA Bank Limited', 'KEENU', 'MCB Bank Limited', 'MCB Islamic', 'MCB-Arif Habib Savings', 'Meezan Bank Limited', 'Mobilink Microfinance Bank Ltd / Jazzcash', 'National Bank of Pakistan', 'NAYAPAY', 'SadaPay', 'Silk Bank', 'Sindh Bank', 'Soneri Bank Limited', 'Standard Chartered Bank', 'Summit Bank', 'UBank / UPaisa', 'United Bank Limited', 'Zarai Taraqiati Bank Limited (ZTBL)'];
 
 /***/ }),
 
@@ -43824,6 +44123,45 @@ component.options.__file = "resources/js/components/reports/fis/InventoryGoodRet
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18 */ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18");
+/* harmony import */ var _LeopardReturnReceivedReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LeopardReturnReceivedReport.vue?vue&type=script&lang=js */ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LeopardReturnReceivedReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__.render,
+  _LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/reports/fis/LeopardReturnReceivedReport.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/table/TableHeaderComponent.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/table/TableHeaderComponent.vue ***!
@@ -44857,6 +45195,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./LeopardReturnReceivedReport.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js":
 /*!****************************************************************************************!*\
   !*** ./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js ***!
@@ -45569,6 +45923,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InventoryGoodReturnReport_vue_vue_type_template_id_84d9951a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_InventoryGoodReturnReport_vue_vue_type_template_id_84d9951a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./InventoryGoodReturnReport.vue?vue&type=template&id=84d9951a */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/InventoryGoodReturnReport.vue?vue&type=template&id=84d9951a");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18 ***!
+  \***********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18");
 
 
 /***/ }),

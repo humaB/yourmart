@@ -274,4 +274,23 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+
+    public function leopardReturnsReceived(Request $request)
+    {
+        $orders = Order::when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->where('type', 'Normal')
+        ->where('status', '10')
+        ->pluck('id');
+
+        $data = OrderItem::with('variation.product', 'order.shop')->whereIn('order_id', $orders)->get();
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
 }

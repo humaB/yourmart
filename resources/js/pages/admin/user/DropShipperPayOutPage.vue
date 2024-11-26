@@ -86,7 +86,7 @@
                                         <div class="card-body table-responsive" v-if="loader">
                                             <bullet-list-loader :width="250"> </bullet-list-loader>
                                         </div>
-                                        <div class="col-md-12" v-else>
+                                        <div class="col-md-12 table-responsive" v-else>
                                             <table class="table table-bordered" :id="table_id" ref="datatable">
                                                 <thead>
                                                     <tr>
@@ -98,7 +98,8 @@
                                                         <td>{{ index + 1 }}</td>
                                                         <td>{{ item.full_name }}</td>
                                                         <td>{{ item.email }}</td>
-                                                        <td>{{ item.whatsapp_number }}</td>
+                                                        <td>{{ item.payment_cycle}}</td>
+                                                        <td>{{ getNextDueDate(item.voucher_created_at, item.payment_cycle) }}</td> <!-- Next Due Date -->
                                                         <td>{{ formatPrice(item.total_payable) }}</td>
                                                         <td>{{ formatPrice(item.total_paid) }}</td>
                                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
@@ -218,7 +219,7 @@ export default {
             tableHeader: {
                 heading: "Dropshipper Pay outs",
             },
-            th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+            th: ["Sr #", "Name", "Email", "Cycle","Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
             table_id: "moq_table",
             btnLoader: false,
             records: [],
@@ -267,6 +268,23 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        getNextDueDate(voucherCreatedAt, paymentCycle) {
+            if (!voucherCreatedAt || !paymentCycle) return "N/A"; // Return 'N/A' if data is missing
+
+            const cycleDays = {
+                'Weekly': 7,
+                'Bi-Weekly': 14,
+                'Tri-Weekly': 21,
+                'Monthly': 30
+            };
+
+            const daysToAdd = cycleDays[paymentCycle];
+            if (!daysToAdd) return "N/A"; // Handle unsupported cycles
+
+            const createdDate = new Date(voucherCreatedAt);
+            const nextDueDate = new Date(createdDate.setDate(createdDate.getDate() + daysToAdd));
+            return nextDueDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+        },
         markasReplacement(data){
             this.orderID = data.id
         },
@@ -350,7 +368,17 @@ export default {
                     vm.totalRemaining = results.total_remaining;
                     vm.remainingDropshippers = results.remaining_dropshippers;
 
-                    vm.records = results.dropshippers;
+                    // Assuming `results.remaining_dropshippers` is the array of dropshipper data
+                    vm.records= results.dropshippers.map(dropshipper => {
+                        // Check if the structure and dropshipper_last_paid_voucher exist
+                        if (dropshipper.general_ledger?.dropshipper_shop_ledger?.dropshipper_last_paid_voucher) {
+                            dropshipper.voucher_created_at = dropshipper.general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher.created_at;
+                        } else {
+                            // If not available, set it to null
+                            dropshipper.voucher_created_at = null;
+                        }
+                        return dropshipper;
+                    });
                 });
         },
         fetchDetail(id, status) {

@@ -14,6 +14,7 @@ use App\Models\Account\Cash;
 use App\Models\Account\AccountHead;
 use App\Http\Resources\ValidationCollection;
 use App\Models\Account\AccountTransaction;
+use App\Models\CustomerBank;
 use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
@@ -61,7 +62,7 @@ class DropShipperController extends Controller
 
     public function pendingPayouts()
     {
-        $dropshipper = DropShipper::whereColumn('total_payable', '!=', 'total_paid')->get();
+        $dropshipper = DropShipper::with('general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher')->whereColumn('total_payable', '!=', 'total_paid')->get();
 
         $totalPayable = DropShipper::sum('total_payable');
         $totalPayablePaid = DropShipper::sum('total_paid');
@@ -139,15 +140,20 @@ class DropShipperController extends Controller
             }
         }
 
+        $customerBank = CustomerBank::firstOrCreate(
+            ['name' => $request->bank['name']], // Conditions to check
+        );
+
         $dropshipper->update([
-            'full_name' => $request->input('full_name'),
-            'email' => $request->input('email'),
-            'cnic_number' => $request->input('cnic_number'),
+            'full_name'       => $request->input('full_name'),
+            'email'           => $request->input('email'),
+            'cnic_number'     => $request->input('cnic_number'),
             'whatsapp_number' => $request->input('whatsapp_number'),
-            'address' => $request->input('address'),
-            'account_number' => $request->input('account_number'),
-            'account_title' => $request->input('account_title'),
-            'account_iban'  => $request->input('account_iban'),
+            'address'         => $request->input('address'),
+            'bank_id'         => $customerBank->id,
+            'account_number'  => $request->input('account_number'),
+            'account_title'   => $request->input('account_title'),
+            'account_iban'    => $request->input('account_iban'),
         ]);
 
         // Loop through the shops and update each record

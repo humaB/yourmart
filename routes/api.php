@@ -165,6 +165,7 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
         Route::post('/good-issued',  [ FisReportController::class , 'goodIssuedRegister']);
         Route::post('/good-returns',  [ FisReportController::class , 'goodReturnRegister']);
         Route::post('/delivered-order-details',  [ FisReportController::class , 'deliveredOrders']);
+        Route::post('/leopard-return-receiveds',  [ FisReportController::class , 'leopardReturnsReceived']);
 
         Route::post('/good-received/delete',  [ FisReportController::class , 'goodReceivedDelete']);
 
