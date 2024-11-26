@@ -30,7 +30,7 @@ class CourierReturnController extends Controller
 
     public function inwardRecord(){
 
-        $data = StoreReturnDetail::with('variation.product', 'srn.order')
+        $data = StoreReturnDetail::with('product', 'srn.order')
         ->orderBy('id','desc')
         ->get();
 

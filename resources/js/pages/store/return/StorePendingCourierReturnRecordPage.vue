@@ -20,7 +20,7 @@
                                         <th>Product</th>
                                         <th>Quantity</th>
                                         <th>Created Date</th>
-                                        <th>Action</th>
+                                
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -28,12 +28,10 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.srn ? item.srn.order.tracking_number : '' }}</td>
                                         <td>{{ item.srn_id }}</td>
-                                        <td>{{ item.variation ? item.variation.product.title : '' }}</td>
+                                        <td>{{ item.product ? item.product.title : '' }}</td>
                                         <td>{{ item.quantity}}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
-                                        <td>
-                                            <button class="btn btn-dark" @click="printPurchaseOrder( item.srn_id )"><i class="fa fa-print"></i> Print</button>
-                                        </td>
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -105,7 +103,7 @@
                         this.dataTable()
                     },300)
                 })
-                .catch((err) => this.fetchInwards());
+
             },
             dataTable(){
                 $('#table').DataTable({

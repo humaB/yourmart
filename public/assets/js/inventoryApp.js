@@ -1968,8 +1968,6 @@ __webpack_require__.r(__webpack_exports__);
         setTimeout(function () {
           _this.dataTable();
         }, 300);
-      })["catch"](function (err) {
-        return _this.fetchInwards();
       });
     },
     dataTable: function dataTable() {
@@ -4710,16 +4708,7 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.inwards, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.srn ? item.srn.order.tracking_number : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.srn_id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
-      staticClass: "btn btn-dark",
-      on: {
-        click: function click($event) {
-          return _vm.printPurchaseOrder(item.srn_id);
-        }
-      }
-    }, [_c("i", {
-      staticClass: "fa fa-print"
-    }), _vm._v(" Print")])])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.srn ? item.srn.order.tracking_number : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.srn_id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])])])], 1)])]), _vm._v(" "), _c("form", {
     ref: "summaryForm",
     attrs: {
@@ -4748,7 +4737,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("SRN #")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("SRN #")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Created Date")])])]);
 }];
 render._withStripped = true;
 
