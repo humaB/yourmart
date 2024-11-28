@@ -224,7 +224,7 @@ function chart3() {
         }
         ],
         title: {
-            text: 'Average High & Low Temperature',
+            text: '',
             align: 'left'
         },
         grid: {

@@ -1134,7 +1134,7 @@
 
                               <div class="col-md-12">
                                 <div class="card">
-                                    <h4 class="pl-4 pt-4">Purchase Orders</h4>
+                                    <h4 class="pl-4 pt-4">Purchase Orders & Inventory</h4>
                                     <div class="card-body">
                                         <div class="row" style="margin-left: -10px">
                                             <!-- cards -->
@@ -1288,87 +1288,89 @@
                                                 </tr>
                                             </table>
 
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Gross Current Stock</th>
+                                                        <th>Item in Stock</th>
+                                                        <th>Stock Value</th>
+                                                        <th>Items in Return</th>
+                                                        <th>Return Value</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.grossStockValue) }}</td>
+                                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.numberOfItemsInStock) }}</td>
+                                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.stockValue) }}</td>
+                                                        <td class="text-end h6">{{ formatPrice(inventoryStatus.totalItemInReturn) }}</td>
+                                                        <td colspan="2"class="text-end h6">{{ formatPrice(inventoryStatus.totalReturnValue) }}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="0">Number of Products in Stock </th>
+                                                        <th colspan="2" class="h6"> {{ formatPrice(inventoryStatus.numberOfProductInStock) }}</th>
+                                                        <th colspan="0">Out of stock</th>
+                                                        <th colspan="3" class="h6"> {{ formatPrice(inventoryStatus.outOfStock) }}</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Published </th>
+                                                        <th class="h6"> {{ formatPrice(inventoryStatus.publishedProducts) }}</th>
+                                                        <th>Draft</th>
+                                                        <th class="h6"> {{ formatPrice(inventoryStatus.draftProducts) }}</th>
+                                                        <th>Trash</th>
+                                                        <th class="h6"> {{ formatPrice(inventoryStatus.trashedProducts) }}</th>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+
+                                            <div class="col-md-6 mt-5">
+                                                <h6>Fast Moving Products (Top 10)</h6>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>SKU</th>
+                                                            <th>QTY SOLD</th>
+                                                            <th>Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="product in fastMovingProducts" :key="product.id">
+                                                            <td>{{ product.title }}</td>
+                                                            <td>{{ product.variation.sku || '' }}</td>
+                                                            <td>{{ product.issuance_sum_quantity }}</td>
+                                                            <td>{{ formatPrice( product.issuance_sum_total ) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- <div class="col-md-6 mt-5">
+                                                <h6>Slow Moving Products (Top 10)</h6>
+                                                <table class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Product</th>
+                                                            <th>SKU</th>
+                                                            <th>QTY SOLD</th>
+                                                            <th>Amount</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="product in slowMovingProducts" :key="product.id">
+                                                            <td>{{ product.title }}</td>
+                                                            <td>{{ product.variation.sku || '' }}</td>
+                                                            <td>{{ product.issuance_sum_quantity || 0 }}</td>
+                                                            <td>{{ formatPrice( product.issuance_sum_total || 0 ) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div> -->
+
                                         </div>
                                     </div>
 
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Inventory Status</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row m-1 mt-3">
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-purple">
-                                                        <i class="fas fa-store"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0"> 524</h4>
-                                                                <span class="text-muted">Active Categories</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-green">
-                                                        <i class="fas fa-hiking"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0">
-                                                                    <i class="ti-arrow-up text-success"></i> 4,000,0
-                                                                </h4>
-                                                                <span class="text-muted">Tags</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-cyan">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0">
-                                                                    <i class="ti-arrow-up text-success"></i> 15
-                                                                </h4>
-                                                                <span class="text-muted">High Stock</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-orange">
-                                                        <i class="fas fa-dollar-sign"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0">
-                                                                    <i class="ti-arrow-up text-success"></i>10
-                                                                </h4>
-                                                                <span class="text-muted">Low Stock</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -1776,7 +1778,83 @@
                 </div>
             </div>
 
-
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Inventory Status</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row m-1 mt-3">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-purple">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h4 class="font-light mb-0"> 524</h4>
+                                                <span class="text-muted">Product in Stock</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-green">
+                                        <i class="fas fa-hiking"></i>
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h4 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i> 4,000,0
+                                                </h4>
+                                                <span class="text-muted">Stock Value</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-cyan">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h4 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i> 15
+                                                </h4>
+                                                <span class="text-muted">High Stock</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-orange">
+                                        <i class="fas fa-dollar-sign"></i>
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h4 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i>10
+                                                </h4>
+                                                <span class="text-muted">Low Stock</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="col-md-12">
                 <div class="card">

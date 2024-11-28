@@ -27,20 +27,29 @@
        $orders = DB::table('orders')
         ->where('status', '0')
         ->count();
+        $payOuts = DB::table('drop_shippers')->whereColumn('total_payable', '!=', 'total_paid')->count();
     @endphp
     <ul class="sidebar-menu">
         <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}" >
             <a href="{{ route('inventory.products.orders') }}" class="nav-link"><i class="fa fa-book" aria-hidden="true"></i><span>Orders</span>
                 @if ( $orders > 0)
-                <span class="badge headerBadge1"
-                    style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
-                    {{ $orders }}
-                </span>
-            @endif
+                    <span class="badge headerBadge1"
+                        style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                        {{ $orders }}
+                    </span>
+                @endif
             </a>
         </li>
+
         <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}" >
-            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's</span></a>
+            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's {{$payOuts }}</span>
+                @if ( $payOuts > 0)
+                    <span class="badge headerBadge1"
+                        style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                        {{ $payOuts }}
+                    </span>
+                @endif
+            </a>
         </li>
 
     </ul>

@@ -65,6 +65,7 @@
 
     <!-- JS Libraies -->
     <script src="{{ asset('assets/bundles/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/js/page/chart-apexcharts.js') }}"></script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('assets/js/page/index.js') }}"></script>
     <!-- Template JS File -->
@@ -76,6 +77,7 @@
     <script src="{{ asset('assets/bundles/sweetalert/sweetalert.min.js') }}"></script>
     <!-- Page Specific JS File -->
     <script src="{{ asset('assets/js/page/sweetalert.js') }}"></script>
+
     <script src="{{ asset('assets/js/page/widget-chart.js') }}"></script>
     @stack('scripts')
 
