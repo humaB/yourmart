@@ -323,16 +323,18 @@ class OrderController extends Controller
                 ]);
                 foreach ($order->items as $product) {
                     $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                    $variation->decrement('stock', $product->quantity);
+                    if( $variation ){
+                        $variation->decrement('stock', $product->quantity);
 
-                    StoreIssuanceDetail::create([
-                        'sin_id'     => $issuance->id,
-                        'product_id' => $variation->product_id,
-                        'quantity'   => $product->quantity,
-                        'price'      => $product->price,
-                        'total'      => (float)$product->quantity * (float)$product->price,
-                        'added_by'  => auth()->user()->id,
-                    ]);
+                        StoreIssuanceDetail::create([
+                            'sin_id'     => $issuance->id,
+                            'product_id' => $variation->product_id,
+                            'quantity'   => $product->quantity,
+                            'price'      => $product->price,
+                            'total'      => (float)$product->quantity * (float)$product->price,
+                            'added_by'  => auth()->user()->id,
+                        ]);
+                    }
                 }
             }
         } else if ($userRole == 'admin') {
@@ -368,16 +370,18 @@ class OrderController extends Controller
                 ]);
                 foreach ($order->items as $product) {
                     $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                    $variation->decrement('stock', $product->quantity);
+                    if($variation){
+                        $variation->decrement('stock', $product->quantity);
 
-                    StoreIssuanceDetail::create([
-                        'sin_id'     => $issuance->id,
-                        'product_id' => $variation->product_id,
-                        'quantity'   => $product->quantity,
-                        'price'      => $product->price,
-                        'total'      => (float)$product->quantity * (float)$product->price,
-                        'added_by'  => auth()->user()->id,
-                    ]);
+                        StoreIssuanceDetail::create([
+                            'sin_id'     => $issuance->id,
+                            'product_id' => $variation->product_id,
+                            'quantity'   => $product->quantity,
+                            'price'      => $product->price,
+                            'total'      => (float)$product->quantity * (float)$product->price,
+                            'added_by'  => auth()->user()->id,
+                        ]);
+                    }
                 }
             }
         }

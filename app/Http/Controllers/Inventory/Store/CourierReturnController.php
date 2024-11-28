@@ -45,7 +45,6 @@ class CourierReturnController extends Controller
         $data = Order::with('user', 'shop')->where('status', 9)
         ->get();
 
-
         return (new ResponseCollection($data))
         ->response()
         ->setStatusCode(200);
