@@ -42,7 +42,7 @@
         </li>
 
         <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}" >
-            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's {{$payOuts }}</span>
+            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's</span>
                 @if ( $payOuts > 0)
                     <span class="badge headerBadge1"
                         style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
