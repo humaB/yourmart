@@ -306,6 +306,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/decisions',  [ InventoryPurchaseOrderController::class , 'decisions']);
 
             Route::post('/status-counts',  [ InventoryPurchaseOrderController::class , 'statusCounts']);
+
+            Route::post('/attachments',  [ InventoryPurchaseOrderController::class , 'fetchAttachment']);
+            Route::post('/attachments/upload',  [ InventoryPurchaseOrderController::class , 'uploadAttachment']);
         });
 
         Route::group(['prefix' => 'gate'], function(){

@@ -12,6 +12,7 @@ use App\Models\Inventory\Product\Tag;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
+use App\Models\Inventory\PurchaseOrder\PurchaseOrderAttachment;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -51,6 +52,45 @@ class InventoryPurchaseOrderController extends Controller
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function fetchAttachment()
+    {
+        $purchaseOrders = PurchaseOrderAttachment::get();
+
+        return (new ResponseCollection($purchaseOrders))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+
+    public function uploadAttachment( Request $request ){
+
+        $request->validate([
+            'po'           => 'required',
+            'file'         => 'required',
+            'attachment'   => 'required'
+        ]);
+
+        PurchaseOrderAttachment::create([
+            'po_id'       => $request->po,
+            'file'        => $request->file,
+            'attachment'  => $request->attachment ? $this->attachment($request->attachment) : '',
+        ]);
+    }
+
+    public function attachment($image)
+    {
+
+        $filenameWithExt = $image->getClientOriginalName();
+        //get just filename
+        $filename        = pathinfo($filenameWithExt);
+        //get just extension
+        $extension       = $image->extension();
+        $nameToStore     = str_replace(' ', '', $filename['filename']) . "_" . time() . "." . $extension;
+        //Move to folder
+        $path            = $image->storeAs('public/uploads/purchase_orders/attachments', $nameToStore);
+        return $nameToStore;
     }
 
     public function statusCounts( Request $request )
