@@ -63,7 +63,7 @@
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label for="amountField">Narration</label>
-                                <input type="text" v-model="addData.narration" class="form-control" id="amountField" placeholder="Enter amount" />
+                                <input type="text" v-model="addData.narration" class="form-control" id="amountField" placeholder="Enter Narration" />
                             </div>
                         </div>
 

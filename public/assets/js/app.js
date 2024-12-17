@@ -6823,7 +6823,7 @@ var render = function render() {
     attrs: {
       type: "text",
       id: "amountField",
-      placeholder: "Enter amount"
+      placeholder: "Enter Narration"
     },
     domProps: {
       value: _vm.addData.narration

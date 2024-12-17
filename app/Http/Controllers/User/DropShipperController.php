@@ -400,7 +400,7 @@ public function fetchDetails(Request $request)
     public function decision(Request $request)
     {
 
-        $lock = Cache::lock('dropshipper_decision3')->block(7, function () use ($request) {
+        $lock = Cache::lock('dropshipper_decision4')->block(7, function () use ($request) {
 
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
@@ -427,6 +427,14 @@ public function fetchDetails(Request $request)
 
             if ($request->action != 'reject') {
 
+                $leopardApi = new LeopardApiHelper();
+                $leopard  = $leopardApi->createShipperAccount($dropshipper);
+                if($leopard == 0){
+                    return (new ValidationCollection(["Something went wrong please try again"]))
+                    ->response()
+                    ->setStatusCode(400);
+                }
+
                 $user = User::create([
                     'name'     => $dropshipper->full_name,
                     'email'    => $dropshipper->email,
@@ -434,9 +442,6 @@ public function fetchDetails(Request $request)
                     'role'     => 'dropshipper',
                     'allowed_ip_address' => '*'
                 ]);
-
-                $leopardApi = new LeopardApiHelper();
-                $leopard  = $leopardApi->createShipperAccount($dropshipper);
 
                 //General Ledger
                 $group = $this->accountGroupFourthCreate(
