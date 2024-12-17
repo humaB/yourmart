@@ -4491,7 +4491,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     addPayment: function addPayment() {
       var _this2 = this;
-      if (this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
+      if (this.addData.type == null || this.addData.from_account == null) {
         return swal({
           title: "Error",
           text: 'Please fill all field',
@@ -6796,7 +6796,8 @@ var render = function render() {
     on: {
       keypress: function keypress($event) {
         return _vm.numberValidate($event, {
-          dot: true
+          dot: true,
+          negative: true
         });
       },
       input: function input($event) {

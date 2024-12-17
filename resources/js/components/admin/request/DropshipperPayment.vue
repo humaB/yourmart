@@ -56,7 +56,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="amountField">Amount <span class="text-danger">*</span></label>
-                                <input type="text" v-model="addData.amount" class="form-control" id="amountField" placeholder="Enter amount" @keypress="numberValidate($event,{dot:true})" />
+                                <input type="text" v-model="addData.amount" class="form-control" id="amountField" placeholder="Enter amount" @keypress="numberValidate($event,{dot:true,negative:true})" />
                             </div>
                         </div>
 

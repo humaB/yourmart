@@ -432,7 +432,7 @@ export default {
         },
         addPayment() {
 
-            if (this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
+            if (this.addData.type == null || this.addData.from_account == null) {
                 return swal({
                     title: "Error",
                     text: 'Please fill all field',
