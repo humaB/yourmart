@@ -18,7 +18,7 @@
  </div>
 
  @push('scripts')
-    <script src="{{ asset('assets/js/app.js') }}"></script>
+    <script src="{{ mix('assets/js/app.js') }}"></script>
  @endpush
 
 @endsection

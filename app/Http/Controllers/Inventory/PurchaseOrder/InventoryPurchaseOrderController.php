@@ -54,9 +54,9 @@ class InventoryPurchaseOrderController extends Controller
             ->setStatusCode(200);
     }
 
-    public function fetchAttachment()
+    public function fetchAttachment( Request $request )
     {
-        $purchaseOrders = PurchaseOrderAttachment::get();
+        $purchaseOrders = PurchaseOrderAttachment::where('po_id', $request->po)->get();
 
         return (new ResponseCollection($purchaseOrders))
             ->response()

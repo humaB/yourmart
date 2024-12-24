@@ -26,7 +26,7 @@
 
                   <!-- Image Section -->
                 <h3>Banner Image Settings</h3>
-                <div class="form-group border border-1 p-2" v-for="(img, index) in form.imageSettings" :key="index + 1">
+                <div class="form-group border border-1 p-2" v-for="(img, index) in form.imageSettings" :key="'banner-'+index + 1">
                     <h4>Banner Image {{ index + 1 }}</h4>
 
                     <div class="row">
@@ -210,8 +210,8 @@
 
                 // Add image data
                 this.form.imageSettings.forEach((img, index) => {
-                    formData.append(`image[${index}][index]`,img.index + 1 );
-                    formData.append(`image[${index}][link]`, img.image); // Append the image link
+                    formData.append(`image[${index}][index]`,img.index );
+                    formData.append(`image[${index}][link]`, img.link); // Append the image link
                     formData.append(`image[${index}][button_link]`, img.button_link); // Append the button link
                     formData.append(`image[${index}][button_label]`, img.button_label);
                 });
