@@ -303,7 +303,7 @@
             @updateProduct="updateProduct($event)" @editProductVariant="editProductVariantFun($event)"
             @updateDimensions="updateDimensions($event)" @updateDiscount="updateDiscount($event)"
             @searchProduct="searchProduct($event)" @updateUpSell="updateUpSell($event)"
-            @updateTags="updateTags($event)" @removeTag="removeTag($event)" @changeStatus="changeStatus($event)"
+            @updateTags="updateTags($event)" @removeTag="removeTag($event)" @removeRelatedProduct="removeRelatedProduct($event)" @changeStatus="changeStatus($event)"
             @changeImage="changeHeroImage($event)" />
 
         <EditProductVariant :loader="btnLoader" :colors="colorsDropDown" :sizes="sizesDropDown"
@@ -764,6 +764,21 @@ export default {
                 vm.fetchDetail(data.id)
             }).catch((err) => {
                 vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    removeRelatedProduct(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "inventory/products/related-products/removes", data)
+            .then((response) => {
+                vm.fetchDetail(data.id)
+            }).catch((err) => {
                 return swal({
                     title: "Error",
                     text: 'Oops, Something went wrong please try again',

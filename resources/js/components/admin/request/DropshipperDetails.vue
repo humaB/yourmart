@@ -172,6 +172,8 @@
                     <button v-if="details.status == 0" type="button" class="btn btn-danger" :class="loader ? 'btn-progress disabled' : ''" @click="decision('reject')">Reject</button>
 
                     <button v-if="details.status == 1" type="button" class="btn btn-danger" :class="loader ? 'btn-progress disabled' : ''" @click="decision('deactivate')">Deactivate</button>
+                    <button v-if="details.status == 3" type="button" class="btn btn-success" :class="loader ? 'btn-progress disabled' : ''" @click="decision('activate')">Re Activate</button>
+
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </div>

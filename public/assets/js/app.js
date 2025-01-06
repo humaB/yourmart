@@ -6242,7 +6242,18 @@ var render = function render() {
         return _vm.decision("deactivate");
       }
     }
-  }, [_vm._v("Deactivate")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("Deactivate")]) : _vm._e(), _vm._v(" "), _vm.details.status == 3 ? _c("button", {
+    staticClass: "btn btn-success",
+    "class": _vm.loader ? "btn-progress disabled" : "",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.decision("activate");
+      }
+    }
+  }, [_vm._v("Re Activate")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -9835,8 +9846,8 @@ var render = function render() {
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
   }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
-    staticClass: "modal-footer"
-  }, [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
+    staticClass: "modal-footer d-dlex justify-content-between"
+  }, [_c("div", [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
     attrs: {
       "data-toggle": "modal",
@@ -9849,7 +9860,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                    ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -9858,22 +9869,11 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Revert to Pre Step\n                    ")]) : _vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Revert to Pre Step\n                        ")]) : _vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Revert to Pre Step\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
-    staticClass: "btn btn-primary",
-    on: {
-      click: function click($event) {
-        return _vm.forward();
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-paper-plane"
-  }), _vm._v(" Forward Order\n                    ")]) : _vm.loader ? _c("button", {
-    staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Revert to Pre Step\n                        ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -9882,15 +9882,26 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Reject Order\n                    ")]) : _vm.rejectLoader ? _c("button", {
+  }), _vm._v(" Reject Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.forward();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-paper-plane"
+  }), _vm._v(" Forward Order\n                        ")]) : _vm.loader ? _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled"
+  }, [_vm._v("\n                            Forward\n                        ")]) : _vm.rejectLoader ? _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
-  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                            Forward\n                        ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("\n                        Close\n                    ")])]) : _vm.view != "viewOnly" && _vm.details.type == "Cash" ? _c("div", {
+  }, [_vm._v("\n                            Close\n                        ")])])]) : _vm.view != "viewOnly" && _vm.details.type == "Cash" ? _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",

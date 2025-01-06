@@ -207,6 +207,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
         Route::post('/tags/removes', [ ProductController::class , 'removeTag']);
 
+        Route::post('/related-products/removes', [ ProductController::class , 'removeRelatedProduct']);
+
         Route::get('/export', [ProductController::class, 'exportExcel']);
 
 

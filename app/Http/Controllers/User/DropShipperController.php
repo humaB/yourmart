@@ -421,6 +421,12 @@ public function fetchDetails(Request $request)
                 ]);
 
                 return ['message' => 'successfully updated'];
+            }else if($request->action == 'activate'){
+                User::where('id', $dropshipper->user_id)->restore();
+                $dropshipper->update([
+                    'status'  => '1' // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
+                ]);
+                return ['message' => 'successfully updated'];
             }
 
             $leopard = 0;

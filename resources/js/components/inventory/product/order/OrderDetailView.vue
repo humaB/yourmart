@@ -687,37 +687,44 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer" v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
-                        <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
-                            @click="markasReplacement()"
-                            v-if="(role == 'order collection' || role == 'admin') && details.is_replacement == 0">
-                            <i class="fas fa-arrow-right"></i> Mark as Replacement
-                        </button>
+                    <div class="modal-footer d-dlex justify-content-between" v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
+                        <div>
+                            <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
+                                @click="markasReplacement()"
+                                v-if="(role == 'order collection' || role == 'admin') && details.is_replacement == 0">
+                                <i class="fas fa-arrow-right"></i> Mark as Replacement
+                            </button>
 
-                        <button class="btn btn-danger" @click="revertBack()"
-                            v-if="details.status > 0 && !revertLoader && role != 'supervisor'">
-                            <i class="fas fa-undo-alt"></i> Revert to Pre Step
-                        </button>
-                        <button class="btn btn-danger btn-progress disabled"
-                            v-else-if="revertLoader && role != 'supervisor'">
-                            <i class="fas fa-undo-alt"></i> Revert to Pre Step
-                        </button>
+                            <button class="btn btn-danger" @click="revertBack()"
+                                v-if="details.status > 0 && !revertLoader && role != 'supervisor'">
+                                <i class="fas fa-undo-alt"></i> Revert to Pre Step
+                            </button>
+                            <button class="btn btn-danger btn-progress disabled"
+                                v-else-if="revertLoader && role != 'supervisor'">
+                                <i class="fas fa-undo-alt"></i> Revert to Pre Step
+                            </button>
 
-                        <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
-                            <i class="fas fa-paper-plane"></i> Forward Order
-                        </button>
-                        <button class="btn btn-primary btn-progress disabled" v-else-if="loader">
-                            Forward
-                        </button>
-                        <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
-                            <i class="fa fa-trash"></i> Reject Order
-                        </button>
-                        <button class="btn btn-danger btn-progress disabled" v-else-if="rejectLoader">
-                            Forward
-                        </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Close
-                        </button>
+                            <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
+                                <i class="fa fa-trash"></i> Reject Order
+                            </button>
+                        </div>
+
+                        <div>
+                            <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
+                                <i class="fas fa-paper-plane"></i> Forward Order
+                            </button>
+                            <button class="btn btn-primary btn-progress disabled" v-else-if="loader">
+                                Forward
+                            </button>
+
+                            <button class="btn btn-danger btn-progress disabled" v-else-if="rejectLoader">
+                                Forward
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+
                     </div>
                     <div class="modal-footer" v-else-if="view != 'viewOnly' && details.type == 'Cash'">
 

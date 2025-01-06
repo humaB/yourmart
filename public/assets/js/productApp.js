@@ -2088,6 +2088,12 @@ __webpack_require__.r(__webpack_exports__);
         type: type
       });
     },
+    removeRelatedProduct: function removeRelatedProduct(product) {
+      this.$emit('removeRelatedProduct', {
+        id: this.product.id,
+        product: product
+      });
+    },
     removeTag: function removeTag(tag) {
       this.$emit('removeTag', {
         id: this.product.id,
@@ -2783,6 +2789,19 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].component("v-select", (vue_select__W
         vm.fetchDetail(data.id);
       })["catch"](function (err) {
         vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: 'Oops, Something went wrong please try again',
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    removeRelatedProduct: function removeRelatedProduct(data) {
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/related-products/removes", data).then(function (response) {
+        vm.fetchDetail(data.id);
+      })["catch"](function (err) {
         return swal({
           title: "Error",
           text: 'Oops, Something went wrong please try again',
@@ -5251,7 +5270,18 @@ var render = function render() {
         return _vm.decision("deactivate");
       }
     }
-  }, [_vm._v("Deactivate")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("Deactivate")]) : _vm._e(), _vm._v(" "), _vm.details.status == 3 ? _c("button", {
+    staticClass: "btn btn-success",
+    "class": _vm.loader ? "btn-progress disabled" : "",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.decision("activate");
+      }
+    }
+  }, [_vm._v("Re Activate")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -9129,8 +9159,8 @@ var render = function render() {
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
   }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
-    staticClass: "modal-footer"
-  }, [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
+    staticClass: "modal-footer d-dlex justify-content-between"
+  }, [_c("div", [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
     attrs: {
       "data-toggle": "modal",
@@ -9143,7 +9173,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                    ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -9152,22 +9182,11 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Revert to Pre Step\n                    ")]) : _vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Revert to Pre Step\n                        ")]) : _vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Revert to Pre Step\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
-    staticClass: "btn btn-primary",
-    on: {
-      click: function click($event) {
-        return _vm.forward();
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-paper-plane"
-  }), _vm._v(" Forward Order\n                    ")]) : _vm.loader ? _c("button", {
-    staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Revert to Pre Step\n                        ")]) : _vm._e(), _vm._v(" "), !_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -9176,15 +9195,26 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Reject Order\n                    ")]) : _vm.rejectLoader ? _c("button", {
+  }), _vm._v(" Reject Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.forward();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-paper-plane"
+  }), _vm._v(" Forward Order\n                        ")]) : _vm.loader ? _c("button", {
+    staticClass: "btn btn-primary btn-progress disabled"
+  }, [_vm._v("\n                            Forward\n                        ")]) : _vm.rejectLoader ? _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
-  }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }, [_vm._v("\n                            Forward\n                        ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("\n                        Close\n                    ")])]) : _vm.view != "viewOnly" && _vm.details.type == "Cash" ? _c("div", {
+  }, [_vm._v("\n                            Close\n                        ")])])]) : _vm.view != "viewOnly" && _vm.details.type == "Cash" ? _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
@@ -10652,6 +10682,9 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "modal-dialog modal-dialog-centered modal-xl",
+    staticStyle: {
+      "max-width": "90%"
+    },
     attrs: {
       role: "document"
     }
@@ -11388,7 +11421,11 @@ var render = function render() {
     staticClass: "col-md-12 mt-4"
   }, [_c("h5", [_vm._v("Related Products")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered"
-  }, [_vm._m(4), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", {
+    attrs: {
+      width: "33%"
+    }
+  }, [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
     staticClass: "col-md-10"
@@ -11408,7 +11445,7 @@ var render = function render() {
       expression: "upsell"
     }
   }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                            Product")])], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md2"
+    staticClass: "col-md-2"
   }, [_c("button", {
     staticClass: "mt-2 btn btn-primary",
     on: {
@@ -11418,9 +11455,23 @@ var render = function render() {
     }
   }, [_vm._v("Add")])])]), _vm._v(" "), _c("div", [_c("ul", _vm._l(_vm.product.up_sells, function (item) {
     return _c("li", {
-      key: item.id
-    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + "\n                                                        ")]);
-  }), 0)])]), _vm._v(" "), _c("td", [_c("div", {
+      key: item.id,
+      staticClass: "mb-1 border-bottom"
+    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + " "), _c("button", {
+      staticClass: "btn btn-sm btn-danger float-right",
+      on: {
+        click: function click($event) {
+          return _vm.removeRelatedProduct(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
+    })])]);
+  }), 0)])]), _vm._v(" "), _c("td", {
+    attrs: {
+      width: "33%"
+    }
+  }, [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
     staticClass: "col-md-10"
@@ -11440,7 +11491,7 @@ var render = function render() {
       expression: "crossSell"
     }
   }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                            Product")])], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md2"
+    staticClass: "col-md-2"
   }, [_c("button", {
     staticClass: "mt-2 btn btn-primary",
     on: {
@@ -11452,9 +11503,23 @@ var render = function render() {
     staticClass: "mt-3"
   }, [_c("ul", _vm._l(_vm.product.cross_sells, function (item) {
     return _c("li", {
-      key: item.id
-    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + "\n                                                        ")]);
-  }), 0)])]), _vm._v(" "), _c("td", [_c("div", {
+      key: item.id,
+      staticClass: "mb-1 border-bottom"
+    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + " "), _c("button", {
+      staticClass: "btn btn-sm btn-danger float-right",
+      on: {
+        click: function click($event) {
+          return _vm.removeRelatedProduct(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
+    })])]);
+  }), 0)])]), _vm._v(" "), _c("td", {
+    attrs: {
+      width: "33%"
+    }
+  }, [_c("div", {
     staticClass: "p-3 row"
   }, [_c("div", {
     staticClass: "col-md-10"
@@ -11474,7 +11539,7 @@ var render = function render() {
       expression: "boughtTogether"
     }
   }), _vm._v(" "), _c("small", [_vm._v("Please Enter 3 or more characters to Search\n                                                            Product")])], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md2"
+    staticClass: "col-md-2"
   }, [_c("button", {
     staticClass: "mt-2 btn btn-primary",
     on: {
@@ -11486,8 +11551,18 @@ var render = function render() {
     staticClass: "mt-3"
   }, [_c("ul", _vm._l(_vm.product.bought_togethers, function (item) {
     return _c("li", {
-      key: item.id
-    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + "\n                                                        ")]);
+      key: item.id,
+      staticClass: "mb-1 border-bottom"
+    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + " "), _c("button", {
+      staticClass: "btn btn-sm btn-danger float-right",
+      on: {
+        click: function click($event) {
+          return _vm.removeRelatedProduct(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-trash"
+    })])]);
   }), 0)])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-4"
   }, [_c("table", {
@@ -12475,6 +12550,9 @@ var render = function render() {
       },
       removeTag: function removeTag($event) {
         return _vm.removeTag($event);
+      },
+      removeRelatedProduct: function removeRelatedProduct($event) {
+        return _vm.removeRelatedProduct($event);
       },
       changeStatus: function changeStatus($event) {
         return _vm.changeStatus($event);

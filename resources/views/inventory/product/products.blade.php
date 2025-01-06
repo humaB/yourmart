@@ -31,7 +31,7 @@
     <script src="{{ asset('assets/bundles/summernote/summernote-bs4.js') }}"></script>
     <script src="{{ asset('assets/bundles/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
 
-    <script src="{{ asset('assets/js/productApp.js') }}"></script>
+    <script src="{{ mix('assets/js/productApp.js') }}"></script>
 
     <script>
         $(".productHighlights, .productDescription").summernote({

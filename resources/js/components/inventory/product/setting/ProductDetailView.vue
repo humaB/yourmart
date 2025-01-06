@@ -3,7 +3,7 @@
         <!-- Modal -->
         <div class="modal fade" id="productDetailView" tabindex="-1" role="dialog"
             aria-labelledby="productDetailViewTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document" style="max-width: 90%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLongTitle">Product View</h5>
@@ -418,7 +418,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>
+                                            <td width="33%">
                                                 <div class="p-3 row">
                                                     <div class="col-md-10 ">
                                                         <v-select :options="productOptions" v-model="upsell"
@@ -427,19 +427,19 @@
                                                         <small>Please Enter 3 or more characters to Search
                                                             Product</small>
                                                     </div>
-                                                    <div class="col-md2">
+                                                    <div class="col-md-2">
                                                         <button class="mt-2 btn btn-primary" @click="updateUpSell('upsell')">Add</button>
                                                     </div>
                                                 </div>
                                                 <div>
                                                     <ul>
-                                                        <li v-for="item in product.up_sells" :key="item.id">
-                                                            {{ item.product.title }}
+                                                        <li v-for="item in product.up_sells" :key="item.id" class="mb-1 border-bottom">
+                                                            {{ item.product.title }} <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="33%">
                                                 <div class="p-3 row">
                                                     <div class="col-md-10 ">
                                                         <v-select :options="productOptions" v-model="crossSell"
@@ -448,20 +448,20 @@
                                                         <small>Please Enter 3 or more characters to Search
                                                             Product</small>
                                                     </div>
-                                                    <div class="col-md2">
+                                                    <div class="col-md-2">
                                                         <button class="mt-2 btn btn-primary" @click="updateUpSell('crossSell')">Add</button>
                                                     </div>
                                                 </div>
                                                 <div class="mt-3">
 
                                                     <ul>
-                                                        <li v-for="item in product.cross_sells" :key="item.id">
-                                                            {{ item.product.title }}
+                                                        <li v-for="item in product.cross_sells" :key="item.id" class=" mb-1 border-bottom">
+                                                            {{ item.product.title }} <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td width="33%">
                                                 <div class="p-3 row">
                                                     <div class="col-md-10 ">
                                                         <v-select :options="productOptions" v-model="boughtTogether"
@@ -470,14 +470,14 @@
                                                         <small>Please Enter 3 or more characters to Search
                                                             Product</small>
                                                     </div>
-                                                    <div class="col-md2">
+                                                    <div class="col-md-2">
                                                         <button class="mt-2 btn btn-primary" @click="updateUpSell('boughtTogether')">Add</button>
                                                     </div>
                                                 </div>
                                                 <div class="mt-3">
                                                     <ul>
-                                                        <li v-for="item in product.bought_togethers" :key="item.id">
-                                                            {{ item.product.title }}
+                                                        <li v-for="item in product.bought_togethers" :key="item.id" class=" mb-1 border-bottom">
+                                                            {{ item.product.title }} <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -677,6 +677,9 @@ export default {
                 dataToSend = this.selectedAttributes;
             }
             this.$emit('updateTags', { id : this.product.id , products : dataToSend, type : type})
+        },
+        removeRelatedProduct( product ){
+            this.$emit('removeRelatedProduct' , { id : this.product.id, product : product })
         },
         removeTag( tag ){
             this.$emit('removeTag' , { id : this.product.id, tag : tag })

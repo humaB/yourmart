@@ -875,6 +875,12 @@ class ProductController extends Controller
         return response()->json(['message' => 'Tags Removed Successfully'], 200);
     }
 
+    public function removeRelatedProduct( Request $request ){
+
+        ProductUpsellCrossSell::where('id', $request->product)->delete();
+        return response()->json(['message' => 'Related product Removed Successfully'], 200);
+    }
+
     public function exportExcel(){
         return Excel::download(new ProductExport, 'products.xlsx');
     }
