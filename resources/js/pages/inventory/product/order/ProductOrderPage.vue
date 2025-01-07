@@ -489,6 +489,10 @@
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                 data-toggle="modal" data-target="#ticket"
                                                                 title="View Details"><i class="fa fa-eye"></i></button>
+
+                                                            <button class="btn btn-danger" title="Mark as being return" @click="markasReplacement({ id : item.id })" data-toggle="modal" data-target="#markasBeingReturn" v-if="item.status == 11">
+                                                                <i class="fas fa-undo-alt"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 </tbody>

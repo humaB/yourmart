@@ -13381,7 +13381,23 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fa fa-eye"
-    })])])]);
+    })]), _vm._v(" "), item.status == 11 ? _c("button", {
+      staticClass: "btn btn-danger",
+      attrs: {
+        title: "Mark as being return",
+        "data-toggle": "modal",
+        "data-target": "#markasBeingReturn"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.markasReplacement({
+            id: item.id
+          });
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fas fa-undo-alt"
+    })]) : _vm._e()])]);
   }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("OrderDetailView", {
     attrs: {
       revertLoader: _vm.revertLoader,
