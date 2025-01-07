@@ -276,6 +276,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/tracking',  [ OrderController::class , 'trackingDetails']);
 
             Route::post('/mark-as-replacement',  [ OrderController::class , 'markasReplacement']);
+            Route::post('/mark-as-being-return',  [ OrderController::class , 'markasBeingReturn']);
         });
 
         Route::group(['prefix' => 'settings'], function(){

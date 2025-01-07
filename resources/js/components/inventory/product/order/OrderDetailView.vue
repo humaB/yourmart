@@ -687,6 +687,8 @@
                         </div>
                     </div>
 
+
+
                     <div class="modal-footer d-dlex justify-content-between" v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
                         <div>
                             <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
@@ -745,6 +747,9 @@
                         </button>
                     </div>
                     <div class="modal-footer" v-else>
+                        <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal" data-target="#markasBeingReturn" v-if="role != 'supervisor' && details.status == 11">
+                            <i class="fas fa-undo-alt"></i> Mark as Being Return
+                        </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>
@@ -990,6 +995,9 @@ export default {
         },
         markasReplacement() {
             this.$emit('markasReplacement', { id: this.details.id });
+        },
+        markAsBeingReturn() {
+            this.$emit('markAsBeingReturn', { id: this.details.id });
         },
         revertBack() {
             this.$emit('revert', { id: this.details.id });

@@ -1416,6 +1416,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         id: this.details.id
       });
     },
+    markAsBeingReturn: function markAsBeingReturn() {
+      this.$emit('markAsBeingReturn', {
+        id: this.details.id
+      });
+    },
     revertBack: function revertBack() {
       this.$emit('revert', {
         id: this.details.id
@@ -1513,6 +1518,31 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           }]
         });
       }, 300);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js":
+/*!****************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js ***!
+  \****************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'OrderMarkasBeingReturnConfirmation',
+  props: ['loader', 'orderID'],
+  methods: {
+    markasBeingReturnConfirmation: function markasBeingReturnConfirmation() {
+      this.$emit('markasBeingReturnConfirmation', {
+        id: this.orderID
+      });
     }
   }
 });
@@ -3530,7 +3560,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
@@ -3538,6 +3568,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
 /* harmony import */ var _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/inventory/product/order/TrackingDetailPopup.vue */ "./resources/js/components/inventory/product/order/TrackingDetailPopup.vue");
 /* harmony import */ var _components_inventory_product_order_OrderMarkasReplacementConfirmation_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue */ "./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue");
+/* harmony import */ var _components_inventory_product_order_OrderMarkasBeingReturnConfirmation_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue */ "./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue");
+
 
 
 
@@ -3549,11 +3581,12 @@ __webpack_require__.r(__webpack_exports__);
   name: 'ProductOrderPage',
   components: {
     TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_6__.BulletListLoader,
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_7__.BulletListLoader,
     OrderDetailView: _components_inventory_product_order_OrderDetailView_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     OrderMarkasReplacementConfirmation: _components_inventory_product_order_OrderMarkasReplacementConfirmation_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    TrackingDetailPopup: _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_4__["default"]
+    TrackingDetailPopup: _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    OrderMarkasBeingReturnConfirmation: _components_inventory_product_order_OrderMarkasBeingReturnConfirmation_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   data: function data() {
     return {
@@ -3832,6 +3865,24 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    markasBeingReturnConfirmation: function markasBeingReturnConfirmation() {
+      var _this3 = this;
+      var vm = this;
+      vm.markasReplacementLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/mark-as-being-return", {
+        id: this.orderID
+      }).then(function (response) {
+        vm.markasReplacementLoader = false;
+        $("#markasBeingReturn").modal('hide');
+        _this3.fetchDetail(_this3.orderID);
+        return swal({
+          title: "Success",
+          text: "Marked as Returned Successfully",
+          icon: "success",
+          timer: 3000
+        });
+      });
+    },
     fetchTracking: function fetchTracking(id) {
       var vm = this;
       axios.post(this.api_url + "inventory/products/orders/tracking", {
@@ -3871,11 +3922,11 @@ __webpack_require__.r(__webpack_exports__);
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
     updatePaidAmount: function updatePaidAmount(data) {
-      var _this3 = this;
+      var _this4 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data).then(function (response) {
-        _this3.fetchDetail(data.id);
+        _this4.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -3894,11 +3945,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addDiscount: function addDiscount(data) {
-      var _this4 = this;
+      var _this5 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/add-discount", data).then(function (response) {
-        _this4.fetchDetail(data.id);
+        _this5.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -3917,11 +3968,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updatePackagingAmount: function updatePackagingAmount(data) {
-      var _this5 = this;
+      var _this6 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data).then(function (response) {
-        _this5.fetchDetail(data.id);
+        _this6.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -4122,10 +4173,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteComment: function deleteComment(data) {
-      var _this6 = this;
+      var _this7 = this;
       var vm = this;
       axios.post(this.api_url + "inventory/products/orders/comments/delete", data).then(function (response) {
-        _this6.fetchDetail(data.id);
+        _this7.fetchDetail(data.id);
         return swal({
           title: "Success",
           text: "Comment deleted successfully",
@@ -9246,7 +9297,20 @@ var render = function render() {
     }
   }, [_vm._v("\n                        Close\n                    ")])]) : _c("div", {
     staticClass: "modal-footer"
-  }, [_c("button", {
+  }, [_vm.role != "supervisor" && _vm.details.status == 11 ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#markasBeingReturn"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markAsBeingReturn();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-undo-alt"
+  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -9395,6 +9459,98 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Confirm Packaging Amount")])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36 ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "markasBeingReturn",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "markasReplacementTitle",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markasBeingReturnConfirmation();
+      }
+    }
+  }, [_vm._v("Yes, Mark as Being Return")]) : _c("button", {
+    staticClass: "btn btn-danger btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Yes, Mark as Being Return")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Confirmation")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Are you sure you want to mark this as being return ?")]), _vm._v(" "), _c("code", [_vm._v("This will have no impact on accounting but will stand in receivable's from leopard")])])]);
 }];
 render._withStripped = true;
 
@@ -13260,6 +13416,9 @@ var render = function render() {
       markasReplacement: function markasReplacement($event) {
         return _vm.markasReplacement($event);
       },
+      markAsBeingReturn: function markAsBeingReturn($event) {
+        return _vm.markasReplacement($event);
+      },
       addDiscount: function addDiscount($event) {
         return _vm.addDiscount($event);
       },
@@ -13283,6 +13442,16 @@ var render = function render() {
     on: {
       markasReplacementConfirmation: function markasReplacementConfirmation($event) {
         return _vm.markasReplacementConfirmation($event);
+      }
+    }
+  }), _vm._v(" "), _c("OrderMarkasBeingReturnConfirmation", {
+    attrs: {
+      orderID: _vm.orderID,
+      loader: _vm.markasReplacementLoader
+    },
+    on: {
+      markasBeingReturnConfirmation: function markasBeingReturnConfirmation($event) {
+        return _vm.markasBeingReturnConfirmation($event);
       }
     }
   })], 1);
@@ -39685,6 +39854,45 @@ component.options.__file = "resources/js/components/inventory/product/order/Orde
 
 /***/ }),
 
+/***/ "./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _OrderMarkasBeingReturnConfirmation_vue_vue_type_template_id_73ebba36__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36 */ "./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36");
+/* harmony import */ var _OrderMarkasBeingReturnConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js */ "./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrderMarkasBeingReturnConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrderMarkasBeingReturnConfirmation_vue_vue_type_template_id_73ebba36__WEBPACK_IMPORTED_MODULE_0__.render,
+  _OrderMarkasBeingReturnConfirmation_vue_vue_type_template_id_73ebba36__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue":
 /*!************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue ***!
@@ -40510,6 +40718,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js":
+/*!************************************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js ***!
+  \************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasBeingReturnConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasBeingReturnConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue?vue&type=script&lang=js":
 /*!************************************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue?vue&type=script&lang=js ***!
@@ -40948,6 +41172,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderDetailView_vue_vue_type_template_id_c2132ad6__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderDetailView_vue_vue_type_template_id_c2132ad6__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderDetailView.vue?vue&type=template&id=c2132ad6 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderDetailView.vue?vue&type=template&id=c2132ad6");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36":
+/*!******************************************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36 ***!
+  \******************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasBeingReturnConfirmation_vue_vue_type_template_id_73ebba36__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasBeingReturnConfirmation_vue_vue_type_template_id_73ebba36__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasBeingReturnConfirmation_vue_vue_type_template_id_73ebba36__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue?vue&type=template&id=73ebba36");
 
 
 /***/ }),

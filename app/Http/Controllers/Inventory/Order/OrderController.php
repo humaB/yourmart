@@ -129,6 +129,16 @@ class OrderController extends Controller
         return ['message' => 'Marked as Replacement'];
     }
 
+    public function markasBeingReturn(Request $request)
+    {
+
+        Order::where('id', $request->id)->update([
+            'status' => '9'
+        ]);
+
+        return ['message' => 'Marked as Being Return'];
+    }
+
     public function details(Request $request)
     {
 
