@@ -220,6 +220,7 @@ class OrderController extends Controller
             'items.variation.size',
             'returns.details.product',
             'returns.details.product.variation.images.attachment',
+            'attachments',
 
             //For Daraz Order
             'daraz_labels'

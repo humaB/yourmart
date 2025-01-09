@@ -9437,9 +9437,9 @@ var render = function render() {
     staticClass: "attachment-mail"
   }, [_c("p", [_c("span", [_c("i", {
     staticClass: "fa fa-paperclip"
-  }), _vm._v(" " + _vm._s(1 + (_vm.details.daraz_labels ? _vm.details.daraz_labels.length : 0)) + " attachments — ")])]), _vm._v(" "), _vm.details.payment_proof_attachment ? _c("div", {
+  }), _vm._v(" " + _vm._s(1 + (_vm.details.daraz_labels ? _vm.details.daraz_labels.length : 0) + (_vm.details.attachments ? _vm.details.attachments.length : 0)) + " attachments — ")])]), _vm._v(" "), _vm.details ? _c("div", {
     staticClass: "row"
-  }, [_c("div", {
+  }, [_vm.details.payment_proof_attachment ? _c("div", {
     staticClass: "col-md-2"
   }, [_c("a", {
     attrs: {
@@ -9458,8 +9458,35 @@ var render = function render() {
       href: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment),
       target: "_blank"
     }
-  }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])]), _vm._v(" "), _vm._l(_vm.details.daraz_labels, function (attachment) {
-    return _c("div", {
+  }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.details.attachments, function (item) {
+    return _vm.details.attachments.length > 0 ? _c("div", {
+      key: item.id,
+      staticClass: "col-md-2"
+    }, [_c("a", {
+      attrs: {
+        target: "_blank",
+        href: _vm.setCommentImage(item.attachment)
+      }
+    }, [_vm.isImage(item.attachment) ? _c("img", {
+      staticClass: "img-thumbnail img-responsive",
+      attrs: {
+        alt: "attachment",
+        src: _vm.setCommentImage(item.attachment)
+      }
+    }) : _c("i", {
+      staticClass: "img-thumbnail img-responsive fas fa-file p-5",
+      staticStyle: {
+        color: "red"
+      }
+    })]), _vm._v(" "), _c("a", {
+      staticClass: "name",
+      attrs: {
+        href: _vm.setCommentImage(item.attachment),
+        target: "_blank"
+      }
+    }, [_vm._v(" " + _vm._s(_vm.truncatedAttachmentName(item.attachment)) + "\n                                                ")])]) : _vm._e();
+  }), _vm._v(" "), _vm._l(_vm.details.daraz_labels, function (attachment) {
+    return _vm.details.daraz_labels.length > 0 ? _c("div", {
       key: attachment.id,
       staticClass: "col-md-2"
     }, [_c("a", {
@@ -9479,7 +9506,7 @@ var render = function render() {
         href: "".concat(_vm.web_url, "public/storage/uploads/labels/").concat(attachment.attachment),
         target: "_blank"
       }
-    }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(attachment.attachment)) + "\n                                                ")])]);
+    }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(attachment.attachment)) + "\n                                                ")])]) : _vm._e();
   })], 2) : _vm._e()])])])]), _vm._v(" "), _c("div", {
     staticClass: "card"
   }, [_c("div", {

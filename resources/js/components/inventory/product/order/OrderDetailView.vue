@@ -452,12 +452,11 @@
                                         <div class="attachment-mail">
                                             <p>
                                                 <span>
-                                                    <i class="fa fa-paperclip"></i> {{ 1 + (details.daraz_labels ?
-                                                    details.daraz_labels.length : 0) }} attachments — </span>
+                                                    <i class="fa fa-paperclip"></i> {{  1 + (details.daraz_labels ? details.daraz_labels.length : 0) + (details.attachments ? details.attachments.length : 0) }} attachments — </span>
                                                 <!-- <a href="#">Download all attachments</a> -->
                                             </p>
-                                            <div class="row" v-if="details.payment_proof_attachment">
-                                                <div class="col-md-2">
+                                            <div class="row" v-if="details">
+                                                <div class="col-md-2" v-if="details.payment_proof_attachment">
                                                     <a target="_blank"
                                                         :href="setImage(details.payment_proof_attachment)">
                                                         <img class="img-thumbnail img-responsive" alt="attachment"
@@ -470,9 +469,23 @@
                                                     </a>
                                                 </div>
 
+                                                   <!-- Attachments from comments array -->
+                                                   <div class="col-md-2" v-for="item in details.attachments"  :key="item.id" v-if="details.attachments.length > 0">
+                                                    <a target="_blank" :href="setCommentImage(item.attachment)">
+                                                      <img class="img-thumbnail img-responsive" v-if="isImage(item.attachment)" alt="attachment" :src="setCommentImage(item.attachment)">
+                                                      <i
+                                                          v-else
+                                                          class="img-thumbnail img-responsive fas fa-file p-5"
+                                                          style="color: red;"
+                                                      ></i>
+                                                    </a>
+                                                    <a class="name" :href="setCommentImage(item.attachment)" target="_blank"> {{ truncatedAttachmentName(item.attachment) }}
+                                                    </a>
+                                                  </div>
+
 
                                                 <!-- Attachments from daraz_labels array -->
-                                                <div class="col-md-2" v-for="attachment in details.daraz_labels"
+                                                <div class="col-md-2" v-for="attachment in details.daraz_labels" v-if="details.daraz_labels.length > 0"
                                                     :key="attachment.id">
                                                     <a target="_blank" :href="setImage(attachment.attachment)">
                                                         <img class="img-thumbnail img-responsive"

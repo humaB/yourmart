@@ -97,4 +97,8 @@ class Order extends Model
                     ->where('debit', '!=', '0')
                     ->whereIn('type', ['BP', 'CP']);
     }
+
+    public function attachments(){
+        return $this->hasMany(OrderComment::class)->where('attachment', '!=', '')->select('id', 'order_id','attachment');
+    }
 }
