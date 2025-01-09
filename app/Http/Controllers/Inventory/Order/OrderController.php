@@ -175,6 +175,21 @@ class OrderController extends Controller
             $ledger->accountTransaction(73, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'order', $order->id, $approved = 1);
             //Sale Credit
             $ledger->accountTransaction(74, $head_id, 0, $packingCharges + $otherCharges + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'order', $order->id, $approved = 1);
+
+           //Meezan Bank Debit
+            if($order->paid_amount > 0 ){
+                $document = $ledger->voucherType('bank');
+                //Bank Cash Debit
+                $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'order', $order->id, $approved = 1);
+                //Dropshipper Credit
+                $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'order', $order->id, $approved = 1);
+
+                $dropshipper->increment('total_payable' , $order->paid_amount);
+                $dropshipper->increment('remaining_amount' , $order->paid_amount);
+
+                $shop->increment('total_payable' , $order->paid_amount);
+                $shop->increment('total_remaining' , $order->paid_amount);
+            }
         }
 
         // Create activity log
