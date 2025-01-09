@@ -1957,9 +1957,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(this.api_url + "inventory/products/store/pending-returns").then(function (response) {
         var results = response.data.response;
         vm.pendingReturns = results;
-        setTimeout(function () {
-          vm.dataTable();
-        }, 300);
+        vm.dataTable();
       })["catch"](function (err) {
         return _this.fetchReturnOrders();
       });
@@ -1990,13 +1988,18 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     dataTable: function dataTable() {
-      $('#table').DataTable({
-        dom: "Bfrtip",
-        buttons: [{
-          extend: "excel",
-          title: 'Returns Details'
-        }]
-      });
+      if ($.fn.DataTable.isDataTable("#order_table")) {
+        $('#order_table').DataTable().destroy();
+      }
+      setTimeout(function () {
+        $('#order_table').DataTable({
+          dom: "Bfrtip",
+          buttons: [{
+            extend: "excel",
+            title: 'Returns Details'
+          }]
+        });
+      }, 300);
     }
   }
 });
@@ -4897,7 +4900,7 @@ var render = function render() {
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
-      id: "table"
+      id: "order_table"
     }
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingReturns, function (item, index) {
     return _c("tr", {

@@ -11,7 +11,7 @@
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
-                            <table class="table table-bordered" id="table">
+                            <table class="table table-bordered" id="order_table">
                                 <thead>
                                     <tr>
                                         <th>Sr #</th>
@@ -99,10 +99,7 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
                 .then((response) => {
                     const results = response.data.response;
                     vm.pendingReturns = results;
-
-                    setTimeout(() => {
-                        vm.dataTable()
-                    }, 300);
+                    vm.dataTable()
                 })
                 .catch((err) => this.fetchReturnOrders());
             },
@@ -135,14 +132,19 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
                 });
             },
             dataTable(){
-                $('#table').DataTable({
-                    dom: "Bfrtip",
-                    buttons: [{
-                        extend: "excel",
-                        title: 'Returns Details'
-                        },
-                    ],
-                })
+                if ($.fn.DataTable.isDataTable("#order_table")) {
+                    $('#order_table').DataTable().destroy();
+                }
+                    setTimeout(function () {
+                        $('#order_table').DataTable({
+                        dom: "Bfrtip",
+                        buttons: [{
+                            extend: "excel",
+                            title: 'Returns Details'
+                            },
+                        ],
+                    })
+                }, 300);
             }
         }
     }

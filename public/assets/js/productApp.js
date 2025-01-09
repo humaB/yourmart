@@ -8796,7 +8796,7 @@ var render = function render() {
     staticClass: "attachment-mail"
   }, [_c("p", [_c("span", [_c("i", {
     staticClass: "fa fa-paperclip"
-  }), _vm._v(" " + _vm._s(1 + (_vm.details.daraz_labels ? _vm.details.daraz_labels.length : 0) + (_vm.details.attachments ? _vm.details.attachments.length : 0)) + " attachments — ")])]), _vm._v(" "), _vm.details ? _c("div", {
+  }), _vm._v(" " + _vm._s((_vm.details.daraz_labels ? _vm.details.daraz_labels.length : 0) + (_vm.details.attachments ? _vm.details.attachments.length : 0)) + " attachments — ")])]), _vm._v(" "), _vm.details ? _c("div", {
     staticClass: "row"
   }, [_vm.details.payment_proof_attachment ? _c("div", {
     staticClass: "col-md-2"

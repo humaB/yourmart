@@ -452,7 +452,7 @@
                                         <div class="attachment-mail">
                                             <p>
                                                 <span>
-                                                    <i class="fa fa-paperclip"></i> {{  1 + (details.daraz_labels ? details.daraz_labels.length : 0) + (details.attachments ? details.attachments.length : 0) }} attachments — </span>
+                                                    <i class="fa fa-paperclip"></i> {{ (details.daraz_labels ? details.daraz_labels.length : 0) + (details.attachments ? details.attachments.length : 0) }} attachments — </span>
                                                 <!-- <a href="#">Download all attachments</a> -->
                                             </p>
                                             <div class="row" v-if="details">
