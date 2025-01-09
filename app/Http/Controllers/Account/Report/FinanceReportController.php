@@ -61,7 +61,7 @@ class FinanceReportController extends BaseController
 
     public function generalLedgerReport(Request $request)
     {
-        $heads = AccountHead::where(["group_id"=>$request->level_four])->pluck('id');
+        $heads = AccountHead::where(["group_id" => $request->level_four])->pluck('id');
 
         // to get name
         $level_four = AccountGroup::where("id",$request->level_four)->first();
@@ -72,7 +72,6 @@ class FinanceReportController extends BaseController
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
-        ->orderBy("created_at",'ASC')
         ->sum("debit");
 
         // to get sum of previous credits
@@ -81,7 +80,6 @@ class FinanceReportController extends BaseController
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
-        ->orderBy("created_at",'ASC')
         ->sum("credit");
 
         // to get sum of debits
@@ -93,7 +91,6 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
         ->sum("debit");
 
         // to get sum of credits
@@ -105,7 +102,6 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
         ->sum("credit");
 
         // main record
@@ -118,7 +114,7 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
+        ->orderBy("id")
         ->get();
 
         $general_ledgers = (object)[];
@@ -147,7 +143,6 @@ class FinanceReportController extends BaseController
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
-        ->orderBy("created_at",'ASC')
         ->sum("debit");
 
         // to get sum of previous credits
@@ -156,7 +151,6 @@ class FinanceReportController extends BaseController
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
-        ->orderBy("created_at",'ASC')
         ->sum("credit");
 
         // to get sum of debits
@@ -168,7 +162,6 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
         ->sum("debit");
 
         // to get sum of credits
@@ -180,7 +173,6 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
         ->sum("credit");
 
         // main record
@@ -192,7 +184,7 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
+        ->orderBy("id")
         ->get();
 
         $ledgers = (object)[];
@@ -217,7 +209,6 @@ class FinanceReportController extends BaseController
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
-        ->orderBy("created_at",'ASC')
         ->sum("debit");
 
         // to get sum of previous credits
@@ -225,7 +216,6 @@ class FinanceReportController extends BaseController
         ->when($request->from, function ($q) use ($request) {
             $q->where('created_at', '<', $request->from);
         })
-        ->orderBy("created_at",'ASC')
         ->sum("credit");
 
         // to get sum of debits
@@ -236,7 +226,6 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
         ->sum("debit");
 
         // to get sum of credits
@@ -247,7 +236,6 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
         ->sum("credit");
 
         // main record
@@ -259,7 +247,7 @@ class FinanceReportController extends BaseController
         ->when($request->to, function ($q) use ($request) {
             $q->where('created_at', '<=', $request->to." 23:59:59");
         })
-        ->orderBy("created_at",'ASC')
+        ->orderBy("id")
         ->get();
 
         $journals = (object)[];

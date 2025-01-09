@@ -291,7 +291,6 @@ class LeopardApiHelper
             $head_id = $this->openShopLedger( $shop , $ledger, $group_id);
         }
 
-
         //Book Total Packaging and Courier + 60 RS as charge
         /*
         *   Total Packaging and Courier + 60 Debit to Dropshipper

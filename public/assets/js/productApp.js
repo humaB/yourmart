@@ -3874,7 +3874,7 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         vm.markasReplacementLoader = false;
         $("#markasBeingReturn").modal('hide');
-        _this3.fetchDetail(_this3.orderID);
+        _this3.fetchOrders();
         return swal({
           title: "Success",
           text: "Marked as Returned Successfully",

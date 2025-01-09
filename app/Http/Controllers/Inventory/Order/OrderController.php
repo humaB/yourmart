@@ -15,6 +15,7 @@ use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
 use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Order\OrderLeopardStatus;
+use App\Models\Inventory\Product\Setting\OtherCharge;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreIssuance;
@@ -22,6 +23,7 @@ use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User\DropShipper;
+use App\Models\User\DropShipperShop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -54,7 +56,7 @@ class OrderController extends Controller
         if ($userRole == 'admin' || $userRole == 'supervisor') {
             $dropshipper = null;
 
-            if ($request->droshipper != 0 ) {
+            if ($request->droshipper != 0) {
                 $dropshipper = $request->droshipper;
                 $dropshipper = DropShipper::where('id', $dropshipper)->first();
                 $dropshipper = $dropshipper->user_id ?? 0;
@@ -63,7 +65,7 @@ class OrderController extends Controller
             $orders = Order::with('user', 'shop')
                 ->orderBy('id', 'desc')
                 // Apply status filter when provided
-                ->when( $status != '', function ($query) use ( $status ) {
+                ->when($status != '', function ($query) use ($status) {
                     return $query->where('status', "$status");
                 })
                 // Apply date range filters when provided
@@ -132,8 +134,54 @@ class OrderController extends Controller
     public function markasBeingReturn(Request $request)
     {
 
+        $order = Order::where('id', $request->id)->first();
+        $totalReceivable = $order->courier_service_price + $order->packaging_price;
+        $totalReceived = $order->paid_amount;
+        $difference = $totalReceivable - $totalReceived;
+        if ($totalReceivable > $totalReceived) {
+            $totalPayable = -$difference;
+        } else {
+            $totalPayable = -$difference;
+        }
+
         Order::where('id', $request->id)->update([
-            'status' => '9'
+            'status' => '9',
+            'total_profit' => $totalPayable
+        ]);
+
+        if ($difference != 0) {
+            $ledger = new AccountHeadHelper();
+            $document = $ledger->voucherType('JV');
+
+            $shop = DropShipperShop::where('id', $order->shop_id)->first();
+            $head_id = $shop->account_head_id;
+            $courierCharges = $order->courier_service_price;
+            $packingCharges = $order->packaging_price;
+            $otherCharges = OtherCharge::where('type', 'Return')->where('status', '0')->first();
+            $otherCharges = (float)$otherCharges->amount;
+            $courierExtraCharges = $order->range->our_charges;
+
+            $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
+            //60 are extra charges which will in future be set by admin
+            $dropshipper->decrement('total_payable', $courierCharges + $packingCharges +  $otherCharges);
+            $dropshipper->decrement('remaining_amount', $courierCharges + $packingCharges +  $otherCharges);
+
+            $shop->decrement('total_payable', $courierCharges + $packingCharges +  $otherCharges);
+            $shop->decrement('total_remaining', $courierCharges + $packingCharges +  $otherCharges);
+
+            $document = $ledger->voucherType('JV');
+            $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + $otherCharges, 0, 'Total Receivable Amount', $document, 'JV', 'order', $order->id, $approved = 1);
+            //Leopard Credit
+            $ledger->accountTransaction(73, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'order', $order->id, $approved = 1);
+            //Sale Credit
+            $ledger->accountTransaction(74, $head_id, 0, $packingCharges + $otherCharges + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'order', $order->id, $approved = 1);
+        }
+
+        // Create activity log
+        OrderActivity::create([
+            'order_id'  => $order->id,
+            'activity'  => 'Order marked as being return',
+            'added_by'  => auth()->user()->id,
         ]);
 
         return ['message' => 'Marked as Being Return'];
@@ -237,7 +285,7 @@ class OrderController extends Controller
 
             $totalItemPrice = $singlePrice * $quantity;
 
-           $discount =  ((float)$request->amount / (float)$subTotal) * (float)$totalItemPrice;
+            $discount =  ((float)$request->amount / (float)$subTotal) * (float)$totalItemPrice;
             //Calculate Courier
             $extraCourierCharges = ((float)$totalCourierAmount / (float)$subTotal) * (float)$totalItemPrice;
             //Calculate Packaging
@@ -249,11 +297,11 @@ class OrderController extends Controller
 
             // Update the order item in the database
             $item->update([
-                    'price'          => round($buyPrice),
-                    'sell_price'     => round($sellPrice),
-                    'courier_cost'   => round($extraCourierCharges),
-                    'packaging_cost' => round($extraPackagingCharges),
-                ]);
+                'price'          => round($buyPrice),
+                'sell_price'     => round($sellPrice),
+                'courier_cost'   => round($extraCourierCharges),
+                'packaging_cost' => round($extraPackagingCharges),
+            ]);
         }
 
         return response()->json(['message' => 'Order packaging amount updated successfully.'], 200);
@@ -333,7 +381,7 @@ class OrderController extends Controller
                 ]);
                 foreach ($order->items as $product) {
                     $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                    if( $variation ){
+                    if ($variation) {
                         $variation->decrement('stock', $product->quantity);
 
                         StoreIssuanceDetail::create([
@@ -380,7 +428,7 @@ class OrderController extends Controller
                 ]);
                 foreach ($order->items as $product) {
                     $variation = ProductVariation::where('id', $product->product_variation_id)->first();
-                    if($variation){
+                    if ($variation) {
                         $variation->decrement('stock', $product->quantity);
 
                         StoreIssuanceDetail::create([
@@ -555,7 +603,7 @@ class OrderController extends Controller
     public function deleteComment(Request $request)
     {
         if ($request->comment) {
-          OrderComment::where('id', $request->comment)->delete();
+            OrderComment::where('id', $request->comment)->delete();
         }
 
         return ['message' => 'Comment deleted Successfully'];

@@ -849,7 +849,7 @@ export default {
                     vm.markasReplacementLoader = false;
 
                     $("#markasBeingReturn").modal('hide');
-                    this.fetchDetail(this.orderID);
+                    this.fetchOrders();
                     return swal({
                         title: "Success",
                         text: "Marked as Returned Successfully",
