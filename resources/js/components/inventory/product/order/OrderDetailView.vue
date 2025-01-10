@@ -20,9 +20,9 @@
                                     v-else-if="details.status == 3">Packing/Dispatch</span>
                                 <span class="badge badge-warning text-dark" v-else-if="details.status == 4">Audit</span>
                                 <span class="badge badge-succes" v-else-if="details.status == 5">Dispatched</span>
-                                <span class="badge badge-danger" v-else-if="details.status == 6">Rejection Under
+                                <span class="badge badge-danger" v-else-if="details.status == 6">Cancellation Under
                                     Review</span>
-                                <span class="badge badge-danger" v-else-if="details.status == 7">Rejected</span>
+                                <span class="badge badge-danger" v-else-if="details.status == 7">Cancelled</span>
                             </h5>
 
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -720,7 +720,7 @@
                             </button>
 
                             <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
-                                <i class="fa fa-trash"></i> Reject Order
+                                <i class="fa fa-trash"></i> Cancel Order
                             </button>
                         </div>
 
@@ -750,7 +750,7 @@
                             Forward
                         </button>
                         <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
-                            <i class="fa fa-trash"></i> Reject Order
+                            <i class="fa fa-trash"></i> Cancel Order
                         </button>
                         <button class="btn btn-danger btn-progress disabled" v-else-if="rejectLoader">
                             Forward

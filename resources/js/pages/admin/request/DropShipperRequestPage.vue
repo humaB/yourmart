@@ -168,20 +168,13 @@
             </div>
         </div>
 
-        <DropshipperDetails
-            :details="details"
-            :loader="btnLoader"
-            @decision="decision($event)"
-            @updateDropshipperInformation="updateDropshipperInformation($event)"
-        />
+        <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)"
+            @updateDropshipperInformation="updateDropshipperInformation($event)" />
 
         <DropshipperPayment ref="dropshipperPayment" :orders="orders" :addData="addData" :loader="paymentLoader"
             :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
 
-        <DropshipperPaymentHistory
-            :history="paymentHistorys"
-            :selectedDropshipper="selectedDropshipper"
-        />
+        <DropshipperPaymentHistory :history="paymentHistorys" :selectedDropshipper="selectedDropshipper" />
 
         <!-- Summary PRINT -->
         <form method="POST" :action="public_url + '/requests/dropshippers/pdf'" target="_blank" ref="requestForm">
@@ -248,7 +241,7 @@ export default {
             },
             paymentLoader: false,
             selectedDropshipper: '',
-            paymentHistorys : []
+            paymentHistorys: []
         };
     },
     created() {
@@ -257,28 +250,28 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
-        updateDropshipperInformation( data ){
-                let vm = this;
-                axios
-                    .post(this.api_url + "dropshippers", data)
-                    .then((response) => {
-                        vm.fetchRecord();
+        updateDropshipperInformation(data) {
+            let vm = this;
+            axios
+                .post(this.api_url + "dropshippers", data)
+                .then((response) => {
+                    vm.fetchRecord();
 
-                        return swal({
-                            title: "Success",
-                            text: 'Information updated successfully',
-                            icon: "success",
-                            timer: 3000,
-                        });
-                    }).catch((err) => {
-
-                        return swal({
-                            title: "Error",
-                            text: err.response.data.response[0],
-                            icon: "error",
-                            timer: 3000,
-                        });
+                    return swal({
+                        title: "Success",
+                        text: 'Information updated successfully',
+                        icon: "success",
+                        timer: 3000,
                     });
+                }).catch((err) => {
+
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
         },
         formatPrice(price) {
             var string = parseFloat(price).toString();
@@ -347,7 +340,7 @@ export default {
 
                 });
         },
-        paymentHistory( id ){
+        paymentHistory(id) {
             let vm = this;
             vm.selectedDropshipper = id;
             axios
@@ -436,14 +429,14 @@ export default {
     watch: {
         records(newLedger) {
             if ($.fn.DataTable.isDataTable("#moq_table")) {
-                    $('#moq_table').DataTable().destroy();
-                }
-                    setTimeout(function () {
-                        $('#moq_table').DataTable({
-                        dom: "Bfrtip",
-                        buttons: ["copy", "csv", "excel"],
-                    })
-                }, 300);
+                $('#moq_table').DataTable().destroy();
+            }
+            setTimeout(function () {
+                $('#moq_table').DataTable({
+                    dom: "Bfrtip",
+                    buttons: ["copy", "csv", "excel"],
+                })
+            }, 300);
         },
     },
 }

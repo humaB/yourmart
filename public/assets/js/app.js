@@ -9250,9 +9250,9 @@ var render = function render() {
     staticClass: "badge badge-succes"
   }, [_vm._v("Dispatched")]) : _vm.details.status == 6 ? _c("span", {
     staticClass: "badge badge-danger"
-  }, [_vm._v("Rejection Under\n                                Review")]) : _vm.details.status == 7 ? _c("span", {
+  }, [_vm._v("Cancellation Under\n                                Review")]) : _vm.details.status == 7 ? _c("span", {
     staticClass: "badge badge-danger"
-  }, [_vm._v("Rejected")]) : _vm._e()]), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Cancelled")]) : _vm._e()]), _vm._v(" "), _vm._m(0)])]), _vm._v(" "), _c("div", {
     staticClass: "modal-body row"
   }, [_c("div", {
     staticClass: "col-md-8"
@@ -9917,7 +9917,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Reject Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
@@ -9958,7 +9958,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Reject Order\n                    ")]) : _vm.rejectLoader ? _c("button", {
+  }), _vm._v(" Cancel Order\n                    ")]) : _vm.rejectLoader ? _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
   }, [_vm._v("\n                        Forward\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",

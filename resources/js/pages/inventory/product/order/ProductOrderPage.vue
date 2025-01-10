@@ -212,7 +212,7 @@
                                         <th>Audit Manager</th>
                                         <th>Dispatched</th>
                                         <th>Under Review</th>
-                                        <th>Rejected</th>
+                                        <th>Cancelled</th>
                                         <th>Delivered</th>
                                         <th>Returned</th>
                                         <th>Returned to store</th>
