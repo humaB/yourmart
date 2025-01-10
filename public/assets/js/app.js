@@ -3786,8 +3786,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   watch: {
     records: function records(newLedger) {
+      if ($.fn.DataTable.isDataTable("#moq_table")) {
+        $('#moq_table').DataTable().destroy();
+      }
       setTimeout(function () {
-        $("#moq_table").DataTable({
+        $('#moq_table').DataTable({
           dom: "Bfrtip",
           buttons: ["copy", "csv", "excel"]
         });

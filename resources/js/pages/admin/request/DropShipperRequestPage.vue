@@ -435,12 +435,15 @@ export default {
     },
     watch: {
         records(newLedger) {
-            setTimeout(() => {
-                $("#moq_table").DataTable({
-                    dom: "Bfrtip",
-                    buttons: ["copy", "csv", "excel"],
-                });
-            }, 300);
+            if ($.fn.DataTable.isDataTable("#moq_table")) {
+                    $('#moq_table').DataTable().destroy();
+                }
+                    setTimeout(function () {
+                        $('#moq_table').DataTable({
+                        dom: "Bfrtip",
+                        buttons: ["copy", "csv", "excel"],
+                    })
+                }, 300);
         },
     },
 }
