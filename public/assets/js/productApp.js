@@ -3676,7 +3676,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.orders.reduce(function (totals, order) {
         var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-        if (orderDate === today && order.status <= 5) {
+        if (orderDate === today && order.status !== 6 && order.status !== 7) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3699,7 +3699,7 @@ __webpack_require__.r(__webpack_exports__);
     // Calculate overall summary
     overallSummary: function overallSummary() {
       return this.orders.reduce(function (totals, order) {
-        if (order.status <= 5) {
+        if (order.status !== 6 && order.status !== 7) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3725,7 +3725,7 @@ __webpack_require__.r(__webpack_exports__);
 
       return this.orders.reduce(function (totals, order) {
         var orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-        if (orderDate === today && order.type === 'Normal' && order.status <= 5) {
+        if (orderDate === today && order.type === 'Normal' && order.status !== 6 && order.status !== 7) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3748,7 +3748,7 @@ __webpack_require__.r(__webpack_exports__);
     // Calculate summary for "Normal" type
     normalSummary: function normalSummary() {
       return this.orders.reduce(function (totals, order) {
-        if (order.type === 'Normal' && order.status <= 5) {
+        if (order.type === 'Normal' && order.status !== 6 && order.status !== 7) {
           totals.totalOrders++;
           totals.productPrice += parseFloat(order.total_bill || 0);
           totals.courier += parseFloat(order.courier_service_price || 0);
@@ -3945,7 +3945,6 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     applyFilter: function applyFilter() {
-      this.clearDataTable();
       this.fetchOrders();
     },
     resetFilter: function resetFilter() {
@@ -3960,7 +3959,6 @@ __webpack_require__.r(__webpack_exports__);
         from: '',
         to: ''
       };
-      this.clearDataTable();
       this.fetchOrders();
     },
     getPercentage: function getPercentage(statusCount) {
@@ -4044,9 +4042,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     fetchOrders: function fetchOrders() {
+      var _this8 = this;
       var vm = this;
       vm.loader = true;
-      this.clearDataTable();
+      if ($.fn.DataTable.isDataTable("#moq_table")) {
+        this.clearDataTable();
+      }
       axios.get(this.api_url + "inventory/products/orders", {
         params: {
           droshipper: vm.filter.dropshipper.code,
@@ -4125,6 +4126,9 @@ __webpack_require__.r(__webpack_exports__);
               break;
           }
         });
+        setTimeout(function () {
+          _this8.dataTable();
+        }, 300);
         vm.loader = false;
       });
     },
@@ -4226,10 +4230,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteComment: function deleteComment(data) {
-      var _this8 = this;
+      var _this9 = this;
       var vm = this;
       axios.post(this.api_url + "inventory/products/orders/comments/delete", data).then(function (response) {
-        _this8.fetchDetail(data.id);
+        _this9.fetchDetail(data.id);
         return swal({
           title: "Success",
           text: "Comment deleted successfully",
@@ -4246,22 +4250,13 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     dataTable: function dataTable() {
-      $("#moq_table").DataTable();
+      $("#moq_table").DataTable({
+        dom: "Bfrtip",
+        buttons: ["copy", "csv", "excel"]
+      });
     },
     clearDataTable: function clearDataTable() {
-      var table = $("#moq_table").DataTable();
-      table.destroy();
-    }
-  },
-  watch: {
-    orders: function orders(newLedger) {
-      this.clearDataTable();
-      setTimeout(function () {
-        $("#moq_table").DataTable({
-          dom: "Bfrtip",
-          buttons: ["copy", "csv", "excel"]
-        });
-      }, 300);
+      $("#moq_table").DataTable().clear().destroy();
     }
   }
 });
@@ -13542,9 +13537,9 @@ var render = function render() {
       staticClass: "badge badge-succes"
     }, [_vm._v("Dispatched")]) : item.status == 6 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Rejection Under\n                                                            Review")]) : item.status == 7 ? _c("span", {
+    }, [_vm._v("Cancellation Under\n                                                            Review")]) : item.status == 7 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Rejected")]) : item.status == 8 ? _c("span", {
+    }, [_vm._v("Cancelled")]) : item.status == 8 ? _c("span", {
       staticClass: "badge badge-success"
     }, [_vm._v("Delivered")]) : item.status == 9 ? _c("span", {
       staticClass: "badge badge-danger"
@@ -13675,7 +13670,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "card-header"
-  }, [_c("h4", [_vm._v("Order Statistics "), _c("code", [_vm._v("( In process )")])])]);
+  }, [_c("h4", [_vm._v("Order Statistics "), _c("code", [_vm._v("( Processed Orders)")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

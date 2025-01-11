@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Order Statistics <code>( In process )</code></h4>
+                        <h4>Order Statistics <code>( Processed Orders)</code></h4>
                     </div>
                     <div class="card-body">
                         <ul class="nav nav-pills" id="myTab3" role="tablist">
@@ -42,7 +42,7 @@
                                             </tr>
                                             <tr>
                                                 <th>Today’s</th>
-                                                <td>{{formatPrice(todaySummary.totalOrders) }}</td>
+                                                <td>{{ formatPrice(todaySummary.totalOrders) }}</td>
                                                 <td>{{ formatPrice(todaySummary.productPrice - ( todaySummary.courier + todaySummary.packaging )) }}</td>
                                                 <td>{{ formatPrice(todaySummary.courier) }}</td>
                                                 <td>{{ formatPrice(todaySummary.packaging) }}</td>
@@ -471,10 +471,10 @@
                                                             <span class="badge badge-succes"
                                                                 v-else-if="item.status == 5">Dispatched</span>
                                                             <span class="badge badge-danger"
-                                                                v-else-if="item.status == 6">Rejection Under
+                                                                v-else-if="item.status == 6">Cancellation Under
                                                                 Review</span>
                                                             <span class="badge badge-danger"
-                                                                v-else-if="item.status == 7">Rejected</span>
+                                                                v-else-if="item.status == 7">Cancelled</span>
                                                             <span class="badge badge-success"
                                                                 v-else-if="item.status == 8">Delivered</span>
                                                             <span class="badge badge-danger"
@@ -618,7 +618,7 @@ export default {
             return this.orders.reduce((totals, order) => {
                 let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
 
-                if (orderDate === today && order.status <= 5) {
+                if (orderDate === today && (order.status !== 6 && order.status !== 7)) {
                     totals.totalOrders++;
                     totals.productPrice += parseFloat(order.total_bill || 0);
                     totals.courier += parseFloat(order.courier_service_price || 0);
@@ -643,7 +643,7 @@ export default {
         // Calculate overall summary
         overallSummary() {
             return this.orders.reduce((totals, order) => {
-                if (order.status <= 5) {
+                if ((order.status !== 6 && order.status !== 7)) {
                     totals.totalOrders++;
                     totals.productPrice += parseFloat(order.total_bill || 0);
                     totals.courier += parseFloat(order.courier_service_price || 0);
@@ -672,7 +672,7 @@ export default {
         return this.orders.reduce((totals, order) => {
             let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
 
-            if (orderDate === today && order.type === 'Normal' && order.status <= 5) {
+            if (orderDate === today && order.type === 'Normal' && (order.status !== 6 && order.status !== 7)) {
 
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
@@ -696,7 +696,7 @@ export default {
           // Calculate summary for "Normal" type
     normalSummary() {
         return this.orders.reduce((totals, order) => {
-            if (order.type === 'Normal' && order.status <= 5) {
+            if (order.type === 'Normal' && (order.status !== 6 && order.status !== 7)) {
                 totals.totalOrders++;
                 totals.productPrice += parseFloat(order.total_bill || 0);
                 totals.courier += parseFloat(order.courier_service_price || 0);
@@ -896,7 +896,6 @@ export default {
                 });
         },
         applyFilter() {
-            this.clearDataTable();
             this.fetchOrders();
         },
         resetFilter() {
@@ -909,7 +908,6 @@ export default {
                 to: ''
             }
 
-            this.clearDataTable();
             this.fetchOrders();
         },
         getPercentage(statusCount) {
@@ -1007,7 +1005,9 @@ export default {
             let vm = this;
 
             vm.loader = true;
-            this.clearDataTable();
+            if ($.fn.DataTable.isDataTable("#moq_table")) {
+                this.clearDataTable();
+            }
 
             axios
                 .get(this.api_url + "inventory/products/orders", {
@@ -1079,6 +1079,9 @@ export default {
                         }
                     });
 
+                    setTimeout(() => {
+                        this.dataTable();
+                    }, 300);
                     vm.loader = false;
                 });
         },
@@ -1222,22 +1225,13 @@ export default {
                 });
         },
         dataTable() {
-            $("#moq_table").DataTable();
+            $("#moq_table").DataTable({
+                dom: "Bfrtip",
+                buttons: ["copy", "csv", "excel"],
+            });
         },
         clearDataTable() {
-            const table = $("#moq_table").DataTable();
-            table.destroy();
-        },
-    },
-    watch: {
-        orders(newLedger) {
-            this.clearDataTable();
-            setTimeout(() => {
-                $("#moq_table").DataTable({
-                    dom: "Bfrtip",
-                    buttons: ["copy", "csv", "excel"],
-                });
-            }, 300);
+            $("#moq_table").DataTable().clear().destroy();
         },
     },
 }
