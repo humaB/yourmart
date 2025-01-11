@@ -515,6 +515,7 @@
             @fetchDropshipperDetails="fetchDropshipperDetails($event)" @updatePaidAmount="updatePaidAmount($event)"
             @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)"
             @markAsBeingReturn="markasReplacement($event)"
+            @markAsDelivered="markasReplacement($event)"
             @addDiscount="addDiscount($event)"
             @deleteComment="deleteComment($event)"
         />
@@ -532,6 +533,12 @@
             @markasBeingReturnConfirmation="markasBeingReturnConfirmation($event)"
         />
 
+        <OrderMarkasDeliveredConfirmation
+            :orderID="orderID"
+            :loader="markasReplacementLoader"
+            @markasDeliveredConfirmation="markasDeliveredConfirmation($event)"
+        />
+
     </div>
 </template>
 <script>
@@ -544,6 +551,7 @@ import DropshipperDetails from "../../../../components/admin/request/Dropshipper
 import TrackingDetailPopup from "../../../../components/inventory/product/order/TrackingDetailPopup.vue";
 import OrderMarkasReplacementConfirmation from "../../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue";
 import OrderMarkasBeingReturnConfirmation from "../../../../components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue";
+import OrderMarkasDeliveredConfirmation from "../../../../components/inventory/product/order/OrderMarkasDeliveredConfirmation.vue";
 
 export default {
     name: 'ProductOrderPage',
@@ -554,7 +562,8 @@ export default {
         DropshipperDetails,
         OrderMarkasReplacementConfirmation,
         TrackingDetailPopup,
-        OrderMarkasBeingReturnConfirmation
+        OrderMarkasBeingReturnConfirmation,
+        OrderMarkasDeliveredConfirmation
     },
     data() {
         return {
@@ -850,9 +859,29 @@ export default {
 
                     $("#markasBeingReturn").modal('hide');
                     this.fetchOrders();
+                    this.fetchDetail(this.orderID);
                     return swal({
                         title: "Success",
                         text: "Marked as Returned Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
+        markasDeliveredConfirmation() {
+            let vm = this;
+            vm.markasReplacementLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/mark-as-delivered", { id: this.orderID })
+                .then((response) => {
+                    vm.markasReplacementLoader = false;
+
+                    $("#markasDelivered").modal('hide');
+                    this.fetchOrders();
+                    this.fetchDetail(this.orderID);
+                    return swal({
+                        title: "Success",
+                        text: "Marked as Delivered Successfully",
                         icon: "success",
                         timer: 3000,
                     });

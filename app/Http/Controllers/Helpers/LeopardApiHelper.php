@@ -220,7 +220,7 @@ class LeopardApiHelper
         }
     }
 
-    private function parcelDelivered( $order ){
+    public function parcelDelivered( $order ){
 
         //Customer Selling Price - ( (Product Price + courier + packaging) - Advance )
         //3500 - ( ( 1000 + 200 + 40 ) - 500)
@@ -228,9 +228,9 @@ class LeopardApiHelper
         $packingCharges = $order->packaging_price;
         $advance         = $order->paid_amount;
         $productPrice    = (float)$order->total_bill - ( (float)$courierCharges + (float)$packingCharges );
-        $sellingPrice    = $order->selling_price - (float)$order->total_bill + $advance;
+
         $courierExtraCharges = $order->range->our_charges;
-        $payableAmount = (float)$order->total_bill - $advance;
+        $payableAmount = (float)$order->total_bill - $advance; //Amount Yourmart must receive
         $profit      = ((float)$order->selling_price + $advance) - (float)$order->total_bill;
 
 
@@ -246,11 +246,11 @@ class LeopardApiHelper
                 'total_profit'  => $profit
             ]);
 
-            $dropshipper->increment('total_payable' , $sellingPrice);
-            $dropshipper->increment('remaining_amount' , $sellingPrice);
+            $dropshipper->increment('total_payable' , $profit);
+            $dropshipper->increment('remaining_amount' , $profit);
 
-            $shop->increment('total_payable' , $sellingPrice);
-            $shop->increment('total_remaining' , $sellingPrice);
+            $shop->increment('total_payable' , $profit);
+            $shop->increment('total_remaining' , $profit);
         }
     }
 

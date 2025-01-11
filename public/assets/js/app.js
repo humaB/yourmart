@@ -1615,6 +1615,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         id: this.details.id
       });
     },
+    markAsDelivered: function markAsDelivered() {
+      this.$emit('markAsDelivered', {
+        id: this.details.id
+      });
+    },
     revertBack: function revertBack() {
       this.$emit('revert', {
         id: this.details.id
@@ -9981,7 +9986,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _vm.role != "supervisor" && _vm.details.status == 11 ? _c("button", {
+    staticClass: "btn btn-success",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#markasDelivered"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markAsDelivered();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-check"
+  }), _vm._v(" Mark as Delivered\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",

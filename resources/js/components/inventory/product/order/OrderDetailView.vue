@@ -763,6 +763,9 @@
                         <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal" data-target="#markasBeingReturn" v-if="role != 'supervisor' && details.status == 11">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return
                         </button>
+                        <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal" data-target="#markasDelivered" v-if="role != 'supervisor' && details.status == 11">
+                            <i class="fas fa-check"></i> Mark as Delivered
+                        </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>
@@ -1011,6 +1014,9 @@ export default {
         },
         markAsBeingReturn() {
             this.$emit('markAsBeingReturn', { id: this.details.id });
+        },
+        markAsDelivered() {
+            this.$emit('markAsDelivered', { id: this.details.id });
         },
         revertBack() {
             this.$emit('revert', { id: this.details.id });

@@ -133,7 +133,6 @@ class OrderController extends Controller
 
     public function markasBeingReturn(Request $request)
     {
-
         $order = Order::where('id', $request->id)->first();
         $totalReceivable = $order->courier_service_price + $order->packaging_price;
         $totalReceived = $order->paid_amount;
@@ -200,6 +199,29 @@ class OrderController extends Controller
         ]);
 
         return ['message' => 'Marked as Being Return'];
+    }
+
+    public function markasDelivered(Request $request){
+
+        $order = Order::where('id', $request->id)->first();
+        if( $order->status != '8'){
+            $leopard = new LeopardApiHelper();
+
+            $leopard->parcelDelivered($order);
+
+            Order::where('id', $request->id)->update([
+                'status' => '8'
+            ]);
+
+            // Create activity log
+            OrderActivity::create([
+                'order_id'  => $order->id,
+                'activity'  => 'Order marked as delivered',
+                'added_by'  => auth()->user()->id,
+            ]);
+        }
+
+        return ['message' => 'Marked as Delivered'];
     }
 
     public function details(Request $request)
