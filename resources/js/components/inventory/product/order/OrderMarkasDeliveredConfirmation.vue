@@ -16,8 +16,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" @click="markasDeliveredConfirmation()" v-if="!loader">Yes, Mark as Being Return</button>
-                <button type="button" class="btn btn-danger btn-progress disabled" v-else>Yes, Mark as Being Return</button>
+                <button type="button" class="btn btn-success" @click="markasDeliveredConfirmation()" v-if="!loader">Yes, Mark as Delivered</button>
+                <button type="button" class="btn btn-success btn-progress disabled" v-else>Yes, Mark as Being Return</button>
 
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>

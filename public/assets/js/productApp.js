@@ -9679,7 +9679,7 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.loader ? _c("button", {
-    staticClass: "btn btn-danger",
+    staticClass: "btn btn-success",
     attrs: {
       type: "button"
     },
@@ -9688,8 +9688,8 @@ var render = function render() {
         return _vm.markasDeliveredConfirmation();
       }
     }
-  }, [_vm._v("Yes, Mark as Being Return")]) : _c("button", {
-    staticClass: "btn btn-danger btn-progress disabled",
+  }, [_vm._v("Yes, Mark as Delivered")]) : _c("button", {
+    staticClass: "btn btn-success btn-progress disabled",
     attrs: {
       type: "button"
     }
