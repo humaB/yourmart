@@ -28,7 +28,7 @@ class PageController extends Controller
                 if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
                    $imageIndex =  'image-' . ($image['index'] + 1);
                     // Check if an image record exists, update or create new
-                   $homePageSetting = HomePageSetting::where('type', $imageIndex)->first();
+                   return $homePageSetting = HomePageSetting::where('type', $imageIndex)->first();
 
                     if ($homePageSetting) {
                         return $homePageSetting;
