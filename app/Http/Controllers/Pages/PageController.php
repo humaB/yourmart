@@ -41,7 +41,7 @@ class PageController extends Controller
                         if (!empty($image['link']) && $image['link'] != 'undefined') {
                             $updateData['attachment'] = $this->homeBanner($image['link']); // Attachment as image
                         }
-
+                        return $imageIndex;
                         // Perform the update
                         return HomePageSetting::where('type', $imageIndex)->first();
                         HomePageSetting::where('type', $imageIndex)->update($updateData);
