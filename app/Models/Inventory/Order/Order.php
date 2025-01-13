@@ -35,6 +35,7 @@ class Order extends Model
         'total_bill',
         'paid_amount',
         'remaining_amount',
+        'discount',
         'payment_method',
         'payment_proof_attachment',
         'selling_price',

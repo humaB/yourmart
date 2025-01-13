@@ -1568,11 +1568,17 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     this.fetchDropshippers();
   },
   computed: {
-    total: function total() {
+    subTotal: function subTotal() {
       var _this$packingAmount, _this$packingQuantity;
       return this.products.reduce(function (acc, product) {
         return acc + parseFloat(product.total);
-      }, 0) + parseFloat((_this$packingAmount = this.packingAmount) !== null && _this$packingAmount !== void 0 ? _this$packingAmount : 0) * parseFloat((_this$packingQuantity = this.packingQuantity) !== null && _this$packingQuantity !== void 0 ? _this$packingQuantity : 0) - parseFloat(this.discount);
+      }, 0) + parseFloat((_this$packingAmount = this.packingAmount) !== null && _this$packingAmount !== void 0 ? _this$packingAmount : 0) * parseFloat((_this$packingQuantity = this.packingQuantity) !== null && _this$packingQuantity !== void 0 ? _this$packingQuantity : 0);
+    },
+    total: function total() {
+      var _this$packingAmount2, _this$packingQuantity2;
+      return this.products.reduce(function (acc, product) {
+        return acc + parseFloat(product.total);
+      }, 0) + parseFloat((_this$packingAmount2 = this.packingAmount) !== null && _this$packingAmount2 !== void 0 ? _this$packingAmount2 : 0) * parseFloat((_this$packingQuantity2 = this.packingQuantity) !== null && _this$packingQuantity2 !== void 0 ? _this$packingQuantity2 : 0) - parseFloat(this.discount);
     },
     totalQuantity: function totalQuantity() {
       return this.products.reduce(function (acc, product) {
@@ -4552,6 +4558,12 @@ var render = function render() {
     staticClass: "row mt-3"
   }, [_c("div", {
     staticClass: "col-6"
+  }, [_vm._v("Subtotal:")]), _vm._v(" "), _c("div", {
+    staticClass: "col-6"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.subTotal)))])]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-3"
+  }, [_c("div", {
+    staticClass: "col-6"
   }, [_vm._v("Discount:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6"
   }, [_c("input", {
@@ -4578,7 +4590,7 @@ var render = function render() {
     staticClass: "row mt-3"
   }, [_c("div", {
     staticClass: "col-6"
-  }, [_vm._v("Subtotal:")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total Bill:")]), _vm._v(" "), _c("div", {
     staticClass: "col-6"
   }, [_vm._v(_vm._s(_vm.formatPrice(_vm.total)))])]), _vm._v(" "), _c("hr"), _vm._v(" "), _vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "row"

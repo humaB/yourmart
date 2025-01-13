@@ -309,6 +309,7 @@ class OrderController extends Controller
         $order->update([
             'total_bill'       => $newTotal,
             'remaining_amount' => $newTotal - $paidAmount,
+            'discount'         => $request->amount
         ]);
 
         $totalCourierAmount = $order->courier_service_price;
@@ -339,6 +340,7 @@ class OrderController extends Controller
                 'sell_price'     => round($sellPrice),
                 'courier_cost'   => round($extraCourierCharges),
                 'packaging_cost' => round($extraPackagingCharges),
+                'discount'       => round($discount / $quantity),
             ]);
         }
 

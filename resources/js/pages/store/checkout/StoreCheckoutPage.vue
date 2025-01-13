@@ -113,11 +113,15 @@
 
                                                         </div>
                                                         <div class="row mt-3">
+                                                            <div class="col-6">Subtotal:</div>
+                                                            <div class="col-6">{{ formatPrice(subTotal) }}</div>
+                                                        </div>
+                                                        <div class="row mt-3">
                                                             <div class="col-6">Discount:</div>
                                                             <div class="col-6"><input type="text" v-model="discount" class="form-control"></div>
                                                         </div>
                                                         <div class="row mt-3">
-                                                            <div class="col-6">Subtotal:</div>
+                                                            <div class="col-6">Total Bill:</div>
                                                             <div class="col-6">{{ formatPrice(total) }}</div>
                                                         </div>
                                                         <hr />
@@ -233,6 +237,9 @@ export default {
         this.fetchDropshippers();
     },
     computed: {
+        subTotal() {
+            return this.products.reduce((acc, product) => acc + parseFloat(product.total), 0) + ( parseFloat(this.packingAmount ?? 0)  * parseFloat(this.packingQuantity ?? 0) );
+        },
         total() {
             return this.products.reduce((acc, product) => acc + parseFloat(product.total), 0) + ( parseFloat(this.packingAmount ?? 0)  * parseFloat(this.packingQuantity ?? 0) ) - parseFloat(this.discount);
         },

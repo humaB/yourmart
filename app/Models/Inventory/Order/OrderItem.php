@@ -18,6 +18,7 @@ class OrderItem extends Model
         'sell_price',
         'packaging_cost',
         'courier_cost',
+        'discount',
         'belongs_to'
     ];
 

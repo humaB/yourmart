@@ -97,6 +97,7 @@ class StoreCheckOutController extends Controller
                 'total_bill'         => $request->total, // Save the calculated total bill
                 'paid_amount'        => $request->total,
                 'remaining_amount'   => 0,
+                'discount'           => $request->discount,
                 'payment_method'     => ucwords('COD'), // COD || Advance Payment || Partial Payment
                 'payment_proof_attachment' =>  $request->file('paymentAttachment') ? $this->attachment($request->file('paymentAttachment')) : null,
                 'selling_price'            => 0,
@@ -128,6 +129,7 @@ class StoreCheckOutController extends Controller
                         'quantity'             => $item['quantity'],
                         'sell_price'           => round( ((float)$item['quantity'] * (float)$singlePrice) + $packagingCost),
                         'packaging_cost'       => $packagingCost,
+                        'discount'             => round($discount / $quantity),
                         'belongs_to'           => auth()->user()->id ?? 0
                     ]);
 
@@ -308,11 +310,12 @@ class StoreCheckOutController extends Controller
         foreach ($order->items as $item) {
             $title = $item->variation->product->title;
             $quantity = $item->quantity;
-            $price = number_format($item->price);
+            $price = number_format($item->price + $item->discount);
             $courier = number_format($item->courier_cost);
             $packaging = number_format($item->packaging_cost);
             $subTotal = (float)$item->price * (float)$item->quantity;
-            $total_cost = number_format($subTotal + $item->packaging_cost + $item->courier_cost);
+            $discount = (float)$item->discount * (float)$item->quantity;
+            $total_cost = number_format($subTotal + $item->packaging_cost + $item->courier_cost + $discount);
             $image = url('/public/storage/uploads/inventory/products/media/'.$item->variation->product->hero_image);
 
             $html .= '
@@ -340,7 +343,7 @@ class StoreCheckOutController extends Controller
 
         $courierCharges = $order->courier_service_price;
         $packagingCharges = $order->packaging_price;
-        $subTotal = $order->total_bill - ( $courierCharges + $packagingCharges );
+        $subTotal = $order->total_bill - ( $courierCharges + $packagingCharges ) + $order->discount;
 
         $pdf->SetFont('dejavusans', 'B', 10);
         $pdf->Cell(110, 8, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
@@ -356,10 +359,15 @@ class StoreCheckOutController extends Controller
 
         $pdf->SetFont('dejavusans', 'B', 10);
         $pdf->Cell(110, 8, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
-        $pdf->Cell(40, 8, 'Packaging Charges:', 'B', 0, 'R', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(40, 8, 'Packaging Charges:', '', 0, 'R', 0, '', 0, false, 'T', 'M');
         $pdf->SetFont('dejavusans', '', 10);
-        $pdf->Cell(40, 8, number_format($packagingCharges), 'B', 1, 'R', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(40, 8, number_format($packagingCharges), '', 1, 'R', 0, '', 0, false, 'T', 'M');
 
+        $pdf->SetFont('dejavusans', 'B', 10);
+        $pdf->Cell(110, 8, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
+        $pdf->Cell(40, 8, 'Discount:', 'B', 0, 'R', 0, '', 0, false, 'T', 'M');
+        $pdf->SetFont('dejavusans', '', 10);
+        $pdf->Cell(40, 8, number_format($order->discount), 'B', 1, 'R', 0, '', 0, false, 'T', 'M');
 
         $pdf->SetFont('dejavusans', 'B', 10);
         $pdf->Cell(110, 8, '', 0, 0, 'R', 0, '', 0, false, 'T', 'M');
