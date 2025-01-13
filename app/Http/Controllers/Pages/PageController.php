@@ -25,12 +25,12 @@ class PageController extends Controller
 
         if ($request->has('image') && !empty($request->image)) {
             foreach ($request->image as $image) {
-                if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
+                if ((isset($image['link']) && $image['link'] != 'undefined') && isset($image['button_link']) && !empty($image['button_link'])) {
+
                     // Check if an image record exists, update or create new
                     $homePageSetting = HomePageSetting::where('type', 'image-' . $image['index'])->first();
 
                     if ($homePageSetting) {
-
                         $updateData = [
                             'position' => $image['button_link'], // Button link
                             'label' => $image['button_label'],   // Button label
