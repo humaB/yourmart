@@ -26,13 +26,11 @@ class PageController extends Controller
         if ($request->has('image') && !empty($request->image)) {
             foreach ($request->image as $image) {
                 if (isset($image['link']) && isset($image['button_link']) && !empty($image['button_link'])) {
-                    return $image;
-                   return $imageIndex =  'image-' . ($image['index'] + 1);
+                    $imageIndex =  'image-' . ($image['index']);
                     // Check if an image record exists, update or create new
-                   return $homePageSetting = HomePageSetting::where('type', $imageIndex)->first();
+                    $homePageSetting = HomePageSetting::where('type', $imageIndex)->first();
 
                     if ($homePageSetting) {
-                        return $homePageSetting;
                         $updateData = [
                             'position' => $image['button_link'], // Button link
                             'label' => $image['button_label'],   // Button label
@@ -43,12 +41,11 @@ class PageController extends Controller
                         if (!empty($image['link']) && $image['link'] != 'undefined') {
                             $updateData['attachment'] = $this->homeBanner($image['link']); // Attachment as image
                         }
-                        return $imageIndex;
+
                         // Perform the update
-                        return HomePageSetting::where('type', $imageIndex)->first();
-                        HomePageSetting::where('type', $imageIndex)->update($updateData);
+                        $homePageSetting->update($updateData);
                     } else {
-                        $imageIndex =  'image-' . ($image['index'] + 1);
+                        $imageIndex =  'image-' . ($image['index']);
                         // Create new image setting
                         HomePageSetting::create([
                             'type' =>      $imageIndex,
