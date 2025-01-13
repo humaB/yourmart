@@ -39,6 +39,7 @@ class PageController extends Controller
 
                         // Only update 'attachment' if 'link' is provided
                         if (!empty($image['link']) && $image['link'] != 'undefined') {
+                            return "sad";
                             $updateData['attachment'] = $this->homeBanner($image['link']); // Attachment as image
                         }
 
