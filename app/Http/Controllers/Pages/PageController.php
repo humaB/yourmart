@@ -42,6 +42,7 @@ class PageController extends Controller
                             $updateData['attachment'] = $this->homeBanner($image['link']); // Attachment as image
                         }
 
+                        return $updateData;
                         // Perform the update
                         $homePageSetting->update($updateData);
                     } else {
