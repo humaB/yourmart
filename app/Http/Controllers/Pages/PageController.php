@@ -31,6 +31,7 @@ class PageController extends Controller
                    $homePageSetting = HomePageSetting::where('type', $imageIndex)->first();
 
                     if ($homePageSetting) {
+                        return $homePageSetting;
                         $updateData = [
                             'position' => $image['button_link'], // Button link
                             'label' => $image['button_label'],   // Button label
