@@ -203,6 +203,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
         Route::post('/tags/changed', [ ProductController::class , 'updateTags']);
         Route::post('/status/changed', [ ProductController::class , 'updateStatus']);
         Route::post('/hero-image/changed', [ ProductController::class , 'updateHeroImage']);
+        Route::post('/video/changed', [ ProductController::class , 'updateVideo']);
         Route::post('/color-images/changed', [ ProductController::class , 'updateColorImages']);
 
         Route::post('/tags/removes', [ ProductController::class , 'removeTag']);

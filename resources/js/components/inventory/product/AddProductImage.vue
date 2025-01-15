@@ -52,7 +52,7 @@
                                         <div class="col-3 col-sm-2" v-for="(image, index) in filteredImages" :key="index">
                                             <label class="imagecheck mb-4">
                                                 <input
-                                                    v-if="selectedColor != 'Hero'"
+                                                    v-if="selectedColor != 'Hero' && selectedColor != 'Video'"
                                                     type="checkbox"
                                                     :value="image"
                                                     class="imagecheck-input"
@@ -68,11 +68,19 @@
                                                     @change="setSelectedImage(image)"
                                                 />
                                                 <span class="imagecheck-figure">
-                                                    <img
+                                                    <video v-if="isVideo(image.attachment)"
+                                                    :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
+                                                    controls
+                                                    class="media-video"
+                                                >
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                                    <img v-else
                                                         :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
                                                         :alt="image.alt"
                                                         class="imagecheck-image"
                                                     />
+
                                                 </span>
                                             </label>
                                         </div>
@@ -243,6 +251,16 @@ export default {
                 console.error('Error fetching image size:', error);
             }
         },
+        isVideo(fileName) {
+            // Define video file extensions
+            const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'mkv', 'flv', 'webm'];
+
+            // Extract the file extension
+            const extension = fileName.split('.').pop().toLowerCase();
+
+            // Check if the extension matches any video extension
+            return videoExtensions.includes(extension);
+        },
         formatBytes(bytes) {
             const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
             if (bytes === 0) return '0 Bytes';
@@ -256,7 +274,12 @@ export default {
                 } else {
                     this.$emit('addSelectedHeroImages', this.heroImage);
                 }
-            } else {
+            }else if (this.selectedColor == 'Video') {
+                if (this.type && this.type == 'edit') {
+                    this.$emit('changeSelectedVideo', this.heroImage);
+                }
+            }
+             else {
                 if (this.type && this.type == 'colorEdit') {
                     this.$emit('addMoreSelectedImages', { images: this.selectedImagesByColor, id: this.colorId });
                 } else {
@@ -340,3 +363,11 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.media-video {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+</style>

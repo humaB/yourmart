@@ -124,15 +124,21 @@
                                         <tr>
                                             <th>Video Link</th>
                                             <td>
-                                                <div v-if="!editingField.video_link">{{ product.video_link ? product.video_link : 'N/A' }}</div>
-                                                <div v-else>
-                                                    <input v-model="editedProduct.video_link" type="text" class="form-control">
+                                                <div v-if="!editingField.video_link">
+                                                    <a
+                                                        v-if="product.video_link"
+                                                        :href="getImageUrl(product.video_link)"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        class="btn btn-link"
+                                                    >
+                                                        {{ product.video_link }}
+                                                    </a>
+                                                    <span v-else>N/A</span>
                                                 </div>
                                             </td>
                                             <td>
-                                                <button v-if="!editingField.video_link" @click="editField('video_link')" class="btn btn-sm btn-primary">Edit</button>
-                                                <button v-else @click="saveField('video_link')" class="btn btn-sm btn-success">Save</button>
-                                                <button v-if="editingField.video_link" @click="cancelEdit('video_link')" class="btn btn-sm btn-danger">Cancel</button>
+                                                <button  @click="addImage('Video' , 'edit')" data-toggle="modal" data-target="#uploadProductImage" class="btn btn-sm btn-primary">Edit</button>
                                             </td>
                                         </tr>
 

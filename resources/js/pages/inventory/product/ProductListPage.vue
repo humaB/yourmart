@@ -318,7 +318,10 @@
             @updateImageData="updateImageData($event)" @deleteImage="deleteImage($event)"
             @addSelectedImages="addSelectedImages($event)" @addMoreSelectedImages="addMoreSelectedImages($event)"
             @addSelectedHeroImages="addSelectedHeroImages($event)" @uploadAttachment="uploadAttachment($event)"
-            @changeSelectedHeroImage="changeSelectedHeroImage($event)" />
+            @changeSelectedHeroImage="changeSelectedHeroImage($event)"
+            @changeSelectedVideo="changeSelectedVideo($event)"
+
+            />
     </div>
 </template>
 <script>
@@ -679,7 +682,6 @@ export default {
                 timer: 3000,
             });
         }
-
         const product = {
             'attachment': data.attachment,
             'id': this.details.id
@@ -687,6 +689,36 @@ export default {
 
         axios
             .post(this.api_url + "inventory/products/hero-image/changed", product)
+            .then((response) => {
+                vm.fetchDetail(this.details.id)
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: 'Oops, Something went wrong please try again',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+    changeSelectedVideo(data) {
+        let vm = this;
+        if (!data) {
+            return swal({
+                title: "Required",
+                text: 'Please select video first',
+                icon: "Success",
+                timer: 3000,
+            });
+        }
+
+        const product = {
+            'attachment': data.attachment,
+            'id'        : this.details.id
+        }
+
+        axios
+            .post(this.api_url + "inventory/products/video/changed", product)
             .then((response) => {
                 vm.fetchDetail(this.details.id)
             }).catch((err) => {

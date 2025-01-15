@@ -129,12 +129,12 @@
                                                 <div class="tab-content no-padding" id="myTab2Content">
                                                     <div class="tab-pane fade show row active" id="general"
                                                         role="tabpanel" aria-labelledby="general-tab">
-                                                        <div class="col-md-12 mt-2">
+                                                        <!-- <div class="col-md-12 mt-2">
                                                             <p>Video Link <span class="text-danger">( optional )</span>
                                                             </p>
                                                             <input type="text" class="form-control" v-model="videoLink">
                                                             <small>Please add valid video link, thanks</small>
-                                                        </div>
+                                                        </div> -->
                                                         <div class="col-md-12 mt-2">
                                                             <p>Warranty <span class="text-danger">( optional )</span>
                                                             </p>

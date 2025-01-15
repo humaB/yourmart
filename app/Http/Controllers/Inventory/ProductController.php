@@ -748,6 +748,15 @@ class ProductController extends Controller
         return response()->json(['message' => 'Hero Image changed successfully'], 200);
     }
 
+    public function updateVideo(Request $request)
+    {
+        Product::where('id', $request->id)->update([
+            'video_link' => $request->attachment
+        ]);
+
+        return response()->json(['message' => 'Video changed successfully'], 200);
+    }
+
     public function updateColorImages(Request $request)
     {
         $images = $request->images;

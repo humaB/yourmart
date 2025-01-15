@@ -10,6 +10,7 @@ use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariationImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 
 class AttachmentController extends Controller
@@ -109,6 +110,15 @@ class AttachmentController extends Controller
         $nameToStore     = str_replace(' ', '' ,$filename['filename']) . "_" . time() . "." . $extension;
         //Move to folder
         $path            = $image->storeAs('public/uploads/inventory/products/media/', $nameToStore);
+
+        // Prepare the file to send to another Laravel project
+        $filePath = storage_path('app/' . $path);
+        $response = Http::attach(
+            'file',
+            file_get_contents($filePath),
+            $nameToStore
+        )->post('http://localhost/dropshipping-frontend/public/api/upload-attachment');
+
         return $nameToStore;
     }
 
