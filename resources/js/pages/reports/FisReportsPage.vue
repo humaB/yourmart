@@ -40,15 +40,22 @@
 
                             <div class="col-md-4 col-6">
                                 <h6>
-                                    4.
+                                    5.
                                     <a href="#" @click="deliveredOrder()"><i class="fas fa-fax"></i> Delivered Order Detail</a>
                                 </h6>
                             </div>
 
                             <div class="col-md-4 col-6">
                                 <h6>
-                                    5.
+                                    6.
                                     <a href="#" @click="leopardReturnReceived()"><i class="fas fa-fax"></i> Leopard Returns Received</a>
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    7.
+                                    <a href="#" @click="orderIssuanceReport()"><i class="fas fa-fax"></i> Order Issuance Report</a>
                                 </h6>
                             </div>
                         </div>
@@ -76,6 +83,9 @@
 
         <LeopardReturnReceivedReport v-if="report == 'leopard-return-received'" :data="leopardReturnReceivedData"
             :loader="loader" @leopardReturnReceivedFilter="leopardReturnReceivedFilter($event)" />
+
+        <OrderIssuanceReport v-if="report == 'order-issuance-report'" :data="orderIssuanceReportData"
+            :loader="loader" @orderIssuanceReportFilter="orderIssuanceReportFilter($event)" />
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -121,6 +131,7 @@ import InventoryGoodIssuanceReport from '../../components/reports/fis/InventoryG
 import InventoryGoodReceivedReport from '../../components/reports/fis/InventoryGoodReceivedReport.vue';
 import InventoryGoodReturnReport from '../../components/reports/fis/InventoryGoodReturnReport.vue';
 import LeopardReturnReceivedReport from '../../components/reports/fis/LeopardReturnReceivedReport.vue';
+import OrderIssuanceReport from '../../components/reports/fis/OrderIssuanceReport.vue';
 
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
@@ -133,7 +144,8 @@ export default {
         InventoryGoodIssuanceReport,
         InventoryGoodReturnReport,
         DeliveredOrderDetailsReport,
-        LeopardReturnReceivedReport
+        LeopardReturnReceivedReport,
+        OrderIssuanceReport
     },
     data() {
         return {
@@ -150,6 +162,7 @@ export default {
             goodReturnData: [],
             deliveredOrderData : [],
             leopardReturnReceivedData : [],
+            orderIssuanceReportData : [],
             loader: false,
             deleteLoader : false,
             role: null,
@@ -163,6 +176,19 @@ export default {
         this.fetchProducts();
     },
     methods: {
+        orderIssuanceReport() {
+            this.report = 'order-issuance-report'
+        },
+        orderIssuanceReportFilter(data) {
+            let vm = this;
+            vm.loader = true;
+            axios.post(vm.api_url + 'reports/fis/order-issuances', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.orderIssuanceReportData = results;
+                    vm.loader = false;
+                })
+        },
         leopardReturnReceived() {
             this.report = 'leopard-return-received'
         },

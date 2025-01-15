@@ -13,6 +13,7 @@ use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrderDetail;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceivedDetail;
+use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -237,7 +238,7 @@ class FisReportController extends Controller
     }
     public function goodReturnRegister(Request $request)
     {
-        $data = StoreReturnDetail::with('product', 'srn')
+        $data = StoreReturnDetail::with('product', 'srn.order.shop')
             ->when($request->from, function ($q) use ($request) {
                 $q->whereDate('created_at', '>=', $request->from);
             })
@@ -290,6 +291,61 @@ class FisReportController extends Controller
         $data = OrderItem::with('variation.product', 'order.shop')->whereIn('order_id', $orders)->get();
 
         return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function orderIssuance(Request $request)
+    {
+
+        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+        ->when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->get()->groupBy('product_id');
+
+        $products = [];
+        foreach( $issues as $singleProductGroup ){
+            $products[$singleProductGroup[0]->product_id]['sku'] = $singleProductGroup[0]->product->variation->sku;
+            $products[$singleProductGroup[0]->product_id]['name'] = $singleProductGroup[0]->product->title;
+            $quantity = $singleProductGroup->sum('quantity');
+            $products[$singleProductGroup[0]->product_id]['quantity'] = $quantity;
+
+
+            //Calculate Avg Purchase Price
+            $rate = StoreReceivedDetail::where('created_at', '<=', $request->to)
+            ->where('product_id', $singleProductGroup[0]->product_id)
+            ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+            ->first();
+            $purchase_cost = (float)$rate->rate * $quantity;
+            $products[$singleProductGroup[0]->product_id]['purchase_rate'] = round($rate->rate);
+            $products[$singleProductGroup[0]->product_id]['purchase_cost'] = round( $purchase_cost );
+
+             //Calculate Avg Issuance Price
+             $issance_price = $singleProductGroup->sum('total');
+             $issance_rate = $singleProductGroup->sum('price');
+             $products[$singleProductGroup[0]->product_id]['issance_price'] = round( $issance_rate / $quantity );
+             $products[$singleProductGroup[0]->product_id]['issance_cost'] = round( $issance_price  );
+
+             //Get Return and calculate there total
+             $return_quantity = 0;
+             foreach($singleProductGroup as $order ){
+                $order_no = $order->sin->order_id;
+                $product = $order->product_id;
+
+               $returned = StoreReturn::where('order_id', $order_no)->first();
+                if( $returned ){
+                    $return_record = StoreReturnDetail::where('product_id', $product)->where('srn_id', $returned->id)->first();
+                    $return_quantity += $return_record ? $return_record->quantity : 0;
+                }
+            }
+            $products[$singleProductGroup[0]->product_id]['returned'] = $return_quantity;
+        }
+
+        return (new ResponseCollection($products))
             ->response()
             ->setStatusCode(200);
     }

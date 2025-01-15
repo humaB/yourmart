@@ -2842,6 +2842,76 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=script&lang=js":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=script&lang=js ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'OrderIssuanceReport',
+  props: ['data', 'loader'],
+  components: {
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
+  },
+  data: function data() {
+    return {
+      public_url: window.location.origin + "",
+      filter: {
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10)
+      }
+    };
+  },
+  methods: {
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price).toFixed(2);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    submitFunction: function submitFunction() {
+      this.clearDataTable();
+      this.$emit('orderIssuanceReportFilter', this.filter);
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $('#order_issuance_table').DataTable();
+      table.destroy();
+    }
+  },
+  watch: {
+    data: function data(newLedger) {
+      setTimeout(function () {
+        $('#order_issuance_table').DataTable({
+          "bSort": false,
+          dom: 'Bfrtip',
+          buttons: [{
+            extend: 'copy',
+            title: 'Order Issuance Report'
+          }, 'csv', {
+            extend: 'excel',
+            title: 'Order Issuance Report'
+          }]
+        });
+      }, 300);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js ***!
@@ -5562,7 +5632,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReceivedReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReceivedReport.vue");
 /* harmony import */ var _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReturnReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReturnReport.vue");
 /* harmony import */ var _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/reports/fis/LeopardReturnReceivedReport.vue */ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue");
-/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/reports/fis/OrderIssuanceReport.vue */ "./resources/js/components/reports/fis/OrderIssuanceReport.vue");
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+
 
 
 
@@ -5573,13 +5645,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FisReportsPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
     InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     InventoryGoodReturnReport: _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     DeliveredOrderDetailsReport: _components_reports_fis_DeliveredOrderDetailsReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    LeopardReturnReceivedReport: _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+    LeopardReturnReceivedReport: _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    OrderIssuanceReport: _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   data: function data() {
     return {
@@ -5596,6 +5669,7 @@ __webpack_require__.r(__webpack_exports__);
       goodReturnData: [],
       deliveredOrderData: [],
       leopardReturnReceivedData: [],
+      orderIssuanceReportData: [],
       loader: false,
       deleteLoader: false,
       role: null,
@@ -5609,6 +5683,18 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchProducts();
   },
   methods: {
+    orderIssuanceReport: function orderIssuanceReport() {
+      this.report = 'order-issuance-report';
+    },
+    orderIssuanceReportFilter: function orderIssuanceReportFilter(data) {
+      var vm = this;
+      vm.loader = true;
+      axios.post(vm.api_url + 'reports/fis/order-issuances', data).then(function (res) {
+        var results = res.data.response;
+        vm.orderIssuanceReportData = results;
+        vm.loader = false;
+      });
+    },
     leopardReturnReceived: function leopardReturnReceived() {
       this.report = 'leopard-return-received';
     },
@@ -12507,6 +12593,17 @@ var render = function render() {
       staticClass: "h5"
     }, [_vm._v("\n                                        " + _vm._s(item.srn_id) + "\n                                    ")]), _vm._v(" "), _c("td", {
       staticClass: "h5"
+    }, [_c("a", {
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.printOrderDetails(item.srn.order_id);
+        }
+      }
+    }, [_vm._v("\n                                            " + _vm._s(item.srn.order && item.srn.order.shop && item.srn.order.shop.store_name ? item.srn.order.shop.store_name.substring(0, 3) + "-" + item.srn.order.order_no : item.srn.order ? item.srn.order.order_no : "") + "\n                                        ")])]), _vm._v(" "), _c("td", {
+      staticClass: "h5"
     }, [_vm._v(_vm._s(item.product ? item.product.title : ""))]), _vm._v(" "), _c("td", {
       staticClass: "h5"
     }, [_vm._v(_vm._s(_vm.formatPrice(item.price)))]), _vm._v(" "), _c("td", {
@@ -12531,7 +12628,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("SRN #")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Issued Qty")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("SRN #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Issued Qty")])])]);
 }];
 render._withStripped = true;
 
@@ -12663,6 +12760,137 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Average Price ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total Price Cost")]), _vm._v(" "), _c("th", [_vm._v("Total Sell Cost")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=template&id=41f202f3":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=template&id=41f202f3 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-4 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "from"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "to"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "order_issuance_table"
+    }
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(item["sku"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["name"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["quantity"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["purchase_rate"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["purchase_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["issance_price"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["issance_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["returned"] * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["issance_cost"] - item["purchase_cost"] - item["returned"] * item["issance_price"])))])]);
+  }), 0)])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Order Issuance Report")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-4 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Purchase Price ")]), _vm._v(" "), _c("th", [_vm._v("Purchase Cost")]), _vm._v(" "), _c("th", [_vm._v("Issuance Price")]), _vm._v(" "), _c("th", [_vm._v("Issuance Cost")]), _vm._v(" "), _c("th", [_vm._v("Returns Cost")]), _vm._v(" "), _c("th", [_vm._v("Profit")])])]);
 }];
 render._withStripped = true;
 
@@ -18781,7 +19009,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Inventory Good\n                                    Returns")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                4.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                5.\n                                "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -18794,7 +19022,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Delivered Order Detail")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                5.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                6.\n                                "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -18805,7 +19033,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Leopard Returns Received")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Leopard Returns Received")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 col-6"
+  }, [_c("h6", [_vm._v("\n                                7.\n                                "), _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.orderIssuanceReport();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fax"
+  }), _vm._v(" Order Issuance Report")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -18870,6 +19111,16 @@ var render = function render() {
     on: {
       leopardReturnReceivedFilter: function leopardReturnReceivedFilter($event) {
         return _vm.leopardReturnReceivedFilter($event);
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), _vm.report == "order-issuance-report" ? _c("OrderIssuanceReport", {
+    attrs: {
+      data: _vm.orderIssuanceReportData,
+      loader: _vm.loader
+    },
+    on: {
+      orderIssuanceReportFilter: function orderIssuanceReportFilter($event) {
+        return _vm.orderIssuanceReportFilter($event);
       }
     }
   }) : _vm._e(), _vm._v(" "), _c("div", {
@@ -45720,6 +45971,45 @@ component.options.__file = "resources/js/components/reports/fis/LeopardReturnRec
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/OrderIssuanceReport.vue":
+/*!*********************************************************************!*\
+  !*** ./resources/js/components/reports/fis/OrderIssuanceReport.vue ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _OrderIssuanceReport_vue_vue_type_template_id_41f202f3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrderIssuanceReport.vue?vue&type=template&id=41f202f3 */ "./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=template&id=41f202f3");
+/* harmony import */ var _OrderIssuanceReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrderIssuanceReport.vue?vue&type=script&lang=js */ "./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrderIssuanceReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrderIssuanceReport_vue_vue_type_template_id_41f202f3__WEBPACK_IMPORTED_MODULE_0__.render,
+  _OrderIssuanceReport_vue_vue_type_template_id_41f202f3__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/reports/fis/OrderIssuanceReport.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/table/TableHeaderComponent.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/table/TableHeaderComponent.vue ***!
@@ -46769,6 +47059,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderIssuanceReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderIssuanceReport.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderIssuanceReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js":
 /*!****************************************************************************************!*\
   !*** ./resources/js/components/table/TableHeaderComponent.vue?vue&type=script&lang=js ***!
@@ -47498,6 +47804,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_LeopardReturnReceivedReport_vue_vue_type_template_id_0f983f18__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue?vue&type=template&id=0f983f18");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=template&id=41f202f3":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=template&id=41f202f3 ***!
+  \***************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderIssuanceReport_vue_vue_type_template_id_41f202f3__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderIssuanceReport_vue_vue_type_template_id_41f202f3__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderIssuanceReport_vue_vue_type_template_id_41f202f3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderIssuanceReport.vue?vue&type=template&id=41f202f3 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/OrderIssuanceReport.vue?vue&type=template&id=41f202f3");
 
 
 /***/ }),
