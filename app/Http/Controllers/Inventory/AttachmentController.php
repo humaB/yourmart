@@ -117,7 +117,7 @@ class AttachmentController extends Controller
             'file',
             file_get_contents($filePath),
             $nameToStore
-        )->post('http://localhost/dropshipping-frontend/public/api/upload-attachment');
+        )->post(env('MIX_WEB_URL') . 'public/api/upload-attachment');
 
         return $nameToStore;
     }
