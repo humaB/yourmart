@@ -2874,6 +2874,13 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    calculateProfit: function calculateProfit(item) {
+      var netSale = item['issance_cost'];
+      var returnCost = item['returned'] * item['issance_price'];
+      var purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
+      var profit = netSale - returnCost - purchaseCost;
+      return profit;
+    },
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
     },
@@ -12870,7 +12877,7 @@ var render = function render() {
   }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(item["sku"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["name"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["quantity"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["purchase_rate"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["purchase_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["issance_price"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["issance_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["returned"] * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["issance_cost"] - item["purchase_cost"] - item["returned"] * item["issance_price"])))])]);
+    }, [_c("td", [_vm._v(_vm._s(item["sku"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["name"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["quantity"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["purchase_rate"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["purchase_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["issance_price"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["issance_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["returned"] * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item))))])]);
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {

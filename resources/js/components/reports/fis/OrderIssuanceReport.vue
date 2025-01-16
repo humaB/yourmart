@@ -56,7 +56,7 @@
                                        <td>{{ item['issance_price']}}</td>
                                        <td>{{ formatPrice( item['issance_cost'] )}}</td>
                                        <td>{{ formatPrice( item['returned'] * item['issance_price'] ) }}</td>
-                                       <td>{{ formatPrice( (item['issance_cost'] -  item['purchase_cost'] ) - item['returned'] * item['issance_price'] ) }}</td>
+                                       <td>{{ formatPrice( calculateProfit(item)) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -88,6 +88,13 @@ export default {
         }
     },
     methods: {
+        calculateProfit(item) {
+            const netSale = item['issance_cost'];
+            const returnCost = item['returned'] * item['issance_price'];
+            const purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
+            const profit = netSale - returnCost - purchaseCost;
+            return profit;
+        },
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : '';
         },
