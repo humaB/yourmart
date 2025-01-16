@@ -82,6 +82,18 @@ class DropShipperController extends Controller
             ->setStatusCode(200);
     }
 
+    public function pendingPayoutRecord(Request $request)
+    {
+        $dropshippers = Dropshipper::where('total_payable' ,'!=', '0')
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return (new ResponseCollection($dropshippers))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+
     public function orderDetail(Request $request)
     {
         $orders = Order::with(

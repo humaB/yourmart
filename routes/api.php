@@ -106,6 +106,7 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/shops/payments',  [ DropShipperController::class , 'shopPayments']);
 
     Route::get('/pay-outs',  [ DropShipperController::class , 'pendingPayouts']);
+    Route::get('/pay-outs/records',  [ DropShipperController::class , 'pendingPayoutRecord']);
 
     Route::group(['prefix' => 'payments'], function(){
         Route::post('/data',  [ DropShipperController::class , 'paymentData']);

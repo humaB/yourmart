@@ -1,136 +1,209 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-12 col-md-12 col-lg-12">
-                <div class="card card-primary">
-                    <TableHeader :tableHeader="tableHeader" />
+            <div class="card-body">
+                <ul class="nav nav-pills" id="myTab3" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab" aria-controls="home" aria-selected="true">Pending Payouts</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile" aria-selected="false">Overall Record</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="myTabContent2">
+                  <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card card-primary">
+                            <TableHeader :tableHeader="tableHeader" />
 
-                    <div class="row px-4">
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-purple">
-                                    <i class="fa fa-hand-holding-usd"></i>
+                            <div class="row px-4">
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                    <div class="card card-statistic-1">
+                                        <div class="card-icon l-bg-purple">
+                                            <i class="fa fa-hand-holding-usd"></i>
+                                        </div>
+                                        <div class="card-wrap">
+                                            <div class="padding-20">
+                                                <div class="text-right">
+                                                    <h3 class="font-light mb-0">
+                                                        <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPayable) }}
+                                                    </h3>
+                                                    <span class="text-muted">Total Payouts</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPayable) }}
-                                            </h3>
-                                            <span class="text-muted">Total Payouts</span>
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                    <div class="card card-statistic-1">
+                                        <div class="card-icon l-bg-green">
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </div>
+                                        <div class="card-wrap">
+                                            <div class="padding-20">
+                                                <div class="text-right">
+                                                    <h3 class="font-light mb-0">
+                                                        <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid) }}
+                                                    </h3>
+                                                    <span class="text-muted">Total Paid</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                    <div class="card card-statistic-1">
+                                        <div class="card-icon l-bg-cyan">
+                                            <i class="fa fa-calculator"></i>
+                                        </div>
+                                        <div class="card-wrap">
+                                            <div class="padding-20">
+                                                <div class="text-right">
+                                                    <h3 class="font-light mb-0">
+                                                        <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalRemaining)
+                                                        }}
+                                                    </h3>
+                                                    <span class="text-muted">Total Remaining</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                    <div class="card card-statistic-1">
+                                        <div class="card-icon l-bg-orange">
+                                            <i class="fa fa-clipboard-list"></i>
+                                        </div>
+                                        <div class="card-wrap">
+                                            <div class="padding-20">
+                                                <div class="text-right">
+                                                    <h3 class="font-light mb-0">
+                                                        <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
+                                                    </h3>
+                                                    <span class="text-muted">Total Sellers</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-green">
-                                    <i class="fa fa-thumbs-up"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid) }}
-                                            </h3>
-                                            <span class="text-muted">Total Paid</span>
+
+                            <div class="card-body row">
+                                <!-- Table -->
+                                <div class="col-md-12 mt-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="card-body table-responsive" v-if="loader">
+                                                    <bullet-list-loader :width="250"> </bullet-list-loader>
+                                                </div>
+                                                <div class="col-md-12 table-responsive" v-else>
+                                                    <table class="table table-bordered" :id="table_id" ref="datatable">
+                                                        <thead>
+                                                            <tr>
+                                                                <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr v-for="(item, index) in records" :key="item.id">
+                                                                <td>{{ index + 1 }}</td>
+                                                                <td>{{ item.full_name }}</td>
+                                                                <td>{{ item.email }}</td>
+                                                                <td>{{ item.payment_cycle}}</td>
+                                                                <td>{{ getNextDueDate(item.voucher_created_at, item.payment_cycle) }}</td> <!-- Next Due Date -->
+                                                                <td>{{ formatPrice(item.total_payable) }}</td>
+                                                                <td>{{ formatPrice(item.total_paid) }}</td>
+                                                                <td>{{ formatPrice(item.remaining_amount) }}</td>
+                                                                <td width="20%">
+                                                                    <button class="btn btn-info" @click="fetchDetail(item.id)"
+                                                                        data-toggle="modal" data-target="#dropShipperDetail"
+                                                                        title="View Details"><i class="fa fa-eye"></i></button>
+                                                                    <button class="btn btn-dark" @click="printRequest(item.id)"
+                                                                        title="Print"><i class="fa fa-print"></i></button>
+                                                                    <button class="btn btn-primary"
+                                                                        @click="paymentDetail(item.id)" data-toggle="modal"
+                                                                        data-target="#dropShipperPayment" title="Payment"><i
+                                                                            class="fas fa-credit-card"></i></button>
+                                                                    <button class="btn btn-primary"
+                                                                        @click="paymentHistory(item.id)" data-toggle="modal"
+                                                                        data-target="#dropshipperHistory" title="Payment"><i
+                                                                                class="far fa-clock"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
                                 </div>
+                                <!-- END TABLE -->
                             </div>
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-cyan">
-                                    <i class="fa fa-calculator"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalRemaining)
-                                                }}
-                                            </h3>
-                                            <span class="text-muted">Total Remaining</span>
-                                        </div>
-                                    </div>
-                                </div>
+                    </div>
+                  </div>
+                  <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h5>All Payouts Record</h5>
                             </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-orange">
-                                    <i class="fa fa-clipboard-list"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
-                                            </h3>
-                                            <span class="text-muted">Total Sellers</span>
-                                        </div>
-                                    </div>
+                            <div class="card-body">
+                                <div class="col-md-12">
+                                    <table class="table table-bordered" id="payout-record">
+                                        <thead>
+                                            <tr>
+                                                <th v-for="(item, index) in th2" :key="item">{{ item }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(item, index) in payOuts" :key="item.id">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ item.full_name }}</td>
+                                                <td>{{ item.email }}</td>
+                                                <td>{{ item.whatsapp_number }}</td>
+                                                <td>{{ formatPrice(item.total_payable) }}</td>
+                                                <td>{{ formatPrice(item.total_paid) }}</td>
+                                                <td>{{ formatPrice(item.remaining_amount) }}</td>
+                                                <td>
+                                                    <span v-if="item.status == 0"
+                                                        class="badge badge-warning">Pending</span>
+                                                    <span v-if="item.status == 1"
+                                                        class="badge badge-success">Approved</span>
+                                                    <span v-if="item.status == 2"
+                                                        class="badge badge-danger">Rejected</span>
+                                                    <span v-if="item.status == 3"
+                                                        class="badge badge-danger">Deactivated</span>
+                                                </td>
+                                                <td>{{ formatDate(item.created_at) }}</td>
+                                                <td width="20%">
+                                                    <button class="btn btn-info" @click="fetchDetail(item.id)"
+                                                        data-toggle="modal" data-target="#dropShipperDetail"
+                                                        title="View Details"><i class="fa fa-eye"></i></button>
+                                                    <button class="btn btn-dark" @click="printRequest(item.id)"
+                                                        title="Print"><i class="fa fa-print"></i></button>
+                                                    <button class="btn btn-primary"
+                                                        @click="paymentDetail(item.id)" data-toggle="modal"
+                                                        data-target="#dropShipperPayment" title="Payment"><i
+                                                            class="fas fa-credit-card"></i></button>
+                                                    <button class="btn btn-primary"
+                                                        @click="paymentHistory(item.id)" data-toggle="modal"
+                                                        data-target="#dropshipperHistory" title="Payment"><i
+                                                            class="far fa-clock"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
+                  </div>
 
-                    <div class="card-body row">
-                        <!-- Table -->
-                        <div class="col-md-12 mt-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="card-body table-responsive" v-if="loader">
-                                            <bullet-list-loader :width="250"> </bullet-list-loader>
-                                        </div>
-                                        <div class="col-md-12 table-responsive" v-else>
-                                            <table class="table table-bordered" :id="table_id" ref="datatable">
-                                                <thead>
-                                                    <tr>
-                                                        <th v-for="(item, index) in th" :key="item">{{ item }}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(item, index) in records" :key="item.id">
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>{{ item.full_name }}</td>
-                                                        <td>{{ item.email }}</td>
-                                                        <td>{{ item.payment_cycle}}</td>
-                                                        <td>{{ getNextDueDate(item.voucher_created_at, item.payment_cycle) }}</td> <!-- Next Due Date -->
-                                                        <td>{{ formatPrice(item.total_payable) }}</td>
-                                                        <td>{{ formatPrice(item.total_paid) }}</td>
-                                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                                        <td width="20%">
-                                                            <button class="btn btn-info" @click="fetchDetail(item.id)"
-                                                                data-toggle="modal" data-target="#dropShipperDetail"
-                                                                title="View Details"><i class="fa fa-eye"></i></button>
-                                                            <button class="btn btn-dark" @click="printRequest(item.id)"
-                                                                title="Print"><i class="fa fa-print"></i></button>
-                                                            <button class="btn btn-primary"
-                                                                @click="paymentDetail(item.id)" data-toggle="modal"
-                                                                data-target="#dropShipperPayment" title="Payment"><i
-                                                                    class="fas fa-credit-card"></i></button>
-                                                            <button class="btn btn-primary"
-                                                                @click="paymentHistory(item.id)" data-toggle="modal"
-                                                                data-target="#dropshipperHistory" title="Payment"><i
-                                                                        class="far fa-clock"></i></button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <!-- END TABLE -->
-                    </div>
                 </div>
-            </div>
+              </div>
+
         </div>
 
         <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)"
@@ -220,9 +293,11 @@ export default {
                 heading: "Dropshipper Pay outs",
             },
             th: ["Sr #", "Name", "Email", "Cycle","Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+            th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
             table_id: "moq_table",
             btnLoader: false,
             records: [],
+            payOuts : [],
             orders: [],
             accountBanks: [],
             accountCash: [],
@@ -265,9 +340,20 @@ export default {
     created() {
         this.csrf = $('meta[name=csrf-token]').attr('content');
         this.fetchRecord();
+        this.fetchPayoutRecord();
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        fetchPayoutRecord() {
+            let vm = this;
+
+            vm.loader = false;
+            axios
+                .get(this.api_url + "dropshippers/pay-outs/records")
+                .then((response) => {
+                    vm.payOuts = response.data.response
+                });
+        },
         getNextDueDate(voucherCreatedAt, paymentCycle) {
             if (!voucherCreatedAt || !paymentCycle) return "N/A"; // Return 'N/A' if data is missing
 
@@ -479,9 +565,11 @@ export default {
         },
         dataTable() {
             $("#moq_table").DataTable();
+            $("#payout-record").DataTable();
         },
         clearDataTable() {
             const table = $("#moq_table").DataTable();
+            $("#payout-record").DataTable().destroy();
             table.destroy();
         },
         fetchOrderDetails(id) {
@@ -641,6 +729,14 @@ export default {
         records(newLedger) {
             setTimeout(() => {
                 $("#moq_table").DataTable({
+                    dom: "Bfrtip",
+                    buttons: ["copy", "csv", "excel"],
+                });
+            }, 300);
+        },
+        payOuts(newLedger) {
+            setTimeout(() => {
+                $("#payout-record").DataTable({
                     dom: "Bfrtip",
                     buttons: ["copy", "csv", "excel"],
                 });

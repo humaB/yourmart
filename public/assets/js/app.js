@@ -4422,9 +4422,11 @@ __webpack_require__.r(__webpack_exports__);
         heading: "Dropshipper Pay outs"
       },
       th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+      th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
       table_id: "moq_table",
       btnLoader: false,
       records: [],
+      payOuts: [],
       orders: [],
       accountBanks: [],
       accountCash: [],
@@ -4473,9 +4475,17 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.csrf = $('meta[name=csrf-token]').attr('content');
     this.fetchRecord();
+    this.fetchPayoutRecord();
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
+    fetchPayoutRecord: function fetchPayoutRecord() {
+      var vm = this;
+      vm.loader = false;
+      axios.get(this.api_url + "dropshippers/pay-outs/records").then(function (response) {
+        vm.payOuts = response.data.response;
+      });
+    },
     getNextDueDate: function getNextDueDate(voucherCreatedAt, paymentCycle) {
       if (!voucherCreatedAt || !paymentCycle) return "N/A"; // Return 'N/A' if data is missing
 
@@ -4665,9 +4675,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     dataTable: function dataTable() {
       $("#moq_table").DataTable();
+      $("#payout-record").DataTable();
     },
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
+      $("#payout-record").DataTable().destroy();
       table.destroy();
     },
     fetchOrderDetails: function fetchOrderDetails(id) {
@@ -4804,6 +4816,14 @@ __webpack_require__.r(__webpack_exports__);
     records: function records(newLedger) {
       setTimeout(function () {
         $("#moq_table").DataTable({
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel"]
+        });
+      }, 300);
+    },
+    payOuts: function payOuts(newLedger) {
+      setTimeout(function () {
+        $("#payout-record").DataTable({
           dom: "Bfrtip",
           buttons: ["copy", "csv", "excel"]
         });
@@ -18156,6 +18176,20 @@ var render = function render() {
   return _c("div", [_c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "card-body"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "tab-content",
+    attrs: {
+      id: "myTabContent2"
+    }
+  }, [_c("div", {
+    staticClass: "tab-pane fade show active",
+    attrs: {
+      id: "home3",
+      role: "tabpanel",
+      "aria-labelledby": "home-tab3"
+    }
+  }, [_c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
@@ -18169,22 +18203,6 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPayable)) + "\n                                        ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
   }, [_vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
@@ -18195,9 +18213,9 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                        ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPayable)) + "\n                                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
@@ -18211,9 +18229,9 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                        ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
@@ -18227,7 +18245,23 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                        ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                                ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Total Sellers")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "card-body row"
@@ -18319,7 +18353,101 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "far fa-clock"
     })])])]);
-  }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("DropshipperDetails", {
+  }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
+    attrs: {
+      id: "profile3",
+      role: "tabpanel",
+      "aria-labelledby": "profile-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card card-primary"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "payout-record"
+    }
+  }, [_c("thead", [_c("tr", _vm._l(_vm.th2, function (item, index) {
+    return _c("th", {
+      key: item
+    }, [_vm._v(_vm._s(item))]);
+  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.payOuts, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Approved")]) : _vm._e(), _vm._v(" "), item.status == 2 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Rejected")]) : _vm._e(), _vm._v(" "), item.status == 3 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
+      attrs: {
+        width: "20%"
+      }
+    }, [_c("button", {
+      staticClass: "btn btn-info",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropShipperDetail",
+        title: "View Details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetail(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-dark",
+      attrs: {
+        title: "Print"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.printRequest(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-print"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropShipperPayment",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentDetail(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fas fa-credit-card"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropshipperHistory",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentHistory(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "far fa-clock"
+    })])])]);
+  }), 0)])])])])])])])])]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
       details: _vm.details,
       loader: _vm.btnLoader
@@ -18433,6 +18561,40 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
+  return _c("ul", {
+    staticClass: "nav nav-pills",
+    attrs: {
+      id: "myTab3",
+      role: "tablist"
+    }
+  }, [_c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link active",
+    attrs: {
+      id: "home-tab3",
+      "data-toggle": "tab",
+      href: "#home3",
+      role: "tab",
+      "aria-controls": "home",
+      "aria-selected": "true"
+    }
+  }, [_vm._v("Pending Payouts")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      id: "profile-tab3",
+      "data-toggle": "tab",
+      href: "#profile3",
+      role: "tab",
+      "aria-controls": "profile",
+      "aria-selected": "false"
+    }
+  }, [_vm._v("Overall Record")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
   return _c("div", {
     staticClass: "card-icon l-bg-purple"
   }, [_c("i", {
@@ -18462,6 +18624,12 @@ var staticRenderFns = [function () {
   }, [_c("i", {
     staticClass: "fa fa-clipboard-list"
   })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("All Payouts Record")])]);
 }];
 render._withStripped = true;
 
