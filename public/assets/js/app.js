@@ -2873,6 +2873,54 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
+  computed: {
+    totalIssuanceQuantity: function totalIssuanceQuantity() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + item.quantity;
+      }, 0);
+    },
+    totalIssuancePurchased: function totalIssuancePurchased() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + parseFloat(item.quantity) * parseFloat(item.purchase_rate);
+      }, 0);
+    },
+    totalReturnQuantity: function totalReturnQuantity() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + item.returned;
+      }, 0);
+    },
+    totalReturnAmount: function totalReturnAmount() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + item.returned * item.issance_price;
+      }, 0);
+    },
+    totalSellingQuantity: function totalSellingQuantity() {
+      return Object.values(this.data).reduce(function (total, item) {
+        console.log(parseFloat(item.quantity) * parseFloat(item.issance_price));
+        return total + parseFloat(item.quantity) * parseFloat(item.issance_price);
+      }, 0);
+    },
+    netBuyingCost: function netBuyingCost() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + (parseFloat(item.quantity) - parseFloat(item.returned)) * parseFloat(item.purchase_rate);
+      }, 0);
+    },
+    netSales: function netSales() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + (parseFloat(item.quantity) - parseFloat(item.returned)) * parseFloat(item.issance_price);
+      }, 0);
+    },
+    profit: function profit() {
+      var totalProfit = 0;
+      Object.values(this.data).forEach(function (item) {
+        var netSale = item['issance_cost'];
+        var returnCost = item['returned'] * item['issance_price'];
+        var purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
+        totalProfit += netSale - returnCost - purchaseCost;
+      });
+      return totalProfit;
+    }
+  },
   methods: {
     calculateProfit: function calculateProfit(item) {
       var netSale = item['issance_cost'];
@@ -2885,7 +2933,7 @@ __webpack_require__.r(__webpack_exports__);
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
     },
     formatPrice: function formatPrice(price) {
-      var value = parseFloat(price).toFixed(2);
+      var value = parseFloat(price);
       var string = value.toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
@@ -12863,7 +12911,189 @@ var render = function render() {
     }
   })]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
-  }, [_vm.loader ? _c("div", {
+  }, [_c("div", {
+    staticClass: "row",
+    staticStyle: {
+      "margin-left": "-10px"
+    }
+  }, [_c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                " + _vm._s(_vm.formatPrice(_vm.totalIssuanceQuantity)) + "\n                                                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Products")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                " + _vm._s(_vm.formatPrice(_vm.totalIssuancePurchased)) + "\n                                                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Purchased")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                " + _vm._s(_vm.formatPrice(_vm.totalSellingQuantity.toFixed(0))) + "\n                                                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Selling")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                " + _vm._s(_vm.totalReturnQuantity) + "\n                                                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Returns")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                " + _vm._s(_vm.formatPrice(_vm.totalReturnAmount)) + "\n                                                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Return Amount")])])])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row",
+    staticStyle: {
+      "margin-left": "-10px"
+    }
+  }, [_c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                    " + _vm._s(_vm.totalIssuanceQuantity - _vm.totalReturnQuantity) + "\n                                                                ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Net Quantity")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                    " + _vm._s(_vm.formatPrice(_vm.netBuyingCost)) + "\n                                                                ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Net Buying Cost")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                    " + _vm._s(_vm.formatPrice(_vm.netSales.toFixed(0))) + "\n                                                                ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Net Sales")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h4", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                                                    " + _vm._s(_vm.formatPrice(_vm.profit)) + "\n                                                                ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Profit")])])])])])])])])]), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
@@ -12874,10 +13104,10 @@ var render = function render() {
     attrs: {
       id: "order_issuance_table"
     }
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+  }, [_vm._m(11), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(item["sku"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["name"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["quantity"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["purchase_rate"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["purchase_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["issance_price"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["issance_cost"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["returned"] * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item))))])]);
+    }, [_c("td", [_vm._v(_vm._s(item["sku"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["name"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["quantity"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["purchase_rate"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["purchase_rate"] * item["quantity"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["issance_price"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["quantity"] * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["returned"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item["returned"] * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item["quantity"] - item["returned"]))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice((item["quantity"] - item["returned"]) * item["purchase_rate"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice((item["quantity"] - item["returned"]) * item["issance_price"])))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.calculateProfit(item))))])]);
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
@@ -12897,7 +13127,79 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Purchase Price ")]), _vm._v(" "), _c("th", [_vm._v("Purchase Cost")]), _vm._v(" "), _c("th", [_vm._v("Issuance Price")]), _vm._v(" "), _c("th", [_vm._v("Issuance Cost")]), _vm._v(" "), _c("th", [_vm._v("Returns Cost")]), _vm._v(" "), _c("th", [_vm._v("Profit")])])]);
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-shopping-bag"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-undo"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-credit-card"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-shopping-bag"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-credit-card"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Purchase Price ")]), _vm._v(" "), _c("th", [_vm._v("Purchase Cost")]), _vm._v(" "), _c("th", [_vm._v("Selling Price")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("Return Quantity")]), _vm._v(" "), _c("th", [_vm._v("Return Amount")]), _vm._v(" "), _c("th", [_vm._v("Net Quantity")]), _vm._v(" "), _c("th", [_vm._v("Net Buying Cost")]), _vm._v(" "), _c("th", [_vm._v("Net Sales")]), _vm._v(" "), _c("th", [_vm._v("Profit")])])]);
 }];
 render._withStripped = true;
 

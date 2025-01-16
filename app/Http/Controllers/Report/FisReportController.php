@@ -328,7 +328,7 @@ class FisReportController extends Controller
              $issance_price = $singleProductGroup->sum('total');
              $issance_rate = $singleProductGroup->sum('price');
              $products[$singleProductGroup[0]->product_id]['issance_price'] = round( $issance_rate / $quantity );
-             $products[$singleProductGroup[0]->product_id]['issance_cost'] = round( $issance_price  );
+             $products[$singleProductGroup[0]->product_id]['issance_cost'] = round( $issance_price );
 
              //Get Return and calculate there total
              $return_quantity = 0;

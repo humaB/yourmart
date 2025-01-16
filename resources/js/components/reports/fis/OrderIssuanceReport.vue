@@ -27,10 +27,192 @@
                             </form>
                         </div>
                         <div class="col-md-12">
+
+                            <div class="row" style="margin-left: -10px">
+                                <!-- cards -->
+                                    <table style="table-layout: fixed; width: 100%;">
+                                        <tr>
+                                            <td style="padding : 10px">
+                                                <div class="card card-statistic-1">
+                                                    <div class="card-icon l-bg-cyan">
+                                                        <i class="fa fa-shopping-bag"></i>
+                                                    </div>
+                                                    <div class="card-wrap">
+                                                        <div class="padding-20">
+                                                            <div class="text-right">
+                                                                <h4 class="font-light mb-0">
+                                                                    <i class="ti-arrow-up text-success"></i>
+                                                                    {{ formatPrice(totalIssuanceQuantity) }}
+                                                                </h4>
+                                                                <span class="text-muted">Products</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="padding : 10px">
+                                                <div class="card card-statistic-1">
+                                                    <div class="card-icon l-bg-orange">
+                                                        <i class="fas fa-clock"></i>
+                                                    </div>
+                                                    <div class="card-wrap">
+                                                        <div class="padding-20">
+                                                            <div class="text-right">
+                                                                <h4 class="font-light mb-0">
+                                                                    <i class="ti-arrow-up text-success"></i>
+                                                                    {{ formatPrice(totalIssuancePurchased) }}
+                                                                </h4>
+                                                                <span class="text-muted">Purchased</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="padding : 10px">
+                                                <div class="card card-statistic-1">
+                                                    <div class="card-icon l-bg-green">
+                                                        <i class="fas fa-boxes"></i>
+                                                    </div>
+                                                    <div class="card-wrap">
+                                                        <div class="padding-20">
+                                                            <div class="text-right">
+                                                                <h4 class="font-light mb-0">
+                                                                    <i class="ti-arrow-up text-success"></i>
+                                                                    {{  formatPrice(totalSellingQuantity.toFixed(0)) }}
+                                                                </h4>
+                                                                <span class="text-muted">Selling</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="padding : 10px">
+                                                <div class="card card-statistic-1">
+                                                    <div class="card-icon l-bg-purple">
+                                                        <i class="fas fa-undo"></i>
+                                                    </div>
+                                                    <div class="card-wrap">
+                                                        <div class="padding-20">
+                                                            <div class="text-right">
+                                                                <h4 class="font-light mb-0">
+                                                                    <i class="ti-arrow-up text-success"></i>
+                                                                    {{ totalReturnQuantity }}
+                                                                </h4>
+                                                                <span class="text-muted">Returns</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td style="padding : 10px">
+                                                <div class="card card-statistic-1">
+                                                    <div class="card-icon l-bg-cyan">
+                                                        <i class="fas fa-credit-card"></i>
+                                                    </div>
+                                                    <div class="card-wrap">
+                                                        <div class="padding-20">
+                                                            <div class="text-right">
+                                                                <h4 class="font-light mb-0">
+                                                                    <i class="ti-arrow-up text-success"></i>
+                                                                    {{ formatPrice(totalReturnAmount) }}
+                                                                </h4>
+                                                                <span class="text-muted">Return Amount</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+
+                                <div class="row" style="margin-left: -10px">
+                                    <!-- cards -->
+                                        <table style="table-layout: fixed; width: 100%;">
+                                            <tr>
+                                                <td style="padding : 10px">
+                                                    <div class="card card-statistic-1">
+                                                        <div class="card-icon l-bg-cyan">
+                                                            <i class="fa fa-shopping-bag"></i>
+                                                        </div>
+                                                        <div class="card-wrap">
+                                                            <div class="padding-20">
+                                                                <div class="text-right">
+                                                                    <h4 class="font-light mb-0">
+                                                                        <i class="ti-arrow-up text-success"></i>
+                                                                        {{ totalIssuanceQuantity - totalReturnQuantity }}
+                                                                    </h4>
+                                                                    <span class="text-muted">Net Quantity</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding : 10px">
+                                                    <div class="card card-statistic-1">
+                                                        <div class="card-icon l-bg-orange">
+                                                            <i class="fas fa-clock"></i>
+                                                        </div>
+                                                        <div class="card-wrap">
+                                                            <div class="padding-20">
+                                                                <div class="text-right">
+                                                                    <h4 class="font-light mb-0">
+                                                                        <i class="ti-arrow-up text-success"></i>
+                                                                        {{ formatPrice( netBuyingCost ) }}
+                                                                    </h4>
+                                                                    <span class="text-muted">Net Buying Cost</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding : 10px">
+                                                    <div class="card card-statistic-1">
+                                                        <div class="card-icon l-bg-green">
+                                                            <i class="fas fa-boxes"></i>
+                                                        </div>
+                                                        <div class="card-wrap">
+                                                            <div class="padding-20">
+                                                                <div class="text-right">
+                                                                    <h4 class="font-light mb-0">
+                                                                        <i class="ti-arrow-up text-success"></i>
+                                                                        {{  formatPrice(netSales.toFixed(0)) }}
+                                                                    </h4>
+                                                                    <span class="text-muted">Net Sales</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td style="padding : 10px">
+                                                    <div class="card card-statistic-1">
+                                                        <div class="card-icon l-bg-purple">
+                                                            <i class="fas fa-credit-card"></i>
+                                                        </div>
+                                                        <div class="card-wrap">
+                                                            <div class="padding-20">
+                                                                <div class="text-right">
+                                                                    <h4 class="font-light mb-0">
+                                                                        <i class="ti-arrow-up text-success"></i>
+                                                                        {{ formatPrice(profit) }}
+                                                                    </h4>
+                                                                    <span class="text-muted">Profit</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+
+
                             <div class="card-body table-responsive" v-if="loader">
                                 <bullet-list-loader :width="250">
                                 </bullet-list-loader>
                             </div>
+
                             <table class="table table-bordered" id="order_issuance_table" v-else>
                                 <thead>
 
@@ -40,9 +222,13 @@
                                         <th>Quantity</th>
                                         <th>Purchase Price </th>
                                         <th>Purchase Cost</th>
-                                        <th>Issuance Price</th>
-                                        <th>Issuance Cost</th>
-                                        <th>Returns Cost</th>
+                                        <th>Selling Price</th>
+                                        <th>Sales</th>
+                                        <th>Return Quantity</th>
+                                        <th>Return Amount</th>
+                                        <th>Net Quantity</th>
+                                        <th>Net Buying Cost</th>
+                                        <th>Net Sales</th>
                                         <th>Profit</th>
                                     </tr>
                                 </thead>
@@ -52,10 +238,14 @@
                                        <td>{{ item['name']}}</td>
                                        <td>{{ item['quantity']}}</td>
                                        <td>{{ item['purchase_rate']}}</td>
-                                       <td>{{ formatPrice( item['purchase_cost'] )}}</td>
+                                       <td>{{ formatPrice( item['purchase_rate'] * item['quantity'] )}}</td>
                                        <td>{{ item['issance_price']}}</td>
-                                       <td>{{ formatPrice( item['issance_cost'] )}}</td>
+                                       <td>{{ formatPrice( item['quantity'] * item['issance_price'] )}}</td>
+                                       <td>{{ item['returned'] }}</td>
                                        <td>{{ formatPrice( item['returned'] * item['issance_price'] ) }}</td>
+                                       <td>{{ item['quantity'] - item['returned'] }}</td>
+                                       <td>{{ formatPrice( (item['quantity'] - item['returned']) * item['purchase_rate'] ) }}</td>
+                                       <td>{{ formatPrice( (item['quantity'] - item['returned']) * item['issance_price'] ) }}</td>
                                        <td>{{ formatPrice( calculateProfit(item)) }}</td>
                                     </tr>
                                 </tbody>
@@ -87,6 +277,55 @@ export default {
             },
         }
     },
+    computed: {
+        totalIssuanceQuantity() {
+            return Object.values(this.data).reduce((total, item) => {
+                return total + item.quantity;
+            }, 0);
+        },
+        totalIssuancePurchased() {
+            return Object.values(this.data).reduce((total, item) => {
+                return total + (parseFloat(item.quantity) * parseFloat(item.purchase_rate));
+            }, 0);
+        },
+        totalReturnQuantity() {
+            return Object.values(this.data).reduce((total, item) => {
+                return total + item.returned;
+            }, 0);
+        },
+        totalReturnAmount() {
+            return Object.values(this.data).reduce((total, item) => {
+                return total + (item.returned * item.issance_price);
+            }, 0);
+        },
+        totalSellingQuantity() {
+            return Object.values(this.data).reduce((total, item) => {
+                console.log(parseFloat(item.quantity) * parseFloat(item.issance_price));
+
+                return total + (parseFloat(item.quantity) * parseFloat(item.issance_price));
+            }, 0);
+        },
+        netBuyingCost() {
+            return Object.values(this.data).reduce((total, item) => {
+                return total + ((parseFloat(item.quantity) - parseFloat(item.returned)) * parseFloat(item.purchase_rate));
+            }, 0);
+        },
+        netSales() {
+            return Object.values(this.data).reduce((total, item) => {
+                return total + ((parseFloat(item.quantity) - parseFloat(item.returned)) * parseFloat(item.issance_price));
+            }, 0);
+        },
+        profit() {
+            let totalProfit = 0;
+            Object.values(this.data).forEach(item => {
+                const netSale = item['issance_cost'];
+                const returnCost = item['returned'] * item['issance_price'];
+                const purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
+                totalProfit += netSale - returnCost - purchaseCost;
+            });
+            return totalProfit;
+        }
+    },
     methods: {
         calculateProfit(item) {
             const netSale = item['issance_cost'];
@@ -99,7 +338,7 @@ export default {
             return date ? moment(date).format('DD-MMM-YYYY') : '';
         },
         formatPrice: function formatPrice(price) {
-            const value = parseFloat(price).toFixed(2)
+            const value = parseFloat(price)
             var string = value.toString();
             return string
                 .replace(/,/g, "")
