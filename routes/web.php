@@ -81,6 +81,7 @@ Route::group(['prefix' => '/pages', 'middleware' => 'auth'], function () {
     Route::get('/', [PageController::class, 'index'])->name('pages');
     Route::get('/library', [LibraryPageController::class, 'index'])->name('library.page');
     Route::get('/help-center', [HelpCenterPageController::class, 'index'])->name('help.center.page');
+    Route::get('/dropshipper-settings', [LibraryPageController::class, 'dropshipperIndex'])->name('pages.dropshipper');
 });
 
 

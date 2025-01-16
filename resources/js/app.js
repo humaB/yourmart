@@ -36,6 +36,7 @@ Vue.component('supplier-requests', require('./pages/admin/request/SupplierReques
 Vue.component('courier-page', require('./pages/inventory/product/setting/CourierPage.vue').default );
 Vue.component('page-setting-page', require('./pages/pages/PageSettingPage.vue').default );
 Vue.component('library-setting-page', require('./pages/pages/LibrarySettingPage.vue').default );
+Vue.component('dropshipper-setting-page', require('./pages/pages/DropshipperSettingPage.vue').default );
 Vue.component('help-center-setting-page', require('./pages/pages/HelpCenterSettingPage.vue').default );
 Vue.component('ticket-page', require('./pages/TicketPage.vue').default );
 Vue.component('profile-setting-page', require('./pages/setting/ProfileSettingPage.vue').default );

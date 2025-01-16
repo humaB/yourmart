@@ -69,6 +69,44 @@ class LibraryPageController extends Controller
         return response()->json(['message' => 'Library page settings saved successfully!'], 200);
     }
 
+    public function dropshipperIndex(){
+        return view('pages.dropshipper_setting_page');
+    }
+
+    public function fetchDropshipperSetting(){
+        $dropshipper = LibraryPageSetting::where('name', ['dropshipper-page'])->first();
+        $supplier = LibraryPageSetting::where('name', ['supplier-page'])->first();
+
+        $data = [
+            'supplier'    => $supplier,
+            'dropshipper' => $dropshipper
+        ];
+        return (new ResponseCollection( $data ))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function dropshipperSettingStore( Request $request ){
+
+        $data = [
+            'description' => $request->type . '-page',
+            'video_links' => $request->video,
+            'added_by'    => auth()->user()->id, // Assuming you're using authentication
+        ];
+
+        // Check if attachment is present in the request and add it to the data array
+        if ($request->attachment && $request->has('attachment')) {
+            $data['attachment'] = $this->image($request->attachment);
+        }
+
+        LibraryPageSetting::updateOrCreate(
+            ['name' => $request->type . '-page'], // Condition to check for an existing record
+            $data
+        );
+
+        return response()->json(['message' => 'DS/SP PAGE settings saved successfully!'], 200);
+    }
+
     public function image( $image  ){
         $filenameWithExt = $image->getClientOriginalName();
         //get just filename

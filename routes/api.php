@@ -120,6 +120,9 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
         Route::get('/home-page',  [ PageController::class , 'fectHomePageSettingStore']);
         Route::post('/home-page',  [ PageController::class , 'homePageSettingStore']);
 
+        Route::get('/dropshipper-page',  [ LibraryPageController::class , 'fetchDropshipperSetting']);
+        Route::post('/dropshipper-page',  [ LibraryPageController::class , 'dropshipperSettingStore']);
+
         Route::group(['prefix' => 'library-page'], function(){
             Route::get('/',  [ LibraryPageController::class , 'fetchCourses']);
             Route::post('/',  [ LibraryPageController::class , 'store']);

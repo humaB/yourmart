@@ -5204,6 +5204,164 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _components_pages_library_NewLibraryCourse_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/pages/library/NewLibraryCourse.vue */ "./resources/js/components/pages/library/NewLibraryCourse.vue");
+/* harmony import */ var _components_pages_library_EditLibraryCourse_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/pages/library/EditLibraryCourse.vue */ "./resources/js/components/pages/library/EditLibraryCourse.vue");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/lib/axios.js");
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "DropshipperSettingPage",
+  components: {
+    NewLibraryCourse: _components_pages_library_NewLibraryCourse_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    EditLibraryCourse: _components_pages_library_EditLibraryCourse_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
+      btnLoading: false,
+      tableLoading: false,
+      dropshipperData: {
+        isEditing: false
+      },
+      supplierData: {
+        isEditing: false
+      },
+      dropshipper: {
+        video: "",
+        attachment: ""
+      },
+      supplier: {
+        video: "",
+        attachment: ""
+      }
+    };
+  },
+  created: function created() {
+    this.settings();
+  },
+  methods: {
+    setDropshipperAttachment: function setDropshipperAttachment(event) {
+      this.dropshipper.attachment = event.target.files[0];
+    },
+    setSupplierAttachment: function setSupplierAttachment(event) {
+      this.supplier.attachment = event.target.files[0];
+    },
+    editItem: function editItem(item) {
+      if (item.name == 'dropshipper-page') {
+        Vue.set(this.dropshipperData, 'isEditing', true);
+      }
+      if (item.name == 'supplier-page') {
+        Vue.set(this.supplierData, 'isEditing', true);
+      }
+    },
+    saveItem: function saveItem(item) {
+      var _this = this;
+      var fd = new FormData();
+      if (item == 'dropshipper-page') {
+        if (this.dropshipper.attachment == '' && !this.dropshipperData) {
+          return swal({
+            icon: 'error',
+            title: 'Required',
+            text: 'Please upload attachment first'
+          });
+        }
+        if (this.dropshipper.video == '') {
+          return swal({
+            icon: 'error',
+            title: 'Required',
+            text: 'Please add video link first'
+          });
+        }
+        this.dropshipper.type = 'dropshipper';
+        fd.append('type', 'dropshipper');
+        fd.append('attachment', this.dropshipper.attachment);
+        fd.append('video', this.dropshipper.video);
+      }
+      if (item == 'supplier-page') {
+        if (this.supplier.attachment == '' && !this.supplierData) {
+          return swal({
+            icon: 'error',
+            title: 'Required',
+            text: 'Please upload attachment first'
+          });
+        }
+        if (this.supplier.video == '') {
+          return swal({
+            icon: 'error',
+            title: 'Required',
+            text: 'Please add video link first'
+          });
+        }
+        fd.append('type', 'supplier');
+        fd.append('attachment', this.supplier.attachment);
+        fd.append('video', this.supplier.video);
+      }
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].post(this.api_url + "pages/settings/dropshipper-page", fd).then(function (response) {
+        _this.dropshipper = {
+          attachment: "",
+          video: ""
+        };
+        _this.supplier = {
+          attachment: "",
+          video: ""
+        };
+        _this.settings();
+        return swal({
+          icon: 'success',
+          title: 'Success',
+          text: 'Data Successfully added'
+        });
+      });
+    },
+    cancelEdit: function cancelEdit(item) {
+      if (item.name == 'dropshipper-page') {
+        this.dropshipperData.isEditing = false;
+      }
+      if (item.name == 'supplier-page') {
+        this.supplierData.isEditing = false;
+      }
+    },
+    handleFileChange: function handleFileChange(event, type) {
+      // Handle the file change event
+      if (type == 'dropshipper-page') {
+        this.setDropshipperAttachment(event);
+      } else {
+        this.setSupplierAttachment(event);
+      }
+    },
+    settings: function settings() {
+      var _this2 = this;
+      this.tableLoading = true;
+      axios__WEBPACK_IMPORTED_MODULE_2__["default"].get(this.api_url + "pages/settings/dropshipper-page").then(function (response) {
+        _this2.supplierData = response.data.response.supplier;
+        _this2.dropshipperData = response.data.response.dropshipper;
+        if (_this2.dropshipperData) {
+          _this2.dropshipper.video = _this2.dropshipperData.video_links;
+        }
+        if (_this2.supplierData) {
+          _this2.supplier.video = _this2.supplierData.video_links;
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/HelpCenterSettingPage.vue?vue&type=script&lang=js":
 /*!****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/HelpCenterSettingPage.vue?vue&type=script&lang=js ***!
@@ -19098,6 +19256,284 @@ var render = function render() {
   })], 1)])])])])], 1)])])], 1);
 };
 var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=template&id=56265cc1":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=template&id=56265cc1 ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("section", [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "course_table"
+    }
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", [_vm.dropshipperData ? _c("tr", [_c("th", {
+    attrs: {
+      scope: "row"
+    }
+  }, [_vm._v("1")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.dropshipperData.name))]), _vm._v(" "), !_vm.dropshipperData.isEditing ? _c("td", [_c("a", {
+    attrs: {
+      href: _vm.public_url + "storage/uploads/pages/library/courses/" + _vm.dropshipperData.attachment,
+      target: "_blank"
+    }
+  }, [_c("img", {
+    attrs: {
+      width: "80",
+      src: _vm.public_url + "storage/uploads/pages/library/courses/" + _vm.dropshipperData.attachment
+    }
+  })])]) : _c("td", [_c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file"
+    },
+    on: {
+      change: function change($event) {
+        return _vm.setDropshipperAttachment($event);
+      }
+    }
+  })]), _vm._v(" "), !_vm.dropshipperData.isEditing ? _c("td", [_vm._v(_vm._s(_vm.dropshipperData.video_links))]) : _c("td", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.dropshipper.video,
+      expression: "dropshipper.video"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.dropshipper.video
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.dropshipper, "video", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("td", [!_vm.dropshipperData.isEditing ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.editItem(_vm.dropshipperData);
+      }
+    }
+  }, [_vm._v("Edit")]) : _c("button", {
+    staticClass: "btn btn-success",
+    on: {
+      click: function click($event) {
+        return _vm.saveItem("dropshipper-page");
+      }
+    }
+  }, [_vm._v("Save")]), _vm._v(" "), _vm.dropshipperData.isEditing ? _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.cancelEdit(_vm.dropshipperData);
+      }
+    }
+  }, [_vm._v("Cancel")]) : _vm._e()])]) : _vm._e(), _vm._v(" "), !_vm.dropshipperData ? _c("tr", [_c("th", {
+    attrs: {
+      scope: "row"
+    }
+  }, [_vm._v("1")]), _vm._v(" "), _c("td", [_vm._v("Dropshipper")]), _vm._v(" "), _c("td", [_c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file"
+    },
+    on: {
+      change: function change($event) {
+        return _vm.setDropshipperAttachment($event);
+      }
+    }
+  })]), _vm._v(" "), _c("td", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.dropshipper.video,
+      expression: "dropshipper.video"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Enter Video Link"
+    },
+    domProps: {
+      value: _vm.dropshipper.video
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.dropshipper, "video", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("td", [_c("button", {
+    staticClass: "btn btn-success",
+    on: {
+      click: function click($event) {
+        return _vm.saveItem("dropshipper-page");
+      }
+    }
+  }, [_vm._v("Update")])])]) : _vm._e(), _vm._v(" "), _vm.supplierData ? _c("tr", [_c("th", {
+    attrs: {
+      scope: "row"
+    }
+  }, [_vm._v("2")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.supplierData.name))]), _vm._v(" "), !_vm.supplierData.isEditing ? _c("td", [_c("a", {
+    attrs: {
+      href: _vm.public_url + "storage/uploads/pages/library/courses/" + _vm.supplierData.attachment,
+      target: "_blank"
+    }
+  }, [_c("img", {
+    attrs: {
+      width: "80",
+      src: _vm.public_url + "storage/uploads/pages/library/courses/" + _vm.supplierData.attachment
+    }
+  })])]) : _c("td", [_c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file"
+    },
+    on: {
+      change: function change($event) {
+        return _vm.setSupplierAttachment($event);
+      }
+    }
+  })]), _vm._v(" "), !_vm.supplierData.isEditing ? _c("td", [_vm._v(_vm._s(_vm.supplierData.video_links))]) : _c("td", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.supplier.video,
+      expression: "supplier.video"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.supplier.video
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.supplier, "video", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("td", [!_vm.supplierData.isEditing ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.editItem(_vm.supplierData);
+      }
+    }
+  }, [_vm._v("Edit")]) : _c("button", {
+    staticClass: "btn btn-success",
+    on: {
+      click: function click($event) {
+        return _vm.saveItem("supplier-page");
+      }
+    }
+  }, [_vm._v("Save")]), _vm._v(" "), _vm.supplierData.isEditing ? _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.cancelEdit(_vm.supplierData);
+      }
+    }
+  }, [_vm._v("Cancel")]) : _vm._e()])]) : _vm._e(), _vm._v(" "), !_vm.supplierData ? _c("tr", [_c("th", {
+    attrs: {
+      scope: "row"
+    }
+  }, [_vm._v("2")]), _vm._v(" "), _c("td", [_vm._v("Supplier")]), _vm._v(" "), _c("td", [_c("input", {
+    staticClass: "form-control",
+    attrs: {
+      type: "file"
+    },
+    on: {
+      change: function change($event) {
+        return _vm.setSupplierAttachment($event);
+      }
+    }
+  })]), _vm._v(" "), _c("td", [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.supplier.video,
+      expression: "supplier.video"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      placeholder: "Enter Video Link"
+    },
+    domProps: {
+      value: _vm.supplier.video
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.supplier, "video", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("td", [_c("button", {
+    staticClass: "btn btn-success",
+    on: {
+      click: function click($event) {
+        return _vm.saveItem("supplier-page");
+      }
+    }
+  }, [_vm._v("Update")])])]) : _vm._e()])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header justify-content-between"
+  }, [_c("h4", [_vm._v("Dropshipper/Supplier Page settings")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("Type")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("Attachment")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("Video Link")]), _vm._v(" "), _c("th", {
+    attrs: {
+      scope: "col"
+    }
+  }, [_vm._v("Action")])])]);
+}];
 render._withStripped = true;
 
 
@@ -46982,6 +47418,45 @@ component.options.__file = "resources/js/pages/inventory/product/setting/Courier
 
 /***/ }),
 
+/***/ "./resources/js/pages/pages/DropshipperSettingPage.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/pages/pages/DropshipperSettingPage.vue ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DropshipperSettingPage_vue_vue_type_template_id_56265cc1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropshipperSettingPage.vue?vue&type=template&id=56265cc1 */ "./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=template&id=56265cc1");
+/* harmony import */ var _DropshipperSettingPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropshipperSettingPage.vue?vue&type=script&lang=js */ "./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DropshipperSettingPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DropshipperSettingPage_vue_vue_type_template_id_56265cc1__WEBPACK_IMPORTED_MODULE_0__.render,
+  _DropshipperSettingPage_vue_vue_type_template_id_56265cc1__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/pages/DropshipperSettingPage.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/pages/pages/HelpCenterSettingPage.vue":
 /*!************************************************************!*\
   !*** ./resources/js/pages/pages/HelpCenterSettingPage.vue ***!
@@ -47817,6 +48292,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=script&lang=js":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=script&lang=js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperSettingPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperSettingPage.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperSettingPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/pages/pages/HelpCenterSettingPage.vue?vue&type=script&lang=js":
 /*!************************************************************************************!*\
   !*** ./resources/js/pages/pages/HelpCenterSettingPage.vue?vue&type=script&lang=js ***!
@@ -48573,6 +49064,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierPage_vue_vue_type_template_id_009775de__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierPage_vue_vue_type_template_id_009775de__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierPage.vue?vue&type=template&id=009775de */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=template&id=009775de");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=template&id=56265cc1":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=template&id=56265cc1 ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperSettingPage_vue_vue_type_template_id_56265cc1__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperSettingPage_vue_vue_type_template_id_56265cc1__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperSettingPage_vue_vue_type_template_id_56265cc1__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperSettingPage.vue?vue&type=template&id=56265cc1 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/pages/DropshipperSettingPage.vue?vue&type=template&id=56265cc1");
 
 
 /***/ }),
@@ -69536,6 +70044,7 @@ Vue.component('supplier-requests', (__webpack_require__(/*! ./pages/admin/reques
 Vue.component('courier-page', (__webpack_require__(/*! ./pages/inventory/product/setting/CourierPage.vue */ "./resources/js/pages/inventory/product/setting/CourierPage.vue")["default"]));
 Vue.component('page-setting-page', (__webpack_require__(/*! ./pages/pages/PageSettingPage.vue */ "./resources/js/pages/pages/PageSettingPage.vue")["default"]));
 Vue.component('library-setting-page', (__webpack_require__(/*! ./pages/pages/LibrarySettingPage.vue */ "./resources/js/pages/pages/LibrarySettingPage.vue")["default"]));
+Vue.component('dropshipper-setting-page', (__webpack_require__(/*! ./pages/pages/DropshipperSettingPage.vue */ "./resources/js/pages/pages/DropshipperSettingPage.vue")["default"]));
 Vue.component('help-center-setting-page', (__webpack_require__(/*! ./pages/pages/HelpCenterSettingPage.vue */ "./resources/js/pages/pages/HelpCenterSettingPage.vue")["default"]));
 Vue.component('ticket-page', (__webpack_require__(/*! ./pages/TicketPage.vue */ "./resources/js/pages/TicketPage.vue")["default"]));
 Vue.component('profile-setting-page', (__webpack_require__(/*! ./pages/setting/ProfileSettingPage.vue */ "./resources/js/pages/setting/ProfileSettingPage.vue")["default"]));
