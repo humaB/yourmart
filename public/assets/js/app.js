@@ -2896,7 +2896,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalSellingQuantity: function totalSellingQuantity() {
       return Object.values(this.data).reduce(function (total, item) {
-        console.log(parseFloat(item.quantity) * parseFloat(item.issance_price));
         return total + parseFloat(item.quantity) * parseFloat(item.issance_price);
       }, 0);
     },
@@ -2913,20 +2912,20 @@ __webpack_require__.r(__webpack_exports__);
     profit: function profit() {
       var totalProfit = 0;
       Object.values(this.data).forEach(function (item) {
-        var netSale = item['issance_cost'];
-        var returnCost = item['returned'] * item['issance_price'];
-        var purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
-        totalProfit += netSale - returnCost - purchaseCost;
+        var netQuantity = item['quantity'] - item['returned'];
+        var netSale = item['issance_price'] * netQuantity;
+        var netPurchase = netQuantity * item['purchase_rate'];
+        totalProfit += netSale - netPurchase;
       });
       return totalProfit;
     }
   },
   methods: {
     calculateProfit: function calculateProfit(item) {
-      var netSale = item['issance_cost'];
-      var returnCost = item['returned'] * item['issance_price'];
-      var purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
-      var profit = netSale - returnCost - purchaseCost;
+      var netQuantity = item['quantity'] - item['returned'];
+      var netSale = item['issance_price'] * netQuantity;
+      var netPurchase = netQuantity * item['purchase_rate'];
+      var profit = netSale - netPurchase;
       return profit;
     },
     formatDate: function formatDate(date) {

@@ -300,8 +300,6 @@ export default {
         },
         totalSellingQuantity() {
             return Object.values(this.data).reduce((total, item) => {
-                console.log(parseFloat(item.quantity) * parseFloat(item.issance_price));
-
                 return total + (parseFloat(item.quantity) * parseFloat(item.issance_price));
             }, 0);
         },
@@ -318,20 +316,20 @@ export default {
         profit() {
             let totalProfit = 0;
             Object.values(this.data).forEach(item => {
-                const netSale = item['issance_cost'];
-                const returnCost = item['returned'] * item['issance_price'];
-                const purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
-                totalProfit += netSale - returnCost - purchaseCost;
+                const netQuantity = (item['quantity'] - item['returned']);
+                const netSale = item['issance_price'] * netQuantity;
+                const netPurchase = netQuantity * item['purchase_rate'];
+                totalProfit += netSale - netPurchase;
             });
             return totalProfit;
         }
     },
     methods: {
         calculateProfit(item) {
-            const netSale = item['issance_cost'];
-            const returnCost = item['returned'] * item['issance_price'];
-            const purchaseCost = (item['quantity'] - item['returned']) * item['purchase_rate'];
-            const profit = netSale - returnCost - purchaseCost;
+            const netQuantity = (item['quantity'] - item['returned']);
+            const netSale = item['issance_price'] * netQuantity;
+            const netPurchase = netQuantity * item['purchase_rate'];
+            const profit = netSale - netPurchase;
             return profit;
         },
         formatDate(date) {
