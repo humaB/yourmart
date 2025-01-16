@@ -309,6 +309,7 @@ class FisReportController extends Controller
 
         $products = [];
         foreach( $issues as $singleProductGroup ){
+
             $products[$singleProductGroup[0]->product_id]['sku'] = $singleProductGroup[0]->product->variation->sku;
             $products[$singleProductGroup[0]->product_id]['name'] = $singleProductGroup[0]->product->title;
             $quantity = $singleProductGroup->sum('quantity');
@@ -320,6 +321,7 @@ class FisReportController extends Controller
             ->where('product_id', $singleProductGroup[0]->product_id)
             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
             ->first();
+
             $purchase_cost = (float)$rate->rate * $quantity;
             $products[$singleProductGroup[0]->product_id]['purchase_rate'] = round($rate->rate);
             $products[$singleProductGroup[0]->product_id]['purchase_cost'] = round( $purchase_cost );
@@ -327,7 +329,7 @@ class FisReportController extends Controller
              //Calculate Avg Issuance Price
              $issance_price = $singleProductGroup->sum('total');
              $issance_rate = $singleProductGroup->sum('price');
-             $products[$singleProductGroup[0]->product_id]['issance_price'] = round( $issance_rate / $quantity );
+             $products[$singleProductGroup[0]->product_id]['issance_price'] = round( $issance_price / $quantity );
              $products[$singleProductGroup[0]->product_id]['issance_cost'] = round( $issance_price );
 
              //Get Return and calculate there total

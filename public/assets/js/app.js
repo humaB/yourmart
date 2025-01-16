@@ -12403,7 +12403,7 @@ var render = function render() {
     attrs: {
       id: "inventory_good_received"
     }
-  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("GRN #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Received Qty")]), _vm._v(" "), _vm.role == "admin" ? _c("th", [_vm._v("Action")]) : _vm._e()])]), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+  }, [_c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("GRN #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Rate ")]), _vm._v(" "), _c("th", [_vm._v("Received Qty")]), _vm._v(" "), _c("th", [_vm._v("Tax")]), _vm._v(" "), _c("th", [_vm._v("Delivery Charges")]), _vm._v(" "), _c("th", [_vm._v("Discount")]), _vm._v(" "), _c("th", [_vm._v("Total")]), _vm._v(" "), _vm.role == "admin" ? _c("th", [_vm._v("Action")]) : _vm._e()])]), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", {
@@ -12438,7 +12438,15 @@ var render = function render() {
       staticClass: "h5"
     }, [_vm._v(_vm._s(_vm.formatPrice(item.price)))]), _vm._v(" "), _c("td", {
       staticClass: "h5"
-    }, [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _vm.role == "admin" ? _c("td", [_c("button", {
+    }, [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", {
+      staticClass: "h5"
+    }, [_vm._v(_vm._s(item.tax))]), _vm._v(" "), _c("td", {
+      staticClass: "h5"
+    }, [_vm._v(_vm._s(item.delivery_charges))]), _vm._v(" "), _c("td", {
+      staticClass: "h5"
+    }, [_vm._v(_vm._s(item.discount))]), _vm._v(" "), _c("td", {
+      staticClass: "h5"
+    }, [_vm._v(_vm._s(_vm.formatPrice(item.total)))]), _vm._v(" "), _vm.role == "admin" ? _c("td", [_c("button", {
       staticClass: "btn btn-danger",
       attrs: {
         "data-toggle": "modal",

@@ -51,6 +51,10 @@
                                         <th>Product Name </th>
                                         <th>Rate </th>
                                         <th>Received Qty</th>
+                                        <th>Tax</th>
+                                        <th>Delivery Charges</th>
+                                        <th>Discount</th>
+                                        <th>Total</th>
                                         <th v-if="role == 'admin'">Action</th>
                                     </tr>
                                 </thead>
@@ -75,6 +79,10 @@
                                         <td class="h5">{{ formatPrice(item.price) }}</td>
 
                                         <td class="h5">{{ item.quantity }}</td>
+                                        <td class="h5">{{ item.tax }}</td>
+                                        <td class="h5">{{ item.delivery_charges }}</td>
+                                        <td class="h5">{{ item.discount }}</td>
+                                        <td class="h5">{{ formatPrice(item.total) }}</td>
                                         <td v-if="role == 'admin'"><button class="btn btn-danger" data-toggle="modal" data-target="#deleteGRN" @click="deleteGRN(item)"><i class="fa fa-trash"></i></button></td>
                                     </tr>
                                 </tbody>
