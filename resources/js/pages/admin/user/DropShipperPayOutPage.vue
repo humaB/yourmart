@@ -150,6 +150,77 @@
                                 <h5>All Payouts Record</h5>
                             </div>
                             <div class="card-body">
+                                <div class="row px-4">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-purple">
+                                                <i class="fa fa-hand-holding-usd"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPayable) }}
+                                                        </h3>
+                                                        <span class="text-muted">Total Payouts</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-green">
+                                                <i class="fa fa-thumbs-up"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid) }}
+                                                        </h3>
+                                                        <span class="text-muted">Total Paid</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-cyan">
+                                                <i class="fa fa-calculator"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalRemaining)
+                                                            }}
+                                                        </h3>
+                                                        <span class="text-muted">Total Remaining</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-orange">
+                                                <i class="fa fa-clipboard-list"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
+                                                        </h3>
+                                                        <span class="text-muted">Total Sellers</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <table class="table table-bordered" id="payout-record">
                                         <thead>

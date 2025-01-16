@@ -18367,6 +18367,72 @@ var render = function render() {
   }, [_vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
+    staticClass: "row px-4"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPayable)) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Sellers")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
     staticClass: "table table-bordered",
@@ -18630,6 +18696,38 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "card-header"
   }, [_c("h5", [_vm._v("All Payouts Record")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fa fa-hand-holding-usd"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fa fa-thumbs-up"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-calculator"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fa fa-clipboard-list"
+  })]);
 }];
 render._withStripped = true;
 
