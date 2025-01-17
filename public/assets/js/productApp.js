@@ -4347,6 +4347,18 @@ __webpack_require__.r(__webpack_exports__);
       dispatcheds: []
     };
   },
+  computed: {
+    totalPendingShipment: function totalPendingShipment() {
+      return this.pendingDispatchs.reduce(function (acc, current) {
+        return acc + parseFloat(current.total_bill);
+      }, 0);
+    },
+    totalHandOver: function totalHandOver() {
+      return this.dispatcheds.reduce(function (acc, current) {
+        return acc + parseFloat(current.total_amount);
+      }, 0);
+    }
+  },
   created: function created() {
     this.fetchPendingDispatchs({
       from: null,
@@ -4410,31 +4422,6 @@ __webpack_require__.r(__webpack_exports__);
         vm.dataTable();
       })["catch"](function (err) {
         return _this2.fetchReturnOrders();
-      });
-    },
-    addToStock: function addToStock(data) {
-      var _this3 = this;
-      var vm = this;
-      vm.btnLoader = true;
-      axios.post(this.api_url + "inventory/products/store/product-returned", data).then(function (response) {
-        $("#returnProduct").modal('hide');
-        _this3.$emit('saved', true);
-        vm.btnLoader = false;
-        _this3.fetchReturnOrders();
-        return swal({
-          title: "Success",
-          text: 'In ward Created Successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        vm.btnLoader = false;
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
-          icon: "error",
-          timer: 3000
-        });
       });
     },
     dataTable: function dataTable() {
@@ -13940,6 +13927,62 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-5"
+  }, [_c("div", {
+    staticClass: "card bg-info"
+  }, [_c("div", {
+    staticClass: "card-statistic-4 text-white"
+  }, [_c("div", {
+    staticClass: "align-items-center justify-content-between"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("Pending Shipments Amount")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.formatPrice(_vm.totalPendingShipment)) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
+  }, [_c("div", {
+    staticClass: "banner-img"
+  }, [_c("img", {
+    attrs: {
+      src: _vm.public_url + "/assets2/img/banner/2.png",
+      alt: ""
+    }
+  })])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-63 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-5"
+  }, [_c("div", {
+    staticClass: "card bg-success"
+  }, [_c("div", {
+    staticClass: "card-statistic-4"
+  }, [_c("div", {
+    staticClass: "align-items-center justify-content-between"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content text-white"
+  }, [_c("h5", {
+    staticClass: "font-15"
+  }, [_vm._v("Handed-Over Shipments Amount")]), _vm._v(" "), _c("h2", {
+    staticClass: "mb-3 font-18"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.formatPrice(_vm.totalHandOver)) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
+  }, [_c("div", {
+    staticClass: "banner-img"
+  }, [_c("img", {
+    attrs: {
+      src: _vm.public_url + "/assets2/img/banner/4.png",
+      alt: ""
+    }
+  })])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "tab-content",
     attrs: {
       id: "myTabContent2"
@@ -13952,7 +13995,7 @@ var render = function render() {
       "aria-labelledby": "home-tab3"
     }
   }, [_c("div", {
-    staticClass: "row mt-5"
+    staticClass: "row"
   }, [_c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
@@ -14064,16 +14107,12 @@ var render = function render() {
       "aria-labelledby": "profile-tab3"
     }
   }, [_c("div", {
-    staticClass: "row mt-5"
+    staticClass: "row"
   }, [_c("div", {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
-  }, [_c("TableHeader", {
-    attrs: {
-      tableHeader: _vm.tableHeader
-    }
-  }), _vm._v(" "), _c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row"
@@ -14129,18 +14168,18 @@ var render = function render() {
         _vm.$set(_vm.filter, "to", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _vm._m(4)]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _vm._m(5)]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-3"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {
       id: "dispatched-order_table"
     }
-  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.dispatcheds, function (item, index) {
+  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.dispatcheds, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + "-" + item.order.order_no : item.order.order_no) + "\n                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
-  }), 0)])])])])], 1)])])])])])])]);
+  }), 0)])])])])])])])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -14194,6 +14233,12 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Order Date")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Shipped")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

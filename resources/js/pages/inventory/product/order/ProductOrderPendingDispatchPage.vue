@@ -14,9 +14,59 @@
                 </li>
 
               </ul>
+
+              <div class="row">
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-5">
+                    <div class="card bg-info">
+                        <div class="card-statistic-4 text-white">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
+                                        <div class="card-content">
+                                            <h5 class="font-15">Pending Shipments Amount</h5>
+                                            <h2 class="mb-3 font-18">
+                                                {{ formatPrice(totalPendingShipment) }}
+                                            </h2>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img :src="public_url + '/assets2/img/banner/2.png'" alt="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-63 col-lg-6 col-md-6 col-sm-6 col-xs-12 mt-5">
+                    <div class="card bg-success">
+                        <div class="card-statistic-4">
+                            <div class="align-items-center justify-content-between">
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
+                                        <div class="card-content text-white">
+                                            <h5 class="font-15">Handed-Over Shipments Amount</h5>
+                                            <h2 class="mb-3 font-18">
+                                                {{ formatPrice(totalHandOver) }}
+                                            </h2>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
+                                        <div class="banner-img">
+                                            <img :src="public_url + '/assets2/img/banner/4.png'" alt="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              </div>
               <div class="tab-content" id="myTabContent2">
                 <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
-                    <div class="row mt-5">
+                    <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                           <div class="card card-primary">
                             <TableHeader :tableHeader="tableHeader" />
@@ -79,10 +129,12 @@
 
                 </div>
                 <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
-                    <div class="row mt-5">
+                    <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                           <div class="card card-primary">
-                            <TableHeader :tableHeader="tableHeader" />
+                            <div class="card-header">
+                                <h4>Shipped</h4>
+                            </div>
 
                             <div class="card-body">
                               <!-- Table -->
@@ -171,6 +223,18 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
                 dispatcheds : []
             };
         },
+        computed:{
+            totalPendingShipment() {
+                return this.pendingDispatchs.reduce((acc, current) => {
+                    return acc + parseFloat(current.total_bill);
+                    }, 0)
+            },
+            totalHandOver() {
+                return this.dispatcheds.reduce((acc, current) => {
+                    return acc + parseFloat(current.total_amount);
+                    }, 0)
+            }
+        },
         created(){
             this.fetchPendingDispatchs({ from : null , to : null});
         },
@@ -234,34 +298,6 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
                     vm.dataTable()
                 })
                 .catch((err) => this.fetchReturnOrders());
-            },
-            addToStock(data){
-                let vm = this;
-                vm.btnLoader = true;
-                axios
-                .post(this.api_url + "inventory/products/store/product-returned", data)
-                .then((response) => {
-
-                    $("#returnProduct").modal('hide');
-                    this.$emit('saved', true)
-                    vm.btnLoader = false;
-                    this.fetchReturnOrders();
-                    return swal({
-                        title: "Success",
-                        text: 'In ward Created Successfully',
-                        icon: "success",
-                        timer: 3000,
-                    });
-                })
-                .catch((err) => {
-                    vm.btnLoader = false;
-                    return swal({
-                        title: "Error",
-                        text: err.response.data.response[0],
-                        icon: "error",
-                        timer: 3000,
-                    });
-                });
             },
             dataTable(){
                 if ($.fn.DataTable.isDataTable("#order_table")) {
