@@ -13,6 +13,7 @@ use App\Models\Inventory\Courier\CourierCategoryRange;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
+use App\Models\Inventory\Order\OrderDispatchedRecord;
 use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\Inventory\Product\Setting\OtherCharge;
@@ -37,6 +38,11 @@ class OrderController extends Controller
     public function record()
     {
         return view('inventory.product.order.order_record');
+    }
+
+    public function dispatchIndex()
+    {
+        return view('inventory.product.order.order_dispatch');
     }
 
     public function fetchOrders(Request $request)
@@ -119,6 +125,52 @@ class OrderController extends Controller
         return (new ResponseCollection($orders))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function pendingDispatchs(Request $request)
+    {
+
+        $dispatched = OrderDispatchedRecord::with('order.shop')
+        ->when($request->from, function ($query, $from) {
+            return $query->whereDate('created_at', '>=', $from);
+        })
+        ->when($request->to, function ($query, $to) {
+            return $query->whereDate('created_at', '<=', $to);
+        })
+        ->get();
+
+        $orders = Order::with('shop', 'user')
+        ->where('type', 'Normal')
+        ->where('status', '5')
+        ->when($request->from, function ($query, $from) {
+            return $query->whereDate('created_at', '>=', $from);
+        })
+        ->when($request->to, function ($query, $to) {
+            return $query->whereDate('created_at', '<=', $to);
+        })
+        ->whereNotIn('id', $dispatched->pluck('order_id'))
+        ->orderBy('id', 'desc')->get();
+
+        $data = [
+            'pendings'   => $orders,
+            'dispatched' => $dispatched
+        ];
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function addDispatched( Request $request ){
+
+        OrderDispatchedRecord::create([
+            'order_id'        => $request->id,
+            'tracking_number' => $request->tracking_number,
+            'total_amount'    => $request->total_bill,
+            'added_by'        => auth()->user()->id
+        ]);
+
+        return ['message' => 'Order Dispatched'];
     }
 
     public function markasReplacement(Request $request)

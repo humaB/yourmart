@@ -31,6 +31,12 @@
         ->where('status', '0')
         ->count();
         $payOuts = DB::table('drop_shippers')->whereColumn('total_payable', '!=', 'total_paid')->count();
+
+        $dispatched = DB::table('order_dispatched_records')->pluck('order_id');
+
+        $shipments = DB::table('orders')->where('type', 'Normal')->where('status', '5')
+        ->whereNotIn('id', $dispatched)
+        ->count();
     @endphp
     <ul class="sidebar-menu">
         <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}" >
@@ -43,6 +49,18 @@
                 @endif
             </a>
         </li>
+
+        <li class="dropdown {{ request()->is('dispatchs') ? 'active' : '' }}" >
+            <a href="{{ route('inventory.products.orders.dispatchs') }}" class="nav-link"><i class="fa fa-box" aria-hidden="true"></i><span>Shipments</span>
+                @if ( $shipments > 0)
+                <span class="badge headerBadge1"
+                    style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                    {{ $shipments }}
+                </span>
+            @endif
+            </a>
+        </li>
+
 
         <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}" >
             <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's</span>
