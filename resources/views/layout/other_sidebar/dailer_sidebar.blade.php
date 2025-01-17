@@ -7,6 +7,12 @@
         $orders = DB::table('orders')
         ->where('status', '0')
         ->count();
+
+        $dispatched = DB::table('order_dispatched_records')->pluck('order_id');
+
+        $shipments = DB::table('orders')->where('type', 'Normal')->whereIn('status', ['4','5'])
+        ->whereNotIn('id', $dispatched)
+        ->count();
     @endphp
     <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}" >
         <a href="{{ route('inventory.products.order_record') }}" class="nav-link"><i class="fas fa-save"></i><span>Orders Record</span>
@@ -28,6 +34,17 @@
                     <li><a class="nav-link" href="{{ route('inventory.products.check_out.return_record') }}">
                         <i data-feather="file-text"></i>Record</a></li>
                 </ul>
+    </li>
+
+    <li class="dropdown {{ request()->is('dispatchs') ? 'active' : '' }}" >
+        <a href="{{ route('inventory.products.orders.dispatchs') }}" class="nav-link"><i class="fa fa-box" aria-hidden="true"></i><span>Shipments</span>
+            @if ( $shipments > 0)
+            <span class="badge headerBadge1"
+                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                {{ $shipments }}
+            </span>
+        @endif
+        </a>
     </li>
 
 </ul>
