@@ -141,7 +141,7 @@ class OrderController extends Controller
 
         $orders = Order::with('shop', 'user')
         ->where('type', 'Normal')
-        ->where('status', '5')
+        ->whereIn('status', ['4','5'])
         ->when($request->from, function ($query, $from) {
             return $query->whereDate('created_at', '>=', $from);
         })

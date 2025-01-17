@@ -34,7 +34,7 @@
 
         $dispatched = DB::table('order_dispatched_records')->pluck('order_id');
 
-        $shipments = DB::table('orders')->where('type', 'Normal')->where('status', '5')
+        $shipments = DB::table('orders')->where('type', 'Normal')->whereIn('status', ['4','5'])
         ->whereNotIn('id', $dispatched)
         ->count();
     @endphp
