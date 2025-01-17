@@ -311,7 +311,7 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
                             dom: "Bfrtip",
                             buttons: [{
                                 extend: "excel",
-                                title: 'Returns Details'
+                                title: 'Pending Shipments'
                                 },
                             ],
                         })
@@ -320,7 +320,7 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
                             dom: "Bfrtip",
                             buttons: [{
                                 extend: "excel",
-                                title: 'Returns Details'
+                                title: 'Handed-Over Shipments'
                                 },
                             ],
                         })

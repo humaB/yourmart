@@ -4436,14 +4436,14 @@ __webpack_require__.r(__webpack_exports__);
           dom: "Bfrtip",
           buttons: [{
             extend: "excel",
-            title: 'Returns Details'
+            title: 'Pending Shipments'
           }]
         });
         $('#dispatched-order_table').DataTable({
           dom: "Bfrtip",
           buttons: [{
             extend: "excel",
-            title: 'Returns Details'
+            title: 'Handed-Over Shipments'
           }]
         });
       }, 300);
