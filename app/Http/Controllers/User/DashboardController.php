@@ -43,6 +43,7 @@ class DashboardController extends Controller
         $topFiveDropshippers = $this->topFiveDropshippers( $request );
         $topFiveSellingProduct = $this->topFiveSellingProduct( $request );
         $topFiveSuppliers   = $this->topFiveSuppliers( $request );
+        $inventoryStatus    = $this->inventoryStatus( $request );
 
         $data = [
             'orders'  => [
@@ -62,12 +63,65 @@ class DashboardController extends Controller
             'allProcessedOrders' => $allProcessedOrders,
             'topFiveDropshippers' => $topFiveDropshippers,
             'topFiveSellingProduct' => $topFiveSellingProduct,
-            'topFiveSuppliers'      => $topFiveSuppliers
+            'topFiveSuppliers'      => $topFiveSuppliers,
+            'inventoryStatus'       => $inventoryStatus
         ];
 
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    private function inventoryStatus( $request ){
+
+        $purchaseOrders = PurchaseOrder::selectRaw("
+            COUNT(*) as totalPo,
+            SUM(CASE WHEN status = '1' THEN 1 ELSE 0 END) as approved,
+            SUM(CASE WHEN status = '0' THEN 1 ELSE 0 END) as pending,
+            SUM(CASE WHEN status = '2' THEN 1 ELSE 0 END) as rejected,
+            SUM(CASE WHEN status = '1' THEN total_amount ELSE 0 END) as totalAmount,
+            SUM(CASE WHEN status = '1' THEN remaining_amount ELSE 0 END) as remaining
+        ")
+        ->when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->first();
+
+        $lowStock = ProductVariation::where('status', '0')
+        ->where('stock', '>', 0)
+        ->where('stock', '<=', 20)
+        ->count();
+
+        $highStock = ProductVariation::where('status', '0')
+        ->where('stock', '>', 150)
+        ->count();
+
+        $activeCategoryCount = Product::distinct('category_id')->count('category_id');
+
+        $totalTags = Tag::count();
+
+        return [
+            'purchaseOrders' => [
+                'totalPo' => $purchaseOrders->totalPo,
+                'approved' => $purchaseOrders->approved,
+                'pending' => $purchaseOrders->pending,
+                'rejected' => $purchaseOrders->rejected,
+                'totalAmount' => $purchaseOrders->totalAmount,
+                'remaining' => $purchaseOrders->remaining,
+                'paid' => $purchaseOrders->totalAmount - $purchaseOrders->remaining,
+            ],
+
+            'lowStock' => $lowStock,
+            'highStock' => $highStock,
+
+            'categories' =>  $activeCategoryCount,
+            'totalTags' => $totalTags,
+        ];
+
+
     }
 
     private function topFiveSellingProduct( $request ){

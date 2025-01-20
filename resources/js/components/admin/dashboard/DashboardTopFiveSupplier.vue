@@ -11,7 +11,7 @@
                 <img class="mr-3 rounded" width="55" :src="`${web_url}public/storage/uploads/supplier/${supplier.supplier.profile_image}`" alt="product">
                 <div class="media-body">
                   <div class="float-right">
-                    <div class="font-weight-600 text-muted text-small">{{ formatPrice(supplier.total_amount_sum) }} Sales</div>
+                    <div class="font-weight-600 text-muted text-small">{{ formatPrice(supplier.total_amount_sum) }} Purchase</div>
                   </div>
                   <div class="media-title">{{ supplier.supplier.full_name }}</div>
                   <div class="mt-1">

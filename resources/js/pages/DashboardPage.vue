@@ -80,245 +80,10 @@
                         <DashboardTopFiveSupplier
                             :topFiveSuppliers='topFiveSuppliers'
                         />
-                              <div class="col-md-12">
-                                <div class="card">
-                                    <h4 class="pl-4 pt-4">Purchase Orders</h4>
-                                    <div class="card-body">
-                                        <div class="row" style="margin-left: -10px">
-                                            <!-- cards -->
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <div class="card bg-info">
-                                                    <div class="card-statistic-4 text-white">
-                                                        <div class="align-items-center justify-content-between">
-                                                            <div class="row">
-                                                                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
-                                                                    <div class="card-content">
-                                                                        <h5 class="font-15">Payable Amount</h5>
-                                                                        <h2 class="mb-3 font-18">
-                                                                            {{ formatPrice( po.totalAmount) }}
-                                                                        </h2>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                                                    <div class="banner-img">
-                                                                        <img :src="public_url + '/assets2/img/banner/2.png'" alt="" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <div class="card bg-success">
-                                                    <div class="card-statistic-4">
-                                                        <div class="align-items-center justify-content-between">
-                                                            <div class="row">
-                                                                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
-                                                                    <div class="card-content text-white">
-                                                                        <h5 class="font-15">Paid Amount</h5>
-                                                                        <h2 class="mb-3 font-18">
-                                                                            {{ formatPrice(po.paid) }}
-                                                                        </h2>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                                                    <div class="banner-img">
-                                                                        <img :src="public_url + '/assets2/img/banner/4.png'" alt="" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <div class="card bg-warning">
-                                                    <div class="card-statistic-4">
-                                                        <div class="align-items-center justify-content-between">
-                                                            <div class="row">
-                                                                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
-                                                                    <div class="card-content">
-                                                                        <h5 class="font-15">
-                                                                            Remaining Payable's
-                                                                        </h5>
-                                                                        <h2 class="mb-3 font-18">
-                                                                            {{ formatPrice(po.remaining) }}
-                                                                        </h2>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                                                    <div class="banner-img">
-                                                                        <img :src="public_url + '/assets2/img/banner/1.png'" alt="" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <table style="table-layout: fixed; width: 100%;">
-                                                <tr>
-                                                    <td style="padding : 10px">
-                                                        <div class="card card-statistic-1">
-                                                            <div class="card-icon l-bg-cyan">
-                                                                <i class="fa fa-check-circle"></i>
-                                                            </div>
-                                                            <div class="card-wrap">
-                                                                <div class="padding-20">
-                                                                    <div class="text-right">
-                                                                        <h3 class="font-light mb-0">
-                                                                            <i class="ti-arrow-up text-success"></i>
-                                                                            {{ po.totalPo }}
-                                                                        </h3>
-                                                                        <span class="text-muted">Total Purchase Orders</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td style="padding : 10px">
-                                                        <div class="card card-statistic-1">
-                                                            <div class="card-icon l-bg-orange">
-                                                                <i class="fas fa-clock"></i>
-                                                            </div>
-                                                            <div class="card-wrap">
-                                                                <div class="padding-20">
-                                                                    <div class="text-right">
-                                                                        <h3 class="font-light mb-0">
-                                                                            <i class="ti-arrow-up text-success"></i>
-                                                                            {{ po.pending }}
-                                                                        </h3>
-                                                                        <span class="text-muted">Pending</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td style="padding : 10px">
-                                                        <div class="card card-statistic-1">
-                                                            <div class="card-icon l-bg-purple">
-                                                                <i class="fa fa-thumbs-up"></i>
-                                                            </div>
-                                                            <div class="card-wrap">
-                                                                <div class="padding-20">
-                                                                    <div class="text-right">
-                                                                        <h3 class="font-light mb-0">
-                                                                            <i class="ti-arrow-up text-success"></i>
-                                                                            {{ po.approved }}
-                                                                        </h3>
-                                                                        <span class="text-muted">Approved</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td style="padding : 10px">
-                                                        <div class="card card-statistic-1">
-                                                            <div class="card-icon l-bg-green">
-                                                                <i class="fa fa-thumbs-down"></i>
-                                                            </div>
-                                                            <div class="card-wrap">
-                                                                <div class="padding-20">
-                                                                    <div class="text-right">
-                                                                        <h3 class="font-light mb-0">
-                                                                            <i class="ti-arrow-up text-success"></i>
-                                                                            {{ po.rejected }}
-                                                                        </h3>
-                                                                        <span class="text-muted">Rejected</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-
-                                                </tr>
-                                            </table>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Inventory Status</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row m-1 mt-3">
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-purple">
-                                                        <i class="fas fa-store"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0"> 524</h4>
-                                                                <span class="text-muted">Active Categories</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-green">
-                                                        <i class="fas fa-hiking"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0">
-                                                                    <i class="ti-arrow-up text-success"></i> 4,000,0
-                                                                </h4>
-                                                                <span class="text-muted">Tags</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-cyan">
-                                                        <i class="fas fa-chart-line"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0">
-                                                                    <i class="ti-arrow-up text-success"></i> 15
-                                                                </h4>
-                                                                <span class="text-muted">High Stock</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                                <div class="card card-statistic-1">
-                                                    <div class="card-icon l-bg-orange">
-                                                        <i class="fas fa-dollar-sign"></i>
-                                                    </div>
-                                                    <div class="card-wrap">
-                                                        <div class="padding-20">
-                                                            <div class="text-right">
-                                                                <h4 class="font-light mb-0">
-                                                                    <i class="ti-arrow-up text-success"></i>10
-                                                                </h4>
-                                                                <span class="text-muted">Low Stock</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <DashboardSectionFour
+                            :inventoryStatus="inventoryStatus"
+                        />
 
 
                               <div class="col-md-12">
@@ -605,6 +370,7 @@
 </template>
 
 <script>
+import DashboardSectionFour from '../components/admin/dashboard/DashboardSectionFour.vue';
 import DashboardSectionOne from '../components/admin/dashboard/DashboardSectionOne.vue';
 import DashboardSectionThree from '../components/admin/dashboard/DashboardSectionThree.vue';
 import DashboardSectionTwo from '../components/admin/dashboard/DashboardSectionTwo.vue';
@@ -622,7 +388,8 @@ export default {
         DashboardSectionThree,
         DashboardTopFiveDropshipper,
         DashboardTopFiveProduct,
-        DashboardTopFiveSupplier
+        DashboardTopFiveSupplier,
+        DashboardSectionFour
     },
     data() {
         return {
@@ -682,18 +449,7 @@ export default {
                 remaining : 0,
                 total_sellers : 0
             },
-            inventoryStatus : {
-                numberOfItemsInStock  : 0,
-                stockValue            : 0,
-                totalItemInReturn     : 0,
-                totalReturnValue      : 0,
-                grossStockValue       : 0,
-                numberOfProductInStock : 0,
-                outOfStock            : 0,
-                publishedProducts     : 0,
-                draftProducts         : 0,
-                trashedProducts       : 0,
-            },
+            inventoryStatus : {},
             categoryWiseProducts : [],
             tagWiseProducts : [],
             fastMovingProducts : [],
@@ -731,43 +487,9 @@ export default {
         this.top10SellingProducts();
         this.top10Dropshippers(this.filter);
         this.fetchTicketStatusCounts();
-        this.fetchPurchaseOrders( this.filter );
         this.fetchCategoryandTagWiseProducts();
     },
     methods: {
-        fetchPurchaseOrders( data ){
-                let vm = this;
-                axios
-                .post(this.api_url + "inventory/products/purchase-orders/status-counts", data)
-                .then((response) => {
-                    const results = response.data.response[0];
-
-                    vm.po.totalPo = results.purchaseOrders.totalPo;
-                    vm.po.approved = results.purchaseOrders.approved;
-                    vm.po.pending = results.purchaseOrders.pending;
-                    vm.po.rejected = results.purchaseOrders.rejected;
-                    vm.po.totalAmount = results.purchaseOrders.totalAmount;
-                    vm.po.remaining = results.purchaseOrders.remaining;
-                    vm.po.paid = vm.po.totalAmount - vm.po.remaining;
-
-                    vm.inventoryStatus = {
-                        numberOfItemsInStock  : results.numberOfItemsInStock,
-                        stockValue            : results.stockValue,
-                        totalItemInReturn     : results.totalItemInReturn,
-                        totalReturnValue      : results.totalReturnValue,
-                        grossStockValue       : results.grossStockValue,
-                        numberOfProductInStock : results.numberOfProductInStock,
-                        outOfStock            : results.outOfStock,
-                        publishedProducts     : results.publishedProducts,
-                        draftProducts         : results.draftProducts,
-                        trashedProducts       : results.trashedProducts,
-
-                        categoryWiseProducts  : results.categoryWiseProducts,
-                        tagWiseProducts       : results.tagWiseProducts
-                    }
-                })
-                .catch((err) => this.fetchPurchaseOrders());
-            },
         fetchCategoryandTagWiseProducts(){
             let vm = this;
                 axios
@@ -852,26 +574,8 @@ export default {
                     vm.topFiveDropshippers = results.topFiveDropshippers;
                     vm.topFiveProduct = results.topFiveSellingProduct;
                     vm.topFiveSuppliers = results.topFiveSuppliers;
+                    vm.inventoryStatus = results.inventoryStatus;
 
-                    vm.orders = {
-                        totalOrder: results.totalOrder,
-                        inProcess: results.inProcess,
-                        outOfDelivery: results.outOfDelivery,
-                        delivered: results.delivered,
-                        returns: results.returns,
-                        normalOrders: results.normalOrders,
-                        darazOrders: results.darazOrders,
-                        cashOrders: results.cashOrders,
-                        grossSales : results.grossSales,
-                        itemSolds : results.itemSolds,
-                        productCost : results.productCost,
-                        packing : results.packing,
-                        packingProfit : results.packingProfit,
-                        courier : results.courier,
-                        courierProfit : results.courierProfit,
-                        costOfGood : results.costOfGood,
-                        grossProfit : results.grossProfit,
-                    }
                 })
 
         },
