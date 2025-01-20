@@ -57,308 +57,12 @@
                           </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-purple">
-                                    <i class="fa fa-hand-holding-usd"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(dropshipper.total) }}
-                                            </h3>
-                                            <span class="text-muted">Total Payouts</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-green">
-                                    <i class="fa fa-thumbs-up"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(dropshipper.paid) }}
-                                            </h3>
-                                            <span class="text-muted">Total Paid</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-cyan">
-                                    <i class="fa fa-calculator"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(dropshipper.remaining)
-                                                }}
-                                            </h3>
-                                            <span class="text-muted">Total Remaining</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                            <div class="card card-statistic-1">
-                                <div class="card-icon l-bg-orange">
-                                    <i class="fa fa-clipboard-list"></i>
-                                </div>
-                                <div class="card-wrap">
-                                    <div class="padding-20">
-                                        <div class="text-right">
-                                            <h3 class="font-light mb-0">
-                                                <i class="ti-arrow-up text-success"></i> {{ dropshipper.total_sellers }}
-                                            </h3>
-                                            <span class="text-muted">Total Sellers</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div class="col-md-12">
-
-                            <table style="table-layout: fixed; width: 100%;">
-                                <tr>
-                                    <td style="width: 20%; padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-cyan">
-                                                <i class="fa fa-shopping-bag"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                            {{ orders.totalOrder }}
-                                                        </h3>
-                                                        <span class="text-muted">Open Support Ticket</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 20%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-orange">
-                                                <i class="fas fa-clock"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                            {{ orders.inProcess }}
-                                                        </h3>
-                                                        <span class="text-muted">Pending DS Application</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 25%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-purple">
-                                                <i class="fas fa-shopping-cart"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                            {{ orders.outOfDelivery }}
-                                                        </h3>
-                                                        <span class="text-muted">Pending Suppliers Applications</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 20%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-green">
-                                                <i class="fas fa-clock"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                            {{ orders.inProcess }}
-                                                        </h3>
-                                                        <span class="text-muted">Returns Receivable</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td style="width: 20%;padding : 10px">
-                                        <div class="card card-statistic-1">
-                                            <div class="card-icon l-bg-cyan">
-                                                <i class="fas fa-clock"></i>
-                                            </div>
-                                            <div class="card-wrap">
-                                                <div class="padding-20">
-                                                    <div class="text-right">
-                                                        <h3 class="font-light mb-0">
-                                                            <i class="ti-arrow-up text-success"></i>
-                                                            {{ orders.inProcess }}
-                                                        </h3>
-                                                        <span class="text-muted">Pending PO</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-
-                                </tr>
-                            </table>
-                        </div>
-
-                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4>DS Applications Status</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.dropshippers.total }}</div>
-                                        <div class="font-weight-bold">Applications</div>
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar l-bg-purple" role="progressbar"
-                                                :style="{ width: applications.dropshippers.total + '%' }"
-                                                :aria-valuenow="applications.dropshippers.total" aria-valuemin="0"
-                                                aria-valuemax="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.dropshippers.approved }}</div>
-                                        <div class="font-weight-bold">Approved</div>
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar bg-success"
-                                                :style="{ width: getApplicationPercentage(applications.dropshippers.approved, applications.dropshippers.total) + '%' }"
-                                                :aria-valuenow="getApplicationPercentage(applications.dropshippers.approved, applications.dropshippers.total)"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{ getApplicationPercentage(applications.dropshippers.approved,
-                                                applications.dropshippers.total) }}% </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.dropshippers.reject }}</div>
-                                        <div class="font-weight-bold">Rejected</div>
-
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar bg-orange"
-                                                :style="{ width: getApplicationPercentage(applications.dropshippers.reject, applications.dropshippers.total) + '%' }"
-                                                :aria-valuenow="getApplicationPercentage(applications.dropshippers.reject, applications.dropshippers.total)"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{ getApplicationPercentage(applications.dropshippers.reject,
-                                                applications.dropshippers.total) }}% </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.dropshippers.pending }}</div>
-                                        <div class="font-weight-bold">In-Process</div>
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar l-bg-yellow" role="progressbar"
-                                                :style="{ width: getApplicationPercentage(applications.dropshippers.pending, applications.dropshippers.total) + '%' }"
-                                                :aria-valuenow="getApplicationPercentage(applications.dropshippers.pending, applications.dropshippers.total)"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{ getApplicationPercentage(applications.dropshippers.pending,
-                                                applications.dropshippers.total) }}%
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                        <div class="col-lg-6 col-md-6 col-12 col-sm-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4>Supplier Applications Status</h4>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.supplier.total }}</div>
-                                        <div class="font-weight-bold">Applications</div>
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar l-bg-purple" role="progressbar"
-                                                data-width="100%"
-                                                aria-valuenow="100" aria-valuemin="0"
-                                                aria-valuemax="100">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.supplier.approved }}</div>
-                                        <div class="font-weight-bold">Approved</div>
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar bg-success"
-                                                :style="{ width: getApplicationPercentage(applications.supplier.approved, applications.supplier.total) + '%' }"
-                                                :aria-valuenow="getApplicationPercentage(applications.supplier.approved, applications.supplier.total)"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{ getApplicationPercentage(applications.supplier.approved,
-                                                applications.supplier.total) }}% </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.supplier.reject }}</div>
-                                        <div class="font-weight-bold">Rejected</div>
-
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar bg-orange"
-                                                :style="{ width: getApplicationPercentage(applications.supplier.reject, applications.supplier.total) + '%' }"
-                                                :aria-valuenow="getApplicationPercentage(applications.supplier.reject, applications.supplier.total)"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{ getApplicationPercentage(applications.supplier.reject,
-                                                applications.supplier.total) }}% </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="text-small float-right font-weight-bold text-muted">{{
-                                            applications.supplier.pending }}</div>
-                                        <div class="font-weight-bold">In-Process</div>
-                                        <div class="progress" data-height="15">
-                                            <div class="progress-bar l-bg-yellow" role="progressbar"
-                                                :style="{ width: getApplicationPercentage(applications.supplier.pending, applications.supplier.total) + '%' }"
-                                                :aria-valuenow="getApplicationPercentage(applications.supplier.pending, applications.supplier.total)"
-                                                aria-valuemin="0" aria-valuemax="100">
-                                                {{ getApplicationPercentage(applications.supplier.pending,
-                                                applications.supplier.total) }}%
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-
+                        <DashboardSectionTwo
+                            :dropshipper="pendingPayouts"
+                            :applications="applications"
+                            :pendingRequests="pendingRequests"
+                        />
 
                         <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <div class="card">
@@ -1562,13 +1266,15 @@
 
 <script>
 import DashboardSectionOne from '../components/admin/dashboard/DashboardSectionOne.vue';
+import DashboardSectionTwo from '../components/admin/dashboard/DashboardSectionTwo.vue';
 import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
 
 export default {
     name: 'DashboardPage',
     components: {
         DropshipperDetails,
-        DashboardSectionOne
+        DashboardSectionOne,
+        DashboardSectionTwo
     },
     data() {
         return {
@@ -1663,7 +1369,22 @@ export default {
             approvedDropshipper : {},
             activeSeller : {},
             liveProduct : {},
-            orderProcessed : {}
+            orderProcessed : {},
+            pendingPayouts : {},
+            pendingRequests : {
+                dropshippers: {
+                    total: 0,
+                    pending: 0,
+                    approved: 0,
+                    reject: 0
+                },
+                supplier: {
+                    total: 0,
+                    pending: 0,
+                    approved: 0,
+                    reject: 0
+                },
+            }
         };
     },
     created() {
@@ -1785,6 +1506,8 @@ export default {
                     vm.activeSeller = results.activeSeller;
                     vm.liveProduct = results.liveProduct;
                     vm.orderProcessed = results.orderProcessed;
+                    vm.pendingPayouts = results.payOuts;
+                    vm.pendingRequests = results.pendingRequests;
 
                     vm.orders = {
                         totalOrder: results.totalOrder,
@@ -1919,13 +1642,7 @@ export default {
         getPercentage(statusCount) {
             if (this.totalTicketSum.total_tickets === 0) return 0;
             return Math.round((statusCount / this.totalTicketSum.total_tickets) * 100);
-        },
-        getApplicationPercentage(count, total) {
-            if (count === 0) return 0; // Correct check to prevent division by zero
-            const percentage = Math.round((count / total) * 100);
-            return percentage;
         }
-
     },
 };
 </script>
