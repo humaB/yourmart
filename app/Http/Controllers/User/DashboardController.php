@@ -15,6 +15,7 @@ use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\Supplier;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -29,45 +30,11 @@ class DashboardController extends Controller
             $q->whereDate('created_at', '<=', $request->to);
         })->get();
 
-        $items = OrderItem::whereIn('order_id', $orders->where('status', '8')->pluck('id'))->get();
 
-        // Calculate product code (quantity * avg_price)
-        $itemsWithProductCost = $items->map(function ($item) {
-            $quantity = $item->quantity;
-            $avgPrice = $item->variation->avg_price ?? 0; // Use 0 if avg_price is null
-            $productCost = $quantity * $avgPrice;
-
-            // Add the product code to each item for reference
-            $item->product_cost = $productCost;
-
-            return $item;
-        });
-
-        // Sum up the product_cost values
-        $totalProductCostSum = $itemsWithProductCost->sum('product_cost');
-
-        $grossSales = $items->map(function ($item) {
-            $quantity = $item->quantity;
-            $avgPrice = $item->price ?? 0; // Use 0 if avg_price is null
-            $productCost = $quantity * $avgPrice;
-
-            // Add the product code to each item for reference
-            $item->gross_sale = $productCost;
-
-            return $item;
-        });
-
-        // Sum up the product_cost values
-        $totalGrossSale = $itemsWithProductCost->sum('gross_sale');
-
-        $packingCharges = $orders->where('status', '8')->sum('packaging_price');
-        $packingChargeProfit = $orders->where('status', '8')->sum('packaging_price') * 0.15;
-
-        $courier = $orders->where('status', '8')->sum('courier_service_price');
-        $courierProfit = $orders->where('status', '8')->sum('courier_service_internal_price');
-
-        $totalCost   = $totalProductCostSum + ($packingCharges - $packingChargeProfit) + ($courier - $courierProfit);
-        $grossProfit = $totalGrossSale - $totalCost;
+        $approvedDropshipper = $this->getApprovedDropshippers( $request );
+        $activeSeller        = $this->getActiveSeller($request);
+        $liveProduct        = $this->getLiveProducts();
+        $orderProcessed     = $this->orderProcessed($orders);
 
         $data = [
             'totalOrder'    => $orders->count(),
@@ -80,20 +47,176 @@ class DashboardController extends Controller
             'darazOrders'   => $orders->where('type', 'Daraz')->count(),
             'cashOrders'    => $orders->where('type', 'Cash')->count(),
 
-            'grossSales'    => $totalGrossSale,
-            'itemSolds'     => $items->sum('quantity'),
-            'productCost'   => $totalProductCostSum,
-            'packing'       => $packingCharges,
-            'packingProfit' => $packingChargeProfit,
-            'courier'       => $courier,
-            'courierProfit' => $courierProfit,
-            'costOfGood'    => $totalCost,
-            'grossProfit'   => $grossProfit
+            'approvedDropshipper' => $approvedDropshipper,
+            'activeSeller'       => $activeSeller,
+            'liveProduct'        => $liveProduct,
+            'orderProcessed'     => $orderProcessed,
+
         ];
 
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    private function orderProcessed( $orders){
+        $processed = $orders->whereNotIn('status',['6','7'])->count();
+        $returns = $orders->whereIn('status',['9','10'])->count();
+
+        $items = OrderItem::whereIn('order_id', $orders->where('status', '8')->pluck('id'))->get();
+
+        // Calculate product cost (quantity * avg_price)
+        $itemsWithProductCost = $items->map(function ($item) {
+            $quantity = $item->quantity;
+            $avgPrice = $item->variation->avg_price ?? 0; // Use 0 if avg_price is null
+            $productCost = (float)$quantity * (float)$avgPrice;
+
+            // Add the product code to each item for reference
+            $item->product_cost = $productCost;
+
+            return $item;
+        });
+
+        // Sum up the product_cost values
+        $totalProductCostSum = $itemsWithProductCost->sum('product_cost');
+
+        $grossSales = $items->map(function ($item) {
+            $quantity = $item->quantity;
+            $price = $item->price ?? 0;
+            $productSellingCost = (float)$quantity * (float)$price;
+
+            // Add the product code to each item for reference
+            $item->gross_sale = $productSellingCost;
+
+            return $item;
+        });
+
+        // Sum up the product_cost values
+        $totalGrossSale = $grossSales->sum('gross_sale');
+
+        $packingCharges = $orders->where('status', '8')->sum('packaging_price');
+        $packingChargeProfit = $orders->where('status', '8')->sum('packaging_price') * 0.15;
+
+        $courier = $orders->where('status', '8')->sum('courier_service_price');
+        $courierProfit = $orders->where('status', '8')->sum('courier_service_internal_price');
+
+        $totalCost   = $totalProductCostSum;
+        $grossProfit = $totalGrossSale - $totalCost;
+
+        $returnRatio = $processed > 0 ? ($returns / $processed) * 100 : 0;
+
+        return [
+            'processed'           => $processed,
+            'totalGrossSale'      => $totalGrossSale,
+            'totalCost'           => $totalCost,
+            'packing'       => $packingCharges,
+            'packingProfit' => $packingChargeProfit,
+            'courier'       => $courier,
+            'courierProfit' => $courierProfit,
+            'costOfGood'    => $totalCost,
+            'grossProfit'   => $grossProfit,
+            'totalProductCostSum' => $totalProductCostSum,
+            'returnRatio'         => round($returnRatio)
+        ];
+    }
+
+    private function getLiveProducts(){
+
+        $products = Product::where('status', '0')->pluck('id');
+
+        $variations = ProductVariation::whereIn('product_id', $products)
+        ->where('status', '0')
+        ->where('stock', '>', '0')->get(['id', 'stock', 'avg_price']);
+
+        $currentStockValue = 0;
+        foreach( $variations as $variation ){
+            $currentStockValue += (float)$variation->stock * (float)$variation->avg_price;
+        }
+
+        return [
+            'count'             => $products->count(),
+            'currentStockValue' => $currentStockValue
+        ];
+
+    }
+
+    private function getApprovedDropshippers( $request ){
+        $from = $request->from;
+        $to = $request->to;
+
+        $currentCount = DropShipper::where('status', '1')
+        ->when($from, function ($q) use ($from) {
+            $q->whereDate('created_at', '>=', $from);
+        })
+        ->when($to, function ($q) use ($to) {
+            $q->whereDate('created_at', '<=', $to);
+        })
+        ->count();
+
+        // Calculate previous time range
+        $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+        $previousTo = Carbon::parse($to)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+
+        $previousCount = DropShipper::where('status', '1')
+            ->whereDate('created_at', '>=', $previousFrom)
+            ->whereDate('created_at', '<=', $previousTo)
+            ->count();
+
+        // Calculate difference and percentage
+        $difference = $currentCount - $previousCount;
+        $percentageChange = $previousCount > 0 ? ($difference / $previousCount) * 100 : null;
+
+        // Determine increase or decrease
+        $trend = $difference > 0 ? 'increase' : ($difference < 0 ? 'decrease' : 'no change');
+
+        return [
+            'current_count' => $currentCount,
+            'previous_count' => $previousCount,
+            'difference' => $difference,
+            'percentage_change' => $percentageChange !== null ? round($percentageChange, 2) . '%' : 'N/A',
+            'trend' => $trend,
+        ];
+    }
+
+    private function getActiveSeller( $request ){
+        $from = $request->from;
+        $to = $request->to;
+
+        $orders = Order::pluck('belongs_to');
+        $currentCount = DropShipper::where('status', '1')
+        ->when($from, function ($q) use ($from) {
+            $q->whereDate('created_at', '>=', $from);
+        })
+        ->when($to, function ($q) use ($to) {
+            $q->whereDate('created_at', '<=', $to);
+        })
+        ->whereIn('user_id', $orders)
+        ->count();
+
+        // Calculate previous time range
+        $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+        $previousTo = Carbon::parse($to)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+
+        $previousCount = DropShipper::where('status', '1')
+            ->whereDate('created_at', '>=', $previousFrom)
+            ->whereDate('created_at', '<=', $previousTo)
+            ->whereIn('user_id', $orders)
+            ->count();
+
+        // Calculate difference and percentage
+        $difference = $currentCount - $previousCount;
+        $percentageChange = $previousCount > 0 ? ($difference / $previousCount) * 100 : null;
+
+        // Determine increase or decrease
+        $trend = $difference > 0 ? 'increase' : ($difference < 0 ? 'decrease' : 'no change');
+
+        return [
+            'current_count' => $currentCount,
+            'previous_count' => $previousCount,
+            'difference' => $difference,
+            'percentage_change' => $percentageChange !== null ? round($percentageChange, 2) . '%' : 'N/A',
+            'trend' => $trend,
+        ];
     }
 
     public function categoryTagWiseProduct(){

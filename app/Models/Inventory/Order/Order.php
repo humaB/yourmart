@@ -49,7 +49,7 @@ class Order extends Model
         'no_of_labels',
         'tracking_number',
         'slip_link', // from Leopard
-        'belongs_to',
+        'belongs_to', // From User Table
     ];
 
     public function user(){

@@ -4,49 +4,16 @@
             <div class="col-md-12">
 
                 <form @submit.prevent="applyFilter" class="row col-md-12 mb-3">
-                    <div class="col-md-3">
-                        <label for="">Select Dropshipper</label>
-                        <select v-model="filter.status" class="form-control">
-                            <option value="">Select from the following</option>
-                            <option value="0">Order Collection</option>
-                            <option value="1">Inventory Manager</option>
-                            <option value="2">QA Manager</option>
-                            <option value="3">Packing/Dispatch</option>
-                            <option value="4">Auditor</option>
-                            <option value="5">Under Review</option>
-                            <option value="7">Rejected</option>
-                            <option value="11">Out for Delivery</option>
-                            <option value="8">Delivered</option>
-                            <option value="9">Returned</option>
-                            <option value="10">Returned to store</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label for="">Select Shop</label>
-                        <select v-model="filter.status" class="form-control">
-                            <option value="">Select from the following</option>
-                            <option value="0">Order Collection</option>
-                            <option value="1">Inventory Manager</option>
-                            <option value="2">QA Manager</option>
-                            <option value="3">Packing/Dispatch</option>
-                            <option value="4">Auditor</option>
-                            <option value="5">Under Review</option>
-                            <option value="7">Rejected</option>
-                            <option value="11">Out for Delivery</option>
-                            <option value="8">Delivered</option>
-                            <option value="9">Returned</option>
-                            <option value="10">Returned to store</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
+
+                    <div class="col-md-4">
                         <label for="">From</label>
                         <input type="date" v-model="filter.from" class="form-control">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <label for="">To</label>
                         <input type="date" v-model="filter.to" class="form-control">
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <label for="">Action</label><br>
                         <button class="btn btn-primary mr-2" @click="applyFilter">Filter</button>
                         <button class="btn btn-danger" @click="resetFilter">Reset</button>
@@ -54,217 +21,13 @@
                 </form>
             </div>
 
-
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                  <div class="card">
-                    <div class="card-statistic-4">
-                      <div class="align-items-center justify-content-between">
-                        <div class="row ">
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                            <div class="card-content">
-                              <h5 class="font-15">Approved Dropshipper</h5>
-                              <h2 class="mb-3 font-18">258</h2>
-                              <p class="mb-0"><span class="col-green">10%</span> Increase</p>
-                            </div>
-                          </div>
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                            <div class="banner-img">
-                              <img src="assets/img/banner/1.png" alt="">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                  <div class="card">
-                    <div class="card-statistic-4">
-                      <div class="align-items-center justify-content-between">
-                        <div class="row ">
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                            <div class="card-content">
-                              <h5 class="font-15"> Active Sellers</h5>
-                              <h2 class="mb-3 font-18">1,287</h2>
-                              <p class="mb-0"><span class="col-orange">09%</span> Decrease</p>
-                            </div>
-                          </div>
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                            <div class="banner-img">
-                              <img src="assets/img/banner/2.png" alt="">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                  <div class="card">
-                    <div class="card-statistic-4">
-                      <div class="align-items-center justify-content-between">
-                        <div class="row ">
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                            <div class="card-content">
-                              <h5 class="font-15">Live Products</h5>
-                              <h2 class="mb-3 font-18">128</h2>
-                              <p class="mb-0"><span class="col-green">18%</span>
-                                Increase</p>
-                            </div>
-                          </div>
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                            <div class="banner-img">
-                              <img src="assets/img/banner/3.png" alt="">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                  <div class="card">
-                    <div class="card-statistic-4">
-                      <div class="align-items-center justify-content-between">
-                        <div class="row ">
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                            <div class="card-content">
-                              <h5 class="font-15">Current Stock Value</h5>
-                              <h2 class="mb-3 font-18">$48,697</h2>
-                              <p class="mb-0"><span class="col-green">42%</span> Increase</p>
-                            </div>
-                          </div>
-                          <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                            <div class="banner-img">
-                              <img src="assets/img/banner/4.png" alt="">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-
-                    <div class="col-xl-3 col-lg-6">
-                      <div class="card">
-                        <div class="card-bg"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                          <div class="p-t-20 d-flex justify-content-between">
-                            <div class="col">
-                              <h6 class="mb-0">Order Processed</h6>
-                              <span class="font-weight-bold mb-0 font-20">1,562</span>
-                            </div>
-                            <i class="fas fa-address-card card-icon col-orange font-30 p-r-30"></i>
-                          </div>
-                          <canvas id="cardChart1" height="92" width="350" style="display: block; height: 74px; width: 280px;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-6">
-                      <div class="card">
-                        <div class="card-bg"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                          <div class="p-t-20 d-flex justify-content-between">
-                            <div class="col">
-                              <h6 class="mb-0">Sales</h6>
-                              <span class="font-weight-bold mb-0 font-20">895</span>
-                            </div>
-                            <i class="fas fa-diagnoses card-icon col-green font-30 p-r-30"></i>
-                          </div>
-                          <canvas id="cardChart2" height="92" width="350" style="display: block; height: 74px; width: 280px;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-6">
-                      <div class="card">
-                        <div class="card-bg"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                          <div class="p-t-20 d-flex justify-content-between">
-                            <div class="col">
-                              <h6 class="mb-0">Cost of Good solds</h6>
-                              <span class="font-weight-bold mb-0 font-20">+22.58%</span>
-                            </div>
-                            <i class="fas fa-chart-bar card-icon col-indigo font-30 p-r-30"></i>
-                          </div>
-                          <canvas id="cardChart3" height="92" width="350" style="display: block; height: 74px; width: 280px;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-xl-3 col-lg-6">
-                      <div class="card">
-                        <div class="card-bg"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
-                          <div class="p-t-20 d-flex justify-content-between">
-                            <div class="col">
-                              <h6 class="mb-0">Gross Profit</h6>
-                              <span class="font-weight-bold mb-0 font-20">$2,687</span>
-                            </div>
-                            <i class="fas fa-hand-holding-usd card-icon col-cyan font-30 p-r-30"></i>
-                          </div>
-                          <canvas id="cardChart4" height="92" width="350" style="display: block; height: 74px; width: 280px;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="col-md-12">
-
-                        <table style="table-layout: fixed; width: 100%;">
-                            <tr>
-                                <td style="width: 20%; padding : 10px">
-                                    <div class="card card-statistic-1">
-                                        <div class="card-icon l-bg-cyan">
-                                            <i class="fa fa-shopping-bag"></i>
-                                        </div>
-                                        <div class="card-wrap">
-                                            <div class="padding-20">
-                                                <div class="text-right">
-                                                    <h3 class="font-light mb-0">
-                                                        <i class="ti-arrow-up text-success"></i>
-                                                        {{ orders.totalOrder }}
-                                                    </h3>
-                                                    <span class="text-muted">Return Ratio</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="width: 20%;padding : 10px">
-                                    <div class="card card-statistic-1">
-                                        <div class="card-icon l-bg-orange">
-                                            <i class="fas fa-clock"></i>
-                                        </div>
-                                        <div class="card-wrap">
-                                            <div class="padding-20">
-                                                <div class="text-right">
-                                                    <h3 class="font-light mb-0">
-                                                        <i class="ti-arrow-up text-success"></i>
-                                                        {{ orders.inProcess }}
-                                                    </h3>
-                                                    <span class="text-muted">Courier Charges</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="width: 25%;padding : 10px">
-                                    <div class="card card-statistic-1">
-                                        <div class="card-icon l-bg-purple">
-                                            <i class="fas fa-shopping-cart"></i>
-                                        </div>
-                                        <div class="card-wrap">
-                                            <div class="padding-20">
-                                                <div class="text-right">
-                                                    <h3 class="font-light mb-0">
-                                                        <i class="ti-arrow-up text-success"></i>
-                                                        {{ orders.outOfDelivery }}
-                                                    </h3>
-                                                    <span class="text-muted">Packing Charges</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-
-                            </tr>
-                        </table>
-                    </div>
+            <DashboardSectionOne
+                :orders="orders"
+                :approvedDropshipper="approvedDropshipper"
+                :activeSeller="activeSeller"
+                :liveProduct="liveProduct"
+                :orderProcessed="orderProcessed"
+            />
 
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-6">
                         <div class="card">
@@ -1798,12 +1561,14 @@
 </template>
 
 <script>
+import DashboardSectionOne from '../components/admin/dashboard/DashboardSectionOne.vue';
 import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
 
 export default {
     name: 'DashboardPage',
     components: {
-        DropshipperDetails
+        DropshipperDetails,
+        DashboardSectionOne
     },
     data() {
         return {
@@ -1894,11 +1659,15 @@ export default {
             fastMovingProducts : [],
             slowMovingProducts : [],
             lowStock : [],
-            highStock : []
+            highStock : [],
+            approvedDropshipper : {},
+            activeSeller : {},
+            liveProduct : {},
+            orderProcessed : {}
         };
     },
     created() {
-        this.fetchData(this.filter);
+        this.fetchData({from : null , to : null });
         this.top10SellingProducts();
         this.top10Dropshippers(this.filter);
         this.fetchTicketStatusCounts();
@@ -2012,6 +1781,11 @@ export default {
                 .post(this.api_url + "users/dashboard", data)
                 .then((response) => {
                     const results = response.data.response;
+                    vm.approvedDropshipper = results.approvedDropshipper;
+                    vm.activeSeller = results.activeSeller;
+                    vm.liveProduct = results.liveProduct;
+                    vm.orderProcessed = results.orderProcessed;
+
                     vm.orders = {
                         totalOrder: results.totalOrder,
                         inProcess: results.inProcess,
