@@ -62,187 +62,13 @@
                             :dropshipper="pendingPayouts"
                             :applications="applications"
                             :pendingRequests="pendingRequests"
+                            :allProcessedOrders="allProcessedOrders"
                         />
 
-                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="card">
-                              <div class="card-statistic-4">
-                                <div class="align-items-center justify-content-between">
-                                  <div class="row ">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                                      <div class="card-content">
-                                        <h5 class="font-15">Total Processed</h5>
-                                        <h2 class="mb-3 font-18">258</h2>
-                                        <h2 class="mb-3 font-18">$48,697</h2>
-                                        <p class="mb-0"><span class="col-green">10%</span> Increase</p>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                      <div class="banner-img">
-                                        <img src="assets/img/banner/1.png" alt="">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="card">
-                              <div class="card-statistic-4">
-                                <div class="align-items-center justify-content-between">
-                                  <div class="row ">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                                      <div class="card-content">
-                                        <h5 class="font-15"> COD</h5>
-                                        <h2 class="mb-3 font-18">1,287</h2>
-                                        <h2 class="mb-3 font-18">$48,697</h2>
-                                        <p class="mb-0"><span class="col-orange">09%</span> Decrease</p>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                      <div class="banner-img">
-                                        <img src="assets/img/banner/2.png" alt="">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="card">
-                              <div class="card-statistic-4">
-                                <div class="align-items-center justify-content-between">
-                                  <div class="row ">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                                      <div class="card-content">
-                                        <h5 class="font-15">Daraz</h5>
-                                        <h2 class="mb-3 font-18">128</h2>
-                                        <h2 class="mb-3 font-18">$48,697</h2>
-                                        <p class="mb-0"><span class="col-green">18%</span>
-                                          Increase</p>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                      <div class="banner-img">
-                                        <img src="assets/img/banner/3.png" alt="">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <div class="card">
-                              <div class="card-statistic-4">
-                                <div class="align-items-center justify-content-between">
-                                  <div class="row ">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pr-0 pt-3">
-                                      <div class="card-content">
-                                        <h5 class="font-15">Cash</h5>
-                                        <h2 class="mb-3 font-18">$48,697</h2>
-                                        <h2 class="mb-3 font-18">$48,697</h2>
-                                        <p class="mb-0"><span class="col-green">42%</span> Increase</p>
-                                      </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                      <div class="banner-img">
-                                        <img src="assets/img/banner/4.png" alt="">
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-
-
-                            <div class="col-xl-3 col-lg-6">
-                              <div class="card">
-                                <div class="card-body card-type-3">
-                                  <div class="row">
-                                    <div class="col">
-                                      <h6 class="text-muted mb-0">Delivered</h6>
-                                      <span class="font-weight-bold mb-0">450</span>
-                                    </div>
-                                    <div class="col-auto">
-                                      <div class="card-circle l-bg-orange text-white">
-                                        <i class="fas fa-book-open"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <p class="mt-3 mb-0 text-muted text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 10%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-6">
-                              <div class="card">
-                                <div class="card-body card-type-3">
-                                  <div class="row">
-                                    <div class="col">
-                                      <h6 class="text-muted mb-0">In Process</h6>
-                                      <span class="font-weight-bold mb-0">1,562</span>
-                                    </div>
-                                    <div class="col-auto">
-                                      <div class="card-circle l-bg-cyan text-white">
-                                        <i class="fas fa-briefcase"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <p class="mt-3 mb-0 text-muted text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 7.8%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-6">
-                              <div class="card">
-                                <div class="card-body card-type-3">
-                                  <div class="row">
-                                    <div class="col">
-                                      <h6 class="text-muted mb-0">Return</h6>
-                                      <span class="font-weight-bold mb-0">7,897</span>
-                                    </div>
-                                    <div class="col-auto">
-                                      <div class="card-circle l-bg-green text-white">
-                                        <i class="fas fa-phone"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <p class="mt-3 mb-0 text-muted text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 15%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-xl-3 col-lg-6">
-                              <div class="card">
-                                <div class="card-body card-type-3">
-                                  <div class="row">
-                                    <div class="col">
-                                      <h6 class="text-muted mb-0">Return Received</h6>
-                                      <span class="font-weight-bold mb-0">$8,965</span>
-                                    </div>
-                                    <div class="col-auto">
-                                      <div class="card-circle l-bg-purple text-white">
-                                        <i class="fas fa-dollar-sign"></i>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <p class="mt-3 mb-0 text-muted text-sm">
-                                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 5.4%</span>
-                                    <span class="text-nowrap">Since last month</span>
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
+                        <DashboardSectionThree
+                            :allProcessedOrders="allProcessedOrders"
+                            :processOrders="processOrders"
+                        />
 
                             <div class="col-12 col-sm-6 col-lg-4">
                                 <div class="card gradient-bottom">
@@ -1266,6 +1092,7 @@
 
 <script>
 import DashboardSectionOne from '../components/admin/dashboard/DashboardSectionOne.vue';
+import DashboardSectionThree from '../components/admin/dashboard/DashboardSectionThree.vue';
 import DashboardSectionTwo from '../components/admin/dashboard/DashboardSectionTwo.vue';
 import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
 
@@ -1274,7 +1101,8 @@ export default {
     components: {
         DropshipperDetails,
         DashboardSectionOne,
-        DashboardSectionTwo
+        DashboardSectionTwo,
+        DashboardSectionThree
     },
     data() {
         return {
@@ -1300,20 +1128,6 @@ export default {
                 in_process: 0,
             },
             dropShipperDetails: {},
-            applications: {
-                dropshippers: {
-                    total: 0,
-                    pending: 0,
-                    approved: 0,
-                    reject: 0
-                },
-                supplier: {
-                    total: 0,
-                    pending: 0,
-                    approved: 0,
-                    reject: 0
-                },
-            },
             po : {
                 totalPo : 0,
                 approved : 0,
@@ -1384,7 +1198,9 @@ export default {
                     approved: 0,
                     reject: 0
                 },
-            }
+            },
+            allProcessedOrders : {},
+            processOrders : {}
         };
     },
     created() {
@@ -1508,6 +1324,8 @@ export default {
                     vm.orderProcessed = results.orderProcessed;
                     vm.pendingPayouts = results.payOuts;
                     vm.pendingRequests = results.pendingRequests;
+                    vm.allProcessedOrders = results.allProcessedOrders;
+                    vm.processOrders = results.orders;
 
                     vm.orders = {
                         totalOrder: results.totalOrder,

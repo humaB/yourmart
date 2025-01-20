@@ -39,24 +39,24 @@ class DashboardController extends Controller
         $orderProcessed     = $this->orderProcessed($orders);
         $pendingPayouts     = $this->pendingPayouts();
         $pendingRequests    = $this->pendingRequests( $request );
+        $allProcessedOrders = $this->allProcessedOrder( $orders, $request);
 
         $data = [
-            'totalOrder'    => $orders->count(),
-            'inProcess'     => $orders->whereNotIn('status', [9, 10, 7, 8])->count(),
-            'outOfDelivery' => $orders->where('status', '11')->count(),
-            'delivered'     => $orders->where('status', '8')->count(),
-            'returns'       => $orders->whereIn('status', [9, 10])->count(),
-
-            'normalOrders'  => $orders->where('type', 'Normal')->count(),
-            'darazOrders'   => $orders->where('type', 'Daraz')->count(),
-            'cashOrders'    => $orders->where('type', 'Cash')->count(),
+            'orders'  => [
+                'totalOrder'    => $orders->count(),
+                'inProcess'     => $orders->where('type', 'Normal')->whereNotIn('status', [6,7,8, 9, 10])->count(),
+                'delivered'     => $orders->where('status', '8')->count(),
+                'returns'       => $orders->whereIn('status', [9, 10])->count(),
+                'returnAmount'  => $orders->whereIn('status', [9, 10])->sum('total_bill'),
+            ],
 
             'approvedDropshipper' => $approvedDropshipper,
             'activeSeller'       => $activeSeller,
             'liveProduct'        => $liveProduct,
             'orderProcessed'     => $orderProcessed,
             'payOuts'            => $pendingPayouts,
-            'pendingRequests'    => $pendingRequests
+            'pendingRequests'    => $pendingRequests,
+            'allProcessedOrders' => $allProcessedOrders
         ];
 
         return (new ResponseCollection($data))
@@ -65,7 +65,7 @@ class DashboardController extends Controller
     }
 
     private function orderProcessed( $orders){
-        $processed = $orders->whereNotIn('status',['6','7'])->count();
+        $processed = $orders->whereNotIn('status',['6','7'])->where('type', 'Normal')->count();
         $returns = $orders->whereIn('status',['9','10'])->count();
 
         $items = OrderItem::whereIn('order_id', $orders->where('status', '8')->pluck('id'))->get();
@@ -122,6 +122,82 @@ class DashboardController extends Controller
             'grossProfit'   => $grossProfit,
             'totalProductCostSum' => $totalProductCostSum,
             'returnRatio'         => round($returnRatio)
+        ];
+    }
+
+    private function allProcessedOrder( $orders, $request){
+        $from = $request->from;
+        $to = $request->to;
+
+        // Current Period
+        $overallProcessed = $orders->whereNotIn('status', ['6', '7'])->count();
+
+        $overallProcessedAmount = $orders->whereNotIn('status', ['6', '7'])->sum('total_bill');
+
+        // Previous Period
+        $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+        $previousTo = Carbon::parse($to)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+
+        $overallPreviousProcessed = Order::whereNotIn('status', ['6', '7'])
+            ->whereDate('created_at', '>=', $previousFrom)
+            ->whereDate('created_at', '<=', $previousTo)
+            ->count();
+
+        // Calculate Changes
+        $overallProcessedDifference = $overallProcessed - $overallPreviousProcessed;
+        $overallProcessedTrend = $overallProcessedDifference > 0 ? 'Increase' : ($overallProcessedDifference < 0 ? 'Decrease' : 'No Change');
+        $overallProcessedPercentage = $overallPreviousProcessed > 0 ? ($overallProcessedDifference / $overallPreviousProcessed) * 100 : null;
+
+        // Define order types
+        $orderTypes = ['Normal', 'Cash', 'Daraz'];
+
+        $data = [];
+
+        foreach ($orderTypes as $type) {
+            // Current Period
+            $processed = $orders->where('type', $type)
+                ->whereNotIn('status', ['6', '7'])
+                ->count();
+
+            $processedAmount = $orders->where('type', $type)
+                ->whereNotIn('status', ['6', '7'])
+                ->sum('total_bill');
+
+            // Previous Period
+            $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+            $previousTo = Carbon::parse($to)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
+
+            $previousProcessed = Order::where('type', $type)
+                ->whereNotIn('status', ['6', '7'])
+                ->whereDate('created_at', '>=', $previousFrom)
+                ->whereDate('created_at', '<=', $previousTo)
+                ->count();
+
+            // Calculate Changes
+            $processedDifference = $processed - $previousProcessed;
+            $processedTrend = $processedDifference > 0 ? 'Increase' : ($processedDifference < 0 ? 'Decrease' : 'No Change');
+            $processedPercentage = $previousProcessed > 0 ? ($processedDifference / $previousProcessed) * 100 : null;
+
+            $data[$type] = [
+                'current' => $processed,
+                'previous' => $previousProcessed,
+                'difference' => $processedDifference,
+                'trend' => $processedTrend,
+                'percentage_change' => round(abs($processedPercentage)),
+                'processedAmount' => $processedAmount,
+            ];
+        }
+
+        return [
+            'processed' => [
+                'current' => $overallProcessed,
+                'previous' => $overallPreviousProcessed,
+                'difference' => $overallProcessedDifference,
+                'trend'      => $overallProcessedTrend,
+                'percentage_change' => round(abs($overallProcessedPercentage)),
+                'processedAmount' => $overallProcessedAmount
+            ],
+            'other' => $data
         ];
     }
 
