@@ -60,7 +60,6 @@
 
                         <DashboardSectionTwo
                             :dropshipper="pendingPayouts"
-                            :applications="applications"
                             :pendingRequests="pendingRequests"
                             :allProcessedOrders="allProcessedOrders"
                         />
@@ -70,361 +69,17 @@
                             :processOrders="processOrders"
                         />
 
-                            <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="card gradient-bottom">
-                                  <div class="card-header">
-                                    <h4>Top 5 Dropshippers</h4>
+                        <DashboardTopFiveDropshipper
+                            :topFiveDropshippers='topFiveDropshippers'
+                        />
 
-                                  </div>
-                                  <div class="card-body">
-                                    <ul class="list-unstyled list-unstyled-border">
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-3.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">112 Sales</div>
-                                          </div>
-                                          <div class="media-title">Mobile</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="61%"></div>
-                                              <div class="budget-price-label">$24,897</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="38%"></div>
-                                              <div class="budget-price-label">$18,865</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-4.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">49 Sales</div>
-                                          </div>
-                                          <div class="media-title">Laptop</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="78%"></div>
-                                              <div class="budget-price-label">$74,568</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="55%"></div>
-                                              <div class="budget-price-label">$65,892</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-1.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">63 Sales</div>
-                                          </div>
-                                          <div class="media-title">Headphone</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="38%"></div>
-                                              <div class="budget-price-label">$2,859</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="25%"></div>
-                                              <div class="budget-price-label">$1,872</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-2.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">28 Sales</div>
-                                          </div>
-                                          <div class="media-title">Tablet</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="48%"></div>
-                                              <div class="budget-price-label">$11,238</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="33%"></div>
-                                              <div class="budget-price-label">$7,564</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-5.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">19 Sales</div>
-                                          </div>
-                                          <div class="media-title">Camera</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="91%"></div>
-                                              <div class="budget-price-label">$7,285</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="74%"></div>
-                                              <div class="budget-price-label">$5,147</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div class="card-footer pt-3 d-flex justify-content-center">
-                                    <div class="budget-price justify-content-center">
-                                      <div class="budget-price-square bg-primary" data-width="20"></div>
-                                      <div class="budget-price-label">Total Paid</div>
-                                    </div>
-                                    <div class="budget-price justify-content-center">
-                                      <div class="budget-price-square bg-danger" data-width="20"></div>
-                                      <div class="budget-price-label">Balance</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
+                        <DashboardTopFiveProduct
+                            :topFiveProduct='topFiveProduct'
+                        />
 
-                              <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="card gradient-bottom">
-                                  <div class="card-header">
-                                    <h4>Top 5 Selling Products</h4>
-
-                                  </div>
-                                  <div class="card-body">
-                                    <ul class="list-unstyled list-unstyled-border">
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-3.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">112 Sales</div>
-                                          </div>
-                                          <div class="media-title">Mobile</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="61%"></div>
-                                              <div class="budget-price-label">$24,897</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="38%"></div>
-                                              <div class="budget-price-label">$18,865</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-4.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">49 Sales</div>
-                                          </div>
-                                          <div class="media-title">Laptop</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="78%"></div>
-                                              <div class="budget-price-label">$74,568</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="55%"></div>
-                                              <div class="budget-price-label">$65,892</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-1.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">63 Sales</div>
-                                          </div>
-                                          <div class="media-title">Headphone</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="38%"></div>
-                                              <div class="budget-price-label">$2,859</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="25%"></div>
-                                              <div class="budget-price-label">$1,872</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-2.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">28 Sales</div>
-                                          </div>
-                                          <div class="media-title">Tablet</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="48%"></div>
-                                              <div class="budget-price-label">$11,238</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="33%"></div>
-                                              <div class="budget-price-label">$7,564</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-5.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">19 Sales</div>
-                                          </div>
-                                          <div class="media-title">Camera</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="91%"></div>
-                                              <div class="budget-price-label">$7,285</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="74%"></div>
-                                              <div class="budget-price-label">$5,147</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div class="card-footer pt-3 d-flex justify-content-center">
-                                    <div class="budget-price justify-content-center">
-                                      <div class="budget-price-square bg-primary" data-width="20"></div>
-                                      <div class="budget-price-label">Selling Price</div>
-                                    </div>
-                                    <div class="budget-price justify-content-center">
-                                      <div class="budget-price-square bg-danger" data-width="20"></div>
-                                      <div class="budget-price-label">Product Cost</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div class="col-12 col-sm-6 col-lg-4">
-                                <div class="card gradient-bottom">
-                                  <div class="card-header">
-                                    <h4>Top 5 Suppliers</h4>
-
-                                  </div>
-                                  <div class="card-body">
-                                    <ul class="list-unstyled list-unstyled-border">
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-3.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">112 Sales</div>
-                                          </div>
-                                          <div class="media-title">Mobile</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="61%"></div>
-                                              <div class="budget-price-label">$24,897</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="38%"></div>
-                                              <div class="budget-price-label">$18,865</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-4.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">49 Sales</div>
-                                          </div>
-                                          <div class="media-title">Laptop</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="78%"></div>
-                                              <div class="budget-price-label">$74,568</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="55%"></div>
-                                              <div class="budget-price-label">$65,892</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-1.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">63 Sales</div>
-                                          </div>
-                                          <div class="media-title">Headphone</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="38%"></div>
-                                              <div class="budget-price-label">$2,859</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="25%"></div>
-                                              <div class="budget-price-label">$1,872</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-2.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">28 Sales</div>
-                                          </div>
-                                          <div class="media-title">Tablet</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="48%"></div>
-                                              <div class="budget-price-label">$11,238</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="33%"></div>
-                                              <div class="budget-price-label">$7,564</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                      <li class="media">
-                                        <img class="mr-3 rounded" width="55" src="assets/img/products/product-5.png" alt="product">
-                                        <div class="media-body">
-                                          <div class="float-right">
-                                            <div class="font-weight-600 text-muted text-small">19 Sales</div>
-                                          </div>
-                                          <div class="media-title">Camera</div>
-                                          <div class="mt-1">
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-primary" data-width="91%"></div>
-                                              <div class="budget-price-label">$7,285</div>
-                                            </div>
-                                            <div class="budget-price">
-                                              <div class="budget-price-square bg-danger" data-width="74%"></div>
-                                              <div class="budget-price-label">$5,147</div>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div class="card-footer pt-3 d-flex justify-content-center">
-                                    <div class="budget-price justify-content-center">
-                                      <div class="budget-price-square bg-primary" data-width="20"></div>
-                                      <div class="budget-price-label">Total Paid</div>
-                                    </div>
-                                    <div class="budget-price justify-content-center">
-                                      <div class="budget-price-square bg-danger" data-width="20"></div>
-                                      <div class="budget-price-label">Balance</div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-
-
+                        <DashboardTopFiveSupplier
+                            :topFiveSuppliers='topFiveSuppliers'
+                        />
                               <div class="col-md-12">
                                 <div class="card">
                                     <h4 class="pl-4 pt-4">Purchase Orders</h4>
@@ -787,127 +442,6 @@
                                   </div>
                             </div>
 
-
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row" style="margin-left: -10px">
-                            <!-- cards -->
-
-
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="card bg-info">
-                                    <div class="card-statistic-4 text-white">
-                                        <div class="align-items-center justify-content-between">
-                                            <div class="row">
-                                                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
-                                                    <div class="card-content">
-                                                        <h5 class="font-15">Normal / COD</h5>
-                                                        <h2 class="mb-3 font-18">
-                                                            {{ orders.normalOrders }}
-                                                        </h2>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                                    <div class="banner-img">
-                                                        <img :src="public_url + '/assets2/img/banner/2.png'" alt="" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="card bg-success">
-                                    <div class="card-statistic-4">
-                                        <div class="align-items-center justify-content-between">
-                                            <div class="row">
-                                                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
-                                                    <div class="card-content text-white">
-                                                        <h5 class="font-15">Daraz</h5>
-                                                        <h2 class="mb-3 font-18">
-                                                            {{ orders.darazOrders }}
-                                                        </h2>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                                    <div class="banner-img">
-                                                        <img :src="public_url + '/assets2/img/banner/4.png'" alt="" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                <div class="card bg-warning">
-                                    <div class="card-statistic-4">
-                                        <div class="align-items-center justify-content-between">
-                                            <div class="row">
-                                                <div class="col-lg-8 col-md-6 col-sm-6 col-xs-6 pr-0">
-                                                    <div class="card-content">
-                                                        <h5 class="font-15">
-                                                            Direct Sales
-                                                        </h5>
-                                                        <h2 class="mb-3 font-18">
-                                                            {{ orders.cashOrders }}
-                                                        </h2>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0">
-                                                    <div class="banner-img">
-                                                        <img :src="public_url + '/assets2/img/banner/1.png'" alt="" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr class="table-header">
-                                        <th colspan="5" class="h5">Sales Stats</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Gross Sales</th>
-                                        <th>Item Sold</th>
-                                        <th>Products</th>
-                                        <th>Packing</th>
-                                        <th>Courier</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-end h6">{{ formatPrice(orders.grossSales) }}</td>
-                                        <td class="text-end h6">{{ formatPrice(orders.itemSolds) }}</td>
-                                        <td class="text-end h6">{{ formatPrice(orders.productCost) }}</td>
-                                        <td class="text-end h6">
-                                            <span><strong>Overall</strong> {{ formatPrice(orders.packing) }}</span><br>
-                                            <span><strong>Ours</strong> {{ formatPrice(orders.packingProfit) }}</span>
-                                        </td>
-                                        <td class="text-end h6">
-                                            <span><strong>Overall</strong> {{ formatPrice(orders.courier) }}</span><br>
-                                            <span><strong>Ours</strong> {{ formatPrice(orders.courierProfit) }}</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="0">Cost of Goods Sold </th>
-                                        <th colspan="2" class="h6"> {{ formatPrice(orders.costOfGood) }}</th>
-                                        <th colspan="0">Gross Profit</th>
-                                        <th colspan="2" class="h6"> {{ formatPrice(orders.grossProfit) }}</th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -967,10 +501,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
 
             <div class="col-md-12">
                 <div class="card">
@@ -1069,22 +599,6 @@
                 </div>
             </div>
 
-
-
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        Courier Performance (Last 30 days)
-                    </div>
-                    <div class="card-body">
-                        <div class="card-body">
-                            <canvas id="myChart2" height="80"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
         <DropshipperDetails :details="dropShipperDetails" />
     </div>
@@ -1094,6 +608,9 @@
 import DashboardSectionOne from '../components/admin/dashboard/DashboardSectionOne.vue';
 import DashboardSectionThree from '../components/admin/dashboard/DashboardSectionThree.vue';
 import DashboardSectionTwo from '../components/admin/dashboard/DashboardSectionTwo.vue';
+import DashboardTopFiveDropshipper from '../components/admin/dashboard/DashboardTopFiveDropshipper.vue';
+import DashboardTopFiveProduct from '../components/admin/dashboard/DashboardTopFiveProduct.vue';
+import DashboardTopFiveSupplier from '../components/admin/dashboard/DashboardTopFiveSupplier.vue';
 import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
 
 export default {
@@ -1102,7 +619,10 @@ export default {
         DropshipperDetails,
         DashboardSectionOne,
         DashboardSectionTwo,
-        DashboardSectionThree
+        DashboardSectionThree,
+        DashboardTopFiveDropshipper,
+        DashboardTopFiveProduct,
+        DashboardTopFiveSupplier
     },
     data() {
         return {
@@ -1200,7 +720,10 @@ export default {
                 },
             },
             allProcessedOrders : {},
-            processOrders : {}
+            processOrders : {},
+            topFiveDropshippers: [],
+            topFiveProduct : [],
+            topFiveSuppliers : []
         };
     },
     created() {
@@ -1326,6 +849,9 @@ export default {
                     vm.pendingRequests = results.pendingRequests;
                     vm.allProcessedOrders = results.allProcessedOrders;
                     vm.processOrders = results.orders;
+                    vm.topFiveDropshippers = results.topFiveDropshippers;
+                    vm.topFiveProduct = results.topFiveSellingProduct;
+                    vm.topFiveSuppliers = results.topFiveSuppliers;
 
                     vm.orders = {
                         totalOrder: results.totalOrder,

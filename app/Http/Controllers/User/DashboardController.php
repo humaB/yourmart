@@ -40,6 +40,9 @@ class DashboardController extends Controller
         $pendingPayouts     = $this->pendingPayouts();
         $pendingRequests    = $this->pendingRequests( $request );
         $allProcessedOrders = $this->allProcessedOrder( $orders, $request);
+        $topFiveDropshippers = $this->topFiveDropshippers( $request );
+        $topFiveSellingProduct = $this->topFiveSellingProduct( $request );
+        $topFiveSuppliers   = $this->topFiveSuppliers( $request );
 
         $data = [
             'orders'  => [
@@ -56,12 +59,78 @@ class DashboardController extends Controller
             'orderProcessed'     => $orderProcessed,
             'payOuts'            => $pendingPayouts,
             'pendingRequests'    => $pendingRequests,
-            'allProcessedOrders' => $allProcessedOrders
+            'allProcessedOrders' => $allProcessedOrders,
+            'topFiveDropshippers' => $topFiveDropshippers,
+            'topFiveSellingProduct' => $topFiveSellingProduct,
+            'topFiveSuppliers'      => $topFiveSuppliers
         ];
 
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    private function topFiveSellingProduct( $request ){
+
+        $saleKinds = ['Normal' => 8, 'Cash' => 5, 'Daraz' => 5]; // Map sale kinds to their statuses
+        $allOrders = collect();
+
+        foreach ($saleKinds as $type => $status) {
+            $orders = Order::where('type', $type)->where('status', $status)
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->pluck('id');
+            $allOrders = $allOrders->merge($orders);
+        }
+
+        $topFiveSellingProducts = OrderItem::with('variation.product')
+            ->whereIn('order_id', $allOrders)
+            ->select(
+                'product_variation_id',
+                DB::raw('SUM(price * quantity) as selling_price'),
+                DB::raw('SUM(quantity) as total_quantity')
+            )
+            ->groupBy('product_variation_id')
+            ->orderByDesc('total_quantity')
+            ->limit(5) // Limit to the top 5 selling products
+            ->get();
+
+           return $topFiveSellingProducts;
+    }
+
+    private function topFiveDropshippers( $request ){
+
+        $topDropshippers = DropShipper::orderBy('total_payable', 'desc')->limit(5)->get();
+
+        return $topDropshippers;
+    }
+
+    private function topFiveSuppliers( $request ){
+
+        $topFiveSuppliers = PurchaseOrder::with('supplier')
+        ->select(
+            'supplier_id',
+            DB::raw('SUM(total_amount) as total_amount_sum'),
+            DB::raw('SUM(remaining_amount) as remaining_amount_sum')
+        )
+        ->when($request->from, function ($q) use ($request) {
+            $q->whereDate('created_at', '>=', $request->from);
+        })
+        ->when($request->to, function ($q) use ($request) {
+            $q->whereDate('created_at', '<=', $request->to);
+        })
+        ->where('status', '1')
+        ->groupBy('supplier_id')
+        ->orderByDesc('total_amount_sum') // Order by the sum of total amounts
+        ->limit(5) // Limit to top 5 suppliers
+        ->get();
+
+
+        return $topFiveSuppliers;
     }
 
     private function orderProcessed( $orders){
