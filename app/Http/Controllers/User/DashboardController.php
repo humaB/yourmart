@@ -23,32 +23,35 @@ use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
-    public function fetchData(Request $request){
+    public function fetchData(Request $request)
+    {
 
         $orders = Order::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
         })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })->get();
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })->get();
 
 
-        $approvedDropshipper = $this->getApprovedDropshippers( $request );
+        $approvedDropshipper = $this->getApprovedDropshippers($request);
         $activeSeller        = $this->getActiveSeller($request);
         $liveProduct        = $this->getLiveProducts();
         $orderProcessed     = $this->orderProcessed($orders);
         $pendingPayouts     = $this->pendingPayouts();
-        $pendingRequests    = $this->pendingRequests( $request );
-        $allProcessedOrders = $this->allProcessedOrder( $orders, $request);
-        $topFiveDropshippers = $this->topFiveDropshippers( $request );
-        $topFiveSellingProduct = $this->topFiveSellingProduct( $request );
-        $topFiveSuppliers   = $this->topFiveSuppliers( $request );
-        $inventoryStatus    = $this->inventoryStatus( $request );
+        $pendingRequests    = $this->pendingRequests($request);
+        $allProcessedOrders = $this->allProcessedOrder($orders, $request);
+        $topFiveDropshippers = $this->topFiveDropshippers($request);
+        $topFiveSellingProduct = $this->topFiveSellingProduct($request);
+        $topFiveSuppliers   = $this->topFiveSuppliers($request);
+        $inventoryStatus    = $this->inventoryStatus($request);
+        $dropshipperGraph   = $this->dropshipperGraph();
+        $revenueOrderGraph  = $this->revenueOrderGraph();
 
         $data = [
             'orders'  => [
                 'totalOrder'    => $orders->count(),
-                'inProcess'     => $orders->where('type', 'Normal')->whereNotIn('status', [6,7,8, 9, 10])->count(),
+                'inProcess'     => $orders->where('type', 'Normal')->whereNotIn('status', [6, 7, 8, 9, 10])->count(),
                 'delivered'     => $orders->where('status', '8')->count(),
                 'returns'       => $orders->whereIn('status', [9, 10])->count(),
                 'returnAmount'  => $orders->whereIn('status', [9, 10])->sum('total_bill'),
@@ -64,7 +67,9 @@ class DashboardController extends Controller
             'topFiveDropshippers' => $topFiveDropshippers,
             'topFiveSellingProduct' => $topFiveSellingProduct,
             'topFiveSuppliers'      => $topFiveSuppliers,
-            'inventoryStatus'       => $inventoryStatus
+            'inventoryStatus'       => $inventoryStatus,
+            'dropshipperGraph'      => $dropshipperGraph,
+            'revenueOrderGraph'     => $revenueOrderGraph
         ];
 
         return (new ResponseCollection($data))
@@ -72,7 +77,8 @@ class DashboardController extends Controller
             ->setStatusCode(200);
     }
 
-    private function inventoryStatus( $request ){
+    private function inventoryStatus($request)
+    {
 
         $purchaseOrders = PurchaseOrder::selectRaw("
             COUNT(*) as totalPo,
@@ -82,22 +88,22 @@ class DashboardController extends Controller
             SUM(CASE WHEN status = '1' THEN total_amount ELSE 0 END) as totalAmount,
             SUM(CASE WHEN status = '1' THEN remaining_amount ELSE 0 END) as remaining
         ")
-        ->when($request->from, function ($q) use ($request) {
-            $q->whereDate('created_at', '>=', $request->from);
-        })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })
-        ->first();
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->first();
 
         $lowStock = ProductVariation::where('status', '0')
-        ->where('stock', '>', 0)
-        ->where('stock', '<=', 20)
-        ->count();
+            ->where('stock', '>', 0)
+            ->where('stock', '<=', 20)
+            ->count();
 
         $highStock = ProductVariation::where('status', '0')
-        ->where('stock', '>', 150)
-        ->count();
+            ->where('stock', '>', 150)
+            ->count();
 
         $activeCategoryCount = Product::distinct('category_id')->count('category_id');
 
@@ -120,24 +126,99 @@ class DashboardController extends Controller
             'categories' =>  $activeCategoryCount,
             'totalTags' => $totalTags,
         ];
-
-
     }
 
-    private function topFiveSellingProduct( $request ){
+    private function revenueOrderGraph()
+    {
+        // Get the date range for the last 6 months
+        $startDate = now()->subMonths(6)->startOfMonth();
+        $endDate = now()->endOfMonth();
+
+        // Filter orders based on type and status with specific rules
+        $filteredData = Order::where(function ($query) {
+                $query->where('type', 'Normal')->where('status', '8'); // Include Normal with status 8
+            })
+            ->orWhere(function ($query) {
+                $query->whereIn('type', ['Daraz', 'Cash'])->where('status', '5'); // Include Daraz and Cash with status 5
+            })
+            ->whereBetween('created_at', [$startDate, $endDate]) // Filter for the last 6 months
+            ->get()
+            ->groupBy(function ($order) {
+                return $order->created_at->format('Y-m'); // Group by year-month
+            });
+
+        // Prepare data for the chart
+        $data = $filteredData->map(function ($monthOrders, $month) {
+            return [
+                'month' => $month,
+                'low' => $monthOrders->count(), // Count of orders (low data)
+                'high' => $monthOrders->sum('total_bill'), // Sum of total_bill (high data)
+            ];
+        })->values();
+
+        return [
+            'categories' => $data->pluck('month'), // X-axis labels
+            'series' => [
+                [
+                    'name' => 'Order Count',
+                    'data' => $data->pluck('low'),
+                ],
+                [
+                    'name' => 'Revenue',
+                    'data' => $data->pluck('high'),
+                ],
+            ]];
+    }
+
+    private function dropshipperGraph()
+    {
+        // Get the last 12 months with their names
+        $months = collect(range(0, 11))->map(function ($i) {
+            return [
+                'month' => now()->subMonths($i)->format('Y-m'),
+                'name' => now()->subMonths($i)->format('M'),
+            ];
+        })->reverse(); // Reverse to get chronological order
+
+        // Fetch data for dropshippers with status 2 within the last 12 months
+        $dropshippers = DropShipper::where('status', 2)
+            ->where('created_at', '>=', now()->subYear())
+            ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->pluck('count', 'month');
+
+        // Map dropshipper data to each month
+        $data = $months->map(function ($month) use ($dropshippers) {
+            return $dropshippers->get($month['month'], 0); // Default to 0 if no data
+        });
+
+        return [
+            'categories' => $months->pluck('name'), // Extract month names
+            'series' => [
+                [
+                    'name' => 'Dropshippers Registered',
+                    'data' => [...$data],
+                ],
+            ],
+        ];
+    }
+
+
+    private function topFiveSellingProduct($request)
+    {
 
         $saleKinds = ['Normal' => 8, 'Cash' => 5, 'Daraz' => 5]; // Map sale kinds to their statuses
         $allOrders = collect();
 
         foreach ($saleKinds as $type => $status) {
             $orders = Order::where('type', $type)->where('status', $status)
-            ->when($request->from, function ($q) use ($request) {
-                $q->whereDate('created_at', '>=', $request->from);
-            })
-            ->when($request->to, function ($q) use ($request) {
-                $q->whereDate('created_at', '<=', $request->to);
-            })
-            ->pluck('id');
+                ->when($request->from, function ($q) use ($request) {
+                    $q->whereDate('created_at', '>=', $request->from);
+                })
+                ->when($request->to, function ($q) use ($request) {
+                    $q->whereDate('created_at', '<=', $request->to);
+                })
+                ->pluck('id');
             $allOrders = $allOrders->merge($orders);
         }
 
@@ -153,43 +234,46 @@ class DashboardController extends Controller
             ->limit(5) // Limit to the top 5 selling products
             ->get();
 
-           return $topFiveSellingProducts;
+        return $topFiveSellingProducts;
     }
 
-    private function topFiveDropshippers( $request ){
+    private function topFiveDropshippers($request)
+    {
 
         $topDropshippers = DropShipper::orderBy('total_payable', 'desc')->limit(5)->get();
 
         return $topDropshippers;
     }
 
-    private function topFiveSuppliers( $request ){
+    private function topFiveSuppliers($request)
+    {
 
         $topFiveSuppliers = PurchaseOrder::with('supplier')
-        ->select(
-            'supplier_id',
-            DB::raw('SUM(total_amount) as total_amount_sum'),
-            DB::raw('SUM(remaining_amount) as remaining_amount_sum')
-        )
-        ->when($request->from, function ($q) use ($request) {
-            $q->whereDate('created_at', '>=', $request->from);
-        })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })
-        ->where('status', '1')
-        ->groupBy('supplier_id')
-        ->orderByDesc('total_amount_sum') // Order by the sum of total amounts
-        ->limit(5) // Limit to top 5 suppliers
-        ->get();
+            ->select(
+                'supplier_id',
+                DB::raw('SUM(total_amount) as total_amount_sum'),
+                DB::raw('SUM(remaining_amount) as remaining_amount_sum')
+            )
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->where('status', '1')
+            ->groupBy('supplier_id')
+            ->orderByDesc('total_amount_sum') // Order by the sum of total amounts
+            ->limit(5) // Limit to top 5 suppliers
+            ->get();
 
 
         return $topFiveSuppliers;
     }
 
-    private function orderProcessed( $orders){
-        $processed = $orders->whereNotIn('status',['6','7'])->where('type', 'Normal')->count();
-        $returns = $orders->whereIn('status',['9','10'])->count();
+    private function orderProcessed($orders)
+    {
+        $processed = $orders->whereNotIn('status', ['6', '7'])->where('type', 'Normal')->count();
+        $returns = $orders->whereIn('status', ['9', '10'])->count();
 
         $items = OrderItem::whereIn('order_id', $orders->where('status', '8')->pluck('id'))->get();
 
@@ -248,7 +332,8 @@ class DashboardController extends Controller
         ];
     }
 
-    private function allProcessedOrder( $orders, $request){
+    private function allProcessedOrder($orders, $request)
+    {
         $from = $request->from;
         $to = $request->to;
 
@@ -340,59 +425,58 @@ class DashboardController extends Controller
             'total_remaining' => $totalRemaining,
             'remaining_dropshippers' => $remainingDropshippers,
         ];
-
     }
 
-    private function pendingRequests( $request )
+    private function pendingRequests($request)
     {
         $from = $request->from;
         $to = $request->to;
 
         $tickets = Ticket::where('status', '!=', 'Closed')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->count();
 
         $pendingDropshippers = DropShipper::where('status', '0')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->count();
 
         $pendingSuppliers = Supplier::where('status', '0')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->count();
 
         $pendingReceivable = Order::where('status', '9')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->count();
 
 
         $pendingPO = PurchaseOrder::where('status', '0')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->count();
 
         $supplier = [
             'total'    => Supplier::count(),
@@ -418,19 +502,19 @@ class DashboardController extends Controller
             'supplier'           => $supplier,
             'dropshippers'        => $dropshipper
         ];
-
     }
 
-    private function getLiveProducts(){
+    private function getLiveProducts()
+    {
 
         $products = Product::where('status', '0')->pluck('id');
 
         $variations = ProductVariation::whereIn('product_id', $products)
-        ->where('status', '0')
-        ->where('stock', '>', '0')->get(['id', 'stock', 'avg_price']);
+            ->where('status', '0')
+            ->where('stock', '>', '0')->get(['id', 'stock', 'avg_price']);
 
         $currentStockValue = 0;
-        foreach( $variations as $variation ){
+        foreach ($variations as $variation) {
             $currentStockValue += (float)$variation->stock * (float)$variation->avg_price;
         }
 
@@ -438,21 +522,21 @@ class DashboardController extends Controller
             'count'             => $products->count(),
             'currentStockValue' => $currentStockValue
         ];
-
     }
 
-    private function getApprovedDropshippers( $request ){
+    private function getApprovedDropshippers($request)
+    {
         $from = $request->from;
         $to = $request->to;
 
         $currentCount = DropShipper::where('status', '1')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->count();
 
         // Calculate previous time range
         $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
@@ -479,20 +563,21 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getActiveSeller( $request ){
+    private function getActiveSeller($request)
+    {
         $from = $request->from;
         $to = $request->to;
 
         $orders = Order::pluck('belongs_to');
         $currentCount = DropShipper::where('status', '1')
-        ->when($from, function ($q) use ($from) {
-            $q->whereDate('created_at', '>=', $from);
-        })
-        ->when($to, function ($q) use ($to) {
-            $q->whereDate('created_at', '<=', $to);
-        })
-        ->whereIn('user_id', $orders)
-        ->count();
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->whereIn('user_id', $orders)
+            ->count();
 
         // Calculate previous time range
         $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
@@ -520,7 +605,8 @@ class DashboardController extends Controller
         ];
     }
 
-    public function categoryTagWiseProduct(){
+    public function categoryTagWiseProduct()
+    {
 
         $categoryWiseProducts = Category::withCount('product')->where('parent_id', '0')->get();
 
@@ -566,28 +652,29 @@ class DashboardController extends Controller
             'highStock'            => $highStock
         ];
         return (new ResponseCollection($data))
-        ->response()
-        ->setStatusCode(200);
-
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function topSellingProduct(){
+    public function topSellingProduct()
+    {
 
         $orders = Order::where('status', '8')->pluck('id');
 
         $top10SellingProducts = OrderItem::with('variation.product')
-           ->whereIn('order_id', $orders)
-           ->select('product_variation_id', DB::raw('SUM(price * quantity) as selling_price'), DB::raw('SUM(quantity) as total_quantity'))
-           ->groupBy('product_variation_id')
-           ->orderByDesc('total_quantity')
-           ->get();
+            ->whereIn('order_id', $orders)
+            ->select('product_variation_id', DB::raw('SUM(price * quantity) as selling_price'), DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_variation_id')
+            ->orderByDesc('total_quantity')
+            ->get();
 
-           return (new ResponseCollection($top10SellingProducts))
-               ->response()
-               ->setStatusCode(200);
+        return (new ResponseCollection($top10SellingProducts))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function topTenDropshipper( Request $request ){
+    public function topTenDropshipper(Request $request)
+    {
 
         $dropshippers = User::withCount('deliveredOrders as total_orders')
             ->withCount('returnedOrders as total_returns')
@@ -595,16 +682,16 @@ class DashboardController extends Controller
             ->with('dropshipper.shops')
             ->orderBy('total_orders', 'desc')
             ->take(10)
-        ->get();
+            ->get();
 
         $orders = Order::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
         })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })
-        ->whereIn('status', ['8','9','10'])
-        ->get();
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->whereIn('status', ['8', '9', '10'])
+            ->get();
 
         $data = [
             'dropshippers' => $dropshippers,
@@ -613,8 +700,7 @@ class DashboardController extends Controller
                 'total' => $orders->sum('total_profit'),
                 'paid' => $orders->sum('total_paid_profit'),
                 'remaining' => $orders->sum('total_profit') - $orders->sum('total_paid_profit'),
-                'total_sellers' => DropShipper::
-                    when($request->from, function ($q) use ($request) {
+                'total_sellers' => DropShipper::when($request->from, function ($q) use ($request) {
                         $q->whereDate('created_at', '>=', $request->from);
                     })
                     ->when($request->to, function ($q) use ($request) {
@@ -622,8 +708,7 @@ class DashboardController extends Controller
                     })->select('status')->count()
             ],
 
-            'dropshipperApplication' => DropShipper::
-                when($request->from, function ($q) use ($request) {
+            'dropshipperApplication' => DropShipper::when($request->from, function ($q) use ($request) {
                     $q->whereDate('created_at', '>=', $request->from);
                 })
                 ->when($request->to, function ($q) use ($request) {
@@ -633,9 +718,9 @@ class DashboardController extends Controller
             'shipperApplication' => Supplier::when($request->from, function ($q) use ($request) {
                 $q->whereDate('created_at', '>=', $request->from);
             })
-            ->when($request->to, function ($q) use ($request) {
-                $q->whereDate('created_at', '<=', $request->to);
-            })->select('status')->get(),
+                ->when($request->to, function ($q) use ($request) {
+                    $q->whereDate('created_at', '<=', $request->to);
+                })->select('status')->get(),
         ];
 
         return (new ResponseCollection($data))

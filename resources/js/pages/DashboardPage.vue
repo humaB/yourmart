@@ -21,193 +21,155 @@
                 </form>
             </div>
 
-            <DashboardSectionOne
-                :orders="orders"
-                :approvedDropshipper="approvedDropshipper"
-                :activeSeller="activeSeller"
-                :liveProduct="liveProduct"
-                :orderProcessed="orderProcessed"
+            <DashboardSectionOne :orders="orders" :approvedDropshipper="approvedDropshipper"
+                :activeSeller="activeSeller" :liveProduct="liveProduct" :orderProcessed="orderProcessed" />
+
+            <DashboardDropshipperGraph
+                :dropshipperGraph="dropshipperGraph"
             />
 
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 col-6">
-                        <div class="card">
-                          <div class="card-header">
-                            <h4>Dropshipper Registration</h4>
-                          </div>
-                          <div class="card-body">
-                            <div class="recent-report__chart">
-                              <div id="chart2"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+            <DashboardRevenueOrderChart
+                :revenueOrderGraph="revenueOrderGraph"
+            />
 
+            <DashboardSectionTwo :dropshipper="pendingPayouts" :pendingRequests="pendingRequests"
+                :allProcessedOrders="allProcessedOrders" />
 
-                        <div class="col-xl-6 col-md-6 col-lg-6">
-                          <div class="card">
-                            <div class="card-header">
-                              <h4>Revenue-Orders Chart</h4>
-                            </div>
-                            <div class="card-body">
+            <DashboardSectionThree :allProcessedOrders="allProcessedOrders" :processOrders="processOrders" />
 
-                              <div class="recent-report__chart">
-                                <div id="chart3"></div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+            <DashboardTopFiveDropshipper :topFiveDropshippers='topFiveDropshippers' />
 
+            <DashboardTopFiveProduct :topFiveProduct='topFiveProduct' />
 
-                        <DashboardSectionTwo
-                            :dropshipper="pendingPayouts"
-                            :pendingRequests="pendingRequests"
-                            :allProcessedOrders="allProcessedOrders"
-                        />
+            <DashboardTopFiveSupplier :topFiveSuppliers='topFiveSuppliers' />
 
-                        <DashboardSectionThree
-                            :allProcessedOrders="allProcessedOrders"
-                            :processOrders="processOrders"
-                        />
+            <DashboardSectionFour :inventoryStatus="inventoryStatus" />
 
-                        <DashboardTopFiveDropshipper
-                            :topFiveDropshippers='topFiveDropshippers'
-                        />
-
-                        <DashboardTopFiveProduct
-                            :topFiveProduct='topFiveProduct'
-                        />
-
-                        <DashboardTopFiveSupplier
-                            :topFiveSuppliers='topFiveSuppliers'
-                        />
-
-                        <DashboardSectionFour
-                            :inventoryStatus="inventoryStatus"
-                        />
-
-
-                              <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h4>Tickets Status</h4>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                                <tr>
-                                                    <th>Total Tickets</th>
-                                                    <th>Awaiting Your Reply</th>
-                                                    <th>Awaiting YourMart Reply</th>
-                                                    <th>Closed</th>
-                                                    <th>Expired</th>
-                                                    <th>Reviewed</th>
-                                                    <th>In-Process</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>{{ totalTicketSum.total_tickets }}</td>
-                                                    <td class="align-middle">
-                                                        <div class="progress-text text-right text-secondary">
-                                                            {{ getPercentage(totalTicketSum.awaiting_your_reply) }}%
-                                                        </div>
-                                                        <div class="progress" data-height="6">
-                                                            <div class="progress-bar bg-success"
-                                                                :style="{ width: getPercentage(totalTicketSum.awaiting_your_reply) + '%' }">
-                                                            </div>
-                                                        </div>
-                                                        {{ getPercentage(totalTicketSum.awaiting_your_reply) }}
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <div class="progress-text text-right text-secondary">
-                                                            {{ getPercentage(totalTicketSum.awaiting_yourmart_reply) }}%
-                                                        </div>
-                                                        <div class="progress" data-height="6">
-                                                            <div class="progress-bar bg-primary"
-                                                                :style="{ width: getPercentage(totalTicketSum.awaiting_yourmart_reply) + '%' }">
-                                                            </div>
-                                                        </div>
-                                                        {{ totalTicketSum.awaiting_yourmart_reply }}
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <div class="progress-text text-right text-secondary">
-                                                            {{ getPercentage(totalTicketSum.closed) }}%
-                                                        </div>
-                                                        <div class="progress" data-height="6">
-                                                            <div class="progress-bar bg-danger"
-                                                                :style="{ width: getPercentage(totalTicketSum.closed) + '%' }"></div>
-                                                        </div>
-                                                        {{ totalTicketSum.closed }}
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <div class="progress-text text-right text-secondary">
-                                                            {{ getPercentage(totalTicketSum.expired) }}%
-                                                        </div>
-                                                        <div class="progress" data-height="6">
-                                                            <div class="progress-bar bg-success"
-                                                                :style="{ width: getPercentage(totalTicketSum.expired) + '%' }"></div>
-                                                        </div>
-                                                        {{ totalTicketSum.expired }}
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <div class="progress-text text-right text-secondary">
-                                                            {{ getPercentage(totalTicketSum.reviewed) }}%
-                                                        </div>
-                                                        <div class="progress" data-height="6">
-                                                            <div class="progress-bar bg-info"
-                                                                :style="{ width: getPercentage(totalTicketSum.reviewed) + '%' }"></div>
-                                                        </div>
-                                                        {{ totalTicketSum.reviewed }}
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <div class="progress-text text-right text-secondary">
-                                                            {{ getPercentage(totalTicketSum.in_process) }}%
-                                                        </div>
-                                                        <div class="progress" data-height="6">
-                                                            <div class="progress-bar bg-info"
-                                                                :style="{ width: getPercentage(totalTicketSum.in_process) + '%' }">
-                                                            </div>
-                                                        </div>
-                                                        {{ totalTicketSum.in_process }}
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 mt-5">
-                                <div class="card">
-                                    <div class="card-header">
-                                      <h4>Categories-Wise Published Products</h4>
-                                    </div>
-                                    <div class="card-body">
-                                      <ul class="list-group">
-                                        <li v-for="category in categoryWiseProducts" :key="category.id" class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ category.name }}
-                                          <span class="badge badge-primary badge-pill">{{ category.product_count }}</span>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                            </div>
-
-                            <div class="col-md-6 mt-5">
-                                <div class="card">
-                                    <div class="card-header">
-                                      <h4>Tag-Wise Published Products</h4>
-                                    </div>
-                                    <div class="card-body">
-                                      <ul class="list-group">
-                                        <li v-for="tag in tagWiseProducts" :key="tag.id" class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ tag.name }}
-                                          <span class="badge badge-primary badge-pill">{{ tag.tagged_count }}</span>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                            </div>
 
             <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Tickets Status</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Total Tickets</th>
+                                    <th>Awaiting Your Reply</th>
+                                    <th>Awaiting YourMart Reply</th>
+                                    <th>Closed</th>
+                                    <th>Expired</th>
+                                    <th>Reviewed</th>
+                                    <th>In-Process</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ totalTicketSum.total_tickets }}</td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.awaiting_your_reply) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-success"
+                                                :style="{ width: getPercentage(totalTicketSum.awaiting_your_reply) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ getPercentage(totalTicketSum.awaiting_your_reply) }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.awaiting_yourmart_reply) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-primary"
+                                                :style="{ width: getPercentage(totalTicketSum.awaiting_yourmart_reply) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ totalTicketSum.awaiting_yourmart_reply }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.closed) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-danger"
+                                                :style="{ width: getPercentage(totalTicketSum.closed) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.closed }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.expired) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-success"
+                                                :style="{ width: getPercentage(totalTicketSum.expired) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.expired }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.reviewed) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-info"
+                                                :style="{ width: getPercentage(totalTicketSum.reviewed) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.reviewed }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.in_process) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-info"
+                                                :style="{ width: getPercentage(totalTicketSum.in_process) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ totalTicketSum.in_process }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Categories-Wise Published Products</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li v-for="category in categoryWiseProducts" :key="category.id"
+                                class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ category.name }}
+                                <span class="badge badge-primary badge-pill">{{ category.product_count }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mt-5">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Tag-Wise Published Products</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li v-for="tag in tagWiseProducts" :key="tag.id"
+                                class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ tag.name }}
+                                <span class="badge badge-primary badge-pill">{{ tag.tagged_count }}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Top 10 Dropshippers</h4>
@@ -362,7 +324,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
         <DropshipperDetails :details="dropShipperDetails" />
@@ -370,6 +332,8 @@
 </template>
 
 <script>
+import DashboardDropshipperGraph from '../components/admin/dashboard/DashboardDropshipperGraph.vue';
+import DashboardRevenueOrderChart from '../components/admin/dashboard/DashboardRevenueOrderChart.vue';
 import DashboardSectionFour from '../components/admin/dashboard/DashboardSectionFour.vue';
 import DashboardSectionOne from '../components/admin/dashboard/DashboardSectionOne.vue';
 import DashboardSectionThree from '../components/admin/dashboard/DashboardSectionThree.vue';
@@ -389,7 +353,9 @@ export default {
         DashboardTopFiveDropshipper,
         DashboardTopFiveProduct,
         DashboardTopFiveSupplier,
-        DashboardSectionFour
+        DashboardSectionFour,
+        DashboardDropshipperGraph,
+        DashboardRevenueOrderChart
     },
     data() {
         return {
@@ -415,16 +381,16 @@ export default {
                 in_process: 0,
             },
             dropShipperDetails: {},
-            po : {
-                totalPo : 0,
-                approved : 0,
-                pending : 0,
-                rejected : 0,
-                totalAmount : 0,
-                remaining : 0,
-                paid : 0
+            po: {
+                totalPo: 0,
+                approved: 0,
+                pending: 0,
+                rejected: 0,
+                totalAmount: 0,
+                remaining: 0,
+                paid: 0
             },
-            orders : {
+            orders: {
                 totalOrder: 0,
                 inProcess: 0,
                 outOfDelivery: 0,
@@ -433,35 +399,35 @@ export default {
                 normalOrders: 0,
                 darazOrders: 0,
                 cashOrders: 0,
-                grossSales : 0,
-                itemSolds : 0,
-                productCost : 0,
-                packing : 0,
-                packingProfit : 0,
-                courier : 0,
-                courierProfit : 0,
-                costOfGood : 0,
-                grossProfit : 0
+                grossSales: 0,
+                itemSolds: 0,
+                productCost: 0,
+                packing: 0,
+                packingProfit: 0,
+                courier: 0,
+                courierProfit: 0,
+                costOfGood: 0,
+                grossProfit: 0
             },
-            dropshipper : {
-                total : 0,
-                paid : 0,
-                remaining : 0,
-                total_sellers : 0
+            dropshipper: {
+                total: 0,
+                paid: 0,
+                remaining: 0,
+                total_sellers: 0
             },
-            inventoryStatus : {},
-            categoryWiseProducts : [],
-            tagWiseProducts : [],
-            fastMovingProducts : [],
-            slowMovingProducts : [],
-            lowStock : [],
-            highStock : [],
-            approvedDropshipper : {},
-            activeSeller : {},
-            liveProduct : {},
-            orderProcessed : {},
-            pendingPayouts : {},
-            pendingRequests : {
+            inventoryStatus: {},
+            categoryWiseProducts: [],
+            tagWiseProducts: [],
+            fastMovingProducts: [],
+            slowMovingProducts: [],
+            lowStock: [],
+            highStock: [],
+            approvedDropshipper: {},
+            activeSeller: {},
+            liveProduct: {},
+            orderProcessed: {},
+            pendingPayouts: {},
+            pendingRequests: {
                 dropshippers: {
                     total: 0,
                     pending: 0,
@@ -475,17 +441,17 @@ export default {
                     reject: 0
                 },
             },
-            allProcessedOrders : {},
-            processOrders : {},
+            allProcessedOrders: {},
+            processOrders: {},
             topFiveDropshippers: [],
-            topFiveProduct : [],
-            topFiveSuppliers : []
+            topFiveProduct: [],
+            topFiveSuppliers: [],
+            dropshipperGraph : {},
+            revenueOrderGraph : {}
         };
     },
     created() {
-        this.fetchData({from : null , to : null });
-        this.top10SellingProducts();
-        this.top10Dropshippers(this.filter);
+        this.fetchData({ from: null, to: null });
         this.fetchTicketStatusCounts();
         this.fetchCategoryandTagWiseProducts();
     },
@@ -499,17 +465,6 @@ export default {
                     const results = response.data.response;
                     vm.categoryWiseProducts  = results.categoryWiseProducts,
                     vm.tagWiseProducts       = results.tagWiseProducts
-                    vm.fastMovingProducts    = results.fastMovingProducts
-                    vm.slowMovingProducts    = results.slowMovingProducts
-
-                    vm.lowStock    = results.lowStock
-                    vm.highStock    = results.highStock
-
-                    setTimeout(() => {
-                        vm.tagWiseTable();
-                        vm.categoryWiseTable();
-                    },300)
-
                 })
         },
         fetchTicketStatusCounts() {
@@ -557,7 +512,7 @@ export default {
         calculateProfit(deliveredOrders) {
             return deliveredOrders.reduce((sum, order) => sum + (parseFloat(order.selling_price) + parseFloat(order.advance_amount)) - (parseFloat(order.total_bill)), 0);
         },
-        fetchData( data ) {
+        fetchData(data) {
             let vm = this;
             axios
                 .post(this.api_url + "users/dashboard", data)
@@ -575,90 +530,17 @@ export default {
                     vm.topFiveProduct = results.topFiveSellingProduct;
                     vm.topFiveSuppliers = results.topFiveSuppliers;
                     vm.inventoryStatus = results.inventoryStatus;
-
+                    vm.dropshipperGraph = results.dropshipperGraph;
+                    vm.revenueOrderGraph = results.revenueOrderGraph;
                 })
 
         },
-        top10SellingProducts() {
-            let vm = this;
-            axios
-                .get(this.api_url + "users/dashboard/top-selling-products")
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.topTenProducts = results;
-                    setTimeout(() => {
-                        vm.topSellingProductTable();
-                    }, 300)
-                })
 
-        },
-        top10Dropshippers( data ) {
-            let vm = this;
-
-            axios
-                .post(this.api_url + "users/dashboard/top-10-dropshippers", data)
-                .then((response) => {
-                    const results = response.data.response;
-                    vm.topDropshippers = results.dropshippers;
-
-                    // Initialize counters
-                    let dropshipperApproved = 0;
-                    let dropshipperRejected = 0;
-                    let dropshipperPending = 0;
-
-                    let supplierApproved = 0;
-                    let supplierRejected = 0;
-                    let supplierPending = 0;
-
-                    // Count each status
-                    results.dropshipperApplication.forEach(item => {
-                        if (item.status === 1) {
-                            dropshipperApproved++;
-                        } else if (item.status === 2) {
-                            dropshipperRejected++;
-                        } else if (item.status === 0) {
-                            dropshipperPending++;
-                        }
-                    });
-
-                    // Update applications for dropshippers and suppliers
-                    this.applications.dropshippers.total = results.dropshipperApplication.length;
-                    this.applications.dropshippers.approved = dropshipperApproved;
-                    this.applications.dropshippers.reject = dropshipperRejected;
-                    this.applications.dropshippers.pending = dropshipperPending;
-
-                    results.shipperApplication.forEach(item => {
-                        if (item.status === 1) {
-                            supplierApproved++;
-                        } else if (item.status === 2) {
-                            supplierRejected++;
-                        } else if (item.status === 0) {
-                            supplierPending++;
-                        }
-                    });
-
-                    this.applications.supplier.total = results.shipperApplication.length;
-                    this.applications.supplier.approved = supplierApproved;
-                    this.applications.supplier.reject = supplierRejected;
-                    this.applications.supplier.pending = supplierPending;
-
-                    this.dropshipper = results.dropshipperPayouts
-
-                    setTimeout(() => {
-                        vm.topDropshipperTable();
-                    }, 300)
-                })
-
-        },
         applyFilter() {
-            this.fetchData( this.filter );
+            this.fetchData(this.filter);
             this.clearDatatable();
             this.top10Dropshippers(this.filter);
-            this.fetchPurchaseOrders( this.filter );
-        },
-        clearDatatable(){
-            const table = $('#topDropshipperTable').DataTable();
-            table.destroy();
+            this.fetchPurchaseOrders(this.filter);
         },
         resetFilter() {
 
@@ -668,24 +550,6 @@ export default {
             return string
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-        },
-        topSellingProductTable() {
-            $("#topSellingProductTable").DataTable({
-                dom: "Bfrtip",
-                buttons: ["copy", "csv", "excel"],
-            });
-        },
-        topDropshipperTable() {
-            $("#topDropshipperTable").DataTable({
-                dom: "Bfrtip",
-                buttons: ["copy", "csv", "excel"],
-            });
-        },
-        tagWiseTable() {
-            $("#tagWiseTable").DataTable();
-        },
-        categoryWiseTable() {
-            $("#categoryWiseTable").DataTable();
         },
         getPercentage(statusCount) {
             if (this.totalTicketSum.total_tickets === 0) return 0;
