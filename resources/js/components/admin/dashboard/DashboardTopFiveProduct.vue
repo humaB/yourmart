@@ -7,7 +7,7 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled list-unstyled-border">
-              <li class="media" v-for="product in topFiveProduct" :key="'product-'+product.id">
+              <li class="media" v-for="(product,index) in topFiveProduct" :key="'product-'+index">
                 <img class="mr-3 rounded" width="55"  :src="getImageUrl(product?.variation?.product?.hero_image)" alt="product">
                 <div class="media-body">
                   <div class="float-right">

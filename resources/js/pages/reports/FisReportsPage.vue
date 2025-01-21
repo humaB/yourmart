@@ -58,6 +58,34 @@
                                     <a href="#" @click="orderIssuanceReport()"><i class="fas fa-fax"></i> Order Issuance Report</a>
                                 </h6>
                             </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    8.
+                                    <a href="#" @click="topSellingProducts()"><i class="fas fa-fax"></i> Top Selling Product</a>
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    9.
+                                    <a href="#" @click="top10Dropshipper()"><i class="fas fa-fax"></i> Top 10 Dropshippers</a>
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    10.
+                                    <a href="#" @click="highStockProduct()"><i class="fas fa-fax"></i> High Stock Products</a>
+                                </h6>
+                            </div>
+
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    11.
+                                    <a href="#" @click="lowStockProduct()"><i class="fas fa-fax"></i> Low Stock Products</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -86,6 +114,19 @@
 
         <OrderIssuanceReport v-if="report == 'order-issuance-report'" :data="orderIssuanceReportData"
             :loader="loader" @orderIssuanceReportFilter="orderIssuanceReportFilter($event)" />
+
+        <TopSellingProduct v-if="report == 'top-selling-products'" :data="topSellingProductData"
+            :loader="loader" @topSellingProductsFilter="topSellingProductsFilter($event)" />
+
+        <Top10DropshipperReport v-if="report == 'top-10-dropshipper'" :data="top10DropshipperData"
+            :loader="loader" @top10DropshipperFilter="top10DropshipperFilter($event)" />
+
+        <HighStockProductReport v-if="report == 'high-stock-report'" :data="highStockProductData"
+            :loader="loader" @highStockProductFilter="highStockProductFilter($event)" />
+
+        <LowStockProductReport v-if="report == 'low-stock-report'" :data="lowStockProductData"
+            :loader="loader" @lowStockProductFilter="lowStockProductFilter($event)" />
+
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -126,12 +167,16 @@
 </template>
 <script>
 import DeliveredOrderDetailsReport from '../../components/reports/fis/DeliveredOrderDetailsReport.vue';
+import HighStockProductReport from '../../components/reports/fis/HighStockProductReport.vue';
 import InventoryControlRegisterReport from '../../components/reports/fis/InventoryControlRegisterReport.vue';
 import InventoryGoodIssuanceReport from '../../components/reports/fis/InventoryGoodIssuanceReport.vue';
 import InventoryGoodReceivedReport from '../../components/reports/fis/InventoryGoodReceivedReport.vue';
 import InventoryGoodReturnReport from '../../components/reports/fis/InventoryGoodReturnReport.vue';
 import LeopardReturnReceivedReport from '../../components/reports/fis/LeopardReturnReceivedReport.vue';
+import LowStockProductReport from '../../components/reports/fis/LowStockProductReport.vue';
 import OrderIssuanceReport from '../../components/reports/fis/OrderIssuanceReport.vue';
+import Top10DropshipperReport from '../../components/reports/fis/Top10DropshipperReport.vue';
+import TopSellingProduct from '../../components/reports/fis/TopSellingProduct.vue';
 
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
@@ -145,7 +190,11 @@ export default {
         InventoryGoodReturnReport,
         DeliveredOrderDetailsReport,
         LeopardReturnReceivedReport,
-        OrderIssuanceReport
+        OrderIssuanceReport,
+        TopSellingProduct,
+        Top10DropshipperReport,
+        HighStockProductReport,
+        LowStockProductReport
     },
     data() {
         return {
@@ -169,13 +218,69 @@ export default {
             grnDetails: {
                 product: '',
                 id: ''
-            }
+            },
+            topSellingProductData : [],
+            top10DropshipperData : [],
+            lowStockProductData : [],
+            highStockProductData : [],
         }
     },
     created() {
         this.fetchProducts();
     },
     methods: {
+        lowStockProduct() {
+            this.report = 'low-stock-report'
+        },
+        lowStockProductFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/product-wise-count', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.lowStockProductData = results.lowStock;
+                    vm.loader = false;
+                })
+        },
+        highStockProduct() {
+            this.report = 'high-stock-report'
+        },
+        highStockProductFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/product-wise-count', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.highStockProductData = results.highStock;
+                    vm.loader = false;
+                })
+        },
+        top10Dropshipper() {
+            this.report = 'top-10-dropshipper'
+        },
+        top10DropshipperFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.post(vm.api_url + 'reports/fis/top-10-dropshippers', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.top10DropshipperData = results.dropshippers;
+                    vm.loader = false;
+                })
+        },
+        topSellingProducts() {
+            this.report = 'top-selling-products'
+        },
+        topSellingProductsFilter() {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/top-selling-products')
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.topSellingProductData = results;
+                    vm.loader = false;
+                })
+        },
         orderIssuanceReport() {
             this.report = 'order-issuance-report'
         },

@@ -174,6 +174,9 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
 
         Route::post('/good-received/delete',  [ FisReportController::class , 'goodReceivedDelete']);
 
+        Route::get('/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
+        Route::post('/top-10-dropshippers',  [ DashboardController::class , 'topTenDropshipper']);
+        Route::get('/product-wise-count',  [ DashboardController::class , 'categoryTagWiseProduct']);
     });
 });
 

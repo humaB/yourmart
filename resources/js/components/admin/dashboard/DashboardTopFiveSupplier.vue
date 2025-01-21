@@ -7,7 +7,7 @@
           </div>
           <div class="card-body">
             <ul class="list-unstyled list-unstyled-border">
-              <li class="media" v-for="supplier in topFiveSuppliers" :key="'dropshiper-'+supplier.id">
+              <li class="media" v-for="supplier in topFiveSuppliers" :key="'supplier-'+supplier.supplier_id">
                 <img class="mr-3 rounded" width="55" :src="`${web_url}public/storage/uploads/supplier/${supplier.supplier.profile_image}`" alt="product">
                 <div class="media-body">
                   <div class="float-right">

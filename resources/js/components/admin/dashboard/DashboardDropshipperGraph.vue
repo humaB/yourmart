@@ -95,7 +95,9 @@ export default {
     watch : {
         dropshipperGraph: {
             handler(newGraph) {
-                this.initChart(newGraph.categories, [newGraph.series[0]]);
+                if (newGraph.series && newGraph.series.length > 0) {
+                    this.initChart(newGraph.categories, [newGraph.series[0]]);
+                }
             },
             immediate: true, // Ensures the chart initializes on the first load
             deep: true,
