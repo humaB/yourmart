@@ -185,8 +185,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
         <DropshipperDetails :details="dropShipperDetails" />
     </div>
@@ -380,6 +378,9 @@ export default {
         applyFilter() {
             this.fetchData(this.filter);
             this.clearDatatable();
+        },
+        resetFilter() {
+            this.fetchData({from : null, to : null});
         },
         formatPrice(price) {
             var string = parseFloat(price).toString();

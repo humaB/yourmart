@@ -181,7 +181,7 @@ class DashboardController extends Controller
         })->reverse(); // Reverse to get chronological order
 
         // Fetch data for dropshippers with status 2 within the last 12 months
-        $dropshippers = DropShipper::where('status', 2)
+       $dropshippers = DropShipper::where('status', '1')
             ->where('created_at', '>=', now()->subYear())
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as count')
             ->groupBy('month')
