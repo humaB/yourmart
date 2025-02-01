@@ -457,17 +457,16 @@
                                             </p>
                                             <div class="row" v-if="details">
                                                 <div class="col-md-2" v-if="details.payment_proof_attachment">
-                                                    <a target="_blank"
-                                                        :href="setImage(details.payment_proof_attachment)">
-                                                        <img class="img-thumbnail img-responsive" alt="attachment"
-                                                            :src="`${web_url}public/storage/uploads/payments/${details.payment_proof_attachment}`">
+                                                    <a target="_blank" :href="setImage(details.payment_proof_attachment)">
+                                                      <img class="img-thumbnail img-responsive" alt="attachment"
+                                                           :src="`${web_url}${details.type === 'Cash' ? 'public/uploads/dropshipper/payments/' : 'public/storage/uploads/payments/'}${details.payment_proof_attachment}`">
                                                     </a>
                                                     <a class="name"
-                                                        :href="`${web_url}public/storage/uploads/payments/${details.payment_proof_attachment}`"
-                                                        target="_blank">
-                                                        {{ truncatedAttachmentName(details.payment_proof_attachment) }}
+                                                       :href="`${web_url}${details.type === 'Cash' ? 'public/uploads/dropshipper/payments/' : 'public/storage/uploads/payments/'}${details.payment_proof_attachment}`"
+                                                       target="_blank">
+                                                      {{ truncatedAttachmentName(details.payment_proof_attachment) }}
                                                     </a>
-                                                </div>
+                                                  </div>
 
                                                    <!-- Attachments from comments array -->
                                                    <div class="col-md-2" v-for="item in details.attachments"  :key="item.id" v-if="details.attachments.length > 0">
