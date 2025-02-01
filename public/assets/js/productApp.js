@@ -9014,7 +9014,7 @@ var render = function render() {
     staticClass: "fa fa-paperclip"
   }), _vm._v(" " + _vm._s((_vm.details.daraz_labels ? _vm.details.daraz_labels.length : 0) + (_vm.details.attachments ? _vm.details.attachments.length : 0)) + " attachments — ")])]), _vm._v(" "), _vm.details ? _c("div", {
     staticClass: "row"
-  }, [_vm.details.payment_proof_attachment ? _c("div", {
+  }, [_vm.details.payment_proof_attachment && _vm.details.type != "Cash" ? _c("div", {
     staticClass: "col-md-2"
   }, [_c("a", {
     attrs: {
@@ -9025,15 +9025,34 @@ var render = function render() {
     staticClass: "img-thumbnail img-responsive",
     attrs: {
       alt: "attachment",
-      src: "".concat(_vm.details.type === "Cash" ? "/" + _vm.public_url : _vm.web_url).concat(_vm.details.type === "Cash" ? "public/uploads/dropshipper/payments/" : "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment)
+      src: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment)
     }
   })]), _vm._v(" "), _c("a", {
     staticClass: "name",
     attrs: {
-      href: "".concat(_vm.details.type === "Cash" ? "/" + _vm.public_url : _vm.web_url).concat(_vm.details.type === "Cash" ? "public/uploads/dropshipper/payments/" : "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment),
+      href: "".concat(_vm.web_url, "public/storage/uploads/payments/").concat(_vm.details.payment_proof_attachment),
       target: "_blank"
     }
-  }, [_vm._v("\n                                                  " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.details.attachments, function (item) {
+  }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])]) : _vm._e(), _vm._v(" "), _vm.details.payment_proof_attachment && _vm.details.type == "Cash" ? _c("div", {
+    staticClass: "col-md-2"
+  }, [_c("a", {
+    attrs: {
+      target: "_blank",
+      href: _vm.setImage(_vm.details.payment_proof_attachment)
+    }
+  }, [_c("img", {
+    staticClass: "img-thumbnail img-responsive",
+    attrs: {
+      alt: "attachment",
+      src: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(_vm.details.payment_proof_attachment)
+    }
+  })]), _vm._v(" "), _c("a", {
+    staticClass: "name",
+    attrs: {
+      href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(_vm.details.payment_proof_attachment),
+      target: "_blank"
+    }
+  }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.details.attachments, function (item) {
     return _vm.details.attachments.length > 0 ? _c("div", {
       key: item.id,
       staticClass: "col-md-2"
