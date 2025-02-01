@@ -44,8 +44,6 @@ Vue.component('profile-setting-page', require('./pages/setting/ProfileSettingPag
 //Reports
 Vue.component('fis-report-page', require('./pages/reports/FisReportsPage.vue').default );
 
-
-
 const app = new Vue({
     el: '#app',
 });

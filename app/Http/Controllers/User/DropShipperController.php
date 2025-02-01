@@ -268,8 +268,10 @@ public function fetchDetails(Request $request)
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop')->whereIn('account_head_id', $ledgers)
-            ->where('type', 'BP')
-            ->orWhere('type', 'CP')
+            ->where(function($query){
+                $query->where('type', 'BP')
+                ->orWhere('type', 'CP');
+            })
             ->get();
 
         return (new ResponseCollection($transactions))
