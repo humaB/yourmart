@@ -16,3 +16,12 @@ const mix = require('laravel-mix');
  mix.js('resources/js/inventoryApp.js', 'public/assets/js')
  mix.js('resources/js/accountApp.js', 'public/assets/js')
  .vue();
+
+    //Version only customerApp.js
+mix.version([
+    'public/assets/js/app.js',
+    'public/assets/js/productApp.js',
+    'public/assets/js/inventoryApp.js',
+    'public/assets/js/accountApp.js',
+]);
+
