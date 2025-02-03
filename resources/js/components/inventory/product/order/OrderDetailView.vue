@@ -473,10 +473,12 @@
                                                     <a target="_blank"
                                                         :href="setImage(details.payment_proof_attachment)">
                                                         <img class="img-thumbnail img-responsive" alt="attachment"
-                                                            :src="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`">
+                                                            :src="`${public_url}/public/storage/uploads/dropshipper/
+                                                            payments/${details.payment_proof_attachment}`">
                                                     </a>
                                                     <a class="name"
-                                                        :href="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`"
+                                                        :href="`${public_url}/public/storage/uploads/dropshipper/
+                                                        payments/${details.payment_proof_attachment}`"
                                                         target="_blank">
                                                         {{ truncatedAttachmentName(details.payment_proof_attachment) }}
                                                     </a>
@@ -773,10 +775,10 @@
                         </button>
                     </div>
                     <div class="modal-footer" v-else>
-                        <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal" data-target="#markasBeingReturn" v-if="role != 'supervisor' && details.status == 11">
+                        <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal" data-target="#markasBeingReturn" v-if="role == 'admin' && details.status == 11">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return
                         </button>
-                        <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal" data-target="#markasDelivered" v-if="role != 'supervisor' && details.status == 11">
+                        <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal" data-target="#markasDelivered" v-if="role == 'admin' && details.status == 11">
                             <i class="fas fa-check"></i> Mark as Delivered
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
