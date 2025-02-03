@@ -14,7 +14,7 @@ class CourierReturnController extends Controller
 {
     public function index()
     {
-        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor'){
+        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor' && auth()->user()->role != 'auditor'){
             abort(401);
         }
         return view('inventory.store.return.courier_return');
@@ -22,7 +22,7 @@ class CourierReturnController extends Controller
 
     public function record()
     {
-        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor'){
+        if( auth()->user()->role != 'admin' && auth()->user()->role != 'inventory manager' && auth()->user()->role != 'supervisor' && auth()->user()->role != 'auditor'){
             abort(401);
         }
         return view('inventory.store.return.courier_return_record');
