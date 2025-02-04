@@ -150,7 +150,7 @@ class DashboardController extends Controller
         // Prepare data for the chart
         $data = $filteredData->map(function ($monthOrders, $month) {
             return [
-                'month' => $month,
+                'month' => date('M-y', strtotime($month)),
                 'low' => $monthOrders->count(), // Count of orders (low data)
                 'high' => $monthOrders->sum('total_bill'), // Sum of total_bill (high data)
             ];
