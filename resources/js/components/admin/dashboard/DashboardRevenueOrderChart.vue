@@ -27,7 +27,7 @@ export default {
         initChart() {
 
             const revenueData = this.revenueOrderGraph.series.find(series => series.name === "Revenue").data;
-            const maxRevenue = Math.max(...revenueData) + 5000; // Add some padding for visual clarity
+            const maxRevenue = Math.max(...revenueData) + 10000; // Add some padding for visual clarity
 
             const options = {
                 chart: {
