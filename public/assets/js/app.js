@@ -203,7 +203,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var revenueData = this.revenueOrderGraph.series.find(function (series) {
         return series.name === "Revenue";
       }).data;
-      var maxRevenue = Math.max.apply(Math, _toConsumableArray(revenueData)) + 1000; // Add some padding for visual clarity
+      var maxRevenue = Math.max.apply(Math, _toConsumableArray(revenueData)) + 5000; // Add some padding for visual clarity
 
       var options = {
         chart: {
