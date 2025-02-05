@@ -4318,15 +4318,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
-/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../components/inventory/product/order/TrackingDetailPopup.vue */ "./resources/js/components/inventory/product/order/TrackingDetailPopup.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'StorePendingCourierReturnPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    TrackingDetailPopup: _components_inventory_product_order_TrackingDetailPopup_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -4344,7 +4347,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       orderNumber: "",
       loader: false,
-      dispatcheds: []
+      dispatcheds: [],
+      trackingDetails: []
     };
   },
   computed: {
@@ -4366,6 +4370,14 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
+    fetchTracking: function fetchTracking(id) {
+      var vm = this;
+      axios.post(this.api_url + "inventory/products/orders/tracking", {
+        id: id
+      }).then(function (response) {
+        vm.trackingDetails = response.data.response;
+      });
+    },
     formatPrice: function formatPrice(price) {
       var value = parseFloat(price).toFixed(2);
       var string = value.toString();
@@ -4410,7 +4422,7 @@ __webpack_require__.r(__webpack_exports__);
       this.detail = detail;
     },
     formatDate: function formatDate(date) {
-      return date ? moment__WEBPACK_IMPORTED_MODULE_2___default()(date).format('DD-MMM-YYYY') : 'N/A';
+      return date ? moment__WEBPACK_IMPORTED_MODULE_3___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
     fetchPendingDispatchs: function fetchPendingDispatchs(data) {
       var _this2 = this;
@@ -14117,7 +14129,18 @@ var render = function render() {
   }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingDispatchs, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                                  ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                                  ")]), _vm._v(" "), _c("td", [_c("a", {
+      attrs: {
+        href: "#",
+        "data-toggle": "modal",
+        "data-target": "#trackingInformation"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchTracking(item.id);
+        }
+      }
+    }, [_vm._v("\n                                                        " + _vm._s(item.tracking_number) + "\n                                                    ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])], 1)])])]), _vm._v(" "), _c("div", {
     staticClass: "tab-pane fade",
     attrs: {
@@ -14198,7 +14221,11 @@ var render = function render() {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + "-" + item.order.order_no : item.order.order_no) + "\n                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
-  }), 0)])])])])])])])])])])])]);
+  }), 0)])])])])])])])])])])]), _vm._v(" "), _c("TrackingDetailPopup", {
+    attrs: {
+      trackingDetails: _vm.trackingDetails
+    }
+  })], 1);
 };
 var staticRenderFns = [function () {
   var _vm = this,

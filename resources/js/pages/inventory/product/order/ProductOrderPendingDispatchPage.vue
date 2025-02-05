@@ -111,7 +111,14 @@
                                                     <td>
                                                         {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
                                                       </td>
-                                                    <td>{{ item.tracking_number }}</td>
+                                                      <td>
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#trackingInformation"
+                                                            @click="fetchTracking(item.id)">
+                                                            {{ item.tracking_number }}
+                                                        </a>
+
+                                                    </td>
                                                     <td>{{ item.user.name }}</td>
                                                     <td>{{ formatPrice(item.total_bill) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>
@@ -191,18 +198,22 @@
             </div>
           </div>
 
+          <TrackingDetailPopup :trackingDetails="trackingDetails" />
+
     </div>
 </template>
 <script>
 
 import { filter } from "lodash";
 import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
+import TrackingDetailPopup from "../../../../components/inventory/product/order/TrackingDetailPopup.vue";
+import moment from "moment";
 
-  import moment from "moment";
     export default {
         name : 'StorePendingCourierReturnPage',
         components: {
             TableHeader,
+            TrackingDetailPopup
         },
         data() {
             return {
@@ -220,7 +231,8 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
                 },
                 orderNumber : "",
                 loader : false,
-                dispatcheds : []
+                dispatcheds : [],
+                trackingDetails: [],
             };
         },
         computed:{
@@ -239,6 +251,14 @@ import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
             this.fetchPendingDispatchs({ from : null , to : null});
         },
         methods : {
+            fetchTracking(id) {
+                let vm = this;
+                axios
+                    .post(this.api_url + "inventory/products/orders/tracking", { id })
+                    .then((response) => {
+                        vm.trackingDetails = response.data.response
+                    });
+            },
             formatPrice(price) {
                 const value = parseFloat(price).toFixed(2)
                 var string = value.toString();
