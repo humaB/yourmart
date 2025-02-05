@@ -111,14 +111,7 @@
                                                     <td>
                                                         {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
                                                       </td>
-                                                      <td>
-                                                        <a href="#" data-toggle="modal"
-                                                            data-target="#trackingInformation"
-                                                            @click="fetchTracking(item.id)">
-                                                            {{ item.tracking_number }}
-                                                        </a>
-
-                                                    </td>
+                                                      <td>{{ item.tracking_number}}</td>
                                                     <td>{{ item.user.name }}</td>
                                                     <td>{{ formatPrice(item.total_bill) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>
@@ -178,7 +171,14 @@
                                                     <td>
                                                         {{ item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + '-' + item.order.order_no : item.order.order_no }}
                                                     </td>
-                                                    <td>{{ item.tracking_number }}</td>
+                                                    <td>
+                                                        <a href="#" data-toggle="modal"
+                                                            data-target="#trackingInformation"
+                                                            @click="fetchTracking(item.id)">
+                                                            {{ item.tracking_number }}
+                                                        </a>
+
+                                                    </td>
                                                     <td>{{ formatPrice(item.total_amount) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>
 
