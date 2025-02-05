@@ -137,6 +137,7 @@ class OrderController extends Controller
         ->when($request->to, function ($query, $to) {
             return $query->whereDate('created_at', '<=', $to);
         })
+        ->orderBy('id', 'desc')
         ->get();
 
         $orders = Order::with('shop', 'user')

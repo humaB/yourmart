@@ -106,7 +106,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="(item,index) in pendingDispatchs" :key="item.id">
+                                                <tr v-for="(item,index) in pendingDispatchs" :key="'pending-'+item.id">
                                                     <td>{{ index + 1 }}</td>
                                                     <td>
                                                         {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
@@ -166,7 +166,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr v-for="(item,index) in dispatcheds" :key="item.id">
+                                                <tr v-for="(item,index) in dispatcheds" :key="'dispatched-'+item.id">
                                                     <td>{{ index + 1 }}</td>
                                                     <td>
                                                         {{ item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + '-' + item.order.order_no : item.order.order_no }}
@@ -174,10 +174,9 @@
                                                     <td>
                                                         <a href="#" data-toggle="modal"
                                                             data-target="#trackingInformation"
-                                                            @click="fetchTracking(item.id)">
+                                                            @click="fetchTracking(item.order_id)">
                                                             {{ item.tracking_number }}
                                                         </a>
-
                                                     </td>
                                                     <td>{{ formatPrice(item.total_amount) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>

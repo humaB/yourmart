@@ -14128,7 +14128,7 @@ var render = function render() {
     }
   }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingDispatchs, function (item, index) {
     return _c("tr", {
-      key: item.id
+      key: "pending-" + item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                                  ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])], 1)])])]), _vm._v(" "), _c("div", {
     staticClass: "tab-pane fade",
@@ -14208,7 +14208,7 @@ var render = function render() {
     }
   }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.dispatcheds, function (item, index) {
     return _c("tr", {
-      key: item.id
+      key: "dispatched-" + item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + "-" + item.order.order_no : item.order.order_no) + "\n                                                ")]), _vm._v(" "), _c("td", [_c("a", {
       attrs: {
         href: "#",
@@ -14217,7 +14217,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.fetchTracking(item.id);
+          return _vm.fetchTracking(item.order_id);
         }
       }
     }, [_vm._v("\n                                                        " + _vm._s(item.tracking_number) + "\n                                                    ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
