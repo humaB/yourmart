@@ -161,6 +161,7 @@
                                                     <th>Sr #</th>
                                                     <th>Order #</th>
                                                     <th>Tracking Number</th>
+                                                    <th>Status</th>
                                                     <th>Amount</th>
                                                     <th>Dispatched Date</th>
                                                 </tr>
@@ -178,6 +179,7 @@
                                                             {{ item.tracking_number }}
                                                         </a>
                                                     </td>
+                                                    <td>{{ item?.tracking?.leopard_label}}</td>
                                                     <td>{{ formatPrice(item.total_amount) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>
 

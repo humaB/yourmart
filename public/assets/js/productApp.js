@@ -14207,6 +14207,7 @@ var render = function render() {
       id: "dispatched-order_table"
     }
   }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.dispatcheds, function (item, index) {
+    var _item$tracking;
     return _c("tr", {
       key: "dispatched-" + item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + "-" + item.order.order_no : item.order.order_no) + "\n                                                ")]), _vm._v(" "), _c("td", [_c("a", {
@@ -14220,7 +14221,7 @@ var render = function render() {
           return _vm.fetchTracking(item.order_id);
         }
       }
-    }, [_vm._v("\n                                                        " + _vm._s(item.tracking_number) + "\n                                                    ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
+    }, [_vm._v("\n                                                        " + _vm._s(item.tracking_number) + "\n                                                    ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$tracking = item.tracking) === null || _item$tracking === void 0 ? void 0 : _item$tracking.leopard_label))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])])])])])])])]), _vm._v(" "), _c("TrackingDetailPopup", {
     attrs: {
       trackingDetails: _vm.trackingDetails
@@ -14296,7 +14297,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Dispatched Date")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Dispatched Date")])])]);
 }];
 render._withStripped = true;
 

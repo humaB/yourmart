@@ -20,4 +20,8 @@ class OrderDispatchedRecord extends Model
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
+    public function tracking(){
+        return $this->hasOne(OrderLeopardStatus::class, 'order_id', 'order_id')->orderBy('id', 'desc');
+    }
+
 }

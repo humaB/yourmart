@@ -130,7 +130,7 @@ class OrderController extends Controller
     public function pendingDispatchs(Request $request)
     {
 
-        $dispatched = OrderDispatchedRecord::with('order.shop')
+        $dispatched = OrderDispatchedRecord::with('order.shop', 'tracking')
         ->when($request->from, function ($query, $from) {
             return $query->whereDate('created_at', '>=', $from);
         })
