@@ -473,12 +473,10 @@
                                                     <a target="_blank"
                                                         :href="setImage(details.payment_proof_attachment)">
                                                         <img class="img-thumbnail img-responsive" alt="attachment"
-                                                            :src="`${public_url}/public/storage/uploads/dropshipper/
-                                                            payments/${details.payment_proof_attachment}`">
+                                                            :src="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`">
                                                     </a>
                                                     <a class="name"
-                                                        :href="`${public_url}/public/storage/uploads/dropshipper/
-                                                        payments/${details.payment_proof_attachment}`"
+                                                        :href="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`"
                                                         target="_blank">
                                                         {{ truncatedAttachmentName(details.payment_proof_attachment) }}
                                                     </a>

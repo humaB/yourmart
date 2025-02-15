@@ -12535,12 +12535,12 @@ var render = function render() {
     staticClass: "img-thumbnail img-responsive",
     attrs: {
       alt: "attachment",
-      src: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/\n                                                        payments/").concat(_vm.details.payment_proof_attachment)
+      src: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(_vm.details.payment_proof_attachment)
     }
   })]), _vm._v(" "), _c("a", {
     staticClass: "name",
     attrs: {
-      href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/\n                                                    payments/").concat(_vm.details.payment_proof_attachment),
+      href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(_vm.details.payment_proof_attachment),
       target: "_blank"
     }
   }, [_vm._v("\n                                                    " + _vm._s(_vm.truncatedAttachmentName(_vm.details.payment_proof_attachment)) + "\n                                                ")])]) : _vm._e(), _vm._v(" "), _vm._l(_vm.details.attachments, function (item) {
