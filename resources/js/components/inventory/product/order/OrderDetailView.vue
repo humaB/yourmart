@@ -465,7 +465,7 @@
                                                     <a class="name"
                                                         :href="`${web_url}public/storage/uploads/payments/${details.payment_proof_attachment}`"
                                                         target="_blank">
-                                                        {{ truncatedAttachmentName(details.payment_proof_attachment) }}
+                                                        {{ truncatedAttachmentName(details.payment_proof_attachment ) }}
                                                     </a>
                                                 </div>
 
