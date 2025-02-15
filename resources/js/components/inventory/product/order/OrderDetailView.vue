@@ -471,7 +471,7 @@
 
                                                 <div class="col-md-2" v-if="details.payment_proof_attachment && details.type == 'Cash'">
                                                     <a target="_blank"
-                                                        :href="setImage(details.payment_proof_attachment)">
+                                                        :href="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`">
                                                         <img class="img-thumbnail img-responsive" alt="attachment"
                                                             :src="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`">
                                                     </a>

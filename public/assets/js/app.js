@@ -12529,7 +12529,7 @@ var render = function render() {
   }, [_c("a", {
     attrs: {
       target: "_blank",
-      href: _vm.setImage(_vm.details.payment_proof_attachment)
+      href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(_vm.details.payment_proof_attachment)
     }
   }, [_c("img", {
     staticClass: "img-thumbnail img-responsive",
