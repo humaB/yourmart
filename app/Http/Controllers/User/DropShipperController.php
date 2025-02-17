@@ -414,7 +414,7 @@ public function fetchDetails(Request $request)
     public function decision(Request $request)
     {
 
-        $lock = Cache::lock('dropshipper_decision4')->block(7, function () use ($request) {
+        $lock = Cache::lock('dropshipper_decision5')->block(7, function () use ($request) {
 
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
@@ -489,7 +489,7 @@ public function fetchDetails(Request $request)
             ]);
 
             DropShipperShop::where('dropshipper_id', $dropshipper->id)->update([
-                'leopard_id' => $leopard,
+                'leopard_id'      => $leopard,
                 'account_head_id' => $head_id,
             ]);
 
@@ -503,7 +503,6 @@ public function fetchDetails(Request $request)
             ];
 
             Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
-
 
             return ['message' => 'successfully updated'];
         });
