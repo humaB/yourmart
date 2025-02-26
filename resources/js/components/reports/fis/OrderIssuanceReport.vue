@@ -355,7 +355,7 @@ export default {
         data(newLedger) {
             setTimeout(() => {
                 $('#order_issuance_table').DataTable({
-                    "bSort": false,
+                    "bSort": true,
                     dom: 'Bfrtip',
                     buttons: [
                         {

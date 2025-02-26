@@ -3529,7 +3529,7 @@ __webpack_require__.r(__webpack_exports__);
     data: function data(newLedger) {
       setTimeout(function () {
         $('#order_issuance_table').DataTable({
-          "bSort": false,
+          "bSort": true,
           dom: 'Bfrtip',
           buttons: [{
             extend: 'copy',
