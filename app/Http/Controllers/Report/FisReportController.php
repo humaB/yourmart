@@ -305,7 +305,7 @@ class FisReportController extends Controller
         ->when($request->to, function ($q) use ($request) {
             $q->whereDate('created_at', '<=', $request->to);
         })
-        ->where('order_id','0')
+        ->where('order_id', '!=','0')
         ->pluck('id');
 
         $issues = StoreIssuanceDetail::with('product.variation', 'sin')
