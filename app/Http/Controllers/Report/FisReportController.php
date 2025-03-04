@@ -11,6 +11,7 @@ use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrderDetail;
+use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturn;
@@ -298,13 +299,17 @@ class FisReportController extends Controller
     public function orderIssuance(Request $request)
     {
 
-        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-        ->when($request->from, function ($q) use ($request) {
+        $orders = StoreIssuance::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
         })
         ->when($request->to, function ($q) use ($request) {
             $q->whereDate('created_at', '<=', $request->to);
         })
+        ->where('order_id','0')
+        ->pluck('id');
+
+        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+        ->whereIn('sin_id', $orders)
         ->get()->groupBy('product_id');
 
         $products = [];
@@ -328,7 +333,6 @@ class FisReportController extends Controller
 
              //Calculate Avg Issuance Price
              $issance_price = $singleProductGroup->sum('total');
-             $issance_rate = $singleProductGroup->sum('price');
              $products[$singleProductGroup[0]->product_id]['issance_price'] = round( $issance_price / $quantity );
              $products[$singleProductGroup[0]->product_id]['issance_cost'] = round( $issance_price );
 
