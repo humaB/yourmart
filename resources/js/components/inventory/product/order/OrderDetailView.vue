@@ -604,6 +604,17 @@
                                 </div>
                             </div>
 
+                            <div class="card" v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager'|| role == 'packing & dispatch manager'">
+                                <div class="card-body row">
+                                    <div class="col-md-12">
+                                        <Camera
+                                            :details="details"
+                                            @addCommentDirect="addCommentDirect($event)"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="card" v-if="role == 'inventory manager'">
                                 <div class="card-body row">
                                     <div class="col-md-12">
@@ -790,10 +801,14 @@
     </div>
 </template>
 <script>
+import Camera from './Camera.vue';
 
 export default {
     name: "OrderDetailView",
     props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader', 'view'],
+    components :  {
+        Camera
+    },
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
@@ -827,6 +842,7 @@ export default {
         this.$parent.$on("commentAdded", (value) => {
             if (value) {
                 this.close();
+                this.$emit('commentAdded', true)
             }
         });
     },
@@ -1092,6 +1108,9 @@ export default {
             fd.append('attachment', vm.attachment);
 
             vm.$emit('addComment', fd)
+        },
+        addCommentDirect(fd) {
+            this.$emit('addComment', fd)
         },
         truncatedAttachmentName(attachment) {
             const maxLength = 20; // Set your desired max length here
