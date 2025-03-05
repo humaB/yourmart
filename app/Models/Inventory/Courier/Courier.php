@@ -19,4 +19,8 @@ class Courier extends Model
     public function categories(){
         return $this->hasMany(CourierCategory::class, 'courier_id', 'id');
     }
+
+    public function disclaimer(){
+        return $this->hasOne(CourierDisclaimer::class, 'courier_id', 'id');
+    }
 }

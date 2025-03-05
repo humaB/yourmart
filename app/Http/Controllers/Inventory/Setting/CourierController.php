@@ -9,6 +9,7 @@ use App\Models\Inventory\Courier\Courier;
 use App\Models\Inventory\Courier\CourierAddedCategory;
 use App\Models\Inventory\Courier\CourierCategory;
 use App\Models\Inventory\Courier\CourierCategoryRange;
+use App\Models\Inventory\Courier\CourierDisclaimer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,14 @@ class CourierController extends Controller
     }
 
     public function details( Request $request ){
-        $courier = Courier::with('categories.ranges')->where('id', $request->id)->get();
+        $courier = Courier::with('categories.ranges', 'disclaimer')
+        ->where('id', $request->id)
+        ->get();
+
+        foreach ($courier as $item) {
+            $item['disclaimer_text'] = $item->disclaimer->disclaimer ?? "";
+        }
+
         return (new ResponseCollection($courier))
         ->response()
         ->setStatusCode(200);
@@ -107,6 +115,19 @@ class CourierController extends Controller
             'status' => 'success',
             'response' => $courier
         ], 200);
+    }
+
+    public function addDisclaimer( Request $request ){
+
+        CourierDisclaimer::updateOrInsert(
+            ['courier_id' => $request->courier], // condition
+            [
+                'courier_id' => $request->courier,
+                'disclaimer' => $request->text
+            ]
+        );
+
+        return ['message' => 'Successfully added'];
     }
 
     public function fetchCategory(){

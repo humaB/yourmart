@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Helpers;
 
 use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Models\Inventory\Courier\CourierCategory;
+use App\Models\Inventory\Courier\CourierDisclaimer;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\Inventory\Product\Setting\OtherCharge;
@@ -112,8 +113,10 @@ class LeopardApiHelper
 
     public function bookAPacket($weight, $request, $order_no, $shop, $city, $package)
     {
-
         $package = CourierCategory::where('id', $package)->first();
+        $courierDisclaimer = CourierDisclaimer::where('courier_id',$request->courier_service_id)->first();
+        $instruction = $request->instructions ? ($request->instructions. ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' .$courierDisclaimer->disclaimer ?? "");
+
 
         $shop = DropShipperShop::with('dropshipper')->where('id', $shop)->first();
         $order_no = $shop ?  substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $order_no : $order_no;
@@ -143,7 +146,7 @@ class LeopardApiHelper
             'consignment_name_eng' => $request->customer_name, // Replace with consignee name
             'consignment_phone' => $request->phone_number, // Replace with consignee phone number
             'consignment_address' => $request->address,  // Replace with consignee address
-            'special_instructions' => $request->instructions ?? '', // Replace with actual instructions
+            'special_instructions' => $instruction, // Replace with actual instructions
 
             'shipment_type' => strtolower($package->name), // Optional Field (You can keep it empty so It will pick default value i.e. "overnight"), Type Shipment type name here
 

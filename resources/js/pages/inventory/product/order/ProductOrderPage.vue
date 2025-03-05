@@ -394,14 +394,36 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
+
+                                        <div class="col-md-6 mb-2">
+                                            <label for=""><b>Multiple Action</b></label>
+                                            <select name="" id="" class="form-control" v-model="multipleAction">
+                                                <option value="">Choose from following</option>
+                                                <option value="Product List" v-if="role == 'admin' || role == 'supervisor' || role == 'inventory manager'">Get Products List</option>
+                                                <option value="Print Labels" v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager' || role == 'packing & dispatch manager'">Print Courier Labels</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-2">
+                                            <label for=""><b>Action</b></label><br>
+                                            <button class="btn btn-primary w-100" @click="multipleActionFunc()"
+                                                v-if="!btnLoader">Perform Action</button>
+                                            <button class="btn btn-primary w-100 btn-progress disabled" v-else>Perform Action</button>
+                                        </div>
                                         <div class="card-body table-responsive" v-if="loader">
                                             <bullet-list-loader :width="250"> </bullet-list-loader>
                                         </div>
                                         <div class="col-md-12 table-responsive" v-else>
+
                                             <table class="table table-bordered" :id="table_id">
                                                 <thead>
                                                     <tr>
                                                         <th>Sr #</th>
+                                                        <th>
+                                                            <input type="checkbox"
+                                                                class="form-control custom-checkbox"
+                                                                v-model="checkedAllOrders"
+                                                                @change="toggleAllOrders">
+                                                        </th>
                                                         <th>Reference ID</th>
                                                         <th>Type</th>
                                                         <th>Dropshipper</th>
@@ -425,6 +447,13 @@
                                                 <tbody>
                                                     <tr v-for="(item, index) in orders" :key="item.id">
                                                         <td>{{ index + 1 }}</td>
+                                                        <td>
+                                                            <div class="pretty p-default p-round p-thick">
+                                                                <input type="checkbox"
+                                                                    class="form-control custom-checkbox"
+                                                                    v-model="selectedOrders" :value="item.id">
+                                                            </div>
+                                                        </td>
                                                         <td>{{ item.id }}</td>
                                                         <td>{{ item.type }}</td>
                                                         <td>{{ item.user ? item.user.name : '-' }}</td>
@@ -539,6 +568,14 @@
             @markasDeliveredConfirmation="markasDeliveredConfirmation($event)"
         />
 
+        <OrderSelectedProductList
+            :products="selectedProductList"
+        />
+
+        <OrderSelectedLabelPrint
+            :labels="selectedOrderLabels"
+        />
+
     </div>
 </template>
 <script>
@@ -552,6 +589,8 @@ import TrackingDetailPopup from "../../../../components/inventory/product/order/
 import OrderMarkasReplacementConfirmation from "../../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue";
 import OrderMarkasBeingReturnConfirmation from "../../../../components/inventory/product/order/OrderMarkasBeingReturnConfirmation.vue";
 import OrderMarkasDeliveredConfirmation from "../../../../components/inventory/product/order/OrderMarkasDeliveredConfirmation.vue";
+import OrderSelectedProductList from "../../../../components/inventory/product/order/OrderSelectedProductList.vue";
+import OrderSelectedLabelPrint from "../../../../components/inventory/product/order/OrderSelectedLabelPrint.vue";
 
 export default {
     name: 'ProductOrderPage',
@@ -563,7 +602,9 @@ export default {
         OrderMarkasReplacementConfirmation,
         TrackingDetailPopup,
         OrderMarkasBeingReturnConfirmation,
-        OrderMarkasDeliveredConfirmation
+        OrderMarkasDeliveredConfirmation,
+        OrderSelectedProductList,
+        OrderSelectedLabelPrint
     },
     data() {
         return {
@@ -607,7 +648,12 @@ export default {
             trackingDetails: [],
             orderID: '',
             markasReplacementLoader: false,
-            dropshippers : []
+            dropshippers : [],
+            checkedAllOrders : false,
+            selectedOrders: [],
+            multipleAction: '',
+            selectedProductList : [],
+            selectedOrderLabels : []
         };
     },
     computed: {
@@ -663,136 +709,133 @@ export default {
                 amountRemaining: 0,
             });
         },
+        // Calculate summary for "Normal" type
+        normalToday() {
 
-                 // Calculate summary for "Normal" type
-    normalToday() {
+            let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
 
-        let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+            return this.orders.reduce((totals, order) => {
+                let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
 
-        return this.orders.reduce((totals, order) => {
-            let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+                if (orderDate === today && order.type === 'Normal' && (order.status !== 6 && order.status !== 7)) {
 
-            if (orderDate === today && order.type === 'Normal' && (order.status !== 6 && order.status !== 7)) {
-
-                totals.totalOrders++;
-                totals.productPrice += parseFloat(order.total_bill || 0);
-                totals.courier += parseFloat(order.courier_service_price || 0);
-                totals.packaging += parseFloat(order.packaging_price || 0);
-                totals.totalSales += parseFloat(order.total_bill || 0);
-                totals.amountReceived += parseFloat(order.paid_amount || 0);
-                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
-            }
-            return totals;
-        }, {
-            totalOrders: 0,
-            productPrice: 0,
-            courier: 0,
-            packaging: 0,
-            totalSales: 0,
-            amountReceived: 0,
-            amountRemaining: 0,
-        });
-    },
-          // Calculate summary for "Normal" type
-    normalSummary() {
-        return this.orders.reduce((totals, order) => {
-            if (order.type === 'Normal' && (order.status !== 6 && order.status !== 7)) {
-                totals.totalOrders++;
-                totals.productPrice += parseFloat(order.total_bill || 0);
-                totals.courier += parseFloat(order.courier_service_price || 0);
-                totals.packaging += parseFloat(order.packaging_price || 0);
-                totals.totalSales += parseFloat(order.total_bill || 0);
-                totals.amountReceived += parseFloat(order.paid_amount || 0);
-                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
-            }
-            return totals;
-        }, {
-            totalOrders: 0,
-            productPrice: 0,
-            courier: 0,
-            packaging: 0,
-            totalSales: 0,
-            amountReceived: 0,
-            amountRemaining: 0,
-        });
-    },
- // Calculate summary for "Daraz" type
- darazToday() {
-    let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
-        return this.orders.reduce((totals, order) => {
-            let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-            if (orderDate === today && order.type === 'Daraz' && order.status <= 5) {
-                totals.totalOrders++;
-                totals.productPrice += parseFloat(order.total_bill || 0);
-                totals.courier += parseFloat(order.courier_service_price || 0);
-                totals.packaging += parseFloat(order.packaging_price || 0);
-                totals.totalSales += parseFloat(order.total_bill || 0);
-                totals.amountReceived += parseFloat(order.paid_amount || 0);
-                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
-            }
-            return totals;
-        }, {
-            totalOrders: 0,
-            productPrice: 0,
-            courier: 0,
-            packaging: 0,
-            totalSales: 0,
-            amountReceived: 0,
-            amountRemaining: 0,
-        });
-    },
-
-    // Calculate summary for "Daraz" type
-    darazSummary() {
-        return this.orders.reduce((totals, order) => {
-            if (order.type === 'Daraz' && order.status <= 5) {
-                totals.totalOrders++;
-                totals.productPrice += parseFloat(order.total_bill || 0);
-                totals.courier += parseFloat(order.courier_service_price || 0);
-                totals.packaging += parseFloat(order.packaging_price || 0);
-                totals.totalSales += parseFloat(order.total_bill || 0);
-                totals.amountReceived += parseFloat(order.paid_amount || 0);
-                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
-            }
-            return totals;
-        }, {
-            totalOrders: 0,
-            productPrice: 0,
-            courier: 0,
-            packaging: 0,
-            totalSales: 0,
-            amountReceived: 0,
-            amountRemaining: 0,
-        });
-    },
-
-    // Calculate summary for "Cash" type
-    cashToday() {
-        let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
-        return this.orders.reduce((totals, order) => {
-            let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
-            if (orderDate === today && order.type === 'Cash' && order.status <= 5) {
-                totals.totalOrders++;
-                totals.productPrice += parseFloat(order.total_bill || 0);
-                totals.courier += parseFloat(order.courier_service_price || 0);
-                totals.packaging += parseFloat(order.packaging_price || 0);
-                totals.totalSales += parseFloat(order.total_bill || 0);
-                totals.amountReceived += parseFloat(order.paid_amount || 0);
-                totals.amountRemaining += parseFloat(order.remaining_amount || 0);
-            }
-            return totals;
-        }, {
-            totalOrders: 0,
-            productPrice: 0,
-            courier: 0,
-            packaging: 0,
-            totalSales: 0,
-            amountReceived: 0,
-            amountRemaining: 0,
-        });
-    },
-    // Calculate summary for "Cash" type
-    cashSummary() {
+                    totals.totalOrders++;
+                    totals.productPrice += parseFloat(order.total_bill || 0);
+                    totals.courier += parseFloat(order.courier_service_price || 0);
+                    totals.packaging += parseFloat(order.packaging_price || 0);
+                    totals.totalSales += parseFloat(order.total_bill || 0);
+                    totals.amountReceived += parseFloat(order.paid_amount || 0);
+                    totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                }
+                return totals;
+            }, {
+                totalOrders: 0,
+                productPrice: 0,
+                courier: 0,
+                packaging: 0,
+                totalSales: 0,
+                amountReceived: 0,
+                amountRemaining: 0,
+            });
+        },
+            // Calculate summary for "Normal" type
+        normalSummary() {
+            return this.orders.reduce((totals, order) => {
+                if (order.type === 'Normal' && (order.status !== 6 && order.status !== 7)) {
+                    totals.totalOrders++;
+                    totals.productPrice += parseFloat(order.total_bill || 0);
+                    totals.courier += parseFloat(order.courier_service_price || 0);
+                    totals.packaging += parseFloat(order.packaging_price || 0);
+                    totals.totalSales += parseFloat(order.total_bill || 0);
+                    totals.amountReceived += parseFloat(order.paid_amount || 0);
+                    totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                }
+                return totals;
+            }, {
+                totalOrders: 0,
+                productPrice: 0,
+                courier: 0,
+                packaging: 0,
+                totalSales: 0,
+                amountReceived: 0,
+                amountRemaining: 0,
+            });
+        },
+        // Calculate summary for "Daraz" type
+        darazToday() {
+            let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+                return this.orders.reduce((totals, order) => {
+                    let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+                    if (orderDate === today && order.type === 'Daraz' && order.status <= 5) {
+                        totals.totalOrders++;
+                        totals.productPrice += parseFloat(order.total_bill || 0);
+                        totals.courier += parseFloat(order.courier_service_price || 0);
+                        totals.packaging += parseFloat(order.packaging_price || 0);
+                        totals.totalSales += parseFloat(order.total_bill || 0);
+                        totals.amountReceived += parseFloat(order.paid_amount || 0);
+                        totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                    }
+                    return totals;
+                }, {
+                    totalOrders: 0,
+                    productPrice: 0,
+                    courier: 0,
+                    packaging: 0,
+                    totalSales: 0,
+                    amountReceived: 0,
+                    amountRemaining: 0,
+                });
+        },
+        // Calculate summary for "Daraz" type
+        darazSummary() {
+            return this.orders.reduce((totals, order) => {
+                if (order.type === 'Daraz' && order.status <= 5) {
+                    totals.totalOrders++;
+                    totals.productPrice += parseFloat(order.total_bill || 0);
+                    totals.courier += parseFloat(order.courier_service_price || 0);
+                    totals.packaging += parseFloat(order.packaging_price || 0);
+                    totals.totalSales += parseFloat(order.total_bill || 0);
+                    totals.amountReceived += parseFloat(order.paid_amount || 0);
+                    totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                }
+                return totals;
+            }, {
+                totalOrders: 0,
+                productPrice: 0,
+                courier: 0,
+                packaging: 0,
+                totalSales: 0,
+                amountReceived: 0,
+                amountRemaining: 0,
+            });
+        },
+        // Calculate summary for "Cash" type
+        cashToday() {
+            let today = new Date().toISOString().slice(0, 10); // Get today's date in YYYY-MM-DD format
+            return this.orders.reduce((totals, order) => {
+                let orderDate = new Date(order.created_at).toISOString().slice(0, 10);
+                if (orderDate === today && order.type === 'Cash' && order.status <= 5) {
+                    totals.totalOrders++;
+                    totals.productPrice += parseFloat(order.total_bill || 0);
+                    totals.courier += parseFloat(order.courier_service_price || 0);
+                    totals.packaging += parseFloat(order.packaging_price || 0);
+                    totals.totalSales += parseFloat(order.total_bill || 0);
+                    totals.amountReceived += parseFloat(order.paid_amount || 0);
+                    totals.amountRemaining += parseFloat(order.remaining_amount || 0);
+                }
+                return totals;
+            }, {
+                totalOrders: 0,
+                productPrice: 0,
+                courier: 0,
+                packaging: 0,
+                totalSales: 0,
+                amountReceived: 0,
+                amountRemaining: 0,
+            });
+        },
+        // Calculate summary for "Cash" type
+        cashSummary() {
         return this.orders.reduce((totals, order) => {
             if (order.type === 'Cash' && order.status <= 5) {
                 totals.totalOrders++;
@@ -813,14 +856,66 @@ export default {
             amountReceived: 0,
             amountRemaining: 0,
         });
+        },
     },
-    },
-
     created() {
         this.fetchOrders();
         this.fetchDropshippers();
     },
     methods: {
+        multipleActionFunc() {
+            let vm = this;
+            if (vm.multipleAction == '') {
+                return swal({
+                    title: "Required",
+                    text: 'Please select some action first',
+                    icon: "error",
+                    timer: 3000,
+                });
+            }
+
+            const data = {
+                products: vm.selectedOrders,
+                action: vm.multipleAction
+            }
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/actions", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.selectedOrders = [];
+
+                    const results = response.data.response;
+                    if(vm.multipleAction == "Product List"){
+                        vm.selectedProductList = results;
+                        $("#selectedOrderList").modal('show')
+                    }
+                    if( vm.multipleAction == "Print Labels"){
+                        vm.selectedOrderLabels = results;
+                        $("#selectedOrderPrints").modal('show')
+                    }
+
+                    vm.multipleAction = "";
+
+                }).catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: 'Oops, Something went wrong please try again',
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        toggleAllOrders() {
+            if (this.checkedAllOrders) {
+                // If "Check All" is checked, select all orders
+                this.selectedOrders = this.orders.map(order => order.id);
+            } else {
+                // If "Check All" is unchecked, deselect all orders
+                this.selectedOrders = [];
+            }
+        },
         fetchDropshippers() {
             axios.get(this.api_url + "dropshippers/drop-down")
                 .then((res) => {
@@ -1236,3 +1331,13 @@ export default {
     },
 }
 </script>
+<style scoped>
+.custom-checkbox {
+    width: 16px;
+    /* Adjust the width as needed */
+    height: 16px;
+    /* Adjust the height as needed */
+    transform: scale(0.8);
+    /* You can also use scale to adjust the size */
+}
+</style>

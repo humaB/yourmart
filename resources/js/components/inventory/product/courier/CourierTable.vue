@@ -22,6 +22,9 @@
             <a href="#" class="btn btn-icon icon-left btn-info" data-toggle="modal" data-target="#courierDetailPopup" @click="fetchDetails(item.id)">
                 <i class="far fa-eye"></i>
               </a>
+            <a href="#" class="btn btn-icon icon-left btn-info" data-toggle="modal" data-target="#courierDisclaimer" @click="fetchDetails(item.id)">
+               Add Disclaimer
+              </a>
             <a href="#" class="btn btn-icon icon-left btn-primary" data-toggle="modal" data-target="#editCourier" @click="edit(item.id, item.name, item.contact, item.address)">
               <i class="far fa-edit"></i>
             </a>

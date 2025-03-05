@@ -152,6 +152,8 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::post('/add', [CourierController::class, 'store']); // Add a new courier
     Route::post('/update', [CourierController::class, 'update']); // Update an existing courier
 
+    Route::post('/disclaimers', [CourierController::class, 'addDisclaimer']);
+
     Route::post('/details', [CourierController::class, 'details']);
 
     Route::get('/categories', [CourierController::class, 'fetchCategory']);
@@ -290,6 +292,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/mark-as-replacement',  [ OrderController::class , 'markasReplacement']);
             Route::post('/mark-as-being-return',  [ OrderController::class , 'markasBeingReturn']);
             Route::post('/mark-as-delivered',  [ OrderController::class , 'markasDelivered']);
+
+            Route::post('/actions',  [ OrderController::class , 'multipleActions']);
         });
 
         Route::group(['prefix' => 'settings'], function(){

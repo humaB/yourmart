@@ -5663,6 +5663,33 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=script&lang=js":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=script&lang=js ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "CourierDisclaimerPopup",
+  props: ['courier'],
+  methods: {
+    updateDisclaimer: function updateDisclaimer() {
+      var data = {
+        courier: this.courier.id,
+        text: this.courier.disclaimer_text
+      };
+      this.$emit('updateDisclaimer', data);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=script&lang=js":
 /*!**************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=script&lang=js ***!
@@ -5680,6 +5707,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inventory_product_courier_CourierEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierEditPopup.vue */ "./resources/js/components/inventory/product/courier/CourierEditPopup.vue");
 /* harmony import */ var _components_inventory_product_courier_AddCourierCategory_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/AddCourierCategory.vue */ "./resources/js/components/inventory/product/courier/AddCourierCategory.vue");
 /* harmony import */ var _components_inventory_product_courier_CourierDetailPopup_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../components/inventory/product/courier/CourierDetailPopup.vue */ "./resources/js/components/inventory/product/courier/CourierDetailPopup.vue");
+/* harmony import */ var _CourierDisclaimerPopup_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./CourierDisclaimerPopup.vue */ "./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue");
+
 
 
 
@@ -5694,7 +5723,8 @@ __webpack_require__.r(__webpack_exports__);
     CourierAddPopup: _components_inventory_product_courier_CourierAddPopup_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     CourierEditPopup: _components_inventory_product_courier_CourierEditPopup_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     AddCourierCategory: _components_inventory_product_courier_AddCourierCategory_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    CourierDetailPopup: _components_inventory_product_courier_CourierDetailPopup_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+    CourierDetailPopup: _components_inventory_product_courier_CourierDetailPopup_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    CourierDisclaimerPopup: _CourierDisclaimerPopup_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
   },
   data: function data() {
     return {
@@ -5717,6 +5747,19 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchCouriers();
   },
   methods: {
+    updateDisclaimer: function updateDisclaimer(data) {
+      var vm = this;
+      axios.post(this.api_url + "couriers/disclaimers", data).then(function (response) {
+        return swal({
+          title: "Success",
+          text: "Disclaimer added",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
     fetchCouriers: function fetchCouriers() {
       var vm = this;
       axios.get(this.api_url + "couriers").then(function (response) {
@@ -12239,6 +12282,18 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "far fa-eye"
     })]), _vm._v(" "), _c("a", {
+      staticClass: "btn btn-icon icon-left btn-info",
+      attrs: {
+        href: "#",
+        "data-toggle": "modal",
+        "data-target": "#courierDisclaimer"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetails(item.id);
+        }
+      }
+    }, [_vm._v("\n             Add Disclaimer\n            ")]), _vm._v(" "), _c("a", {
       staticClass: "btn btn-icon icon-left btn-primary",
       attrs: {
         href: "#",
@@ -19691,6 +19746,111 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "courierDisclaimer",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "courierDisclaimerTitle",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.courier.disclaimer_text,
+      expression: "courier.disclaimer_text"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "",
+      id: ""
+    },
+    domProps: {
+      value: _vm.courier.disclaimer_text
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.courier, "disclaimer_text", $event.target.value);
+      }
+    }
+  }), _vm._v(" "), _c("small", [_vm._v("This will show in remarks section in printed label")])])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.updateDisclaimer();
+      }
+    }
+  }, [_vm._v("Update Disclaimer")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Add Disclaimer")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=template&id=009775de":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=template&id=009775de ***!
@@ -19789,7 +19949,16 @@ var render = function render() {
         return _vm.fetchDetails($event);
       }
     }
-  })], 1)])])])])], 1)])])], 1);
+  })], 1)])])])])], 1)])]), _vm._v(" "), _c("CourierDisclaimerPopup", {
+    attrs: {
+      courier: _vm.courierDetails
+    },
+    on: {
+      updateDisclaimer: function updateDisclaimer($event) {
+        return _vm.updateDisclaimer($event);
+      }
+    }
+  })], 1);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -48514,6 +48683,45 @@ component.options.__file = "resources/js/pages/admin/user/UserPage.vue"
 
 /***/ }),
 
+/***/ "./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CourierDisclaimerPopup_vue_vue_type_template_id_12fe7f82__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82 */ "./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82");
+/* harmony import */ var _CourierDisclaimerPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CourierDisclaimerPopup.vue?vue&type=script&lang=js */ "./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CourierDisclaimerPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CourierDisclaimerPopup_vue_vue_type_template_id_12fe7f82__WEBPACK_IMPORTED_MODULE_0__.render,
+  _CourierDisclaimerPopup_vue_vue_type_template_id_12fe7f82__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/pages/inventory/product/setting/CourierPage.vue":
 /*!**********************************************************************!*\
   !*** ./resources/js/pages/inventory/product/setting/CourierPage.vue ***!
@@ -49619,6 +49827,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDisclaimerPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierDisclaimerPopup.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDisclaimerPopup_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=script&lang=js":
 /*!**********************************************************************************************!*\
   !*** ./resources/js/pages/inventory/product/setting/CourierPage.vue?vue&type=script&lang=js ***!
@@ -50611,6 +50835,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserPage_vue_vue_type_template_id_3fa0f745__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_UserPage_vue_vue_type_template_id_3fa0f745__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserPage.vue?vue&type=template&id=3fa0f745 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/UserPage.vue?vue&type=template&id=3fa0f745");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82 ***!
+  \***************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDisclaimerPopup_vue_vue_type_template_id_12fe7f82__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDisclaimerPopup_vue_vue_type_template_id_12fe7f82__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierDisclaimerPopup_vue_vue_type_template_id_12fe7f82__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/inventory/product/setting/CourierDisclaimerPopup.vue?vue&type=template&id=12fe7f82");
 
 
 /***/ }),

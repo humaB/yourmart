@@ -277,6 +277,18 @@ class OrderController extends Controller
         return ['message' => 'Marked as Delivered'];
     }
 
+    public function multipleActions(Request $request ){
+        if( $request->action == 'Product List'){
+            $data = OrderItem::with('variation.product', 'variation.images')->whereIn('order_id', $request->products)->get();
+        }else{
+            $data = Order::whereIn('id', $request->products)->get();
+        }
+
+        return (new ResponseCollection($data))
+        ->response()
+        ->setStatusCode(200);
+    }
+
     public function details(Request $request)
     {
 

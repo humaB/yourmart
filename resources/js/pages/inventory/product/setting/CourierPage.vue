@@ -56,6 +56,11 @@
           </div>
         </div>
       </div>
+
+      <CourierDisclaimerPopup
+        :courier="courierDetails"
+        @updateDisclaimer="updateDisclaimer($event)"
+      />
     </div>
   </template>
 
@@ -66,6 +71,7 @@
   import CourierEditPopup from "../../../../components/inventory/product/courier/CourierEditPopup.vue";
   import AddCourierCategory from "../../../../components/inventory/product/courier/AddCourierCategory.vue";
   import CourierDetailPopup from "../../../../components/inventory/product/courier/CourierDetailPopup.vue";
+  import CourierDisclaimerPopup from "./CourierDisclaimerPopup.vue";
 
   export default {
     name: "CourierPage",
@@ -75,7 +81,8 @@
       CourierAddPopup,
       CourierEditPopup,
       AddCourierCategory,
-      CourierDetailPopup
+      CourierDetailPopup,
+      CourierDisclaimerPopup
     },
     data() {
       return {
@@ -91,13 +98,27 @@
         editDetails: {},
         btnLoader: false,
         courierDetails : {},
-        ranges : []
+        ranges : [],
       };
     },
     created() {
       this.fetchCouriers();
     },
     methods: {
+      updateDisclaimer( data ){
+        let vm = this;
+        axios
+          .post(this.api_url + "couriers/disclaimers", data)
+          .then((response) => {
+            return swal({
+                title: "Success",
+                text: "Disclaimer added",
+                icon: "success",
+                timer: 3000
+            });
+          })
+          .catch((err) => console.log(err));
+      },
       fetchCouriers() {
         let vm = this;
         axios
