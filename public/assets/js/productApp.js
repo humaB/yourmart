@@ -10550,10 +10550,9 @@ var render = function render() {
       id: "required_product_table"
     }
   }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item) {
-    var _item$variation, _item$variation2, _item$variation3;
     return _c("tr", {
       key: item.id
-    }, [(_item$variation = item.variation) !== null && _item$variation !== void 0 && (_item$variation = _item$variation.product) !== null && _item$variation !== void 0 && _item$variation.title ? _c("td", {
+    }, [_c("td", {
       staticClass: "text-truncate"
     }, [_c("ul", {
       staticClass: "list-unstyled order-list m-b-0 m-b-0"
@@ -10561,15 +10560,15 @@ var render = function render() {
       staticClass: "team-member team-member-sm"
     }, [_c("a", {
       attrs: {
-        href: _vm.getImageUrl((_item$variation2 = item.variation) === null || _item$variation2 === void 0 || (_item$variation2 = _item$variation2.images[0]) === null || _item$variation2 === void 0 || (_item$variation2 = _item$variation2.attachment) === null || _item$variation2 === void 0 ? void 0 : _item$variation2.attachment),
+        href: _vm.getImageUrl(item.image),
         target: "_blank"
       }
     }, [_c("img", {
       staticClass: "rounded-circle",
       attrs: {
-        src: _vm.getImageUrl((_item$variation3 = item.variation) === null || _item$variation3 === void 0 || (_item$variation3 = _item$variation3.images[0]) === null || _item$variation3 === void 0 || (_item$variation3 = _item$variation3.attachment) === null || _item$variation3 === void 0 ? void 0 : _item$variation3.attachment)
+        src: _vm.getImageUrl(item.image)
       }
-    })])])])]) : _vm._e(), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.variation.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.variation.product.title)), _c("br")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))])]);
+    })])])])]), _vm._v(" "), _c("td", [_c("b", [_vm._v("SKU : ")]), _vm._v(_vm._s(item.sku)), _c("br"), _vm._v(" "), _c("b", [_vm._v("Title : ")]), _vm._v(_vm._s(item.product)), _c("br")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))])]);
   }), 0)])])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])]);
 };
 var staticRenderFns = [function () {

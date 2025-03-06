@@ -279,7 +279,20 @@ class OrderController extends Controller
 
     public function multipleActions(Request $request ){
         if( $request->action == 'Product List'){
-            $data = OrderItem::with('variation.product', 'variation.images')->whereIn('order_id', $request->products)->get();
+            $data = OrderItem::with('variation.product', 'variation.images.attachment')
+            ->whereIn('order_id', $request->products)
+            ->get()
+            ->groupBy('product_variation_id')
+            ->map(function ($items) {
+                return [
+                    'sku'      => $items->first()->variation->sku,
+                    'product'  => $items->first()->variation->product->title,
+                    'quantity' => $items->sum('quantity'),
+                    'image'    => optional($items->first()->variation->images->first())->attachment->attachment,
+                ];
+            })
+            ->values()
+            ->toArray();
         }else{
             $data = Order::whereIn('id', $request->products)->get();
         }

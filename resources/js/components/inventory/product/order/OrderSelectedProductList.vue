@@ -26,20 +26,20 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="item in products" :key="item.id">
-                                        <td class="text-truncate" v-if="item.variation?.product?.title">
+                                        <td class="text-truncate">
                                             <ul class="list-unstyled order-list m-b-0 m-b-0">
                                                 <li class="team-member team-member-sm">
-                                                    <a :href="getImageUrl(item.variation?.images[0]?.attachment?.attachment)"
+                                                    <a :href="getImageUrl(item.image)"
                                                         target="_blank">
                                                         <img class="rounded-circle"
-                                                            :src="getImageUrl(item.variation?.images[0]?.attachment?.attachment)">
+                                                            :src="getImageUrl(item.image)">
                                                     </a>
                                                 </li>
                                             </ul>
                                         </td>
                                         <td>
-                                            <b>SKU : </b>{{ item.variation.sku }}<br>
-                                            <b>Title : </b>{{ item.variation.product.title }}<br>
+                                            <b>SKU : </b>{{ item.sku }}<br>
+                                            <b>Title : </b>{{ item.product }}<br>
                                         </td>
                                         <td>{{ item.quantity }}</td>
 
