@@ -10559,7 +10559,7 @@ var render = function render() {
     staticClass: "fa fa-comment"
   }), _vm._v(" "), _c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                        ")])])])]) : _vm._e()])]), _vm._v(" "), !_vm.details.re_attempt ? _c("div", {
     staticClass: "col-md-12"
-  }, [_c("strong", [_vm._v("Enter Advice")]), _vm._v(" "), _c("textarea", {
+  }, [_c("strong", [_vm._v("Re-Attempt Instructions")]), _vm._v(" "), _c("textarea", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -10570,7 +10570,7 @@ var render = function render() {
     attrs: {
       name: "",
       id: "",
-      placeholder: "Enter remarks for re-attempt (instructions for courier company)"
+      placeholder: "براہ کرم پہلے اپنے کسٹمر سے رابطہ کریں، پھر کورئیر کے لیے ہدایات درج کریں تاکہ پارسل کی دوبارہ ترسیل کی جا سکے۔ شکریہ!"
     },
     domProps: {
       value: _vm.remarks
@@ -10626,7 +10626,7 @@ var staticRenderFns = [function () {
     attrs: {
       id: "exampleModalLongTitle"
     }
-  }, [_vm._v("Re-attempt")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("RE-ATTEMP YOUR ORDER DELIVERY")]), _vm._v(" "), _c("button", {
     staticClass: "close",
     attrs: {
       type: "button",

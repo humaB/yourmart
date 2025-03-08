@@ -6,7 +6,7 @@
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Re-attempt</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">RE-ATTEMP YOUR ORDER DELIVERY</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -54,8 +54,8 @@
                             </div>
                         </div>
                         <div class="col-md-12" v-if="!details.re_attempt">
-                            <strong>Enter Advice</strong>
-                            <textarea name="" id="" v-model="remarks" class="form-control" placeholder="Enter remarks for re-attempt (instructions for courier company)"></textarea>
+                            <strong>Re-Attempt Instructions</strong>
+                            <textarea name="" id="" v-model="remarks" class="form-control" placeholder="براہ کرم پہلے اپنے کسٹمر سے رابطہ کریں، پھر کورئیر کے لیے ہدایات درج کریں تاکہ پارسل کی دوبارہ ترسیل کی جا سکے۔ شکریہ!"></textarea>
                         </div>
                         <div class="col-md-12" v-else>
                             <strong>Added Advice : {{ details?.re_attempt?.advice }}</strong>
