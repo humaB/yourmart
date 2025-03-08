@@ -52,6 +52,10 @@ class Order extends Model
         'belongs_to', // From User Table
     ];
 
+    public function re_attempt(){
+        return $this->hasOne(OrderReAttempt::class, 'order_id', 'id');
+    }
+
     public function user(){
         return $this->hasOne(User::class, 'id', 'belongs_to');
     }

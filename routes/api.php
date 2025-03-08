@@ -276,6 +276,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/comments',  [ OrderController::class , 'comment']);
             Route::post('/comments/delete',  [ OrderController::class , 'deleteComment']);
 
+            Route::post('/re-attempts',  [ OrderController::class , 'reAttempt']);
+
             Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
             Route::post('/revert',  [ OrderController::class , 'revert']);
             Route::post('/reject',  [ OrderController::class , 'reject']);

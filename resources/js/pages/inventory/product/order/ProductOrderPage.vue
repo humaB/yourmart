@@ -452,8 +452,9 @@
                                                         <th>Advance</th>
                                                         <th>Total Payable</th>
                                                         <th>Total Paid</th>
-                                                        <th>Status</th>
                                                         <th>Date</th>
+                                                        <th>Status</th>
+                                                        <th>Re-attempt</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -499,6 +500,7 @@
                                                         <td>{{ formatPrice(item.advance_amount) }}</td>
                                                         <td>{{ formatPrice(item.total_profit) }}</td>
                                                         <td>{{ formatPrice(item.total_paid_profit) }}</td>
+                                                        <td>{{ formatDate(item.created_at) }}</td>
                                                         <td>
                                                             <span class="badge badge-warning text-dark"
                                                                 v-if="item.status == 0">Order Collection</span>
@@ -528,7 +530,12 @@
                                                             <span class="badge badge-warning"
                                                                 v-else-if="item.status == 12">Ready for Return</span>
                                                         </td>
-                                                        <td>{{ formatDate(item.created_at) }}</td>
+                                                        <td v-if="item.status == 12 && (role == 'admin' || role == 'supervisor' || role == 'auditor')">
+                                                            <button class="btn btn-primary" @click="fetchDetail(item.id)" data-toggle="modal" data-target="#orderReattempt" title="Press to reattempt">
+                                                                <i class="fa fa-undo"></i>
+                                                            </button>
+                                                        </td>
+                                                        <td v-else>-</td>
                                                         <td>
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                 data-toggle="modal" data-target="#ticket"
@@ -591,6 +598,12 @@
             :labels="selectedOrderLabels"
         />
 
+        <OrderReattempt
+            :loader="btnLoader"
+            :details="details"
+            @reAttempt="reAttempt($event)"
+        />
+
     </div>
 </template>
 <script>
@@ -606,6 +619,7 @@ import OrderMarkasBeingReturnConfirmation from "../../../../components/inventory
 import OrderMarkasDeliveredConfirmation from "../../../../components/inventory/product/order/OrderMarkasDeliveredConfirmation.vue";
 import OrderSelectedProductList from "../../../../components/inventory/product/order/OrderSelectedProductList.vue";
 import OrderSelectedLabelPrint from "../../../../components/inventory/product/order/OrderSelectedLabelPrint.vue";
+import OrderReattempt from "../../../../components/inventory/product/order/OrderReattempt.vue";
 
 export default {
     name: 'ProductOrderPage',
@@ -619,7 +633,8 @@ export default {
         OrderMarkasBeingReturnConfirmation,
         OrderMarkasDeliveredConfirmation,
         OrderSelectedProductList,
-        OrderSelectedLabelPrint
+        OrderSelectedLabelPrint,
+        OrderReattempt
     },
     data() {
         return {
@@ -879,6 +894,32 @@ export default {
         this.fetchDropshippers();
     },
     methods: {
+        reAttempt( data ){
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/re-attempts", data)
+                .then((response) => {
+                    const results = response.data.response;
+                    vm.btnLoader = false;
+                    vm.fetchDetail(data.id);
+                    return swal({
+                        title: "Success",
+                        text: "Re-attempt request sent successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });;
+        },
         multipleActionFunc() {
             let vm = this;
             if (vm.multipleAction == '') {

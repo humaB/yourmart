@@ -16,6 +16,7 @@ use App\Models\Inventory\Order\OrderComment;
 use App\Models\Inventory\Order\OrderDispatchedRecord;
 use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Order\OrderLeopardStatus;
+use App\Models\Inventory\Order\OrderReAttempt;
 use App\Models\Inventory\Product\Setting\OtherCharge;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
@@ -30,6 +31,9 @@ use Illuminate\Support\Facades\Http;
 
 class OrderController extends Controller
 {
+    private $apiKey = '487F7B22F68312D2C1BBC93B1AEA445B1726751602';
+    private $apiPassword = 'Allah@001#';
+
     public function index()
     {
         return view('inventory.product.order.orders');
@@ -125,6 +129,72 @@ class OrderController extends Controller
         return (new ResponseCollection($orders))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function reAttempt( Request $request ) {
+
+        $order = Order::where('id', $request->id)->first();
+
+        $response = Http::post('https://merchantapi.leopardscourier.com/api/shipperAdviceList/format/json/', [
+            'api_key' => $this->apiKey,
+            'api_password' => $this->apiPassword,
+            'product' => '',
+            'status' => '',
+            'origionID' => '',
+            'destinationID' => '',
+            'dateFrom' => '',
+            'toDate' => '',
+            'Cn_number' =>  "",
+            'start' => 0,
+            'length' => 100
+        ]);
+
+        $trackingId = "";
+        // Check if the request was successful
+        if ($response->successful()) {
+            // Process the response
+            $responseData = $response->json();
+            if (isset($responseData['data']) && count($responseData['data']) > 0) {
+                foreach ($responseData['data'] as $item) {
+                    if ($item['cn_number'] == $order->tracking_number) {
+                        $trackingId = $item['id'];
+                    }
+                }
+            }
+        }
+
+        if( !$trackingId ){
+            return (new ValidationCollection(['Re-delivery attempt already in progress for this order']))
+            ->response()
+            ->setStatusCode(421);
+        }
+
+        $response = Http::post('https://merchantapi.leopardscourier.com/api/updateShipperAdvice/format/json/', [
+            'api_key' => $this->apiKey,
+            'api_password' => $this->apiPassword,
+            'data' => [
+                [
+                    'id'        => $trackingId,
+                    'cn_number' =>  $order->tracking_number ?? "",
+                    'shipper_advice_status' => 'RA', // allowed statuses are ('RA', 'RT')
+                    'shipper_remarks' => $request->remarks
+                ],
+                // Add more data here...
+            ]
+        ]);
+
+        OrderReAttempt::create([
+             'order_id' => $order->id,
+             'advice'   => $request->remarks
+        ]);
+
+        OrderActivity::create([
+            'order_id'  => $order->id,
+            'activity'  => 'Re-attempt try added with remarks : '.$request->remarks,
+            'added_by'  => auth('sanctum')->user()->id
+        ]);
+
+        return response()->json([], 200);
     }
 
     public function pendingDispatchs(Request $request)
@@ -321,6 +391,7 @@ class OrderController extends Controller
             'returns.details.product',
             'returns.details.product.variation.images.attachment',
             'attachments',
+            're_attempt',
 
             //For Daraz Order
             'daraz_labels'
