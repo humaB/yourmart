@@ -3913,7 +3913,8 @@ __webpack_require__.r(__webpack_exports__);
         rejected: 0,
         delivered: 0,
         returned: 0,
-        returnedToStock: 0
+        returnedToStock: 0,
+        readyForReturn: 0
       },
       filter: {
         dropshipper: {
@@ -4389,7 +4390,8 @@ __webpack_require__.r(__webpack_exports__);
           dispatched: 0,
           delivered: 0,
           returned: 0,
-          returnedToStock: 0
+          returnedToStock: 0,
+          readyForReturn: 0
         };
 
         // Process orders and calculate total counts based on the status
@@ -4439,6 +4441,10 @@ __webpack_require__.r(__webpack_exports__);
             case 10:
               // Returned
               vm.totalOrders.returnedToStock++;
+              break;
+            case 12:
+              //Ready for return
+              vm.totalOrders.readyForReturn++;
               break;
           }
         });
@@ -14013,6 +14019,20 @@ var render = function render() {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
+  }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.readyForReturn)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "progress",
+    attrs: {
+      "data-height": "6"
+    }
+  }, [_c("div", {
+    staticClass: "progress-bar bg-danger",
+    style: {
+      width: _vm.getPercentage(_vm.totalOrders.readyForReturn) + "%"
+    }
+  })]), _vm._v("\n                                        " + _vm._s(_vm.totalOrders.readyForReturn) + "\n                                    ")]), _vm._v(" "), _c("td", {
+    staticClass: "align-middle"
+  }, [_c("div", {
+    staticClass: "progress-text text-right text-secondary"
   }, [_vm._v("\n                                            " + _vm._s(_vm.getPercentage(_vm.totalOrders.delivered)) + "%\n                                        ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
@@ -14179,6 +14199,10 @@ var render = function render() {
       value: "11"
     }
   }, [_vm._v("Out for Delivery")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "12"
+    }
+  }, [_vm._v("Ready for return")]), _vm._v(" "), _c("option", {
     attrs: {
       value: "8"
     }
@@ -14434,7 +14458,9 @@ var render = function render() {
       staticClass: "badge badge-danger"
     }, [_vm._v("Returned To Stock")]) : item.status == 11 ? _c("span", {
       staticClass: "badge badge-warning"
-    }, [_vm._v("Out for delivery")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_vm._v("Out for delivery")]) : item.status == 12 ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Ready for Return")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",
@@ -14643,7 +14669,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Under Review")]), _vm._v(" "), _c("th", [_vm._v("Cancelled")]), _vm._v(" "), _c("th", [_vm._v("Delivered")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Returned to store")])]);
+  return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Under Review")]), _vm._v(" "), _c("th", [_vm._v("Cancelled")]), _vm._v(" "), _c("th", [_vm._v("Ready for return")]), _vm._v(" "), _c("th", [_vm._v("Delivered")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Returned to store")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

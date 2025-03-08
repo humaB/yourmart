@@ -76,7 +76,7 @@ class LeopardApiHelper
         ],
         'NR' => [
             'leopard_id' => 'Ready for Return',
-            'label' => 'Return'
+            'label' => 'Ready for Return'
         ],
         'AC' => [
             'leopard_id' => 'Assigned To Courier (Out For Delivery)',
@@ -202,7 +202,7 @@ class LeopardApiHelper
                         'status' => '8'
                     ]);
                 }
-                  //If product is delivered
+                  //If product is not delivered and returned
                 if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
 
                     $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
@@ -217,6 +217,13 @@ class LeopardApiHelper
                 if( $order['status'] == 'AC'){
                     $detail->update([
                         'status' => '11'
+                    ]);
+                }
+
+                if( $order['status'] == 'NR'){
+                    //Ready to return
+                    $detail->update([
+                        'status' => '12'
                     ]);
                 }
             }

@@ -213,6 +213,7 @@
                                         <th>Dispatched</th>
                                         <th>Under Review</th>
                                         <th>Cancelled</th>
+                                        <th>Ready for return</th>
                                         <th>Delivered</th>
                                         <th>Returned</th>
                                         <th>Returned to store</th>
@@ -306,6 +307,17 @@
                                         </td>
                                         <td class="align-middle">
                                             <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.readyForReturn) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-danger"
+                                                    :style="{ width: getPercentage(totalOrders.readyForReturn) + '%' }">
+                                                </div>
+                                            </div>
+                                            {{ totalOrders.readyForReturn }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
                                                 {{ getPercentage(totalOrders.delivered) }}%
                                             </div>
                                             <div class="progress" data-height="6">
@@ -367,6 +379,7 @@
                                     <option value="6">Under Review</option>
                                     <option value="7">Rejected</option>
                                     <option value="11">Out for Delivery</option>
+                                    <option value="12">Ready for return</option>
                                     <option value="8">Delivered</option>
                                     <option value="9">Returned</option>
                                     <option value="10">Returned to store</option>
@@ -512,6 +525,8 @@
                                                                 v-else-if="item.status == 10">Returned To Stock</span>
                                                             <span class="badge badge-warning"
                                                                 v-else-if="item.status == 11">Out for delivery</span>
+                                                            <span class="badge badge-warning"
+                                                                v-else-if="item.status == 12">Ready for Return</span>
                                                         </td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
                                                         <td>
@@ -636,7 +651,8 @@ export default {
                 rejected: 0,
                 delivered: 0,
                 returned: 0,
-                returnedToStock: 0
+                returnedToStock: 0,
+                readyForReturn : 0
             },
             filter: {
                 dropshipper : { code : 0 , label : 'Select from the following'},
@@ -1131,7 +1147,8 @@ export default {
                         dispatched: 0,
                         delivered: 0,
                         returned: 0,
-                        returnedToStock: 0
+                        returnedToStock: 0,
+                        readyForReturn : 0
                     };
 
                     // Process orders and calculate total counts based on the status
@@ -1170,6 +1187,9 @@ export default {
                                 break;
                             case 10: // Returned
                                 vm.totalOrders.returnedToStock++;
+                                break;
+                            case 12: //Ready for return
+                                vm.totalOrders.readyForReturn++;
                                 break;
                         }
                     });
