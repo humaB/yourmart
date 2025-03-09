@@ -408,19 +408,9 @@
                                 <div class="card-body">
                                     <div class="row">
 
-                                        <div class="col-md-6 mb-2">
-                                            <label for=""><b>Multiple Action</b></label>
-                                            <select name="" id="" class="form-control" v-model="multipleAction">
-                                                <option value="">Choose from following</option>
-                                                <option value="Product List" v-if="role == 'admin' || role == 'supervisor' || role == 'inventory manager'">Get Products List</option>
-                                                <option value="Print Labels" v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager' || role == 'packing & dispatch manager'">Print Courier Labels</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-md-6 mb-2">
-                                            <label for=""><b>Action</b></label><br>
-                                            <button class="btn btn-primary w-100" @click="multipleActionFunc()"
-                                                v-if="!btnLoader">Perform Action</button>
-                                            <button class="btn btn-primary w-100 btn-progress disabled" v-else>Perform Action</button>
+                                        <div class="col-md-12 mb-2">
+                                            <button class="btn btn-primary" @click="multipleActionFunc('Product List')" v-if="role == 'admin' || role == 'supervisor' || role == 'inventory manager'">Get Products List</button>
+                                            <button class="btn btn-primary" @click="multipleActionFunc('Print Labels')" v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager' || role == 'packing & dispatch manager'">Print Courier Labels</button>
                                         </div>
                                         <div class="card-body table-responsive" v-if="loader">
                                             <bullet-list-loader :width="250"> </bullet-list-loader>
@@ -920,20 +910,12 @@ export default {
                     });
                 });;
         },
-        multipleActionFunc() {
+        multipleActionFunc( value ) {
             let vm = this;
-            if (vm.multipleAction == '') {
-                return swal({
-                    title: "Required",
-                    text: 'Please select some action first',
-                    icon: "error",
-                    timer: 3000,
-                });
-            }
 
             const data = {
                 products: vm.selectedOrders,
-                action: vm.multipleAction
+                action: value
             }
             vm.btnLoader = true;
             axios
@@ -943,11 +925,11 @@ export default {
                     vm.selectedOrders = [];
 
                     const results = response.data.response;
-                    if(vm.multipleAction == "Product List"){
+                    if(value == "Product List"){
                         vm.selectedProductList = results;
                         $("#selectedOrderList").modal('show')
                     }
-                    if( vm.multipleAction == "Print Labels"){
+                    if( value == "Print Labels"){
                         vm.selectedOrderLabels = results;
                         $("#selectedOrderPrints").modal('show')
                     }

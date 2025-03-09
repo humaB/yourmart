@@ -4212,30 +4212,22 @@ __webpack_require__.r(__webpack_exports__);
       });
       ;
     },
-    multipleActionFunc: function multipleActionFunc() {
+    multipleActionFunc: function multipleActionFunc(value) {
       var vm = this;
-      if (vm.multipleAction == '') {
-        return swal({
-          title: "Required",
-          text: 'Please select some action first',
-          icon: "error",
-          timer: 3000
-        });
-      }
       var data = {
         products: vm.selectedOrders,
-        action: vm.multipleAction
+        action: value
       };
       vm.btnLoader = true;
       axios.post(this.api_url + "inventory/products/orders/actions", data).then(function (response) {
         vm.btnLoader = false;
         vm.selectedOrders = [];
         var results = response.data.response;
-        if (vm.multipleAction == "Product List") {
+        if (value == "Product List") {
           vm.selectedProductList = results;
           $("#selectedOrderList").modal('show');
         }
-        if (vm.multipleAction == "Print Labels") {
+        if (value == "Print Labels") {
           vm.selectedOrderLabels = results;
           $("#selectedOrderPrints").modal('show');
         }
@@ -14518,54 +14510,22 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-6 mb-2"
-  }, [_vm._m(7), _vm._v(" "), _c("select", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.multipleAction,
-      expression: "multipleAction"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      name: "",
-      id: ""
-    },
-    on: {
-      change: function change($event) {
-        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
-          return o.selected;
-        }).map(function (o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val;
-        });
-        _vm.multipleAction = $event.target.multiple ? $$selectedVal : $$selectedVal[0];
-      }
-    }
-  }, [_c("option", {
-    attrs: {
-      value: ""
-    }
-  }, [_vm._v("Choose from following")]), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "inventory manager" ? _c("option", {
-    attrs: {
-      value: "Product List"
-    }
-  }, [_vm._v("Get Products List")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "qc manager" || _vm.role == "packing & dispatch manager" ? _c("option", {
-    attrs: {
-      value: "Print Labels"
-    }
-  }, [_vm._v("Print Courier Labels")]) : _vm._e()])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6 mb-2"
-  }, [_vm._m(8), _c("br"), _vm._v(" "), !_vm.btnLoader ? _c("button", {
-    staticClass: "btn btn-primary w-100",
+    staticClass: "col-md-12 mb-2"
+  }, [_vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "inventory manager" ? _c("button", {
+    staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
-        return _vm.multipleActionFunc();
+        return _vm.multipleActionFunc("Product List");
       }
     }
-  }, [_vm._v("Perform Action")]) : _c("button", {
-    staticClass: "btn btn-primary w-100 btn-progress disabled"
-  }, [_vm._v("Perform Action")])]), _vm._v(" "), _vm.loader ? _c("div", {
+  }, [_vm._v("Get Products List")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "qc manager" || _vm.role == "packing & dispatch manager" ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.multipleActionFunc("Print Labels");
+      }
+    }
+  }, [_vm._v("Print Courier Labels")]) : _vm._e()]), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
@@ -14919,22 +14879,6 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("tr", [_c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Collection")]), _vm._v(" "), _c("th", [_vm._v("Inventory")]), _vm._v(" "), _c("th", [_vm._v("QC Manager")]), _vm._v(" "), _c("th", [_vm._v("Packing ")]), _vm._v(" "), _c("th", [_vm._v("Audit Manager")]), _vm._v(" "), _c("th", [_vm._v("Dispatched")]), _vm._v(" "), _c("th", [_vm._v("Under Review")]), _vm._v(" "), _c("th", [_vm._v("Cancelled")]), _vm._v(" "), _c("th", [_vm._v("Ready for return")]), _vm._v(" "), _c("th", [_vm._v("Delivered")]), _vm._v(" "), _c("th", [_vm._v("Returned")]), _vm._v(" "), _c("th", [_vm._v("Returned to store")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_c("b", [_vm._v("Multiple Action")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("label", {
-    attrs: {
-      "for": ""
-    }
-  }, [_c("b", [_vm._v("Action")])]);
 }];
 render._withStripped = true;
 
