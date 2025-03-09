@@ -1863,10 +1863,6 @@ __webpack_require__.r(__webpack_exports__);
       this.clearDataTable();
       setTimeout(function () {
         $("#required_product_table").DataTable({
-          paging: false,
-          ordering: false,
-          info: false,
-          sorting: true,
           dom: "Bfrtip",
           buttons: [{
             extend: "print",
@@ -14511,7 +14507,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-12 mb-2 float-right"
+    staticClass: "col-md-12 mb-2 text-right"
   }, [_vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "inventory manager" ? _c("button", {
     staticClass: "btn btn-primary",
     on: {

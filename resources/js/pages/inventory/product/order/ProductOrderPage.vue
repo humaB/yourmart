@@ -408,7 +408,7 @@
                                 <div class="card-body">
                                     <div class="row">
 
-                                        <div class="col-md-12 mb-2 float-right">
+                                        <div class="col-md-12 mb-2 text-right">
                                             <button class="btn btn-primary" @click="multipleActionFunc('Product List')" v-if="role == 'admin' || role == 'supervisor' || role == 'inventory manager'">Get Products List</button>
                                             <button class="btn btn-primary" @click="multipleActionFunc('Print Labels')" v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager' || role == 'packing & dispatch manager'">Print Courier Labels</button>
                                         </div>
