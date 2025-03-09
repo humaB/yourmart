@@ -88,6 +88,7 @@
                         paging: false,
                         ordering: false,
                         info: false,
+                        sorting: true,
                         dom: "Bfrtip",
                         buttons: [{
                             extend: "print",
