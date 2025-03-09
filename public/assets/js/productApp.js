@@ -4192,6 +4192,7 @@ __webpack_require__.r(__webpack_exports__);
         var results = response.data.response;
         vm.btnLoader = false;
         vm.fetchDetail(data.id);
+        vm.fetchOrders();
         return swal({
           title: "Success",
           text: "Re-attempt request sent successfully",
@@ -14642,7 +14643,7 @@ var render = function render() {
       staticClass: "badge badge-warning"
     }, [_vm._v("Out for delivery")]) : item.status == 12 ? _c("span", {
       staticClass: "badge badge-warning"
-    }, [_vm._v("Ready for Return")]) : _vm._e()]), _vm._v(" "), item.status == 12 && (_vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "auditor") ? _c("td", [_c("button", {
+    }, [_vm._v("Ready for Return")]) : _vm._e()]), _vm._v(" "), item.status == 12 && (_vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "auditor") ? _c("td", [!item.re_attempt ? _c("button", {
       staticClass: "btn btn-primary",
       attrs: {
         "data-toggle": "modal",
@@ -14654,9 +14655,19 @@ var render = function render() {
           return _vm.fetchDetail(item.id);
         }
       }
-    }, [_c("i", {
-      staticClass: "fa fa-undo"
-    })])]) : _c("td", [_vm._v("-")]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_vm._v("\n                                                            Active\n                                                        ")]) : _c("button", {
+      staticClass: "btn btn-success",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#orderReattempt",
+        title: "Press to reattempt"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetail(item.id);
+        }
+      }
+    }, [_vm._v("\n                                                            Already Applied\n                                                        ")])]) : _c("td", [_vm._v("-")]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",

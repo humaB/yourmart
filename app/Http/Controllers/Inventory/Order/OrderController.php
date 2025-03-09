@@ -72,7 +72,7 @@ class OrderController extends Controller
                 $dropshipper = $dropshipper->user_id ?? 0;
             }
 
-            $orders = Order::with('user', 'shop')
+            $orders = Order::with('user', 'shop', 're_attempt')
                 ->orderBy('id', 'desc')
                 // Apply status filter when provided
                 ->when($status != '', function ($query) use ($status) {
@@ -93,7 +93,7 @@ class OrderController extends Controller
                 })
                 ->get();
         } else {
-            $orders = Order::with('user', 'shop')->where('status', $statusMap[$userRole])
+            $orders = Order::with('user', 'shop', 're_attempt')->where('status', $statusMap[$userRole])
                 ->orderBy('id', 'desc')
                 ->get();
         }

@@ -521,8 +521,11 @@
                                                                 v-else-if="item.status == 12">Ready for Return</span>
                                                         </td>
                                                         <td v-if="item.status == 12 && (role == 'admin' || role == 'supervisor' || role == 'auditor')">
-                                                            <button class="btn btn-primary" @click="fetchDetail(item.id)" data-toggle="modal" data-target="#orderReattempt" title="Press to reattempt">
-                                                                <i class="fa fa-undo"></i>
+                                                            <button v-if="!item.re_attempt" class="btn btn-primary" @click="fetchDetail(item.id)" data-toggle="modal" data-target="#orderReattempt" title="Press to reattempt">
+                                                                Active
+                                                            </button>
+                                                            <button v-else class="btn btn-success" @click="fetchDetail(item.id)" data-toggle="modal" data-target="#orderReattempt" title="Press to reattempt">
+                                                                Already Applied
                                                             </button>
                                                         </td>
                                                         <td v-else>-</td>
@@ -893,6 +896,7 @@ export default {
                     const results = response.data.response;
                     vm.btnLoader = false;
                     vm.fetchDetail(data.id);
+                    vm.fetchOrders();
                     return swal({
                         title: "Success",
                         text: "Re-attempt request sent successfully",
