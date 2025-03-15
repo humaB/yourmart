@@ -293,20 +293,20 @@ class StoreCheckOutController extends Controller
         $pdf->SetTextColor(0, 0, 0); // Text color
 
         // Set column widths
-        $widths = [17.5, 70.7, 16.6, 21, 21.5, 21, 24.5];
+        $widths = [17.5, 70.7, 16.6, 21.2, 21.1, 21.1, 24.8];
 
         // Move to the first row
         $pdf->Ln(5);
 
         // Print table header only once on the first page
         if ($pdf->getPage() == 1) {
-            $pdf->MultiCell($widths[0], 9, 'Product Image', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
-            $pdf->MultiCell($widths[1], 9, 'Product Title', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
-            $pdf->MultiCell($widths[2], 9, 'Quantity', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
-            $pdf->MultiCell($widths[3], 9, 'Product Cost', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
-            $pdf->MultiCell($widths[4], 9, 'Courier Charges', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
-            $pdf->MultiCell($widths[5], 9, 'Packaging Charges', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
-            $pdf->MultiCell($widths[6], 9, 'Sub Total', 1, 'R', true, 1, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[0], 11, 'Product Image', 1, 'L', true, 0, '', '', true, 0, false, true, 11, 'M');
+            $pdf->MultiCell($widths[1], 11, 'Product Title', 1, 'L', true, 0, '', '', true, 0, false, true, 11, 'M');
+            $pdf->MultiCell($widths[2], 11, 'Quantity', 1, 'L', true, 0, '', '', true, 0, false, true, 11, 'M');
+            $pdf->MultiCell($widths[3], 11, 'Product Cost', 1, 'L', true, 0, '', '', true, 0, false, true, 11, 'M');
+            $pdf->MultiCell($widths[4], 11, 'Courier Charges', 1, 'L', true, 0, '', '', true, 0, false, true, 11, 'M');
+            $pdf->MultiCell($widths[5], 11, 'Packaging Charges', 1, 'L', true, 0, '', '', true, 0, false, true, 11, 'M');
+            $pdf->MultiCell($widths[6], 11, 'Sub Total', 1, 'R', true, 1, '', '', true, 0, false, true, 11, 'M');
         }
 
 
