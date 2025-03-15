@@ -288,31 +288,33 @@ class StoreCheckOutController extends Controller
         $pdf->Cell(0, 7, $order->phone_number, 0, 1, 'L', 0, '', 0, false, 'T', 'M');
         $pdf->Ln(2);
 
-        // Set font
-        $pdf->SetFont('Helvetica', '', 9);
+        $pdf->SetFont('helvetica', 'B', 9);
+        $pdf->SetFillColor(255, 255, 255); // Background color
+        $pdf->SetTextColor(0, 0, 0); // Text color
 
-        $html = '
-            <table cellpadding="5" style="border-collapse: collapse; width: 100%;">
-        ';
+        // Set column widths
+        $widths = [17.5, 70.7, 16.6, 21, 21.5, 21, 24.5];
 
-        // Only add headers on the first page
+        // Move to the first row
+        $pdf->Ln(5);
+
+        // Print table header only once on the first page
         if ($pdf->getPage() == 1) {
-            $html .= '
-                <thead>
-                    <tr>
-                        <th width="50" align="left" style="border: 1px solid #888; font-size:9px;"><b>Product Image</b></th>
-                        <th width="200" align="left" style="border: 1px solid #888; font-size:9px;"><b>Product Title</b></th>
-                        <th width="47" align="center" style="border: 1px solid #888; font-size:9px;"><b>Quantity</b></th>
-                        <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Product Cost</b></th>
-                        <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Courier Charges</b></th>
-                        <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Packaging Charges</b></th>
-                        <th width="70" align="right" style="border: 1px solid #888; font-size:9px;"><b>Sub Total</b></th>
-                    </tr>
-                </thead>
-            ';
+            $pdf->MultiCell($widths[0], 9, 'Product Image', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[1], 9, 'Product Title', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[2], 9, 'Quantity', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[3], 9, 'Product Cost', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[4], 9, 'Courier Charges', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[5], 9, 'Packaging Charges', 1, 'L', true, 0, '', '', true, 0, false, true, 9, 'M');
+            $pdf->MultiCell($widths[6], 9, 'Sub Total', 1, 'R', true, 1, '', '', true, 0, false, true, 9, 'M');
         }
 
-        $html .= '<tbody>';
+
+        $pdf->SetFont('helvetica', '', 9);
+        $html = '
+        <table cellpadding="5" style="border-collapse: collapse; width: 100%;">
+            <tbody>
+        ';
 
         foreach ($order->items as $item) {
             $title = $item->variation->product->title;
