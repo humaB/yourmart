@@ -292,20 +292,27 @@ class StoreCheckOutController extends Controller
         $pdf->SetFont('Helvetica', '', 9);
 
         $html = '
-<table cellpadding="5" style="border-collapse: collapse; width: 100%;">
-  <thead>
-    <tr>
-      <th width="50" align="left" style="border: 1px solid #888; font-size:9px;"><b>Product Image</b></th>
-        <th width="200" align="left" style="border: 1px solid #888; font-size:9px;"><b>Product Title</b></th>
-      <th width="47" align="center" style="border: 1px solid #888; font-size:9px;"><b>Quantity</b></th>
-      <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Product Cost</b></th>
-      <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Courier Charges</b></th>
-      <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Packaging Charges</b></th>
-      <th width="70" align="right" style="border: 1px solid #888; font-size:9px;"><b>Sub Total</b></th>
-    </tr>
-  </thead>
-  <tbody>
-';
+            <table cellpadding="5" style="border-collapse: collapse; width: 100%;">
+        ';
+
+        // Only add headers on the first page
+        if ($pdf->getPage() == 1) {
+            $html .= '
+                <thead>
+                    <tr>
+                        <th width="50" align="left" style="border: 1px solid #888; font-size:9px;"><b>Product Image</b></th>
+                        <th width="200" align="left" style="border: 1px solid #888; font-size:9px;"><b>Product Title</b></th>
+                        <th width="47" align="center" style="border: 1px solid #888; font-size:9px;"><b>Quantity</b></th>
+                        <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Product Cost</b></th>
+                        <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Courier Charges</b></th>
+                        <th width="60" align="right" style="border: 1px solid #888; font-size:9px;"><b>Packaging Charges</b></th>
+                        <th width="70" align="right" style="border: 1px solid #888; font-size:9px;"><b>Sub Total</b></th>
+                    </tr>
+                </thead>
+            ';
+        }
+
+        $html .= '<tbody>';
 
         foreach ($order->items as $item) {
             $title = $item->variation->product->title;
@@ -319,25 +326,25 @@ class StoreCheckOutController extends Controller
             $image = url('/public/storage/uploads/inventory/products/media/'.$item->variation->product->hero_image);
 
             $html .= '
-    <tr>
-      <td width="50" align="center" style="border: 1px solid #888; font-size:8px;"><img src="' . $image . '" width="50px" height="40px"></td>
-      <td width="200" align="left" style="border: 1px solid #888; font-size:8px;">' . $title . '</td>
-      <td width="47" align="center" style="border: 1px solid #888; font-size:8px;">' . $quantity . '</td>
-      <td width="60" align="right" style="border: 1px solid #888; font-size:8px;">' . $price . '</td>
-      <td width="60" align="right" style="border: 1px solid #888; font-size:8px;">' . $courier . '</td>
-      <td width="60" align="right" style="border: 1px solid #888; font-size:8px;">' . $packaging . '</td>
-      <td width="70" align="right" style="border: 1px solid #888; font-size:8px;">' . $total_cost . '</td>
-    </tr>
-  ';
+                <tr>
+                <td width="50" align="center" style="border: 1px solid #888; font-size:8px;"><img src="' . $image . '" width="50px" height="40px"></td>
+                <td width="200" align="left" style="border: 1px solid #888; font-size:8px;">' . $title . '</td>
+                <td width="47" align="center" style="border: 1px solid #888; font-size:8px;">' . $quantity . '</td>
+                <td width="60" align="right" style="border: 1px solid #888; font-size:8px;">' . $price . '</td>
+                <td width="60" align="right" style="border: 1px solid #888; font-size:8px;">' . $courier . '</td>
+                <td width="60" align="right" style="border: 1px solid #888; font-size:8px;">' . $packaging . '</td>
+                <td width="70" align="right" style="border: 1px solid #888; font-size:8px;">' . $total_cost . '</td>
+                </tr>
+            ';
         }
 
         $html .= '
-  </tbody>
-</table>
-';
+            </tbody>
+            </table>
+            ';
 
         // Print text using writeHTMLCell()
-        $pdf->writeHTMLCell(0, 0, 9, '', $html, 0);
+        $pdf->writeHTML($html, true, false, true, false, '');
         $pdf->Ln();
         $pdf->Ln(10);
 
@@ -398,21 +405,24 @@ class MYPDF extends TCPDF
     //Page header
     public function Header()
     {
-        // Logo
-        $image_path = asset('assets/img/fa-icon.jpg');
+        if ($this->getPage() == 1) {
+             // Logo
+            $image_path = asset('assets/img/fa-icon.jpg');
 
-        //Logo
-        $this->Ln();
-        $this->Ln(10);
-        $this->Image($image_path, 10, 2, 20, '', 'JPG',  '', '', true, 150, '', false, false, 0, false, false, false);
-        $this->Cell(0, 10, 'YourMart', 0, 1, 'C', 0, '', 0, false, 'M', 'M');
-        $this->SetFont('helvetica', 'B', 12);
-        $this->Cell(0, 10, 'Invoice', 0, 0, 'C', 0, '', 0, false, 'M', 'M');
-        $this->SetFont('helvetica', '', 10);
-        $this->Cell(0, 10, '+92 326 981 0000', 0, 1, 'R', 0, '', 0, false, 'M', 'M');
-        $this->SetFont('helvetica', '', 12);
+            //Logo
+            $this->Ln();
+            $this->Ln(10);
+            $this->Image($image_path, 10, 2, 20, '', 'JPG',  '', '', true, 150, '', false, false, 0, false, false, false);
+            $this->Cell(0, 10, 'YourMart', 0, 1, 'C', 0, '', 0, false, 'M', 'M');
+            $this->SetFont('helvetica', 'B', 12);
+            $this->Cell(0, 10, 'Invoice', 0, 0, 'C', 0, '', 0, false, 'M', 'M');
+            $this->SetFont('helvetica', '', 10);
+            $this->Cell(0, 10, '+92 326 981 0000', 0, 1, 'R', 0, '', 0, false, 'M', 'M');
+            $this->SetFont('helvetica', '', 12);
 
-        $this->Cell(0, 0, "", 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
+            $this->Cell(0, 0, "", 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
+        }
+
     }
 
     // Page footer
