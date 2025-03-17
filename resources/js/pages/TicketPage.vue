@@ -149,7 +149,14 @@
                                     <td>{{ ticket.ticket_type }}</td>
                                     <td>{{ ticket.message }}</td>
                                     <td>{{ ticket.status || 'Pending' }}</td>
-                                    <td>{{ ticket.added_by_name.name }}</td>
+                                    <td>
+                                        <a href="#"
+                                        @click="fetchDropshipperDetails(ticket.added_by_name?.dropshipper?.id)"
+                                        data-toggle="modal"
+                                        data-target="#dropShipperDetail">{{
+                                            ticket.added_by_name.name }}</a>
+                                    </td>
+
                                     <td>{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
                                     <td>
                                         <button @click="viewTicketDetails(ticket)" class="btn btn-info">View</button>
@@ -189,7 +196,13 @@
 
                                     <div class="mb-2 d-flex justify-content-between">
                                         <p class="mb-1"><strong>Ticket Added By:</strong></p>
-                                        <p class="mb-1">{{ selectedTicket.added_by_name ? selectedTicket.added_by_name.name : 'N/A' }}</p>
+                                        <p class="mb-1"><a href="#"
+                                            @click="fetchDropshipperDetails(selectedTicket.added_by_name?.dropshipper?.id)"
+                                            data-toggle="modal"
+                                            data-target="#dropShipperDetail">{{
+                                                selectedTicket.added_by_name?.name }}
+                                        </a>
+                                        </p>
                                     </div>
 
                                     <div class="mb-2 d-flex justify-content-between">
@@ -298,6 +311,8 @@
             :role="'admin'"
         />
 
+        <DropshipperDetails :details="dropShipperDetails" />
+
     </div>
 </template>
 <script>
@@ -305,12 +320,14 @@
 import { BulletListLoader } from "vue-content-loader";
 import moment from "moment";
 import OrderDetailView from "../components/inventory/product/order/OrderDetailView.vue";
+import DropshipperDetails from "../components/admin/request/DropshipperDetails.vue";
 
 export default {
     name: 'TicketPage',
     components: {
         BulletListLoader,
-        OrderDetailView
+        OrderDetailView,
+        DropshipperDetails
     },
     data() {
         return {
@@ -344,13 +361,23 @@ export default {
                 ticketId: null
             },
             commentLoader : false,
-            orderDetails : {}
+            orderDetails : {},
+            dropShipperDetails : {}
         };
     },
     created() {
         this.fetchTicketData();
     },
     methods: {
+        fetchDropshipperDetails(id) {
+            let vm = this;
+            axios
+                .post(this.api_url + "dropshippers/details", { id })
+                .then((response) => {
+                    vm.dropShipperDetails = response.data.response[0]
+                });
+
+        },
         async addMessage() {
             // Validation for chat message and status
             if (!this.postMessage.chatMessage || this.postMessage.chatMessage.trim() === '') {

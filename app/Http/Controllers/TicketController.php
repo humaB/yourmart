@@ -19,7 +19,7 @@ class TicketController extends Controller
     public function fetchTickets(Request $request)
     {
        // Start query with base conditions (fetching only tickets added by the authenticated user)
-       $query = Ticket::with('added_by_name', 'order.shop');
+       $query = Ticket::with('added_by_name.dropshipper', 'order.shop');
 
        // Apply filters if they are provided in the request
 
@@ -114,7 +114,7 @@ class TicketController extends Controller
     public function getTicket(Request $request)
     {
         // Count tickets by each status
-        $ticket = Ticket::with('added_by_name', 'order.shop')->where("id",$request->ticket_id)->first();
+        $ticket = Ticket::with('added_by_name.dropshipper', 'order.shop')->where("id",$request->ticket_id)->first();
 
         // Return the status counts as a JSON response
         return response()->json([
