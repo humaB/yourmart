@@ -274,6 +274,7 @@ class DashboardController extends Controller
     {
         $processed = $orders->whereNotIn('status', ['6', '7'])->where('type', 'Normal')->count();
         $returns = $orders->whereIn('status', ['9', '10'])->count();
+        $inProcess = $orders->where('type', 'Normal')->whereNotIn('status', [6, 7, 8, 9, 10])->count();
 
         $items = OrderItem::whereIn('order_id', $orders->where('status', '8')->pluck('id'))->get();
 
@@ -315,7 +316,7 @@ class DashboardController extends Controller
         $totalCost   = $totalProductCostSum;
         $grossProfit = $totalGrossSale - $totalCost;
 
-        $returnRatio = $processed > 0 ? ($returns / $processed) * 100 : 0;
+        $returnRatio = $processed > 0 ? ($returns / ($processed -  $inProcess)) * 100 : 0;
 
         return [
             'processed'           => $processed,
