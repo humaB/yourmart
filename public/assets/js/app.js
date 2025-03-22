@@ -18611,30 +18611,28 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
-    staticClass: "card-bg"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
-    staticClass: "p-t-20 d-flex justify-content-between"
+    staticClass: "card-statistic-4"
   }, [_c("div", {
-    staticClass: "col"
-  }, [_c("h6", {
-    staticClass: "mb-0"
-  }, [_vm._v("Profit")]), _vm._v(" "), _c("span", {
-    staticClass: "font-weight-bold mb-0 font-20"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalSales - (_vm.totalProductCost + _vm.totalPackingCourier))))])]), _vm._v(" "), _c("i", {
-    staticClass: "fas fa-address-card card-icon col-orange font-30 p-r-30"
-  })]), _vm._v(" "), _c("canvas", {
-    staticClass: "chartjs-render-monitor",
-    staticStyle: {
-      display: "block",
-      height: "74px",
-      width: "280px"
-    },
-    attrs: {
-      id: "cardChart1",
-      height: "92",
-      width: "350"
-    }
-  })])])])]), _vm._v(" "), _c("table", {
+    staticClass: "align-items-center justify-content-between"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-12 col-md-12 col-sm-12 col-xs-6 pr-0"
+  }, [_c("div", {
+    staticClass: "card-content p-2"
+  }, [_c("h6", [_vm._v("Key Statistics")]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-between mb-0"
+  }, [_c("span", {
+    staticClass: "col-green"
+  }, [_vm._v("Profit:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.formatPrice(_vm.totalSales - (_vm.totalProductCost + _vm.totalPackingCourier))))])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-between mb-0"
+  }, [_c("span", {
+    staticClass: "col-green"
+  }, [_vm._v("Return Charges:")]), _vm._v(" "), _c("span", [_vm._v(_vm._s(_vm.formatPrice(_vm.totalSales - (_vm.totalProductCost + _vm.totalPackingCourier) - _vm.totalProfit)))])]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-between mb-0"
+  }, [_c("span", {
+    staticClass: "col-green"
+  }, [_vm._v("Total Balance:")]), _vm._v(" "), _c("span", [_vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalProfit)))])])])])])])])])])]), _vm._v(" "), _c("table", {
     staticStyle: {
       "table-layout": "fixed",
       width: "100%"
@@ -18646,7 +18644,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(4), _vm._v(" "), _c("div", {
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -18665,7 +18663,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(5), _vm._v(" "), _c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -18684,7 +18682,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -18703,7 +18701,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(7), _vm._v(" "), _c("div", {
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -18722,7 +18720,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(8), _vm._v(" "), _c("div", {
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -18734,7 +18732,7 @@ var render = function render() {
     staticClass: "ti-arrow-up text-success"
   }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(8), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("RevenueChat", {
     attrs: {
@@ -18751,13 +18749,13 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(10), _vm._v(" "), _c("div", {
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-hover mb-0"
-  }, [_vm._m(11), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
+  }, [_vm._m(10), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))])]);
@@ -18767,7 +18765,7 @@ var render = function render() {
     staticClass: "col-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(12), _vm._v(" "), _c("div", {
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
@@ -18779,7 +18777,7 @@ var render = function render() {
     attrs: {
       id: "save-stage"
     }
-  }, [_vm._m(13), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
+  }, [_vm._m(12), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.store_name))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(_vm.formatDate(item.created_at)) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_payable))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_remaining))]), _vm._v(" "), _c("td", {
@@ -18799,62 +18797,6 @@ var render = function render() {
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "chartjs-size-monitor",
-    staticStyle: {
-      position: "absolute",
-      inset: "0px",
-      overflow: "hidden",
-      "pointer-events": "none",
-      visibility: "hidden",
-      "z-index": "-1"
-    }
-  }, [_c("div", {
-    staticClass: "chartjs-size-monitor-expand",
-    staticStyle: {
-      position: "absolute",
-      left: "0",
-      top: "0",
-      right: "0",
-      bottom: "0",
-      overflow: "hidden",
-      "pointer-events": "none",
-      visibility: "hidden",
-      "z-index": "-1"
-    }
-  }, [_c("div", {
-    staticStyle: {
-      position: "absolute",
-      width: "1000000px",
-      height: "1000000px",
-      left: "0",
-      top: "0"
-    }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "chartjs-size-monitor-shrink",
-    staticStyle: {
-      position: "absolute",
-      left: "0",
-      top: "0",
-      right: "0",
-      bottom: "0",
-      overflow: "hidden",
-      "pointer-events": "none",
-      visibility: "hidden",
-      "z-index": "-1"
-    }
-  }, [_c("div", {
-    staticStyle: {
-      position: "absolute",
-      width: "200%",
-      height: "200%",
-      left: "0",
-      top: "0"
-    }
-  })])]);
-}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {

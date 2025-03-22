@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </div>
-         
+
         </div>
         <div class="row" style="margin-left: -10px">
             <!-- cards -->
@@ -176,31 +176,32 @@
             </div>
             <div class="col-xl-3 col-lg-6">
                 <div class="card">
-                    <div class="card-bg">
-                        <div class="chartjs-size-monitor"
-                            style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                            <div class="chartjs-size-monitor-expand"
-                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
+                    <div class="card-statistic-4">
+                        <div class="align-items-center justify-content-between">
+                            <div class="row ">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6 pr-0">
+                                    <div class="card-content p-2">
+                                        <h6>Key Statistics</h6>
+                                        <div class="d-flex justify-content-between mb-0">
+                                            <span class="col-green">Profit:</span>
+                                            <span>{{ formatPrice(totalSales - (totalProductCost + totalPackingCourier)) }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-0">
+                                            <span class="col-green">Return Charges:</span>
+                                            <span>{{ formatPrice((totalSales - (totalProductCost + totalPackingCourier) - totalProfit)) }}</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between mb-0">
+                                            <span class="col-green">Total Balance:</span>
+                                            <span> {{ formatPrice(totalProfit) }}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="chartjs-size-monitor-shrink"
-                                style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                            </div>
-                        </div>
-                        <div class="p-t-20 d-flex justify-content-between">
-                            <div class="col">
-                                <h6 class="mb-0">Profit</h6>
-                                <span class="font-weight-bold mb-0 font-20">{{ formatPrice(totalSales -
-                                    (totalProductCost + totalPackingCourier)) }}</span>
-                            </div>
-                            <i class="fas fa-address-card card-icon col-orange font-30 p-r-30"></i>
-                        </div>
-                        <canvas id="cardChart1" height="92" width="350"
-                            style="display: block; height: 74px; width: 280px;" class="chartjs-render-monitor"></canvas>
+
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <table style="table-layout: fixed; width: 100%;">
             <tr>
