@@ -13008,7 +13008,7 @@ var render = function render() {
       staticClass: "text-muted"
     }, [_vm._v("Comment by "), _c("span", {
       staticClass: "font-weight-bold font-13"
-    }, [_vm._v(_vm._s(comment.user.name) + " ( " + _vm._s(comment.user.role) + " )")]), _vm._v("\n                                                   -" + _vm._s(_vm.formatDate(comment.created_at)))])]), _vm._v(" "), _vm.role == "admin" ? _c("button", {
+    }, [_vm._v(_vm._s(comment.user.name) + " ( " + _vm._s(comment.user.role) + " )")]), _vm._v("\n                                                   -" + _vm._s(_vm.formatDate(comment.created_at)))])]), _vm._v(" "), _vm.role == "admin" || _vm.role == "auditor" ? _c("button", {
       staticClass: "btn btn-danger btn-sm",
       on: {
         click: function click($event) {

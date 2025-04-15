@@ -583,7 +583,7 @@
                                                             comment.user.role }} )</span>
                                                     &nbsp;&nbsp; -{{ formatDate(comment.created_at) }}</small>
                                             </div>
-                                            <button class="btn btn-danger btn-sm" v-if="role == 'admin'"
+                                            <button class="btn btn-danger btn-sm" v-if="role == 'admin' || role == 'auditor'"
                                                 @click="deleteComment(comment.id)"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
