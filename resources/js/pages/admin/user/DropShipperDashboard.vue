@@ -1,12 +1,52 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <h5>Preview Dashboard for {{ customerName }},</h5>
+            <div class="col-12 col-sm-12 col-lg-12">
+                <div class="card profile-widget">
+                  <div class="profile-widget-header">
 
-            </div>
+                    <img
+                    :src="profilePic ? public_url +'storage/uploads/dropshipper/' + profilePic : public_url +'assets/img/users/user-4.jpg'"
+                    alt="image"
+                    class="rounded-circle profile-widget-picture">
+
+                    <div class="profile-widget-items">
+                      <div class="profile-widget-item">
+                        <div class="profile-widget-item-label">Orders</div>
+                        <div class="profile-widget-item-value">{{ totalOrders }}</div>
+                      </div>
+                      <div class="profile-widget-item">
+                        <div class="profile-widget-item-label">Success Rate</div>
+                        <div class="profile-widget-item-value">{{accountHealth}}%</div>
+                      </div>
+                      <div class="profile-widget-item">
+                        <div class="profile-widget-item-label">Revenue</div>
+                        <div class="profile-widget-item-value">{{ formatPrice(totalProfit) }}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="profile-widget-description pb-0">
+                    <div class="profile-widget-name"><h4><strong>{{ customerName }}</strong></h4> <div class="text-muted d-inline font-weight-normal">
+
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <div>
+                            <a href="#" :class="['btn btn-icon mr-2', levelColorClass]">
+                              <i class="fas fa-star"></i>
+                            </a>
+                            <strong class="mb-0 h5">{{ displayLevel }}</strong>
+                        </div>
+
+                        <div class="ml-5"> <ProgressBar :currentLevel="levelNumber"/> </div>
+                        <div></div>
+
+                      </div>
+                  </div>
+                </div>
+              </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
             <div class="col-md-6 mb-3">
                 <h6>Account Health Status</h6>
                 <div class="progress">
@@ -17,7 +57,7 @@
                 </div>
             </div>
 
-        </div>
+        </div> -->
         <div class="row" style="margin-left: -10px">
             <!-- cards -->
             <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -423,12 +463,14 @@
 import moment from "moment";
 import RevenueChat from "../../../components/dropshipper/RevenueChat.vue";
 import RevenueBarChat from "../../../components/dropshipper/RevenueBarChat.vue";
+import ProgressBar from "../../../components/dropshipper/ProgressBar.vue";
 
 export default {
     name: "DropShipperDashboard",
     components: {
         RevenueChat,
-        RevenueBarChat
+        RevenueBarChat,
+        ProgressBar
     },
     data() {
         return {
@@ -476,11 +518,32 @@ export default {
             barChart: [],
         };
     },
+    computed: {
+        displayLevel() {
+            const sellerLevels = ['Level 01', 'Level 02', 'Level 03'];
+            return sellerLevels.includes(this.level) ? `${this.level} Seller` : this.level;
+        },
+        levelColorClass() {
+            switch (this.level) {
+            case 'New Seller':
+                return 'btn-secondary'; // Grey
+            case 'Level 01':
+                return 'btn-primary'; // Blue
+            case 'Level 02':
+                return 'btn-success'; // Green
+            case 'Level 03':
+                return 'btn-warning'; // Gold
+            case 'Top Rated Seller':
+                return 'btn-purple'; // Custom class (see CSS below)
+            default:
+                return 'btn-light';
+            }
+        }
+    },
     created() {
         this.getParamsFromUrl();
         this.fetchData();
     },
-
     methods: {
         getParamsFromUrl() {
             // Use URLSearchParams to extract the id and contact from the URL
@@ -498,39 +561,6 @@ export default {
                 from: new Date().toISOString().substr(0, 10),
                 to: new Date().toISOString().substr(0, 10),
             }
-        },
-        applyFilter() {
-            axios
-                .post(this.api_url + "dropshippers", this.filter)
-                .then((response) => {
-                    const result = response.data.response;
-
-                    // Assign the result values to the Vue data properties
-                    this.totalProfit = result.totalProfit;
-                    this.totalRemaining = result.totalRemaining;
-                    this.totalPaid = result.totalPaid;
-
-                    this.totalSales = result.totalSales;
-                    this.totalProductCost = result.totalProductCost;
-                    this.totalPackingCourier = result.totalPackingCourier;
-                    this.totalOrders = result.totalOrders;
-
-                    this.deliveredOrders = result.deliveredOrders;
-                    this.inProcessOrder = result.inProcessOrder;
-                    this.failedOrder = result.failedOrder;
-                    this.outFordeliveredOrders = result.outFordeliveredOrders;
-                    this.customerName = result.name;
-                    this.stores = result.stores;
-
-                    this.revenueGraphData = result.revenueGraphData;
-                    this.revenueDates = result.revenueDates;
-
-                    this.topFiveProducts = result.topFiveProducts;
-
-                })
-                .catch((err) => {
-
-                });
         },
         formatPrice(price) {
             var string = parseFloat(price).toString();
@@ -562,7 +592,16 @@ export default {
                     this.failedOrder = result.failedOrder;
                     this.outFordeliveredOrders = result.outFordeliveredOrders;
                     this.customerName = result.name;
+                    this.profilePic   = result.profilePic;
                     this.stores = result.stores;
+                    this.level = result.level;
+                    this.levelNumber = [
+                        'New Seller',
+                        'Level 01',
+                        'Level 02',
+                        'Level 03',
+                        'Top Rated Seller'
+                    ].indexOf(this.level);
 
                     this.revenueGraphData = result.revenueGraphData;
                     this.revenueDates = result.revenueDates;
@@ -621,3 +660,10 @@ export default {
     },
 };
 </script>
+<style scoped>
+.btn-purple {
+    background-color: #e97bb8;
+    color: #fff;
+  }
+</style>
+

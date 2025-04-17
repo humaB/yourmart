@@ -95,6 +95,9 @@ class DropshipperPreviewController extends Controller
                 'total_profit' => $totalProfit,
             ];
         })->values()->toArray(); // values() resets the keys, toArray() converts it to a standard array
+
+        $level = $this->determineSellerLevel($totalOrders, $accountHealth, $totalProfit);
+
         // Build the response data array
         $data = [
             'totalProfit' => $totalProfit,
@@ -114,7 +117,9 @@ class DropshipperPreviewController extends Controller
             'topFiveProducts' =>  $topFiveProducts,
 
             'name'        => $dropshipper->full_name,
+            'profilePic'  => $dropshipper->profile_image,
             'stores'      => $stores,
+            'level'       => $level,
 
             'revenueGraphData'  => $revenueGraphData,
             'revenueDates'      => $revenueDates,
@@ -128,6 +133,46 @@ class DropshipperPreviewController extends Controller
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function determineSellerLevel($orders, $successRate, $revenue)
+    {
+        $levels = [
+            'Top Rated Seller' => [
+                'orders' => 2000,
+                'success_rate' => 90,
+                'revenue' => 500000,
+            ],
+            'Level 03' => [
+                'orders' => 1000,
+                'success_rate' => 85,
+                'revenue' => 160000,
+            ],
+            'Level 02' => [
+                'orders' => 400,
+                'success_rate' => 80,
+                'revenue' => 60000,
+            ],
+            'Level 01' => [
+                'orders' => 100,
+                'success_rate' => 80,
+                'revenue' => 20000,
+            ],
+        ];
+
+        foreach ($levels as $level => $criteria) {
+            $matchCount = 0;
+
+            if ($orders >= $criteria['orders']) $matchCount++;
+            if ($successRate >= $criteria['success_rate']) $matchCount++;
+            if ($revenue > $criteria['revenue']) $matchCount++;
+
+            if ($matchCount >= 2) {
+                return $level;
+            }
+        }
+
+        return 'New Seller';
     }
 
     private function barChatData( $dropshipper ){

@@ -1067,6 +1067,74 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['currentLevel'],
+  data: function data() {
+    return {
+      levels: ['New Seller', 'Level 01', 'Level 02', 'Level 03', 'Top Rated Seller']
+    };
+  },
+  methods: {
+    formatLevel: function formatLevel(item) {
+      // Check for Level with leading zero
+      var match = item.match(/^Level 0(\d)$/);
+      if (match) {
+        return "Level ".concat(match[1], " Seller"); // e.g., Level 1 Seller
+      }
+      return item;
+    },
+    getLevelColor: function getLevelColor(level) {
+      switch (level) {
+        case 'New Seller':
+          return '#6c757d';
+        // Grey
+        case 'Level 01':
+          return '#007bff';
+        // Blue
+        case 'Level 02':
+          return '#28a745';
+        // Green
+        case 'Level 03':
+          return '#ffc107';
+        // Gold
+        case 'Top Rated Seller':
+          return '#e97bb8';
+        // Purple
+        default:
+          return '#dee2e6';
+        // Default light grey
+      }
+    },
+    getLevelTooltip: function getLevelTooltip(level) {
+      switch (level) {
+        case 'Level 01':
+          return "CRITERIA\n\u2713 Orders 100\n\u2713 Success Rate 80%\n\u2713 Revenue > 20k \n\nREWARDS\n\u2713 Social Media Coverage\n\u2713 Certificate\n";
+        case 'Level 02':
+          return "CRITERIA\n\u2713 Orders 400\n\u2713 Success Rate 80%\n\u2713 Revenue > 60k \n\nREWARDS\n\u2713 Social Media Coverage\n\u2713 Certificate\n\u2713 Gift";
+        case 'Level 03':
+          return "CRITERIA\n\u2713 Orders 1,000\n\u2713 Success Rate 85%\n\u2713 Revenue > 160k \n\nREWARDS\n\u2713 Social Media Coverage\n\u2713 Certificate\n\u2713 Gift\n\u2713 1-To-1 Support";
+        case 'Top Rated Seller':
+          return "CRITERIA\n\u2713 Orders 2,500\n\u2713 Success Rate 90%\n\u2713 Revenue > 500k \n\nREWARDS\n\u2713 Social Media Coverage\n\u2713 Certificate\n\u2713 Gift\n\u2713 1-To-1 Support\n\u2713 Shield of Honor\n\u2713 Membership of Advisory Team";
+        default:
+          return "CRITERIA\n\u2713 Orders < 100\n\u2713 Success Rate < 80%\n\u2713 Revenue < 20k \n\nREWARDS\n\u2713 Weekly Payouts";
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js":
 /*!********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=script&lang=js ***!
@@ -4831,6 +4899,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_dropshipper_RevenueChat_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/dropshipper/RevenueChat.vue */ "./resources/js/components/dropshipper/RevenueChat.vue");
 /* harmony import */ var _components_dropshipper_RevenueBarChat_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/dropshipper/RevenueBarChat.vue */ "./resources/js/components/dropshipper/RevenueBarChat.vue");
+/* harmony import */ var _components_dropshipper_ProgressBar_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/dropshipper/ProgressBar.vue */ "./resources/js/components/dropshipper/ProgressBar.vue");
+
 
 
 
@@ -4838,7 +4908,8 @@ __webpack_require__.r(__webpack_exports__);
   name: "DropShipperDashboard",
   components: {
     RevenueChat: _components_dropshipper_RevenueChat_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    RevenueBarChat: _components_dropshipper_RevenueBarChat_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    RevenueBarChat: _components_dropshipper_RevenueBarChat_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    ProgressBar: _components_dropshipper_ProgressBar_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   data: function data() {
     return {
@@ -4887,6 +4958,33 @@ __webpack_require__.r(__webpack_exports__);
       barChart: []
     };
   },
+  computed: {
+    displayLevel: function displayLevel() {
+      var sellerLevels = ['Level 01', 'Level 02', 'Level 03'];
+      return sellerLevels.includes(this.level) ? "".concat(this.level, " Seller") : this.level;
+    },
+    levelColorClass: function levelColorClass() {
+      switch (this.level) {
+        case 'New Seller':
+          return 'btn-secondary';
+        // Grey
+        case 'Level 01':
+          return 'btn-primary';
+        // Blue
+        case 'Level 02':
+          return 'btn-success';
+        // Green
+        case 'Level 03':
+          return 'btn-warning';
+        // Gold
+        case 'Top Rated Seller':
+          return 'btn-purple';
+        // Custom class (see CSS below)
+        default:
+          return 'btn-light';
+      }
+    }
+  },
   created: function created() {
     this.getParamsFromUrl();
     this.fetchData();
@@ -4908,9 +5006,16 @@ __webpack_require__.r(__webpack_exports__);
         to: new Date().toISOString().substr(0, 10)
       };
     },
-    applyFilter: function applyFilter() {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("DD-MMM-YYYY") : "N/A";
+    },
+    fetchData: function fetchData() {
       var _this = this;
-      axios.post(this.api_url + "dropshippers", this.filter).then(function (response) {
+      axios.post(this.api_url + "dropshippers/preview", this.filter).then(function (response) {
         var result = response.data.response;
 
         // Assign the result values to the Vue data properties
@@ -4926,45 +5031,17 @@ __webpack_require__.r(__webpack_exports__);
         _this.failedOrder = result.failedOrder;
         _this.outFordeliveredOrders = result.outFordeliveredOrders;
         _this.customerName = result.name;
+        _this.profilePic = result.profilePic;
         _this.stores = result.stores;
+        _this.level = result.level;
+        _this.levelNumber = ['New Seller', 'Level 01', 'Level 02', 'Level 03', 'Top Rated Seller'].indexOf(_this.level);
         _this.revenueGraphData = result.revenueGraphData;
         _this.revenueDates = result.revenueDates;
+        _this.barChart = result.barChart;
         _this.topFiveProducts = result.topFiveProducts;
-      })["catch"](function (err) {});
-    },
-    formatPrice: function formatPrice(price) {
-      var string = parseFloat(price).toString();
-      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-    },
-    formatDate: function formatDate(date) {
-      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format("DD-MMM-YYYY") : "N/A";
-    },
-    fetchData: function fetchData() {
-      var _this2 = this;
-      axios.post(this.api_url + "dropshippers/preview", this.filter).then(function (response) {
-        var result = response.data.response;
-
-        // Assign the result values to the Vue data properties
-        _this2.totalProfit = result.totalProfit;
-        _this2.totalRemaining = result.totalRemaining;
-        _this2.totalPaid = result.totalPaid;
-        _this2.totalSales = result.totalSales;
-        _this2.totalProductCost = result.totalProductCost;
-        _this2.totalPackingCourier = result.totalPackingCourier;
-        _this2.totalOrders = result.totalOrders;
-        _this2.deliveredOrders = result.deliveredOrders;
-        _this2.inProcessOrder = result.inProcessOrder;
-        _this2.failedOrder = result.failedOrder;
-        _this2.outFordeliveredOrders = result.outFordeliveredOrders;
-        _this2.customerName = result.name;
-        _this2.stores = result.stores;
-        _this2.revenueGraphData = result.revenueGraphData;
-        _this2.revenueDates = result.revenueDates;
-        _this2.barChart = result.barChart;
-        _this2.topFiveProducts = result.topFiveProducts;
-        _this2.leopardPerformance = result.leopardPerformance;
-        _this2.accountHealth = result.accountHealth;
-        _this2.renderChart();
+        _this.leopardPerformance = result.leopardPerformance;
+        _this.accountHealth = result.accountHealth;
+        _this.renderChart();
       })["catch"](function (err) {});
     },
     renderChart: function renderChart() {
@@ -11358,6 +11435,64 @@ var render = function render() {
       staticClass: "fas fa-trash-alt"
     })])])]);
   }), 0)])]);
+};
+var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "progress-container"
+  }, _vm._l(_vm.levels, function (item, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "level-step"
+    }, [_c("div", {
+      staticClass: "icon-wrapper",
+      "class": {
+        completed: index < _vm.currentLevel,
+        active: index == _vm.currentLevel,
+        locked: index > _vm.currentLevel
+      },
+      style: {
+        backgroundColor: _vm.getLevelColor(item)
+      },
+      attrs: {
+        "data-placement": "top",
+        title: _vm.getLevelTooltip(item)
+      }
+    }, [_c("i", {
+      staticClass: "text-white",
+      "class": {
+        "fas fa-check": index < _vm.currentLevel,
+        "fas fa-crosshairs": index === _vm.currentLevel,
+        "fas fa-lock": index > _vm.currentLevel
+      }
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "level-label"
+    }, [_vm._v("  " + _vm._s(_vm.formatLevel(item)))]), _vm._v(" "), index < _vm.levels.length - 1 ? _c("div", {
+      staticClass: "line",
+      "class": {
+        completed: index < _vm.currentLevel
+      }
+    }) : _vm._e()]);
+  }), 0);
 };
 var staticRenderFns = [];
 render._withStripped = true;
@@ -18400,10 +18535,10 @@ render._withStripped = true;
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d":
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -18418,23 +18553,61 @@ var render = function render() {
   return _c("div", [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12"
-  }, [_c("h5", [_vm._v("Preview Dashboard for " + _vm._s(_vm.customerName) + ",")])])]), _vm._v(" "), _c("div", {
-    staticClass: "row"
+    staticClass: "col-12 col-sm-12 col-lg-12"
   }, [_c("div", {
-    staticClass: "col-md-6 mb-3"
-  }, [_c("h6", [_vm._v("Account Health Status")]), _vm._v(" "), _c("div", {
-    staticClass: "progress"
+    staticClass: "card profile-widget"
   }, [_c("div", {
-    staticClass: "progress-bar",
-    style: "width:" + _vm.accountHealth + "%",
+    staticClass: "profile-widget-header"
+  }, [_c("img", {
+    staticClass: "rounded-circle profile-widget-picture",
     attrs: {
-      role: "progressbar",
-      "aria-valuenow": _vm.accountHealth,
-      "aria-valuemin": "0",
-      "aria-valuemax": "100"
+      src: _vm.profilePic ? _vm.public_url + "storage/uploads/dropshipper/" + _vm.profilePic : _vm.public_url + "assets/img/users/user-4.jpg",
+      alt: "image"
     }
-  }, [_vm._v("\n                    " + _vm._s(_vm.accountHealth) + "%\n                ")])])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-items"
+  }, [_c("div", {
+    staticClass: "profile-widget-item"
+  }, [_c("div", {
+    staticClass: "profile-widget-item-label"
+  }, [_vm._v("Orders")]), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-item-value"
+  }, [_vm._v(_vm._s(_vm.totalOrders))])]), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-item"
+  }, [_c("div", {
+    staticClass: "profile-widget-item-label"
+  }, [_vm._v("Success Rate")]), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-item-value"
+  }, [_vm._v(_vm._s(_vm.accountHealth) + "%")])]), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-item"
+  }, [_c("div", {
+    staticClass: "profile-widget-item-label"
+  }, [_vm._v("Revenue")]), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-item-value"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.totalProfit)))])])])]), _vm._v(" "), _c("div", {
+    staticClass: "profile-widget-description pb-0"
+  }, [_c("div", {
+    staticClass: "profile-widget-name"
+  }, [_c("h4", [_c("strong", [_vm._v(_vm._s(_vm.customerName))])]), _vm._v(" "), _c("div", {
+    staticClass: "text-muted d-inline font-weight-normal"
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "d-flex justify-content-between align-items-center mb-5"
+  }, [_c("div", [_c("a", {
+    "class": ["btn btn-icon mr-2", _vm.levelColorClass],
+    attrs: {
+      href: "#"
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-star"
+  })]), _vm._v(" "), _c("strong", {
+    staticClass: "mb-0 h5"
+  }, [_vm._v(_vm._s(_vm.displayLevel))])]), _vm._v(" "), _c("div", {
+    staticClass: "ml-5"
+  }, [_c("ProgressBar", {
+    attrs: {
+      currentLevel: _vm.levelNumber
+    }
+  })], 1), _vm._v(" "), _c("div")])])])])]), _vm._v(" "), _c("div", {
     staticClass: "row",
     staticStyle: {
       "margin-left": "-10px"
@@ -23569,6 +23742,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\n.cap[data-v-311edd2c] {\n  text-tran
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.progress-container[data-v-c948c2e4] {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  position: relative;\n  margin: 5px 0;\n}\n.level-step[data-v-c948c2e4] {\n  display: flex;\n  align-items: center;\n  position: relative;\n}\n.icon-wrapper[data-v-c948c2e4] {\n  width: 40px;\n  height: 40px;\n  border-radius: 8px;\n  background-color: #ccc;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  z-index: 2;\n  transition: background-color 0.3s ease;\n}\n.icon-wrapper.completed[data-v-c948c2e4] {\n  background-color: #00bcd4; /* Cyan for completed */\n  color: #fff;\n}\n.icon-wrapper.active[data-v-c948c2e4] {\n  background-color: #2196f3; /* Blue for active */\n  color: #fff;\n}\n.icon-wrapper.locked[data-v-c948c2e4] {\n  background-color: #e0e0e0; /* Grey for locked */\n  color: #888;\n}\n.level-label[data-v-c948c2e4] {\n  text-align: center;\n  font-size: 11px;\n  color: #333;\n  position: absolute;\n  top: 50px;\n  left: 10%;\n  transform: translateX(-50%);\n  width: 100px;\n  font-weight: 600;\n}\n.line[data-v-c948c2e4] {\n  height: 2px;\n  width: 150px;\n  background-color: #ccc;\n  margin: 0 5px;\n  z-index: 1;\n}\n.line.completed[data-v-c948c2e4] {\n  background-color: #00bcd4;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=style&index=0&id=bf01a856&scoped=true&lang=css":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=style&index=0&id=bf01a856&scoped=true&lang=css ***!
@@ -23635,6 +23832,30 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "\nvideo[data-v-a3b854b8] {\n  width: 100%;\n  max-width: 400px;\n  border: 2px solid #ddd;\n  margin-bottom: 10px;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.btn-purple[data-v-7390990d] {\n    background-color: #e97bb8;\n    color: #fff;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -24007,6 +24228,36 @@ var update = _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_in
 
 /***/ }),
 
+/***/ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/laravel-mix/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/laravel-mix/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_style_index_0_id_c948c2e4_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_style_index_0_id_c948c2e4_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_style_index_0_id_c948c2e4_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=style&index=0&id=bf01a856&scoped=true&lang=css":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=style&index=0&id=bf01a856&scoped=true&lang=css ***!
@@ -24094,6 +24345,36 @@ var update = _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_in
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_a3b854b8_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/laravel-mix/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/laravel-mix/node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_style_index_0_id_7390990d_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_style_index_0_id_7390990d_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_style_index_0_id_7390990d_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -47603,6 +47884,47 @@ component.options.__file = "resources/js/components/admin/user/UserTable.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/dropshipper/ProgressBar.vue":
+/*!*************************************************************!*\
+  !*** ./resources/js/components/dropshipper/ProgressBar.vue ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ProgressBar_vue_vue_type_template_id_c948c2e4_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true */ "./resources/js/components/dropshipper/ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true");
+/* harmony import */ var _ProgressBar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ProgressBar.vue?vue&type=script&lang=js */ "./resources/js/components/dropshipper/ProgressBar.vue?vue&type=script&lang=js");
+/* harmony import */ var _ProgressBar_vue_vue_type_style_index_0_id_c948c2e4_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css */ "./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ProgressBar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ProgressBar_vue_vue_type_template_id_c948c2e4_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render,
+  _ProgressBar_vue_vue_type_template_id_c948c2e4_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  "c948c2e4",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/dropshipper/ProgressBar.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/dropshipper/RevenueBarChat.vue":
 /*!****************************************************************!*\
   !*** ./resources/js/components/dropshipper/RevenueBarChat.vue ***!
@@ -48868,23 +49190,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropShipperDashboard.vue?vue&type=template&id=7390990d */ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d");
+/* harmony import */ var _DropShipperDashboard_vue_vue_type_template_id_7390990d_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true */ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true");
 /* harmony import */ var _DropShipperDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropShipperDashboard.vue?vue&type=script&lang=js */ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=script&lang=js");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _DropShipperDashboard_vue_vue_type_style_index_0_id_7390990d_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css */ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
+;
 
 
 /* normalize component */
-;
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _DropShipperDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-  _DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.render,
-  _DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  _DropShipperDashboard_vue_vue_type_template_id_7390990d_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render,
+  _DropShipperDashboard_vue_vue_type_template_id_7390990d_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
   false,
   null,
-  null,
+  "7390990d",
   null
   
 )
@@ -49594,6 +49918,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserTable_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./UserTable.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/user/UserTable.vue?vue&type=script&lang=js");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserTable_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/dropshipper/ProgressBar.vue?vue&type=script&lang=js":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/ProgressBar.vue?vue&type=script&lang=js ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProgressBar.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -50590,6 +50930,23 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/dropshipper/ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true ***!
+  \*******************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_template_id_c948c2e4_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_template_id_c948c2e4_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_template_id_c948c2e4_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=template&id=c948c2e4&scoped=true");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2":
 /*!**********************************************************************************************!*\
   !*** ./resources/js/components/dropshipper/RevenueBarChat.vue?vue&type=template&id=89b5d1d2 ***!
@@ -51134,19 +51491,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d":
-/*!**********************************************************************************************!*\
-  !*** ./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d ***!
-  \**********************************************************************************************/
+/***/ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true":
+/*!**********************************************************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true ***!
+  \**********************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.render),
-/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperDashboard.vue?vue&type=template&id=7390990d */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_template_id_7390990d_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=template&id=7390990d&scoped=true");
 
 
 /***/ }),
@@ -51403,6 +51760,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css":
+/*!*********************************************************************************************************************!*\
+  !*** ./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css ***!
+  \*********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ProgressBar_vue_vue_type_style_index_0_id_c948c2e4_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css */ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/dropshipper/ProgressBar.vue?vue&type=style&index=0&id=c948c2e4&scoped=true&lang=css");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=style&index=0&id=bf01a856&scoped=true&lang=css":
 /*!****************************************************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/courier/CourierEditPopup.vue?vue&type=style&index=0&id=bf01a856&scoped=true&lang=css ***!
@@ -51438,6 +51808,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_Camera_vue_vue_type_style_index_0_id_a3b854b8_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!../../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Camera.vue?vue&type=style&index=0&id=a3b854b8&scoped=true&lang=css */ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/Camera.vue?vue&type=style&index=0&id=a3b854b8&scoped=true&lang=css");
+
+
+/***/ }),
+
+/***/ "./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css":
+/*!************************************************************************************************************************!*\
+  !*** ./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css ***!
+  \************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropShipperDashboard_vue_vue_type_style_index_0_id_7390990d_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css */ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/admin/user/DropShipperDashboard.vue?vue&type=style&index=0&id=7390990d&scoped=true&lang=css");
 
 
 /***/ }),
