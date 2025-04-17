@@ -6,7 +6,7 @@
                   <div class="profile-widget-header">
 
                     <img
-                    :src="profilePic ? public_url +'storage/uploads/dropshipper/' + profilePic : public_url +'assets/img/users/user-4.jpg'"
+                    :src="profilePic ? 'https://yourmart.pk/storage/uploads/dropshipper/' + profilePic : 'https://yourmart.pk/assets/img/users/user-4.jpg'"
                     alt="image"
                     class="rounded-circle profile-widget-picture">
 

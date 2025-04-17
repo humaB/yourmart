@@ -18563,7 +18563,7 @@ var render = function render() {
   }, [_c("img", {
     staticClass: "rounded-circle profile-widget-picture",
     attrs: {
-      src: _vm.profilePic ? _vm.public_url + "storage/uploads/dropshipper/" + _vm.profilePic : _vm.public_url + "assets/img/users/user-4.jpg",
+      src: _vm.profilePic ? "https://yourmart.pk/storage/uploads/dropshipper/" + _vm.profilePic : "https://yourmart.pk/assets/img/users/user-4.jpg",
       alt: "image"
     }
   }), _vm._v(" "), _c("div", {
