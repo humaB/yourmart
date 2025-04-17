@@ -4955,7 +4955,9 @@ __webpack_require__.r(__webpack_exports__);
       },
       leopardPerformance: [],
       accountHealth: 0,
-      barChart: []
+      barChart: [],
+      level: '',
+      levelNumber: 1
     };
   },
   computed: {

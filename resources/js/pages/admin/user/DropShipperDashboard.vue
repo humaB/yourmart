@@ -516,6 +516,8 @@ export default {
             leopardPerformance: [],
             accountHealth: 0,
             barChart: [],
+            level : '',
+            levelNumber : 1
         };
     },
     computed: {
