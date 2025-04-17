@@ -126,7 +126,6 @@ class DropShipperController extends Controller
             'user' => function ($query) {
                 $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
             },
-            'level'
         ])
 
         ->when($status, function ($query, $status) {
@@ -145,41 +144,7 @@ class DropShipperController extends Controller
         $levelTable = new DropShipperLevel();
         $levelDetailTable = new DropShipperLevelDetail();
         foreach ($dropshippers as $dropshipper) {
-            $user = $dropshipper->user;
-
-            $orders = $user->total_orders_count ?? 0;
-            $deliveredOrders = $user->delivered_orders_count ?? 0;
-            $failedOrders = $user->returned_orders_count ?? 0;
-
-            // Calculate account health
-            $accountHealth = $level->accountHealth($deliveredOrders, $failedOrders);
-
-            // You can calculate revenue if available or leave as 0
-            $revenue = $dropshipper->total_payable ?? 0;
-
-            // Determine seller level
-            $sellerLevel = $level->determineSellerLevel($orders, $accountHealth, $revenue);
-
-            $dropshipper->seller_level = $sellerLevel;
-
-            $check = $levelTable->where('dropshipper_id', $dropshipper->id)->where('level', $sellerLevel)->first();
-
-            if( !$check ){
-                $dropshipperLevel = $levelTable->create([
-                    'dropshipper_id' => $dropshipper->id,
-                    'user_id'        => $dropshipper->user_id,
-                    'level'          => $sellerLevel,// New Seller || Level 01 || Level 02 || Level 03 || Top Rated Seller
-                    'is_completed'   => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
-                ]);
-
-                $requirementArray = $this->getRequirementArray($sellerLevel);
-
-                $levelDetailTable->create([
-                    'dropshipper_level_id'   => $dropshipperLevel->id,
-                    'requirement'            => $requirementArray,
-                    'is_completed'           => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
-                ]);
-            }
+            $dropshipper = $this->calculateLevel($dropshipper, $level, $levelTable, $levelDetailTable);
         }
 
         $data = [
@@ -196,6 +161,49 @@ class DropShipperController extends Controller
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function calculateLevel($dropshipper, $level,$levelTable, $levelDetailTable){
+        $user = $dropshipper->user;
+
+        $orders = $user->total_orders_count ?? 0;
+        $deliveredOrders = $user->delivered_orders_count ?? 0;
+        $failedOrders = $user->returned_orders_count ?? 0;
+
+        // Calculate account health
+        $accountHealth = $level->accountHealth($deliveredOrders, $failedOrders);
+
+        // You can calculate revenue if available or leave as 0
+        $revenue = $dropshipper->total_payable ?? 0;
+
+        // Determine seller level
+        $sellerLevel = $level->determineSellerLevel($orders, $accountHealth, $revenue);
+
+        $dropshipper->seller_level = $sellerLevel;
+
+        $check = $levelTable->where('dropshipper_id', $dropshipper->id)->where('level', $sellerLevel)->first();
+
+        if( !$check ){
+
+            $levelTable->where('dropshipper_id', $dropshipper->id)->update([
+                'is_active' => '0'
+            ]);
+
+            $dropshipperLevel = $levelTable->create([
+                'dropshipper_id' => $dropshipper->id,
+                'user_id'        => $dropshipper->user_id,
+                'level'          => $sellerLevel,// New Seller || Level 01 || Level 02 || Level 03 || Top Rated Seller
+                'is_completed'   => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
+            ]);
+
+            $requirementArray = $this->getRequirementArray($sellerLevel);
+
+            $levelDetailTable->create([
+                'dropshipper_level_id'   => $dropshipperLevel->id,
+                'requirement'            => $requirementArray,
+                'is_completed'           => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
+            ]);
+        }
     }
 
     public function getRequirementArray($sellerLevel)
@@ -342,7 +350,22 @@ class DropShipperController extends Controller
 public function fetchDetails(Request $request)
     {
 
+        $dropshippers = DropShipper::with([
+            'user' => function ($query) {
+                $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
+            },
+        ])
+        ->with('bank', 'city', 'shops', 'level.details')->where('id', $request->id)->get();
+
+        $level = new DropshipperPreviewController();
+        $levelTable = new DropShipperLevel();
+        $levelDetailTable = new DropShipperLevelDetail();
+        foreach ($dropshippers as $dropshipper) {
+            $dropshipper = $this->calculateLevel($dropshipper, $level, $levelTable, $levelDetailTable);
+        }
+
         $dropshippers = DropShipper::with('bank', 'city', 'shops', 'level.details')->where('id', $request->id)->get();
+
 
         return (new ResponseCollection($dropshippers))
             ->response()

@@ -61,7 +61,7 @@ class DropShipper extends Model
     }
 
     public function level(){
-        return $this->hasOne(DropShipperLevel::class,'dropshipper_id','id')->orderBy('id', 'desc');
+        return $this->hasOne(DropShipperLevel::class,'dropshipper_id','id')->where('is_active', '1')->orderBy('id', 'desc');
     }
 
     public function shop(){

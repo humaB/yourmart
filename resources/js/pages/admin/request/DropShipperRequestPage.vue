@@ -150,14 +150,7 @@
                                                                 title="View Details"><i class="fa fa-eye"></i></button>
                                                             <button class="btn btn-dark" @click="printRequest(item.id)"
                                                                 title="Print"><i class="fa fa-print"></i></button>
-                                                            <button class="btn btn-primary"
-                                                                @click="paymentDetail(item.id)" data-toggle="modal"
-                                                                data-target="#dropShipperPayment" title="Payment"><i
-                                                                    class="fas fa-credit-card"></i></button>
-                                                            <button class="btn btn-primary"
-                                                                @click="paymentHistory(item.id)" data-toggle="modal"
-                                                                data-target="#dropshipperHistory" title="Payment"><i
-                                                                    class="far fa-clock"></i></button>
+                                           
                                                         </td>
                                                     </tr>
                                                 </tbody>

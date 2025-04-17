@@ -18404,34 +18404,6 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fa fa-print"
-    })]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-primary",
-      attrs: {
-        "data-toggle": "modal",
-        "data-target": "#dropShipperPayment",
-        title: "Payment"
-      },
-      on: {
-        click: function click($event) {
-          return _vm.paymentDetail(item.id);
-        }
-      }
-    }, [_c("i", {
-      staticClass: "fas fa-credit-card"
-    })]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-primary",
-      attrs: {
-        "data-toggle": "modal",
-        "data-target": "#dropshipperHistory",
-        title: "Payment"
-      },
-      on: {
-        click: function click($event) {
-          return _vm.paymentHistory(item.id);
-        }
-      }
-    }, [_c("i", {
-      staticClass: "far fa-clock"
     })])])]);
   }), 0)]), _vm._v(" "), _c("div", {
     staticClass: "card-footer text-right"

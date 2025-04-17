@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('user_id');
             $table->string('level');
             $table->smallInteger('is_completed')->default(0);
+            $table->smallInteger('is_active')->default(1);
             $table->timestamps();
         });
 
