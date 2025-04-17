@@ -101,6 +101,9 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/preview',  [ DropshipperPreviewController::class , 'fetchData']);
 
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
+
+    Route::post('/update-levels',  [ DropShipperController::class , 'updateLevels']);
+
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
     Route::get('/orders',  [ DropShipperController::class , 'orders']);
     Route::post('/shops/payments',  [ DropShipperController::class , 'shopPayments']);

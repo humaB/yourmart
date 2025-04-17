@@ -6,6 +6,11 @@
                     <TableHeader :tableHeader="tableHeader" />
 
                     <div class="row px-4">
+                        <div class="col-md-12 mb-2 text-right">
+                            <button class="btn btn-danger" @click="updateLevel()" v-if="!btnLoader">Run Corn Job</button>
+                            <button class="btn btn-danger btn-progress disabled" v-else>Run Corn Job</button>
+
+                        </div>
                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                             <div class="card card-statistic-1">
                                 <div class="card-icon l-bg-purple">
@@ -87,10 +92,29 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
+                                <label for="">Level</label>
+                                <select v-model="filter.level" class="form-control">
+                                    <option value="">Select from the following</option>
+                                    <option>New Seller</option>
+                                    <option>Level 01</option>
+                                    <option>Level 02</option>
+                                    <option>Level 03</option>
+                                    <option>Top Rated Seller</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Incentive</label>
+                                <select v-model="filter.incentive" class="form-control">
+                                    <option value="">Select from the following</option>
+                                    <option value="0">Pending</option>
+                                    <option value="1">Given</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
                                 <label for="">From</label>
                                 <input type="date" v-model="filter.from" class="form-control">
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <label for="">To</label>
                                 <input type="date" v-model="filter.to" class="form-control">
                             </div>
@@ -150,7 +174,7 @@
                                                                 title="View Details"><i class="fa fa-eye"></i></button>
                                                             <button class="btn btn-dark" @click="printRequest(item.id)"
                                                                 title="Print"><i class="fa fa-print"></i></button>
-                                           
+
                                                         </td>
                                                     </tr>
                                                 </tbody>
@@ -253,6 +277,8 @@ export default {
                 status: '',
                 from: '',
                 to: '',
+                level : "",
+                incentive : ""
             },
             addData: {
                 shop_id: { code: 0, label: "Select from the following" },
@@ -309,6 +335,30 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        updateLevel(){
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "dropshippers/update-levels")
+                .then((response) => {
+                    vm.fetchRecord(vm.page);
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: 'Information updated successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }).catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
         updateDropshipperInformation(data) {
             let vm = this;
             axios
@@ -386,7 +436,9 @@ export default {
                         status: vm.filter.status,
                         from: vm.filter.from,
                         to: vm.filter.to,
-                        page : page
+                        page : page,
+                        level : vm.filter.level,
+                        incentive : vm.filter.incentive
                     },
                 })
                 .then((response) => {
@@ -431,7 +483,9 @@ export default {
             vm.filter = {
                 status: '',
                 from: '',
-                to: ''
+                to: '',
+                level : "",
+                incentive : ""
             }
 
             this.clearDataTable();

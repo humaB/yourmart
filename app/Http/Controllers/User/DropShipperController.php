@@ -120,6 +120,13 @@ class DropShipperController extends Controller
         $status = $request->query('status');
         $from = $request->query('from');
         $to = $request->query('to');
+        $level = $request->query('level');
+        $incentive = $request->query('incentive');
+
+        $selectDropshippers = [];
+        if( $level || $incentive ){
+            $selectDropshippers = DropShipperLevel::where('level', $level)->orWhere('is_completed', $incentive)->pluck('dropshipper_id');
+        }
 
         // Apply filters to the query
         $dropshippers = Dropshipper::with([
@@ -127,7 +134,9 @@ class DropShipperController extends Controller
                 $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
             },
         ])
-
+        ->when($selectDropshippers, function ($query, $selectDropshippers) {
+            return $query->whereIn('id', $selectDropshippers);
+        })
         ->when($status, function ($query, $status) {
             return $query->where('status', $status);
         })
@@ -345,6 +354,23 @@ class DropShipperController extends Controller
         return (new ResponseCollection($dropshippers))
             ->response()
             ->setStatusCode(200);
+    }
+
+    public function updateLevels(){
+        $dropshippers = DropShipper::with([
+            'user' => function ($query) {
+                $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
+            },
+        ])->get();
+
+        $level = new DropshipperPreviewController();
+        $levelTable = new DropShipperLevel();
+        $levelDetailTable = new DropShipperLevelDetail();
+        foreach ($dropshippers as $dropshipper) {
+            $dropshipper = $this->calculateLevel($dropshipper, $level, $levelTable, $levelDetailTable);
+        }
+
+        return response()->json([], 200);
     }
 
 public function fetchDetails(Request $request)

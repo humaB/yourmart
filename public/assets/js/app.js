@@ -4571,7 +4571,9 @@ __webpack_require__.r(__webpack_exports__);
       filter: {
         status: '',
         from: '',
-        to: ''
+        to: '',
+        level: "",
+        incentive: ""
       },
       addData: {
         shop_id: {
@@ -4647,6 +4649,28 @@ __webpack_require__.r(__webpack_exports__);
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
+    updateLevel: function updateLevel() {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "dropshippers/update-levels").then(function (response) {
+        vm.fetchRecord(vm.page);
+        vm.btnLoader = false;
+        return swal({
+          title: "Success",
+          text: 'Information updated successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
     updateDropshipperInformation: function updateDropshipperInformation(data) {
       var vm = this;
       axios.post(this.api_url + "dropshippers", data).then(function (response) {
@@ -4714,7 +4738,9 @@ __webpack_require__.r(__webpack_exports__);
           status: vm.filter.status,
           from: vm.filter.from,
           to: vm.filter.to,
-          page: page
+          page: page,
+          level: vm.filter.level,
+          incentive: vm.filter.incentive
         }
       }).then(function (response) {
         vm.records = response.data.response.dropshippers.data;
@@ -4757,7 +4783,9 @@ __webpack_require__.r(__webpack_exports__);
       vm.filter = {
         status: '',
         from: '',
-        to: ''
+        to: '',
+        level: "",
+        incentive: ""
       };
       this.clearDataTable();
       this.fetchRecord();
@@ -18150,6 +18178,17 @@ var render = function render() {
   }), _vm._v(" "), _c("div", {
     staticClass: "row px-4"
   }, [_c("div", {
+    staticClass: "col-md-12 mb-2 text-right"
+  }, [!_vm.btnLoader ? _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.updateLevel();
+      }
+    }
+  }, [_vm._v("Run Corn Job")]) : _c("button", {
+    staticClass: "btn btn-danger btn-progress disabled"
+  }, [_vm._v("Run Corn Job")])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
@@ -18272,6 +18311,72 @@ var render = function render() {
     attrs: {
       "for": ""
     }
+  }, [_vm._v("Level")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.level,
+      expression: "filter.level"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "level", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", [_vm._v("New Seller")]), _vm._v(" "), _c("option", [_vm._v("Level 01")]), _vm._v(" "), _c("option", [_vm._v("Level 02")]), _vm._v(" "), _c("option", [_vm._v("Level 03")]), _vm._v(" "), _c("option", [_vm._v("Top Rated Seller")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Incentive")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.incentive,
+      expression: "filter.incentive"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "incentive", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "0"
+    }
+  }, [_vm._v("Pending")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "1"
+    }
+  }, [_vm._v("Given")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-2"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
   }, [_vm._v("From")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -18293,7 +18398,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", {
     attrs: {
       "for": ""
