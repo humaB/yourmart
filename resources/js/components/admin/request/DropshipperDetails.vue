@@ -136,6 +136,32 @@
                         </div>
                       </div>
 
+                      <div class="col-md-12">
+                        <h5>Incentives</h5>
+                        <hr>
+                      </div>
+                      <div class="col-md-12" v-if="!editMode"
+                        v-for="(requirement, key) in details?.level?.details.requirement"
+                        :key="'level-'+key">
+                          <p>
+                            <strong>{{ key }}</strong> —
+                            <span :class="requirement.filled ? 'text-success' : 'text-muted'">
+                              {{ requirement.filled ? '✔️ Completed' : '⏳ Not Completed' }}
+                            </span>
+                          </p>
+                        </div>
+
+                      <div class="col-md-3" v-if="editMode"
+                            v-for="(requirement, key) in details?.level?.details.requirement"
+                            :key="key">
+                        <div class="form-check">
+                            <input class="form-check-input"
+                                    type="checkbox"
+                                    :id="`requirement-${key}`"
+                                    v-model="requirement.filled" />
+                            <label class="form-check-label" :for="`requirement-${key}`">{{ key }}</label>
+                        </div>
+                        </div>
 
                     <!-- You can also display uploaded images here if needed -->
                     <div class=row>

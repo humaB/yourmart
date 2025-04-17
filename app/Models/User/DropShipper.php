@@ -60,6 +60,10 @@ class DropShipper extends Model
         return $this->hasOne(CustomerBank::class,'id','bank_id');
     }
 
+    public function level(){
+        return $this->hasOne(DropShipperLevel::class,'dropshipper_id','id')->orderBy('id', 'desc');
+    }
+
     public function shop(){
         return $this->hasOne(DropShipperShop::class,'dropshipper_id','id');
     }

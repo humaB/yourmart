@@ -5510,6 +5510,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
+  var _vm$details, _vm$details2;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -5834,13 +5835,65 @@ var render = function render() {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Payment Cycle")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._l((_vm$details = _vm.details) === null || _vm$details === void 0 || (_vm$details = _vm$details.level) === null || _vm$details === void 0 ? void 0 : _vm$details.details.requirement, function (requirement, key) {
+    return !_vm.editMode ? _c("div", {
+      key: "level-" + key,
+      staticClass: "col-md-12"
+    }, [_c("p", [_c("strong", [_vm._v(_vm._s(key))]), _vm._v(" —\n                        "), _c("span", {
+      "class": requirement.filled ? "text-success" : "text-muted"
+    }, [_vm._v("\n                          " + _vm._s(requirement.filled ? "✔️ Completed" : "⏳ Not Completed") + "\n                        ")])])]) : _vm._e();
+  }), _vm._v(" "), _vm._l((_vm$details2 = _vm.details) === null || _vm$details2 === void 0 || (_vm$details2 = _vm$details2.level) === null || _vm$details2 === void 0 ? void 0 : _vm$details2.details.requirement, function (requirement, key) {
+    return _vm.editMode ? _c("div", {
+      key: key,
+      staticClass: "col-md-3"
+    }, [_c("div", {
+      staticClass: "form-check"
+    }, [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: requirement.filled,
+        expression: "requirement.filled"
+      }],
+      staticClass: "form-check-input",
+      attrs: {
+        type: "checkbox",
+        id: "requirement-".concat(key)
+      },
+      domProps: {
+        checked: Array.isArray(requirement.filled) ? _vm._i(requirement.filled, null) > -1 : requirement.filled
+      },
+      on: {
+        change: function change($event) {
+          var $$a = requirement.filled,
+            $$el = $event.target,
+            $$c = $$el.checked ? true : false;
+          if (Array.isArray($$a)) {
+            var $$v = null,
+              $$i = _vm._i($$a, $$v);
+            if ($$el.checked) {
+              $$i < 0 && _vm.$set(requirement, "filled", $$a.concat([$$v]));
+            } else {
+              $$i > -1 && _vm.$set(requirement, "filled", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            }
+          } else {
+            _vm.$set(requirement, "filled", $$c);
+          }
+        }
+      }
+    }), _vm._v(" "), _c("label", {
+      staticClass: "form-check-label",
+      attrs: {
+        "for": "requirement-".concat(key)
+      }
+    }, [_vm._v(_vm._s(key))])])]) : _vm._e();
+  }), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-4"
   }, [_vm.details.profile_image ? _c("div", {
     staticClass: "mt-5"
-  }, [_vm._m(4), _vm._v(" "), _c("img", {
+  }, [_vm._m(5), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.profile_image),
@@ -5850,7 +5903,7 @@ var render = function render() {
     staticClass: "col-md-4"
   }, [_vm.details.cnic_front_image ? _c("div", {
     staticClass: "mt-5"
-  }, [_vm._m(5), _vm._v(" "), _c("img", {
+  }, [_vm._m(6), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.cnic_front_image),
@@ -5860,13 +5913,13 @@ var render = function render() {
     staticClass: "col-md-4"
   }, [_vm.details.cnic_back_image ? _c("div", {
     staticClass: "mt-5"
-  }, [_vm._m(6), _vm._v(" "), _c("img", {
+  }, [_vm._m(7), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.cnic_back_image),
       alt: "CNIC Back Image"
     }
-  })]) : _vm._e()])])]), _vm._v(" "), _c("div", {
+  })]) : _vm._e()])])], 2), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("a", {
     staticClass: "btn btn-primary",
@@ -5968,6 +6021,12 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Account Information")]), _vm._v(" "), _c("hr")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Incentives")]), _vm._v(" "), _c("hr")]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

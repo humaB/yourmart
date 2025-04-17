@@ -253,7 +253,7 @@ class DropshipperPreviewController extends Controller
         return $stores;
     }
 
-    private function accountHealth($totalDelivered, $totalReturned){
+    public function accountHealth($totalDelivered, $totalReturned){
 
         // Assume Delivered Orders 10
         // Assume Return 5

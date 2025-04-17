@@ -51,11 +51,15 @@ class User extends Authenticatable
         return $this->hasOne(DropShipper::class, 'user_id', 'id');
     }
 
+    public function totalOrders() {
+        return $this->hasMany(Order::class, 'belongs_to', 'id')->whereNotIn('status', [6,7])->where('is_replacement', '0');
+    }
+
     public function deliveredOrders() {
         return $this->hasMany(Order::class, 'belongs_to', 'id')->where('status' , '8');
     }
 
     public function returnedOrders() {
-        return $this->hasMany(Order::class, 'belongs_to', 'id')->whereIn('status' , ['9', '10']);
+        return $this->hasMany(Order::class, 'belongs_to', 'id')->whereIn('status' , ['9', '10'])->where('is_replacement', '0');
     }
 }

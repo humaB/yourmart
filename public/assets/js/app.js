@@ -4550,7 +4550,7 @@ __webpack_require__.r(__webpack_exports__);
       tableHeader: {
         heading: "Dropshipper Request's"
       },
-      th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
+      th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Level", "Incentive", "Added Date", "Action"],
       table_id: "moq_table",
       guestQuantity: 0,
       registeredQuantity: 0,
@@ -4589,19 +4589,68 @@ __webpack_require__.r(__webpack_exports__);
       },
       paymentLoader: false,
       selectedDropshipper: '',
-      paymentHistorys: []
+      paymentHistorys: [],
+      pagination: {},
+      page: 1
     };
+  },
+  computed: {
+    pagesToShow: function pagesToShow() {
+      var pages = [];
+      var total = this.pagination.last_page;
+      var current = this.page;
+      if (total <= 7) {
+        for (var i = 1; i <= total; i++) {
+          pages.push({
+            page: i,
+            key: i
+          });
+        }
+      } else {
+        pages.push({
+          page: 1,
+          key: 'start'
+        });
+        if (current > 4) {
+          pages.push({
+            page: '...',
+            key: 'start-dots',
+            ellipsis: true
+          });
+        }
+        var start = Math.max(2, current - 2);
+        var end = Math.min(total - 1, current + 2);
+        for (var _i = start; _i <= end; _i++) {
+          pages.push({
+            page: _i,
+            key: _i
+          });
+        }
+        if (current < total - 3) {
+          pages.push({
+            page: '...',
+            key: 'end-dots',
+            ellipsis: true
+          });
+        }
+        pages.push({
+          page: total,
+          key: 'end'
+        });
+      }
+      return pages;
+    }
   },
   created: function created() {
     this.csrf = $('meta[name=csrf-token]').attr('content');
-    this.fetchRecord();
+    this.fetchRecord(1);
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
     updateDropshipperInformation: function updateDropshipperInformation(data) {
       var vm = this;
       axios.post(this.api_url + "dropshippers", data).then(function (response) {
-        vm.fetchRecord();
+        vm.fetchRecord(vm.page);
         return swal({
           title: "Success",
           text: 'Information updated successfully',
@@ -4636,7 +4685,7 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       vm.btnLoader = true;
       axios.post(this.api_url + "dropshippers/decisions", data).then(function (response) {
-        vm.fetchRecord();
+        vm.fetchRecord(vm.page);
         $(".modal").click();
         _this.btnLoader = false;
         return swal({
@@ -4656,28 +4705,28 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     fetchRecord: function fetchRecord() {
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       var vm = this;
-      vm.loader = false;
-      axios.get(this.api_url + "dropshippers", {
+      vm.page = page;
+      var url = this.api_url + "dropshippers";
+      axios.get(url, {
         params: {
           status: vm.filter.status,
           from: vm.filter.from,
-          to: vm.filter.to
+          to: vm.filter.to,
+          page: page
         }
       }).then(function (response) {
-        vm.records = response.data.response;
+        vm.records = response.data.response.dropshippers.data;
+        vm.pagination = response.data.response.pagination;
 
         // Calculate request statistics
-        vm.totalRequest = vm.records.length;
-        vm.pendingRequest = vm.records.filter(function (record) {
-          return record.status === 0;
-        }).length;
-        vm.approvedRequest = vm.records.filter(function (record) {
-          return record.status === 1;
-        }).length;
-        vm.rejectedRequest = vm.records.filter(function (record) {
-          return record.status === 2;
-        }).length;
+        // vm.totalRequest = vm.records.length;
+        // vm.pendingRequest = vm.records.filter(record => record.status === 0).length;
+        // vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
+        // vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
+
+        vm.loader = false;
       });
     },
     paymentHistory: function paymentHistory(id) {
@@ -4751,7 +4800,20 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     dataTable: function dataTable() {
-      $("#moq_table").DataTable();
+      if ($.fn.DataTable.isDataTable("#moq_table")) {
+        $('#moq_table').DataTable().destroy();
+      }
+      setTimeout(function () {
+        $("#moq_table").DataTable({
+          "paging": false,
+          "pageLength": 20,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": false,
+          "autoWidth": false
+        });
+      }, 300);
     },
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
@@ -4759,16 +4821,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   watch: {
-    records: function records(newLedger) {
-      if ($.fn.DataTable.isDataTable("#moq_table")) {
-        $('#moq_table').DataTable().destroy();
+    records: {
+      deep: true,
+      // if `record` is an object and you want to track nested changes
+      handler: function handler(newVal, oldVal) {
+        this.dataTable();
       }
-      setTimeout(function () {
-        $('#moq_table').DataTable({
-          dom: "Bfrtip",
-          buttons: ["copy", "csv", "excel"]
-        });
-      }, 300);
     }
   }
 });
@@ -9183,6 +9241,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
+  var _vm$details, _vm$details2;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -9507,13 +9566,65 @@ var render = function render() {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Payment Cycle")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._l((_vm$details = _vm.details) === null || _vm$details === void 0 || (_vm$details = _vm$details.level) === null || _vm$details === void 0 ? void 0 : _vm$details.details.requirement, function (requirement, key) {
+    return !_vm.editMode ? _c("div", {
+      key: "level-" + key,
+      staticClass: "col-md-12"
+    }, [_c("p", [_c("strong", [_vm._v(_vm._s(key))]), _vm._v(" —\n                        "), _c("span", {
+      "class": requirement.filled ? "text-success" : "text-muted"
+    }, [_vm._v("\n                          " + _vm._s(requirement.filled ? "✔️ Completed" : "⏳ Not Completed") + "\n                        ")])])]) : _vm._e();
+  }), _vm._v(" "), _vm._l((_vm$details2 = _vm.details) === null || _vm$details2 === void 0 || (_vm$details2 = _vm$details2.level) === null || _vm$details2 === void 0 ? void 0 : _vm$details2.details.requirement, function (requirement, key) {
+    return _vm.editMode ? _c("div", {
+      key: key,
+      staticClass: "col-md-3"
+    }, [_c("div", {
+      staticClass: "form-check"
+    }, [_c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: requirement.filled,
+        expression: "requirement.filled"
+      }],
+      staticClass: "form-check-input",
+      attrs: {
+        type: "checkbox",
+        id: "requirement-".concat(key)
+      },
+      domProps: {
+        checked: Array.isArray(requirement.filled) ? _vm._i(requirement.filled, null) > -1 : requirement.filled
+      },
+      on: {
+        change: function change($event) {
+          var $$a = requirement.filled,
+            $$el = $event.target,
+            $$c = $$el.checked ? true : false;
+          if (Array.isArray($$a)) {
+            var $$v = null,
+              $$i = _vm._i($$a, $$v);
+            if ($$el.checked) {
+              $$i < 0 && _vm.$set(requirement, "filled", $$a.concat([$$v]));
+            } else {
+              $$i > -1 && _vm.$set(requirement, "filled", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            }
+          } else {
+            _vm.$set(requirement, "filled", $$c);
+          }
+        }
+      }
+    }), _vm._v(" "), _c("label", {
+      staticClass: "form-check-label",
+      attrs: {
+        "for": "requirement-".concat(key)
+      }
+    }, [_vm._v(_vm._s(key))])])]) : _vm._e();
+  }), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-4"
   }, [_vm.details.profile_image ? _c("div", {
     staticClass: "mt-5"
-  }, [_vm._m(4), _vm._v(" "), _c("img", {
+  }, [_vm._m(5), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.profile_image),
@@ -9523,7 +9634,7 @@ var render = function render() {
     staticClass: "col-md-4"
   }, [_vm.details.cnic_front_image ? _c("div", {
     staticClass: "mt-5"
-  }, [_vm._m(5), _vm._v(" "), _c("img", {
+  }, [_vm._m(6), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.cnic_front_image),
@@ -9533,13 +9644,13 @@ var render = function render() {
     staticClass: "col-md-4"
   }, [_vm.details.cnic_back_image ? _c("div", {
     staticClass: "mt-5"
-  }, [_vm._m(6), _vm._v(" "), _c("img", {
+  }, [_vm._m(7), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/dropshipper/").concat(_vm.details.cnic_back_image),
       alt: "CNIC Back Image"
     }
-  })]) : _vm._e()])])]), _vm._v(" "), _c("div", {
+  })]) : _vm._e()])])], 2), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [_c("a", {
     staticClass: "btn btn-primary",
@@ -9641,6 +9752,12 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Account Information")]), _vm._v(" "), _c("hr")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Incentives")]), _vm._v(" "), _c("hr")]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -18234,7 +18351,7 @@ var render = function render() {
       width: 250
     }
   })], 1) : _c("div", {
-    staticClass: "col-md-12"
+    staticClass: "col-md-12 table-responsive"
   }, [_c("table", {
     ref: "datatable",
     staticClass: "table table-bordered",
@@ -18246,6 +18363,7 @@ var render = function render() {
       key: item
     }, [_vm._v(_vm._s(item))]);
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
+    var _item$level;
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
@@ -18256,7 +18374,7 @@ var render = function render() {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e(), _vm._v(" "), item.status == 3 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
+    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.seller_level) + "\n                                                    ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s((item === null || item === void 0 || (_item$level = item.level) === null || _item$level === void 0 ? void 0 : _item$level.is_completed) == "1" ? "Completed" : "Pending") + "\n                                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
@@ -18315,7 +18433,71 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "far fa-clock"
     })])])]);
-  }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("DropshipperDetails", {
+  }), 0)]), _vm._v(" "), _c("div", {
+    staticClass: "card-footer text-right"
+  }, [_c("nav", {
+    staticClass: "d-inline-block"
+  }, [_c("ul", {
+    staticClass: "pagination mb-0"
+  }, [_c("li", {
+    staticClass: "page-item",
+    "class": {
+      disabled: _vm.page === 1
+    }
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.fetchRecord(_vm.page - 1);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-chevron-left"
+  })])]), _vm._v(" "), _vm._l(_vm.pagesToShow, function (n) {
+    return _c("li", {
+      key: n.key,
+      staticClass: "page-item",
+      "class": {
+        active: _vm.page === n.page,
+        disabled: n.ellipsis
+      }
+    }, [!n.ellipsis ? _c("a", {
+      staticClass: "page-link",
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          return _vm.fetchRecord(n.page);
+        }
+      }
+    }, [_vm._v("\n                                                    " + _vm._s(n.page) + "\n                                                  ")]) : _c("span", {
+      staticClass: "page-link"
+    }, [_vm._v("...")])]);
+  }), _vm._v(" "), _c("li", {
+    staticClass: "page-item",
+    "class": {
+      disabled: _vm.page === _vm.pagination.last_page
+    }
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.fetchRecord(_vm.page + 1);
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-chevron-right"
+  })])])], 2)])])])])])])])])], 1)])]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
       details: _vm.details,
       loader: _vm.btnLoader

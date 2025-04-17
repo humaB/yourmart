@@ -111,7 +111,7 @@
                                         <div class="card-body table-responsive" v-if="loader">
                                             <bullet-list-loader :width="250"> </bullet-list-loader>
                                         </div>
-                                        <div class="col-md-12" v-else>
+                                        <div class="col-md-12 table-responsive" v-else>
                                             <table class="table table-bordered" :id="table_id" ref="datatable">
                                                 <thead>
                                                     <tr>
@@ -137,6 +137,12 @@
                                                             <span v-if="item.status == 3"
                                                                 class="badge badge-danger">Deactivated</span>
                                                         </td>
+                                                        <td>
+                                                            {{ item.seller_level }}
+                                                        </td>
+                                                        <td>
+                                                            {{ item?.level?.is_completed == '1' ? 'Completed' : 'Pending' }}
+                                                        </td>
                                                         <td>{{ formatDate(item.created_at) }}</td>
                                                         <td width="20%">
                                                             <button class="btn btn-info" @click="fetchDetail(item.id)"
@@ -156,6 +162,30 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
+                                            <div class="card-footer text-right">
+                                                <nav class="d-inline-block">
+                                                  <ul class="pagination mb-0">
+                                                    <li class="page-item" :class="{ disabled: page === 1 }">
+                                                      <a class="page-link" href="#" @click.prevent="fetchRecord(page - 1)">
+                                                        <i class="fas fa-chevron-left"></i>
+                                                      </a>
+                                                    </li>
+
+                                                    <li class="page-item" v-for="n in pagesToShow" :key="n.key" :class="{ active: page === n.page, disabled: n.ellipsis }">
+                                                      <a v-if="!n.ellipsis" class="page-link" href="#" @click.prevent="fetchRecord(n.page)">
+                                                        {{ n.page }}
+                                                      </a>
+                                                      <span v-else class="page-link">...</span>
+                                                    </li>
+
+                                                    <li class="page-item" :class="{ disabled: page === pagination.last_page }">
+                                                      <a class="page-link" href="#" @click.prevent="fetchRecord(page + 1)">
+                                                        <i class="fas fa-chevron-right"></i>
+                                                      </a>
+                                                    </li>
+                                                  </ul>
+                                                </nav>
+                                              </div>
                                         </div>
                                     </div>
                                 </div>
@@ -208,7 +238,7 @@ export default {
             tableHeader: {
                 heading: "Dropshipper Request's",
             },
-            th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
+            th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status","Level","Incentive", "Added Date", "Action"],
             table_id: "moq_table",
             guestQuantity: 0,
             registeredQuantity: 0,
@@ -241,12 +271,48 @@ export default {
             },
             paymentLoader: false,
             selectedDropshipper: '',
-            paymentHistorys: []
+            paymentHistorys: [],
+            pagination: {},
+            page: 1,
         };
+    },
+    computed: {
+        pagesToShow() {
+        const pages = [];
+        const total = this.pagination.last_page;
+        const current = this.page;
+
+        if (total <= 7) {
+            for (let i = 1; i <= total; i++) {
+            pages.push({ page: i, key: i });
+            }
+        } else {
+            pages.push({ page: 1, key: 'start' });
+
+            if (current > 4) {
+            pages.push({ page: '...', key: 'start-dots', ellipsis: true });
+            }
+
+            const start = Math.max(2, current - 2);
+            const end = Math.min(total - 1, current + 2);
+
+            for (let i = start; i <= end; i++) {
+            pages.push({ page: i, key: i });
+            }
+
+            if (current < total - 3) {
+            pages.push({ page: '...', key: 'end-dots', ellipsis: true });
+            }
+
+            pages.push({ page: total, key: 'end' });
+        }
+
+        return pages;
+        }
     },
     created() {
         this.csrf = $('meta[name=csrf-token]').attr('content');
-        this.fetchRecord();
+        this.fetchRecord(1);
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
@@ -255,7 +321,7 @@ export default {
             axios
                 .post(this.api_url + "dropshippers", data)
                 .then((response) => {
-                    vm.fetchRecord();
+                    vm.fetchRecord(vm.page);
 
                     return swal({
                         title: "Success",
@@ -296,7 +362,7 @@ export default {
             axios
                 .post(this.api_url + "dropshippers/decisions", data)
                 .then((response) => {
-                    vm.fetchRecord();
+                    vm.fetchRecord(vm.page);
                     $(".modal").click();
                     this.btnLoader = false;
                     return swal({
@@ -315,29 +381,32 @@ export default {
                     });
                 });
         },
-        fetchRecord() {
+        fetchRecord( page = 1) {
             let vm = this;
+            vm.page = page;
 
-            vm.loader = false;
+            let url = this.api_url + "dropshippers";
+
             axios
-                .get(this.api_url + "dropshippers", {
+                .get(url, {
                     params: {
                         status: vm.filter.status,
                         from: vm.filter.from,
                         to: vm.filter.to,
+                        page : page
                     },
                 })
                 .then((response) => {
-                    vm.records = response.data.response
-
+                    vm.records = response.data.response.dropshippers.data;
+                    vm.pagination = response.data.response.pagination;
 
                     // Calculate request statistics
-                    vm.totalRequest = vm.records.length;
-                    vm.pendingRequest = vm.records.filter(record => record.status === 0).length;
-                    vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
-                    vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
+                    // vm.totalRequest = vm.records.length;
+                    // vm.pendingRequest = vm.records.filter(record => record.status === 0).length;
+                    // vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
+                    // vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
 
-
+                    vm.loader = false;
                 });
         },
         paymentHistory(id) {
@@ -419,7 +488,20 @@ export default {
                 });
         },
         dataTable() {
-            $("#moq_table").DataTable();
+            if ($.fn.DataTable.isDataTable("#moq_table")) {
+                $('#moq_table').DataTable().destroy();
+            }
+            setTimeout(function () {
+                $("#moq_table").DataTable({
+                    "paging": false,
+                    "pageLength": 20,
+                    "lengthChange": false,
+                    "searching": true,
+                    "ordering": true,
+                    "info": false,
+                    "autoWidth": false,
+                });
+            }, 300);
         },
         clearDataTable() {
             const table = $("#moq_table").DataTable();
@@ -427,17 +509,12 @@ export default {
         },
     },
     watch: {
-        records(newLedger) {
-            if ($.fn.DataTable.isDataTable("#moq_table")) {
-                $('#moq_table').DataTable().destroy();
-            }
-            setTimeout(function () {
-                $('#moq_table').DataTable({
-                    dom: "Bfrtip",
-                    buttons: ["copy", "csv", "excel"],
-                })
-            }, 300);
-        },
-    },
+        records: {
+        deep: true, // if `record` is an object and you want to track nested changes
+        handler(newVal, oldVal) {
+            this.dataTable()
+        }
+        }
+  },
 }
 </script>

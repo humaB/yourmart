@@ -18,6 +18,8 @@ use App\Models\CustomerBank;
 use App\Models\Inventory\Order\Order;
 use App\Models\User;
 use App\Models\User\DropShipper;
+use App\Models\User\DropShipperLevel;
+use App\Models\User\DropShipperLevelDetail;
 use App\Models\User\DropShipperShop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -120,7 +122,14 @@ class DropShipperController extends Controller
         $to = $request->query('to');
 
         // Apply filters to the query
-        $dropshippers = Dropshipper::when($status, function ($query, $status) {
+        $dropshippers = Dropshipper::with([
+            'user' => function ($query) {
+                $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
+            },
+            'level'
+        ])
+
+        ->when($status, function ($query, $status) {
             return $query->where('status', $status);
         })
             ->when($from, function ($query, $from) {
@@ -130,15 +139,115 @@ class DropShipperController extends Controller
                 return $query->whereDate('created_at', '<=', $to);
             })
             ->orderBy('id', 'desc')
-            ->get();
+            ->paginate(20);
 
-        return (new ResponseCollection($dropshippers))
+        $level = new DropshipperPreviewController();
+        $levelTable = new DropShipperLevel();
+        $levelDetailTable = new DropShipperLevelDetail();
+        foreach ($dropshippers as $dropshipper) {
+            $user = $dropshipper->user;
+
+            $orders = $user->total_orders_count ?? 0;
+            $deliveredOrders = $user->delivered_orders_count ?? 0;
+            $failedOrders = $user->returned_orders_count ?? 0;
+
+            // Calculate account health
+            $accountHealth = $level->accountHealth($deliveredOrders, $failedOrders);
+
+            // You can calculate revenue if available or leave as 0
+            $revenue = $dropshipper->total_payable ?? 0;
+
+            // Determine seller level
+            $sellerLevel = $level->determineSellerLevel($orders, $accountHealth, $revenue);
+
+            $dropshipper->seller_level = $sellerLevel;
+
+            $check = $levelTable->where('dropshipper_id', $dropshipper->id)->where('level', $sellerLevel)->first();
+
+            if( !$check ){
+                $dropshipperLevel = $levelTable->create([
+                    'dropshipper_id' => $dropshipper->id,
+                    'user_id'        => $dropshipper->user_id,
+                    'level'          => $sellerLevel,// New Seller || Level 01 || Level 02 || Level 03 || Top Rated Seller
+                    'is_completed'   => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
+                ]);
+
+                $requirementArray = $this->getRequirementArray($sellerLevel);
+
+                $levelDetailTable->create([
+                    'dropshipper_level_id'   => $dropshipperLevel->id,
+                    'requirement'            => $requirementArray,
+                    'is_completed'           => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
+                ]);
+            }
+        }
+
+        $data = [
+            'dropshippers'     => $dropshippers,
+            'pagination'            => [
+                'total'        => $dropshippers->total(),
+                'per_page'     => $dropshippers->perPage(),
+                'current_page' => $dropshippers->currentPage(),
+                'last_page'    => $dropshippers->lastPage(),
+                'from'         => $dropshippers->firstItem(),
+                'to'           => $dropshippers->lastItem(),
+            ],
+        ];
+        return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
     }
 
+    public function getRequirementArray($sellerLevel)
+    {
+        $allRewards = [
+            'Social Media Coverage',
+            'Certificate',
+            'Gift',
+            '1-To-1 Support',
+            'Shield of Honor',
+            'Membership of Advisory Team',
+        ];
+
+        $rewardMap = [
+            'New Seller' => [],
+            'Level 01' => [
+                'Social Media Coverage',
+                'Certificate',
+            ],
+            'Level 02' => [
+                'Social Media Coverage',
+                'Certificate',
+                'Gift',
+            ],
+            'Level 03' => [
+                'Social Media Coverage',
+                'Certificate',
+                'Gift',
+                '1-To-1 Support',
+            ],
+            'Top Rated Seller' => [
+                'Social Media Coverage',
+                'Certificate',
+                'Gift',
+                '1-To-1 Support',
+                'Shield of Honor',
+                'Membership of Advisory Team',
+            ],
+        ];
+
+        $available = $rewardMap[$sellerLevel] ?? [];
+
+        return collect($allRewards)
+        ->filter(fn($reward) => in_array($reward, $available))
+        ->mapWithKeys(fn($reward) => [$reward => ['filled' => false]])
+        ->toArray();
+
+    }
+
     public function update(Request $request)
     {
+
         // Update Dropshipper Information
         $dropshipper = Dropshipper::findOrFail($request->id);
 
@@ -181,6 +290,40 @@ class DropShipperController extends Controller
             ]);
         }
 
+        // Get the requirement data from the request
+        if( $request->level ){
+            $requirementData = $request->level['details']['requirement'];
+
+            // Find the DropShipperLevelDetail record
+            $detail = DropShipperLevelDetail::where('dropshipper_level_id', $request->level['id'])->first();
+
+            if ($detail) {
+                // Prepare updated requirement structure
+                $updatedRequirements = [];
+                $allFilled = true;
+
+                foreach ($requirementData as $key => $value) {
+                    $filled = (bool) ($value['filled'] ?? false);
+                    $updatedRequirements[$key] = [
+                        'filled' => $filled
+                    ];
+
+                    if (!$filled) {
+                        $allFilled = false;
+                    }
+                }
+
+                // Save updated requirement as JSON
+                $detail->requirement = $updatedRequirements;
+                $detail->is_completed = $allFilled ? 1 : 0;
+                $detail->save();
+
+                DropShipperLevel::where('id', $request->level['id'])->update([
+                    'is_completed' => $allFilled ? 1 : 0
+                ]);
+            }
+        }
+
         return response()->json(['message' => 'Dropshipper information updated successfully.']);
     }
 
@@ -199,7 +342,7 @@ class DropShipperController extends Controller
 public function fetchDetails(Request $request)
     {
 
-        $dropshippers = DropShipper::with('bank', 'city', 'shops')->where('id', $request->id)->get();
+        $dropshippers = DropShipper::with('bank', 'city', 'shops', 'level.details')->where('id', $request->id)->get();
 
         return (new ResponseCollection($dropshippers))
             ->response()
