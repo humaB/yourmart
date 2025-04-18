@@ -5411,8 +5411,16 @@ __webpack_require__.r(__webpack_exports__);
       role: '',
       paidAmountLoader: false,
       orderID: '',
-      markasReplacementLoader: false
+      markasReplacementLoader: false,
+      levels: []
     };
+  },
+  computed: {
+    incompleteLevelsCount: function incompleteLevelsCount() {
+      return this.levels.filter(function (level) {
+        return level.is_completed == '0';
+      }).length;
+    }
   },
   created: function created() {
     this.csrf = $('meta[name=csrf-token]').attr('content');
@@ -5517,6 +5525,7 @@ __webpack_require__.r(__webpack_exports__);
         vm.totalPaid = results.total_paid;
         vm.totalRemaining = results.total_remaining;
         vm.remainingDropshippers = results.remaining_dropshippers;
+        vm.levels = results.levels;
 
         // Assuming `results.remaining_dropshippers` is the array of dropshipper data
         vm.records = results.dropshippers.map(function (dropshipper) {
@@ -5618,10 +5627,12 @@ __webpack_require__.r(__webpack_exports__);
     dataTable: function dataTable() {
       $("#moq_table").DataTable();
       $("#payout-record").DataTable();
+      $("#level-record").DataTable();
     },
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
       $("#payout-record").DataTable().destroy();
+      $("#level-record").DataTable().destroy();
       table.destroy();
     },
     fetchOrderDetails: function fetchOrderDetails(id) {
@@ -5766,6 +5777,14 @@ __webpack_require__.r(__webpack_exports__);
     payOuts: function payOuts(newLedger) {
       setTimeout(function () {
         $("#payout-record").DataTable({
+          dom: "Bfrtip",
+          buttons: ["copy", "csv", "excel"]
+        });
+      }, 300);
+    },
+    levels: function levels(newLedger) {
+      setTimeout(function () {
+        $("#level-record").DataTable({
           dom: "Bfrtip",
           buttons: ["copy", "csv", "excel"]
         });
@@ -19595,7 +19614,27 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "card-body"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
+  }, [_c("ul", {
+    staticClass: "nav nav-pills",
+    attrs: {
+      id: "myTab3",
+      role: "tablist"
+    }
+  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      id: "level-tab3",
+      "data-toggle": "tab",
+      href: "#level3",
+      role: "tab",
+      "aria-controls": "level",
+      "aria-selected": "false"
+    }
+  }, [_vm._v("Level & Rewards "), _c("span", {
+    staticClass: "badge badge-primary"
+  }, [_vm._v(_vm._s(_vm.incompleteLevelsCount))])])])]), _vm._v(" "), _c("div", {
     staticClass: "tab-content",
     attrs: {
       id: "myTabContent2"
@@ -19621,7 +19660,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(1), _vm._v(" "), _c("div", {
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19637,7 +19676,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(2), _vm._v(" "), _c("div", {
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19653,7 +19692,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19669,7 +19708,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(4), _vm._v(" "), _c("div", {
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19782,7 +19821,7 @@ var render = function render() {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
-  }, [_vm._m(5), _vm._v(" "), _c("div", {
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row px-4"
@@ -19790,7 +19829,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19806,7 +19845,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(7), _vm._v(" "), _c("div", {
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19822,7 +19861,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(8), _vm._v(" "), _c("div", {
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19838,7 +19877,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -19930,6 +19969,60 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "far fa-clock"
+    })])])]);
+  }), 0)])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
+    attrs: {
+      id: "level3",
+      role: "tabpanel",
+      "aria-labelledby": "level-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card card-primary"
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "level-record"
+    }
+  }, [_vm._m(12), _vm._v(" "), _c("tbody", _vm._l(_vm.levels, function (item, index) {
+    var _item$dropshipper, _item$dropshipper2, _item$dropshipper3;
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$dropshipper = item.dropshipper) === null || _item$dropshipper === void 0 ? void 0 : _item$dropshipper.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$dropshipper2 = item.dropshipper) === null || _item$dropshipper2 === void 0 ? void 0 : _item$dropshipper2.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$dropshipper3 = item.dropshipper) === null || _item$dropshipper3 === void 0 ? void 0 : _item$dropshipper3.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.level))]), _vm._v(" "), _c("td", {
+      attrs: {
+        width: "40%"
+      }
+    }, _vm._l(item === null || item === void 0 ? void 0 : item.details.requirement, function (requirement, key) {
+      return _c("div", {
+        key: "level-" + key,
+        staticClass: "col-md-12"
+      }, [_c("p", [_c("strong", [_vm._v(_vm._s(key))]), _vm._v(" —\n                                                    "), _c("span", {
+        "class": requirement.filled ? "text-success" : "text-muted"
+      }, [_vm._v("\n                                                      " + _vm._s(requirement.filled ? "✔️ Completed" : "⏳ Not Completed") + "\n                                                    ")])])]);
+    }), 0), _vm._v(" "), _c("td", {
+      attrs: {
+        width: "20%"
+      }
+    }, [_c("button", {
+      staticClass: "btn btn-info",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropShipperDetail",
+        title: "View Details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetail(item.dropshipper_id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
     })])])]);
   }), 0)])])])])])])])])]), _vm._v(" "), _c("DropshipperDetails", {
     attrs: {
@@ -20045,13 +20138,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("ul", {
-    staticClass: "nav nav-pills",
-    attrs: {
-      id: "myTab3",
-      role: "tablist"
-    }
-  }, [_c("li", {
+  return _c("li", {
     staticClass: "nav-item"
   }, [_c("a", {
     staticClass: "nav-link active",
@@ -20063,7 +20150,11 @@ var staticRenderFns = [function () {
       "aria-controls": "home",
       "aria-selected": "true"
     }
-  }, [_vm._v("Pending Payouts")])]), _vm._v(" "), _c("li", {
+  }, [_vm._v("Pending Payouts")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("li", {
     staticClass: "nav-item"
   }, [_c("a", {
     staticClass: "nav-link",
@@ -20075,7 +20166,7 @@ var staticRenderFns = [function () {
       "aria-controls": "profile",
       "aria-selected": "false"
     }
-  }, [_vm._v("Overall Record")])])]);
+  }, [_vm._v("Overall Record")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -20146,6 +20237,16 @@ var staticRenderFns = [function () {
   }, [_c("i", {
     staticClass: "fa fa-clipboard-list"
   })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Level & Rewards")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Whatsapp Number")]), _vm._v(" "), _c("th", [_vm._v("Level")]), _vm._v(" "), _c("th", [_vm._v("Rewards")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

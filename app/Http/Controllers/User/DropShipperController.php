@@ -71,12 +71,15 @@ class DropShipperController extends Controller
         $totalRemaining   = DropShipper::sum('remaining_amount');
         $remainingDropshippers = $dropshipper->count();
 
+        $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')->get();
+
         $response = [
             'dropshippers' => $dropshipper,
             'total_payable' => $totalPayable,
             'total_paid' => $totalPayablePaid,
             'total_remaining' => $totalRemaining,
             'remaining_dropshippers' => $remainingDropshippers,
+            'levels'   => $levels
         ];
 
         return (new ResponseCollection($response))

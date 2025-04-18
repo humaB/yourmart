@@ -22,4 +22,8 @@ class DropShipperLevel extends Model
     public function details(){
         return $this->hasOne(DropShipperLevelDetail::class,'dropshipper_level_id','id');
     }
+
+    public function dropshipper(){
+        return $this->belongsTo(DropShipper::class,'dropshipper_id','id');
+    }
 }

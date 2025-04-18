@@ -9,6 +9,9 @@
                   <li class="nav-item">
                     <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile" aria-selected="false">Overall Record</a>
                   </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="level-tab3" data-toggle="tab" href="#level3" role="tab" aria-controls="level" aria-selected="false">Level & Rewards <span class="badge badge-primary">{{ incompleteLevelsCount  }}</span></a>
+                  </li>
                 </ul>
                 <div class="tab-content" id="myTabContent2">
                   <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
@@ -272,6 +275,61 @@
                     </div>
                   </div>
 
+
+                  <div class="tab-pane fade" id="level3" role="tabpanel" aria-labelledby="level-tab3">
+                    <div class="col-12 col-md-12 col-lg-12">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h5>Level & Rewards</h5>
+                            </div>
+                            <div class="card-body">
+
+                                <div class="col-md-12">
+                                    <table class="table table-bordered" id="level-record">
+                                        <thead>
+                                            <tr>
+                                                <th>Sr #</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Whatsapp Number</th>
+                                                <th>Level</th>
+                                                <th>Rewards</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(item, index) in levels" :key="item.id">
+                                                <td>{{ index + 1 }}</td>
+                                                <td>{{ item?.dropshipper?.full_name }}</td>
+                                                <td>{{ item?.dropshipper?.email }}</td>
+                                                <td>{{ item?.dropshipper?.whatsapp_number }}</td>
+                                                <td>{{ item.level }}</td>
+                                                <td width="40%">
+                                                    <div class="col-md-12"
+                                                    v-for="(requirement, key) in item?.details.requirement"
+                                                    :key="'level-'+key">
+                                                      <p>
+                                                        <strong>{{ key }}</strong> —
+                                                        <span :class="requirement.filled ? 'text-success' : 'text-muted'">
+                                                          {{ requirement.filled ? '✔️ Completed' : '⏳ Not Completed' }}
+                                                        </span>
+                                                      </p>
+                                                    </div>
+                                                </td>
+                                                <td width="20%">
+                                                    <button class="btn btn-info" @click="fetchDetail(item.dropshipper_id)"
+                                                        data-toggle="modal" data-target="#dropShipperDetail"
+                                                        title="View Details"><i class="fa fa-eye"></i></button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
 
@@ -405,8 +463,14 @@ export default {
             role : '',
             paidAmountLoader : false,
             orderID : '',
-            markasReplacementLoader : false
+            markasReplacementLoader : false,
+            levels : []
         };
+    },
+    computed: {
+        incompleteLevelsCount() {
+            return this.levels.filter(level => level.is_completed == '0').length;
+        }
     },
     created() {
         this.csrf = $('meta[name=csrf-token]').attr('content');
@@ -524,6 +588,7 @@ export default {
                     vm.totalPaid = results.total_paid;
                     vm.totalRemaining = results.total_remaining;
                     vm.remainingDropshippers = results.remaining_dropshippers;
+                    vm.levels = results.levels;
 
                     // Assuming `results.remaining_dropshippers` is the array of dropshipper data
                     vm.records= results.dropshippers.map(dropshipper => {
@@ -637,10 +702,12 @@ export default {
         dataTable() {
             $("#moq_table").DataTable();
             $("#payout-record").DataTable();
+            $("#level-record").DataTable();
         },
         clearDataTable() {
             const table = $("#moq_table").DataTable();
             $("#payout-record").DataTable().destroy();
+            $("#level-record").DataTable().destroy();
             table.destroy();
         },
         fetchOrderDetails(id) {
@@ -808,6 +875,14 @@ export default {
         payOuts(newLedger) {
             setTimeout(() => {
                 $("#payout-record").DataTable({
+                    dom: "Bfrtip",
+                    buttons: ["copy", "csv", "excel"],
+                });
+            }, 300);
+        },
+        levels(newLedger) {
+            setTimeout(() => {
+                $("#level-record").DataTable({
                     dom: "Bfrtip",
                     buttons: ["copy", "csv", "excel"],
                 });
