@@ -133,6 +133,7 @@ class DropShipperController extends Controller
             'user' => function ($query) {
                 $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
             },
+            'level'
         ])
         ->when($selectDropshippers, function ($query, $selectDropshippers) {
             return $query->whereIn('id', $selectDropshippers);
