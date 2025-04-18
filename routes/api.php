@@ -103,6 +103,7 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
 
     Route::post('/update-levels',  [ DropShipperController::class , 'updateLevels']);
+    Route::post('/levels/update-requirements',  [ DropShipperController::class , 'updateLevelRequirements']);
 
     Route::post('/decisions',  [ DropShipperController::class , 'decision']);
     Route::get('/orders',  [ DropShipperController::class , 'orders']);

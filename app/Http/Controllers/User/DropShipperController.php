@@ -377,7 +377,47 @@ class DropShipperController extends Controller
         return response()->json([], 200);
     }
 
-public function fetchDetails(Request $request)
+    public function updateLevelRequirements( Request $request ){
+
+            $requirementData = $request->details['requirement'];
+
+            // Find the DropShipperLevelDetail record
+            $detail = DropShipperLevelDetail::where('dropshipper_level_id', $request->id)->first();
+
+            if ($detail) {
+                // Prepare updated requirement structure
+                $updatedRequirements = [];
+                $allFilled = true;
+
+                foreach ($requirementData as $key => $value) {
+                    $filled = (bool) ($value['filled'] ?? false);
+                    $updatedRequirements[$key] = [
+                        'filled' => $filled
+                    ];
+
+                    if (!$filled) {
+                        $allFilled = false;
+                    }
+                }
+
+                // Save updated requirement as JSON
+                $detail->requirement = $updatedRequirements;
+                $detail->is_completed = $allFilled ? 1 : 0;
+                $detail->save();
+
+                DropShipperLevel::where('id', $request->id)->update([
+                    'is_completed' => $allFilled ? 1 : 0
+                ]);
+
+        }
+
+        $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')->get();
+        return (new ResponseCollection($levels))
+        ->response()
+        ->setStatusCode(200);
+    }
+
+    public function fetchDetails(Request $request)
     {
 
         $dropshippers = DropShipper::with([

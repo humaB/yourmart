@@ -285,7 +285,7 @@
                             <div class="card-body">
 
                                 <div class="col-md-12">
-                                    <table class="table table-bordered" id="level-record">
+                                    <table class="table table-bordered table-striped" id="level-record">
                                         <thead>
                                             <tr>
                                                 <th>Sr #</th>
@@ -305,7 +305,7 @@
                                                 <td>{{ item?.dropshipper?.whatsapp_number }}</td>
                                                 <td>{{ item.level }}</td>
                                                 <td width="40%">
-                                                    <div class="col-md-12"
+                                                    <div class="col-md-12" v-if="!editMode"
                                                     v-for="(requirement, key) in item?.details.requirement"
                                                     :key="'level-'+key">
                                                       <p>
@@ -315,8 +315,37 @@
                                                         </span>
                                                       </p>
                                                     </div>
+                                                    <div class="col-md-3" v-if="editMode"
+                                                    v-for="(requirement, key) in item?.details.requirement"
+                                                    :key="key">
+                                                <div class="form-check">
+                                                    <input class="form-check-input"
+                                                            type="checkbox"
+                                                            :id="`requirement-${key}`"
+                                                            v-model="requirement.filled" />
+                                                    <label class="form-check-label" :for="`requirement-${key}`">{{ key }}</label>
+                                                </div>
+                                                </div>
                                                 </td>
                                                 <td width="20%">
+                                                    <button
+                                                        v-if="!editMode"
+                                                        class="btn btn-primary ml-1"
+                                                        @click="enableEdit(item)"
+                                                        title="Edit"
+                                                    >
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+
+                                                    <button
+                                                        v-if="editMode"
+                                                        class="btn btn-success ml-1"
+                                                        @click="saveItem(item)"
+                                                        title="Save"
+                                                    >
+                                                        <i class="fa fa-save"></i>
+                                                    </button>
+
                                                     <button class="btn btn-info" @click="fetchDetail(item.dropshipper_id)"
                                                         data-toggle="modal" data-target="#dropShipperDetail"
                                                         title="View Details"><i class="fa fa-eye"></i></button>
@@ -464,7 +493,8 @@ export default {
             paidAmountLoader : false,
             orderID : '',
             markasReplacementLoader : false,
-            levels : []
+            levels : [],
+            editMode : false
         };
     },
     computed: {
@@ -479,6 +509,24 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        enableEdit(item) {
+            this.editMode = true; // Make item editable
+        },
+        saveItem(item) {
+            this.editMode = false;
+            let vm = this;
+            axios
+                .post(this.api_url + "dropshippers/levels/update-requirements", item)
+                .then((response) => {
+                    vm.levels = response.data.response;
+                    return swal({
+                        title: "Success",
+                        text: "Successfully Updated",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
         fetchPayoutRecord() {
             let vm = this;
 
@@ -881,6 +929,9 @@ export default {
             }, 300);
         },
         levels(newLedger) {
+            if ($.fn.DataTable.isDataTable("#level-record")) {
+                $('#level-record').DataTable().destroy();
+            }
             setTimeout(() => {
                 $("#level-record").DataTable({
                     dom: "Bfrtip",

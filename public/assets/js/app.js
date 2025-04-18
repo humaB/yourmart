@@ -5412,7 +5412,8 @@ __webpack_require__.r(__webpack_exports__);
       paidAmountLoader: false,
       orderID: '',
       markasReplacementLoader: false,
-      levels: []
+      levels: [],
+      editMode: false
     };
   },
   computed: {
@@ -5429,6 +5430,22 @@ __webpack_require__.r(__webpack_exports__);
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
+    enableEdit: function enableEdit(item) {
+      this.editMode = true; // Make item editable
+    },
+    saveItem: function saveItem(item) {
+      this.editMode = false;
+      var vm = this;
+      axios.post(this.api_url + "dropshippers/levels/update-requirements", item).then(function (response) {
+        vm.levels = response.data.response;
+        return swal({
+          title: "Success",
+          text: "Successfully Updated",
+          icon: "success",
+          timer: 3000
+        });
+      });
+    },
     fetchPayoutRecord: function fetchPayoutRecord() {
       var vm = this;
       vm.loader = false;
@@ -5783,6 +5800,9 @@ __webpack_require__.r(__webpack_exports__);
       }, 300);
     },
     levels: function levels(newLedger) {
+      if ($.fn.DataTable.isDataTable("#level-record")) {
+        $('#level-record').DataTable().destroy();
+      }
       setTimeout(function () {
         $("#level-record").DataTable({
           dom: "Bfrtip",
@@ -19986,7 +20006,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "col-md-12"
   }, [_c("table", {
-    staticClass: "table table-bordered",
+    staticClass: "table table-bordered table-striped",
     attrs: {
       id: "level-record"
     }
@@ -19998,18 +20018,87 @@ var render = function render() {
       attrs: {
         width: "40%"
       }
-    }, _vm._l(item === null || item === void 0 ? void 0 : item.details.requirement, function (requirement, key) {
-      return _c("div", {
+    }, [_vm._l(item === null || item === void 0 ? void 0 : item.details.requirement, function (requirement, key) {
+      return !_vm.editMode ? _c("div", {
         key: "level-" + key,
         staticClass: "col-md-12"
       }, [_c("p", [_c("strong", [_vm._v(_vm._s(key))]), _vm._v(" —\n                                                    "), _c("span", {
         "class": requirement.filled ? "text-success" : "text-muted"
-      }, [_vm._v("\n                                                      " + _vm._s(requirement.filled ? "✔️ Completed" : "⏳ Not Completed") + "\n                                                    ")])])]);
-    }), 0), _vm._v(" "), _c("td", {
+      }, [_vm._v("\n                                                      " + _vm._s(requirement.filled ? "✔️ Completed" : "⏳ Not Completed") + "\n                                                    ")])])]) : _vm._e();
+    }), _vm._v(" "), _vm._l(item === null || item === void 0 ? void 0 : item.details.requirement, function (requirement, key) {
+      return _vm.editMode ? _c("div", {
+        key: key,
+        staticClass: "col-md-3"
+      }, [_c("div", {
+        staticClass: "form-check"
+      }, [_c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: requirement.filled,
+          expression: "requirement.filled"
+        }],
+        staticClass: "form-check-input",
+        attrs: {
+          type: "checkbox",
+          id: "requirement-".concat(key)
+        },
+        domProps: {
+          checked: Array.isArray(requirement.filled) ? _vm._i(requirement.filled, null) > -1 : requirement.filled
+        },
+        on: {
+          change: function change($event) {
+            var $$a = requirement.filled,
+              $$el = $event.target,
+              $$c = $$el.checked ? true : false;
+            if (Array.isArray($$a)) {
+              var $$v = null,
+                $$i = _vm._i($$a, $$v);
+              if ($$el.checked) {
+                $$i < 0 && _vm.$set(requirement, "filled", $$a.concat([$$v]));
+              } else {
+                $$i > -1 && _vm.$set(requirement, "filled", $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+              }
+            } else {
+              _vm.$set(requirement, "filled", $$c);
+            }
+          }
+        }
+      }), _vm._v(" "), _c("label", {
+        staticClass: "form-check-label",
+        attrs: {
+          "for": "requirement-".concat(key)
+        }
+      }, [_vm._v(_vm._s(key))])])]) : _vm._e();
+    })], 2), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
-    }, [_c("button", {
+    }, [!_vm.editMode ? _c("button", {
+      staticClass: "btn btn-primary ml-1",
+      attrs: {
+        title: "Edit"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.enableEdit(item);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-edit"
+    })]) : _vm._e(), _vm._v(" "), _vm.editMode ? _c("button", {
+      staticClass: "btn btn-success ml-1",
+      attrs: {
+        title: "Save"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.saveItem(item);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-save"
+    })]) : _vm._e(), _vm._v(" "), _c("button", {
       staticClass: "btn btn-info",
       attrs: {
         "data-toggle": "modal",
