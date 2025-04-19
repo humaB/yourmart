@@ -16,6 +16,8 @@ use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\User\DropShipper;
+use App\Models\User\DropShipperLevel;
+use App\Models\User\DropShipperShop;
 use App\Models\User\Supplier;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -47,6 +49,7 @@ class DashboardController extends Controller
         $inventoryStatus    = $this->inventoryStatus($request);
         $dropshipperGraph   = $this->dropshipperGraph();
         $revenueOrderGraph  = $this->revenueOrderGraph();
+        $levels = DropShipperLevel::where('level', '!=', 'New Seller')->get();
 
         $data = [
             'orders'  => [
@@ -69,7 +72,8 @@ class DashboardController extends Controller
             'topFiveSuppliers'      => $topFiveSuppliers,
             'inventoryStatus'       => $inventoryStatus,
             'dropshipperGraph'      => $dropshipperGraph,
-            'revenueOrderGraph'     => $revenueOrderGraph
+            'revenueOrderGraph'     => $revenueOrderGraph,
+            'levels'                => $levels
         ];
 
         return (new ResponseCollection($data))

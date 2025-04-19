@@ -256,12 +256,82 @@
                 </tr>
             </table>
         </div>
+        <div class="row px-4 col-md-12">
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon l-bg-purple">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-right">
+                                <h3 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i> {{ formatPrice(levelsWidget.level1) }}
+                                </h3>
+                                <span class="text-muted">Level 01 Seller</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon l-bg-green">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-right">
+                                <h3 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i> {{ formatPrice(levelsWidget.level2) }}
+                                </h3>
+                                <span class="text-muted">Level 02 Seller</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon l-bg-cyan">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-right">
+                                <h3 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i> {{ formatPrice(levelsWidget.level3) }}
+                                </h3>
+                                <span class="text-muted">Level 03 Seller</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                <div class="card card-statistic-1">
+                    <div class="card-icon l-bg-orange">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="padding-20">
+                            <div class="text-right">
+                                <h3 class="font-light mb-0">
+                                    <i class="ti-arrow-up text-success"></i> {{ levelsWidget.topRatedSeller }}
+                                </h3>
+                                <span class="text-muted">Top Rated Seller</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
 export default {
     name: 'DashboardSectionOne',
-    props : ['orders', 'approvedDropshipper', 'activeSeller', 'liveProduct', 'orderProcessed'],
+    props : ['orders', 'approvedDropshipper', 'activeSeller', 'liveProduct', 'orderProcessed', 'levelsWidget'],
     methods : {
         formatPrice(price) {
             var string = parseFloat(price).toString();

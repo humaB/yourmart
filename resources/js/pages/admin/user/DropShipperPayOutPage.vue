@@ -283,8 +283,107 @@
                                 <h5>Level & Rewards</h5>
                             </div>
                             <div class="card-body">
-
+                                <div class="row px-4">
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-purple">
+                                                <i class="fas fa-chart-line"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ formatPrice(levelsWidget.level1) }}
+                                                        </h3>
+                                                        <span class="text-muted">Level 01 Seller</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-green">
+                                                <i class="fas fa-user-check"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ formatPrice(levelsWidget.level2) }}
+                                                        </h3>
+                                                        <span class="text-muted">Level 02 Seller</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-cyan">
+                                                <i class="fas fa-tasks"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ formatPrice(levelsWidget.level3) }}
+                                                        </h3>
+                                                        <span class="text-muted">Level 03 Seller</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                        <div class="card card-statistic-1">
+                                            <div class="card-icon l-bg-orange">
+                                                <i class="fas fa-crown"></i>
+                                            </div>
+                                            <div class="card-wrap">
+                                                <div class="padding-20">
+                                                    <div class="text-right">
+                                                        <h3 class="font-light mb-0">
+                                                            <i class="ti-arrow-up text-success"></i> {{ levelsWidget.topRatedSeller }}
+                                                        </h3>
+                                                        <span class="text-muted">Top Rated Seller</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
+                                    <form @submit.prevent="applyFilter" class="row col-md-12">
+
+                                        <div class="col-md-4">
+                                            <label for="">Level</label>
+                                            <select v-model="filter.level" class="form-control">
+                                                <option value="">Select from the following</option>
+                                                <option>New Seller</option>
+                                                <option>Level 01</option>
+                                                <option>Level 02</option>
+                                                <option>Level 03</option>
+                                                <option>Top Rated Seller</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="">Incentive</label>
+                                            <select v-model="filter.incentive" class="form-control">
+                                                <option value="">Select from the following</option>
+                                                <option value="0">Pending</option>
+                                                <option value="1">Given</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <label for="">Action</label><br>
+                                            <button type="submit" class="btn btn-primary mr-2">Filter</button>
+                                            <button class="btn btn-danger" @click="resetFilter">Reset</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="col-md-12 mt-3">
                                     <table class="table table-bordered table-striped" id="level-record">
                                         <thead>
                                             <tr>
@@ -430,6 +529,7 @@ import DropshipperPaymentHistory from "../../../components/admin/request/Dropshi
 import TrackingDetailPopup from "../../../components/inventory/product/order/TrackingDetailPopup.vue";
 import OrderDetailView from "../../../components/inventory/product/order/OrderDetailView.vue";
 import OrderMarkasReplacementConfirmation from "../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue";
+import { filter } from "lodash";
 
 export default {
     name: 'DropShipperPayOutPage',
@@ -494,7 +594,17 @@ export default {
             orderID : '',
             markasReplacementLoader : false,
             levels : [],
-            editMode : false
+            editMode : false,
+            levelsWidget : {
+                level1 : 0,
+                level2 : 0,
+                level3 : 0,
+                topRatedSeller : 0
+            },
+            filter : {
+                level : "",
+                incentive : ""
+            }
         };
     },
     computed: {
@@ -509,6 +619,26 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        applyFilter(){
+            let vm = this;
+            axios
+                .post(this.api_url + "dropshippers/levels/filters", vm.filter)
+                .then((response) => {
+                    vm.levels = response.data.response;
+                });
+        },
+        resetFilter(){
+            let vm = this;
+            vm.filter = {
+                level : "",
+                incentive : ""
+            }
+            axios
+                .post(this.api_url + "dropshippers/levels/filters", vm.filter)
+                .then((response) => {
+                    vm.levels = response.data.response;
+                });
+        },
         enableEdit(item) {
             this.editMode = true; // Make item editable
         },
@@ -637,6 +767,12 @@ export default {
                     vm.totalRemaining = results.total_remaining;
                     vm.remainingDropshippers = results.remaining_dropshippers;
                     vm.levels = results.levels;
+                    vm.levelsWidget = {
+                        level1: vm.levels.filter(level => level.level === 'Level 01').length,
+                        level2: vm.levels.filter(level => level.level === 'Level 02').length,
+                        level3: vm.levels.filter(level => level.level === 'Level 03').length,
+                        topRatedSeller: vm.levels.filter(level => level.level === 'Top Rated Seller').length
+                    };
 
                     // Assuming `results.remaining_dropshippers` is the array of dropshipper data
                     vm.records= results.dropshippers.map(dropshipper => {
@@ -660,21 +796,6 @@ export default {
                 .then((response) => {
                     vm.details = response.data.response[0]
                 });
-        },
-        applyFilter() {
-            this.clearDataTable();
-            this.fetchRecord();
-        },
-        resetFilter() {
-            let vm = this;
-            vm.filter = {
-                status: '',
-                from: '',
-                to: ''
-            }
-
-            this.clearDataTable();
-            this.fetchRecord();
         },
         paymentDetail(id) {
             let vm = this;

@@ -417,6 +417,21 @@ class DropShipperController extends Controller
         ->setStatusCode(200);
     }
 
+    public function filterLevels( Request $request ){
+        $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')
+        ->when($request->level, function($query) use ($request) {
+            $query->where('level', $request->level);
+        })
+        ->when($request->incentive, function($query) use ($request) {
+            $query->where('is_completed', $request->incentive);
+        })
+        ->get();
+
+        return (new ResponseCollection($levels))
+        ->response()
+        ->setStatusCode(200);
+    }
+
     public function fetchDetails(Request $request)
     {
 

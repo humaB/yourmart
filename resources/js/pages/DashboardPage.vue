@@ -29,7 +29,7 @@
             <div class="row" v-else>
 
             <DashboardSectionOne :orders="orders" :approvedDropshipper="approvedDropshipper"
-                :activeSeller="activeSeller" :liveProduct="liveProduct" :orderProcessed="orderProcessed" />
+                :activeSeller="activeSeller" :liveProduct="liveProduct" :orderProcessed="orderProcessed" :levelsWidget="levelsWidget" />
 
             </div>
 
@@ -309,7 +309,13 @@ export default {
             topFiveProduct: [],
             topFiveSuppliers: [],
             dropshipperGraph : {},
-            revenueOrderGraph : {}
+            revenueOrderGraph : {},
+            levelsWidget : {
+                level1 : 0,
+                level2 : 0,
+                level3 : 0,
+                topRatedSeller : 0
+            },
         };
     },
     created() {
@@ -371,6 +377,13 @@ export default {
                     vm.inventoryStatus = results.inventoryStatus;
                     vm.dropshipperGraph = results.dropshipperGraph;
                     vm.revenueOrderGraph = results.revenueOrderGraph;
+                    const levels = results.levels
+                    vm.levelsWidget = {
+                        level1: levels.filter(level => level.level === 'Level 01').length,
+                        level2: levels.filter(level => level.level === 'Level 02').length,
+                        level3: levels.filter(level => level.level === 'Level 03').length,
+                        topRatedSeller: levels.filter(level => level.level === 'Top Rated Seller').length
+                    };
                     vm.loader = false;
                 })
 
