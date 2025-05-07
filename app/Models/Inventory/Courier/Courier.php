@@ -13,6 +13,7 @@ class Courier extends Model
         'courier_name',
         'contact_person',
         'contact_person_contact',
+        'is_active', // 1 => is active || 0 => Not Active
         'added_by'
     ];
 

@@ -2034,7 +2034,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       // Store the scanned QR code for tracking number
       paidAmount: '',
       packagingAmount: '',
-      discount: ''
+      discount: '',
+      csrf: ""
     };
   },
   mounted: function mounted() {
@@ -2046,6 +2047,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         _this.$emit('commentAdded', true);
       }
     });
+  },
+  created: function created() {
+    this.csrf = $('meta[name=csrf-token]').attr('content');
   },
   computed: {
     filteredComments: function filteredComments() {
@@ -2108,6 +2112,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
+    printPostExSlip: function printPostExSlip(order) {
+      var _this4 = this;
+      setTimeout(function () {
+        _this4.$refs.printAirBill.submit();
+      }, 500);
+    },
     deleteComment: function deleteComment(comment) {
       this.$emit('deleteComment', {
         id: this.details.id,
@@ -2210,7 +2220,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
     },
-    forward: function forward() {
+    forward: function forward(courier) {
       if (this.role == 'inventory manager') {
         // Check if any item hasn't been scanned
         var unscannedItems = this.details.items.filter(function (item) {
@@ -2241,7 +2251,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       }
       this.$emit('forward', {
-        id: this.details.id
+        id: this.details.id,
+        courier: courier
       });
     },
     markasReplacement: function markasReplacement() {
@@ -13154,14 +13165,23 @@ var render = function render() {
     staticClass: "row mt-3"
   }, [_c("div", {
     staticClass: "col-md-8"
-  }, [_vm.details.type == "Normal" ? _c("h5", [_vm._v("Tracking # " + _vm._s(_vm.details.tracking_number))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("a", {
+  }, [_vm.details.type == "Normal" ? _c("h5", [_vm._v("Tracking # " + _vm._s(_vm.details.tracking_number))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && _vm.details.courier_service_id == "1" ? _c("a", {
     attrs: {
       href: _vm.details.slip_link,
       target: "_blank"
     }
-  }, [_vm._v("Press to Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", {
+  }, [_vm._v("Press to\n                                                            Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && _vm.details.courier_service_id == "2" ? _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.printPostExSlip(_vm.details.id);
+      }
+    }
+  }, [_vm._v("Press to\n                                                            Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", {
     staticClass: "mt-2"
-  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Courier\n                                                                Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                        ")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A") + "\n                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Courier\n                                                                Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                        ")]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 text-right"
   }, [_c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Order Notes:")]), _vm._v(" " + _vm._s(_vm.details.order_note) + "\n                                                        ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("No of labels:")]), _vm._v(" " + _vm._s(_vm.details.no_of_labels) + "\n                                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -13183,9 +13203,9 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("h6", [_vm._v(_vm._s(_vm.details.type) + " Order")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered table-sm"
-  }, [_c("tbody", [_vm._m(7), _vm._v(" "), _c("tr", [_vm._m(8), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.total_bill) - parseFloat(_vm.details.advance_amount))))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()])])]), _vm._v(" "), _c("table", {
+  }, [_c("tbody", [_vm._m(7), _vm._v(" "), _c("tr", [_vm._m(8), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.advance_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.total_bill) - parseFloat(_vm.details.advance_amount))) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.total_bill)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.paid_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()])])]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered table-sm"
-  }, [_c("tbody", [_vm._m(9), _vm._v(" "), _c("tr", [_vm._m(10), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v("0")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()]), _vm._v(" "), _c("tr", [_vm._m(11), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount - _vm.details.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount))))])])]), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(12), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
+  }, [_c("tbody", [_vm._m(9), _vm._v(" "), _c("tr", [_vm._m(10), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.advance_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", [_vm._v("0")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.total_bill)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.paid_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()]), _vm._v(" "), _c("tr", [_vm._m(11), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price)) + "\n                                                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount - _vm.details.advance_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.details.selling_price - _vm.details.paid_amount + parseFloat(_vm.details.advance_amount))) + "\n                                                                        ")])])]), _vm._v(" "), _c("tfoot", [_c("tr", [_vm._m(12), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
     staticClass: "h5"
   }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.advance_amount) + parseFloat(_vm.details.selling_price))) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("td", {
     staticClass: "h5"
@@ -13193,17 +13213,17 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount) - parseFloat(_vm.details.paid_amount))) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.total_bill)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.paid_amount)))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.paid_amount)) + "\n                                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Cash" || _vm.details.type == "Daraz" ? _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()])])])]), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
+  }, [_vm._v("\n                                                                            " + _vm._s(_vm.formatPrice(_vm.details.total_bill - _vm.details.paid_amount)))]) : _vm._e()])])])]), _vm._v(" "), _vm.details.type == "Normal" ? _c("div", {
     staticClass: "col-md-12"
   }, [_c("h6", [_vm._v("Overall Stats")]), _vm._v(" "), _c("table", {
     staticClass: "table table-bordered table-sm"
   }, [_c("tbody", [_c("tr", [_vm._m(13), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount))))]), _vm._v(" "), _vm._m(14), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) + parseFloat(_vm.details.advance_amount))) + "\n                                                                        ")]), _vm._v(" "), _vm._m(14), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_bill)))]), _vm._v(" "), _vm._m(15), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -13789,11 +13809,47 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [_vm._m(27), _vm._v(" "), _c("div", {
+    staticClass: "dropdown-menu",
+    staticStyle: {
+      position: "absolute",
+      transform: "translate3d(0px, -2px, 0px)",
+      top: "0px",
+      left: "0px",
+      "will-change": "transform"
+    },
+    attrs: {
+      "x-placement": "top-start"
+    }
+  }, [_c("a", {
+    staticClass: "dropdown-item has-icon",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.forward("leopard");
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-truck"
+  }), _vm._v(" With Leopard\n                            ")]), _vm._v(" "), _c("a", {
+    staticClass: "dropdown-item has-icon",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.forward("postEx");
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-shipping-fast"
+  }), _vm._v(" With PostEx\n                            ")])]), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
-        return _vm.forward();
+        return _vm.forward("leopard");
       }
     }
   }, [_c("i", {
@@ -13814,7 +13870,7 @@ var render = function render() {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
-        return _vm.forward();
+        return _vm.forward("cash");
       }
     }
   }, [_c("i", {
@@ -13872,7 +13928,30 @@ var render = function render() {
       type: "button",
       "data-dismiss": "modal"
     }
-  }, [_vm._v("\n                        Close\n                    ")])])])])])]);
+  }, [_vm._v("\n                        Close\n                    ")])])])])]), _vm._v(" "), _c("form", {
+    ref: "printAirBill",
+    attrs: {
+      action: "".concat(_vm.public_url, "/inventory/products/orders/postex-airbill"),
+      method: "post",
+      target: "_blank"
+    }
+  }, [_c("input", {
+    attrs: {
+      type: "hidden",
+      name: "_token"
+    },
+    domProps: {
+      value: _vm.csrf
+    }
+  }), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "hidden",
+      name: "tracking"
+    },
+    domProps: {
+      value: _vm.details.tracking_number
+    }
+  })])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -14015,6 +14094,20 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Confirm Packaging Amount")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("button", {
+    staticClass: "btn btn-primary dropdown-toggle",
+    attrs: {
+      type: "button",
+      "data-toggle": "dropdown",
+      "aria-haspopup": "true",
+      "aria-expanded": "false"
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-paper-plane"
+  }), _vm._v(" Forward Order\n                        ")]);
 }];
 render._withStripped = true;
 

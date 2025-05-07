@@ -39,8 +39,8 @@
                                         <div class="mail-heading d-flex justify-content-between">
                                             <h4 class="vew-mail-header">
                                                 <h3>Order Details # {{ details.shop ?
-                                                    details.shop.store_name.substring(0, 3)+'-' : '' }}{{
-                                                    details.order_no }}</h3>
+                                                    details.shop.store_name.substring(0, 3) + '-' : '' }}{{
+                                                        details.order_no }}</h3>
                                             </h4>
                                             <h4 v-if="details.is_replacement == 1">
                                                 Replacement Order
@@ -65,7 +65,7 @@
                                                         </p>
                                                         <p><strong>City:</strong> {{ details.city ? details.city.name :
                                                             ''
-                                                            }}</p>
+                                                        }}</p>
                                                     </div>
                                                     <div class="col-md-4"
                                                         v-if="details.user && details.user.dropshipper">
@@ -82,7 +82,7 @@
                                                                             @click="fetchDropshipperDetails(details.user.dropshipper.id)"
                                                                             data-toggle="modal"
                                                                             data-target="#dropShipperDetail">{{
-                                                                            details.user.dropshipper.full_name }}</a>
+                                                                                details.user.dropshipper.full_name }}</a>
                                                                         <div class="author-box-job">{{
                                                                             details.user.dropshipper.whatsapp_number }}
                                                                         </div>
@@ -105,29 +105,37 @@
                                                     <h5 class="d-flex justify-content-between align-items-center">
                                                         <span>Order # {{ details.shop ?
                                                             details.shop.store_name.substring(0, 3) + '-' : '' }}{{
-                                                            details.order_no }}</span>
+                                                                details.order_no }}</span>
                                                         <span>Date/Time : {{ formatNormalDate(details.created_at)
-                                                            }}</span>
+                                                        }}</span>
                                                     </h5>
                                                     <div class="row mt-3">
                                                         <div class="col-md-8">
                                                             <h5 v-if="details.type == 'Normal'">Tracking # {{
                                                                 details.tracking_number }}</h5>
-                                                            <a v-if="details.type == 'Normal'" :href="details.slip_link"
-                                                                target="_blank">Press to Print</a>
+                                                            <!-- For Leopard -->
+                                                            <a v-if="details.type == 'Normal' && details.courier_service_id == '1'"
+                                                                :href="details.slip_link" target="_blank">Press to
+                                                                Print</a>
+                                                            <!-- For PostEx -->
+                                                            <a v-if="details.type == 'Normal' && details.courier_service_id == '2'"
+                                                                href="#" @click="printPostExSlip(details.id)">Press to
+                                                                Print</a>
+
                                                             <p v-if="details.type == 'Normal'" class="mt-2">
                                                                 <strong>Courier Service:</strong> {{ details.courier ?
-                                                                details.courier.courier_name : 'N/A' }}</p>
+                                                                    details.courier.courier_name : 'N/A' }}
+                                                            </p>
                                                             <p v-if="details.type == 'Normal'"><strong>Selected Package
                                                                     :</strong> {{ details.range ?
-                                                                details.range.category.name : 'N/A' }}</p>
+                                                                        details.range.category.name : 'N/A' }}</p>
                                                             <p v-if="details.type == 'Normal'"><strong>Courier
                                                                     Instructions:</strong> {{ details.instructions }}
                                                             </p>
                                                         </div>
                                                         <div class="col-md-4 text-right">
                                                             <p><strong>Shop:</strong> {{ details.shop ?
-                                                                details.shop.store_name: 'N/A' }}</p>
+                                                                details.shop.store_name : 'N/A' }}</p>
                                                             <p><strong>Order Notes:</strong> {{ details.order_note }}
                                                             </p>
                                                             <p><strong>No of labels:</strong> {{ details.no_of_labels }}
@@ -146,16 +154,16 @@
                                                                             <td><strong>Product Cost:</strong></td>
                                                                             <td class="text-left">{{
                                                                                 formatPrice(parseFloat(details.total_bill)
-                                                                                -
-                                                                                (parseFloat(details.courier_service_price)
-                                                                                + parseFloat(details.packaging_price)))
-                                                                                }}</td>
+                                                                                    -
+                                                                                    (parseFloat(details.courier_service_price)
+                                                                                        + parseFloat(details.packaging_price)))
+                                                                            }}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Courier Charges:</strong></td>
                                                                             <td class="text-left">{{
                                                                                 formatPrice(details.courier_service_price)
-                                                                                }}</td>
+                                                                            }}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Packing Charges:</strong></td>
@@ -183,17 +191,32 @@
                                                                             <td><strong>Your Mart</strong></td>
                                                                             <td><strong>Receivable</strong></td>
                                                                             <td><strong>Received</strong></td>
-                                                                            <td ><strong>Remaining</strong></td>
+                                                                            <td><strong>Remaining</strong></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong></strong></td>
-                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(details.total_bill) }}</td>
-                                                                            <td v-if="details.type == 'Normal'">{{formatPrice(details.advance_amount) }}</td>
-                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(parseFloat(details.total_bill) - parseFloat(details.advance_amount)) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">{{
+                                                                                formatPrice(details.total_bill) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">
+                                                                                {{ formatPrice(details.advance_amount) }}
+                                                                            </td>
+                                                                            <td v-if="details.type == 'Normal'">{{
+                                                                                formatPrice(parseFloat(details.total_bill)
+                                                                                - parseFloat(details.advance_amount)) }}
+                                                                            </td>
 
-                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
-                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
-                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill - details.paid_amount) }}</td>
+                                                                            <td
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.total_bill) }}
+                                                                            </td>
+                                                                            <td
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.paid_amount) }}
+                                                                            </td>
+                                                                            <td
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.total_bill -
+                                                                                details.paid_amount) }}</td>
                                                                         </tr>
 
                                                                     </tbody>
@@ -205,25 +228,43 @@
                                                                             <td><strong>Dropshipper</strong></td>
                                                                             <td><strong>Receivable</strong></td>
                                                                             <td><strong>Received</strong></td>
-                                                                            <td ><strong>Remaining</strong></td>
+                                                                            <td><strong>Remaining</strong></td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Advance</strong></td>
-                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(details.advance_amount) }}</td>
-                                                                            <td v-if="details.type == 'Normal'">{{ formatPrice(details.advance_amount) }}</td>
+                                                                            <td v-if="details.type == 'Normal'">{{
+                                                                                formatPrice(details.advance_amount) }}
+                                                                            </td>
+                                                                            <td v-if="details.type == 'Normal'">{{
+                                                                                formatPrice(details.advance_amount) }}
+                                                                            </td>
                                                                             <td v-if="details.type == 'Normal'">0</td>
 
-                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
-                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
-                                                                            <td v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill - details.paid_amount) }}</td>
+                                                                            <td
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.total_bill) }}
+                                                                            </td>
+                                                                            <td
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.paid_amount) }}
+                                                                            </td>
+                                                                            <td
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.total_bill -
+                                                                                details.paid_amount) }}</td>
                                                                         </tr>
 
 
                                                                         <tr>
                                                                             <td><strong>COD</strong></td>
-                                                                            <td>{{ formatPrice(details.selling_price) }}</td>
-                                                                            <td>{{ formatPrice(details.paid_amount - details.advance_amount) }}</td>
-                                                                            <td>{{ formatPrice((details.selling_price - details.paid_amount) + parseFloat(details.advance_amount)) }}</td>
+                                                                            <td>{{ formatPrice(details.selling_price) }}
+                                                                            </td>
+                                                                            <td>{{ formatPrice(details.paid_amount -
+                                                                                details.advance_amount) }}</td>
+                                                                            <td>{{ formatPrice((details.selling_price -
+                                                                                details.paid_amount) +
+                                                                                parseFloat(details.advance_amount)) }}
+                                                                            </td>
                                                                         </tr>
 
 
@@ -231,23 +272,40 @@
                                                                     <tfoot>
                                                                         <tr>
                                                                             <td><strong>Total</strong></td>
-                                                                            <td class="h5" v-if="details.type == 'Normal'">
+                                                                            <td class="h5"
+                                                                                v-if="details.type == 'Normal'">
                                                                                 <!-- Total Receivable: Sum of all receivable values -->
-                                                                                {{ formatPrice(parseFloat(details.advance_amount) + parseFloat(details.selling_price)) }}
+                                                                                {{
+                                                                                formatPrice(parseFloat(details.advance_amount)
+                                                                                + parseFloat(details.selling_price)) }}
                                                                             </td>
-                                                                            <td class="h5" v-if="details.type == 'Normal'">
+                                                                            <td class="h5"
+                                                                                v-if="details.type == 'Normal'">
                                                                                 <!-- Total Received: Sum of all received amounts -->
                                                                                 {{ formatPrice(details.paid_amount) }}
                                                                             </td>
-                                                                            <td class="h5" v-if="details.type == 'Normal'">
+                                                                            <td class="h5"
+                                                                                v-if="details.type == 'Normal'">
                                                                                 <!-- Total Remaining: Sum of all remaining amounts -->
-                                                                                {{ formatPrice( parseFloat(details.selling_price) + parseFloat(details.advance_amount) - parseFloat(details.paid_amount) ) }}
+                                                                                {{ formatPrice(
+                                                                                    parseFloat(details.selling_price) +
+                                                                                parseFloat(details.advance_amount) -
+                                                                                parseFloat(details.paid_amount) ) }}
                                                                             </td>
 
 
-                                                                            <td class="h5" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill) }}</td>
-                                                                            <td class="h5" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.paid_amount) }}</td>
-                                                                            <td class="h5" v-if="details.type == 'Cash' || details.type ==  'Daraz'">{{ formatPrice(details.total_bill - details.paid_amount) }}</td>
+                                                                            <td class="h5"
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.total_bill) }}
+                                                                            </td>
+                                                                            <td class="h5"
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.paid_amount) }}
+                                                                            </td>
+                                                                            <td class="h5"
+                                                                                v-if="details.type == 'Cash' || details.type == 'Daraz'">
+                                                                                {{ formatPrice(details.total_bill -
+                                                                                details.paid_amount) }}</td>
                                                                         </tr>
 
 
@@ -262,11 +320,18 @@
                                                                         <tr>
 
                                                                             <td><strong>COD + Advance : </strong></td>
-                                                                            <td class="h5">{{ formatPrice( parseFloat(details.selling_price) + parseFloat(details.advance_amount) ) }}</td>
+                                                                            <td class="h5">{{ formatPrice(
+                                                                                parseFloat(details.selling_price) +
+                                                                                parseFloat(details.advance_amount) ) }}
+                                                                            </td>
                                                                             <td><strong>Your Mart : </strong></td>
-                                                                            <td class="h5">{{ formatPrice( details.total_bill ) }}</td>
+                                                                            <td class="h5">{{ formatPrice(
+                                                                                details.total_bill ) }}</td>
                                                                             <td><strong>Dropshipper : </strong></td>
-                                                                            <td class="h5">{{ formatPrice(( parseFloat(details.selling_price) + parseFloat(details.advance_amount)) - parseFloat(details.total_bill) ) }}</td>
+                                                                            <td class="h5">{{ formatPrice((
+                                                                                parseFloat(details.selling_price) +
+                                                                                parseFloat(details.advance_amount)) -
+                                                                                parseFloat(details.total_bill) ) }}</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
@@ -320,11 +385,11 @@
                                                                     <b>Title : </b>{{ item.variation.product.title
                                                                     }}<br>
                                                                     <b>Description : </b>{{
-                                                                    item.variation.product.short_description }}<br>
+                                                                        item.variation.product.short_description }}<br>
                                                                     <b>Color : </b>{{ item.variation.color
-                                                                    ?item.variation.color.name : '-' }}<br>
+                                                                        ? item.variation.color.name : '-' }}<br>
                                                                     <b>Size : </b>{{ item.variation.size
-                                                                    ?item.variation.size.name : '-' }}
+                                                                        ? item.variation.size.name : '-' }}
                                                                 </td>
                                                                 <td v-else>
                                                                     Packing Only
@@ -333,13 +398,13 @@
                                                                 <td>{{ parseFloat(item.price) }}</td>
                                                                 <td>{{ item.quantity }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * (
-                                                                    parseFloat(item.price) ) }}</td>
+                                                                    parseFloat(item.price)) }}</td>
                                                                 <td>{{ item.packaging_cost }}</td>
                                                                 <td>{{ item.courier_cost }}</td>
                                                                 <td>{{ (parseFloat(item.quantity) *
                                                                     parseFloat(item.price)) +
                                                                     (parseFloat(item.packaging_cost) +
-                                                                    parseFloat(item.courier_cost)) }}</td>
+                                                                        parseFloat(item.courier_cost)) }}</td>
 
                                                                 <td v-if="details.is_replacement == 1">0</td>
                                                                 <td v-else>{{ item.sell_price }}</td>
@@ -348,7 +413,7 @@
                                                                 <td v-else>{{ parseFloat(item.sell_price) - (
                                                                     (parseFloat(item.quantity) * parseFloat(item.price)
                                                                     ) + (parseFloat(item.packaging_cost) +
-                                                                    parseFloat(item.courier_cost) ) ) }}</td>
+                                                                        parseFloat(item.courier_cost))) }}</td>
                                                                 <!-- <td v-if="details.is_replacement == 1">0</td>
                                                                 <td v-else>
                                                                     {{
@@ -432,15 +497,15 @@
                                                                     <b>SKU : </b>{{ item.product.variation.sku }}<br>
                                                                     <b>Title : </b>{{ item.product.title }}<br>
                                                                     <b>Description : </b>{{
-                                                                    item.product.short_description }}<br>
+                                                                        item.product.short_description }}<br>
                                                                     <b>Color : </b>{{ item.product.variation.color
-                                                                    ?item.product.variation.color.name : '-' }}<br>
+                                                                        ? item.product.variation.color.name : '-' }}<br>
                                                                     <b>Size : </b>{{ item.product.variation.size
-                                                                    ?item.product.variation.size.name : '-' }}
+                                                                        ? item.product.variation.size.name : '-' }}
                                                                 </td>
                                                                 <td>{{ item.quantity }}</td>
                                                                 <td>{{ parseFloat(item.quantity) * (
-                                                                    parseFloat(item.price) ) }}</td>
+                                                                    parseFloat(item.price)) }}</td>
 
                                                             </tr>
                                                         </tbody>
@@ -452,11 +517,14 @@
                                         <div class="attachment-mail">
                                             <p>
                                                 <span>
-                                                    <i class="fa fa-paperclip"></i> {{ (details.daraz_labels ? details.daraz_labels.length : 0) + (details.attachments ? details.attachments.length : 0) }} attachments — </span>
+                                                    <i class="fa fa-paperclip"></i> {{ (details.daraz_labels ?
+                                                        details.daraz_labels.length : 0) + (details.attachments ?
+                                                    details.attachments.length : 0) }} attachments — </span>
                                                 <!-- <a href="#">Download all attachments</a> -->
                                             </p>
                                             <div class="row" v-if="details">
-                                                <div class="col-md-2" v-if="details.payment_proof_attachment && details.type != 'Cash'">
+                                                <div class="col-md-2"
+                                                    v-if="details.payment_proof_attachment && details.type != 'Cash'">
                                                     <a target="_blank"
                                                         :href="setImage(details.payment_proof_attachment)">
                                                         <img class="img-thumbnail img-responsive" alt="attachment"
@@ -465,11 +533,12 @@
                                                     <a class="name"
                                                         :href="`${web_url}public/storage/uploads/payments/${details.payment_proof_attachment}`"
                                                         target="_blank">
-                                                        {{ truncatedAttachmentName(details.payment_proof_attachment ) }}
+                                                        {{ truncatedAttachmentName(details.payment_proof_attachment) }}
                                                     </a>
                                                 </div>
 
-                                                <div class="col-md-2" v-if="details.payment_proof_attachment && details.type == 'Cash'">
+                                                <div class="col-md-2"
+                                                    v-if="details.payment_proof_attachment && details.type == 'Cash'">
                                                     <a target="_blank"
                                                         :href="`${public_url}/public/storage/uploads/dropshipper/payments/${details.payment_proof_attachment}`">
                                                         <img class="img-thumbnail img-responsive" alt="attachment"
@@ -482,24 +551,25 @@
                                                     </a>
                                                 </div>
 
-                                                   <!-- Attachments from comments array -->
-                                                   <div class="col-md-2" v-for="item in details.attachments"  :key="item.id" v-if="details.attachments.length > 0">
+                                                <!-- Attachments from comments array -->
+                                                <div class="col-md-2" v-for="item in details.attachments" :key="item.id"
+                                                    v-if="details.attachments.length > 0">
                                                     <a target="_blank" :href="setCommentImage(item.attachment)">
-                                                      <img class="img-thumbnail img-responsive" v-if="isImage(item.attachment)" alt="attachment" :src="setCommentImage(item.attachment)">
-                                                      <i
-                                                          v-else
-                                                          class="img-thumbnail img-responsive fas fa-file p-5"
-                                                          style="color: red;"
-                                                      ></i>
+                                                        <img class="img-thumbnail img-responsive"
+                                                            v-if="isImage(item.attachment)" alt="attachment"
+                                                            :src="setCommentImage(item.attachment)">
+                                                        <i v-else class="img-thumbnail img-responsive fas fa-file p-5"
+                                                            style="color: red;"></i>
                                                     </a>
-                                                    <a class="name" :href="setCommentImage(item.attachment)" target="_blank"> {{ truncatedAttachmentName(item.attachment) }}
+                                                    <a class="name" :href="setCommentImage(item.attachment)"
+                                                        target="_blank"> {{ truncatedAttachmentName(item.attachment) }}
                                                     </a>
-                                                  </div>
+                                                </div>
 
 
                                                 <!-- Attachments from daraz_labels array -->
-                                                <div class="col-md-2" v-for="attachment in details.daraz_labels" v-if="details.daraz_labels.length > 0"
-                                                    :key="attachment.id">
+                                                <div class="col-md-2" v-for="attachment in details.daraz_labels"
+                                                    v-if="details.daraz_labels.length > 0" :key="attachment.id">
                                                     <a target="_blank" :href="setImage(attachment.attachment)">
                                                         <img class="img-thumbnail img-responsive"
                                                             alt="daraz label attachment"
@@ -583,7 +653,8 @@
                                                             comment.user.role }} )</span>
                                                     &nbsp;&nbsp; -{{ formatDate(comment.created_at) }}</small>
                                             </div>
-                                            <button class="btn btn-danger btn-sm" v-if="role == 'admin' || role == 'auditor'"
+                                            <button class="btn btn-danger btn-sm"
+                                                v-if="role == 'admin' || role == 'auditor'"
                                                 @click="deleteComment(comment.id)"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
@@ -604,13 +675,11 @@
                                 </div>
                             </div>
 
-                            <div class="card" v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager'|| role == 'packing & dispatch manager'">
+                            <div class="card"
+                                v-if="role == 'admin' || role == 'supervisor' || role == 'qc manager' || role == 'packing & dispatch manager'">
                                 <div class="card-body row">
                                     <div class="col-md-12">
-                                        <Camera
-                                            :details="details"
-                                            @addCommentDirect="addCommentDirect($event)"
-                                        />
+                                        <Camera :details="details" @addCommentDirect="addCommentDirect($event)" />
                                     </div>
                                 </div>
                             </div>
@@ -725,8 +794,9 @@
                     </div>
 
 
-
-                    <div class="modal-footer d-dlex justify-content-between" v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
+                    <!-- Normal Admin rights -->
+                    <div class="modal-footer d-dlex justify-content-between"
+                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
                         <div>
                             <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
                                 @click="markasReplacement()"
@@ -743,13 +813,28 @@
                                 <i class="fas fa-undo-alt"></i> Revert to Pre Step
                             </button>
 
-                            <button class="btn btn-danger" @click="reject()" v-if="!rejectLoader && role != 'supervisor'">
+                            <button class="btn btn-danger" @click="reject()"
+                                v-if="!rejectLoader && role != 'supervisor'">
                                 <i class="fa fa-trash"></i> Cancel Order
                             </button>
                         </div>
 
                         <div>
-                            <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-paper-plane"></i> Forward Order
+                            </button>
+                            <div class="dropdown-menu" x-placement="top-start"
+                                style="position: absolute; transform: translate3d(0px, -2px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item has-icon" href="#" @click="forward('leopard')">
+                                    <i class="fas fa-truck"></i> With Leopard
+                                </a>
+                                <a class="dropdown-item has-icon" href="#" @click="forward('postEx')">
+                                    <i class="fas fa-shipping-fast"></i> With PostEx
+                                </a>
+                            </div>
+                            <button class="btn btn-primary" @click="forward('leopard')"
+                                v-if="!loader && role != 'supervisor'">
                                 <i class="fas fa-paper-plane"></i> Forward Order
                             </button>
                             <button class="btn btn-primary btn-progress disabled" v-else-if="loader">
@@ -765,9 +850,11 @@
                         </div>
 
                     </div>
+
+                    <!-- For Cash Order -->
                     <div class="modal-footer" v-else-if="view != 'viewOnly' && details.type == 'Cash'">
 
-                        <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
+                        <button class="btn btn-primary" @click="forward('cash')" v-if="!loader && role != 'supervisor'">
                             <i class="fas fa-paper-plane"></i> Forward Order
                         </button>
                         <button class="btn btn-primary btn-progress disabled" v-else-if="loader">
@@ -783,11 +870,14 @@
                             Close
                         </button>
                     </div>
+                    <!-- For Delivered or returns order -->
                     <div class="modal-footer" v-else>
-                        <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal" data-target="#markasBeingReturn" v-if="role == 'admin' && details.status == 11">
+                        <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
+                            data-target="#markasBeingReturn" v-if="role == 'admin' && details.status == 11">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return
                         </button>
-                        <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal" data-target="#markasDelivered" v-if="role == 'admin' && details.status == 11">
+                        <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal"
+                            data-target="#markasDelivered" v-if="role == 'admin' && details.status == 11">
                             <i class="fas fa-check"></i> Mark as Delivered
                         </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -798,6 +888,12 @@
             </div>
         </div>
 
+        <!-- PostEx AirBill -->
+        <form :action="`${public_url}/inventory/products/orders/postex-airbill`" method="post" ref="printAirBill"
+            target="_blank">
+            <input type="hidden" name="_token" :value="csrf">
+            <input type="hidden" name="tracking" :value="details.tracking_number">
+        </form>
     </div>
 </template>
 <script>
@@ -806,7 +902,7 @@ import Camera from './Camera.vue';
 export default {
     name: "OrderDetailView",
     props: ["details", "loader", "id", 'role', 'statuses', 'users', 'rejectLoader', 'paidAmountLoader', 'revertLoader', 'view'],
-    components :  {
+    components: {
         Camera
     },
     data() {
@@ -834,7 +930,8 @@ export default {
             scannedTrackingNumber: '', // Store the scanned QR code for tracking number
             paidAmount: '',
             packagingAmount: '',
-            discount: ''
+            discount: '',
+            csrf : ""
         }
     },
     mounted() {
@@ -845,6 +942,9 @@ export default {
                 this.$emit('commentAdded', true)
             }
         });
+    },
+    created() {
+        this.csrf = $('meta[name=csrf-token]').attr('content');
     },
     computed: {
         filteredComments() {
@@ -913,6 +1013,11 @@ export default {
 
     },
     methods: {
+        printPostExSlip(order) {
+            setTimeout(() => {
+                this.$refs.printAirBill.submit();
+            }, 500);
+        },
         deleteComment(comment) {
             this.$emit('deleteComment', { id: this.details.id, comment });
         },
@@ -1007,7 +1112,7 @@ export default {
             }
             return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
         },
-        forward() {
+        forward(courier) {
             if (this.role == 'inventory manager') {
                 // Check if any item hasn't been scanned
                 const unscannedItems = this.details.items.filter(item => !item.scannedQR);
@@ -1036,7 +1141,7 @@ export default {
                 }
             }
 
-            this.$emit('forward', { id: this.details.id });
+            this.$emit('forward', { id: this.details.id, courier });
         },
         markasReplacement() {
             this.$emit('markasReplacement', { id: this.details.id });

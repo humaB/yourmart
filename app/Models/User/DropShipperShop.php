@@ -26,6 +26,7 @@ class DropShipperShop extends Model
         'total_remaining',
 
         'leopard_id',
+        'postex_store_code',
     ];
 
     public function dropshipper(){

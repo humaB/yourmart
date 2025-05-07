@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory\Order;
 use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Helpers\PostExApiHelper;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Models\Account\AccountTransaction;
@@ -47,6 +48,27 @@ class OrderController extends Controller
     public function dispatchIndex()
     {
         return view('inventory.product.order.order_dispatch');
+    }
+
+    public function  postExAirbill( Request $request ){
+
+        $response = Http::withHeaders([
+            'token' => 'ZWExMGNhYWFkYjM3NGM3MzhkZWZkN2M0M2M5YjhhZjU6MTY2ZjRiMmQ1YWVmNDkyOTg5OTE5NmUwMTkzNjdiYjg=',
+        ])->get('https://api.postex.pk/services/partnerintegration/api/order/airway-bill', [
+            'trackingNumbers' => $request->tracking,
+        ]);
+
+        if ($response->successful()) {
+            return response($response->body(), 200)
+                ->header('Content-Type', 'application/pdf')
+                ->header('Content-Disposition', 'inline; filename="airway-bill.pdf"');
+        } else {
+            return response()->json([
+                'error' => 'Failed to fetch airway bill',
+                'status' => $response->status(),
+                'message' => $response->body(),
+            ], $response->status());
+        }
     }
 
     public function fetchOrders(Request $request)
@@ -498,16 +520,15 @@ class OrderController extends Controller
 
     public function updateStatus(Request $request)
     {
-
         $userRole  = trim(auth()->user()->role);
 
         $order = Order::with('items')->find($request->id);
 
         // Map roles to corresponding statuses
         $statusMap = [
-            'order collection manager' => 0,    // Role for order collection
-            'inventory manager' => 1,  // Role for inventory issuance
-            'qc manager' => 2,         // Role for quality control
+            'order collection manager'   => 0,    // Role for order collection
+            'inventory manager'          => 1,  // Role for inventory issuance
+            'qc manager'                 => 2,         // Role for quality control
             'packing & dispatch manager' => 3,    // Role for packing and dispatch
             'auditor' => 4   // Role for audit
         ];
@@ -547,20 +568,39 @@ class OrderController extends Controller
 
             if ($userRole == 'order collection manager' && $order->type == 'Normal') {
 
-                $leopardData = [
-                    'track_number' => null,
-                    'slip_link'    => null
-                ];
+                if( $request->courier == 'leopard'){
+                    $leopardData = [
+                        'track_number' => null,
+                        'slip_link'    => null
+                    ];
 
-                $leopardApi = new LeopardApiHelper();
-                $city = City::where('id', $order->city_id)->first();
-                $range = CourierCategoryRange::where('id', $order->range_id)->first();
-                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+                    $leopardApi = new LeopardApiHelper();
+                    $city = City::where('id', $order->city_id)->first();
+                    $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                    $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
 
-                $order->update([
-                    'tracking_number'       => $leopardData['track_number'],
-                    'slip_link'             => $leopardData['slip_link']
-                ]);
+                    $order->update([
+                        'tracking_number'       => $leopardData['track_number'],
+                        'slip_link'             => $leopardData['slip_link'],
+                        'courier_service_id'    => '1'
+                    ]);
+                }
+
+                if( $request->courier == 'postEx' ){
+                    $postExApi = new PostExApiHelper();
+                    $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
+
+                    if ($postExData['error'] && $postExData['error'] != '') {
+                        return (new ValidationCollection([$postExData['error']]))
+                            ->response()
+                            ->setStatusCode(421);
+                    }
+
+                    $order->update([
+                        'tracking_number'       => $postExData['track_number'],
+                        'courier_service_id'    => '2'
+                    ]);
+                }
             }
 
             if ($userRole == 'inventory manager') {
@@ -586,28 +626,46 @@ class OrderController extends Controller
             }
         } else if ($userRole == 'admin') {
 
-            if ($order->status == '0' && $order->type == 'Normal') {
+            if ( $order->status == '0' && $order->type == 'Normal') {
 
-                $leopardData = [
-                    'track_number' => null,
-                    'slip_link'    => null
-                ];
+                if( $request->courier == 'leopard'){
+                    $leopardData = [
+                        'track_number' => null,
+                        'slip_link'    => null
+                    ];
 
-                $leopardApi = new LeopardApiHelper();
-                $city = City::where('id', $order->city_id)->first();
-                $range = CourierCategoryRange::where('id', $order->range_id)->first();
-                $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+                    $leopardApi = new LeopardApiHelper();
+                    $city = City::where('id', $order->city_id)->first();
+                    $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                    $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
 
-                if ($leopardData['error'] && $leopardData['error'] != '') {
-                    return (new ValidationCollection([$leopardData['error']]))
-                        ->response()
-                        ->setStatusCode(421);
+                    if ($leopardData['error'] && $leopardData['error'] != '') {
+                        return (new ValidationCollection([$leopardData['error']]))
+                            ->response()
+                            ->setStatusCode(421);
+                    }
+
+                    $order->update([
+                        'tracking_number'       => $leopardData['track_number'],
+                        'slip_link'             => $leopardData['slip_link'],
+                        'courier_service_id'    => '1'
+                    ]);
                 }
+                if( $request->courier == 'postEx' ){
+                    $postExApi = new PostExApiHelper();
+                    $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
 
-                $order->update([
-                    'tracking_number'       => $leopardData['track_number'],
-                    'slip_link'             => $leopardData['slip_link']
-                ]);
+                    if ($postExData['error'] && $postExData['error'] != '') {
+                        return (new ValidationCollection([$postExData['error']]))
+                            ->response()
+                            ->setStatusCode(421);
+                    }
+
+                    $order->update([
+                        'tracking_number'       => $postExData['track_number'],
+                        'courier_service_id'    => '2'
+                    ]);
+                }
             }
 
             if ($order->status == '1') {
@@ -701,11 +759,19 @@ class OrderController extends Controller
 
             $order->update(['status' => '7']);
 
-            $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
-                'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
-                'api_password' => 'Allah@001#',
-                'cn_numbers' => $order->tracking_number, // or 'XXYYYYYYYY,XXYYYYYYYY,XXYYYYYY'
-            ]);
+            if( $order->courier_service_id == '1'){
+                $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
+                    'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+                    'api_password' => 'Allah@001#',
+                    'cn_numbers'   => $order->tracking_number, // or 'XXYYYYYYYY,XXYYYYYYYY,XXYYYYYY'
+                ]);
+            }
+
+            if( $order->courier_service_id == '2'){
+                $postEx = new PostExApiHelper();
+                return $postEx->cancelOrder($order->tracking_number);
+            }
+
         } else {
             $order->update(['status' => '6']);
             OrderActivity::create([

@@ -102,6 +102,8 @@ Route::group(['prefix' => '/inventory', 'middleware' => 'auth'], function () {
             Route::get('/records', [OrderController::class, 'record'])->name('inventory.products.order_record');
 
             Route::get('/dispatchs', [OrderController::class, 'dispatchIndex'])->name('inventory.products.orders.dispatchs');
+
+            Route::post('/postex-airbill', [OrderController::class, 'postExAirbill']);
         });
 
         Route::group(['prefix' => '/purchase-orders'], function () {
