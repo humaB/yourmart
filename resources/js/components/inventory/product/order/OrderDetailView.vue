@@ -118,7 +118,7 @@
                                                                 :href="details.slip_link" target="_blank">Press to
                                                                 Print</a>
                                                             <!-- For PostEx -->
-                                                            <a v-if="details.type == 'Normal' && details.courier_service_id == '2'"
+                                                            <a v-if="details.status > 0 && details.type == 'Normal' && details.courier_service_id == '2'"
                                                                 href="#" @click="printPostExSlip(details.id)">Press to
                                                                 Print</a>
 
@@ -820,7 +820,7 @@
                         </div>
 
                         <div>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                            <!-- <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-paper-plane"></i> Forward Order
                             </button>
@@ -832,8 +832,8 @@
                                 <a class="dropdown-item has-icon" href="#" @click="forward('postEx')">
                                     <i class="fas fa-shipping-fast"></i> With PostEx
                                 </a>
-                            </div>
-                            <button class="btn btn-primary" @click="forward('leopard')"
+                            </div> -->
+                            <button class="btn btn-primary" @click="forward()"
                                 v-if="!loader && role != 'supervisor'">
                                 <i class="fas fa-paper-plane"></i> Forward Order
                             </button>
@@ -854,7 +854,7 @@
                     <!-- For Cash Order -->
                     <div class="modal-footer" v-else-if="view != 'viewOnly' && details.type == 'Cash'">
 
-                        <button class="btn btn-primary" @click="forward('cash')" v-if="!loader && role != 'supervisor'">
+                        <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
                             <i class="fas fa-paper-plane"></i> Forward Order
                         </button>
                         <button class="btn btn-primary btn-progress disabled" v-else-if="loader">
@@ -1112,7 +1112,7 @@ export default {
             }
             return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
         },
-        forward(courier) {
+        forward() {
             if (this.role == 'inventory manager') {
                 // Check if any item hasn't been scanned
                 const unscannedItems = this.details.items.filter(item => !item.scannedQR);
@@ -1141,7 +1141,7 @@ export default {
                 }
             }
 
-            this.$emit('forward', { id: this.details.id, courier });
+            this.$emit('forward', { id: this.details.id });
         },
         markasReplacement() {
             this.$emit('markasReplacement', { id: this.details.id });

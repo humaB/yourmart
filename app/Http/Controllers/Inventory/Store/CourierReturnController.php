@@ -43,6 +43,7 @@ class CourierReturnController extends Controller
     public function pendingReturns(){
 
         $data = Order::with('user', 'shop')->where('status', 9)
+        ->orderBy('id', 'desc')
         ->get();
 
         return (new ResponseCollection($data))

@@ -145,8 +145,14 @@ class OrderController extends Controller
 
     public function trackingDetails(Request $request)
     {
-
-        $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('updated_at', 'desc')->get();
+        $order = Order::where('id', $request->id)->first();
+        $orders = [];
+        if( $order->courier_service_id == '1'){
+            $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('updated_at', 'desc')->get();
+        }else{
+            $postEx = new PostExApiHelper();
+            $orders = $postEx->tracking($order->tracking_number);
+        }
 
         return (new ResponseCollection($orders))
             ->response()
@@ -568,7 +574,7 @@ class OrderController extends Controller
 
             if ($userRole == 'order collection manager' && $order->type == 'Normal') {
 
-                if( $request->courier == 'leopard'){
+                if( $order->courier_service_id == '1'){
                     $leopardData = [
                         'track_number' => null,
                         'slip_link'    => null
@@ -582,11 +588,10 @@ class OrderController extends Controller
                     $order->update([
                         'tracking_number'       => $leopardData['track_number'],
                         'slip_link'             => $leopardData['slip_link'],
-                        'courier_service_id'    => '1'
                     ]);
                 }
 
-                if( $request->courier == 'postEx' ){
+                if( $order->courier_service_id == '2' ){
                     $postExApi = new PostExApiHelper();
                     $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
 
@@ -598,7 +603,6 @@ class OrderController extends Controller
 
                     $order->update([
                         'tracking_number'       => $postExData['track_number'],
-                        'courier_service_id'    => '2'
                     ]);
                 }
             }
@@ -628,7 +632,7 @@ class OrderController extends Controller
 
             if ( $order->status == '0' && $order->type == 'Normal') {
 
-                if( $request->courier == 'leopard'){
+                if( $order->courier_service_id == '1' ){
                     $leopardData = [
                         'track_number' => null,
                         'slip_link'    => null
@@ -648,10 +652,10 @@ class OrderController extends Controller
                     $order->update([
                         'tracking_number'       => $leopardData['track_number'],
                         'slip_link'             => $leopardData['slip_link'],
-                        'courier_service_id'    => '1'
                     ]);
                 }
-                if( $request->courier == 'postEx' ){
+
+                if( $order->courier_service_id == '2' ){
                     $postExApi = new PostExApiHelper();
                     $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
 
@@ -663,7 +667,6 @@ class OrderController extends Controller
 
                     $order->update([
                         'tracking_number'       => $postExData['track_number'],
-                        'courier_service_id'    => '2'
                     ]);
                 }
             }
@@ -733,7 +736,7 @@ class OrderController extends Controller
                 'added_by'  => auth()->user()->id,
             ]);
 
-            if ($order->status > 1) {
+            if ($order->status > 1 ) {
                 $srn = StoreReturn::create([
                     'order_id'        => $order->id,
                     'dropshipper_id'  => $order->belongs_to,
@@ -757,8 +760,7 @@ class OrderController extends Controller
                 }
             }
 
-            $order->update(['status' => '7']);
-
+            // Leopard
             if( $order->courier_service_id == '1'){
                 $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
                     'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
@@ -767,10 +769,13 @@ class OrderController extends Controller
                 ]);
             }
 
+            // PostEx
             if( $order->courier_service_id == '2'){
                 $postEx = new PostExApiHelper();
-                return $postEx->cancelOrder($order->tracking_number);
+                $postEx->cancelOrder($order->tracking_number);
             }
+
+            $order->update(['status' => '7']);
 
         } else {
             $order->update(['status' => '6']);
@@ -813,7 +818,6 @@ class OrderController extends Controller
                     ->increment('stock', $product->quantity);
             }
         }
-
 
         $order->decrement('status');
 

@@ -5,24 +5,83 @@ namespace App\Http\Controllers\Helpers;
 use App\Http\Resources\ValidationCollection;
 use App\Models\City;
 use App\Models\Inventory\Courier\CourierDisclaimer;
+use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
+use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
 use Illuminate\Support\Facades\Http;
 
 class PostExApiHelper
 {
     private $token = 'ZWExMGNhYWFkYjM3NGM3MzhkZWZkN2M0M2M5YjhhZjU6MTY2ZjRiMmQ1YWVmNDkyOTg5OTE5NmUwMTkzNjdiYjg=';
+    private $url = 'https://api.postex.pk/services/partnerintegration/api';
+
+    public $shipmentStatuses = [
+        'Unbooked' => [
+            'postex' => 'Unbooked',
+            'label' => 'In Process'
+        ],
+        'Booked' => [
+            'postex' => 'Booked',
+            'label' => 'In Process'
+        ],
+        'PostEx WareHouse' => [
+            'postex' => 'PostEx WareHouse',
+            'label' => 'In Process'
+        ],
+        'Out For Delivery' => [
+            'postex' => 'Out For Delivery',
+            'label' => 'Out For Delivery'
+        ],
+        'Delivered' => [
+            'postex' => 'Delivered',
+            'label' => 'Delivered'
+        ],
+        'Returned' => [
+            'postex' => 'Returned',
+            'label' => 'Returned'
+        ],
+        'Un-Assigned By Me' => [
+            'postex' => 'Un-Assigned By Me',
+            'label' => 'Cancelled'
+        ],
+        'Expired' => [
+            'postex' => 'Expired',
+            'label' => 'In Process'
+        ],
+        'Delivery Under Review' => [
+            'postex' => 'Delivery Under Review',
+            'label' => 'Re-Attempt - Active'
+        ],
+        'Picked By PostEx' => [
+            'postex' => 'Picked By PostEx',
+            'label' => 'In Process'
+        ],
+        'Out For Return' => [
+            'postex' => 'Out For Return',
+            'label' => 'Returned'
+        ],
+        'Attempted' => [
+            'postex' => 'Attempted',
+            'label' => 'In Process'
+        ],
+        'En-Route to {city} warehouse' => [
+            'postex' => 'En-Route to {city} warehouse',
+            'label' => 'In Process'
+        ]
+    ];
+
     public function createShipperAccount($dropshipper)
     {
-        $storeCode = substr($dropshipper->store_name, 0, 3) .'-'. $dropshipper->id;
-        $shipperCode = substr($dropshipper->dropshipper->full_name, 0, 3) . '-' . substr($dropshipper->store_name, 0, 3).'-'.$dropshipper->dropshipper->id;
+        $storeCode = substr($dropshipper->store_name, 0, 3) . '-' . $dropshipper->id;
+        $shipperCode = substr($dropshipper->dropshipper->full_name, 0, 3) . '-' . substr($dropshipper->store_name, 0, 3) . '-' . $dropshipper->dropshipper->id;
 
         $response = Http::withHeaders([
             'token' => $this->token, // Replace with actual token
-        ])->post('https://api.postex.pk/services/partnerintegration/api/merchantStore', [
+        ])->post($this->url . '/merchantStore', [
             'merchantStore' => [
                 'active'         => true,
-                'operationalCity'=> 'Faisalabad',
+                'operationalCity' => 'Faisalabad',
                 'pocContact1'    => $dropshipper->dropshipper->whatsapp_number,
                 'pocEmail1'      => $dropshipper->dropshipper->email,
                 'pocName'        => $dropshipper->dropshipper->full_name,
@@ -51,7 +110,7 @@ class PostExApiHelper
             ]
         ]);
 
-        if ( $response->successful() ) {
+        if ($response->successful()) {
             return response()->json([
                 'error'   => null,
                 'success' => 'Dropshipper Created',
@@ -60,12 +119,12 @@ class PostExApiHelper
         } else {
             return response()->json([
                 'error' => 'Failed to register merchant store',
-                'message' => '',
+                'message' => $response['statusMessage'],
             ], 500);
         }
     }
 
-    public function bookAPacket( $order, $order_no, $shop )
+    public function bookAPacket($order, $order_no, $shop)
     {
 
         $city = City::where('id', $order->city_id)->first();
@@ -80,16 +139,16 @@ class PostExApiHelper
 
         $shop = DropShipperShop::with('dropshipper')->where('id', $shop)->first();
 
-        $storeCode = substr($shop->store_name, 0, 3) .'-'. $shop->id;
-        $shipperCode = substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3).'-'.$shop->dropshipper->id;
+        $storeCode = substr($shop->store_name, 0, 3) . '-' . $shop->id;
+        $shipperCode = substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $shop->dropshipper->id;
 
-        if( !$shop->postex_store_code ){
-           $dropshipper = $this->createShipperAccount($shop);
+        if (!$shop->postex_store_code) {
+            $dropshipper = $this->createShipperAccount($shop);
 
-           $data = $dropshipper->getData(); // returns stdClass
-           if ( $data->error  && $data->error  != '') {
+            $data = $dropshipper->getData(); // returns stdClass
+            if ($data->error  && $data->error  != '') {
                 return $data = [
-                    'error'  =>  "Something went wrong, please try again",
+                    'error'  =>  $data->message,
                 ];
             }
 
@@ -98,12 +157,12 @@ class PostExApiHelper
             ]);
         }
         $order_no = $shop ?  substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $order_no : $order_no;
-        $courierDisclaimer = CourierDisclaimer::where('courier_id',$order->courier_service_id)->first();
-        $instruction = $order->instructions ? ($order->instructions. ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' .$courierDisclaimer->disclaimer ?? "");
+        $courierDisclaimer = CourierDisclaimer::where('courier_id', $order->courier_service_id)->first();
+        $instruction = $order->instructions ? ($order->instructions . ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' . $courierDisclaimer->disclaimer ?? "");
 
         $response = Http::withHeaders([
             'token' => $this->token,
-        ])->post('https://api.postex.pk/services/partnerintegration/api/order/create', [
+        ])->post($this->url . '/order/create', [
             'customerName'       => $order->customer_name,
             'customerPhone'      => $order->phone_number,
             'deliveryAddress'    => $order->address,
@@ -111,8 +170,7 @@ class PostExApiHelper
             'orderDetail'        => $description,
             'orderRefNumber'     => $order_no,
             'returnAddressCode'  => $shipperCode,
-            'cityName'           => 'Lahore',
-            'invoiceDivision'    => 1, // Optional
+            'cityName'           => $city->name,
             'items'              => $orderItems->sum('quantity'),
             'orderType'          => 'Normal', // 'Normal', 'Reverse', or 'Overland'
             'remarks'            => $instruction,
@@ -139,13 +197,79 @@ class PostExApiHelper
         }
     }
 
-    public function cancelOrder($trackingNumber){
-        $response = Http::withHeaders([
+    public function cancelOrder($trackingNumber)
+    {
+        return $response = Http::withHeaders([
             'token' => $this->token,
-        ])->put('https://api.postex.pk/services/partnerintegration/api/order/cancel', [
+        ])->patch($this->url . '/order/cancel', [
             'trackingNumbers' => [
                 $trackingNumber
             ],
         ]);
+    }
+
+    public function tracking($trackingNumber)
+    {
+        $response = Http::withHeaders([
+            'token' => $this->token,
+        ])->get($this->url . '/order/track/'.$trackingNumber);
+
+        $buffer = $response->json();
+
+        $tracking = collect($buffer['dist']['transactionStatusHistory'])->map(function ($label) {
+            return [
+                'id'    => 0,
+                'leopard_label' => $label->transactionStatusMessage,
+                'reason'        => "",
+                'receiver_name' => ""
+            ];
+      })->toArray();
+
+      return $tracking;
+    }
+
+    public function webHook($request){
+        $order = $request;
+
+        $detail = Order::with('range')->where('tracking_number', $order['trackingNumber'])->first();
+
+        if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
+            $status = $this->shipmentStatuses[$order['orderStatus']];
+
+            //If product is delivered
+            if ($status['label'] == 'Delivered' && $detail->status != '8') {
+                $helper = new LeopardApiHelper();
+                $helper->parcelDelivered($detail);
+                $detail->update([
+                    'status' => '8'
+                ]);
+            }
+
+            //If product is not delivered and returned
+            if ($status['label'] == 'Returned' && $detail->status != '9') {
+                $helper = new LeopardApiHelper();
+                $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
+                $shop = DropShipperShop::where('id', $detail->shop_id)->first();
+                $helper->parcelCancel($dropshipper, $shop, $detail);
+
+                $detail->update([
+                    'status' => '9'
+                ]);
+            }
+
+            //out for delivery
+            if ($status['label'] == 'Out For Delivery') {
+                $detail->update([
+                    'status' => '11'
+                ]);
+            }
+
+            if ($status['label'] == 'Delivery Under Review') {
+                //Ready to return
+                $detail->update([
+                    'status' => '12'
+                ]);
+            }
+        }
     }
 }

@@ -264,7 +264,7 @@ class LeopardApiHelper
         }
     }
 
-    private function parcelCancel( $dropshipper, $shop , $order ){
+    public function parcelCancel( $dropshipper, $shop , $order ){
 
         $ledger = new AccountHeadHelper();
         $document = $ledger->voucherType('JV');

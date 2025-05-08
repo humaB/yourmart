@@ -31,6 +31,7 @@ use App\Http\Controllers\TicketController;
 use App\Http\Controllers\Account\Report\FinanceReportController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Helpers\PostExApiHelper;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
@@ -372,8 +373,12 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
 
 Route::post('/web-hook/leopard',  function( Request $request ){
     $leopard = new LeopardApiHelper();
-    Log::info($request);
     return $leopard->webHook($request);
+});
+
+Route::post('/web-hook/post-ex',  function( Request $request ){
+    $postEx = new PostExApiHelper();
+    return $postEx->webHook($request);
 });
 
 Route::prefix('accounts')->group(function () {

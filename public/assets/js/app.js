@@ -2220,7 +2220,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
     },
-    forward: function forward(courier) {
+    forward: function forward() {
       if (this.role == 'inventory manager') {
         // Check if any item hasn't been scanned
         var unscannedItems = this.details.items.filter(function (item) {
@@ -2251,8 +2251,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       }
       this.$emit('forward', {
-        id: this.details.id,
-        courier: courier
+        id: this.details.id
       });
     },
     markasReplacement: function markasReplacement() {
@@ -13170,7 +13169,7 @@ var render = function render() {
       href: _vm.details.slip_link,
       target: "_blank"
     }
-  }, [_vm._v("Press to\n                                                            Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && _vm.details.courier_service_id == "2" ? _c("a", {
+  }, [_vm._v("Press to\n                                                            Print")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && _vm.details.type == "Normal" && _vm.details.courier_service_id == "2" ? _c("a", {
     attrs: {
       href: "#"
     },
@@ -13809,47 +13808,11 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fa fa-trash"
-  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [_vm._m(27), _vm._v(" "), _c("div", {
-    staticClass: "dropdown-menu",
-    staticStyle: {
-      position: "absolute",
-      transform: "translate3d(0px, -2px, 0px)",
-      top: "0px",
-      left: "0px",
-      "will-change": "transform"
-    },
-    attrs: {
-      "x-placement": "top-start"
-    }
-  }, [_c("a", {
-    staticClass: "dropdown-item has-icon",
-    attrs: {
-      href: "#"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.forward("leopard");
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-truck"
-  }), _vm._v(" With Leopard\n                            ")]), _vm._v(" "), _c("a", {
-    staticClass: "dropdown-item has-icon",
-    attrs: {
-      href: "#"
-    },
-    on: {
-      click: function click($event) {
-        return _vm.forward("postEx");
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-shipping-fast"
-  }), _vm._v(" With PostEx\n                            ")])]), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
-        return _vm.forward("leopard");
+        return _vm.forward();
       }
     }
   }, [_c("i", {
@@ -13870,7 +13833,7 @@ var render = function render() {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
-        return _vm.forward("cash");
+        return _vm.forward();
       }
     }
   }, [_c("i", {
@@ -14094,20 +14057,6 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Confirm Packaging Amount")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("button", {
-    staticClass: "btn btn-primary dropdown-toggle",
-    attrs: {
-      type: "button",
-      "data-toggle": "dropdown",
-      "aria-haspopup": "true",
-      "aria-expanded": "false"
-    }
-  }, [_c("i", {
-    staticClass: "fas fa-paper-plane"
-  }), _vm._v(" Forward Order\n                        ")]);
 }];
 render._withStripped = true;
 
