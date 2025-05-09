@@ -281,10 +281,10 @@ class PostExApiHelper
                 ],
                 [
                     'leopard_label'  => $status['postex'],
+                    "short_code"     => 0,
                     'internal_label' => "",
                     'receiver_name'  => "",
                     'reason'         => "",
-                    'time'           => $order['statusUpdateDatetime'],
                 ]
             );
         }
