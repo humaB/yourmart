@@ -393,7 +393,16 @@
                                 <label for="">To</label>
                                 <input type="date" v-model="filter.to" class="form-control">
                             </div>
-                            <div class="col-md-1">
+
+                                <div class="col-md-3">
+                                    <label for="">Select Courier</label>
+                                    <select v-model="filter.courier" class="form-control">
+                                        <option value="">Select from the following</option>
+                                        <option value="1">Leopard</option>
+                                        <option value="2">PostEx</option>
+                                    </select>
+                                </div>
+                            <div class="col-md-2">
                                 <label for="">Action</label><br>
                                 <button class="btn btn-primary mr-2" @click="applyFilter">Filter</button>
                                 <button class="btn btn-danger" @click="resetFilter">Reset</button>
@@ -668,6 +677,7 @@ export default {
                 status: '',
                 from: '',
                 to: '',
+                courier : ""
             },
             trackingDetails: [],
             orderID: '',
@@ -1043,7 +1053,8 @@ export default {
                 dropshipper : { code : 0 , label : 'Select from the following'},
                 status: '',
                 from: '',
-                to: ''
+                to: '',
+                courier : ""
             }
 
             this.fetchOrders();
@@ -1155,6 +1166,7 @@ export default {
                         status: vm.filter.status,
                         from: vm.filter.from,
                         to: vm.filter.to,
+                        courier: vm.filter.courier,
                     },
                 })
                 .then((response) => {

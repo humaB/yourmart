@@ -1944,23 +1944,34 @@ __webpack_require__.r(__webpack_exports__);
       },
       btnLoader: false,
       pendingReturns: [],
-      detail: ''
+      detail: '',
+      filter: {
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10),
+        courier: ""
+      }
     };
   },
   created: function created() {
-    this.fetchReturnOrders();
+    this.fetchReturnOrders({
+      from: null,
+      to: null
+    });
   },
   methods: {
+    filterFunction: function filterFunction() {
+      this.fetchReturnOrders(this.filter);
+    },
     assignBarcode: function assignBarcode(detail) {
       this.detail = detail;
     },
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_2___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
-    fetchReturnOrders: function fetchReturnOrders() {
+    fetchReturnOrders: function fetchReturnOrders(data) {
       var _this = this;
       var vm = this;
-      axios.get(this.api_url + "inventory/products/store/pending-returns").then(function (response) {
+      axios.post(this.api_url + "inventory/products/store/pending-returns", data).then(function (response) {
         var results = response.data.response;
         vm.pendingReturns = results;
         vm.dataTable();
@@ -2024,14 +2035,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'StoreInWardRecordPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_2__.BulletListLoader
   },
   data: function data() {
     return {
@@ -2042,15 +2056,27 @@ __webpack_require__.r(__webpack_exports__);
       },
       inwards: [],
       csrf: '',
-      pid: ''
+      pid: '',
+      filter: {
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10),
+        courier: ""
+      },
+      loader: true
     };
   },
   created: function created() {
     // CSRF token value assigning
     this.csrf = $('meta[name=csrf-token]').attr('content');
-    this.fetchInwards();
+    this.fetchInwards({
+      from: null,
+      to: null
+    });
   },
   methods: {
+    filterFunction: function filterFunction() {
+      this.fetchInwards(this.filter);
+    },
     printPurchaseOrder: function printPurchaseOrder(id) {
       return;
       this.pid = id;
@@ -2062,15 +2088,17 @@ __webpack_require__.r(__webpack_exports__);
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_1___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
-    fetchInwards: function fetchInwards() {
+    fetchInwards: function fetchInwards(data) {
       var _this = this;
       var vm = this;
-      axios.get(this.api_url + "inventory/products/store/product-returned").then(function (response) {
+      vm.loader = true;
+      axios.post(this.api_url + "inventory/products/store/product-returned/records", data).then(function (response) {
         var results = response.data.response;
         vm.inwards = results;
         setTimeout(function () {
           _this.dataTable();
         }, 300);
+        vm.loader = false;
       });
     },
     dataTable: function dataTable() {
@@ -4903,7 +4931,96 @@ var render = function render() {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row"
+  }, [_c("form", {
+    staticClass: "col-md-12 row mb-3",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.filterFunction.apply(null, arguments);
+      }
+    }
   }, [_c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("Courier")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.courier,
+      expression: "filter.courier"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "",
+      id: ""
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "courier", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "1"
+    }
+  }, [_vm._v("Leopard")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "2"
+    }
+  }, [_vm._v("PostEx")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _c("div", {
     staticClass: "col-12"
   }, [_c("div", {
     staticClass: "card"
@@ -4914,10 +5031,11 @@ var render = function render() {
     attrs: {
       id: "order_table"
     }
-  }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingReturns, function (item, index) {
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingReturns, function (item, index) {
+    var _item$courier;
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                      ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$courier = item.courier) === null || _item$courier === void 0 ? void 0 : _item$courier.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-primary",
       attrs: {
         "data-toggle": "modal",
@@ -4944,7 +5062,15 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Order Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("Action")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary w-100"
+  }, [_vm._v(" Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("Order Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 
@@ -4980,7 +5106,102 @@ var render = function render() {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row"
+  }, [_c("form", {
+    staticClass: "col-md-12 row mb-3",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.filterFunction.apply(null, arguments);
+      }
+    }
   }, [_c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("Courier")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.courier,
+      expression: "filter.courier"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "",
+      id: ""
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "courier", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "1"
+    }
+  }, [_vm._v("Leopard")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "2"
+    }
+  }, [_vm._v("PostEx")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _vm.loader ? _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("div", {
     staticClass: "col-12"
   }, [_c("div", {
     staticClass: "card"
@@ -4991,7 +5212,7 @@ var render = function render() {
     attrs: {
       id: "table"
     }
-  }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.inwards, function (item, index) {
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.inwards, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.srn ? item.srn.order.tracking_number : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.srn_id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product ? item.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
@@ -5021,6 +5242,14 @@ var render = function render() {
   })])]);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("Action")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary w-100"
+  }, [_vm._v(" Filter")])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("SRN #")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Created Date")])])]);

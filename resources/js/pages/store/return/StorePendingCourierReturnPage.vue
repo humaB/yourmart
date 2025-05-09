@@ -8,6 +8,28 @@
                 <div class="card-body">
                   <!-- Table -->
                   <div class="row">
+                    <form @submit.prevent="filterFunction" class="col-md-12 row mb-3">
+                        <div class="col-md-3">
+                            <label>Courier</label>
+                           <select name="" id="" v-model="filter.courier" class="form-control">
+                                <option value="">Select from the following</option>
+                                <option value="1">Leopard</option>
+                                <option value="2">PostEx</option>
+                           </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>From</label>
+                            <input type="date" class="form-control" v-model="filter.from">
+                        </div>
+                        <div class="col-md-3">
+                            <label>To</label>
+                            <input type="date" class="form-control" v-model="filter.to">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Action</label>
+                            <button class="btn btn-primary w-100"> Filter</button>
+                        </div>
+                    </form>
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
@@ -16,6 +38,7 @@
                                     <tr>
                                         <th>Sr #</th>
                                         <th>Order #</th>
+                                        <th>Courier</th>
                                         <th>Tracking Number</th>
                                         <th>Dropshipper</th>
                                         <th>Amount</th>
@@ -28,7 +51,8 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>
                                             {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
-                                          </td>
+                                        </td>
+                                        <td>{{ item?.courier?.courier_name }}</td>
                                         <td>{{ item.tracking_number }}</td>
                                         <td>{{ item.user.name }}</td>
                                         <td>{{ item.total_bill }}</td>
@@ -79,23 +103,31 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
                 },
                 btnLoader : false,
                 pendingReturns : [],
-                detail : ''
+                detail : '',
+                filter: {
+                    from: new Date().toISOString().substr(0, 10),
+                    to: new Date().toISOString().substr(0, 10),
+                    courier : ""
+                },
             };
         },
         created(){
-            this.fetchReturnOrders();
+            this.fetchReturnOrders({ from : null , to : null});
         },
         methods : {
+            filterFunction(){
+                this.fetchReturnOrders( this.filter );
+            },
             assignBarcode( detail ){
                 this.detail = detail;
             },
             formatDate(date) {
                 return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
             },
-            fetchReturnOrders(){
+            fetchReturnOrders( data ){
                 let vm = this;
                 axios
-                .get(this.api_url + "inventory/products/store/pending-returns")
+                .post(this.api_url + "inventory/products/store/pending-returns", data)
                 .then((response) => {
                     const results = response.data.response;
                     vm.pendingReturns = results;

@@ -113,6 +113,9 @@ class OrderController extends Controller
                 ->when($dropshipper, function ($query, $dropshipper) {
                     return $query->where('belongs_to', $dropshipper);
                 })
+                ->when($request->courier, function ($query, $courier) {
+                    return $query->where('courier_service_id', $courier);
+                })
                 ->get();
         } else {
             $orders = Order::with('user', 'shop', 're_attempt')->where('status', $statusMap[$userRole])
@@ -228,27 +231,35 @@ class OrderController extends Controller
     public function pendingDispatchs(Request $request)
     {
 
-        $dispatched = OrderDispatchedRecord::with('order.shop', 'tracking')
+        $dispatched = OrderDispatchedRecord::with('order.shop', 'tracking', 'order.courier')
         ->when($request->from, function ($query, $from) {
             return $query->whereDate('created_at', '>=', $from);
         })
         ->when($request->to, function ($query, $to) {
             return $query->whereDate('created_at', '<=', $to);
+        })
+        ->when($request->courier, function ($query, $courier) {
+            return $query->whereHas('order', function ($q) use ($courier) {
+                $q->where('courier_service_id', $courier);
+            });
         })
         ->orderBy('id', 'desc')
         ->get();
 
-        $orders = Order::with('shop', 'user')
-        ->where('type', 'Normal')
-        ->whereIn('status', ['4','5'])
-        ->when($request->from, function ($query, $from) {
-            return $query->whereDate('created_at', '>=', $from);
-        })
-        ->when($request->to, function ($query, $to) {
-            return $query->whereDate('created_at', '<=', $to);
-        })
-        ->whereNotIn('id', $dispatched->pluck('order_id'))
-        ->orderBy('id', 'desc')->get();
+        $orders = Order::with('shop', 'user', 'courier')
+            ->where('type', 'Normal')
+            ->whereIn('status', ['4','5'])
+            ->when($request->from, function ($query, $from) {
+                return $query->whereDate('created_at', '>=', $from);
+            })
+            ->when($request->to, function ($query, $to) {
+                return $query->whereDate('created_at', '<=', $to);
+            })
+            ->when($request->courier, function ($query, $courier) {
+                return $query->where('courier_service_id', $courier);
+            })
+            ->whereNotIn('id', $dispatched->pluck('order_id'))
+            ->orderBy('id', 'desc')->get();
 
         $data = [
             'pendings'   => $orders,

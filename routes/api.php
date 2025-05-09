@@ -364,8 +364,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::get('/issuance',  [ StoreCheckOutController::class , 'fetchRecord']);
 
             //Returns
-            Route::get('/pending-returns',  [ CourierReturnController::class , 'pendingReturns']);
-            Route::get('/product-returned',  [ CourierReturnController::class , 'inWardRecord']);
+            Route::post('/pending-returns',  [ CourierReturnController::class , 'pendingReturns']);
+            Route::post('/product-returned/records',  [ CourierReturnController::class , 'inWardRecord']);
             Route::post('/product-returned',  [ CourierReturnController::class , 'returnProduct']);
         });
     });

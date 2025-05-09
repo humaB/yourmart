@@ -7,9 +7,11 @@ use App\Models\City;
 use App\Models\Inventory\Courier\CourierDisclaimer;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
+use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PostExApiHelper
 {
@@ -230,6 +232,7 @@ class PostExApiHelper
 
     public function webHook($request){
         $order = $request;
+        Log::info($order);
 
         $detail = Order::with('range')->where('tracking_number', $order['trackingNumber'])->first();
 
@@ -270,6 +273,20 @@ class PostExApiHelper
                     'status' => '12'
                 ]);
             }
+
+            OrderLeopardStatus::updateOrCreate(
+                [
+                    'order_id'   => $detail->id,       // Condition 1: order_id must match
+                    'leopard_label' => $status['postex'],  // Condition 2: short_code must match
+                ],
+                [
+                    'leopard_label'  => $status['postex'],
+                    'internal_label' => "",
+                    'receiver_name'  => "",
+                    'reason'         => "",
+                    'time'           => $order['statusUpdateDatetime'],
+                ]
+            );
         }
     }
 }

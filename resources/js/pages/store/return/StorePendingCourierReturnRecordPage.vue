@@ -8,7 +8,32 @@
                 <div class="card-body">
                   <!-- Table -->
                   <div class="row">
-                    <div class="col-12">
+                    <form @submit.prevent="filterFunction" class="col-md-12 row mb-3">
+                        <div class="col-md-3">
+                            <label>Courier</label>
+                           <select name="" id="" v-model="filter.courier" class="form-control">
+                                <option value="">Select from the following</option>
+                                <option value="1">Leopard</option>
+                                <option value="2">PostEx</option>
+                           </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label>From</label>
+                            <input type="date" class="form-control" v-model="filter.from">
+                        </div>
+                        <div class="col-md-3">
+                            <label>To</label>
+                            <input type="date" class="form-control" v-model="filter.to">
+                        </div>
+                        <div class="col-md-3">
+                            <label>Action</label>
+                            <button class="btn btn-primary w-100"> Filter</button>
+                        </div>
+                    </form>
+                    <div class="col-md-12 mt-3" v-if="loader">
+                        <bullet-list-loader :width="250"> </bullet-list-loader>
+                    </div>
+                    <div class="col-12" v-else>
                       <div class="card">
                         <div class="card-body">
                             <table class="table table-bordered" id="table">
@@ -20,7 +45,7 @@
                                         <th>Product</th>
                                         <th>Quantity</th>
                                         <th>Created Date</th>
-                                
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -54,13 +79,15 @@
     </div>
 </template>
 <script>
-    import TableHeader from "../../../components/table/TableHeaderComponent.vue";
-
+  import TableHeader from "../../../components/table/TableHeaderComponent.vue";
+  import { BulletListLoader } from "vue-content-loader";
   import moment from "moment";
+
     export default {
         name : 'StoreInWardRecordPage',
         components: {
             TableHeader,
+            BulletListLoader
         },
         data() {
             return {
@@ -72,14 +99,23 @@
                 inwards : [],
                 csrf : '',
                 pid : '',
+                filter: {
+                    from: new Date().toISOString().substr(0, 10),
+                    to: new Date().toISOString().substr(0, 10),
+                    courier : ""
+                },
+                loader : true
             };
         },
         created(){
             // CSRF token value assigning
             this.csrf = $('meta[name=csrf-token]').attr('content');
-            this.fetchInwards();
+            this.fetchInwards({ from : null , to : null});
         },
         methods : {
+            filterFunction(){
+                this.fetchInwards( this.filter );
+            },
             printPurchaseOrder( id ){
                 return;
                 this.pid = id;
@@ -91,19 +127,21 @@
             formatDate(date) {
                 return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
             },
-            fetchInwards(){
+            fetchInwards( data ){
                 let vm = this;
+                vm.loader = true;
                 axios
-                .get(this.api_url + "inventory/products/store/product-returned")
+                .post(this.api_url + "inventory/products/store/product-returned/records", data)
                 .then((response) => {
                     const results = response.data.response;
                     vm.inwards = results;
 
                     setTimeout(()=>{
                         this.dataTable()
-                    },300)
-                })
+                    },300);
 
+                    vm.loader = false;
+                })
             },
             dataTable(){
                 $('#table').DataTable({

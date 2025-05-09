@@ -80,25 +80,37 @@
                                 </div>
 
                                 <form @submit.prevent="filterFunction" class="col-md-12 row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label>Courier</label>
+                                       <select name="" id="" v-model="filter.courier" class="form-control">
+                                            <option value="">Select from the following</option>
+                                            <option value="1">Leopard</option>
+                                            <option value="2">PostEx</option>
+                                       </select>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label>From</label>
                                         <input type="date" class="form-control" v-model="filter.from">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label>To</label>
                                         <input type="date" class="form-control" v-model="filter.to">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label>Action</label>
                                         <button class="btn btn-primary w-100"> Filter</button>
                                     </div>
                                 </form>
-                                <div class="col-md-12 mt-3">
+                                <div class="col-md-12 mt-3" v-if="tableLoader">
+                                    <bullet-list-loader :width="250"> </bullet-list-loader>
+                                </div>
+                                <div class="col-md-12 mt-3" v-else>
                                         <table class="table table-bordered" id="order_table">
                                             <thead>
                                                 <tr>
                                                     <th>Sr #</th>
                                                     <th>Order #</th>
+                                                    <th>Courier</th>
                                                     <th>Tracking Number</th>
                                                     <th>Dropshipper</th>
                                                     <th>Amount</th>
@@ -110,8 +122,9 @@
                                                     <td>{{ index + 1 }}</td>
                                                     <td>
                                                         {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
-                                                      </td>
-                                                      <td>{{ item.tracking_number}}</td>
+                                                    </td>
+                                                    <td>{{ item?.courier?.courier_name}}</td>
+                                                    <td>{{ item.tracking_number}}</td>
                                                     <td>{{ item.user.name }}</td>
                                                     <td>{{ formatPrice(item.total_bill) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>
@@ -141,25 +154,37 @@
                               <div class="row">
 
                                 <form @submit.prevent="filterFunction" class="col-md-12 row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
+                                        <label>Courier</label>
+                                       <select name="" id="" v-model="filter.courier" class="form-control">
+                                            <option value="">Select from the following</option>
+                                            <option value="1">Leopard</option>
+                                            <option value="2">PostEx</option>
+                                       </select>
+                                    </div>
+                                    <div class="col-md-3">
                                         <label>From</label>
                                         <input type="date" class="form-control" v-model="filter.from">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label>To</label>
                                         <input type="date" class="form-control" v-model="filter.to">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label>Action</label>
                                         <button class="btn btn-primary w-100"> Filter</button>
                                     </div>
                                 </form>
-                                <div class="col-md-12 mt-3">
+                                <div class="col-md-12 mt-3" v-if="tableLoader">
+                                    <bullet-list-loader :width="250"> </bullet-list-loader>
+                                </div>
+                                <div class="col-md-12 mt-3" v-else>
                                         <table class="table table-bordered" id="dispatched-order_table">
                                             <thead>
                                                 <tr>
                                                     <th>Sr #</th>
                                                     <th>Order #</th>
+                                                    <th>Courier</th>
                                                     <th>Tracking Number</th>
                                                     <th>Status</th>
                                                     <th>Amount</th>
@@ -172,6 +197,7 @@
                                                     <td>
                                                         {{ item.order.shop && item.order.shop.store_name ? item.order.shop.store_name.substring(0, 3) + '-' + item.order.order_no : item.order.order_no }}
                                                     </td>
+                                                    <td>{{ item.order?.courier?.courier_name }}</td>
                                                     <td>
                                                         <a href="#" data-toggle="modal"
                                                             data-target="#trackingInformation"
@@ -205,16 +231,17 @@
 </template>
 <script>
 
-import { filter } from "lodash";
 import TableHeader from "../../../../components/table/TableHeaderComponent.vue";
 import TrackingDetailPopup from "../../../../components/inventory/product/order/TrackingDetailPopup.vue";
 import moment from "moment";
+import { BulletListLoader } from "vue-content-loader";
 
     export default {
         name : 'StorePendingCourierReturnPage',
         components: {
             TableHeader,
-            TrackingDetailPopup
+            TrackingDetailPopup,
+            BulletListLoader
         },
         data() {
             return {
@@ -229,11 +256,13 @@ import moment from "moment";
                 filter: {
                     from: new Date().toISOString().substr(0, 10),
                     to: new Date().toISOString().substr(0, 10),
+                    courier : ""
                 },
                 orderNumber : "",
                 loader : false,
                 dispatcheds : [],
                 trackingDetails: [],
+                tableLoader : true
             };
         },
         computed:{
@@ -306,10 +335,11 @@ import moment from "moment";
                 this.detail = detail;
             },
             formatDate(date) {
-                return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
+                return date ? moment.utc(date).format('DD-MMM-YYYY') : 'N/A';
             },
             fetchPendingDispatchs(data){
                 let vm = this;
+                vm.tableLoader =  true;
                 axios
                 .post(this.api_url + "inventory/products/orders/pending-dispatchs", data)
                 .then((response) => {
@@ -317,6 +347,7 @@ import moment from "moment";
                     vm.pendingDispatchs = results.pendings;
                     vm.dispatcheds = results.dispatched;
                     vm.dataTable()
+                    vm.tableLoader = false;
                 })
                 .catch((err) => this.fetchReturnOrders());
             },

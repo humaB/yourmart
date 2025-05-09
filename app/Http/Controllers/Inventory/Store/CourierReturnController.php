@@ -28,9 +28,20 @@ class CourierReturnController extends Controller
         return view('inventory.store.return.courier_return_record');
     }
 
-    public function inwardRecord(){
+    public function inwardRecord(Request $request){
 
         $data = StoreReturnDetail::with('product', 'srn.order')
+        ->when( $request->from, function ($query, $from) {
+            return $query->whereDate('created_at', '>=', $from);
+        })
+        ->when( $request->to, function ($query, $to) {
+            return $query->whereDate('created_at', '<=', $to);
+        })
+        ->when($request->courier, function ($query, $courier) {
+            return $query->whereHas('srn.order', function ($q) use ($courier) {
+                $q->where('courier_service_id', $courier);
+            });
+        })
         ->orderBy('id','desc')
         ->get();
 
@@ -40,11 +51,20 @@ class CourierReturnController extends Controller
     }
 
 
-    public function pendingReturns(){
+    public function pendingReturns( Request $request ){
 
-        $data = Order::with('user', 'shop')->where('status', 9)
-        ->orderBy('id', 'desc')
-        ->get();
+        $data = Order::with('user', 'shop', 'courier')->where('status', 9)
+            ->when( $request->from, function ($query, $from) {
+                return $query->whereDate('created_at', '>=', $from);
+            })
+            ->when( $request->to, function ($query, $to) {
+                return $query->whereDate('created_at', '<=', $to);
+            })
+            ->when( $request->courier, function ($query, $courier) {
+                return $query->where('courier_service_id', $courier);
+            })
+            ->orderBy('id', 'desc')
+            ->get();
 
         return (new ResponseCollection($data))
         ->response()
