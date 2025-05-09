@@ -92,6 +92,14 @@
                                 </select>
                             </div>
                             <div class="col-md-3">
+                                <label for="">Dropshipper Name</label>
+                                <input type="text" name="" id="" class="form-control" v-model="filter.name">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Dropshipper Email</label>
+                                <input type="email" name="" id="" class="form-control" v-model="filter.email">
+                            </div>
+                            <div class="col-md-3">
                                 <label for="">Level</label>
                                 <select v-model="filter.level" class="form-control">
                                     <option value="">Select from the following</option>
@@ -275,6 +283,8 @@ export default {
             id: '',
             filter: {
                 status: '',
+                name : "",
+                email : "",
                 from: '',
                 to: '',
                 level : "",
@@ -434,6 +444,8 @@ export default {
                 .get(url, {
                     params: {
                         status: vm.filter.status,
+                        name : vm.filter.name,
+                        email : vm.filter.email,
                         from: vm.filter.from,
                         to: vm.filter.to,
                         page : page,
@@ -446,10 +458,11 @@ export default {
                     vm.pagination = response.data.response.pagination;
 
                     // Calculate request statistics
-                    // vm.totalRequest = vm.records.length;
-                    // vm.pendingRequest = vm.records.filter(record => record.status === 0).length;
-                    // vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
-                    // vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
+                    const results = response.data.response.statuses;
+                    vm.totalRequest = results.totalRequests;
+                    vm.pendingRequest = results.totalPending;
+                    vm.approvedRequest = results.totalApproved;
+                    vm.rejectedRequest = results.totalRejected;
 
                     vm.loader = false;
                 });
@@ -482,6 +495,8 @@ export default {
             let vm = this;
             vm.filter = {
                 status: '',
+                name : "",
+                email : "",
                 from: '',
                 to: '',
                 level : "",

@@ -4788,23 +4788,25 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
       var vm = this;
       vm.tableLoader = true;
-      axios.post(this.api_url + "inventory/products/orders/pending-dispatchs", data).then(function (response) {
-        var results = response.data.response;
-        vm.pendingDispatchs = results.pendings;
-        vm.dispatcheds = results.dispatched;
-        vm.dataTable();
-        vm.tableLoader = false;
-      })["catch"](function (err) {
-        return _this2.fetchReturnOrders();
-      });
-    },
-    dataTable: function dataTable() {
       if ($.fn.DataTable.isDataTable("#order_table")) {
         $('#order_table').DataTable().destroy();
       }
       if ($.fn.DataTable.isDataTable("#dispatched-order_table")) {
         $('#dispatched-order_table').DataTable().destroy();
       }
+      axios.post(this.api_url + "inventory/products/orders/pending-dispatchs", data).then(function (response) {
+        var results = response.data.response;
+        vm.pendingDispatchs = results.pendings;
+        vm.dispatcheds = results.dispatched;
+        setTimeout(function () {
+          vm.dataTable();
+        }, 300);
+        vm.tableLoader = false;
+      })["catch"](function (err) {
+        return _this2.fetchReturnOrders();
+      });
+    },
+    dataTable: function dataTable() {
       setTimeout(function () {
         $('#order_table').DataTable({
           dom: "Bfrtip",

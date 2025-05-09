@@ -160,6 +160,17 @@ class DropShipperController extends Controller
             $dropshipper = $this->calculateLevel($dropshipper, $level, $levelTable, $levelDetailTable);
         }
 
+        $statuses = DropShipper::selectRaw('status, COUNT(*) as count')
+        ->groupBy('status')
+        ->pluck('count', 'status');
+
+        $statuses = [
+            'totalRequests'  => $statuses->sum(),
+            'totalPending'   => $statuses->get(0, 0),
+            'totalApproved'  => $statuses->get(1, 0),
+            'totalRejected'  => $statuses->get(2, 0),
+        ];
+
         $data = [
             'dropshippers'     => $dropshippers,
             'pagination'            => [
@@ -170,6 +181,8 @@ class DropShipperController extends Controller
                 'from'         => $dropshippers->firstItem(),
                 'to'           => $dropshippers->lastItem(),
             ],
+            
+            'statuses' => $statuses
         ];
         return (new ResponseCollection($data))
             ->response()

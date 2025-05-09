@@ -4600,6 +4600,8 @@ __webpack_require__.r(__webpack_exports__);
       id: '',
       filter: {
         status: '',
+        name: "",
+        email: "",
         from: '',
         to: '',
         level: "",
@@ -4766,6 +4768,8 @@ __webpack_require__.r(__webpack_exports__);
       axios.get(url, {
         params: {
           status: vm.filter.status,
+          name: vm.filter.name,
+          email: vm.filter.email,
           from: vm.filter.from,
           to: vm.filter.to,
           page: page,
@@ -4777,11 +4781,11 @@ __webpack_require__.r(__webpack_exports__);
         vm.pagination = response.data.response.pagination;
 
         // Calculate request statistics
-        // vm.totalRequest = vm.records.length;
-        // vm.pendingRequest = vm.records.filter(record => record.status === 0).length;
-        // vm.approvedRequest = vm.records.filter(record => record.status === 1).length;
-        // vm.rejectedRequest = vm.records.filter(record => record.status === 2).length;
-
+        var results = response.data.response.statuses;
+        vm.totalRequest = results.totalRequests;
+        vm.pendingRequest = results.totalPending;
+        vm.approvedRequest = results.totalApproved;
+        vm.rejectedRequest = results.totalRejected;
         vm.loader = false;
       });
     },
@@ -4812,6 +4816,8 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       vm.filter = {
         status: '',
+        name: "",
+        email: "",
         from: '',
         to: '',
         level: "",
@@ -18538,6 +18544,62 @@ var render = function render() {
       value: "3"
     }
   }, [_vm._v("Deactivated")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Dropshipper Name")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.name,
+      expression: "filter.name"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      name: "",
+      id: ""
+    },
+    domProps: {
+      value: _vm.filter.name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "name", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Dropshipper Email")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.email,
+      expression: "filter.email"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "email",
+      name: "",
+      id: ""
+    },
+    domProps: {
+      value: _vm.filter.email
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "email", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3"
   }, [_c("label", {
     attrs: {
