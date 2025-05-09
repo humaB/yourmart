@@ -41,6 +41,20 @@
                 <DashboardRevenueOrderChart
                     :revenueOrderGraph="revenueOrderGraph"
                 />
+
+                <div class="col-12 col-sm-12 col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Courier Statistics</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="myChart20" height="70"></canvas>
+                            <div class="statistic-details mt-1">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             <div class="card-body table-responsive" v-if="loader">
@@ -191,6 +205,7 @@
 </template>
 
 <script>
+import CourierStatsGraph from '../components/admin/dashboard/CourierStatsGraph.vue';
 import DashboardDropshipperGraph from '../components/admin/dashboard/DashboardDropshipperGraph.vue';
 import DashboardRevenueOrderChart from '../components/admin/dashboard/DashboardRevenueOrderChart.vue';
 import DashboardSectionFour from '../components/admin/dashboard/DashboardSectionFour.vue';
@@ -216,6 +231,7 @@ export default {
         DashboardSectionFour,
         DashboardDropshipperGraph,
         DashboardRevenueOrderChart,
+        CourierStatsGraph,
         BulletListLoader
     },
     data() {
@@ -316,6 +332,7 @@ export default {
                 level3 : 0,
                 topRatedSeller : 0
             },
+            courierPerformance : []
         };
     },
     created() {
@@ -377,6 +394,7 @@ export default {
                     vm.inventoryStatus = results.inventoryStatus;
                     vm.dropshipperGraph = results.dropshipperGraph;
                     vm.revenueOrderGraph = results.revenueOrderGraph;
+                    vm.courierPerformance = results.courierPerformance;
                     const levels = results.levels
                     vm.levelsWidget = {
                         level1: levels.filter(level => level.level === 'Level 01').length,
@@ -385,6 +403,8 @@ export default {
                         topRatedSeller: levels.filter(level => level.level === 'Top Rated Seller').length
                     };
                     vm.loader = false;
+
+                    vm.renderChart()
                 })
 
         },
@@ -404,6 +424,44 @@ export default {
         getPercentage(statusCount) {
             if (this.totalTicketSum.total_tickets === 0) return 0;
             return Math.round((statusCount / this.totalTicketSum.total_tickets) * 100);
+        },
+        renderChart() {
+            const ctx = document.getElementById("myChart20").getContext('2d');
+
+            this.chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: this.courierPerformance.labels,
+                    datasets: this.courierPerformance.datasets
+                },
+                options: {
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                drawBorder: false,
+                                color: '#f2f2f2',
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                stepSize: 10,
+                                fontColor: "#9aa0ac", // Font Color
+                            }
+                        }],
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                fontColor: "#9aa0ac", // Font Color
+                            }
+                        }]
+                    }
+                }
+            });
+
         }
     },
 };

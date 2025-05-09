@@ -439,7 +439,9 @@ export default {
             vm.page = page;
 
             let url = this.api_url + "dropshippers";
-      
+            if ($.fn.DataTable.isDataTable("#moq_table_2")) {
+                $('#moq_table_2').DataTable().destroy();
+            }
             axios
                 .get(url, {
                     params: {

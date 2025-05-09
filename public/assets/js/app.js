@@ -61,6 +61,27 @@ function mergeFn (a, b) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=script&lang=js":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=script&lang=js ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'ChartComponent',
+  mounted: function mounted() {
+    this.renderChart();
+  },
+  methods: {}
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue?vue&type=script&lang=js":
 /*!***********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue?vue&type=script&lang=js ***!
@@ -3975,17 +3996,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardDropshipperGraph.vue */ "./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardRevenueOrderChart.vue */ "./resources/js/components/admin/dashboard/DashboardRevenueOrderChart.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionFour.vue */ "./resources/js/components/admin/dashboard/DashboardSectionFour.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionOne.vue */ "./resources/js/components/admin/dashboard/DashboardSectionOne.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionThree.vue */ "./resources/js/components/admin/dashboard/DashboardSectionThree.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionTwo_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionTwo.vue */ "./resources/js/components/admin/dashboard/DashboardSectionTwo.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveDropshipper.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveDropshipper.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveProduct.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveProduct.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveSupplier.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveSupplier.vue");
-/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var _components_admin_dashboard_CourierStatsGraph_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/admin/dashboard/CourierStatsGraph.vue */ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardDropshipperGraph.vue */ "./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardRevenueOrderChart.vue */ "./resources/js/components/admin/dashboard/DashboardRevenueOrderChart.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionFour.vue */ "./resources/js/components/admin/dashboard/DashboardSectionFour.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionOne.vue */ "./resources/js/components/admin/dashboard/DashboardSectionOne.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionThree.vue */ "./resources/js/components/admin/dashboard/DashboardSectionThree.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionTwo_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionTwo.vue */ "./resources/js/components/admin/dashboard/DashboardSectionTwo.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveDropshipper.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveDropshipper.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveProduct.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveProduct.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveSupplier.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveSupplier.vue");
+/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
@@ -4001,20 +4023,22 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DashboardPage',
   components: {
-    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-    DashboardSectionOne: _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
-    DashboardSectionTwo: _components_admin_dashboard_DashboardSectionTwo_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    DashboardSectionThree: _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    DashboardTopFiveDropshipper: _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-    DashboardTopFiveProduct: _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-    DashboardTopFiveSupplier: _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-    DashboardSectionFour: _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    DashboardDropshipperGraph: _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    DashboardRevenueOrderChart: _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_10__.BulletListLoader
+    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+    DashboardSectionOne: _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    DashboardSectionTwo: _components_admin_dashboard_DashboardSectionTwo_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    DashboardSectionThree: _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    DashboardTopFiveDropshipper: _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    DashboardTopFiveProduct: _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+    DashboardTopFiveSupplier: _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+    DashboardSectionFour: _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    DashboardDropshipperGraph: _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    DashboardRevenueOrderChart: _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    CourierStatsGraph: _components_admin_dashboard_CourierStatsGraph_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_11__.BulletListLoader
   },
   data: function data() {
     var _ref;
@@ -4088,12 +4112,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         approved: 0,
         reject: 0
       }
-    }), "allProcessedOrders", {}), "processOrders", {}), "topFiveDropshippers", []), "topFiveProduct", []), "topFiveSuppliers", []), "dropshipperGraph", {}), _defineProperty(_defineProperty(_ref, "revenueOrderGraph", {}), "levelsWidget", {
+    }), "allProcessedOrders", {}), "processOrders", {}), "topFiveDropshippers", []), "topFiveProduct", []), "topFiveSuppliers", []), "dropshipperGraph", {}), _defineProperty(_defineProperty(_defineProperty(_ref, "revenueOrderGraph", {}), "levelsWidget", {
       level1: 0,
       level2: 0,
       level3: 0,
       topRatedSeller: 0
-    });
+    }), "courierPerformance", []);
   },
   created: function created() {
     this.fetchData({
@@ -4151,6 +4175,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         vm.inventoryStatus = results.inventoryStatus;
         vm.dropshipperGraph = results.dropshipperGraph;
         vm.revenueOrderGraph = results.revenueOrderGraph;
+        vm.courierPerformance = results.courierPerformance;
         var levels = results.levels;
         vm.levelsWidget = {
           level1: levels.filter(function (level) {
@@ -4167,6 +4192,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           }).length
         };
         vm.loader = false;
+        vm.renderChart();
       });
     },
     applyFilter: function applyFilter() {
@@ -4186,6 +4212,42 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     getPercentage: function getPercentage(statusCount) {
       if (this.totalTicketSum.total_tickets === 0) return 0;
       return Math.round(statusCount / this.totalTicketSum.total_tickets * 100);
+    },
+    renderChart: function renderChart() {
+      var ctx = document.getElementById("myChart20").getContext('2d');
+      this.chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.courierPerformance.labels,
+          datasets: this.courierPerformance.datasets
+        },
+        options: {
+          legend: {
+            display: false
+          },
+          scales: {
+            yAxes: [{
+              gridLines: {
+                drawBorder: false,
+                color: '#f2f2f2'
+              },
+              ticks: {
+                beginAtZero: true,
+                stepSize: 10,
+                fontColor: "#9aa0ac" // Font Color
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                fontColor: "#9aa0ac" // Font Color
+              }
+            }]
+          }
+        }
+      });
     }
   }
 });
@@ -4766,6 +4828,9 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       vm.page = page;
       var url = this.api_url + "dropshippers";
+      if ($.fn.DataTable.isDataTable("#moq_table_2")) {
+        $('#moq_table_2').DataTable().destroy();
+      }
       axios.get(url, {
         params: {
           status: vm.filter.status,
@@ -7297,6 +7362,29 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     this.fetchProfileData();
   }
 });
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=template&id=6ac75b26":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=template&id=6ac75b26 ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div");
+};
+var staticRenderFns = [];
+render._withStripped = true;
+
 
 /***/ }),
 
@@ -17525,7 +17613,7 @@ var render = function render() {
     attrs: {
       revenueOrderGraph: _vm.revenueOrderGraph
     }
-  })], 1), _vm._v(" "), _vm.loader ? _c("div", {
+  }), _vm._v(" "), _vm._m(0)], 1), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
@@ -17564,13 +17652,13 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-striped"
-  }, [_vm._m(1), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalTicketSum.total_tickets))]), _vm._v(" "), _c("td", {
+  }, [_vm._m(2), _vm._v(" "), _c("tr", [_c("td", [_vm._v(_vm._s(_vm.totalTicketSum.total_tickets))]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
@@ -17658,7 +17746,7 @@ var render = function render() {
     staticClass: "col-md-6 mt-5"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(2), _vm._v(" "), _c("div", {
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("ul", {
     staticClass: "list-group"
@@ -17673,7 +17761,7 @@ var render = function render() {
     staticClass: "col-md-6 mt-5"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("ul", {
     staticClass: "list-group"
@@ -17691,6 +17779,25 @@ var render = function render() {
   })], 1);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-header"
+  }, [_c("h4", [_vm._v("Courier Statistics")])]), _vm._v(" "), _c("div", {
+    staticClass: "card-body"
+  }, [_c("canvas", {
+    attrs: {
+      id: "myChart20",
+      height: "70"
+    }
+  }), _vm._v(" "), _c("div", {
+    staticClass: "statistic-details mt-1"
+  })])])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -65309,6 +65416,45 @@ var InstagramLoader = {
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/CourierStatsGraph.vue ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CourierStatsGraph_vue_vue_type_template_id_6ac75b26__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CourierStatsGraph.vue?vue&type=template&id=6ac75b26 */ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=template&id=6ac75b26");
+/* harmony import */ var _CourierStatsGraph_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CourierStatsGraph.vue?vue&type=script&lang=js */ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CourierStatsGraph_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CourierStatsGraph_vue_vue_type_template_id_6ac75b26__WEBPACK_IMPORTED_MODULE_0__.render,
+  _CourierStatsGraph_vue_vue_type_template_id_6ac75b26__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/dashboard/CourierStatsGraph.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue":
 /*!*******************************************************************************!*\
   !*** ./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue ***!
@@ -67747,6 +67893,22 @@ component.options.__file = "resources/js/pages/setting/ProfileSettingPage.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=script&lang=js":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierStatsGraph_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierStatsGraph.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierStatsGraph_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue?vue&type=script&lang=js":
 /*!*******************************************************************************************************!*\
   !*** ./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue?vue&type=script&lang=js ***!
@@ -68736,6 +68898,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSettingPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ProfileSettingPage.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/setting/ProfileSettingPage.vue?vue&type=script&lang=js");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ProfileSettingPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=template&id=6ac75b26":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=template&id=6ac75b26 ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierStatsGraph_vue_vue_type_template_id_6ac75b26__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierStatsGraph_vue_vue_type_template_id_6ac75b26__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_CourierStatsGraph_vue_vue_type_template_id_6ac75b26__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CourierStatsGraph.vue?vue&type=template&id=6ac75b26 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/CourierStatsGraph.vue?vue&type=template&id=6ac75b26");
+
 
 /***/ }),
 

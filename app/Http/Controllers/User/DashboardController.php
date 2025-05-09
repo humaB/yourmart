@@ -49,6 +49,8 @@ class DashboardController extends Controller
         $inventoryStatus    = $this->inventoryStatus($request);
         $dropshipperGraph   = $this->dropshipperGraph();
         $revenueOrderGraph  = $this->revenueOrderGraph();
+
+        $courierPerformance  = $this->courierPerformance();
         $levels = DropShipperLevel::where('level', '!=', 'New Seller')->get();
 
         $data = [
@@ -73,13 +75,84 @@ class DashboardController extends Controller
             'inventoryStatus'       => $inventoryStatus,
             'dropshipperGraph'      => $dropshipperGraph,
             'revenueOrderGraph'     => $revenueOrderGraph,
-            'levels'                => $levels
+            'levels'                => $levels,
+
+            'courierPerformance'    => $courierPerformance
         ];
 
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
     }
+
+    private function courierPerformance()
+    {
+        $startDate = Carbon::now()->subMonths(11)->startOfMonth(); // 12 months ago
+        $endDate = Carbon::now()->endOfMonth(); // current month end
+
+        // Group all orders by courier, month, and status
+        $orders = Order::whereBetween('created_at', [$startDate, $endDate])
+            ->whereIn('status', ['8', '9', '10']) // Delivered, Return, Return to Store
+            ->select(
+                'courier_service_id',
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"),
+                'status',
+                DB::raw('COUNT(*) as total')
+            )
+            ->groupBy('courier_service_id', 'month', 'status')
+            ->get();
+
+        // Prepare structure
+        $labels = [];
+        $leopardRates = [];
+        $postexRates = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $monthKey = $date->format('Y-m');
+            $monthLabel = $date->format('F Y');
+
+            $labels[] = $monthLabel;
+
+            // Leopard (courier_service_id = 1)
+            $leopardDelivered = $orders->firstWhere(fn($o) => $o->courier_service_id == 1 && $o->status == '8' && $o->month == $monthKey)->total ?? 0;
+            $leopardReturned = $orders->firstWhere(fn($o) => $o->courier_service_id == 1 && $o->status == '9' && $o->month == $monthKey)->total ?? 0;
+            $leopardReturnToStore = $orders->firstWhere(fn($o) => $o->courier_service_id == 1 && $o->status == '10' && $o->month == $monthKey)->total ?? 0;
+
+            $leopardTotal = $leopardDelivered + $leopardReturned + $leopardReturnToStore;
+            $leopardRate = $leopardTotal > 0 ? round(($leopardDelivered / $leopardTotal) * 100, 2) : 0;
+            $leopardRates[] = $leopardRate;
+
+            // PostEx (courier_service_id = 2)
+            $postexDelivered = $orders->firstWhere(fn($o) => $o->courier_service_id == 2 && $o->status == '8' && $o->month == $monthKey)->total ?? 0;
+            $postexReturned = $orders->firstWhere(fn($o) => $o->courier_service_id == 2 && $o->status == '9' && $o->month == $monthKey)->total ?? 0;
+            $postexReturnToStore = $orders->firstWhere(fn($o) => $o->courier_service_id == 2 && $o->status == '10' && $o->month == $monthKey)->total ?? 0;
+
+            $postexTotal = $postexDelivered + $postexReturned + $postexReturnToStore;
+            $postexRate = $postexTotal > 0 ? round(($postexDelivered / $postexTotal) * 100, 2) : 0;
+            $postexRates[] = $postexRate;
+        }
+
+        return [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Leopard Success Rate (%)',
+                    'data' => $leopardRates,
+                    'backgroundColor' => 'rgba(255,164,38,.9)',
+                    'borderColor' => 'rgba(255,164,38,.9)',
+                ],
+                [
+                    'label' => 'PostEx Success Rate (%)',
+                    'data' => $postexRates,
+                    'backgroundColor' => 'rgba(71,65,98,.9)',
+                    'borderColor' => 'rgba(71,65,98,.9)',
+                ]
+            ]
+        ];
+    }
+
+
 
     private function inventoryStatus($request)
     {

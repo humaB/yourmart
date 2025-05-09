@@ -121,7 +121,7 @@ var myChart = new Chart(ctx, {
   }
 });
 
-var ctx = document.getElementById("myChart2").getContext('2d');
+var ctx = document.getElementById("myChart20").getContext('2d');
 var myChart = new Chart(ctx, {
   type: 'bar',
   data: {
@@ -561,7 +561,7 @@ var myChart = new Chart(ctx, {
   }
 });
 
-// revenue chart 
+// revenue chart
 var options = {
   chart: {
     height: 230,
