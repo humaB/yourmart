@@ -264,7 +264,7 @@ export default {
                 heading: "Dropshipper Request's",
             },
             th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status","Level","Incentive", "Added Date", "Action"],
-            table_id: "moq_table",
+            table_id: "moq_table_2",
             guestQuantity: 0,
             registeredQuantity: 0,
             btnLoader: false,
@@ -439,7 +439,7 @@ export default {
             vm.page = page;
 
             let url = this.api_url + "dropshippers";
-
+      
             axios
                 .get(url, {
                     params: {
@@ -465,6 +465,8 @@ export default {
                     vm.rejectedRequest = results.totalRejected;
 
                     vm.loader = false;
+
+                    this.dataTable();
                 });
         },
         paymentHistory(id) {
@@ -550,11 +552,8 @@ export default {
                 });
         },
         dataTable() {
-            if ($.fn.DataTable.isDataTable("#moq_table")) {
-                $('#moq_table').DataTable().destroy();
-            }
             setTimeout(function () {
-                $("#moq_table").DataTable({
+                $("#moq_table_2").DataTable({
                     "paging": false,
                     "pageLength": 20,
                     "lengthChange": false,
@@ -566,17 +565,9 @@ export default {
             }, 300);
         },
         clearDataTable() {
-            const table = $("#moq_table").DataTable();
+            const table = $("#moq_table_2").DataTable();
             table.destroy();
         },
     },
-    watch: {
-        records: {
-        deep: true, // if `record` is an object and you want to track nested changes
-        handler(newVal, oldVal) {
-            this.dataTable()
-        }
-        }
-  },
 }
 </script>

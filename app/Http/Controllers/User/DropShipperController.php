@@ -125,6 +125,8 @@ class DropShipperController extends Controller
         $to = $request->query('to');
         $level = $request->query('level');
         $incentive = $request->query('incentive');
+        $name = $request->query('name');
+        $email = $request->query('email');
 
         $selectDropshippers = [];
         if( $level || $incentive ){
@@ -138,12 +140,18 @@ class DropShipperController extends Controller
             },
             'level'
         ])
-        ->when($selectDropshippers, function ($query, $selectDropshippers) {
-            return $query->whereIn('id', $selectDropshippers);
-        })
-        ->when($status, function ($query, $status) {
-            return $query->where('status', $status);
-        })
+            ->when($name, function ($query, $name) {
+                return $query->where('full_name', 'LIKE', "%$name%");
+            })
+            ->when($email, function ($query, $email) {
+                return $query->where('email', 'LIKE', "%$email%");
+            })
+            ->when($selectDropshippers, function ($query, $selectDropshippers) {
+                return $query->whereIn('id', $selectDropshippers);
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
             ->when($from, function ($query, $from) {
                 return $query->whereDate('created_at', '>=', $from);
             })
@@ -181,7 +189,7 @@ class DropShipperController extends Controller
                 'from'         => $dropshippers->firstItem(),
                 'to'           => $dropshippers->lastItem(),
             ],
-            
+
             'statuses' => $statuses
         ];
         return (new ResponseCollection($data))

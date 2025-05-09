@@ -4581,7 +4581,7 @@ __webpack_require__.r(__webpack_exports__);
         heading: "Dropshipper Request's"
       },
       th: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Level", "Incentive", "Added Date", "Action"],
-      table_id: "moq_table",
+      table_id: "moq_table_2",
       guestQuantity: 0,
       registeredQuantity: 0,
       btnLoader: false,
@@ -4761,6 +4761,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     fetchRecord: function fetchRecord() {
+      var _this2 = this;
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
       var vm = this;
       vm.page = page;
@@ -4787,6 +4788,7 @@ __webpack_require__.r(__webpack_exports__);
         vm.approvedRequest = results.totalApproved;
         vm.rejectedRequest = results.totalRejected;
         vm.loader = false;
+        _this2.dataTable();
       });
     },
     paymentHistory: function paymentHistory(id) {
@@ -4840,7 +4842,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addPayment: function addPayment() {
-      var _this2 = this;
+      var _this3 = this;
       if (this.addData.type == null || this.addData.amount < 1 || this.addData.from_account == null) {
         return swal({
           title: "Error",
@@ -4858,17 +4860,14 @@ __webpack_require__.r(__webpack_exports__);
           icon: "success",
           timer: 3000
         });
-        _this2.$refs.dropshipperPayment.paymentShopPayments(_this2.addData.shop_id);
-        _this2.addData = JSON.parse(JSON.stringify(_this2.addDataReset));
-        _this2.paymentLoader = false;
+        _this3.$refs.dropshipperPayment.paymentShopPayments(_this3.addData.shop_id);
+        _this3.addData = JSON.parse(JSON.stringify(_this3.addDataReset));
+        _this3.paymentLoader = false;
       });
     },
     dataTable: function dataTable() {
-      if ($.fn.DataTable.isDataTable("#moq_table")) {
-        $('#moq_table').DataTable().destroy();
-      }
       setTimeout(function () {
-        $("#moq_table").DataTable({
+        $("#moq_table_2").DataTable({
           "paging": false,
           "pageLength": 20,
           "lengthChange": false,
@@ -4880,17 +4879,8 @@ __webpack_require__.r(__webpack_exports__);
       }, 300);
     },
     clearDataTable: function clearDataTable() {
-      var table = $("#moq_table").DataTable();
+      var table = $("#moq_table_2").DataTable();
       table.destroy();
-    }
-  },
-  watch: {
-    records: {
-      deep: true,
-      // if `record` is an object and you want to track nested changes
-      handler: function handler(newVal, oldVal) {
-        this.dataTable();
-      }
     }
   }
 });
