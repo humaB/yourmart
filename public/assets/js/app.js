@@ -1609,7 +1609,8 @@ __webpack_require__.r(__webpack_exports__);
       } // Initialize with one empty category selection
       ],
       testWeight: '',
-      weights: []
+      weights: [],
+      editingRangeId: null
     };
   },
   mounted: function mounted() {
@@ -1646,6 +1647,13 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    editRange: function editRange(range) {
+      this.editingRangeId = range.id;
+    },
+    saveRange: function saveRange(range) {
+      this.editingRangeId = null;
+      this.$emit('updateRange', range);
+    },
     calculateTotalCostForWeight: function calculateTotalCostForWeight(_ref) {
       var testWeight = _ref.testWeight,
         range = _ref.range;
@@ -6228,6 +6236,19 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchCouriers();
   },
   methods: {
+    updateRange: function updateRange(data) {
+      var vm = this;
+      axios.post(this.api_url + "couriers/update-ranges", data).then(function (response) {
+        return swal({
+          title: "Success",
+          text: "Range updated successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
     updateDisclaimer: function updateDisclaimer(data) {
       var vm = this;
       axios.post(this.api_url + "couriers/disclaimers", data).then(function (response) {
@@ -12659,13 +12680,223 @@ var render = function render() {
     staticClass: "col-md-12 row mt-5"
   }, [_vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm.details.categories ? _c("div", {
     staticClass: "col-md-12"
-  }, [_c("ul", _vm._l(_vm.details.categories, function (category) {
+  }, [_c("ul", {
+    staticClass: "list-group"
+  }, _vm._l(_vm.details.categories, function (category) {
     return _c("li", {
-      key: category.id
-    }, [_c("b", [_vm._v(_vm._s(category.name))]), _vm._v(" - Internal label "), _c("b", [_vm._v(_vm._s(category.internal_label))]), _vm._v(" "), _c("ul", _vm._l(category.ranges, function (range) {
+      key: category.id,
+      staticClass: "list-group-item"
+    }, [_c("b", [_vm._v(_vm._s(category.name))]), _vm._v(" - Internal label "), _c("b", [_vm._v(_vm._s(category.internal_label))]), _vm._v(" "), _c("ul", {
+      staticClass: "list-group mt-2"
+    }, _vm._l(category.ranges, function (range) {
       return _c("li", {
-        key: range.id
-      }, [_vm._v("\n                                    Range : " + _vm._s(range.minimum_quantity) + " - " + _vm._s(range.maximum_quantity) + " kg:\n                                    Base Rate: " + _vm._s(range.base_rate) + ",\n                                    Per Kg Rate: " + _vm._s(range.per_kg_rate) + ",\n                                    Total: " + _vm._s(range.total) + "\n                                  ")]);
+        key: range.id,
+        staticClass: "list-group-item d-flex justify-content-between align-items-center"
+      }, [_c("div", {
+        staticClass: "w-100"
+      }, [_vm.editingRangeId === range.id ? [_vm._v("\n                                                    Range:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.minimum_quantity,
+          expression: "range.minimum_quantity"
+        }],
+        staticStyle: {
+          width: "70px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.minimum_quantity
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "minimum_quantity", $event.target.value);
+          }
+        }
+      }), _vm._v(" -\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.maximum_quantity,
+          expression: "range.maximum_quantity"
+        }],
+        staticStyle: {
+          width: "70px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.maximum_quantity
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "maximum_quantity", $event.target.value);
+          }
+        }
+      }), _vm._v(" kg,\n                                                    Base Rate:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.base_rate,
+          expression: "range.base_rate"
+        }],
+        staticStyle: {
+          width: "80px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.base_rate
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "base_rate", $event.target.value);
+          }
+        }
+      }), _vm._v(",\n                                                    Charge Per Kg:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.per_kg,
+          expression: "range.per_kg"
+        }],
+        staticStyle: {
+          width: "80px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.per_kg
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "per_kg", $event.target.value);
+          }
+        }
+      }), _vm._v(",\n                                                    Per Kg Rate:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.per_kg_rate,
+          expression: "range.per_kg_rate"
+        }],
+        staticStyle: {
+          width: "80px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.per_kg_rate
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "per_kg_rate", $event.target.value);
+          }
+        }
+      }), _vm._v(",\n                                                    FAC Tax:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.fac_tax,
+          expression: "range.fac_tax"
+        }],
+        staticStyle: {
+          width: "80px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.fac_tax
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "fac_tax", $event.target.value);
+          }
+        }
+      }), _vm._v(",\n                                                    GST Tax:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.gst_tax,
+          expression: "range.gst_tax"
+        }],
+        staticStyle: {
+          width: "80px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.gst_tax
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "gst_tax", $event.target.value);
+          }
+        }
+      }), _vm._v(",\n                                                    Total:\n                                                    "), _c("input", {
+        directives: [{
+          name: "model",
+          rawName: "v-model",
+          value: range.total,
+          expression: "range.total"
+        }],
+        staticStyle: {
+          width: "80px"
+        },
+        attrs: {
+          type: "number"
+        },
+        domProps: {
+          value: range.total
+        },
+        on: {
+          input: function input($event) {
+            if ($event.target.composing) return;
+            _vm.$set(range, "total", $event.target.value);
+          }
+        }
+      })] : [_vm._v("\n                                                    Range: " + _vm._s(range.minimum_quantity) + " - " + _vm._s(range.maximum_quantity) + " kg,\n                                                    Base Rate: " + _vm._s(range.base_rate) + ",\n                                                    Charge Per Kg: " + _vm._s(range.per_kg) + ",\n                                                    Per Kg Rate: " + _vm._s(range.per_kg_rate) + ",\n                                                    FAC Tax: " + _vm._s(range.fac_tax) + ",\n                                                    GST Tax: " + _vm._s(range.gst_tax) + ",\n                                                    Total: " + _vm._s(range.total) + "\n                                                ")]], 2), _vm._v(" "), _c("div", {
+        staticClass: "ml-3 text-nowrap"
+      }, [_vm.editingRangeId === range.id ? _c("button", {
+        staticClass: "btn btn-sm btn-success",
+        attrs: {
+          title: "Save"
+        },
+        on: {
+          click: function click($event) {
+            return _vm.saveRange(range);
+          }
+        }
+      }, [_c("i", {
+        staticClass: "fa fa-save"
+      }), _vm._v(" Save\n                                                ")]) : _c("button", {
+        staticClass: "btn btn-sm btn-primary",
+        attrs: {
+          title: "Edit"
+        },
+        on: {
+          click: function click($event) {
+            return _vm.editRange(range);
+          }
+        }
+      }, [_c("i", {
+        staticClass: "fa fa-edit"
+      }), _vm._v(" Edit\n                                                ")])])]);
     }), 0)]);
   }), 0)]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-5"
@@ -12712,12 +12943,12 @@ var render = function render() {
     }, [_c("td", [_vm._v(_vm._s(weight))]), _vm._v(" "), _vm._l(_vm.details.categories, function (category) {
       return _c("td", {
         key: category.id
-      }, [_vm._v("\n                                      " + _vm._s(_vm.calculateTotalCostForWeight({
+      }, [_vm._v("\n                                            " + _vm._s(_vm.calculateTotalCostForWeight({
         testWeight: weight,
         range: category.ranges.find(function (r) {
           return weight >= parseFloat(r.minimum_quantity) && weight <= parseFloat(r.maximum_quantity);
         })
-      })) + "\n                                    ")]);
+      })) + " ")]);
     })], 2);
   }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])])]);
 };
@@ -20551,7 +20782,7 @@ var render = function render() {
         staticClass: "form-check-input",
         attrs: {
           type: "checkbox",
-          id: "requirement-".concat(key)
+          id: "requirement-".concat(index, "-").concat(key)
         },
         domProps: {
           checked: Array.isArray(requirement.filled) ? _vm._i(requirement.filled, null) > -1 : requirement.filled
@@ -20577,7 +20808,7 @@ var render = function render() {
       }), _vm._v(" "), _c("label", {
         staticClass: "form-check-label",
         attrs: {
-          "for": "requirement-".concat(key)
+          "for": "requirement-".concat(index, "-").concat(key)
         }
       }, [_vm._v(_vm._s(key))])])]) : _vm._e();
     })], 2), _vm._v(" "), _c("td", {
@@ -21301,6 +21532,9 @@ var render = function render() {
       },
       fetchRange: function fetchRange($event) {
         return _vm.fetchRange($event);
+      },
+      updateRange: function updateRange($event) {
+        return _vm.updateRange($event);
       }
     }
   }), _vm._v(" "), _c("AddCourierCategory", {

@@ -40,20 +40,70 @@
                             </div>
 
                             <div class="col-md-12" v-if="details.categories">
-                                <ul>
-                                  <li v-for="category in details.categories" :key="category.id">
-                                    <b>{{ category.name }}</b> - Internal label <b>{{ category.internal_label }}</b>
-                                    <ul>
-                                      <li v-for="range in category.ranges" :key="range.id">
-                                        Range : {{ range.minimum_quantity }} - {{ range.maximum_quantity }} kg:
-                                        Base Rate: {{ range.base_rate }},
-                                        Per Kg Rate: {{ range.per_kg_rate }},
-                                        Total: {{ range.total }}
-                                      </li>
-                                    </ul>
-                                  </li>
+                                <ul class="list-group">
+                                    <li v-for="category in details.categories" :key="category.id"
+                                        class="list-group-item">
+                                        <b>{{ category.name }}</b> - Internal label <b>{{ category.internal_label }}</b>
+
+                                        <ul class="list-group mt-2">
+                                            <li v-for="range in category.ranges" :key="range.id"
+                                                class="list-group-item d-flex justify-content-between align-items-center">
+                                                <div class="w-100">
+                                                    <template v-if="editingRangeId === range.id">
+                                                        Range:
+                                                        <input type="number" v-model="range.minimum_quantity"
+                                                            style="width: 70px;" /> -
+                                                        <input type="number" v-model="range.maximum_quantity"
+                                                            style="width: 70px;" /> kg,
+                                                        Base Rate:
+                                                        <input type="number" v-model="range.base_rate"
+                                                            style="width: 80px;" />,
+                                                        Charge Per Kg:
+                                                        <input type="number" v-model="range.per_kg"
+                                                            style="width: 80px;" />,
+                                                        Per Kg Rate:
+                                                        <input type="number" v-model="range.per_kg_rate"
+                                                            style="width: 80px;" />,
+                                                        FAC Tax:
+                                                        <input type="number" v-model="range.fac_tax"
+                                                            style="width: 80px;" />,
+                                                        GST Tax:
+                                                        <input type="number" v-model="range.gst_tax"
+                                                            style="width: 80px;" />,
+                                                        Total:
+                                                        <input type="number" v-model="range.total"
+                                                            style="width: 80px;" />
+                                                    </template>
+                                                    <template v-else>
+                                                        Range: {{ range.minimum_quantity }} - {{ range.maximum_quantity
+                                                        }} kg,
+                                                        Base Rate: {{ range.base_rate }},
+                                                        Charge Per Kg: {{ range.per_kg }},
+                                                        Per Kg Rate: {{ range.per_kg_rate }},
+                                                        FAC Tax: {{ range.fac_tax }},
+                                                        GST Tax: {{ range.gst_tax }},
+                                                        Total: {{ range.total }}
+                                                    </template>
+                                                </div>
+
+                                                <div class="ml-3 text-nowrap">
+                                                    <button v-if="editingRangeId === range.id"
+                                                        class="btn btn-sm btn-success" @click="saveRange(range)"
+                                                        title="Save">
+                                                        <i class="fa fa-save"></i> Save
+                                                    </button>
+                                                    <button v-else class="btn btn-sm btn-primary"
+                                                        @click="editRange(range)" title="Edit">
+                                                        <i class="fa fa-edit"></i> Edit
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 </ul>
-                              </div>
+                            </div>
+
+
 
                             <!-- Weight Input and Range Calculation -->
                             <div class="col-md-12 mt-5">
@@ -86,20 +136,24 @@
                             <div class="col-md-12 mt-2" v-if="details.categories">
                                 <table class="table table-striped">
                                     <thead>
-                                      <tr>
-                                        <th>Weight (kg)</th>
-                                        <th v-for="category in details.categories" :key="category.id">{{ category ? category.name : '' }}</th>
-                                      </tr>
+                                        <tr>
+                                            <th>Weight (kg)</th>
+                                            <th v-for="category in details.categories" :key="category.id">{{ category ?
+                                                category.name : '' }}</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                      <tr v-for="(weight, index) in weights" :key="index">
-                                        <td>{{ weight }}</td>
-                                        <td v-for="category in details.categories" :key="category.id">
-                                          {{ calculateTotalCostForWeight({ testWeight: weight, range: category.ranges.find(r => weight >= parseFloat(r.minimum_quantity) && weight <= parseFloat(r.maximum_quantity)) }) }}
-                                        </td>
-                                      </tr>
+                                        <tr v-for="(weight, index) in weights" :key="index">
+                                            <td>{{ weight }}</td>
+                                            <td v-for="category in details.categories" :key="category.id">
+                                                {{calculateTotalCostForWeight({
+                                                    testWeight: weight, range:
+                                                        category.ranges.find(r => weight >=
+                                                parseFloat(r.minimum_quantity) && weight <=
+                                                    parseFloat(r.maximum_quantity)) }) }} </td>
+                                        </tr>
                                     </tbody>
-                                  </table>
+                                </table>
                             </div>
                         </div>
 
@@ -127,11 +181,12 @@ export default {
             ],
             testWeight: '',
             weights: [],
+            editingRangeId: null,
         }
     },
     mounted() {
         for (let i = 0.5; i <= 15; i += 0.5) {
-        this.weights.push(i);
+            this.weights.push(i);
         }
     },
     computed: {
@@ -144,17 +199,17 @@ export default {
             try {
                 Object.values(this.ranges).forEach((categoryRanges) => {
                     categoryRanges.forEach((range) => {
-                    if (this.testWeight >= parseFloat(range.minimum_quantity) && this.testWeight <= parseFloat(range.maximum_quantity)) {
+                        if (this.testWeight >= parseFloat(range.minimum_quantity) && this.testWeight <= parseFloat(range.maximum_quantity)) {
 
 
-                        const totalCost = this.calculateTotalCostForWeight({ testWeight: this.testWeight , range});
+                            const totalCost = this.calculateTotalCostForWeight({ testWeight: this.testWeight, range });
 
-                        if (parseFloat(totalCost) < minPrice) {
-                            minPrice = parseFloat(totalCost);
-                            bestRange = range;
-                            bestRange.totalCost = totalCost
+                            if (parseFloat(totalCost) < minPrice) {
+                                minPrice = parseFloat(totalCost);
+                                bestRange = range;
+                                bestRange.totalCost = totalCost
+                            }
                         }
-                    }
                     });
                 });
             } catch (error) {
@@ -163,8 +218,15 @@ export default {
 
             return bestRange;
         }
-        },
+    },
     methods: {
+        editRange(range) {
+            this.editingRangeId = range.id;
+        },
+        saveRange(range) {
+            this.editingRangeId = null;
+            this.$emit('updateRange', range )
+        },
         calculateTotalCostForWeight({ testWeight, range }) {
             if (!range) return 0;
 

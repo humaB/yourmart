@@ -21,6 +21,7 @@
         :ranges="ranges"
         @addNewCourier="add($event)"
         @fetchRange="fetchRange( $event )"
+        @updateRange="updateRange( $event )"
       />
 
       <AddCourierCategory
@@ -105,6 +106,20 @@
       this.fetchCouriers();
     },
     methods: {
+        updateRange( data ){
+        let vm = this;
+        axios
+          .post(this.api_url + "couriers/update-ranges", data)
+          .then((response) => {
+            return swal({
+                title: "Success",
+                text: "Range updated successfully",
+                icon: "success",
+                timer: 3000
+            });
+          })
+          .catch((err) => console.log(err));
+      },
       updateDisclaimer( data ){
         let vm = this;
         axios

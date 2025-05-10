@@ -130,6 +130,21 @@ class CourierController extends Controller
         return ['message' => 'Successfully added'];
     }
 
+    public function updateRange( Request $request ){
+        CourierCategoryRange::where('id', $request->id)->update([
+                'minimum_quantity'  => $request->minimum_quantity,
+                'maximum_quantity'  => $request->maximum_quantity,
+                'base_rate'         => $request->base_rate,
+                'per_kg'            => $request->per_kg,
+                'per_kg_rate'       => $request->per_kg_rate,
+                'fac_tax'           => $request->fac_tax,
+                'gst_tax'           => $request->gst_tax,
+                'total'             => $request->total,
+        ]);
+
+        return ['message' => 'Successfully added'];
+    }
+
     public function fetchCategory(){
         $categories = CourierCategory::select('id as code', 'name as label')->get();
         return (new ResponseCollection($categories))

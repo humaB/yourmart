@@ -418,11 +418,11 @@
                                                     v-for="(requirement, key) in item?.details.requirement"
                                                     :key="key">
                                                 <div class="form-check">
-                                                    <input class="form-check-input"
-                                                            type="checkbox"
-                                                            :id="`requirement-${key}`"
-                                                            v-model="requirement.filled" />
-                                                    <label class="form-check-label" :for="`requirement-${key}`">{{ key }}</label>
+                                                 <input class="form-check-input"
+                                                        type="checkbox"
+                                                        :id="`requirement-${index}-${key}`"
+                                                        v-model="requirement.filled" />
+                                                    <label class="form-check-label" :for="`requirement-${index}-${key}`">{{ key }}</label>
                                                 </div>
                                                 </div>
                                                 </td>
