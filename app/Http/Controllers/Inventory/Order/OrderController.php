@@ -148,14 +148,7 @@ class OrderController extends Controller
 
     public function trackingDetails(Request $request)
     {
-        $order = Order::where('id', $request->id)->first();
-        $orders = [];
-        if( $order->courier_service_id == '1'){
-            $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('updated_at', 'desc')->get();
-        }else{
-            $postEx = new PostExApiHelper();
-            $orders = $postEx->tracking($order->tracking_number);
-        }
+        $orders = OrderLeopardStatus::where('order_id', $request->id)->orderBy('updated_at', 'desc')->get();
 
         return (new ResponseCollection($orders))
             ->response()
