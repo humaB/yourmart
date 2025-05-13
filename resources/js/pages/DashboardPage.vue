@@ -436,7 +436,7 @@ export default {
                 },
                 options: {
                     legend: {
-                        display: false
+                        display: true
                     },
                     scales: {
                         yAxes: [{

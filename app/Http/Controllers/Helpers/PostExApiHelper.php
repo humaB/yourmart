@@ -232,8 +232,7 @@ class PostExApiHelper
 
     public function webHook($request){
         $order = $request;
-        Log::info($order);
-
+     
         $detail = Order::with('range')->where('tracking_number', $order['trackingNumber'])->first();
 
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
