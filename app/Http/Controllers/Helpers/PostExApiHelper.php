@@ -162,7 +162,7 @@ class PostExApiHelper
         $courierDisclaimer = CourierDisclaimer::where('courier_id', $order->courier_service_id)->first();
         $instruction = $order->instructions ? ($order->instructions . ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' . $courierDisclaimer->disclaimer ?? "");
 
-        $response = Http::withHeaders([
+        return $response = Http::withHeaders([
             'token' => $this->token,
         ])->post($this->url . '/order/create', [
             'customerName'       => $order->customer_name,
