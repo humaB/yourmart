@@ -267,7 +267,7 @@ class PostExApiHelper
                 ]);
             }
 
-            if ($status['label'] == 'Delivery Under Review') {
+            if ($status['postex'] == 'Delivery Under Review') {
                 //Ready to return
                 $detail->update([
                     'status' => '12'
