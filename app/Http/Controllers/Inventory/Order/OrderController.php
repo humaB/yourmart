@@ -661,7 +661,7 @@ class OrderController extends Controller
 
                 if( $order->courier_service_id == '2' ){
                     $postExApi = new PostExApiHelper();
-                   return $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
+                    $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
 
                     if ($postExData['error'] && $postExData['error'] != '') {
                         return (new ValidationCollection([$postExData['error']]))
