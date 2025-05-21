@@ -132,7 +132,13 @@
                         <div class="col-md-3 col-6">
                           <strong>Payment Cycle</strong>
                           <br>
-                          <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
+                          <p v-if="!editMode" class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
+                          <select name="" id="" class="form-control" v-else v-model="details.payment_cycle" >
+                            <option>Weekly</option>
+                            <option>Bi-Weekly</option>
+                            <option>Tri-Weekly</option>
+                            <option>Monthly</option>
+                          </select>
                         </div>
                       </div>
 

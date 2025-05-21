@@ -9896,9 +9896,32 @@ var render = function render() {
     }
   })]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
-  }, [_c("strong", [_vm._v("Payment Cycle")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+  }, [_c("strong", [_vm._v("Payment Cycle")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._l((_vm$details = _vm.details) === null || _vm$details === void 0 || (_vm$details = _vm$details.level) === null || _vm$details === void 0 ? void 0 : _vm$details.details.requirement, function (requirement, key) {
+  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))]) : _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.details.payment_cycle,
+      expression: "details.payment_cycle"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "",
+      id: ""
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.details, "payment_cycle", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", [_vm._v("Weekly")]), _vm._v(" "), _c("option", [_vm._v("Bi-Weekly")]), _vm._v(" "), _c("option", [_vm._v("Tri-Weekly")]), _vm._v(" "), _c("option", [_vm._v("Monthly")])])])], 2), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm._l((_vm$details = _vm.details) === null || _vm$details === void 0 || (_vm$details = _vm$details.level) === null || _vm$details === void 0 ? void 0 : _vm$details.details.requirement, function (requirement, key) {
     return !_vm.editMode ? _c("div", {
       key: "level-" + key,
       staticClass: "col-md-12"

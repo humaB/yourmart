@@ -79,7 +79,7 @@ class PostExApiHelper
         $shipperCode = substr($dropshipper->dropshipper->full_name, 0, 3) . '-' . substr($dropshipper->store_name, 0, 3) . '-' . $dropshipper->dropshipper->id;
 
         $response = Http::withHeaders([
-            'token' => $this->token, // Replace with actual token
+            'token' => $this->token,
         ])->post($this->url . '/merchantStore', [
             'merchantStore' => [
                 'active'         => true,
@@ -232,7 +232,7 @@ class PostExApiHelper
 
     public function webHook($request){
         $order = $request;
-     
+
         $detail = Order::with('range')->where('tracking_number', $order['trackingNumber'])->first();
 
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {

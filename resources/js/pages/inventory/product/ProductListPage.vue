@@ -320,8 +320,7 @@
             @addSelectedHeroImages="addSelectedHeroImages($event)" @uploadAttachment="uploadAttachment($event)"
             @changeSelectedHeroImage="changeSelectedHeroImage($event)"
             @changeSelectedVideo="changeSelectedVideo($event)"
-
-            />
+        />
     </div>
 </template>
 <script>

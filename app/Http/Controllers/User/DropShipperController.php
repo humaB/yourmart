@@ -317,6 +317,7 @@ class DropShipperController extends Controller
             'account_number'  => $request->input('account_number'),
             'account_title'   => $request->input('account_title'),
             'account_iban'    => $request->input('account_iban'),
+            'payment_cycle'   => $request->input('payment_cycle')
         ]);
 
         // Loop through the shops and update each record
