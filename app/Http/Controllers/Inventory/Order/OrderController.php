@@ -740,7 +740,8 @@ class OrderController extends Controller
                 'added_by'  => auth()->user()->id,
             ]);
 
-            if ($order->status > 1 ) {
+            $checkedIssuance = StoreIssuance::where('order_id', $order->id)->first();
+            if ($order->status > 1 && $checkedIssuance ) {
                 $srn = StoreReturn::create([
                     'order_id'        => $order->id,
                     'dropshipper_id'  => $order->belongs_to,
