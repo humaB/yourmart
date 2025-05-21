@@ -41,6 +41,7 @@
                                         <th>Courier</th>
                                         <th>Tracking Number</th>
                                         <th>Dropshipper</th>
+                                        <th>Items</th>
                                         <th>Amount</th>
                                         <th>Order Date</th>
                                         <th>Action</th>
@@ -55,6 +56,11 @@
                                         <td>{{ item?.courier?.courier_name }}</td>
                                         <td>{{ item.tracking_number }}</td>
                                         <td>{{ item.user.name }}</td>
+                                        <td>
+                                            <ul>
+                                                <li v-for="product in item.items" :key="'items-'+item.id">{{ product?.variation?.product?.title }}</li>
+                                            </ul>
+                                        </td>
                                         <td>{{ item.total_bill }}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
                                         <td>

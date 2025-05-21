@@ -53,7 +53,7 @@ class CourierReturnController extends Controller
 
     public function pendingReturns( Request $request ){
 
-        $data = Order::with('user', 'shop', 'courier')->where('status', 9)
+        $data = Order::with('user', 'shop', 'courier','items.variation.product')->where('status', 9)
             ->when( $request->from, function ($query, $from) {
                 return $query->whereDate('created_at', '>=', $from);
             })

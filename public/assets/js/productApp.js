@@ -1831,7 +1831,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'OrderSelectedLabelPrint',
   props: ['labels'],
-  methods: {}
+  data: function data() {
+    return {
+      public_url: window.location.origin + "",
+      csrf: "",
+      order: ""
+    };
+  },
+  created: function created() {
+    this.csrf = $('meta[name=csrf-token]').attr('content');
+  },
+  methods: {
+    printPostExSlip: function printPostExSlip(order) {
+      var _this = this;
+      this.order = order;
+      setTimeout(function () {
+        _this.$refs.printAirBill.submit();
+      }, 500);
+    }
+  }
 });
 
 /***/ }),
@@ -10807,13 +10825,45 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.labels, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_c("a", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [item.courier_service_id == "1" ? _c("a", {
       attrs: {
         href: item.slip_link,
         target: "_blank"
       }
-    }, [_vm._v("Press to Print")])])]);
-  }), 0)])])]), _vm._v(" "), _vm._m(2)])])]);
+    }, [_vm._v("Press to Print")]) : _vm._e(), _vm._v(" "), item.courier_service_id == "2" ? _c("a", {
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.printPostExSlip(item.tracking_number);
+        }
+      }
+    }, [_vm._v("Press to\n                                        Print")]) : _vm._e()])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c("form", {
+    ref: "printAirBill",
+    attrs: {
+      action: "".concat(_vm.public_url, "/inventory/products/orders/postex-airbill"),
+      method: "post",
+      target: "_blank"
+    }
+  }, [_c("input", {
+    attrs: {
+      type: "hidden",
+      name: "_token"
+    },
+    domProps: {
+      value: _vm.csrf
+    }
+  }), _vm._v(" "), _c("input", {
+    attrs: {
+      type: "hidden",
+      name: "tracking"
+    },
+    domProps: {
+      value: _vm.order
+    }
+  })])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
