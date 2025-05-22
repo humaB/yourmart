@@ -50,7 +50,8 @@ class OrderController extends Controller
         return view('inventory.product.order.order_dispatch');
     }
 
-    public function  postExAirbill( Request $request ){
+    public function  postExAirbill(Request $request)
+    {
 
         $response = Http::withHeaders([
             'token' => 'ZWExMGNhYWFkYjM3NGM3MzhkZWZkN2M0M2M5YjhhZjU6MTY2ZjRiMmQ1YWVmNDkyOTg5OTE5NmUwMTkzNjdiYjg=',
@@ -155,66 +156,86 @@ class OrderController extends Controller
             ->setStatusCode(200);
     }
 
-    public function reAttempt( Request $request ) {
+    public function reAttempt(Request $request)
+    {
 
         $order = Order::where('id', $request->id)->first();
+        $check = OrderReAttempt::where('order_id', $order->id)->first();
+        if ($check) {
+            return (new ValidationCollection(['Re-delivery attempt already in progress for this order']))
+                ->response()
+                ->setStatusCode(421);
+        }
 
-        $response = Http::post('https://merchantapi.leopardscourier.com/api/shipperAdviceList/format/json/', [
-            'api_key' => $this->apiKey,
-            'api_password' => $this->apiPassword,
-            'product' => '',
-            'status' => '',
-            'origionID' => '',
-            'destinationID' => '',
-            'dateFrom' => '',
-            'toDate' => '',
-            'Cn_number' =>  "",
-            'start' => 0,
-            'length' => 100
-        ]);
+        if ($order->courier_service_id == '1') {
+            $response = Http::post('https://merchantapi.leopardscourier.com/api/shipperAdviceList/format/json/', [
+                'api_key' => $this->apiKey,
+                'api_password' => $this->apiPassword,
+                'product' => '',
+                'status' => '',
+                'origionID' => '',
+                'destinationID' => '',
+                'dateFrom' => '',
+                'toDate' => '',
+                'Cn_number' =>  "",
+                'start' => 0,
+                'length' => 100
+            ]);
 
-        $trackingId = "";
-        // Check if the request was successful
-        if ($response->successful()) {
-            // Process the response
-            $responseData = $response->json();
-            if (isset($responseData['data']) && count($responseData['data']) > 0) {
-                foreach ($responseData['data'] as $item) {
-                    if ($item['cn_number'] == $order->tracking_number) {
-                        $trackingId = $item['id'];
+            $trackingId = "";
+            // Check if the request was successful
+            if ($response->successful()) {
+                // Process the response
+                $responseData = $response->json();
+                if (isset($responseData['data']) && count($responseData['data']) > 0) {
+                    foreach ($responseData['data'] as $item) {
+                        if ($item['cn_number'] == $order->tracking_number) {
+                            $trackingId = $item['id'];
+                        }
                     }
                 }
             }
-        }
 
-        if( !$trackingId ){
-            return (new ValidationCollection(['Re-delivery attempt already in progress for this order']))
-            ->response()
-            ->setStatusCode(421);
-        }
+            if (!$trackingId) {
+                return (new ValidationCollection(['Re-delivery attempt already in progress for this order']))
+                    ->response()
+                    ->setStatusCode(421);
+            }
 
-        $response = Http::post('https://merchantapi.leopardscourier.com/api/updateShipperAdvice/format/json/', [
-            'api_key' => $this->apiKey,
-            'api_password' => $this->apiPassword,
-            'data' => [
-                [
-                    'id'        => $trackingId,
-                    'cn_number' =>  $order->tracking_number ?? "",
-                    'shipper_advice_status' => 'RA', // allowed statuses are ('RA', 'RT')
-                    'shipper_remarks' => $request->remarks
-                ],
-                // Add more data here...
-            ]
-        ]);
+            $response = Http::post('https://merchantapi.leopardscourier.com/api/updateShipperAdvice/format/json/', [
+                'api_key' => $this->apiKey,
+                'api_password' => $this->apiPassword,
+                'data' => [
+                    [
+                        'id'        => $trackingId,
+                        'cn_number' =>  $order->tracking_number ?? "",
+                        'shipper_advice_status' => 'RA', // allowed statuses are ('RA', 'RT')
+                        'shipper_remarks' => $request->remarks
+                    ],
+                    // Add more data here...
+                ]
+            ]);
+        }
+        if ($order->courier_service_id == '2') {
+            $postEx = new PostExApiHelper();
+            $response = $postEx->reAttempt($order->tracking_number);
+            if ($response->successful()) {
+                $response->json(); // or handle successful response
+            } else {
+                return (new ValidationCollection(["Can't re-attempt on this order"]))
+                    ->response()
+                    ->setStatusCode(421);
+            }
+        }
 
         OrderReAttempt::create([
-             'order_id' => $order->id,
-             'advice'   => $request->remarks
+            'order_id' => $order->id,
+            'advice'   => $request->remarks
         ]);
 
         OrderActivity::create([
             'order_id'  => $order->id,
-            'activity'  => 'Re-attempt try added with remarks : '.$request->remarks,
+            'activity'  => 'Re-attempt try added with remarks : ' . $request->remarks,
             'added_by'  => auth('sanctum')->user()->id
         ]);
 
@@ -225,23 +246,23 @@ class OrderController extends Controller
     {
 
         $dispatched = OrderDispatchedRecord::with('order.shop', 'tracking', 'order.courier')
-        ->when($request->from, function ($query, $from) {
-            return $query->whereDate('created_at', '>=', $from);
-        })
-        ->when($request->to, function ($query, $to) {
-            return $query->whereDate('created_at', '<=', $to);
-        })
-        ->when($request->courier, function ($query, $courier) {
-            return $query->whereHas('order', function ($q) use ($courier) {
-                $q->where('courier_service_id', $courier);
-            });
-        })
-        ->orderBy('id', 'desc')
-        ->get();
+            ->when($request->from, function ($query, $from) {
+                return $query->whereDate('created_at', '>=', $from);
+            })
+            ->when($request->to, function ($query, $to) {
+                return $query->whereDate('created_at', '<=', $to);
+            })
+            ->when($request->courier, function ($query, $courier) {
+                return $query->whereHas('order', function ($q) use ($courier) {
+                    $q->where('courier_service_id', $courier);
+                });
+            })
+            ->orderBy('id', 'desc')
+            ->get();
 
         $orders = Order::with('shop', 'user', 'courier')
             ->where('type', 'Normal')
-            ->whereIn('status', ['4','5'])
+            ->whereIn('status', ['4', '5'])
             ->when($request->from, function ($query, $from) {
                 return $query->whereDate('created_at', '>=', $from);
             })
@@ -264,7 +285,8 @@ class OrderController extends Controller
             ->setStatusCode(200);
     }
 
-    public function addDispatched( Request $request ){
+    public function addDispatched(Request $request)
+    {
 
         OrderDispatchedRecord::create([
             'order_id'        => $request->id,
@@ -330,19 +352,19 @@ class OrderController extends Controller
             //Sale Credit
             $ledger->accountTransaction(74, $head_id, 0, $packingCharges + $otherCharges + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'order', $order->id, $approved = 1);
 
-           //Meezan Bank Debit
-            if($order->paid_amount > 0 ){
+            //Meezan Bank Debit
+            if ($order->paid_amount > 0) {
                 $document = $ledger->voucherType('bank');
                 //Bank Cash Debit
                 $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'order', $order->id, $approved = 1);
                 //Dropshipper Credit
                 $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'order', $order->id, $approved = 1);
 
-                $dropshipper->increment('total_payable' , $order->paid_amount);
-                $dropshipper->increment('remaining_amount' , $order->paid_amount);
+                $dropshipper->increment('total_payable', $order->paid_amount);
+                $dropshipper->increment('remaining_amount', $order->paid_amount);
 
-                $shop->increment('total_payable' , $order->paid_amount);
-                $shop->increment('total_remaining' , $order->paid_amount);
+                $shop->increment('total_payable', $order->paid_amount);
+                $shop->increment('total_remaining', $order->paid_amount);
             }
         }
 
@@ -356,10 +378,11 @@ class OrderController extends Controller
         return ['message' => 'Marked as Being Return'];
     }
 
-    public function markasDelivered(Request $request){
+    public function markasDelivered(Request $request)
+    {
 
         $order = Order::where('id', $request->id)->first();
-        if( $order->status != '8'){
+        if ($order->status != '8') {
             $leopard = new LeopardApiHelper();
 
             $leopard->parcelDelivered($order);
@@ -379,29 +402,30 @@ class OrderController extends Controller
         return ['message' => 'Marked as Delivered'];
     }
 
-    public function multipleActions(Request $request ){
-        if( $request->action == 'Product List'){
+    public function multipleActions(Request $request)
+    {
+        if ($request->action == 'Product List') {
             $data = OrderItem::with('variation.product', 'variation.images.attachment')
-            ->whereIn('order_id', $request->products)
-            ->get()
-            ->groupBy('product_variation_id')
-            ->map(function ($items) {
-                return [
-                    'sku'      => $items->first()->variation->sku,
-                    'product'  => $items->first()->variation->product->title,
-                    'quantity' => $items->sum('quantity'),
-                    'image'    => optional($items->first()->variation->images->first())->attachment->attachment,
-                ];
-            })
-            ->values()
-            ->toArray();
-        }else{
+                ->whereIn('order_id', $request->products)
+                ->get()
+                ->groupBy('product_variation_id')
+                ->map(function ($items) {
+                    return [
+                        'sku'      => $items->first()->variation->sku,
+                        'product'  => $items->first()->variation->product->title,
+                        'quantity' => $items->sum('quantity'),
+                        'image'    => optional($items->first()->variation->images->first())->attachment->attachment,
+                    ];
+                })
+                ->values()
+                ->toArray();
+        } else {
             $data = Order::whereIn('id', $request->products)->get();
         }
 
         return (new ResponseCollection($data))
-        ->response()
-        ->setStatusCode(200);
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function details(Request $request)
@@ -578,7 +602,7 @@ class OrderController extends Controller
 
             if ($userRole == 'order collection manager' && $order->type == 'Normal') {
 
-                if( $order->courier_service_id == '1'){
+                if ($order->courier_service_id == '1') {
                     $leopardData = [
                         'track_number' => null,
                         'slip_link'    => null
@@ -595,7 +619,7 @@ class OrderController extends Controller
                     ]);
                 }
 
-                if( $order->courier_service_id == '2' ){
+                if ($order->courier_service_id == '2') {
                     $postExApi = new PostExApiHelper();
                     $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
 
@@ -634,9 +658,9 @@ class OrderController extends Controller
             }
         } else if ($userRole == 'admin') {
 
-            if ( $order->status == '0' && $order->type == 'Normal') {
+            if ($order->status == '0' && $order->type == 'Normal') {
 
-                if( $order->courier_service_id == '1' ){
+                if ($order->courier_service_id == '1') {
                     $leopardData = [
                         'track_number' => null,
                         'slip_link'    => null
@@ -659,7 +683,7 @@ class OrderController extends Controller
                     ]);
                 }
 
-                if( $order->courier_service_id == '2' ){
+                if ($order->courier_service_id == '2') {
                     $postExApi = new PostExApiHelper();
                     $postExData = $postExApi->bookAPacket($order, $order->order_no, $order->shop_id);
 
@@ -741,7 +765,7 @@ class OrderController extends Controller
             ]);
 
             $checkedIssuance = StoreIssuance::where('order_id', $order->id)->first();
-            if ($order->status > 1 && $checkedIssuance ) {
+            if ($order->status > 1 && $checkedIssuance) {
                 $srn = StoreReturn::create([
                     'order_id'        => $order->id,
                     'dropshipper_id'  => $order->belongs_to,
@@ -766,7 +790,7 @@ class OrderController extends Controller
             }
 
             // Leopard
-            if( $order->courier_service_id == '1'){
+            if ($order->courier_service_id == '1') {
                 $response = Http::post('https://merchantapi.leopardscourier.com/api/cancelBookedPackets/format/json/', [
                     'api_key' => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
                     'api_password' => 'Allah@001#',
@@ -775,13 +799,12 @@ class OrderController extends Controller
             }
 
             // PostEx
-            if( $order->courier_service_id == '2'){
+            if ($order->courier_service_id == '2') {
                 $postEx = new PostExApiHelper();
                 $postEx->cancelOrder($order->tracking_number);
             }
 
             $order->update(['status' => '7']);
-
         } else {
             $order->update(['status' => '6']);
             OrderActivity::create([

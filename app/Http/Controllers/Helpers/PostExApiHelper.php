@@ -199,6 +199,16 @@ class PostExApiHelper
         }
     }
 
+    public function reAttempt($trackingNumber)
+    {
+        return $response = Http::withHeaders([
+            'token' => $this->token,
+        ])
+        ->patch($this->url ."/order/retry-attempt", [
+                'trackingNumber' => $trackingNumber
+        ]);
+    }
+
     public function cancelOrder($trackingNumber)
     {
         return $response = Http::withHeaders([
@@ -214,7 +224,7 @@ class PostExApiHelper
     {
         $response = Http::withHeaders([
             'token' => $this->token,
-        ])->get($this->url . '/order/track/'.$trackingNumber);
+        ])->get($this->url . '/order/track/' . $trackingNumber);
 
         $buffer = $response->json();
 
@@ -225,12 +235,13 @@ class PostExApiHelper
                 'reason'        => "",
                 'receiver_name' => ""
             ];
-      })->toArray();
+        })->toArray();
 
-      return $tracking;
+        return $tracking;
     }
 
-    public function webHook($request){
+    public function webHook($request)
+    {
         $order = $request;
 
         $detail = Order::with('range')->where('tracking_number', $order['trackingNumber'])->first();
