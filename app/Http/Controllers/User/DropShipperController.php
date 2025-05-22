@@ -687,7 +687,7 @@ class DropShipperController extends Controller
     public function decision(Request $request)
     {
 
-        $lock = Cache::lock('dropshipper_decision5')->block(7, function () use ($request) {
+        $lock = Cache::lock('dropshipper_decision6')->block(7, function () use ($request) {
 
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
