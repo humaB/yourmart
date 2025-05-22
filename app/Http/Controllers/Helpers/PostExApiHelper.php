@@ -86,7 +86,7 @@ class PostExApiHelper
                 'operationalCity' => 'Faisalabad',
                 'pocContact1'    => $dropshipper->dropshipper->whatsapp_number,
                 'pocEmail1'      => $dropshipper->dropshipper->email,
-                'pocName'        => $dropshipper->dropshipper->full_name,
+                'pocName'        => $dropshipper->store_name,
                 'storeCode'      => $storeCode,
                 'storeName'      => $dropshipper->store_name,
             ],
@@ -94,7 +94,7 @@ class PostExApiHelper
                 'address'     => 'P-22, College Road, Near Hockey Stadium, Kohinoor Town, Faisalabad, Punjab',
                 'addressType' => 'Pickup/Return Address',
                 'pocContact'  => $dropshipper->dropshipper->whatsapp_number,
-                'pocName'     => $dropshipper->dropshipper->full_name,
+                'pocName'     => $dropshipper->store_name,
                 'shipperCode' => $shipperCode,
             ],
             'merchantStoreSetting' => [
@@ -106,7 +106,7 @@ class PostExApiHelper
                 'isStoreShipperName'      => true,
                 'sendEmail'               => true,
                 'sendSms'                 => true,
-                'shipperName'             => $dropshipper->dropshipper->full_name,
+                'shipperName'             => $dropshipper->store_name,
                 'shipperPhone'            => $dropshipper->dropshipper->whatsapp_number,
                 'sms1'                    => $dropshipper->dropshipper->whatsapp_number,
             ]
