@@ -248,7 +248,7 @@ class PostExApiHelper
 
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
             $status = $this->shipmentStatuses[$order['orderStatus']];
-
+            Log::info($request);
             //If product is delivered
             if ($status['label'] == 'Delivered' && $detail->status != '8') {
                 $helper = new LeopardApiHelper();
