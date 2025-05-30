@@ -10705,15 +10705,15 @@ var render = function render() {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Total Payable")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_payable)))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit)))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Total Paid")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_paid)))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Remaining Balance")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.remaining_amount)))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit - _vm.details.total_paid_profit)))])])]), _vm._v(" "), _c("div", {
     staticClass: "py-1"
   }, [_c("table", {
     staticClass: "table"
@@ -14223,7 +14223,18 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-check"
-  }), _vm._v(" Mark as Delivered\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
+  }), _vm._v(" Mark as Delivered\n                    ")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" && _vm.details.status == 8 ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#makeAdjustment"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markAsDelivered();
+      }
+    }
+  }, [_vm._v("\n                        Make Adjustment\n                    ")]) : _vm._e(), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",

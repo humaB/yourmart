@@ -497,6 +497,15 @@ class DropShipperController extends Controller
             ->whereColumn('total_profit', '!=', 'total_paid_profit')
             ->get();
 
+
+        $dropshipper_orders = Order::with('shop')
+            ->where('belongs_to', $dropshipper->user_id)
+            ->whereIn('status', [8, 9, 10])
+            ->get();
+
+        $dropshipper->total_profit = $dropshipper_orders->sum('total_profit');
+        $dropshipper->total_paid_profit = $dropshipper_orders->sum('total_paid_profit');
+
         $data = [
             'orders'  => $orders,
             'banks'   => $banks,

@@ -33,8 +33,8 @@ class Order extends Model
         'order_note',
         'additional_information',
         'total_bill',
-        'paid_amount',
-        'remaining_amount',
+        'paid_amount', // Paid by Customer after COD or Advance
+        'remaining_amount', // remaining left after COD
         'discount',
         'payment_method',
         'payment_proof_attachment',
@@ -44,7 +44,7 @@ class Order extends Model
         'total_paid_profit',
         'packaging_price',
         'is_replacement', // 0 => Normal || 1 => replacement
-        'status', // 0 => Order Collection || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Dispatched || 6 => Admin approval for Rejected || 7 => Rejected || 8 => Delivered || 9 => Returned || 10 => Returned to store from leopard || 11 => Out for Delivery || Ready for Return
+        'status', // 0 => Order Collection || 1 => Inventory Manager || 2 => QA || 3 => Packing/Dispatch || 4 => Autidor || 5 => Dispatched || 6 => Admin approval for Rejected || 7 => Rejected || 8 => Delivered || 9 => Returned || 10 => Returned to store from leopard || 11 => Out for Delivery || 12 => Ready for Return
         'total_weight',
         'no_of_labels',
         'tracking_number',

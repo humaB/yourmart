@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Helpers;
 
 use App\Http\Controllers\Account\Helper\AccountHeadHelper;
+use App\Models\Account\AccountTransaction;
 use App\Models\Inventory\Courier\CourierCategory;
 use App\Models\Inventory\Courier\CourierDisclaimer;
 use App\Models\Inventory\Order\Order;
@@ -361,7 +362,7 @@ class LeopardApiHelper
         */
         $document = $ledger->voucherType('JV');
         $mainAccount = $order->is_replacement == '1' ? 164 : $head_id;
-        $ledger->accountTransaction($mainAccount, 74, $order->total_bill, 0, $order->is_replacement == '1' ? 'Expense amount on company for product replacement' : 'Total Receivable Amount', $document, 'JV', 'order', $order->id, $approved = 1);
+        $ledger->accountTransaction($mainAccount, 74, $order->total_bill, 0, $order->is_replacement == '1' ? 'Expense amount on company for product replacement' : 'Total Receivable Amount for order #'.$order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
         //Sale Credit
         $ledger->accountTransaction(74, $mainAccount, 0, $productPrice + $packingCharges + $courierExtraCharges, 'Product + Packaging Cost', $document, 'JV', 'order', $order->id, $approved = 1);
         //leopard Credit
@@ -375,9 +376,9 @@ class LeopardApiHelper
         //Meezan Bank Debit
         if($order->paid_amount > 0 ){
             $document = $ledger->voucherType('bank');
-            $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order # '.$order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order # '.$order->order_no, $document, $document, 'BR', 'order', $order->id, $approved = 1);
         }
 
         if($order->is_replacement == '1' && $order->paid_amount > 0  ){
@@ -399,9 +400,9 @@ class LeopardApiHelper
         */
         $document = $ledger->voucherType('JV');
         if( $order->selling_price != 0 ){
-            $ledger->accountTransaction(73, $head_id, $order->selling_price, 0, 'COD amount received from customer', $document, 'JV', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction(73, $head_id, $order->selling_price, 0, 'COD amount received from customer, order # '.$order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction($head_id, 73, 0, $order->selling_price, 'COD amount received from customer', $document, 'JV', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 73, 0, $order->selling_price, 'COD amount received from customer, order # '.$order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
         }
     }
 
@@ -435,6 +436,34 @@ class LeopardApiHelper
         ]);
 
         return $group_id = $group->id;
+    }
+
+    public function reverseAccountOnDelivered($order){
+
+        $transactions = AccountTransaction::where('posting_type', 'order')
+            ->where('posting_id', $order->id)
+            ->where(function( $q ){
+                $q->where('type', 'JV')->orWhere('type', 'BR');
+            })
+            ->delete();
+
+        $payableAmount = (float)$order->total_bill - ($advance->advance_amount ?? 0);
+        $profit      = $order->total_profit;
+
+        $order->increment('remaining_amount' , $payableAmount);
+        $order->decrement('paid_amount' , $payableAmount);
+        $order->update([
+            'total_profit'  => 0,
+        ]);
+
+        $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
+        $shop = DropShipperShop::where('id', $order->shop_id)->first();
+
+        $dropshipper->decrement('total_payable' , $profit);
+        $dropshipper->decrement('remaining_amount' , $profit);
+
+        $shop->decrement('total_payable' , $profit);
+        $shop->decrement('total_remaining' , $profit);
     }
 
 }

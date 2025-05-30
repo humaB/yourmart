@@ -244,11 +244,23 @@ class PostExApiHelper
     {
         $order = $request;
 
-        $detail = Order::with('range')->where('tracking_number', $order['trackingNumber'])->first();
+        $detail = Order::with('range')->where('tracking_number', trim($order['trackingNumber']))->first();
+
+        if( $detail && $detail->status == 8 ){
+            $lastUpdatedStatus = OrderLeopardStatus::where('order_id', $detail->id)->orderBy('id', 'desc')->first();
+            if($lastUpdatedStatus && $lastUpdatedStatus->created_at >= now()->subHours(24)){
+                // Code to run if last updated status is within the last 24 hours
+                $helper = new LeopardApiHelper();
+                $helper->reverseAccountOnDelivered($detail);
+                $detail->update([
+                    'status' => '11'
+                ]);
+            }
+        }
 
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
             $status = $this->shipmentStatuses[$order['orderStatus']];
-            Log::info($request);
+
             //If product is delivered
             if ($status['label'] == 'Delivered' && $detail->status != '8') {
                 $helper = new LeopardApiHelper();

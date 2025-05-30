@@ -606,6 +606,12 @@
             @reAttempt="reAttempt($event)"
         />
 
+        <OrderAdjustmentConfirmation
+            :orderID="orderID"
+            :loader="markasReplacementLoader"
+            @markasNotDelivered="markasNotDelivered($event)"
+        />
+
     </div>
 </template>
 <script>
@@ -622,6 +628,7 @@ import OrderMarkasDeliveredConfirmation from "../../../../components/inventory/p
 import OrderSelectedProductList from "../../../../components/inventory/product/order/OrderSelectedProductList.vue";
 import OrderSelectedLabelPrint from "../../../../components/inventory/product/order/OrderSelectedLabelPrint.vue";
 import OrderReattempt from "../../../../components/inventory/product/order/OrderReattempt.vue";
+import OrderAdjustmentConfirmation from "../../../../components/inventory/product/order/OrderAdjustmentConfirmation.vue";
 
 export default {
     name: 'ProductOrderPage',
@@ -636,7 +643,8 @@ export default {
         OrderMarkasDeliveredConfirmation,
         OrderSelectedProductList,
         OrderSelectedLabelPrint,
-        OrderReattempt
+        OrderReattempt,
+        OrderAdjustmentConfirmation
     },
     data() {
         return {
@@ -1021,6 +1029,25 @@ export default {
             vm.markasReplacementLoader = true;
             axios
                 .post(this.api_url + "inventory/products/orders/mark-as-delivered", { id: this.orderID })
+                .then((response) => {
+                    vm.markasReplacementLoader = false;
+
+                    $("#markasDelivered").modal('hide');
+                    this.fetchOrders();
+                    this.fetchDetail(this.orderID);
+                    return swal({
+                        title: "Success",
+                        text: "Marked as Delivered Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
+        markasNotDelivered() {
+            let vm = this;
+            vm.markasReplacementLoader = true;
+            axios
+            .post(this.api_url + "inventory/products/orders/mark-as-not-delivered", { id: this.orderID })
                 .then((response) => {
                     vm.markasReplacementLoader = false;
 

@@ -109,17 +109,17 @@
                               <div class="col-md-3 col-6">
                                 <strong>Total Payable</strong>
                                 <br>
-                                <h5 class="text-muted">{{ formatPrice( details.total_payable ) }}</h5>
+                                <h5 class="text-muted">{{ formatPrice( details.total_profit ) }}</h5>
                               </div>
                               <div class="col-md-3 col-6">
                                 <strong>Total Paid</strong>
                                 <br>
-                                <h5 class="text-muted">{{ formatPrice( details.total_paid ) }}</h5>
+                                <h5 class="text-muted">{{ formatPrice( details.total_paid_profit ) }}</h5>
                               </div>
                               <div class="col-md-3 col-6">
                                 <strong>Remaining Balance</strong>
                                 <br>
-                                <h5 class="text-muted">{{ formatPrice( details.remaining_amount )}}</h5>
+                                <h5 class="text-muted">{{ formatPrice( details.total_profit - details.total_paid_profit)}}</h5>
                               </div>
 
                     </div>

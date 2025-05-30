@@ -23,7 +23,7 @@ class DropShipperShop extends Model
 
         'total_payable',
         'total_paid',
-        'total_remaining',
+        'total_remaining', // Remaining Payable
 
         'leopard_id',
         'postex_store_code',

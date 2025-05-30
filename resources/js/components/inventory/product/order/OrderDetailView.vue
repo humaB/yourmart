@@ -880,6 +880,10 @@
                             data-target="#markasDelivered" v-if="role == 'admin' && details.status == 11">
                             <i class="fas fa-check"></i> Mark as Delivered
                         </button>
+                        <button class="btn btn-danger" @click="markAsDelivered()" data-toggle="modal"
+                            data-target="#makeAdjustment" v-if="role == 'admin' && details.status == 8">
+                            Make Adjustment
+                        </button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">
                             Close
                         </button>

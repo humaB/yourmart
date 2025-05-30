@@ -34,7 +34,7 @@ class DropShipper extends Model
 
         'total_payable',
         'total_paid',
-        'remaining_amount',
+        'remaining_amount', // Remaining Payable
         // Optional Fields
         'store_name',
         'store_url',
