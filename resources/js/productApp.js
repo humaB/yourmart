@@ -6,6 +6,8 @@
 
 window.Vue = require('vue').default;
 window.axios = require('axios');
+import lazyLoad from './helpers/lazyLoader';
+Vue.directive('lazy', lazyLoad)
 
 /**
  * The following block of code may be used to automatically register your

@@ -36,50 +36,36 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4>Select from Gallery</h4>
-                                    <!-- Search Form -->
+                                <!-- Search Form -->
                                 <form class="card-header-form">
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        placeholder="Search by title or alt"
-                                        v-model="searchQuery"
-                                    />
+                                    <input type="text" class="form-control" placeholder="Search by title or alt"
+                                        v-model="searchQuery" />
                                 </form>
                             </div>
                             <div class="card-body row">
                                 <div class="col-md-9">
                                     <div class=" gutters-sm row" id="gallery-scroll">
-                                        <div class="col-3 col-sm-2" v-for="(image, index) in filteredImages" :key="index">
+                                        <div class="col-3 col-sm-2" v-for="(image, index) in filteredImages"
+                                            :key="index">
                                             <label class="imagecheck mb-4">
-                                                <input
-                                                    v-if="selectedColor != 'Hero' && selectedColor != 'Video'"
-                                                    type="checkbox"
-                                                    :value="image"
-                                                    class="imagecheck-input"
+                                                <input v-if="selectedColor != 'Hero' && selectedColor != 'Video'"
+                                                    type="checkbox" :value="image" class="imagecheck-input"
                                                     v-model="selectedImagesByColor[selectedColor]"
-                                                    @change="setSelectedImage(image)"
-                                                />
-                                                <input
-                                                    v-else
-                                                    type="radio"
-                                                    :value="image"
-                                                    class="imagecheck-input"
-                                                    v-model="heroImage"
-                                                    @change="setSelectedImage(image)"
-                                                />
+                                                    @change="setSelectedImage(image)" />
+                                                <input v-else type="radio" :value="image" class="imagecheck-input"
+                                                    v-model="heroImage" @change="setSelectedImage(image)" />
+
                                                 <span class="imagecheck-figure">
                                                     <video v-if="isVideo(image.attachment)"
-                                                    :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
-                                                    controls
-                                                    class="media-video"
-                                                >
-                                                    Your browser does not support the video tag.
-                                                </video>
+                                                        v-lazy-video="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
+                                                        controls class="media-video">
+                                                        Your browser does not support the video tag.
+                                                    </video>
+
                                                     <img v-else
-                                                        :src="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
-                                                        :alt="image.alt"
-                                                        class="imagecheck-image"
-                                                    />
+                                                        v-lazy="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
+                                                        :alt="image.alt" class="imagecheck-image" />
+                                                </span>
 
                                                 </span>
                                             </label>
@@ -90,41 +76,43 @@
                                     <h5>Selected Image</h5>
                                     <p v-if="selectedImage">
                                         <strong>Image:</strong>
-                                        <img
-                                            :src="public_url + 'storage/uploads/inventory/products/media/' + selectedImage.attachment"
-                                            :alt="selectedImage.alt"
-                                            class="img-thumbnail"
-                                            width="100"
-                                            @load="getImageDimensions"
-                                            ref="selectedImage"
-                                        />
-                                               <!-- Display Image Dimensions -->
+                                        <img :src="public_url + 'storage/uploads/inventory/products/media/' + selectedImage.attachment"
+                                            :alt="selectedImage.alt" class="img-thumbnail" width="100"
+                                            @load="getImageDimensions" ref="selectedImage" />
+                                        <!-- Display Image Dimensions -->
                                     </p>
-                                    <p v-if="imageDimensions"><strong>Dimensions:</strong> {{ imageDimensions.width }} x {{ imageDimensions.height }} pixels</p>
-                                     <!-- Display Image Size -->
+                                    <p v-if="imageDimensions"><strong>Dimensions:</strong> {{ imageDimensions.width }} x
+                                        {{ imageDimensions.height }} pixels</p>
+                                    <!-- Display Image Size -->
                                     <p v-if="imageSize"><strong>Size:</strong> {{ imageSize }}</p>
                                     <p v-else>No image selected</p>
 
-                                    <p v-if="selectedImage"><strong>Title:</strong> <input v-if="selectedImage" type="text" name="" id="" v-model="selectedImage.title" class="form-control">
-                                    <p v-if="selectedImage"><strong>ALT:</strong> </p><input v-if="selectedImage" type="text" name="" id="" v-model="selectedImage.alt" class="form-control">
-                                    <p v-if="selectedImage"><strong>Caption:</strong> <textarea v-if="selectedImage"  v-model="selectedImage.caption" class="form-control"></textarea>
-                                    <p v-if="selectedImage"><strong>Description:</strong> </p><textarea v-if="selectedImage"  v-model="selectedImage.description" class="form-control"></textarea>
+                                    <p v-if="selectedImage"><strong>Title:</strong> <input v-if="selectedImage"
+                                            type="text" name="" id="" v-model="selectedImage.title"
+                                            class="form-control">
+                                    <p v-if="selectedImage"><strong>ALT:</strong> </p><input v-if="selectedImage"
+                                        type="text" name="" id="" v-model="selectedImage.alt" class="form-control">
+                                    <p v-if="selectedImage"><strong>Caption:</strong> <textarea v-if="selectedImage"
+                                            v-model="selectedImage.caption" class="form-control"></textarea>
+                                    <p v-if="selectedImage"><strong>Description:</strong> </p><textarea
+                                        v-if="selectedImage" v-model="selectedImage.description"
+                                        class="form-control"></textarea>
 
                                     <!-- Delete Button -->
-                                     <div class="text-right mt-2" v-if="selectedImage">
-                                         <button v-if="!loader" class="btn btn-primary" @click="updateImageData()">
-                                             Update
-                                         </button>
-                                         <button v-else class="btn btn-primary btn-progress disabled">
+                                    <div class="text-right mt-2" v-if="selectedImage">
+                                        <button v-if="!loader" class="btn btn-primary" @click="updateImageData()">
                                             Update
                                         </button>
-                                         <button v-if="!loader" class="btn btn-danger" @click="deleteImage()">
-                                             Delete
-                                         </button>
-                                         <button v-else class="btn btn-danger btn-progress disabled">
+                                        <button v-else class="btn btn-primary btn-progress disabled">
+                                            Update
+                                        </button>
+                                        <button v-if="!loader" class="btn btn-danger" @click="deleteImage()">
                                             Delete
                                         </button>
-                                     </div>
+                                        <button v-else class="btn btn-danger btn-progress disabled">
+                                            Delete
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -187,7 +175,7 @@ export default {
 
             // Filter images based on alt or attachment (title)
             return this.attachments.filter(image => {
-                 // Ensure image properties are not null and handle undefined values
+                // Ensure image properties are not null and handle undefined values
                 const alt = (image.alt || '').toLowerCase();
                 const attachment = (image.title || '').toLowerCase();
 
@@ -199,8 +187,8 @@ export default {
         }
     },
     methods: {
-        updateImageData(){
-            if( !this.selectedImage ){
+        updateImageData() {
+            if (!this.selectedImage) {
                 return swal({
                     title: "Required",
                     text: "Please select image first",
@@ -210,8 +198,8 @@ export default {
             }
             this.$emit('updateImageData', this.selectedImage);
         },
-        deleteImage(){
-            if( !this.selectedImage ){
+        deleteImage() {
+            if (!this.selectedImage) {
                 return swal({
                     title: "Required",
                     text: "Please select image first",
@@ -274,12 +262,12 @@ export default {
                 } else {
                     this.$emit('addSelectedHeroImages', this.heroImage);
                 }
-            }else if (this.selectedColor == 'Video') {
+            } else if (this.selectedColor == 'Video') {
                 if (this.type && this.type == 'edit') {
                     this.$emit('changeSelectedVideo', this.heroImage);
                 }
             }
-             else {
+            else {
                 if (this.type && this.type == 'colorEdit') {
                     this.$emit('addMoreSelectedImages', { images: this.selectedImagesByColor, id: this.colorId });
                 } else {

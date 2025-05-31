@@ -7415,15 +7415,25 @@ var render = function render() {
     }), _vm._v(" "), _c("span", {
       staticClass: "imagecheck-figure"
     }, [_vm.isVideo(image.attachment) ? _c("video", {
+      directives: [{
+        name: "lazy-video",
+        rawName: "v-lazy-video",
+        value: _vm.public_url + "storage/uploads/inventory/products/media/" + image.attachment,
+        expression: "public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
+      }],
       staticClass: "media-video",
       attrs: {
-        src: _vm.public_url + "storage/uploads/inventory/products/media/" + image.attachment,
         controls: ""
       }
-    }, [_vm._v("\n                                                Your browser does not support the video tag.\n                                            ")]) : _c("img", {
+    }, [_vm._v("\n                                                    Your browser does not support the video tag.\n                                                ")]) : _c("img", {
+      directives: [{
+        name: "lazy",
+        rawName: "v-lazy",
+        value: _vm.public_url + "storage/uploads/inventory/products/media/" + image.attachment,
+        expression: "public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
+      }],
       staticClass: "imagecheck-image",
       attrs: {
-        src: _vm.public_url + "storage/uploads/inventory/products/media/" + image.attachment,
         alt: image.alt
       }
     })])])]);
@@ -7440,7 +7450,7 @@ var render = function render() {
     on: {
       load: _vm.getImageDimensions
     }
-  })]) : _vm._e(), _vm._v(" "), _vm.imageDimensions ? _c("p", [_c("strong", [_vm._v("Dimensions:")]), _vm._v(" " + _vm._s(_vm.imageDimensions.width) + " x " + _vm._s(_vm.imageDimensions.height) + " pixels")]) : _vm._e(), _vm._v(" "), _vm.imageSize ? _c("p", [_c("strong", [_vm._v("Size:")]), _vm._v(" " + _vm._s(_vm.imageSize))]) : _c("p", [_vm._v("No image selected")]), _vm._v(" "), _vm.selectedImage ? _c("p", [_c("strong", [_vm._v("Title:")]), _vm._v(" "), _vm.selectedImage ? _c("input", {
+  })]) : _vm._e(), _vm._v(" "), _vm.imageDimensions ? _c("p", [_c("strong", [_vm._v("Dimensions:")]), _vm._v(" " + _vm._s(_vm.imageDimensions.width) + " x\n                                    " + _vm._s(_vm.imageDimensions.height) + " pixels")]) : _vm._e(), _vm._v(" "), _vm.imageSize ? _c("p", [_c("strong", [_vm._v("Size:")]), _vm._v(" " + _vm._s(_vm.imageSize))]) : _c("p", [_vm._v("No image selected")]), _vm._v(" "), _vm.selectedImage ? _c("p", [_c("strong", [_vm._v("Title:")]), _vm._v(" "), _vm.selectedImage ? _c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -7527,7 +7537,7 @@ var render = function render() {
         return _vm.updateImageData();
       }
     }
-  }, [_vm._v("\n                                         Update\n                                     ")]) : _c("button", {
+  }, [_vm._v("\n                                        Update\n                                    ")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
   }, [_vm._v("\n                                        Update\n                                    ")]), _vm._v(" "), !_vm.loader ? _c("button", {
     staticClass: "btn btn-danger",
@@ -7536,7 +7546,7 @@ var render = function render() {
         return _vm.deleteImage();
       }
     }
-  }, [_vm._v("\n                                         Delete\n                                     ")]) : _c("button", {
+  }, [_vm._v("\n                                        Delete\n                                    ")]) : _c("button", {
     staticClass: "btn btn-danger btn-progress disabled"
   }, [_vm._v("\n                                        Delete\n                                    ")])]) : _vm._e()])])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
@@ -16437,6 +16447,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Banks: () => (/* binding */ Banks)
 /* harmony export */ });
 var Banks = ['Al Baraka Islamic Bank Limited', 'Allied Bank Limited', 'Apna Microfinance Bank', 'Askari Commercial Bank Limited', 'Bank AL Habib Limited', 'Bank Alfalah Limited', 'Bank of Khyber', 'Bank of Punjab', 'BankIslami Pakistan Limited', 'Burj Bank Limited', 'Citi Bank', 'Dubai Islamic Bank Pakistan Limited', 'Easypaisa / Telenor Microfinance Bank', 'Faysal Bank Limited', 'FINCA Microfinance Bank', 'FINJA EMI', 'First Women Bank', 'FirstPay / HBL MFB', 'Habib Bank Limited', 'Habib Metropolitan Bank Limited', 'ICBC', 'Js Bank', 'KASA Bank Limited', 'KEENU', 'MCB Bank Limited', 'MCB Islamic', 'MCB-Arif Habib Savings', 'Meezan Bank Limited', 'Mobilink Microfinance Bank Ltd / Jazzcash', 'National Bank of Pakistan', 'NAYAPAY', 'SadaPay', 'Silk Bank', 'Sindh Bank', 'Soneri Bank Limited', 'Standard Chartered Bank', 'Summit Bank', 'UBank / UPaisa', 'United Bank Limited', 'Zarai Taraqiati Bank Limited (ZTBL)'];
+
+/***/ }),
+
+/***/ "./resources/js/helpers/lazyLoader.js":
+/*!********************************************!*\
+  !*** ./resources/js/helpers/lazyLoader.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  inserted: function inserted(el, binding) {
+    var loadImage = function loadImage() {
+      el.src = binding.value;
+    };
+    var observer = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          loadImage();
+          obs.unobserve(el);
+        }
+      });
+    });
+    observer.observe(el);
+  }
+});
 
 /***/ }),
 
@@ -65148,11 +65188,14 @@ const asap = typeof queueMicrotask !== 'undefined' ?
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!************************************!*\
   !*** ./resources/js/productApp.js ***!
   \************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _helpers_lazyLoader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./helpers/lazyLoader */ "./resources/js/helpers/lazyLoader.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -65161,6 +65204,8 @@ var __webpack_exports__ = {};
 
 window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs");
+
+Vue.directive('lazy', _helpers_lazyLoader__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /**
  * The following block of code may be used to automatically register your
