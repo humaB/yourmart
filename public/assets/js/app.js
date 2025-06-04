@@ -9676,6 +9676,30 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 col-6 b-r"
+  }, [_c("strong", [_vm._v("Change Password")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
+    staticClass: "text-muted"
+  }, [_vm._v("*****")]) : _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.details.changedPassword,
+      expression: "details.changedPassword"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "password"
+    },
+    domProps: {
+      value: _vm.details.changedPassword
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.details, "changedPassword", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Location")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"

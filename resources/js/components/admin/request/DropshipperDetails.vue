@@ -36,6 +36,13 @@
                           <input v-else type="email" v-model="details.email" class="form-control">
                         </div>
 
+                        <div class="col-md-3 col-6 b-r">
+                          <strong>Change Password</strong>
+                          <br>
+                          <p v-if="!editMode" class="text-muted">*****</p>
+                          <input v-else type="password" v-model="details.changedPassword" class="form-control">
+                        </div>
+
                         <div class="col-md-3 col-6">
                           <strong>Location</strong>
                           <br>

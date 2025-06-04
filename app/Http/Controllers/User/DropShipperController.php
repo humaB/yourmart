@@ -24,6 +24,7 @@ use App\Models\User\DropShipperShop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use NumberFormatter;
@@ -306,6 +307,17 @@ class DropShipperController extends Controller
         $customerBank = CustomerBank::firstOrCreate(
             ['name' => $request->bank['name']], // Conditions to check
         );
+
+        if ($request->filled('changedPassword')) {
+            User::where('id', $dropshipper->user_id )->update([
+
+                'password' => Hash::make($request->input('changedPassword')),
+            ]);
+        }
+
+        User::where('id', $dropshipper->user_id )->update([
+            'email'   => $request->input('email'),
+        ]);
 
         $dropshipper->update([
             'full_name'       => $request->input('full_name'),
