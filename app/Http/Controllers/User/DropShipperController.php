@@ -65,7 +65,21 @@ class DropShipperController extends Controller
 
     public function pendingPayouts()
     {
-        $dropshipper = DropShipper::with('general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher')->whereColumn('total_payable', '!=', 'total_paid')->get();
+        $dropshippers = DropShipper::with(
+            'general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher',
+            'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
+            'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit',
+            'user:id,name'
+            )->whereColumn('total_payable', '!=', 'total_paid')->get();
+
+       foreach ($dropshippers as $dropshipper) {
+            $delivered = $dropshipper->user?->deliveredOrders ?? collect();
+            $returned = $dropshipper->user?->returnedOrders ?? collect();
+
+            $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
+            $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
+        }
+
 
         $totalPayable = DropShipper::sum('total_payable');
         $totalPayablePaid = DropShipper::sum('total_paid');
@@ -75,7 +89,7 @@ class DropShipperController extends Controller
         $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')->get();
 
         $response = [
-            'dropshippers' => $dropshipper,
+            'dropshippers' => $dropshippers,
             'total_payable' => $totalPayable,
             'total_paid' => $totalPayablePaid,
             'total_remaining' => $totalRemaining,
@@ -92,7 +106,20 @@ class DropShipperController extends Controller
     {
         $dropshippers = Dropshipper::where('total_payable' ,'!=', '0')
             ->orderBy('id', 'desc')
+            ->with(
+                'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
+                'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit',
+                'user:id,name'
+            )
             ->get();
+
+        foreach ($dropshippers as $dropshipper) {
+            $delivered = $dropshipper->user?->deliveredOrders ?? collect();
+            $returned = $dropshipper->user?->returnedOrders ?? collect();
+
+            $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
+            $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
+        }
 
         return (new ResponseCollection($dropshippers))
             ->response()

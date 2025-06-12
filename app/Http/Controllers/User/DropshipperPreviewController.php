@@ -17,10 +17,24 @@ class DropshipperPreviewController extends Controller
     public function fetchData(Request $request )
     {
 
-        $dropshipper = Dropshipper::where('id', $request->id)->first();
-        $totalProfit = $dropshipper->total_payable;
-        $totalRemaining = $dropshipper->remaining_amount;
-        $totalPaid = $dropshipper->total_paid;
+        $dropshipper = Dropshipper::where('id', $request->id)
+        ->with(
+            'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
+            'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit',
+            'user:id,name'
+        )
+        ->first();
+
+        $delivered = $dropshipper->user?->deliveredOrders ?? collect();
+        $returned = $dropshipper->user?->returnedOrders ?? collect();
+
+        $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
+        $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
+
+
+        $totalProfit = $dropshipper->profit;
+        $totalPaid = $dropshipper->paid_profit;
+        $totalRemaining = $totalProfit - $totalPaid;
 
         $orders = Order::where('belongs_to', $dropshipper->user_id)
             ->whereNotIn('status', [7])

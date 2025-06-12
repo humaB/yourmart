@@ -114,9 +114,9 @@
                                                                 <td>{{ item.email }}</td>
                                                                 <td>{{ item.payment_cycle}}</td>
                                                                 <td>{{ getNextDueDate(item.voucher_created_at, item.payment_cycle) }}</td> <!-- Next Due Date -->
-                                                                <td>{{ formatPrice(item.total_payable) }}</td>
-                                                                <td>{{ formatPrice(item.total_paid) }}</td>
-                                                                <td>{{ formatPrice(item.remaining_amount) }}</td>
+                                                                <td>{{ formatPrice(item.profit) }}</td>
+                                                                <td>{{ formatPrice(item.paid_profit) }}</td>
+                                                                <td>{{ formatPrice(item.profit -item.paid_profit) }}</td>
                                                                 <td width="20%">
                                                                     <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                         data-toggle="modal" data-target="#dropShipperDetail"
@@ -237,19 +237,10 @@
                                                 <td>{{ item.full_name }}</td>
                                                 <td>{{ item.email }}</td>
                                                 <td>{{ item.whatsapp_number }}</td>
-                                                <td>{{ formatPrice(item.total_payable) }}</td>
-                                                <td>{{ formatPrice(item.total_paid) }}</td>
-                                                <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                                <td>
-                                                    <span v-if="item.status == 0"
-                                                        class="badge badge-warning">Pending</span>
-                                                    <span v-if="item.status == 1"
-                                                        class="badge badge-success">Approved</span>
-                                                    <span v-if="item.status == 2"
-                                                        class="badge badge-danger">Rejected</span>
-                                                    <span v-if="item.status == 3"
-                                                        class="badge badge-danger">Deactivated</span>
-                                                </td>
+                                                <td>{{ formatPrice(item.profit) }}</td>
+                                                <td>{{ formatPrice(item.paid_profit) }}</td>
+                                                <td>{{ formatPrice(item.profit -item.paid_profit) }}</td>
+
                                                 <td>{{ formatDate(item.created_at) }}</td>
                                                 <td width="20%">
                                                     <button class="btn btn-info" @click="fetchDetail(item.id)"
@@ -551,7 +542,7 @@ export default {
                 heading: "Dropshipper Pay outs",
             },
             th: ["Sr #", "Name", "Email", "Cycle","Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
-            th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Status", "Added Date", "Action"],
+            th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Added Date", "Action"],
             table_id: "moq_table",
             btnLoader: false,
             records: [],
