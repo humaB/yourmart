@@ -76,7 +76,7 @@ class PostExApiHelper
     public function createShipperAccount($dropshipper)
     {
         $storeCode = substr($dropshipper->store_name, 0, 3) . '-' . $dropshipper->id;
-        $shipperCode = substr($dropshipper->dropshipper->full_name, 0, 3) . '-' . substr($dropshipper->store_name, 0, 3) . '-' . $dropshipper->dropshipper->id;
+        $shipperCode = substr($dropshipper->dropshipper->full_name, 0, 3) . '-' . substr($dropshipper->store_name, 0, 3) . '-' . $dropshipper->id;
 
         $response = Http::withHeaders([
             'token' => $this->token,
@@ -142,7 +142,7 @@ class PostExApiHelper
         $shop = DropShipperShop::with('dropshipper')->where('id', $shop)->first();
 
         $storeCode = substr($shop->store_name, 0, 3) . '-' . $shop->id;
-        $shipperCode = substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $shop->dropshipper->id;
+        $shipperCode = substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $shop->id;
 
         if (!$shop->postex_store_code) {
             $dropshipper = $this->createShipperAccount($shop);

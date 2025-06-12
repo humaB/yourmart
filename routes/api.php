@@ -189,6 +189,8 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
         Route::get('/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
         Route::post('/top-10-dropshippers',  [ DashboardController::class , 'topTenDropshipper']);
         Route::get('/product-wise-count',  [ DashboardController::class , 'categoryTagWiseProduct']);
+
+        Route::get('/shop-list-for-postex',  [ DashboardController::class , 'shopListForPostEx']);
     });
 });
 

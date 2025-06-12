@@ -734,6 +734,23 @@ class DashboardController extends Controller
             ->setStatusCode(200);
     }
 
+    public function shopListForPostEx(){
+        $shops = DropShipperShop::with('dropshipper')->where('postex_store_code', '!=', '0')->get();
+        foreach( $shops as $shop ){
+            $currenyShipperCode = substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $shop->dropshipper->id;
+            $requiredShipperCode = substr($shop->dropshipper->full_name, 0, 3) . '-' . substr($shop->store_name, 0, 3) . '-' . $shop->id;
+            $storeCode = substr($shop->store_name, 0, 3) . '-' . $shop->id;
+
+            $shop->current = $currenyShipperCode;
+            $shop->required = $requiredShipperCode;
+            $shop->shop_id = $storeCode;
+        }
+
+         return (new ResponseCollection($shops))
+            ->response()
+            ->setStatusCode(200);
+    }
+
     public function topSellingProduct()
     {
 

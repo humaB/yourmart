@@ -86,6 +86,12 @@
                                     <a href="#" @click="lowStockProduct()"><i class="fas fa-fax"></i> Low Stock Products</a>
                                 </h6>
                             </div>
+                             <div class="col-md-4 col-6">
+                                <h6>
+                                    12.
+                                    <a href="#" @click="shopListPostEx()"><i class="fas fa-fax"></i> Shop List for PostEx</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -126,6 +132,10 @@
 
         <LowStockProductReport v-if="report == 'low-stock-report'" :data="lowStockProductData"
             :loader="loader" @lowStockProductFilter="lowStockProductFilter($event)" />
+
+
+        <ShopListForPostEx v-if="report == 'shop-list-postex'" :data="shopListPostExData"
+            :loader="loader" @shopListPostExFilter="shopListPostExFilter($event)" />
 
 
         <!-- Modal -->
@@ -175,6 +185,7 @@ import InventoryGoodReturnReport from '../../components/reports/fis/InventoryGoo
 import LeopardReturnReceivedReport from '../../components/reports/fis/LeopardReturnReceivedReport.vue';
 import LowStockProductReport from '../../components/reports/fis/LowStockProductReport.vue';
 import OrderIssuanceReport from '../../components/reports/fis/OrderIssuanceReport.vue';
+import ShopListForPostEx from '../../components/reports/fis/ShopListForPostEx.vue';
 import Top10DropshipperReport from '../../components/reports/fis/Top10DropshipperReport.vue';
 import TopSellingProduct from '../../components/reports/fis/TopSellingProduct.vue';
 
@@ -194,7 +205,8 @@ export default {
         TopSellingProduct,
         Top10DropshipperReport,
         HighStockProductReport,
-        LowStockProductReport
+        LowStockProductReport,
+        ShopListForPostEx
     },
     data() {
         return {
@@ -223,12 +235,26 @@ export default {
             top10DropshipperData : [],
             lowStockProductData : [],
             highStockProductData : [],
+            shopListPostExData : []
         }
     },
     created() {
         this.fetchProducts();
     },
     methods: {
+        shopListPostEx() {
+            this.report = 'shop-list-postex'
+        },
+        shopListPostExFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/shop-list-for-postex', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.shopListPostExData = results;
+                    vm.loader = false;
+                })
+        },
         lowStockProduct() {
             this.report = 'low-stock-report'
         },
