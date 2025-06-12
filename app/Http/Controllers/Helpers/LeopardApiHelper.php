@@ -378,7 +378,7 @@ class LeopardApiHelper
             $document = $ledger->voucherType('bank');
             $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order # '.$order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order # '.$order->order_no, $document, $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order # '.$order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
         }
 
         if($order->is_replacement == '1' && $order->paid_amount > 0  ){

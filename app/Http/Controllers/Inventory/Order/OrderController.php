@@ -383,9 +383,13 @@ class OrderController extends Controller
 
         $order = Order::where('id', $request->id)->first();
         if ($order->status != '8') {
-            $leopard = new LeopardApiHelper();
+            if( $order->courier_service_id == '1'){
+                $leopard = new LeopardApiHelper();
 
-            $leopard->parcelDelivered($order);
+                $leopard->parcelDelivered($order);
+            }else if($order->courier_service_id == '2'){
+                $postEx = new PostExApiHelper();
+            }
 
             Order::where('id', $request->id)->update([
                 'status' => '8'
