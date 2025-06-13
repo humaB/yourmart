@@ -139,6 +139,14 @@ class PostExApiHelper
             return "{$qty}x {$productName} ({$sku})";
         })->implode(', ');
 
+        if (strlen($description) >= 500) {
+            $description = $orderItems->map(function ($item) {
+                $sku = $item->variation->sku ?? 'SKU';
+                $qty = $item->quantity ?? 1;
+                return "{$qty}x ({$sku})";
+            })->implode(', ');
+        }
+
         $shop = DropShipperShop::with('dropshipper')->where('id', $shop)->first();
 
         $storeCode = substr($shop->store_name, 0, 3) . '-' . $shop->id;
@@ -162,7 +170,7 @@ class PostExApiHelper
         $courierDisclaimer = CourierDisclaimer::where('courier_id', $order->courier_service_id)->first();
         $instruction = $order->instructions ? ($order->instructions . ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' . $courierDisclaimer->disclaimer ?? "");
 
-        $response = Http::withHeaders([
+       $response = Http::withHeaders([
             'token' => $this->token,
         ])->post($this->url . '/order/create', [
             'customerName'       => $order->customer_name,
