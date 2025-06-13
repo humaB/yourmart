@@ -117,7 +117,6 @@ class OrderController extends Controller
                 ->when($request->courier, function ($query, $courier) {
                     return $query->where('courier_service_id', $courier);
                 })
-                ->limit(500)
                 ->get();
         } else {
             $orders = Order::with('user', 'shop', 're_attempt')->where('status', $statusMap[$userRole])
