@@ -65,7 +65,7 @@
                                                         </p>
                                                         <p><strong>City:</strong> {{ details.city ? details.city.name :
                                                             ''
-                                                        }}</p>
+                                                            }}</p>
                                                     </div>
                                                     <div class="col-md-4"
                                                         v-if="details.user && details.user.dropshipper">
@@ -107,7 +107,7 @@
                                                             details.shop.store_name.substring(0, 3) + '-' : '' }}{{
                                                                 details.order_no }}</span>
                                                         <span>Date/Time : {{ formatNormalDate(details.created_at)
-                                                        }}</span>
+                                                            }}</span>
                                                     </h5>
                                                     <div class="row mt-3">
                                                         <div class="col-md-8">
@@ -163,7 +163,7 @@
                                                                             <td><strong>Courier Charges:</strong></td>
                                                                             <td class="text-left">{{
                                                                                 formatPrice(details.courier_service_price)
-                                                                            }}</td>
+                                                                                }}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Packing Charges:</strong></td>
@@ -799,7 +799,7 @@
 
                     <!-- Normal Admin rights -->
                     <div class="modal-footer d-dlex justify-content-between"
-                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
+                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 5">
                         <div>
                             <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
                                 @click="markasReplacement()"
@@ -823,15 +823,19 @@
                         </div>
 
                         <div>
-                            <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
-                                data-target="#markasBeingReturn" v-if="role == 'admin'">
-                                <i class="fas fa-undo-alt"></i> Mark as Being Return
+                            <!-- <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-paper-plane"></i> Forward Order
                             </button>
-                            <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal"
-                                data-target="#markasDelivered" v-if="role == 'admin'">
-                                <i class="fas fa-check"></i> Mark as Delivered
-                            </button>
-
+                            <div class="dropdown-menu" x-placement="top-start"
+                                style="position: absolute; transform: translate3d(0px, -2px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                <a class="dropdown-item has-icon" href="#" @click="forward('leopard')">
+                                    <i class="fas fa-truck"></i> With Leopard
+                                </a>
+                                <a class="dropdown-item has-icon" href="#" @click="forward('postEx')">
+                                    <i class="fas fa-shipping-fast"></i> With PostEx
+                                </a>
+                            </div> -->
                             <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
                                 <i class="fas fa-paper-plane"></i> Forward Order
                             </button>
@@ -870,7 +874,14 @@
                     </div>
                     <!-- For Delivered or returns order -->
                     <div class="modal-footer" v-else>
-
+                        <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
+                            data-target="#markasBeingReturn" v-if="role == 'admin'">
+                            <i class="fas fa-undo-alt"></i> Mark as Being Return
+                        </button>
+                        <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal"
+                            data-target="#markasDelivered" v-if="role == 'admin'">
+                            <i class="fas fa-check"></i> Mark as Delivered
+                        </button>
                         <button class="btn btn-danger" @click="markAsDelivered()" data-toggle="modal"
                             data-target="#makeAdjustment" v-if="role == 'admin' && details.status == 8">
                             Make Adjustment
