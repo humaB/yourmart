@@ -1315,7 +1315,6 @@ export default {
         },
         forwardToTest(data) {
             let vm = this;
-            vm.commentLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-status/test", data)
             .then((response) => {})
         },

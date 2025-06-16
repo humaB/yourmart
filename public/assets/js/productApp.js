@@ -4645,7 +4645,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     forwardToTest: function forwardToTest(data) {
       var vm = this;
-      vm.commentLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-status/test", data).then(function (response) {});
     },
     reject: function reject(data) {
