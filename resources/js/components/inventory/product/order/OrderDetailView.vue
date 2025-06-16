@@ -799,7 +799,7 @@
 
                     <!-- Normal Admin rights -->
                     <div class="modal-footer d-dlex justify-content-between"
-                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 4">
+                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 5">
                         <div>
                             <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
                                 @click="markasReplacement()"
