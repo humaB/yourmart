@@ -379,7 +379,7 @@ class PostExApiHelper
             'transactionNotes'   => $instruction,
         ]);
 
-        $data = [
+        return $data = [
             'data' => [
                 'customerName'       => $order->customer_name,
                 'customerPhone'      => $order->phone_number,
