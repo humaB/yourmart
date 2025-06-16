@@ -1565,6 +1565,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
     },
+    forwardToTest: function forwardToTest() {
+      this.$emit('forwardToTest', {
+        id: this.details.id
+      });
+    },
     forward: function forward() {
       if (this.role == 'inventory manager') {
         // Check if any item hasn't been scanned
@@ -4637,6 +4642,11 @@ __webpack_require__.r(__webpack_exports__);
           timer: 3000
         });
       });
+    },
+    forwardToTest: function forwardToTest(data) {
+      var vm = this;
+      vm.commentLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/update-status/test", data).then(function (response) {});
     },
     reject: function reject(data) {
       var vm = this;
@@ -10281,6 +10291,15 @@ var render = function render() {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
+        return _vm.forwardToTest();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-clipboard-check"
+  }), _vm._v(" Test Order With Courier\n                        ")]) : _vm._e(), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
         return _vm.forward();
       }
     }
@@ -15118,6 +15137,9 @@ var render = function render() {
       },
       forward: function forward($event) {
         return _vm.forward($event);
+      },
+      forwardToTest: function forwardToTest($event) {
+        return _vm.forwardToTest($event);
       },
       reject: function reject($event) {
         return _vm.reject($event);

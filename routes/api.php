@@ -291,6 +291,8 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/re-attempts',  [ OrderController::class , 'reAttempt']);
 
             Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
+            Route::post('/update-status/test',  [ OrderController::class , 'updateStatusTest']);
+
             Route::post('/revert',  [ OrderController::class , 'revert']);
             Route::post('/reject',  [ OrderController::class , 'reject']);
 

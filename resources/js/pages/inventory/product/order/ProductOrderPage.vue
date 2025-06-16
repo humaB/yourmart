@@ -564,7 +564,7 @@
 
         <OrderDetailView :revertLoader="revertLoader" :rejectLoader="rejectLoader" :paidAmountLoader="paidAmountLoader"
             :details="details" :loader="commentLoader" :role="role" @addComment="addComment($event)"
-            @forward="forward($event)" @reject="reject($event)" @revert="revert($event)"
+            @forward="forward($event)" @forwardToTest="forwardToTest($event)" @reject="reject($event)" @revert="revert($event)"
             @fetchDropshipperDetails="fetchDropshipperDetails($event)" @updatePaidAmount="updatePaidAmount($event)"
             @updatePackagingAmount="updatePackagingAmount($event)" @markasReplacement="markasReplacement($event)"
             @markAsBeingReturn="markasReplacement($event)"
@@ -1312,6 +1312,12 @@ export default {
                         timer: 3000,
                     });
                 });
+        },
+        forwardToTest(data) {
+            let vm = this;
+            vm.commentLoader = true;
+            axios.post(this.api_url + "inventory/products/orders/update-status/test", data)
+            .then((response) => {})
         },
         reject(data) {
             let vm = this;

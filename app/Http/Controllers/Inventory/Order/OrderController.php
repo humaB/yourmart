@@ -755,6 +755,29 @@ class OrderController extends Controller
         return response()->json(['message' => 'Order status updated successfully.'], 200);
     }
 
+    public function updateStatusTest(Request $request)
+    {
+
+        $order = Order::with('items')->find($request->id);
+
+        if ($order->status == '0' && $order->type == 'Normal') {
+            if ($order->courier_service_id == '1') {
+                $leopardApi = new LeopardApiHelper();
+                $city = City::where('id', $order->city_id)->first();
+                $range = CourierCategoryRange::where('id', $order->range_id)->first();
+                return $leopardData = $leopardApi->bookAPacket($order->total_weight, $order, $order->order_no, $order->shop_id, $city, $range->category_id);
+            }
+
+            if ($order->courier_service_id == '2') {
+                $postExApi = new PostExApiHelper();
+                return $postExData = $postExApi->testBookAPacket($order, $order->order_no, $order->shop_id);
+            }
+
+        }
+
+        return response()->json(['message' => 'Order status updated successfully.'], 200);
+    }
+
     public function reject(Request $request)
     {
 

@@ -836,6 +836,9 @@
                                     <i class="fas fa-shipping-fast"></i> With PostEx
                                 </a>
                             </div> -->
+                            <button class="btn btn-primary" @click="forwardToTest()" v-if="!loader && role != 'supervisor'">
+                                <i class="fas fa-clipboard-check"></i> Test Order With Courier
+                            </button>
                             <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
                                 <i class="fas fa-paper-plane"></i> Forward Order
                             </button>
@@ -1117,6 +1120,9 @@ export default {
                 return this.public_url + '/assets/img/blank_image.jpg';
             }
             return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
+        },
+        forwardToTest(){
+            this.$emit('forwardToTest', { id: this.details.id });
         },
         forward() {
             if (this.role == 'inventory manager') {

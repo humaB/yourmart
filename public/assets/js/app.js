@@ -2249,6 +2249,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
     },
+    forwardToTest: function forwardToTest() {
+      this.$emit('forwardToTest', {
+        id: this.details.id
+      });
+    },
     forward: function forward() {
       if (this.role == 'inventory manager') {
         // Check if any item hasn't been scanned
@@ -14262,6 +14267,15 @@ var render = function render() {
   }, [_c("i", {
     staticClass: "fa fa-trash"
   }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]), _vm._v(" "), _c("div", [!_vm.loader && _vm.role != "supervisor" ? _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.forwardToTest();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-clipboard-check"
+  }), _vm._v(" Test Order With Courier\n                        ")]) : _vm._e(), _vm._v(" "), !_vm.loader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-primary",
     on: {
       click: function click($event) {
