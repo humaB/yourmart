@@ -875,11 +875,11 @@
                     <!-- For Delivered or returns order -->
                     <div class="modal-footer" v-else>
                         <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
-                            data-target="#markasBeingReturn" v-if="role == 'admin' && details.status == 11">
+                            data-target="#markasBeingReturn" v-if="role == 'admin'">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return
                         </button>
                         <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal"
-                            data-target="#markasDelivered" v-if="role == 'admin' && details.status == 11">
+                            data-target="#markasDelivered" v-if="role == 'admin'">
                             <i class="fas fa-check"></i> Mark as Delivered
                         </button>
                         <button class="btn btn-danger" @click="markAsDelivered()" data-toggle="modal"

@@ -10328,7 +10328,7 @@ var render = function render() {
     }
   }, [_vm._v("\n                        Close\n                    ")])]) : _c("div", {
     staticClass: "modal-footer"
-  }, [_vm.role == "admin" && _vm.details.status == 11 ? _c("button", {
+  }, [_vm.role == "admin" ? _c("button", {
     staticClass: "btn btn-danger",
     attrs: {
       "data-toggle": "modal",
@@ -10341,7 +10341,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" && _vm.details.status == 11 ? _c("button", {
+  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("button", {
     staticClass: "btn btn-success",
     attrs: {
       "data-toggle": "modal",
