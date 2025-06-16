@@ -360,7 +360,7 @@ class PostExApiHelper
         $courierDisclaimer = CourierDisclaimer::where('courier_id', $order->courier_service_id)->first();
         $instruction = $order->instructions ? ($order->instructions . ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' . $courierDisclaimer->disclaimer ?? "");
 
-       return $response = Http::withHeaders([
+       $response = Http::withHeaders([
             'token' => $this->token,
         ])->post($this->url . '/order/create', [
             'customerName'       => $order->customer_name,
@@ -378,6 +378,28 @@ class PostExApiHelper
             'storeCode'          => $storeCode,
             'transactionNotes'   => $instruction,
         ]);
+
+        $data = [
+            'data' => [
+                'customerName'       => $order->customer_name,
+                'customerPhone'      => $order->phone_number,
+                'deliveryAddress'    => $order->address,
+                'invoicePayment'     => $order->selling_price,
+                'orderDetail'        => $description,
+                'orderRefNumber'     => $order_no,
+                'returnAddressCode'  => $shipperCode,
+                'cityName'           => $city->name,
+                'items'              => $orderItems->sum('quantity'),
+                'orderType'          => 'Normal', // 'Normal', 'Reverse', or 'Overland'
+                'remarks'            => $instruction,
+                'shipperCode'        => $shipperCode,
+                'storeCode'          => $storeCode,
+                'transactionNotes'   => $instruction,
+            ],
+            'postEx' => [
+                $response
+            ]
+        ];
 
     }
 }
