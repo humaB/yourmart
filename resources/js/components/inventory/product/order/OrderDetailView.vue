@@ -877,6 +877,12 @@
                     </div>
                     <!-- For Delivered or returns order -->
                     <div class="modal-footer" v-else>
+                        <div v-if="details.status == '6'">
+                            <button class="btn btn-danger" @click="reject()"
+                                    v-if="!rejectLoader && role != 'supervisor'">
+                                    <i class="fa fa-trash"></i> Cancel Order
+                            </button>
+                        </div>
                         <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
                             data-target="#markasBeingReturn" v-if="role == 'admin'">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return

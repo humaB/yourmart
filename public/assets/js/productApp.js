@@ -10346,7 +10346,16 @@ var render = function render() {
     }
   }, [_vm._v("\n                        Close\n                    ")])]) : _c("div", {
     staticClass: "modal-footer"
-  }, [_vm.role == "admin" ? _c("button", {
+  }, [_vm.details.status == "6" ? _c("div", [!_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: function click($event) {
+        return _vm.reject();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-trash"
+  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("button", {
     staticClass: "btn btn-danger",
     attrs: {
       "data-toggle": "modal",
