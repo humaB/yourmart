@@ -70,9 +70,9 @@ class DropShipperController extends Controller
             'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
             'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit',
             'user:id,name'
-            )->whereColumn('total_payable', '!=', 'total_paid')->get();
+        )->whereColumn('total_payable', '!=', 'total_paid')->get();
 
-       foreach ($dropshippers as $dropshipper) {
+        foreach ($dropshippers as $dropshipper) {
             $delivered = $dropshipper->user?->deliveredOrders ?? collect();
             $returned = $dropshipper->user?->returnedOrders ?? collect();
 
@@ -104,7 +104,7 @@ class DropShipperController extends Controller
 
     public function pendingPayoutRecord(Request $request)
     {
-        $dropshippers = Dropshipper::where('total_payable' ,'!=', '0')
+        $dropshippers = Dropshipper::where('total_payable', '!=', '0')
             ->orderBy('id', 'desc')
             ->with(
                 'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
@@ -157,7 +157,7 @@ class DropShipperController extends Controller
         $email = $request->query('email');
 
         $selectDropshippers = [];
-        if( $level || $incentive ){
+        if ($level || $incentive) {
             $selectDropshippers = DropShipperLevel::where('level', $level)->orWhere('is_completed', $incentive)->pluck('dropshipper_id');
         }
 
@@ -197,8 +197,8 @@ class DropShipperController extends Controller
         }
 
         $statuses = DropShipper::selectRaw('status, COUNT(*) as count')
-        ->groupBy('status')
-        ->pluck('count', 'status');
+            ->groupBy('status')
+            ->pluck('count', 'status');
 
         $statuses = [
             'totalRequests'  => $statuses->sum(),
@@ -225,7 +225,8 @@ class DropShipperController extends Controller
             ->setStatusCode(200);
     }
 
-    public function calculateLevel($dropshipper, $level,$levelTable, $levelDetailTable){
+    public function calculateLevel($dropshipper, $level, $levelTable, $levelDetailTable)
+    {
         $user = $dropshipper->user;
 
         $orders = $user->total_orders_count ?? 0;
@@ -245,7 +246,7 @@ class DropShipperController extends Controller
 
         $check = $levelTable->where('dropshipper_id', $dropshipper->id)->where('level', $sellerLevel)->first();
 
-        if( !$check ){
+        if (!$check) {
 
             $levelTable->where('dropshipper_id', $dropshipper->id)->update([
                 'is_active' => '0'
@@ -254,8 +255,8 @@ class DropShipperController extends Controller
             $dropshipperLevel = $levelTable->create([
                 'dropshipper_id' => $dropshipper->id,
                 'user_id'        => $dropshipper->user_id,
-                'level'          => $sellerLevel,// New Seller || Level 01 || Level 02 || Level 03 || Top Rated Seller
-                'is_completed'   => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
+                'level'          => $sellerLevel, // New Seller || Level 01 || Level 02 || Level 03 || Top Rated Seller
+                'is_completed'   => $sellerLevel == 'New Seller' ? '1' : '0', // 0 => Not Complete || 1 => Completed
             ]);
 
             $requirementArray = $this->getRequirementArray($sellerLevel);
@@ -263,7 +264,7 @@ class DropShipperController extends Controller
             $levelDetailTable->create([
                 'dropshipper_level_id'   => $dropshipperLevel->id,
                 'requirement'            => $requirementArray,
-                'is_completed'           => $sellerLevel == 'New Seller' ? '1': '0',// 0 => Not Complete || 1 => Completed
+                'is_completed'           => $sellerLevel == 'New Seller' ? '1' : '0', // 0 => Not Complete || 1 => Completed
             ]);
         }
     }
@@ -309,10 +310,9 @@ class DropShipperController extends Controller
         $available = $rewardMap[$sellerLevel] ?? [];
 
         return collect($allRewards)
-        ->filter(fn($reward) => in_array($reward, $available))
-        ->mapWithKeys(fn($reward) => [$reward => ['filled' => false]])
-        ->toArray();
-
+            ->filter(fn($reward) => in_array($reward, $available))
+            ->mapWithKeys(fn($reward) => [$reward => ['filled' => false]])
+            ->toArray();
     }
 
     public function update(Request $request)
@@ -321,10 +321,10 @@ class DropShipperController extends Controller
         // Update Dropshipper Information
         $dropshipper = Dropshipper::findOrFail($request->id);
 
-        if( $dropshipper->email != $request->input('email') ){
+        if ($dropshipper->email != $request->input('email')) {
             //Check if email is already registered or not for status approved
             $user = User::where('email', $request->input('email'))->first();
-            if( $user ){
+            if ($user) {
                 return (new ValidationCollection(["This Email already registered with another account"]))
                     ->response()
                     ->setStatusCode(400);
@@ -336,13 +336,13 @@ class DropShipperController extends Controller
         );
 
         if ($request->filled('changedPassword')) {
-            User::where('id', $dropshipper->user_id )->update([
+            User::where('id', $dropshipper->user_id)->update([
 
                 'password' => Hash::make($request->input('changedPassword')),
             ]);
         }
 
-        User::where('id', $dropshipper->user_id )->update([
+        User::where('id', $dropshipper->user_id)->update([
             'email'   => $request->input('email'),
         ]);
 
@@ -373,7 +373,7 @@ class DropShipperController extends Controller
         }
 
         // Get the requirement data from the request
-        if( $request->level ){
+        if ($request->level) {
             $requirementData = $request->level['details']['requirement'];
 
             // Find the DropShipperLevelDetail record
@@ -409,19 +409,23 @@ class DropShipperController extends Controller
         return response()->json(['message' => 'Dropshipper information updated successfully.']);
     }
 
-    public function dropDown(){
+    public function dropDown()
+    {
 
         $dropshippers = DropShipper::where('status', '1')
-        ->select('id as code',
-                 DB::raw("CONCAT(full_name, ' - ', email) as label"))
-        ->get();
+            ->select(
+                'id as code',
+                DB::raw("CONCAT(full_name, ' - ', email) as label")
+            )
+            ->get();
 
         return (new ResponseCollection($dropshippers))
             ->response()
             ->setStatusCode(200);
     }
 
-    public function updateLevels(){
+    public function updateLevels()
+    {
         $dropshippers = DropShipper::with([
             'user' => function ($query) {
                 $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
@@ -438,59 +442,60 @@ class DropShipperController extends Controller
         return response()->json([], 200);
     }
 
-    public function updateLevelRequirements( Request $request ){
+    public function updateLevelRequirements(Request $request)
+    {
 
-            $requirementData = $request->details['requirement'];
+        $requirementData = $request->details['requirement'];
 
-            // Find the DropShipperLevelDetail record
-            $detail = DropShipperLevelDetail::where('dropshipper_level_id', $request->id)->first();
+        // Find the DropShipperLevelDetail record
+        $detail = DropShipperLevelDetail::where('dropshipper_level_id', $request->id)->first();
 
-            if ($detail) {
-                // Prepare updated requirement structure
-                $updatedRequirements = [];
-                $allFilled = true;
+        if ($detail) {
+            // Prepare updated requirement structure
+            $updatedRequirements = [];
+            $allFilled = true;
 
-                foreach ($requirementData as $key => $value) {
-                    $filled = (bool) ($value['filled'] ?? false);
-                    $updatedRequirements[$key] = [
-                        'filled' => $filled
-                    ];
+            foreach ($requirementData as $key => $value) {
+                $filled = (bool) ($value['filled'] ?? false);
+                $updatedRequirements[$key] = [
+                    'filled' => $filled
+                ];
 
-                    if (!$filled) {
-                        $allFilled = false;
-                    }
+                if (!$filled) {
+                    $allFilled = false;
                 }
+            }
 
-                // Save updated requirement as JSON
-                $detail->requirement = $updatedRequirements;
-                $detail->is_completed = $allFilled ? 1 : 0;
-                $detail->save();
+            // Save updated requirement as JSON
+            $detail->requirement = $updatedRequirements;
+            $detail->is_completed = $allFilled ? 1 : 0;
+            $detail->save();
 
-                DropShipperLevel::where('id', $request->id)->update([
-                    'is_completed' => $allFilled ? 1 : 0
-                ]);
-
+            DropShipperLevel::where('id', $request->id)->update([
+                'is_completed' => $allFilled ? 1 : 0
+            ]);
         }
 
         $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')->get();
         return (new ResponseCollection($levels))
-        ->response()
-        ->setStatusCode(200);
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function filterLevels( Request $request ){
+    public function filterLevels(Request $request)
+    {
         $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')
-        ->when($request->level, function($query) use ($request) {
-            $query->where('level', $request->level);
-        })
-        ->when($request->incentive, function($query) use ($request) {
-            $query->where('is_completed', $request->incentive);
-        })
-        ->get();
+            ->when($request->level, function ($query) use ($request) {
+                $query->where('level', $request->level);
+            })
+            ->when($request->incentive, function ($query) use ($request) {
+                $query->where('is_completed', $request->incentive);
+            })
+            ->get();
 
         return (new ResponseCollection($levels))
-        ->response()
-        ->setStatusCode(200);
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function fetchDetails(Request $request)
@@ -501,7 +506,7 @@ class DropShipperController extends Controller
                 $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
             },
         ])
-        ->with('bank', 'city', 'shops', 'level.details')->where('id', $request->id)->get();
+            ->with('bank', 'city', 'shops', 'level.details')->where('id', $request->id)->get();
 
         $level = new DropshipperPreviewController();
         $levelTable = new DropShipperLevel();
@@ -589,9 +594,9 @@ class DropShipperController extends Controller
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop')->whereIn('account_head_id', $ledgers)
-            ->where(function($query){
+            ->where(function ($query) {
                 $query->where('type', 'BP')
-                ->orWhere('type', 'CP');
+                    ->orWhere('type', 'CP');
             })
             ->get();
 
@@ -720,13 +725,14 @@ class DropShipperController extends Controller
         return response()->json([], 200);
     }
 
-    public function attachment( $image  ){
+    public function attachment($image)
+    {
         $filenameWithExt = $image->getClientOriginalName();
         //get just filename
         $filename        = pathinfo($filenameWithExt);
         //get just extension
         $extension       = $image->extension();
-        $nameToStore     = str_replace(' ', '' ,$filename['filename']) . "_" . time() . "." . $extension;
+        $nameToStore     = str_replace(' ', '', $filename['filename']) . "_" . time() . "." . $extension;
         //Move to folder
         $path            = $image->storeAs('public/uploads/dropshipper/payments/', $nameToStore);
         return $nameToStore;
@@ -734,8 +740,8 @@ class DropShipperController extends Controller
 
     public function decision(Request $request)
     {
-
-        $lock = Cache::lock('dropshipper_decision6')->block(7, function () use ($request) {
+        DB::beginTransaction();
+        try {
 
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
@@ -756,7 +762,7 @@ class DropShipperController extends Controller
                 ]);
 
                 return ['message' => 'successfully updated'];
-            }else if($request->action == 'activate'){
+            } else if ($request->action == 'activate') {
                 User::where('id', $dropshipper->user_id)->restore();
                 $dropshipper->update([
                     'status'  => '1' // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
@@ -770,10 +776,10 @@ class DropShipperController extends Controller
 
                 $leopardApi = new LeopardApiHelper();
                 $leopard  = $leopardApi->createShipperAccount($dropshipper);
-                if($leopard == 0){
+                if ($leopard == 0) {
                     return (new ValidationCollection(["Something went wrong please try again"]))
-                    ->response()
-                    ->setStatusCode(400);
+                        ->response()
+                        ->setStatusCode(400);
                 }
 
                 $user = User::create([
@@ -826,9 +832,14 @@ class DropShipperController extends Controller
             Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
 
             return ['message' => 'successfully updated'];
-        });
-
-        return $lock;
+            DB::commit();
+            return response()->json(['message' => 'Sale created successfully'], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return (new ValidationCollection(["Something went wrong please try again"]))
+                ->response()
+                ->setStatusCode(400);
+        }
     }
 
     function accountGroupFourthCreate($name, $second, $third,)
@@ -1002,9 +1013,9 @@ class DropShipperController extends Controller
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop', 'added_by_name')->whereIn('account_head_id', $ledgers)
-            ->where(function($q){
+            ->where(function ($q) {
                 $q->where('type', 'BP')
-                ->orWhere('type', 'CP');
+                    ->orWhere('type', 'CP');
             })
             ->where('document_id', $request->document)
             ->get();
@@ -1018,7 +1029,7 @@ class DropShipperController extends Controller
 
         $pdf->project = 'YourMart';
         //GW-JAN-23-CR-1
-        $pdf->receipt = $transactions[0]->type.'-' . $request->document;
+        $pdf->receipt = $transactions[0]->type . '-' . $request->document;
         //$pdf->copy_type = 'Customer Copy';
 
         // set default header data
@@ -1175,83 +1186,84 @@ class DropShipperController extends Controller
         $pdf->Output('payment_voucher.pdf', 'I');
     }
 
-    public function payment_ledger( Request $request ){
+    public function payment_ledger(Request $request)
+    {
 
-         $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
+        $dropshipper = DropShipper::where('id', $request->dropshipper)->first();
 
-         $orders = Order::with('vouchers', 'shop:id,store_name')->where('belongs_to', $dropshipper->user_id)->whereIn('status', ['8','9','10'])->get();
+        $orders = Order::with('vouchers', 'shop:id,store_name')->where('belongs_to', $dropshipper->user_id)->whereIn('status', ['8', '9', '10'])->get();
 
-         $pdf = new MYPDF3(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-         $pdf->SetCreator(PDF_CREATOR);
-         $pdf->SetAuthor('');
-         $pdf->SetTitle('Payment Ledger');
-         $pdf->SetSubject(' ');
-         $pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
-         $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-         $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-         $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-         $pdf->SetMargins(5, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-         $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
-         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-         // set default font subsetting mode
-         $pdf->setFontSubsetting(true);
-         $pdf->SetFont('times', 'B', 12, 'C', true);
+        $pdf = new MYPDF3(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('');
+        $pdf->SetTitle('Payment Ledger');
+        $pdf->SetSubject(' ');
+        $pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
+        $pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+        $pdf->SetMargins(5, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+        // set default font subsetting mode
+        $pdf->setFontSubsetting(true);
+        $pdf->SetFont('times', 'B', 12, 'C', true);
 
-         $pdf->AddPage('L');
-
-
-         $pdf->SetFont('dejavusans', '', 10, 'C', true);
-
-         $pdf->Ln(5);
-
-         $pdf->SetFont('dejavusans', '', 10, 'C', true);
-         $pdf->MultiCell(40, 0, "Printed Date ", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, date('d-M-Y'), 1, 'R', 0, 0);
-
-         $totalPayable = $orders->sum('total_profit');
-         $totalPaid= $orders->sum('total_paid_profit');
-         $balance= $totalPayable - $totalPaid;
+        $pdf->AddPage('L');
 
 
-         $pdf->Ln();
-         $pdf->MultiCell(40, 0, "Dropshipper", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, $dropshipper->full_name, 1, 'R', 0, 0);
-         $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
-         $pdf->MultiCell(40, 0, "Total Payable", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, $totalPayable, 1, 'R', 0, 0);
+        $pdf->SetFont('dejavusans', '', 10, 'C', true);
 
-         $pdf->Ln();
-         $pdf->MultiCell(40, 0, "CNIC", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, $dropshipper->cnic_number, 1, 'R', 0, 0);
-         $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
-         $pdf->MultiCell(40, 0, "Total Paid", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, $totalPaid, 1, 'R', 0, 0);
+        $pdf->Ln(5);
 
-         $pdf->Ln();
-         $pdf->MultiCell(40, 0, "Contact #", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, $dropshipper->whatsapp_number, 1, 'R', 0, 0);
-         $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
-         $pdf->MultiCell(40, 0, "Remaining Balance", 1, 'L', 0, 0);
-         $pdf->MultiCell(35, 0, $balance, 1, 'R', 0, 0);
+        $pdf->SetFont('dejavusans', '', 10, 'C', true);
+        $pdf->MultiCell(40, 0, "Printed Date ", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, date('d-M-Y'), 1, 'R', 0, 0);
 
-         $pdf->Ln(10);
-         $pdf->SetFont('dejavusans', 'B', 8);
-         $pdf->Cell(10, 0, "Sr", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(20, 0, "Order #", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(25, 0, "Tracking #", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(22, 0, "Order Date", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(25, 0, "Status", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(35, 0, "Total Payable", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(35, 0, "Paid Date", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(35, 0, "Paid Amount", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(35, 0, "Receipt no", 1, false, 'L', 0, '', 0, false, 'T',);
-         $pdf->Cell(35, 0, "Balance", 1, 1, 'L', 0, '', 0, false, 'T',);
+        $totalPayable = $orders->sum('total_profit');
+        $totalPaid = $orders->sum('total_paid_profit');
+        $balance = $totalPayable - $totalPaid;
 
-         $pdf->SetFont('dejavusans', '', 7.7);
-         $total_quantity = 0;
-         $orderTbl = '';
-       // Iterate over each order
+
+        $pdf->Ln();
+        $pdf->MultiCell(40, 0, "Dropshipper", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, $dropshipper->full_name, 1, 'R', 0, 0);
+        $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+        $pdf->MultiCell(40, 0, "Total Payable", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, $totalPayable, 1, 'R', 0, 0);
+
+        $pdf->Ln();
+        $pdf->MultiCell(40, 0, "CNIC", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, $dropshipper->cnic_number, 1, 'R', 0, 0);
+        $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+        $pdf->MultiCell(40, 0, "Total Paid", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, $totalPaid, 1, 'R', 0, 0);
+
+        $pdf->Ln();
+        $pdf->MultiCell(40, 0, "Contact #", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, $dropshipper->whatsapp_number, 1, 'R', 0, 0);
+        $pdf->MultiCell(130, 0, "", 0, 'C', 0, 0);
+        $pdf->MultiCell(40, 0, "Remaining Balance", 1, 'L', 0, 0);
+        $pdf->MultiCell(35, 0, $balance, 1, 'R', 0, 0);
+
+        $pdf->Ln(10);
+        $pdf->SetFont('dejavusans', 'B', 8);
+        $pdf->Cell(10, 0, "Sr", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(20, 0, "Order #", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(25, 0, "Tracking #", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(22, 0, "Order Date", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(25, 0, "Status", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(35, 0, "Total Payable", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(35, 0, "Paid Date", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(35, 0, "Paid Amount", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(35, 0, "Receipt no", 1, false, 'L', 0, '', 0, false, 'T',);
+        $pdf->Cell(35, 0, "Balance", 1, 1, 'L', 0, '', 0, false, 'T',);
+
+        $pdf->SetFont('dejavusans', '', 7.7);
+        $total_quantity = 0;
+        $orderTbl = '';
+        // Iterate over each order
         foreach ($orders as $orderIndex => $order) {
             $vouchers = "";
             $voucherDates = "";
@@ -1261,11 +1273,11 @@ class DropShipperController extends Controller
             foreach ($order->vouchers as $index => $voucher) {
                 $date = date('d-M-Y', strtotime($voucher->created_at));
                 $amount = number_format($voucher->debit);
-                if( $index == 0){
+                if ($index == 0) {
                     $vouchers .= "<span><u>{$voucher->type} - {$voucher->document_id}</u></span>";
                     $voucherDates .= "<span><u>{$date}</u></span>";
                     $voucherAmount .= "<span><u>{$amount}</u></span>";
-                }else{
+                } else {
                     $vouchers .= "<br><span><u>{$voucher->type} - {$voucher->document_id}</u></span>";
                     $voucherDates .= "<br><span><u>{$date}</u></span>";
                     $voucherAmount .= "<br><span><u>{$amount}</u></span>";
@@ -1278,8 +1290,8 @@ class DropShipperController extends Controller
             $status = $order->status == '8' ? 'Delivered' : 'Returned';
             $date = date('d-M-Y', strtotime($order->created_at));
             $balances = $order->total_profit - $order->total_paid_profit;
-                // Generate the table rows for each order
-                $orderTbl .= <<<EOD
+            // Generate the table rows for each order
+            $orderTbl .= <<<EOD
                     <table cellspacing="0" cellpadding="4" border="1">
                         <tr>
                             <td style="width:3.6%;">$index</td>
@@ -1299,7 +1311,7 @@ class DropShipperController extends Controller
         // Write order row to PDF
         $pdf->writeHTML($orderTbl, true, false, false, false, '');
 
-         $pdf->Output('ledger.pdf', 'I');
+        $pdf->Output('ledger.pdf', 'I');
     }
 }
 
