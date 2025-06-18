@@ -742,7 +742,6 @@ class DropShipperController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
             $group_id = null;
@@ -831,7 +830,6 @@ class DropShipperController extends Controller
 
             Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
 
-            return ['message' => 'successfully updated'];
             DB::commit();
             return response()->json(['message' => 'Sale created successfully'], 201);
         } catch (\Exception $e) {
