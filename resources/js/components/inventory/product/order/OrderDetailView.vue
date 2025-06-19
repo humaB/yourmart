@@ -798,8 +798,9 @@
 
 
                     <!-- Normal Admin rights -->
+                     <!-- 6 < 5 -->
                     <div class="modal-footer d-dlex justify-content-between"
-                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 6">
+                        v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
                         <div>
                             <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
                                 @click="markasReplacement()"
@@ -877,13 +878,18 @@
                     </div>
                     <!-- For Delivered or returns order -->
                     <div class="modal-footer" v-else>
-                      
+                        <!-- <div v-if="details.status == 8 || details.status == 9 || details.status == 10">
+                            <button class="btn btn-danger" @click="reject()"
+                                    v-if="!rejectLoader && role != 'supervisor'">
+                                    <i class="fa fa-trash"></i> Cancel Order
+                            </button>
+                        </div> -->
                         <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
-                            data-target="#markasBeingReturn" v-if="role == 'admin'">
+                            data-target="#markasBeingReturn" v-if="role == 'admin' && ( details.status != 8 || details.status != 9 || details.status != 10 )">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return
                         </button>
                         <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal"
-                            data-target="#markasDelivered" v-if="role == 'admin'">
+                            data-target="#markasDelivered" v-if="role == 'admin' && ( details.status != 8 || details.status != 9 || details.status != 10 )">
                             <i class="fas fa-check"></i> Mark as Delivered
                         </button>
                         <button class="btn btn-danger" @click="markAsDelivered()" data-toggle="modal"

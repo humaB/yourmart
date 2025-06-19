@@ -14229,7 +14229,7 @@ var render = function render() {
     }
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 6 ? _c("div", {
+  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
     staticClass: "modal-footer d-dlex justify-content-between"
   }, [_c("div", [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
@@ -14326,7 +14326,7 @@ var render = function render() {
     }
   }, [_vm._v("\n                        Close\n                    ")])]) : _c("div", {
     staticClass: "modal-footer"
-  }, [_vm.role == "admin" ? _c("button", {
+  }, [_vm.role == "admin" && (_vm.details.status != 8 || _vm.details.status != 9 || _vm.details.status != 10) ? _c("button", {
     staticClass: "btn btn-danger",
     attrs: {
       "data-toggle": "modal",
@@ -14339,7 +14339,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-undo-alt"
-  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("button", {
+  }), _vm._v(" Mark as Being Return\n                    ")]) : _vm._e(), _vm._v(" "), _vm.role == "admin" && (_vm.details.status != 8 || _vm.details.status != 9 || _vm.details.status != 10) ? _c("button", {
     staticClass: "btn btn-success",
     attrs: {
       "data-toggle": "modal",
