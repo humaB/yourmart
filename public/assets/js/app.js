@@ -14229,7 +14229,7 @@ var render = function render() {
     }
   }, [_vm._v("Update Amount")]) : _c("button", {
     staticClass: "btn btn-primary btn-progress disabled"
-  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 5 ? _c("div", {
+  }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 6 ? _c("div", {
     staticClass: "modal-footer d-dlex justify-content-between"
   }, [_c("div", [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
@@ -14326,16 +14326,7 @@ var render = function render() {
     }
   }, [_vm._v("\n                        Close\n                    ")])]) : _c("div", {
     staticClass: "modal-footer"
-  }, [_vm.details.status == "6" ? _c("div", [!_vm.rejectLoader && _vm.role != "supervisor" ? _c("button", {
-    staticClass: "btn btn-danger",
-    on: {
-      click: function click($event) {
-        return _vm.reject();
-      }
-    }
-  }, [_c("i", {
-    staticClass: "fa fa-trash"
-  }), _vm._v(" Cancel Order\n                        ")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("button", {
+  }, [_vm.role == "admin" ? _c("button", {
     staticClass: "btn btn-danger",
     attrs: {
       "data-toggle": "modal",
