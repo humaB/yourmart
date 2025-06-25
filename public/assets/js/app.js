@@ -329,7 +329,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/'
+      public_url: window.location.origin + "" + '/'
     };
   },
   methods: {
@@ -465,7 +465,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/'
+      public_url: window.location.origin + "" + '/'
     };
   },
   methods: {
@@ -532,7 +532,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       web_url: "https://yourmart.pk/",
       editMode: false,
       // This controls whether the user is in edit mode
@@ -572,7 +572,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -722,7 +722,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       shopPayments: [],
       shop: []
     };
@@ -844,7 +844,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['history', 'selectedDropshipper'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       id: '',
       csrf: ''
     };
@@ -945,7 +945,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       password: "",
@@ -1002,7 +1002,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       name: "",
       email: "",
       password: "",
@@ -1064,7 +1064,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -1857,7 +1857,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin"
+      public_url: window.location.origin + ""
     };
   },
   methods: {
@@ -2039,7 +2039,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -2474,7 +2474,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   props: ['tags', 'loader', 'settings', 'categories', 'products'],
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      public_url: window.location.origin + "" + '/',
       form: {
         headline: {
           text: ''
@@ -3007,7 +3007,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
@@ -3077,7 +3077,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -3291,7 +3291,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -3376,7 +3376,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -3482,7 +3482,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -3556,7 +3556,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         courier: "",
         from: new Date().toISOString().substr(0, 10),
@@ -3627,7 +3627,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -3701,7 +3701,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
@@ -3825,7 +3825,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -3899,7 +3899,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -4005,7 +4005,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
+      public_url: window.location.origin + "",
       filter: {
         product: {
           code: 0,
@@ -4131,8 +4131,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   data: function data() {
     var _ref;
     return _ref = {
-      api_url: "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: "/public/api/",
+      public_url: window.location.origin + "",
       filter: {
         dropshipper: 0,
         shop: 0,
@@ -4375,8 +4375,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/public/api/",
       web_url: "https://yourmart.pk/",
       tickets: [],
       chats: [],
@@ -4725,8 +4725,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -5069,8 +5069,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Supplier Request's"
       },
@@ -5178,8 +5178,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + "/",
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + "/",
       topSaleProducts: [],
       tickets: [],
       ticketFilter: {
@@ -5383,7 +5383,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Orders"
       },
@@ -5546,12 +5546,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return _defineProperty(_defineProperty({
-      public_url: window.location.origin + "/dropshipping-admin",
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Dropshipper Pay outs"
       },
-      th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "DC & Packing", "Reserved Amount", "Recommended Pay", "Action"],
       th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Added Date", "Action"],
       table_id: "moq_table",
       btnLoader: false,
@@ -5628,6 +5627,14 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
+    getRecommendedPay: function getRecommendedPay(item) {
+      var balance = item.profit - item.paid_profit;
+      if (balance < 0) return '0';
+      return this.formatPrice(balance < item.reserved ? balance : item.reserved);
+    },
+    getNetBalance: function getNetBalance(item) {
+      return item.profit - item.paid_profit - item.reserved;
+    },
     applyFilter: function applyFilter() {
       var vm = this;
       axios.post(this.api_url + "dropshippers/levels/filters", vm.filter).then(function (response) {
@@ -6059,7 +6066,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -6301,7 +6308,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Couriers",
         link: "#",
@@ -6482,8 +6489,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       dropshipperData: {
@@ -6644,8 +6651,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -6791,8 +6798,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "" + '/',
       btnLoading: false,
       tableLoading: false,
       allCourses: [],
@@ -7015,7 +7022,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      api_url: window.location.origin + "/public/api/",
       tableHeader: {
         heading: "Page Setting's"
       },
@@ -7155,8 +7162,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: "/public/api/",
+      public_url: window.location.origin + "",
       tableHeader: {
         heading: "FIS Reports"
       },
@@ -7390,8 +7397,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: window.location.origin + "/dropshipping-admin/public/api/",
-      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "",
       profileData: {},
       btnLoading: false,
       oldPassword: ''
@@ -20702,7 +20709,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_vm.loader ? _c("div", {
-    staticClass: "card-body table-responsive"
+    staticClass: "col-md-12 card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
       width: 250
@@ -20710,19 +20717,14 @@ var render = function render() {
   })], 1) : _c("div", {
     staticClass: "col-md-12 table-responsive"
   }, [_c("h5", [_vm._v("Total Recommended Payouts : " + _vm._s(_vm.formatPrice(_vm.totalRecommended)))]), _vm._v(" "), _c("table", {
-    ref: "datatable",
     staticClass: "table table-bordered",
     attrs: {
       id: _vm.table_id
     }
-  }, [_c("thead", [_c("tr", _vm._l(_vm.th, function (item, index) {
-    return _c("th", {
-      key: item
-    }, [_vm._v(_vm._s(item))]);
-  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
+  }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.profit - item.paid_profit < 0 ? "0" : item.profit - item.paid_profit < item.reserved ? _vm.formatPrice(item.profit - item.paid_profit) : _vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit - item.reserved)))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getRecommendedPay(item)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.getNetBalance(item))))]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
@@ -20792,7 +20794,7 @@ var render = function render() {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row px-4"
@@ -20800,7 +20802,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(7), _vm._v(" "), _c("div", {
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20816,7 +20818,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(8), _vm._v(" "), _c("div", {
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20832,7 +20834,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20848,7 +20850,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(10), _vm._v(" "), _c("div", {
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20950,7 +20952,7 @@ var render = function render() {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
-  }, [_vm._m(11), _vm._v(" "), _c("div", {
+  }, [_vm._m(12), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row px-4"
@@ -20958,7 +20960,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(12), _vm._v(" "), _c("div", {
+  }, [_vm._m(13), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20974,7 +20976,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(13), _vm._v(" "), _c("div", {
+  }, [_vm._m(14), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20990,7 +20992,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(14), _vm._v(" "), _c("div", {
+  }, [_vm._m(15), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -21006,7 +21008,7 @@ var render = function render() {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(15), _vm._v(" "), _c("div", {
+  }, [_vm._m(16), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -21117,7 +21119,7 @@ var render = function render() {
     attrs: {
       id: "level-record"
     }
-  }, [_vm._m(16), _vm._v(" "), _c("tbody", _vm._l(_vm.levels, function (item, index) {
+  }, [_vm._m(17), _vm._v(" "), _c("tbody", _vm._l(_vm.levels, function (item, index) {
     var _item$dropshipper, _item$dropshipper2, _item$dropshipper3;
     return _c("tr", {
       key: item.id
@@ -21396,6 +21398,10 @@ var staticRenderFns = [function () {
   }, [_c("i", {
     staticClass: "fa fa-clipboard-list"
   })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Cycle")]), _vm._v(" "), _c("th", [_vm._v("Due Date")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("DC & Packing")]), _vm._v(" "), _c("th", [_vm._v("Reserved Amount")]), _vm._v(" "), _c("th", [_vm._v("Recommended Pay")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

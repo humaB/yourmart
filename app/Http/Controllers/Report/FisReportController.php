@@ -279,17 +279,20 @@ class FisReportController extends Controller
 
     public function leopardReturnsReceived(Request $request)
     {
-        $orders = Order::when($request->from, function ($q) use ($request) {
+
+        $returns = StoreReturn::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
         })
         ->when($request->to, function ($q) use ($request) {
             $q->whereDate('created_at', '<=', $request->to);
-        })
-        ->when($request->courier, function ($q) use ($request) {
+        })->pluck('order_id');
+
+        $orders = Order::when($request->courier, function ($q) use ($request) {
             $q->where('courier_service_id', $request->courier);
         })
         ->where('type', 'Normal')
         ->where('status', '10')
+        ->whereIn('id', $returns)
         ->pluck('id');
 
         $data = OrderItem::with('variation.product', 'order.shop')->whereIn('order_id', $orders)->get();

@@ -1,6 +1,6 @@
 {
-    "/assets/js/app.js": "/assets/js/app.js",
-    "/assets/js/productApp.js": "/assets/js/productApp.js",
-    "/assets/js/inventoryApp.js": "/assets/js/inventoryApp.js",
-    "/assets/js/accountApp.js": "/assets/js/accountApp.js"
+    "/assets/js/app.js": "/assets/js/app.js?id=18487cb6dcca3888f756f4a4a03dadff",
+    "/assets/js/productApp.js": "/assets/js/productApp.js?id=e65a7956af046116f15e7af8fe754de7",
+    "/assets/js/inventoryApp.js": "/assets/js/inventoryApp.js?id=c29f4ff9b9dc4e4643b520a4170acc20",
+    "/assets/js/accountApp.js": "/assets/js/accountApp.js?id=cf7d4263b2d2dc1fe46b9b94ae485d52"
 }
