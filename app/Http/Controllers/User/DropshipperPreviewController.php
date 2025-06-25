@@ -152,7 +152,7 @@ class DropshipperPreviewController extends Controller
             'leopardPerformance' => $leopardPerformance,
             'totalCustomers' => $totalCustomers,
 
-            'reservedAmount' => $reservedAmount
+            'reservedAmount' => $reservedAmount ?? 0
         ];
 
         return (new ResponseCollection($data))

@@ -564,7 +564,7 @@ class DropShipperController extends Controller
             'banks'   => $banks,
             'cash'    => $cash,
             'dropshipper' =>  $dropshipper,
-            'reserved_amount' =>  $reserved_amount
+            'reserved_amount' =>  $reserved_amount ?? 0
         ];
 
         return (new ResponseCollection($data))
