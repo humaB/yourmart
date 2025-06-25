@@ -14,6 +14,7 @@
                   </li>
                 </ul>
                 <div class="tab-content" id="myTabContent2">
+
                   <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="card card-primary">
@@ -101,6 +102,7 @@
                                                     <bullet-list-loader :width="250"> </bullet-list-loader>
                                                 </div>
                                                 <div class="col-md-12 table-responsive" v-else>
+                                                    <h5>Total Recommended Payouts : {{ formatPrice(totalRecommended) }}</h5>
                                                     <table class="table table-bordered" :id="table_id" ref="datatable">
                                                         <thead>
                                                             <tr>
@@ -149,6 +151,7 @@
                         </div>
                     </div>
                   </div>
+
                   <div class="tab-pane fade" id="profile3" role="tabpanel" aria-labelledby="profile-tab3">
                     <div class="col-12 col-md-12 col-lg-12">
                         <div class="card card-primary">
@@ -227,7 +230,10 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12">
+                                    <div class="card-body table-responsive" v-if="loader">
+                                                    <bullet-list-loader :width="250"> </bullet-list-loader>
+                                                </div>
+                                <div class="col-md-12 table-responsive" v-else>
                                     <table class="table table-bordered" id="payout-record">
                                         <thead>
                                             <tr>
@@ -561,6 +567,7 @@ export default {
             totalPaid: 0,
             totalRemaining: 0,
             remainingDropshippers: 0,
+            totalRecommended: 0,
             id: '',
             filter: {
                 status: '',
@@ -763,6 +770,7 @@ export default {
                     vm.totalPaid = results.total_paid;
                     vm.totalRemaining = results.total_remaining;
                     vm.remainingDropshippers = results.remaining_dropshippers;
+                    vm.totalRecommended = results.total_recommended;
                     vm.levels = results.levels;
                     vm.levelsWidget = {
                         level1: vm.levels.filter(level => level.level === 'Level 01').length,

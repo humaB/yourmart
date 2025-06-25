@@ -5566,6 +5566,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       totalPaid: 0,
       totalRemaining: 0,
       remainingDropshippers: 0,
+      totalRecommended: 0,
       id: '',
       filter: {
         status: '',
@@ -5755,6 +5756,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         vm.totalPaid = results.total_paid;
         vm.totalRemaining = results.total_remaining;
         vm.remainingDropshippers = results.remaining_dropshippers;
+        vm.totalRecommended = results.total_recommended;
         vm.levels = results.levels;
         vm.levelsWidget = {
           level1: vm.levels.filter(function (level) {
@@ -20707,7 +20709,7 @@ var render = function render() {
     }
   })], 1) : _c("div", {
     staticClass: "col-md-12 table-responsive"
-  }, [_c("table", {
+  }, [_c("h5", [_vm._v("Total Recommended Payouts : " + _vm._s(_vm.formatPrice(_vm.totalRecommended)))]), _vm._v(" "), _c("table", {
     ref: "datatable",
     staticClass: "table table-bordered",
     attrs: {
@@ -20858,8 +20860,14 @@ var render = function render() {
     staticClass: "ti-arrow-up text-success"
   }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Total Sellers")])])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
+  }, [_vm._v("Total Sellers")])])])])])])]), _vm._v(" "), _vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("div", {
+    staticClass: "col-md-12 table-responsive"
   }, [_c("table", {
     staticClass: "table table-bordered",
     attrs: {

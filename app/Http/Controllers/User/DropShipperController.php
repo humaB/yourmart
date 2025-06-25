@@ -65,7 +65,7 @@ class DropShipperController extends Controller
 
     public function pendingPayouts()
     {
-        $dropshippers = DropShipper::with(
+        $dropshipperRecord = DropShipper::with(
             'general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher',
             'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
             'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit',
@@ -73,21 +73,37 @@ class DropShipperController extends Controller
             'user:id,name'
         )->whereColumn('total_payable', '!=', 'total_paid')->get();
 
-        foreach ($dropshippers as $dropshipper) {
+        $totalRecommended = 0;
+
+        $dropshippers = $dropshipperRecord->reduce(function ($carry, $dropshipper) use (&$totalRecommended) {
             $delivered = $dropshipper->user?->deliveredOrders ?? collect();
-            $returned = $dropshipper->user?->returnedOrders ?? collect();
-            $reserved = $dropshipper->user?->reservedOrders ?? collect();
+            $returned  = $dropshipper->user?->returnedOrders ?? collect();
+            $reserved  = $dropshipper->user?->reservedOrders ?? collect();
 
-            $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
-            $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
+            $profit      = $delivered->sum('total_profit') + $returned->sum('total_profit');
+            $paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
+            $reservedAmt = $reserved->sum('courier_service_price') + $reserved->sum('packaging_price');
 
-            $dropshipper->reserved = $reserved->sum('courier_service_price') + $reserved->sum('packaging_price');
-        }
+            $balance = $profit - $paid_profit;
+            $net     = $balance - $reservedAmt;
+
+            if ($net > 0) {
+                $dropshipper->profit      = $profit;
+                $dropshipper->paid_profit = $paid_profit;
+                $dropshipper->reserved    = $reservedAmt;
+
+                $totalRecommended += $net;
+                $carry[] = $dropshipper;
+            }
+
+            return $carry;
+        }, collect()); // Start with empty collection
+
 
         $totalPayable = DropShipper::sum('total_payable');
         $totalPayablePaid = DropShipper::sum('total_paid');
         $totalRemaining   = DropShipper::sum('remaining_amount');
-        $remainingDropshippers = $dropshipper->count();
+        $remainingDropshippers = $dropshipperRecord->count();
 
         $levels = DropShipperLevel::with('dropshipper', 'details')->where('level', '!=', 'New Seller')->get();
 
@@ -96,6 +112,7 @@ class DropShipperController extends Controller
             'total_payable' => $totalPayable,
             'total_paid' => $totalPayablePaid,
             'total_remaining' => $totalRemaining,
+            'total_recommended' => $totalRecommended,
             'remaining_dropshippers' => $remainingDropshippers,
             'levels'   => $levels
         ];
