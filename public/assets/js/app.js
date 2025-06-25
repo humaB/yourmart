@@ -5551,7 +5551,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       tableHeader: {
         heading: "Dropshipper Pay outs"
       },
-      th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "DC & Packing", "Recommended Pay", "Action"],
+      th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "DC & Packing", "Reserved Amount", "Recommended Pay", "Action"],
       th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Added Date", "Action"],
       table_id: "moq_table",
       btnLoader: false,
@@ -20720,7 +20720,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit - item.reserved)))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.profit - item.paid_profit < 0 ? "0" : item.profit - item.paid_profit < item.reserved ? _vm.formatPrice(item.profit - item.paid_profit) : _vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit - item.reserved)))]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
