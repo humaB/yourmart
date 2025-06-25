@@ -19856,7 +19856,7 @@ var render = function render() {
     staticClass: "text-muted mb-0"
   }, [_vm._v("Reserved for In-Process Orders")]), _vm._v(" "), _c("span", {
     staticClass: "font-weight-bold mb-0"
-  }, [_vm._v(_vm._s(_vm.totalRemaining < 0 ? "0" : _vm.totalRemaining < _vm.reservedAmount ? _vm.formatPrice() : _vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.totalRemaining < 0 ? "0" : _vm.totalRemaining < _vm.reservedAmount ? _vm.formatPrice(_vm.reservedAmount) : _vm.formatPrice(_vm.totalRemaining)))])]), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-xl-4 col-lg-6"
   }, [_c("div", {
     staticClass: "card"
