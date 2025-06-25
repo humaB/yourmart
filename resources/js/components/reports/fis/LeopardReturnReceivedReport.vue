@@ -4,21 +4,29 @@
             <div class="col-12 col-sm-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Leopard Returns Received</h5>
+                        <h5>Returns Received</h5>
                     </div>
                     <div class="card-body row">
                         <div class="col-md-12">
                             <form @submit.prevent="submitFunction">
                                 <div class="row">
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
+                                        <label for="date">Select Courier</label>
+                                        <select class="form-control" v-model="filter.courier">
+                                            <option value="">Select from the following</option>
+                                            <option value="1">Leopard</option>
+                                            <option value="2">PostEx</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
                                         <label for="date">From</label>
                                         <input type="date" name="from" class="form-control" v-model="filter.from" />
                                     </div>
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-md-3 form-group">
                                         <label for="date">To</label>
                                         <input type="date" name="to" class="form-control" v-model="filter.to" />
                                     </div>
-                                    <div class="col-md-4 form-group pt-4">
+                                    <div class="col-md-3 form-group pt-4">
                                         <button class="btn btn-block btn-primary">Filter</button>
                                     </div>
 
@@ -36,28 +44,15 @@
 
                                     <tr>
                                         <th>Sr #</th>
-                                        <th>Date</th>
-                                        <th>Order #</th>
                                         <th>Product Name </th>
-                                        <th>Average Price </th>
                                         <th>Quantity</th>
-                                        <th>Total Price Cost</th>
-                                        <th>Total Sell Cost</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(item, index) in data" :key="item.id">
                                         <td>{{ index + 1 }}</td>
-                                        <td>{{ formatDate(item.created_at) }}</td>
-                                        <td>
-                                            {{ item.order.shop ? `${item.order.shop.store_name.substring(0,
-                                                3)}-${item.order.order_no}` : item.order.order_no }}
-                                        </td>
-                                        <td>{{ item.variation ? item.variation.product.title : '' }}</td>
-                                        <td>{{ item.variation ? item.variation.avg_price : '0' }}</td>
-                                        <td>{{ item.quantity }}</td>
-                                        <td>{{ formatPrice(item.variation.avg_price * item.quantity) }}</td>
-                                        <td>{{ formatPrice(item.price * item.quantity) }}</td>
+                                        <td>{{ item.product_name  }}</td>
+                                        <td>{{ item.total_qty }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -83,6 +78,7 @@ export default {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             filter: {
+                courier : "",
                 from: new Date().toISOString().substr(0, 10),
                 to: new Date().toISOString().substr(0, 10),
             },

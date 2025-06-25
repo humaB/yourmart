@@ -285,13 +285,25 @@ class FisReportController extends Controller
         ->when($request->to, function ($q) use ($request) {
             $q->whereDate('created_at', '<=', $request->to);
         })
+        ->when($request->courier, function ($q) use ($request) {
+            $q->where('courier_service_id', $request->courier);
+        })
         ->where('type', 'Normal')
         ->where('status', '10')
         ->pluck('id');
 
         $data = OrderItem::with('variation.product', 'order.shop')->whereIn('order_id', $orders)->get();
 
-        return (new ResponseCollection($data))
+        $grouped = $data->groupBy('product_variation_id')->map(function ($items) {
+            $product = $items->first()->variation->product->title ?? null;
+            return [
+                'product_name' => $product ?? 'N/A',
+                'total_qty'    => $items->sum('quantity'),
+            ];
+
+        })->values();
+
+        return (new ResponseCollection($grouped))
             ->response()
             ->setStatusCode(200);
     }

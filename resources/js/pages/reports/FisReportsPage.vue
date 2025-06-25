@@ -48,7 +48,7 @@
                             <div class="col-md-4 col-6">
                                 <h6>
                                     6.
-                                    <a href="#" @click="leopardReturnReceived()"><i class="fas fa-fax"></i> Leopard Returns Received</a>
+                                    <a href="#" @click="leopardReturnReceived()"><i class="fas fa-fax"></i> Returns Received</a>
                                 </h6>
                             </div>
 

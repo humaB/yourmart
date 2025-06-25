@@ -62,4 +62,8 @@ class User extends Authenticatable
     public function returnedOrders() {
         return $this->hasMany(Order::class, 'belongs_to', 'id')->whereIn('status' , ['9', '10'])->where('is_replacement', '0');
     }
+
+    public function reservedOrders() {
+        return $this->hasMany(Order::class, 'belongs_to', 'id')->whereIn('status' , [0, 1, 2, 3, 4, 5, 11, 12])->where('is_replacement', '0')->where('type', 'Normal');
+    }
 }

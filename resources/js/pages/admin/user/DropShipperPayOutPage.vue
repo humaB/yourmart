@@ -117,6 +117,8 @@
                                                                 <td>{{ formatPrice(item.profit) }}</td>
                                                                 <td>{{ formatPrice(item.paid_profit) }}</td>
                                                                 <td>{{ formatPrice(item.profit -item.paid_profit) }}</td>
+                                                                <td>{{ formatPrice(item.reserved) }}</td>
+                                                                <td>{{ formatPrice(( item.profit -item.paid_profit ) - item.reserved) }}</td>
                                                                 <td width="20%">
                                                                     <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                         data-toggle="modal" data-target="#dropShipperDetail"
@@ -240,6 +242,7 @@
                                                 <td>{{ formatPrice(item.profit) }}</td>
                                                 <td>{{ formatPrice(item.paid_profit) }}</td>
                                                 <td>{{ formatPrice(item.profit -item.paid_profit) }}</td>
+
 
                                                 <td>{{ formatDate(item.created_at) }}</td>
                                                 <td width="20%">
@@ -542,7 +545,7 @@ export default {
             tableHeader: {
                 heading: "Dropshipper Pay outs",
             },
-            th: ["Sr #", "Name", "Email", "Cycle","Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+            th: ["Sr #", "Name", "Email", "Cycle","Due Date", "Total Payable", "Total Paid", "Remaining Amount","DC & Packing","Recommended Pay", "Action"],
             th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Added Date", "Action"],
             table_id: "moq_table",
             btnLoader: false,

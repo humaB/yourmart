@@ -3558,6 +3558,7 @@ __webpack_require__.r(__webpack_exports__);
     return {
       public_url: window.location.origin + "",
       filter: {
+        courier: "",
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
       }
@@ -5550,7 +5551,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       tableHeader: {
         heading: "Dropshipper Pay outs"
       },
-      th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "Action"],
+      th: ["Sr #", "Name", "Email", "Cycle", "Due Date", "Total Payable", "Total Paid", "Remaining Amount", "DC & Packing", "Recommended Pay", "Action"],
       th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Added Date", "Action"],
       table_id: "moq_table",
       btnLoader: false,
@@ -17066,7 +17067,44 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-4 form-group"
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("Select Courier")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.courier,
+      expression: "filter.courier"
+    }],
+    staticClass: "form-control",
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "courier", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("Select from the following")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "1"
+    }
+  }, [_vm._v("Leopard")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "2"
+    }
+  }, [_vm._v("PostEx")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
   }, [_c("label", {
     attrs: {
       "for": "date"
@@ -17093,7 +17131,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4 form-group"
+    staticClass: "col-md-3 form-group"
   }, [_c("label", {
     attrs: {
       "for": "date"
@@ -17135,7 +17173,7 @@ var render = function render() {
   }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.order.shop ? "".concat(item.order.shop.store_name.substring(0, 3), "-").concat(item.order.order_no) : item.order.order_no) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.avg_price : "0"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.variation.avg_price * item.quantity)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.price * item.quantity)))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_qty))])]);
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
@@ -17143,19 +17181,19 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "card-header"
-  }, [_c("h5", [_vm._v("Leopard Returns Received")])]);
+  }, [_c("h5", [_vm._v("Returns Received")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-md-4 form-group pt-4"
+    staticClass: "col-md-3 form-group pt-4"
   }, [_c("button", {
     staticClass: "btn btn-block btn-primary"
   }, [_vm._v("Filter")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Average Price ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Total Price Cost")]), _vm._v(" "), _c("th", [_vm._v("Total Sell Cost")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Product Name ")]), _vm._v(" "), _c("th", [_vm._v("Quantity")])])]);
 }];
 render._withStripped = true;
 
@@ -20682,7 +20720,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit)))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.payment_cycle))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.getNextDueDate(item.voucher_created_at, item.payment_cycle)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.reserved)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.profit - item.paid_profit - item.reserved)))]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
@@ -22712,7 +22750,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Leopard Returns Received")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Returns Received")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                7.\n                                "), _c("a", {
     attrs: {

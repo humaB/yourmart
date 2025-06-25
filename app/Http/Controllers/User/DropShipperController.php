@@ -69,17 +69,20 @@ class DropShipperController extends Controller
             'general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher',
             'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
             'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit',
+            'user.reservedOrders:id,belongs_to,courier_service_price,packaging_price',
             'user:id,name'
         )->whereColumn('total_payable', '!=', 'total_paid')->get();
 
         foreach ($dropshippers as $dropshipper) {
             $delivered = $dropshipper->user?->deliveredOrders ?? collect();
             $returned = $dropshipper->user?->returnedOrders ?? collect();
+            $reserved = $dropshipper->user?->reservedOrders ?? collect();
 
             $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
             $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
-        }
 
+            $dropshipper->reserved = $reserved->sum('courier_service_price') + $reserved->sum('packaging_price');
+        }
 
         $totalPayable = DropShipper::sum('total_payable');
         $totalPayablePaid = DropShipper::sum('total_paid');
