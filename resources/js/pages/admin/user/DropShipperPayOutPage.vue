@@ -98,15 +98,26 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
-                                                <div class="card-body table-responsive" v-if="loader">
+                                                <div class="col-md-12 card-body table-responsive" v-if="loader">
                                                     <bullet-list-loader :width="250"> </bullet-list-loader>
                                                 </div>
                                                 <div class="col-md-12 table-responsive" v-else>
                                                     <h5>Total Recommended Payouts : {{ formatPrice(totalRecommended) }}</h5>
-                                                    <table class="table table-bordered" :id="table_id" ref="datatable">
+                                                    <table class="table table-bordered" :id="table_id">
                                                         <thead>
                                                             <tr>
-                                                                <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                                <th>Sr #</th>
+                                                                <th>Name</th>
+                                                                <th>Email</th>
+                                                                <th>Cycle</th>
+                                                                <th>Due Date</th>
+                                                                <th>Total Payable</th>
+                                                                <th>Total Paid</th>
+                                                                <th>Remaining Amount</th>
+                                                                <th>DC &amp; Packing</th>
+                                                                <th>Reserved Amount</th>
+                                                                <th>Recommended Pay</th>
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -119,9 +130,11 @@
                                                                 <td>{{ formatPrice(item.profit) }}</td>
                                                                 <td>{{ formatPrice(item.paid_profit) }}</td>
                                                                 <td>{{ formatPrice(item.profit -item.paid_profit) }}</td>
+
                                                                 <td>{{ formatPrice(item.reserved) }}</td>
-                                                                <td>{{ ( item.profit -item.paid_profit ) < 0 ? '0' : (( item.profit -item.paid_profit ) < item.reserved ? formatPrice(( item.profit -item.paid_profit )) : formatPrice(item.reserved)) }}</td>
-                                                                <td>{{ formatPrice(( item.profit -item.paid_profit ) - item.reserved) }}</td>
+                                                                <td>{{ getRecommendedPay(item) }}</td>
+                                                                <td>{{ formatPrice(getNetBalance(item)) }}</td>
+
                                                                 <td width="20%">
                                                                     <button class="btn btn-info" @click="fetchDetail(item.id)"
                                                                         data-toggle="modal" data-target="#dropShipperDetail"
@@ -552,7 +565,6 @@ export default {
             tableHeader: {
                 heading: "Dropshipper Pay outs",
             },
-            th: ["Sr #", "Name", "Email", "Cycle","Due Date", "Total Payable", "Total Paid", "Remaining Amount","DC & Packing","Reserved Amount","Recommended Pay", "Action"],
             th2: ["Sr #", "Name", "Email", "Contact #", "Total Payable", "Total Paid", "Remaining Amount", "Added Date", "Action"],
             table_id: "moq_table",
             btnLoader: false,
@@ -623,6 +635,14 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        getRecommendedPay(item) {
+            const balance = item.profit - item.paid_profit;
+            if (balance < 0) return '0';
+            return this.formatPrice(balance < item.reserved ? balance : item.reserved);
+        },
+        getNetBalance(item) {
+            return (item.profit - item.paid_profit) - item.reserved;
+        },
         applyFilter(){
             let vm = this;
             axios
