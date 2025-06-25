@@ -112,6 +112,15 @@ class DropshipperPreviewController extends Controller
 
         $level = $this->determineSellerLevel($totalOrders, $accountHealth, $totalProfit);
 
+        //Reserved Amount
+        $reservedAmount = Order::where('belongs_to', $dropshipper->user_id)
+        ->where('type', 'Normal')
+        ->whereIn('status', [0, 1, 2, 3, 4, 5, 11, 12])
+        ->select(
+            DB::raw('SUM(packaging_price + courier_service_price) as total_reserved')
+        )
+        ->value('total_reserved');
+
         // Build the response data array
         $data = [
             'totalProfit' => $totalProfit,
@@ -141,7 +150,9 @@ class DropshipperPreviewController extends Controller
             'accountHealth'     => $accountHealth,
 
             'leopardPerformance' => $leopardPerformance,
-            'totalCustomers' => $totalCustomers
+            'totalCustomers' => $totalCustomers,
+
+            'reservedAmount' => $reservedAmount
         ];
 
         return (new ResponseCollection($data))

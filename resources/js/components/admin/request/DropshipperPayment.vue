@@ -101,26 +101,38 @@
                                 <br>
                                 <p class="text-muted">{{ details.account_iban || 'N/A' }}</p>
                               </div>
-                              <div class="col-md-3 col-6">
+                              <div class="col-md-2 col-6">
                                 <strong>Payment Cycle</strong>
                                 <br>
                                 <p class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
                               </div>
-                              <div class="col-md-3 col-6">
+                              <div class="col-md-2 col-6">
                                 <strong>Total Payable</strong>
                                 <br>
                                 <h5 class="text-muted">{{ formatPrice( details.total_profit ) }}</h5>
                               </div>
-                              <div class="col-md-3 col-6">
+                              <div class="col-md-2 col-6">
                                 <strong>Total Paid</strong>
                                 <br>
                                 <h5 class="text-muted">{{ formatPrice( details.total_paid_profit ) }}</h5>
                               </div>
-                              <div class="col-md-3 col-6">
+                              <div class="col-md-2 col-6">
                                 <strong>Remaining Balance</strong>
                                 <br>
                                 <h5 class="text-muted">{{ formatPrice( details.total_profit - details.total_paid_profit)}}</h5>
                               </div>
+
+                            <div class="col-md-2 col-6">
+                                <strong>Reserved Amount</strong>
+                                <br>
+                                <h5 class="text-muted">{{ formatPrice( reservedAmount )}}</h5>
+                              </div>
+
+                            <div class="col-md-2 col-6">
+                                <strong>Recommended Pay</strong>
+                                <br>
+                                <h5 class="text-muted">{{ formatPrice( (details.total_profit - details.total_paid_profit) - reservedAmount )}}</h5>
+                            </div>
 
                     </div>
 
@@ -192,7 +204,7 @@
 <script>
 export default {
     name: 'DropshipperPayment',
-    props: ['orders', 'addData', 'loader','accountCash','accountBanks', 'details'],
+    props: ['orders', 'addData', 'loader','accountCash','accountBanks', 'details', 'reservedAmount'],
     data() {
           return {
               web_url : process.env.MIX_WEB_URL,

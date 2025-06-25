@@ -133,6 +133,67 @@
             </div>
 
         </div>
+
+     <div class="row">
+  <!-- DC and Packaging Due -->
+  <div class="col-xl-4 col-lg-6">
+    <div class="card">
+      <div class="card-body card-type-3">
+        <div class="row">
+          <div class="col">
+            <h6 class="text-muted mb-0">DC & Packing Due</h6>
+            <span class="font-weight-bold mb-0">{{ formatPrice(reservedAmount) }}</span>
+          </div>
+          <div class="col-auto">
+            <div class="card-circle l-bg-orange text-white">
+              <i class="fas fa-dolly-flatbed"></i> <!-- Better icon for packaging/delivery -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reserved for In-process -->
+  <div class="col-xl-4 col-lg-6">
+    <div class="card">
+      <div class="card-body card-type-3">
+        <div class="row">
+          <div class="col">
+            <h6 class="text-muted mb-0">Reserved for In-Process Orders</h6>
+            <span class="font-weight-bold mb-0">{{ totalRemaining < 0 ? '0' : (totalRemaining < reservedAmount ? formatPrice() : formatPrice(reservedAmount)) }}</span>
+          </div>
+          <div class="col-auto">
+            <div class="card-circle l-bg-cyan text-white">
+              <i class="fas fa-cogs"></i> <!-- Represents in-process or operations -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Payout -->
+  <div class="col-xl-4 col-lg-6">
+    <div class="card">
+      <div class="card-body card-type-3">
+        <div class="row">
+          <div class="col">
+            <h6 class="mb-0"><strong>YOUR NEXT PAYOUT</strong></h6>
+            <span class="font-weight-bold mb-0">{{ totalRemaining < reservedAmount ? '0' :  formatPrice( totalRemaining - reservedAmount) }}</span> <!-- Replace with actual payout -->
+          </div>
+          <div class="col-auto">
+            <div class="card-circle l-bg-green text-white">
+              <i class="fas fa-hand-holding-usd"></i> <!-- Money/payout related icon -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
         <div class="row">
 
             <div class="col-xl-3 col-lg-6">
@@ -517,7 +578,8 @@ export default {
             accountHealth: 0,
             barChart: [],
             level : '',
-            levelNumber : 1
+            levelNumber : 1,
+            reservedAmount : 0
         };
     },
     computed: {
@@ -614,6 +676,7 @@ export default {
 
                     this.leopardPerformance = result.leopardPerformance;
                     this.accountHealth = result.accountHealth;
+                    this.reservedAmount = result.reservedAmount;
 
                     this.renderChart();
                 })

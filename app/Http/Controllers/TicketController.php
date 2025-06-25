@@ -50,7 +50,6 @@ class TicketController extends Controller
 
     public function getTicketStatusCounts(Request $request)
     {
-
         // Count tickets by each status
         $totalTickets = Ticket::count();
         $awaitingYourReply = Ticket::where('status', 'Awaiting Your Reply')->count();
@@ -81,7 +80,6 @@ class TicketController extends Controller
             'ticketId' => 'required',
             'selectedFile' => 'nullable|file|mimes:jpg,jpeg,png,pdf' // Validate the file
         ]);
-
 
         // Create a new ticket message record
         TicketMessage::create([

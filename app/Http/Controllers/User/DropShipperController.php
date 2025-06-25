@@ -550,11 +550,21 @@ class DropShipperController extends Controller
         $dropshipper->total_profit = $dropshipper_orders->sum('total_profit');
         $dropshipper->total_paid_profit = $dropshipper_orders->sum('total_paid_profit');
 
+        //Reserved Amount
+        $reserved_amount = Order::where('belongs_to', $dropshipper->user_id)
+        ->where('type', 'Normal')
+        ->whereIn('status', [0, 1, 2, 3, 4, 5, 11, 12])
+        ->select(
+            DB::raw('SUM(packaging_price + courier_service_price) as total_reserved')
+        )
+        ->value('total_reserved');
+
         $data = [
             'orders'  => $orders,
             'banks'   => $banks,
             'cash'    => $cash,
-            'dropshipper' =>  $dropshipper
+            'dropshipper' =>  $dropshipper,
+            'reserved_amount' =>  $reserved_amount
         ];
 
         return (new ResponseCollection($data))

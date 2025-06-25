@@ -718,7 +718,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropshipperPayment',
-  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
+  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details', 'reservedAmount'],
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
@@ -5221,7 +5221,8 @@ __webpack_require__.r(__webpack_exports__);
       accountHealth: 0,
       barChart: [],
       level: '',
-      levelNumber: 1
+      levelNumber: 1,
+      reservedAmount: 0
     };
   },
   computed: {
@@ -5307,6 +5308,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.topFiveProducts = result.topFiveProducts;
         _this.leopardPerformance = result.leopardPerformance;
         _this.accountHealth = result.accountHealth;
+        _this.reservedAmount = result.reservedAmount;
         _this.renderChart();
       })["catch"](function (err) {});
     },
@@ -5542,7 +5544,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     OrderMarkasReplacementConfirmation: _components_inventory_product_order_OrderMarkasReplacementConfirmation_vue__WEBPACK_IMPORTED_MODULE_7__["default"]
   },
   data: function data() {
-    return _defineProperty({
+    return _defineProperty(_defineProperty({
       public_url: window.location.origin + "",
       api_url: window.location.origin + "/public/api/",
       tableHeader: {
@@ -5608,7 +5610,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }, "filter", {
       level: "",
       incentive: ""
-    });
+    }), "reservedAmount", 0);
   },
   computed: {
     incompleteLevelsCount: function incompleteLevelsCount() {
@@ -5801,7 +5803,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         vm.orders = results.orders;
         vm.accountBanks = results.banks;
         vm.accountCash = results.cash;
-        vm.details = results.dropshipper;
+        vm.details = results.dropshipper, vm.reservedAmount = results.reserved_amount;
       });
     },
     paymentHistory: function paymentHistory(id) {
@@ -10817,22 +10819,30 @@ var render = function render() {
   }, [_c("strong", [_vm._v("Account IBAN")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.details.account_iban || "N/A"))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 col-6"
+    staticClass: "col-md-2 col-6"
   }, [_c("strong", [_vm._v("Payment Cycle")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 col-6"
+    staticClass: "col-md-2 col-6"
   }, [_c("strong", [_vm._v("Total Payable")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit)))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 col-6"
+    staticClass: "col-md-2 col-6"
   }, [_c("strong", [_vm._v("Total Paid")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
   }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 col-6"
+    staticClass: "col-md-2 col-6"
   }, [_c("strong", [_vm._v("Remaining Balance")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit - _vm.details.total_paid_profit)))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit - _vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-2 col-6"
+  }, [_c("strong", [_vm._v("Reserved Amount")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-2 col-6"
+  }, [_c("strong", [_vm._v("Recommended Pay")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
+    staticClass: "text-muted"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit - _vm.details.total_paid_profit - _vm.reservedAmount)))])])]), _vm._v(" "), _c("div", {
     staticClass: "py-1"
   }, [_c("table", {
     staticClass: "table"
@@ -19753,7 +19763,7 @@ var render = function render() {
     staticClass: "font-15"
   }, [_vm._v("Receivable Amount")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.totalProfit)) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.formatPrice(_vm.totalProfit)) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -19780,7 +19790,7 @@ var render = function render() {
     staticClass: "font-15"
   }, [_vm._v("Received Amount")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -19805,9 +19815,9 @@ var render = function render() {
     staticClass: "card-content"
   }, [_c("h5", {
     staticClass: "font-15"
-  }, [_vm._v("\n                                        Current Balance in Wallet\n                                    ")]), _vm._v(" "), _c("h2", {
+  }, [_vm._v("\n                                            Current Balance in Wallet\n                                        ")]), _vm._v(" "), _c("h2", {
     staticClass: "mb-3 font-18"
-  }, [_vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-4 col-md-6 col-sm-6 col-xs-6 pl-0"
   }, [_c("div", {
     staticClass: "banner-img"
@@ -19819,12 +19829,54 @@ var render = function render() {
   })])])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
+    staticClass: "col-xl-4 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("DC & Packing Due")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(0)])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-4 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_c("h6", {
+    staticClass: "text-muted mb-0"
+  }, [_vm._v("Reserved for In-Process Orders")]), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.totalRemaining < 0 ? "0" : _vm.totalRemaining < _vm.reservedAmount ? _vm.formatPrice() : _vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-xl-4 col-lg-6"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body card-type-3"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col"
+  }, [_vm._m(2), _vm._v(" "), _c("span", {
+    staticClass: "font-weight-bold mb-0"
+  }, [_vm._v(_vm._s(_vm.totalRemaining < _vm.reservedAmount ? "0" : _vm.formatPrice(_vm.totalRemaining - _vm.reservedAmount)))])]), _vm._v(" "), _vm._m(3)])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
     staticClass: "col-xl-3 col-lg-6"
   }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-bg"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
     staticClass: "p-t-20 d-flex justify-content-between"
   }, [_c("div", {
     staticClass: "col"
@@ -19852,7 +19904,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-bg"
-  }, [_vm._m(1), _vm._v(" "), _c("div", {
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "p-t-20 d-flex justify-content-between"
   }, [_c("div", {
     staticClass: "col"
@@ -19880,7 +19932,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-bg"
-  }, [_vm._m(2), _vm._v(" "), _c("div", {
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
     staticClass: "p-t-20 d-flex justify-content-between"
   }, [_c("div", {
     staticClass: "col"
@@ -19940,82 +19992,6 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Total Order")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      width: "20%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(4), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("In Process")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      width: "25%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(5), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Out For Delivery")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      width: "22%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Delivered")])])])])])]), _vm._v(" "), _c("td", {
-    staticStyle: {
-      width: "20%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
   }, [_vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
@@ -20026,9 +20002,85 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.totalOrders) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(8), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total Order")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.inProcessOrder) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("In Process")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "25%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.outFordeliveredOrders) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Out For Delivery")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "22%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.deliveredOrders) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Delivered")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(12), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("RevenueChat", {
     attrs: {
@@ -20045,13 +20097,13 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(13), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-hover mb-0"
-  }, [_vm._m(10), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
+  }, [_vm._m(14), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))])]);
@@ -20061,7 +20113,7 @@ var render = function render() {
     staticClass: "col-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(11), _vm._v(" "), _c("div", {
+  }, [_vm._m(15), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
@@ -20073,10 +20125,10 @@ var render = function render() {
     attrs: {
       id: "save-stage"
     }
-  }, [_vm._m(12), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
+  }, [_vm._m(16), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.store_name))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(_vm.formatDate(item.created_at)) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_payable))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_remaining))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.store_name))]), _vm._v(" "), _c("td", [_vm._v("\n                                            " + _vm._s(_vm.formatDate(item.created_at)) + "\n                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_payable))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_remaining))]), _vm._v(" "), _c("td", {
       staticClass: "align-middle"
     }, [_c("div", {
       staticClass: "progress"
@@ -20089,10 +20141,46 @@ var render = function render() {
         "aria-valuemin": "0",
         "aria-valuemax": "100"
       }
-    }, [_vm._v("\n                                                " + _vm._s(item.health) + "%\n                                            ")])])])]);
+    }, [_vm._v("\n                                                    " + _vm._s(item.health) + "%\n                                                ")])])])]);
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "card-circle l-bg-orange text-white"
+  }, [_c("i", {
+    staticClass: "fas fa-dolly-flatbed"
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "card-circle l-bg-cyan text-white"
+  }, [_c("i", {
+    staticClass: "fas fa-cogs"
+  })])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("h6", {
+    staticClass: "mb-0"
+  }, [_c("strong", [_vm._v("YOUR NEXT PAYOUT")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-auto"
+  }, [_c("div", {
+    staticClass: "card-circle l-bg-green text-white"
+  }, [_c("i", {
+    staticClass: "fas fa-hand-holding-usd"
+  })])]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -20311,7 +20399,7 @@ var staticRenderFns = [function () {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header"
-  }, [_vm._v("\n                    Courier Performance (Last 7 days)\n                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                        Courier Performance (Last 7 days)\n                    ")]), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "card-body"
@@ -21107,7 +21195,8 @@ var render = function render() {
       loader: _vm.paymentLoader,
       details: _vm.details,
       accountCash: _vm.accountCash,
-      accountBanks: _vm.accountBanks
+      accountBanks: _vm.accountBanks,
+      reservedAmount: _vm.reservedAmount
     },
     on: {
       add: _vm.addPayment,

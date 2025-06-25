@@ -465,6 +465,7 @@
             :details="details"
             :accountCash="accountCash"
             :accountBanks="accountBanks"
+            :reservedAmount="reservedAmount"
             @add="addPayment"
             @fetchTracking="fetchTracking($event)"
             @fetchOrderDetails="fetchOrderDetails( $event )"
@@ -595,7 +596,8 @@ export default {
             filter : {
                 level : "",
                 incentive : ""
-            }
+            },
+            reservedAmount : 0
         };
     },
     computed: {
@@ -799,7 +801,8 @@ export default {
                     vm.orders = results.orders
                     vm.accountBanks = results.banks
                     vm.accountCash = results.cash
-                    vm.details = results.dropshipper
+                    vm.details = results.dropshipper,
+                    vm.reservedAmount = results.reserved_amount;
                 });
         },
         paymentHistory( id ){
