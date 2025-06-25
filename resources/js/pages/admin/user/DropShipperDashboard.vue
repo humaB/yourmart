@@ -161,7 +161,7 @@
         <div class="row">
           <div class="col">
             <h6 class="text-muted mb-0">Reserved for In-Process Orders</h6>
-            <span class="font-weight-bold mb-0">{{ totalRemaining < 0 ? '0' : (totalRemaining < reservedAmount ? formatPrice(reservedAmount) : formatPrice(totalRemaining)) }}</span>
+            <span class="font-weight-bold mb-0">{{ totalRemaining < 0 ? '0' : (totalRemaining < reservedAmount ? formatPrice(totalRemaining) : formatPrice(reservedAmount)) }}</span>
           </div>
           <div class="col-auto">
             <div class="card-circle l-bg-cyan text-white">
