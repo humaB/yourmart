@@ -255,6 +255,9 @@
                     <li><a class="nav-link" href="{{ route('inventory.products.other_charges') }}">
                         <i data-feather="file-text"></i>Other Charges</a></li>
                     <li>
+                    <li><a class="nav-link" href="{{ route('email_template') }}">
+                        <i data-feather="file-text"></i>Email Templates</a></li>
+                    <li>
                 </ul>
     </li>
 

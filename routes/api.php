@@ -35,6 +35,7 @@ use App\Http\Controllers\Helpers\PostExApiHelper;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
+use App\Http\Controllers\Pages\EmailTemplateController;
 use App\Http\Controllers\Report\FisReportController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\DropshipperPreviewController;
@@ -141,6 +142,14 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
             Route::get('/',  [ HelpCenterPageController::class , 'fectHelpCenterPageSetting']);
             Route::post('/add',  [ HelpCenterPageController::class , 'helpCenterPageSettingStore']);
             Route::post('/update',  [ HelpCenterPageController::class , 'helpCenterPageSettingUpdate']);
+        });
+
+        Route::group(['prefix' => 'email-templates'], function(){
+            Route::get('/',  [ EmailTemplateController::class , 'fectTemplates']);
+            Route::post('/',  [ EmailTemplateController::class , 'store']);
+            Route::post('/update',  [ EmailTemplateController::class , 'helpCenterPageSettingUpdate']);
+
+            Route::post('/send-test-mail',  [ EmailTemplateController::class , 'sendTestMail']);
         });
     });
 });

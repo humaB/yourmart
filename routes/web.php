@@ -28,6 +28,7 @@ use App\Http\Controllers\Account\pdf\TransactionPdfController;
 use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
+use App\Http\Controllers\Pages\EmailTemplateController;
 use App\Http\Controllers\Report\FisReportController;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Product\Variation\ProductVariation;
@@ -194,6 +195,10 @@ Route::prefix('accounts')->group(function () {
 
 Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
     Route::get('/', [CourierController::class, 'index'])->name('couriers');
+});
+
+Route::group(['prefix' => '/email-templates', 'middleware' => 'auth'], function () {
+    Route::get('/', [EmailTemplateController::class, 'index'])->name('email_template');
 });
 
 
