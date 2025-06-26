@@ -1,6 +1,12 @@
 <template>
     <div>
         <div class="row">
+            <div class="col-md-12" v-if="totalRemaining < 0">
+                <div class="alert alert-warning alert-dismissible fade show text-dark" role="alert">
+                    <strong>Oops!</strong> Your account is inactive due to negative balance. Please pay your dues and
+                    raise a support ticket to reactivate your account.
+                </div>
+            </div>
             <div class="col-12 col-sm-12 col-lg-12">
                 <div class="card profile-widget">
                   <div class="profile-widget-header">

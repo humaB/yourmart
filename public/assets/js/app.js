@@ -3586,9 +3586,6 @@ __webpack_require__.r(__webpack_exports__);
     data: function data(newLedger) {
       setTimeout(function () {
         $('#leopard_return_received').DataTable({
-          "bSort": false,
-          sorting: true,
-          sort: true,
           dom: 'Bfrtip',
           buttons: [{
             extend: 'copy',
@@ -19734,7 +19731,9 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("div", [_c("div", {
     staticClass: "row"
-  }, [_c("div", {
+  }, [_vm.totalRemaining < 0 ? _c("div", {
+    staticClass: "col-md-12"
+  }, [_vm._m(0)]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-sm-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card profile-widget"
@@ -19891,7 +19890,7 @@ var render = function render() {
     staticClass: "text-muted mb-0"
   }, [_vm._v("DC & Packing Due")]), _vm._v(" "), _c("span", {
     staticClass: "font-weight-bold mb-0"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(0)])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-xl-4 col-lg-6"
   }, [_c("div", {
     staticClass: "card"
@@ -19905,7 +19904,7 @@ var render = function render() {
     staticClass: "text-muted mb-0"
   }, [_vm._v("Reserved for In-Process Orders")]), _vm._v(" "), _c("span", {
     staticClass: "font-weight-bold mb-0"
-  }, [_vm._v(_vm._s(_vm.totalRemaining < 0 ? "0" : _vm.totalRemaining < _vm.reservedAmount ? _vm.formatPrice(_vm.totalRemaining) : _vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(1)])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.totalRemaining < 0 ? "0" : _vm.totalRemaining < _vm.reservedAmount ? _vm.formatPrice(_vm.totalRemaining) : _vm.formatPrice(_vm.reservedAmount)))])]), _vm._v(" "), _vm._m(2)])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-xl-4 col-lg-6"
   }, [_c("div", {
     staticClass: "card"
@@ -19915,9 +19914,9 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col"
-  }, [_vm._m(2), _vm._v(" "), _c("span", {
+  }, [_vm._m(3), _vm._v(" "), _c("span", {
     staticClass: "font-weight-bold mb-0"
-  }, [_vm._v(_vm._s(_vm.totalRemaining < _vm.reservedAmount ? "0" : _vm.formatPrice(_vm.totalRemaining - _vm.reservedAmount)))])]), _vm._v(" "), _vm._m(3)])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.totalRemaining < _vm.reservedAmount ? "0" : _vm.formatPrice(_vm.totalRemaining - _vm.reservedAmount)))])]), _vm._v(" "), _vm._m(4)])])])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-xl-3 col-lg-6"
@@ -19925,7 +19924,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-bg"
-  }, [_vm._m(4), _vm._v(" "), _c("div", {
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
     staticClass: "p-t-20 d-flex justify-content-between"
   }, [_c("div", {
     staticClass: "col"
@@ -19953,7 +19952,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-bg"
-  }, [_vm._m(5), _vm._v(" "), _c("div", {
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
     staticClass: "p-t-20 d-flex justify-content-between"
   }, [_c("div", {
     staticClass: "col"
@@ -19981,7 +19980,7 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-bg"
-  }, [_vm._m(6), _vm._v(" "), _c("div", {
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
     staticClass: "p-t-20 d-flex justify-content-between"
   }, [_c("div", {
     staticClass: "col"
@@ -20041,7 +20040,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(7), _vm._v(" "), _c("div", {
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20060,7 +20059,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(8), _vm._v(" "), _c("div", {
+  }, [_vm._m(9), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20079,7 +20078,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(9), _vm._v(" "), _c("div", {
+  }, [_vm._m(10), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20098,7 +20097,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(10), _vm._v(" "), _c("div", {
+  }, [_vm._m(11), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20117,7 +20116,7 @@ var render = function render() {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_vm._m(11), _vm._v(" "), _c("div", {
+  }, [_vm._m(12), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -20129,7 +20128,7 @@ var render = function render() {
     staticClass: "ti-arrow-up text-success"
   }), _vm._v(" " + _vm._s(_vm.failedOrder) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(12), _vm._v(" "), _c("div", {
+  }, [_vm._v("Return")])])])])])])])]), _vm._v(" "), _vm._m(13), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("RevenueChat", {
     attrs: {
@@ -20146,13 +20145,13 @@ var render = function render() {
     staticClass: "col-md-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(13), _vm._v(" "), _c("div", {
+  }, [_vm._m(14), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
     staticClass: "table table-hover mb-0"
-  }, [_vm._m(14), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
+  }, [_vm._m(15), _vm._v(" "), _c("tbody", _vm._l(_vm.topFiveProducts, function (item, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.product.title : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.variation ? item.variation.sku : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_courier_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_packaging_cost))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_sell_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(parseFloat(item.total_sell_price) - (parseFloat(item.total_price) + parseFloat(item.total_courier_cost) + parseFloat(item.total_packaging_cost))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_quantity))])]);
@@ -20162,7 +20161,7 @@ var render = function render() {
     staticClass: "col-12"
   }, [_c("div", {
     staticClass: "card"
-  }, [_vm._m(15), _vm._v(" "), _c("div", {
+  }, [_vm._m(16), _vm._v(" "), _c("div", {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "table-responsive"
@@ -20174,7 +20173,7 @@ var render = function render() {
     attrs: {
       id: "save-stage"
     }
-  }, [_vm._m(16), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
+  }, [_vm._m(17), _vm._v(" "), _c("tbody", _vm._l(_vm.stores, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.store_name))]), _vm._v(" "), _c("td", [_vm._v("\n                                            " + _vm._s(_vm.formatDate(item.created_at)) + "\n                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_payable))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_paid))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_remaining))]), _vm._v(" "), _c("td", {
@@ -20194,6 +20193,15 @@ var render = function render() {
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "alert alert-warning alert-dismissible fade show text-dark",
+    attrs: {
+      role: "alert"
+    }
+  }, [_c("strong", [_vm._v("Oops!")]), _vm._v(" Your account is inactive due to negative balance. Please pay your dues and\n                    raise a support ticket to reactivate your account.\n                ")]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {

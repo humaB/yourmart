@@ -108,9 +108,6 @@ export default {
         data(newLedger) {
             setTimeout(() => {
                 $('#leopard_return_received').DataTable({
-                    "bSort": false,
-                    sorting : true,
-                    sort : true,
                     dom: 'Bfrtip',
                     buttons: [
                         {
