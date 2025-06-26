@@ -27,6 +27,7 @@ use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -94,6 +95,19 @@ class OrderController extends Controller
                 $dropshipper = DropShipper::where('id', $dropshipper)->first();
                 $dropshipper = $dropshipper->user_id ?? 0;
             }
+            
+            $from = $request->from;
+            $to = $request->to;
+
+            if (!$from && !$to) {
+                // Default to last 30 days
+                $from = Carbon::now()->subDays(30)->startOfDay();
+                $to = Carbon::now()->endOfDay();
+            } else {
+                // Use provided dates if available
+                $from = $from ? Carbon::parse($from)->startOfDay() : null;
+                $to = $to ? Carbon::parse($to)->endOfDay() : null;
+            }
 
             $orders = Order::with('user', 'shop', 're_attempt')
                 ->orderBy('id', 'desc')
@@ -102,10 +116,10 @@ class OrderController extends Controller
                     return $query->where('status', "$status");
                 })
                 // Apply date range filters when provided
-                ->when($request->from, function ($query, $from) {
+                ->when($from, function ($query, $from) {
                     return $query->whereDate('created_at', '>=', $from);
                 })
-                ->when($request->to, function ($query, $to) {
+                ->when($to, function ($query, $to) {
                     return $query->whereDate('created_at', '<=', $to);
                 })
                 ->when($request->type, function ($query, $type) {
