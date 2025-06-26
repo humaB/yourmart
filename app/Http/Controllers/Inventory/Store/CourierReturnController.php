@@ -8,6 +8,7 @@ use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CourierReturnController extends Controller
@@ -30,11 +31,24 @@ class CourierReturnController extends Controller
 
     public function inwardRecord(Request $request){
 
+        $from = $request->from;
+        $to = $request->to;
+
+        if (!$from && !$to) {
+            // Default to last 30 days
+            $from = Carbon::now()->subDays(30)->startOfDay();
+            $to = Carbon::now()->endOfDay();
+        } else {
+            // Use provided dates if available
+            $from = $from ? Carbon::parse($from)->startOfDay() : null;
+            $to = $to ? Carbon::parse($to)->endOfDay() : null;
+        }
+
         $data = StoreReturnDetail::with('product', 'srn.order')
-        ->when( $request->from, function ($query, $from) {
+        ->when( $from, function ($query, $from) {
             return $query->whereDate('created_at', '>=', $from);
         })
-        ->when( $request->to, function ($query, $to) {
+        ->when( $to, function ($query, $to) {
             return $query->whereDate('created_at', '<=', $to);
         })
         ->when($request->courier, function ($query, $courier) {
