@@ -109,6 +109,8 @@ export default {
             setTimeout(() => {
                 $('#leopard_return_received').DataTable({
                     "bSort": false,
+                    sorting : true,
+                    sort : true,
                     dom: 'Bfrtip',
                     buttons: [
                         {
