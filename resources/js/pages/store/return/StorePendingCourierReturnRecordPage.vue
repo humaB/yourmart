@@ -17,15 +17,19 @@
                                 <option value="2">PostEx</option>
                            </select>
                         </div>
-                        <div class="col-md-3">
+                         <div class="col-md-3">
+                            <label>Tracking Number</label>
+                            <input type="text" class="form-control" v-model="filter.tracking">
+                        </div>
+                        <div class="col-md-2">
                             <label>From</label>
                             <input type="date" class="form-control" v-model="filter.from">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>To</label>
                             <input type="date" class="form-control" v-model="filter.to">
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label>Action</label>
                             <button class="btn btn-primary w-100"> Filter</button>
                         </div>
@@ -102,7 +106,8 @@
                 filter: {
                     from: new Date().toISOString().substr(0, 10),
                     to: new Date().toISOString().substr(0, 10),
-                    courier : ""
+                    courier : "",
+                    tracking : ""
                 },
                 loader : true
             };

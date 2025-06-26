@@ -2060,7 +2060,8 @@ __webpack_require__.r(__webpack_exports__);
       filter: {
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10),
-        courier: ""
+        courier: "",
+        tracking: ""
       },
       loader: true
     };
@@ -5158,6 +5159,28 @@ var render = function render() {
     }
   }, [_vm._v("PostEx")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-3"
+  }, [_c("label", [_vm._v("Tracking Number")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.tracking,
+      expression: "filter.tracking"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text"
+    },
+    domProps: {
+      value: _vm.filter.tracking
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "tracking", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-2"
   }, [_c("label", [_vm._v("From")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -5179,7 +5202,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", [_vm._v("To")]), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -5250,7 +5273,7 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-md-3"
+    staticClass: "col-md-2"
   }, [_c("label", [_vm._v("Action")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-primary w-100"
   }, [_vm._v(" Filter")])]);

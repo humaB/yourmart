@@ -34,7 +34,7 @@ class CourierReturnController extends Controller
         $from = $request->from;
         $to = $request->to;
 
-        if (!$from && !$to) {
+        if (!$from && !$to ) {
             // Default to last 30 days
             $from = Carbon::now()->subDays(30)->startOfDay();
             $to = Carbon::now()->endOfDay();
@@ -42,6 +42,11 @@ class CourierReturnController extends Controller
             // Use provided dates if available
             $from = $from ? Carbon::parse($from)->startOfDay() : null;
             $to = $to ? Carbon::parse($to)->endOfDay() : null;
+        }
+
+        if( $request->tracking ){
+            $from = null;
+            $to = null;
         }
 
         $data = StoreReturnDetail::with('product', 'srn.order')
@@ -54,6 +59,11 @@ class CourierReturnController extends Controller
         ->when($request->courier, function ($query, $courier) {
             return $query->whereHas('srn.order', function ($q) use ($courier) {
                 $q->where('courier_service_id', $courier);
+            });
+        })
+        ->when($request->tracking, function ($query, $tracking) {
+            return $query->whereHas('srn.order', function ($q) use ($tracking) {
+                $q->where('tracking_number', $tracking);
             });
         })
         ->orderBy('id','desc')
