@@ -3549,7 +3549,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'LeopardReturnReceivedReport',
+  name: 'CourierReturnReceivedReport',
   props: ['data', 'loader'],
   components: {
     BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader

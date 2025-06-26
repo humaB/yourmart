@@ -69,7 +69,7 @@ import moment from 'moment';
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
-    name: 'LeopardReturnReceivedReport',
+    name: 'CourierReturnReceivedReport',
     props: ['data', 'loader'],
     components: {
         BulletListLoader
