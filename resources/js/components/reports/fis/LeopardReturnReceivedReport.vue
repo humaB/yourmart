@@ -112,10 +112,10 @@ export default {
                     buttons: [
                         {
                             extend: 'copy',
-                            title: 'Leopard Returns Received',
+                            title: 'Courier Returns Received',
                         }, 'csv', {
                             extend: 'excel',
-                            title: 'Leopard Returns Received',
+                            title: 'Courier Returns Received',
                         }
                     ]
                 });

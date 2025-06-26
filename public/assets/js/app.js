@@ -3589,10 +3589,10 @@ __webpack_require__.r(__webpack_exports__);
           dom: 'Bfrtip',
           buttons: [{
             extend: 'copy',
-            title: 'Leopard Returns Received'
+            title: 'Courier Returns Received'
           }, 'csv', {
             extend: 'excel',
-            title: 'Leopard Returns Received'
+            title: 'Courier Returns Received'
           }]
         });
       }, 300);
