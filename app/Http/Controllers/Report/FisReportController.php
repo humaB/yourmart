@@ -279,26 +279,23 @@ class FisReportController extends Controller
 
     public function leopardReturnsReceived(Request $request)
     {
+        $data = StoreReturnDetail::with('product:id,title', 'srn.order')
+            ->when( $request->from, function ($query, $from) {
+                return $query->whereDate('created_at', '>=', $from);
+            })
+            ->when( $request->to, function ($query, $to) {
+                return $query->whereDate('created_at', '<=', $to);
+            })
+            ->when($request->courier, function ($query, $courier) {
+                return $query->whereHas('srn.order', function ($q) use ($courier) {
+                    $q->where('courier_service_id', $courier);
+                });
+            })
+        ->orderBy('id','desc')
+        ->get();
 
-        $returns = StoreReturn::when($request->from, function ($q) use ($request) {
-            $q->whereDate('created_at', '>=', $request->from);
-        })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })->pluck('order_id');
-
-        $orders = Order::when($request->courier, function ($q) use ($request) {
-            $q->where('courier_service_id', $request->courier);
-        })
-        ->where('type', 'Normal')
-        ->where('status', '10')
-        ->whereIn('id', $returns)
-        ->pluck('id');
-
-        $data = OrderItem::with('variation.product', 'order.shop')->whereIn('order_id', $orders)->get();
-
-        $grouped = $data->groupBy('product_variation_id')->map(function ($items) {
-            $product = $items->first()->variation->product->title ?? null;
+        $grouped = $data->groupBy('product_id')->map(function ($items) {
+            $product = $items->first()->product->title ?? null;
             return [
                 'product_name' => $product ?? 'N/A',
                 'total_qty'    => $items->sum('quantity'),
