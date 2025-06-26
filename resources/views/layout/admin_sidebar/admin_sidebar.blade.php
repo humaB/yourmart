@@ -1,47 +1,52 @@
-
 <ul class="sidebar-menu">
 
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-bell"></i><span>Pages</span></a>
         <ul class="dropdown-menu">
             <li>
-                <a href="{{ route('pages') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Home Page</span></a>
+                <a href="{{ route('pages') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Home
+                        Page</span></a>
             </li>
             <li>
-                <a href="{{ route('library.page') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Library Page</span></a>
+                <a href="{{ route('library.page') }}" class="nav-link"><i class="fa fa-list-alt"
+                        aria-hidden="true"></i><span>Library Page</span></a>
             </li>
             <li>
-                <a href="{{ route('help.center.page') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>Help Center Page</span></a>
+                <a href="{{ route('help.center.page') }}" class="nav-link"><i class="fa fa-list-alt"
+                        aria-hidden="true"></i><span>Help Center Page</span></a>
             </li>
             <li>
-                <a href="{{ route('pages.dropshipper') }}" class="nav-link"><i class="fa fa-list-alt" aria-hidden="true"></i><span>DS/SP Page</span></a>
+                <a href="{{ route('pages.dropshipper') }}" class="nav-link"><i class="fa fa-list-alt"
+                        aria-hidden="true"></i><span>DS/SP Page</span></a>
             </li>
         </ul>
     </li>
 
 
 
-    <li class="dropdown {{ request()->is('products') ? 'active' : '' }}" >
-        <a href="{{ route('inventory.products') }}" class="nav-link"><i class="fa fa-box" aria-hidden="true"></i><span>Products</span></a>
+    <li class="dropdown {{ request()->is('products') ? 'active' : '' }}">
+        <a href="{{ route('inventory.products') }}" class="nav-link"><i class="fa fa-box"
+                aria-hidden="true"></i><span>Products</span></a>
     </li>
 
 
     @php
-       $orders = DB::table('orders')
-        ->where('status', '0')
-        ->count();
+        $orders = DB::table('orders')->where('status', '0')->count();
         $payOuts = DB::table('drop_shippers')->whereColumn('total_payable', '!=', 'total_paid')->count();
 
         $dispatched = DB::table('order_dispatched_records')->pluck('order_id');
 
-        $shipments = DB::table('orders')->where('type', 'Normal')->whereIn('status', ['4','5'])
-        ->whereNotIn('id', $dispatched)
-        ->count();
+        $shipments = DB::table('orders')
+            ->where('type', 'Normal')
+            ->whereIn('status', ['4', '5'])
+            ->whereNotIn('id', $dispatched)
+            ->count();
     @endphp
     <ul class="sidebar-menu">
-        <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}" >
-            <a href="{{ route('inventory.products.orders') }}" class="nav-link"><i class="fa fa-book" aria-hidden="true"></i><span>Orders</span>
-                @if ( $orders > 0)
+        <li class="dropdown {{ request()->is('orders') ? 'active' : '' }}">
+            <a href="{{ route('inventory.products.orders') }}" class="nav-link"><i class="fa fa-book"
+                    aria-hidden="true"></i><span>Orders</span>
+                @if ($orders > 0)
                     <span class="badge headerBadge1"
                         style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
                         {{ $orders }}
@@ -50,21 +55,23 @@
             </a>
         </li>
 
-        <li class="dropdown {{ request()->is('dispatchs') ? 'active' : '' }}" >
-            <a href="{{ route('inventory.products.orders.dispatchs') }}" class="nav-link"><i class="fa fa-box" aria-hidden="true"></i><span>Shipments</span>
-                @if ( $shipments > 0)
-                <span class="badge headerBadge1"
-                    style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
-                    {{ $shipments }}
-                </span>
-            @endif
+        <li class="dropdown {{ request()->is('dispatchs') ? 'active' : '' }}">
+            <a href="{{ route('inventory.products.orders.dispatchs') }}" class="nav-link"><i class="fa fa-box"
+                    aria-hidden="true"></i><span>Shipments</span>
+                @if ($shipments > 0)
+                    <span class="badge headerBadge1"
+                        style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                        {{ $shipments }}
+                    </span>
+                @endif
             </a>
         </li>
 
 
-        <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}" >
-            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check" aria-hidden="true"></i><span>Pay Out's</span>
-                @if ( $payOuts > 0)
+        <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}">
+            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check"
+                    aria-hidden="true"></i><span>Pay Out's</span>
+                @if ($payOuts > 0)
                     <span class="badge headerBadge1"
                         style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
                         {{ $payOuts }}
@@ -75,201 +82,219 @@
 
     </ul>
 
-    <li class="dropdown {{ request()->is('users') ? 'active' : '' }}" >
-        <a href="{{ route('user') }}" class="nav-link"><i
-                class="fas fa-user-alt"></i><span>Users</span></a>
+    <li class="dropdown {{ request()->is('users') ? 'active' : '' }}">
+        <a href="{{ route('user') }}" class="nav-link"><i class="fas fa-user-alt"></i><span>Users</span></a>
     </li>
 
     @php
-       $tickets = DB::table('tickets')
-        ->where('status', '!=', 'Closed')
-        ->orWhere('status', '=', 'Expired')
-        ->count();
+        $tickets = DB::table('tickets')->where('status', '!=', 'Closed')->orWhere('status', '=', 'Expired')->count();
     @endphp
-    <li class="dropdown" >
-        <a href="{{ route('tickets') }}" class="nav-link"><i
-                class="fas fa-ticket-alt"></i><span>Tickets</span>
-                @if ( $tickets > 0)
+    <li class="dropdown">
+        <a href="{{ route('tickets') }}" class="nav-link"><i class="fas fa-ticket-alt"></i><span>Tickets</span>
+            @if ($tickets > 0)
                 <span class="badge headerBadge1"
                     style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
                     {{ $tickets }}
                 </span>
             @endif
-            </a>
+        </a>
     </li>
 
     @php
         $dropshippers = DB::table('drop_shippers')->where('status', '0')->count();
         $supplier = DB::table('suppliers')->where('status', '0')->count();
 
-        $requests = $dropshippers +  $supplier;
+        $requests = $dropshippers + $supplier;
     @endphp
     <li class="dropdown">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                class="fa fa-bell"></i><span>Request's</span>
-             @if ( $requests > 0)
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-bell"></i><span>Request's</span>
+            @if ($requests > 0)
                 <span class="badge headerBadge1"
                     style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
                     {{ $requests }}
                 </span>
             @endif
-            </a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('request.dropshipper') }}">
-                        <i data-feather="file-text"></i>Dropshippers
-                        @if ( $dropshippers > 0)
-                            <span class="badge headerBadge1"
-                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
-                                {{ $dropshippers }}
-                            </span>
-                        @endif
-                    </a></li>
-                    <li><a class="nav-link" href="{{ route('request.supplier') }}">
-                        <i data-feather="file-text"></i>Suppliers
-                        @if ( $supplier > 0)
-                            <span class="badge headerBadge1"
-                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
-                                {{ $supplier }}
-                            </span>
-                        @endif
-                    </a></li>
-                </ul>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{{ route('request.dropshipper') }}">
+                    <i data-feather="file-text"></i>Dropshippers
+                    @if ($dropshippers > 0)
+                        <span class="badge headerBadge1"
+                            style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                            {{ $dropshippers }}
+                        </span>
+                    @endif
+                </a></li>
+            <li><a class="nav-link" href="{{ route('request.supplier') }}">
+                    <i data-feather="file-text"></i>Suppliers
+                    @if ($supplier > 0)
+                        <span class="badge headerBadge1"
+                            style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                            {{ $supplier }}
+                        </span>
+                    @endif
+                </a></li>
+        </ul>
     </li>
 
     <li class="dropdown">
-        <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                class="fas fa-sign-out-alt"></i><span>Check Out's</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('inventory.products.store.check_out') }}">
-                        <i data-feather="file-text"></i>Direct Sale's</a></li>
-                    <li><a class="nav-link" href="{{ route('inventory.products.check_out.return_record') }}">
-                        <i data-feather="file-text"></i>Record</a></li>
-                </ul>
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fas fa-sign-out-alt"></i><span>Check
+                Out's</span></a>
+        <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{{ route('inventory.products.store.check_out') }}">
+                    <i data-feather="file-text"></i>Direct Sale's</a></li>
+            <li><a class="nav-link" href="{{ route('inventory.products.check_out.return_record') }}">
+                    <i data-feather="file-text"></i>Record</a></li>
+        </ul>
     </li>
 
     @php
-        $purchase_orders =  DB::table('inventory_purchase_orders')->where('status', '0')->count();
+        $purchase_orders = DB::table('inventory_purchase_orders')->where('status', '0')->count();
     @endphp
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                 class="fa fa-warehouse"></i><span>Inventory</span>
-                @if ( $purchase_orders > 0)
-                    <span class="badge headerBadge1"
-                        style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
-                        {{ $purchase_orders }}
-                    </span>
-                @endif
-            </a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('inventory.products.purchase_orders.requests') }}">
-                        <i data-feather="file-text"></i>Purchase Order's
-                        @if ( $purchase_orders > 0)
-                            <span class="badge headerBadge1"
-                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
-                                {{ $purchase_orders }}
-                            </span>
-                        @endif
-                    </a></li>
+            @if ($purchase_orders > 0)
+                <span class="badge headerBadge1"
+                    style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                    {{ $purchase_orders }}
+                </span>
+            @endif
+        </a>
+        <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{{ route('inventory.products.purchase_orders.requests') }}">
+                    <i data-feather="file-text"></i>Purchase Order's
+                    @if ($purchase_orders > 0)
+                        <span class="badge headerBadge1"
+                            style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                            {{ $purchase_orders }}
+                        </span>
+                    @endif
+                </a></li>
 
 
 
-                    <li><a class="nav-link" href="{{ route('inventory.products.store.stock') }}">
-                        <i class="fas fa-boxes"></i>Stock</a></li>
-                </ul>
-
-                <li class="dropdown">
-                    <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                            class="fa fa-undo"></i><span>Return's</span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="nav-link" href="{{ route('inventory.products.store.returns') }}">
-                                    <i data-feather="file-text"></i>Courier Returns</a></li>
-                                <li><a class="nav-link" href="{{ route('inventory.products.store.return_record') }}">
-                                    <i data-feather="file-text"></i>Record</a></li>
-                            </ul>
-                </li>
-
-    </li>
-
+            <li><a class="nav-link" href="{{ route('inventory.products.store.stock') }}">
+                    <i class="fas fa-boxes"></i>Stock</a></li>
+        </ul>
 
     <li class="dropdown">
-    <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fas fa-pencil-alt"></i><span>Account</span></a>
-    <ul class="dropdown-menu">
-        <li class="dropdown">
-            <a href="#" class="has-dropdown"><i class="far fa-user"></i><span>Add Ledger</span></a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="{{route('account.group')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Tier 3/4</span></a
-                        >
-                </li>
-                <li>
-                    <a href="{{route('account.head')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Ledger</span></a
-                        >
-                </li>
-                <li>
-                    <a href="{{route('account.head.bank')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Bank-Ledger</span></a
-                        >
-                </li>
-                <li>
-                    <a href="{{route('account.head.cash')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Cash-Ledger</span></a
-                        >
-                </li>
-            </ul>
-        </li>
-        <li class="dropdown">
-            <a href="#" class="has-dropdown"><i class="far fa-money-bill-alt"></i><span>Transaction</span></a>
-            <ul class="dropdown-menu">
-                <li>
-                    <a href="{{route('account.transaction.bank.transactions')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Bank Transaction</span></a
-                        >
-                </li>
-                <li>
-                    <a href="{{route('account.transaction.cash.transactions')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Cash Transaction</span></a
-                        >
-                </li>
-                <li>
-                    <a href="{{route('account.transaction.journal.transactions')}}" class="nav-link"><i class="far fa-dot-circle"></i><span>Journal Transaction</span></a
-                        >
-                </li>
-            </ul>
-        </li>
-    </ul>
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i
+                class="fa fa-undo"></i><span>Return's</span></a>
+        <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{{ route('inventory.products.store.returns') }}">
+                    <i data-feather="file-text"></i>Courier Returns</a></li>
+            <li><a class="nav-link" href="{{ route('inventory.products.store.return_record') }}">
+                    <i data-feather="file-text"></i>Record</a></li>
+        </ul>
     </li>
 
-
+    </li>
 
 
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
-                class="fa fa-cog"></i><span>Setting's</span></a>
+                class="fas fa-pencil-alt"></i><span>Account</span></a>
+        <ul class="dropdown-menu">
+            <li class="dropdown">
+                <a href="#" class="has-dropdown"><i class="far fa-user"></i><span>Add Ledger</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('inventory.products.moq') }}">
-                        <i data-feather="file-text"></i>Minimum Order Qty</a></li>
-                    <li><a class="nav-link" href="{{ route('inventory.products.shipping_classes') }}">
-                        <i data-feather="file-text"></i>Shipping Classes</a></li>
-                    <li><a class="nav-link" href="{{ route('couriers') }}">
-                        <i data-feather="file-text"></i>Couriers</a></li>
-                        <li>
-                    <li><a class="nav-link" href="{{ route('packaging.class') }}">
-                        <i data-feather="file-text"></i>Packaging Class</a></li>
-                        <li>
-                    <li><a class="nav-link" href="{{ route('inventory.products.other_charges') }}">
-                        <i data-feather="file-text"></i>Other Charges</a></li>
                     <li>
-                    <li><a class="nav-link" href="{{ route('email_template') }}">
-                        <i data-feather="file-text"></i>Email Templates</a></li>
+                        <a href="{{ route('account.group') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Tier 3/4</span></a>
+                    </li>
                     <li>
+                        <a href="{{ route('account.head') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Ledger</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ route('account.head.bank') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Bank-Ledger</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ route('account.head.cash') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Cash-Ledger</span></a>
+                    </li>
                 </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="has-dropdown"><i
+                        class="far fa-money-bill-alt"></i><span>Transaction</span></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{{ route('account.transaction.bank.transactions') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Bank Transaction</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ route('account.transaction.cash.transactions') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Cash Transaction</span></a>
+                    </li>
+                    <li>
+                        <a href="{{ route('account.transaction.journal.transactions') }}" class="nav-link"><i
+                                class="far fa-dot-circle"></i><span>Journal Transaction</span></a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
     </li>
+
+
+
+
+    <li class="dropdown {{ request()->routeIs('inventory.products.moq', 'inventory.products.shipping_classes', 'couriers', 'packaging.class', 'inventory.products.other_charges', 'email_template') ? 'active' : '' }}">
+        <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-cog"></i>
+            <span>Setting's</span>
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a class="nav-link {{ request()->routeIs('inventory.products.moq') ? 'active' : '' }}"
+                    href="{{ route('inventory.products.moq') }}">
+                    <i data-feather="file-text"></i>Minimum Order Qty
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->routeIs('inventory.products.shipping_classes') ? 'active' : '' }}"
+                    href="{{ route('inventory.products.shipping_classes') }}">
+                    <i data-feather="file-text"></i>Shipping Classes
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->routeIs('couriers') ? 'active' : '' }}"
+                    href="{{ route('couriers') }}">
+                    <i data-feather="file-text"></i>Couriers
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->routeIs('packaging.class') ? 'active' : '' }}"
+                    href="{{ route('packaging.class') }}">
+                    <i data-feather="file-text"></i>Packaging Class
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->routeIs('inventory.products.other_charges') ? 'active' : '' }}"
+                    href="{{ route('inventory.products.other_charges') }}">
+                    <i data-feather="file-text"></i>Other Charges
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->routeIs('email_template') ? 'active' : '' }}"
+                    href="{{ route('email_template') }}">
+                    <i data-feather="file-text"></i>Email Templates
+                </a>
+            </li>
+        </ul>
+    </li>
+
 
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
                 class="fas fa-tachometer-alt"></i><span>Report's</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('reports.fis') }}">
-                        <i data-feather="file-text"></i>FIS</a></li>
-                    <li><a href="{{route('account.report.finance')}}" class="nav-link">
-                        <i data-feather="file-text"></i><span>Finance</span></a>
-                        </li>
-                </ul>
+        <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{{ route('reports.fis') }}">
+                    <i data-feather="file-text"></i>FIS</a></li>
+            <li><a href="{{ route('account.report.finance') }}" class="nav-link">
+                    <i data-feather="file-text"></i><span>Finance</span></a>
+            </li>
+        </ul>
     </li>
 </ul>
