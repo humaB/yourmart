@@ -16789,13 +16789,13 @@ var render = function render() {
     attrs: {
       id: "closing-report"
     }
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", [_vm._l(_vm.data, function (item, index) {
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
     return _c("tr", {
       key: index
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.date))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.postEx))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.leopards))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.daraz))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cash))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.totalOrders))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.postExReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.leopardReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.totalReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tickets))])]);
-  }), _vm._v(" "), _c("tr", {
+  }), 0), _vm._v(" "), _c("tfoot", [_c("tr", {
     staticClass: "font-weight-bold"
-  }, [_c("td"), _vm._v(" "), _c("td", [_vm._v("Total")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.postEx))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.leopards))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.daraz))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.cash))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.totalOrders))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.total.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.postExReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.leopardReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.totalReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.tickets))])])], 2)])])])])])])]);
+  }, [_c("td"), _vm._v(" "), _c("td", [_vm._v("Total")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.postEx))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.leopards))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.daraz))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.cash))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.totalOrders))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(_vm.total.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.postExReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.leopardReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.totalReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.total.tickets))])])])])])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,

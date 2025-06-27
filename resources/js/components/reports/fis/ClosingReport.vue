@@ -60,7 +60,10 @@
                                         <td>{{ item.tickets }}</td>
                                     </tr>
 
-                                      <tr class="font-weight-bold">
+
+                                </tbody>
+                                <tfoot>
+                                    <tr class="font-weight-bold">
                                         <td></td>
                                         <td>Total</td>
                                         <td>{{ total.postEx }}</td>
@@ -74,7 +77,7 @@
                                         <td>{{ total.totalReturns }}</td>
                                         <td>{{ total.tickets }}</td>
                                     </tr>
-                                </tbody>
+                                </tfoot>
                             </table>
                         </div>
                     </div>
