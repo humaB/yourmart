@@ -238,9 +238,6 @@
         </ul>
     </li>
 
-
-
-
     <li class="dropdown {{ request()->routeIs('inventory.products.moq', 'inventory.products.shipping_classes', 'couriers', 'packaging.class', 'inventory.products.other_charges', 'email_template') ? 'active' : '' }}">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-cog"></i>
             <span>Setting's</span>

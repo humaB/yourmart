@@ -52,22 +52,8 @@
         </div>
 
         <div class="message">
-
-        @if ($mailData['decision'] == 'reject')
         <p>Dear {{ $mailData['full_name'] }},</p>
-        <p>Thank you for applying to become a supplier with YourMart. After carefully reviewing your application, we regret to inform you that it has not been approved at this time.</p>
-        <p>We encourage you to review our requirements and consider reapplying in the future. If you have any questions or need clarification, please feel free to contact us at 0326 9810000.</p>
-        <p>We appreciate your interest in partnering with us and wish you success in your future endeavors.</p>
-        <p>Best regards,</p>
-        <p>YourMart Team</p>
-        @else
-            <p>Dear {{ $mailData['full_name'] }},</p>
-            <p>Congratulations! Your supplier registration application with YourMart has been approved.</p>
-            <p>Please Log in to start managing your orders. For assistance, contact us at 0326 9810000.</p>
-            <p>Welcome aboard!</p>
-            <p>Best regards,</p>
-            <p>YourMart Team</p>
-        @endif
+            {!! $template['body'] !!}
         </div>
 
         <div class="footer">

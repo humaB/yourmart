@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Mail\SupplierDecisionMail;
+use App\Models\Setting\EmailTemplate;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\Supplier;
@@ -75,7 +76,9 @@ class SupplierController extends Controller
                 'decision'        => $request->action
             ];
 
-            Mail::to($supplier->email)->send(new SupplierDecisionMail($mailData));
+        $template = EmailTemplate::where('type', $request->action == 'reject' ? 'supplier_application_rejected' : 'supplier_application_approved')->first();
+
+        Mail::to($supplier->email)->send(new SupplierDecisionMail($mailData , $template));
 
         return ['message', 'successfully updated'];
     }

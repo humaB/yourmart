@@ -16,6 +16,7 @@ use App\Http\Resources\ValidationCollection;
 use App\Models\Account\AccountTransaction;
 use App\Models\CustomerBank;
 use App\Models\Inventory\Order\Order;
+use App\Models\Setting\EmailTemplate;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\DropShipperLevel;
@@ -858,7 +859,8 @@ class DropShipperController extends Controller
                 'decision'        => $request->action
             ];
 
-            Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData));
+            $template = EmailTemplate::where('type', $request->action == 'reject' ? 'dropshipper_application_rejected' : 'dropshipper_application_approved')->first();
+            Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData , $template));
 
             DB::commit();
             return response()->json(['message' => 'Sale created successfully'], 201);

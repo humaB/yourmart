@@ -202,16 +202,4 @@ Route::group(['prefix' => '/email-templates', 'middleware' => 'auth'], function 
 });
 
 
-Route::get('/test', function(){
-        $orders = Order::where('type', 'Normal')->orderBy('id', 'desc')->with('range')->get();
-
-        foreach( $orders as $order ){
-            if( $order->range ){
-                $order->update([
-                    'courier_service_internal_price' => $order->range->our_charges ?? 0
-                ]);
-            }
-        }
-});
-
 

@@ -12,15 +12,16 @@ use Illuminate\Queue\SerializesModels;
 class DropshipperDecisionMail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $mailData;
+    public $mailData, $template;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $template)
     {
         $this->mailData = $mailData;
+        $this->template = $template;
     }
 
     /**
@@ -30,9 +31,8 @@ class DropshipperDecisionMail extends Mailable
      */
     public function envelope()
     {
-        $decision = strtoupper($this->mailData['decision']) == 'REJECT' ? 'NOT APPROVED' : 'APPROVED';
         return new Envelope(
-            subject: 'DROPSHIPPER APPLICATION '.$decision,
+            subject: $this->template->subject,
         );
     }
 
