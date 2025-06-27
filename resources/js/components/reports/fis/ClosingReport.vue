@@ -10,8 +10,11 @@
                         <div class="col-md-12">
                             <form @submit.prevent="submitFunction">
                                 <div class="row">
-                                    <div class="col-md-8">
-                                        <input type="date" name="" id="" class="form-control" v-model="filter.date">
+                                    <div class="col-md-4">
+                                        <input type="date" name="" id="" class="form-control" v-model="filter.from">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="date" name="" id="" class="form-control" v-model="filter.to">
                                     </div>
                                     <div class="col-md-4 form-group">
                                         <button class="btn btn-block btn-primary">Fetch</button>
@@ -28,6 +31,7 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                        <th>Date</th>
                                         <th>PostEx</th>
                                         <th>Leopards</th>
                                         <th>Daraz</th>
@@ -41,19 +45,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>#</td>
-                                        <td>{{ data.postEx }}</td>
-                                        <td>{{ data.leopards }}</td>
-                                        <td>{{ data.daraz }}</td>
-                                        <td>{{ data.cash }}</td>
-                                        <td>{{ data.totalOrders }}</td>
-                                        <td>{{ data.totalSales }}</td>
-                                        <td>{{ data.postExReturns }}</td>
-                                        <td>{{ data.leopardReturns }}</td>
-                                        <td>{{ data.totalReturns }}</td>
-                                        <td>{{ data.tickets }}</td>
+                                    <tr v-for="(item, index) in data" :key="index">
+                                        <td>{{ index + 1 }}</td>
+                                        <td>{{ item.date }}</td>
+                                        <td>{{ item.postEx }}</td>
+                                        <td>{{ item.leopards }}</td>
+                                        <td>{{ item.daraz }}</td>
+                                        <td>{{ item.cash }}</td>
+                                        <td>{{ item.totalOrders }}</td>
+                                        <td>{{ formatPrice(item.totalSales) }}</td>
+                                        <td>{{ item.postExReturns }}</td>
+                                        <td>{{ item.leopardReturns }}</td>
+                                        <td>{{ item.totalReturns }}</td>
+                                        <td>{{ item.tickets }}</td>
                                     </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -78,7 +84,8 @@ export default {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             filter: {
-                date: new Date().toISOString().substr(0, 10),
+                from: new Date().toISOString().substr(0, 10),
+                to: new Date().toISOString().substr(0, 10),
             },
         }
     },

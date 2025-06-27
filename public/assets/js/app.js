@@ -3127,7 +3127,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       public_url: window.location.origin + "",
       filter: {
-        date: new Date().toISOString().substr(0, 10)
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10)
       }
     };
   },
@@ -16699,13 +16700,13 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-md-8"
+    staticClass: "col-md-4"
   }, [_c("input", {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.filter.date,
-      expression: "filter.date"
+      value: _vm.filter.from,
+      expression: "filter.from"
     }],
     staticClass: "form-control",
     attrs: {
@@ -16714,12 +16715,36 @@ var render = function render() {
       id: ""
     },
     domProps: {
-      value: _vm.filter.date
+      value: _vm.filter.from
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.filter, "date", $event.target.value);
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "",
+      id: ""
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
       }
     }
   })]), _vm._v(" "), _vm._m(1)])])]), _vm._v(" "), _c("div", {
@@ -16735,7 +16760,11 @@ var render = function render() {
     attrs: {
       id: "closing-report"
     }
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", [_c("tr", [_c("td", [_vm._v("#")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.postEx))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.leopards))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.daraz))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.cash))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.totalOrders))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.totalSales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.postExReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.leopardReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.totalReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.data.tickets))])])])])])])])])])]);
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.date))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.postEx))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.leopards))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.daraz))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cash))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.totalOrders))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.totalSales)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.postExReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.leopardReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.totalReturns))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tickets))])]);
+  }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -16754,7 +16783,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("PostEx")]), _vm._v(" "), _c("th", [_vm._v("Leopards")]), _vm._v(" "), _c("th", [_vm._v("Daraz")]), _vm._v(" "), _c("th", [_vm._v("Cash")]), _vm._v(" "), _c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("Return PostEx")]), _vm._v(" "), _c("th", [_vm._v("Return Leopard")]), _vm._v(" "), _c("th", [_vm._v("Total Returns")]), _vm._v(" "), _c("th", [_vm._v("Tickets")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("PostEx")]), _vm._v(" "), _c("th", [_vm._v("Leopards")]), _vm._v(" "), _c("th", [_vm._v("Daraz")]), _vm._v(" "), _c("th", [_vm._v("Cash")]), _vm._v(" "), _c("th", [_vm._v("Total Orders")]), _vm._v(" "), _c("th", [_vm._v("Sales")]), _vm._v(" "), _c("th", [_vm._v("Return PostEx")]), _vm._v(" "), _c("th", [_vm._v("Return Leopard")]), _vm._v(" "), _c("th", [_vm._v("Total Returns")]), _vm._v(" "), _c("th", [_vm._v("Tickets")])])]);
 }];
 render._withStripped = true;
 
