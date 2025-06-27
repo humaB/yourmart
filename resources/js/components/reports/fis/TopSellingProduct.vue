@@ -70,7 +70,7 @@ import moment from 'moment';
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
-    name: 'InventoryGoodReturnReport',
+    name: 'TopSellingProduct',
     props: ['data', 'loader', 'products'],
     components: {
         BulletListLoader

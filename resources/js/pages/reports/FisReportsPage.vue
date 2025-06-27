@@ -92,6 +92,12 @@
                                     <a href="#" @click="shopListPostEx()"><i class="fas fa-fax"></i> Shop List for PostEx</a>
                                 </h6>
                             </div>
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    13.
+                                    <a href="#" @click="closingReport()"><i class="fas fa-fax"></i> Daily Business Report</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -137,6 +143,9 @@
         <ShopListForPostEx v-if="report == 'shop-list-postex'" :data="shopListPostExData"
             :loader="loader" @shopListPostExFilter="shopListPostExFilter($event)" />
 
+        <ClosingReport v-if="report == 'closing-report'" :data="closingReportData"
+            :loader="loader" @closingReportFilter="closingReportFilter($event)" />
+
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -176,6 +185,7 @@
     </div>
 </template>
 <script>
+import ClosingReport from '../../components/reports/fis/ClosingReport.vue';
 import DeliveredOrderDetailsReport from '../../components/reports/fis/DeliveredOrderDetailsReport.vue';
 import HighStockProductReport from '../../components/reports/fis/HighStockProductReport.vue';
 import InventoryControlRegisterReport from '../../components/reports/fis/InventoryControlRegisterReport.vue';
@@ -206,7 +216,8 @@ export default {
         Top10DropshipperReport,
         HighStockProductReport,
         LowStockProductReport,
-        ShopListForPostEx
+        ShopListForPostEx,
+        ClosingReport
     },
     data() {
         return {
@@ -235,13 +246,27 @@ export default {
             top10DropshipperData : [],
             lowStockProductData : [],
             highStockProductData : [],
-            shopListPostExData : []
+            shopListPostExData : [],
+            closingReportData : []
         }
     },
     created() {
         this.fetchProducts();
     },
     methods: {
+        closingReport() {
+            this.report = 'closing-report'
+        },
+        closingReportFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.post(vm.api_url + 'reports/fis/closing-report', data)
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.closingReportData = results;
+                    vm.loader = false;
+                })
+        },
         shopListPostEx() {
             this.report = 'shop-list-postex'
         },

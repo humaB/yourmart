@@ -16,6 +16,7 @@ use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -364,6 +365,54 @@ class FisReportController extends Controller
         }
 
         return (new ResponseCollection($products))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function closingReport( Request $request ){
+
+        $orders = Order::whereNotIn('status', ['6', '7'])->whereDate('created_at', $request->date)->get();
+        $postExOrders = $orders->where('courier_service_id', '2')->count();
+        $leopardOrders = $orders->where('courier_service_id', '1')->count();
+        $cashOrders =  $orders->where('type', 'Cash')->count();
+        $darazOrders =  $orders->where('type', 'Daraz')->count();
+
+
+        $courier = '1';
+        $date = $request->date;
+        $leopardReturns = StoreReturnDetail::with('srn.order')
+        ->whereDate('created_at', $date)
+        ->whereHas('srn.order', function ($q) use ($courier) {
+            $q->where('courier_service_id', $courier);
+        })
+        ->orderBy('id', 'desc')
+        ->count();
+
+        $courier = '2';
+        $postExReturns = StoreReturnDetail::with('srn.order')
+        ->whereDate('created_at', $date)
+        ->whereHas('srn.order', function ($q) use ($courier) {
+            $q->where('courier_service_id', $courier);
+        })
+        ->orderBy('id', 'desc')
+        ->count();
+
+        $tickets = Ticket::where('status', '!=', 'Closed')->orWhere('status', '=', 'Expired')->count();
+
+        $data = [
+            'postEx' => $postExOrders,
+            'leopards' => $leopardOrders,
+            'cash'     => $cashOrders,
+            'daraz'    => $darazOrders,
+            'totalOrders' => $orders->count(),
+            'totalSales'  => $orders->sum('total_bill'),
+            'postExReturns' => $postExReturns,
+            'leopardReturns' => $leopardReturns,
+            'totalReturns'   => $postExReturns + $leopardReturns,
+            'tickets'        => $tickets
+        ];
+
+        return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
     }

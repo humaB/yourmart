@@ -200,6 +200,7 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
         Route::get('/product-wise-count',  [ DashboardController::class , 'categoryTagWiseProduct']);
 
         Route::get('/shop-list-for-postex',  [ DashboardController::class , 'shopListForPostEx']);
+        Route::post('/closing-report',  [ FisReportController::class , 'closingReport']);
     });
 });
 
