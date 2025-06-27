@@ -113,7 +113,6 @@ export default {
         data(newLedger) {
             setTimeout(() => {
                 $('#closing-report').DataTable({
-                    "bSort": false,
                     paging: false,         // Disable pagination
                     dom: 'Bfrtip',
                     buttons: [
