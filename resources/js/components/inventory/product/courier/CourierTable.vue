@@ -19,6 +19,10 @@
           <td>{{ item.contact_person }}</td>
           <td>{{ item.contact_person_contact }}</td>
           <td>
+            <span class="badge badge-success" v-if="item.is_active == '1'">Active</span>
+            <span class="badge badge-danger" v-else>In Active</span>
+          </td>
+          <td>
             <a href="#" class="btn btn-icon icon-left btn-info" data-toggle="modal" data-target="#courierDetailPopup" @click="fetchDetails(item.id)">
                 <i class="far fa-eye"></i>
               </a>

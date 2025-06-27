@@ -145,6 +145,19 @@ class CourierController extends Controller
         return ['message' => 'Successfully added'];
     }
 
+  public function changeStatus(Request $request)
+    {
+        $courier = Courier::find($request->id);
+
+        if ($courier) {
+            $courier->is_active = $courier->is_active ? 0 : 1;
+            $courier->save();
+
+            return ['message' => 'Successfully added'];
+        }
+
+    }
+
     public function fetchCategory(){
         $categories = CourierCategory::select('id as code', 'name as label')->get();
         return (new ResponseCollection($categories))

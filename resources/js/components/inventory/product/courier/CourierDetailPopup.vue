@@ -159,6 +159,7 @@
 
                     </div>
                     <div class="modal-footer">
+                        <button class="btn btn-primary" @click="changeStatus()">Change Status</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
@@ -220,6 +221,9 @@ export default {
         }
     },
     methods: {
+        changeStatus(){
+            this.$emit('changeStatus', { id :this.details.id })
+        },
         editRange(range) {
             this.editingRangeId = range.id;
         },

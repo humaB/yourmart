@@ -22,6 +22,7 @@
         @addNewCourier="add($event)"
         @fetchRange="fetchRange( $event )"
         @updateRange="updateRange( $event )"
+        @changeStatus="changeStatus( $event )"
       />
 
       <AddCourierCategory
@@ -93,7 +94,7 @@
           link: "#",
           target: "#addCourier"
         },
-        th: ["Sr #", "Courier Name", "Contact Person", "Contact", "Action"],
+        th: ["Sr #", "Courier Name", "Contact Person", "Contact", "Status","Action"],
         table_id: "courier_list_table",
         couriers: [],
         editDetails: {},
@@ -106,6 +107,21 @@
       this.fetchCouriers();
     },
     methods: {
+        changeStatus( data ){
+            let vm = this;
+            axios
+            .post(this.api_url + "couriers/change-status", data)
+            .then((response) => {
+                this.fetchCouriers();
+                return swal({
+                    title: "Success",
+                    text: "Status Changed successfully",
+                    icon: "success",
+                    timer: 3000
+                });
+            })
+          .catch((err) => console.log(err));
+        },
         updateRange( data ){
         let vm = this;
         axios

@@ -1647,6 +1647,11 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    changeStatus: function changeStatus() {
+      this.$emit('changeStatus', {
+        id: this.details.id
+      });
+    },
     editRange: function editRange(range) {
       this.editingRangeId = range.id;
     },
@@ -6530,7 +6535,7 @@ __webpack_require__.r(__webpack_exports__);
         link: "#",
         target: "#addCourier"
       },
-      th: ["Sr #", "Courier Name", "Contact Person", "Contact", "Action"],
+      th: ["Sr #", "Courier Name", "Contact Person", "Contact", "Status", "Action"],
       table_id: "courier_list_table",
       couriers: [],
       editDetails: {},
@@ -6543,6 +6548,21 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchCouriers();
   },
   methods: {
+    changeStatus: function changeStatus(data) {
+      var _this = this;
+      var vm = this;
+      axios.post(this.api_url + "couriers/change-status", data).then(function (response) {
+        _this.fetchCouriers();
+        return swal({
+          title: "Success",
+          text: "Status Changed successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
     updateRange: function updateRange(data) {
       var vm = this;
       axios.post(this.api_url + "couriers/update-ranges", data).then(function (response) {
@@ -6580,14 +6600,14 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     fetchDetails: function fetchDetails(data) {
-      var _this = this;
+      var _this2 = this;
       var vm = this;
       axios.post(this.api_url + "couriers/details", data).then(function (response) {
         var results = response.data.response[0];
         vm.courierDetails = results;
         // Extract categories and store in data
         results.categories.forEach(function (category) {
-          _this.ranges[category.id] = category.ranges;
+          _this2.ranges[category.id] = category.ranges;
         });
       })["catch"](function (err) {
         return console.log(err);
@@ -13505,7 +13525,22 @@ var render = function render() {
         })
       })) + " ")]);
     })], 2);
-  }), 0)])]) : _vm._e()])]), _vm._v(" "), _vm._m(3)])])])]);
+  }), 0)])]) : _vm._e()])]), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [_c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.changeStatus();
+      }
+    }
+  }, [_vm._v("Change Status")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -13554,18 +13589,6 @@ var staticRenderFns = [function () {
       "data-target": "#addCourierCategory"
     }
   }, [_vm._v("Add\n                                New Package")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "modal-footer"
-  }, [_c("button", {
-    staticClass: "btn btn-secondary",
-    attrs: {
-      type: "button",
-      "data-dismiss": "modal"
-    }
-  }, [_vm._v("Close")])]);
 }];
 render._withStripped = true;
 
@@ -13772,7 +13795,11 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.tbody, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person_contact))]), _vm._v(" "), _c("td", [_c("a", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.contact_person_contact))]), _vm._v(" "), _c("td", [item.is_active == "1" ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Active")]) : _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("In Active")])]), _vm._v(" "), _c("td", [_c("a", {
       staticClass: "btn btn-icon icon-left btn-info",
       attrs: {
         href: "#",
@@ -22871,6 +22898,9 @@ var render = function render() {
       },
       updateRange: function updateRange($event) {
         return _vm.updateRange($event);
+      },
+      changeStatus: function changeStatus($event) {
+        return _vm.changeStatus($event);
       }
     }
   }), _vm._v(" "), _c("AddCourierCategory", {

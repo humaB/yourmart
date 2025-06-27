@@ -172,6 +172,7 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::post('/disclaimers', [CourierController::class, 'addDisclaimer']);
 
     Route::post('/update-ranges', [CourierController::class, 'updateRange']);
+    Route::post('/change-status', [CourierController::class, 'changeStatus']);
 
     Route::post('/details', [CourierController::class, 'details']);
 
