@@ -52,7 +52,7 @@
                                         <td>{{ item.leopards }}</td>
                                         <td>{{ item.daraz }}</td>
                                         <td>{{ item.cash }}</td>
-                                        <td>{{ item.totalOrders }}</td> 
+                                        <td>{{ item.totalOrders }}</td>
                                         <td>{{ formatPrice(item.totalSales) }}</td>
                                         <td>{{ item.postExReturns }}</td>
                                         <td>{{ item.leopardReturns }}</td>
@@ -114,6 +114,7 @@ export default {
             setTimeout(() => {
                 $('#closing-report').DataTable({
                     "bSort": false,
+                    paging: false,         // Disable pagination
                     dom: 'Bfrtip',
                     buttons: [
                         {

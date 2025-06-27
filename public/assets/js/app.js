@@ -3155,6 +3155,8 @@ __webpack_require__.r(__webpack_exports__);
       setTimeout(function () {
         $('#closing-report').DataTable({
           "bSort": false,
+          paging: false,
+          // Disable pagination
           dom: 'Bfrtip',
           buttons: [{
             extend: 'copy',
