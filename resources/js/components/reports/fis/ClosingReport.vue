@@ -60,6 +60,20 @@
                                         <td>{{ item.tickets }}</td>
                                     </tr>
 
+                                      <tr class="font-weight-bold">
+                                        <td></td>
+                                        <td>Total</td>
+                                        <td>{{ total.postEx }}</td>
+                                        <td>{{ total.leopards }}</td>
+                                        <td>{{ total.daraz }}</td>
+                                        <td>{{ total.cash }}</td>
+                                        <td>{{ total.totalOrders }}</td>
+                                        <td>{{ formatPrice(total.totalSales) }}</td>
+                                        <td>{{ total.postExReturns }}</td>
+                                        <td>{{ total.leopardReturns }}</td>
+                                        <td>{{ total.totalReturns }}</td>
+                                        <td>{{ total.tickets }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -87,6 +101,34 @@ export default {
                 from: new Date().toISOString().substr(0, 10),
                 to: new Date().toISOString().substr(0, 10),
             },
+        }
+    },
+    computed: {
+        total() {
+            return this.data.reduce((acc, item) => {
+                acc.postEx += item.postEx || 0;
+                acc.leopards += item.leopards || 0;
+                acc.daraz += item.daraz || 0;
+                acc.cash += item.cash || 0;
+                acc.totalOrders += item.totalOrders || 0;
+                acc.totalSales += item.totalSales || 0;
+                acc.postExReturns += item.postExReturns || 0;
+                acc.leopardReturns += item.leopardReturns || 0;
+                acc.totalReturns += item.totalReturns || 0;
+                acc.tickets += item.tickets || 0;
+                return acc;
+            }, {
+                postEx: 0,
+                leopards: 0,
+                daraz: 0,
+                cash: 0,
+                totalOrders: 0,
+                totalSales: 0,
+                postExReturns: 0,
+                leopardReturns: 0,
+                totalReturns: 0,
+                tickets: 0,
+            });
         }
     },
     methods: {
