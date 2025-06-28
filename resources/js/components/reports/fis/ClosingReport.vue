@@ -22,11 +22,87 @@
                                 </div>
                             </form>
                         </div>
+                        <div class="row col-md-12">
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-purple">
+                                        <i class="fas fa-shopping-basket"></i> <!-- Updated Icon -->
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h3 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i> {{ total.totalOrders }}
+                                                </h3>
+                                                <span class="text-muted">Total Orders</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-green">
+                                        <i class="fas fa-chart-bar"></i> <!-- Updated Icon -->
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h3 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i> {{ total.totalSales }}
+                                                </h3>
+                                                <span class="text-muted">Total Sales</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-cyan">
+                                        <i class="fas fa-calendar-day"></i> <!-- Updated Icon -->
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h3 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i> {{ (parseFloat(total.totalOrders) / dateDiffInDays(filter.from, filter.to) ).toFixed(0) }}
+                                                </h3>
+                                                <span class="text-muted">Avg Per Day Order</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                <div class="card card-statistic-1">
+                                    <div class="card-icon l-bg-orange">
+                                        <i class="fas fa-money-bill-wave"></i> <!-- Updated Icon -->
+                                    </div>
+                                    <div class="card-wrap">
+                                        <div class="padding-20">
+                                            <div class="text-right">
+                                                <h3 class="font-light mb-0">
+                                                    <i class="ti-arrow-up text-success"></i> {{ formatPrice(total.totalSales / dateDiffInDays(filter.from, filter.to) ) }}
+                                                </h3>
+                                                <span class="text-muted">Avg Per Day Sale</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-md-12">
                             <div class="card-body table-responsive" v-if="loader">
                                 <bullet-list-loader :width="250">
                                 </bullet-list-loader>
                             </div>
+
+
                             <table class="table table-bordered" id="closing-report" v-else>
                                 <thead>
                                     <tr>
@@ -135,11 +211,20 @@ export default {
         }
     },
     methods: {
+        dateDiffInDays(from, to) {
+            const fromDate = new Date(from);
+            const toDate = new Date(to);
+            const timeDiff = Math.abs(toDate - fromDate);
+            const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+            console.log(daysDiff + 1);
+
+            return parseFloat(daysDiff + 1) || 1; // Avoid division by zero
+        },
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : '';
         },
         formatPrice: function formatPrice(price) {
-            const value = parseFloat(price).toFixed(2)
+            const value = parseFloat(price).toFixed(0)
             var string = value.toString();
             return string
                 .replace(/,/g, "")
