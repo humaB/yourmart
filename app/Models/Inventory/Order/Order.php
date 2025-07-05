@@ -27,6 +27,7 @@ class Order extends Model
         'courier_service_id',
         'range_id',
         'courier_service_price',
+        'shipping_tax',
         'courier_service_internal_price',// Amount Received by YourMart
         'shop_id',
         'instructions',
@@ -35,12 +36,14 @@ class Order extends Model
         'total_bill',
         'paid_amount', // Paid by Customer after COD or Advance
         'remaining_amount', // remaining left after COD
+        'subtotal_tax',// Tax on product total
         'discount',
         'payment_method',
         'payment_proof_attachment',
         'selling_price',
         'advance_amount',
         'total_profit',
+        'profit_tax',
         'total_paid_profit',
         'packaging_price',
         'is_replacement', // 0 => Normal || 1 => replacement
