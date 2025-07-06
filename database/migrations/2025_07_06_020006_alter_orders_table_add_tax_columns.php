@@ -35,7 +35,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('subtotal_tax');
-            $table->dropColumn('product_cost');
+            // $table->dropColumn('product_cost');
             $table->dropColumn('shipping_tax');
             $table->dropColumn('profit_tax');
         });
