@@ -37,6 +37,7 @@ class Order extends Model
         'paid_amount', // Paid by Customer after COD or Advance
         'remaining_amount', // remaining left after COD
         'subtotal_tax',// Tax on product total
+        'product_cost',
         'discount',
         'payment_method',
         'payment_proof_attachment',

@@ -14,14 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->integer('subtotal_tax')->default(0)->after('remaining_amount');
-            $table->integer('shipping_tax')->default(0)->after('courier_service_price');
-            $table->integer('profit_tax')->default(0)->after('total_profit');
+            $table->integer('subtotal_tax')->default(0)->nullable()->after('remaining_amount');
+            $table->integer('product_cost')->default(0)->nullable()->after('subtotal_tax');
+            $table->integer('shipping_tax')->default(0)->nullable()->after('courier_service_price');
+            $table->integer('profit_tax')->default(0)->nullable()->after('total_profit');
         });
 
         Schema::table('order_items', function (Blueprint $table) {
-            $table->integer('subtotal_tax')->default(0)->after('quantity');
-            $table->integer('shipping_tax')->default(0)->after('courier_cost');
+            $table->integer('subtotal_tax')->default(0)->nullable()->after('quantity');
+            $table->integer('shipping_tax')->default(0)->nullable()->after('courier_cost');
         });
     }
 
@@ -34,6 +35,7 @@ return new class extends Migration
     {
         Schema::table('orders', function (Blueprint $table) {
             $table->dropColumn('subtotal_tax');
+            $table->dropColumn('product_cost');
             $table->dropColumn('shipping_tax');
             $table->dropColumn('profit_tax');
         });

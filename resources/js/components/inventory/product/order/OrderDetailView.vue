@@ -153,10 +153,7 @@
                                                                         <tr>
                                                                             <td><strong>Product Cost:</strong></td>
                                                                             <td class="text-left">{{
-                                                                                formatPrice(parseFloat(details.total_bill)
-                                                                                    -
-                                                                                    (parseFloat(details.courier_service_price)
-                                                                                        + parseFloat(details.packaging_price)))
+                                                                                formatPrice(details.product_cost)
                                                                             }}</td>
                                                                         </tr>
                                                                         <tr>
@@ -169,6 +166,12 @@
                                                                             <td><strong>Packing Charges:</strong></td>
                                                                             <td class="text-left">{{
                                                                                 formatPrice(details.packaging_price) }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td><strong>Total Tax:</strong></td>
+                                                                            <td class="text-left">{{
+                                                                                formatPrice(details.shipping_tax + details.subtotal_tax) }}
                                                                             </td>
                                                                         </tr>
 
@@ -308,8 +311,6 @@
                                                                                 {{ formatPrice(details.total_bill -
                                                                                     details.paid_amount) }}</td>
                                                                         </tr>
-
-
                                                                     </tfoot>
                                                                 </table>
                                                             </div>
@@ -333,6 +334,12 @@
                                                                                 parseFloat(details.selling_price) +
                                                                                 parseFloat(details.advance_amount)) -
                                                                                 parseFloat(details.total_bill)) }}</td>
+                                                                            <td><strong>Tax</strong></td>
+                                                                            <td class="h5">{{ details.profit_tax }}</td>
+                                                                             <td><strong>Profit</strong></td>
+                                                                            <td class="h5">{{  (parseFloat(details.selling_price) +
+                                                                                parseFloat(details.advance_amount)) -
+                                                                                (parseFloat(details.total_bill) + parseFloat(details.profit_tax)) }}</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>

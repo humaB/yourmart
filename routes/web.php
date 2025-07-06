@@ -203,3 +203,11 @@ Route::group(['prefix' => '/email-templates', 'middleware' => 'auth'], function 
 
 
 
+Route::get('/update-produt-cost', function(){
+    $orders = Order::select('id', 'total_bill', 'product_cost', 'courier_service_price', 'packaging_price')->get();
+    foreach( $orders as $order){
+        $order->update([
+            'product_cost' => $order->total_bill - ( $order->courier_service_price + $order->packaging_price)
+        ]);
+    }
+});

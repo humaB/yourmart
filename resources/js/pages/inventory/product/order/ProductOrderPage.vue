@@ -444,6 +444,7 @@
                                                         <th>Product Price</th>
                                                         <th>Courier</th>
                                                         <th>Packaging</th>
+                                                        <th>Total Tax</th>
                                                         <th>Total Cost</th>
                                                         <th>Received</th>
                                                         <th>Remaining</th>
@@ -487,11 +488,10 @@
                                                             </span>
                                                         </td>
 
-                                                        <td>{{ formatPrice(parseFloat(item.total_bill) - (
-                                                            parseFloat(item.courier_service_price) +
-                                                            parseFloat(item.packaging_price))) }}</td>
+                                                        <td>{{ formatPrice(item.product_cost) }}</td>
                                                         <td>{{ item.courier_service_price }}</td>
                                                         <td>{{ item.packaging_price }}</td>
+                                                        <td>{{ item.shipping_tax + item.subtotal_tax }}</td>
                                                         <td>{{ formatPrice(item.total_bill) }}</td>
                                                         <td>{{ formatPrice(item.paid_amount) }}</td>
                                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
