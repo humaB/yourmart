@@ -238,11 +238,11 @@ class LeopardApiHelper
         $courierCharges = $order->courier_service_price;
         $packingCharges = $order->packaging_price;
         $advance         = $order->paid_amount;
-        $productPrice    = (float)$order->total_bill - ( (float)$courierCharges + (float)$packingCharges );
+        $productPrice    = (float)$order->product_cost;
 
         $courierExtraCharges = $order->range->our_charges;
         $payableAmount = (float)$order->total_bill - $advance; //Amount Yourmart must receive
-        $profit      = ((float)$order->selling_price + $advance) - (float)$order->total_bill;
+        $profit      = (((float)$order->selling_price + $advance) - (float)$order->total_bill ) - $order->profit_tax;
 
 
         $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
