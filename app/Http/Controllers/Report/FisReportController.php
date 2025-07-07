@@ -17,6 +17,7 @@ use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\Ticket;
+use App\Models\User\DropShipper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -425,6 +426,23 @@ class FisReportController extends Controller
         }
 
         return (new ResponseCollection($dates))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function dropshipperList(){
+
+        // Apply filters to the query
+        $dropshippers = DropShipper::with([
+            'user' => function ($query) {
+                $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
+            },
+        ])
+            ->orderBy('id', 'desc')
+            ->get();
+
+
+        return (new ResponseCollection($dropshippers))
             ->response()
             ->setStatusCode(200);
     }

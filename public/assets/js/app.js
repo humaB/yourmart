@@ -3283,6 +3283,72 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=script&lang=js":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=script&lang=js ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'DropshipperListReport',
+  props: ['data', 'loader'],
+  components: {
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
+  },
+  data: function data() {
+    return {
+      public_url: window.location.origin + ""
+    };
+  },
+  methods: {
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price).toFixed(2);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    submitFunction: function submitFunction() {
+      this.clearDataTable();
+      this.$emit('dropshipperListFilter', this.filter);
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $('#dropshipper_list').DataTable();
+      table.destroy();
+    }
+  },
+  watch: {
+    data: function data(newLedger) {
+      setTimeout(function () {
+        $('#dropshipper_list').DataTable({
+          "bSort": false,
+          dom: 'Bfrtip',
+          buttons: [{
+            extend: 'copy',
+            title: 'Dropshipper List'
+          }, 'csv', {
+            extend: 'excel',
+            title: 'Dropshipper List'
+          }]
+        });
+      }, 300);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/HighStockProductReport.vue?vue&type=script&lang=js":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/HighStockProductReport.vue?vue&type=script&lang=js ***!
@@ -7524,18 +7590,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _components_reports_fis_ClosingReport_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/reports/fis/ClosingReport.vue */ "./resources/js/components/reports/fis/ClosingReport.vue");
 /* harmony import */ var _components_reports_fis_DeliveredOrderDetailsReport_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/reports/fis/DeliveredOrderDetailsReport.vue */ "./resources/js/components/reports/fis/DeliveredOrderDetailsReport.vue");
-/* harmony import */ var _components_reports_fis_HighStockProductReport_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/reports/fis/HighStockProductReport.vue */ "./resources/js/components/reports/fis/HighStockProductReport.vue");
-/* harmony import */ var _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/reports/fis/InventoryControlRegisterReport.vue */ "./resources/js/components/reports/fis/InventoryControlRegisterReport.vue");
-/* harmony import */ var _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodIssuanceReport.vue */ "./resources/js/components/reports/fis/InventoryGoodIssuanceReport.vue");
-/* harmony import */ var _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReceivedReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReceivedReport.vue");
-/* harmony import */ var _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReturnReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReturnReport.vue");
-/* harmony import */ var _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/reports/fis/LeopardReturnReceivedReport.vue */ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue");
-/* harmony import */ var _components_reports_fis_LowStockProductReport_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/reports/fis/LowStockProductReport.vue */ "./resources/js/components/reports/fis/LowStockProductReport.vue");
-/* harmony import */ var _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../components/reports/fis/OrderIssuanceReport.vue */ "./resources/js/components/reports/fis/OrderIssuanceReport.vue");
-/* harmony import */ var _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/reports/fis/ShopListForPostEx.vue */ "./resources/js/components/reports/fis/ShopListForPostEx.vue");
-/* harmony import */ var _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/reports/fis/Top10DropshipperReport.vue */ "./resources/js/components/reports/fis/Top10DropshipperReport.vue");
-/* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
-/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_reports_fis_DropshipperListReport_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/reports/fis/DropshipperListReport.vue */ "./resources/js/components/reports/fis/DropshipperListReport.vue");
+/* harmony import */ var _components_reports_fis_HighStockProductReport_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/reports/fis/HighStockProductReport.vue */ "./resources/js/components/reports/fis/HighStockProductReport.vue");
+/* harmony import */ var _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/reports/fis/InventoryControlRegisterReport.vue */ "./resources/js/components/reports/fis/InventoryControlRegisterReport.vue");
+/* harmony import */ var _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodIssuanceReport.vue */ "./resources/js/components/reports/fis/InventoryGoodIssuanceReport.vue");
+/* harmony import */ var _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReceivedReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReceivedReport.vue");
+/* harmony import */ var _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../components/reports/fis/InventoryGoodReturnReport.vue */ "./resources/js/components/reports/fis/InventoryGoodReturnReport.vue");
+/* harmony import */ var _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../components/reports/fis/LeopardReturnReceivedReport.vue */ "./resources/js/components/reports/fis/LeopardReturnReceivedReport.vue");
+/* harmony import */ var _components_reports_fis_LowStockProductReport_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../components/reports/fis/LowStockProductReport.vue */ "./resources/js/components/reports/fis/LowStockProductReport.vue");
+/* harmony import */ var _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/reports/fis/OrderIssuanceReport.vue */ "./resources/js/components/reports/fis/OrderIssuanceReport.vue");
+/* harmony import */ var _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/reports/fis/ShopListForPostEx.vue */ "./resources/js/components/reports/fis/ShopListForPostEx.vue");
+/* harmony import */ var _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/reports/fis/Top10DropshipperReport.vue */ "./resources/js/components/reports/fis/Top10DropshipperReport.vue");
+/* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+
 
 
 
@@ -7553,20 +7621,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FisReportsPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
-    InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
-    InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    InventoryGoodReturnReport: _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+    InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    InventoryGoodReturnReport: _components_reports_fis_InventoryGoodReturnReport_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
     DeliveredOrderDetailsReport: _components_reports_fis_DeliveredOrderDetailsReport_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    LeopardReturnReceivedReport: _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-    OrderIssuanceReport: _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-    TopSellingProduct: _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
-    Top10DropshipperReport: _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-    HighStockProductReport: _components_reports_fis_HighStockProductReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    LowStockProductReport: _components_reports_fis_LowStockProductReport_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-    ShopListForPostEx: _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
-    ClosingReport: _components_reports_fis_ClosingReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    LeopardReturnReceivedReport: _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+    OrderIssuanceReport: _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+    TopSellingProduct: _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+    Top10DropshipperReport: _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+    HighStockProductReport: _components_reports_fis_HighStockProductReport_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    LowStockProductReport: _components_reports_fis_LowStockProductReport_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+    ShopListForPostEx: _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
+    ClosingReport: _components_reports_fis_ClosingReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    DropshipperListReport: _components_reports_fis_DropshipperListReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -7596,13 +7665,26 @@ __webpack_require__.r(__webpack_exports__);
       lowStockProductData: [],
       highStockProductData: [],
       shopListPostExData: [],
-      closingReportData: []
+      closingReportData: [],
+      dropshipperListData: []
     };
   },
   created: function created() {
     this.fetchProducts();
   },
   methods: {
+    dropshipperList: function dropshipperList() {
+      this.report = 'dropshipper-list-report';
+    },
+    dropshipperListFilter: function dropshipperListFilter(data) {
+      var vm = this;
+      vm.loader = true;
+      axios.get(vm.api_url + 'reports/fis/dropshipper-list-report').then(function (res) {
+        var results = res.data.response;
+        vm.dropshipperListData = results;
+        vm.loader = false;
+      });
+    },
     closingReport: function closingReport() {
       this.report = 'closing-report';
     },
@@ -17103,6 +17185,91 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=template&id=4b32ac3a":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=template&id=4b32ac3a ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_vm._m(1)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "dropshipper_list"
+    }
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Approved")]) : _vm._e(), _vm._v(" "), item.status == 2 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Rejected")]) : _vm._e(), _vm._v(" "), item.status == 3 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Deactivated")]) : _vm._e()])]);
+  }), 0)])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Delivered Orders Details")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Fetch Record")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Contact #")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Status")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/HighStockProductReport.vue?vue&type=template&id=3b2ae6ae":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/HighStockProductReport.vue?vue&type=template&id=3b2ae6ae ***!
@@ -24093,7 +24260,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Daily Business Report")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Daily Business Report")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 col-6"
+  }, [_c("h6", [_vm._v("\n                                14.\n                                "), _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.dropshipperList();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fax"
+  }), _vm._v(" Dropshippers List")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -24228,6 +24408,16 @@ var render = function render() {
     on: {
       closingReportFilter: function closingReportFilter($event) {
         return _vm.closingReportFilter($event);
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), _vm.report == "dropshipper-list-report" ? _c("DropshipperListReport", {
+    attrs: {
+      data: _vm.dropshipperListData,
+      loader: _vm.loader
+    },
+    on: {
+      dropshipperListFilter: function dropshipperListFilter($event) {
+        return _vm.dropshipperListFilter($event);
       }
     }
   }) : _vm._e(), _vm._v(" "), _c("div", {
@@ -68846,6 +69036,45 @@ component.options.__file = "resources/js/components/reports/fis/DeliveredOrderDe
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/DropshipperListReport.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/reports/fis/DropshipperListReport.vue ***!
+  \***********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DropshipperListReport_vue_vue_type_template_id_4b32ac3a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropshipperListReport.vue?vue&type=template&id=4b32ac3a */ "./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=template&id=4b32ac3a");
+/* harmony import */ var _DropshipperListReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropshipperListReport.vue?vue&type=script&lang=js */ "./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _DropshipperListReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DropshipperListReport_vue_vue_type_template_id_4b32ac3a__WEBPACK_IMPORTED_MODULE_0__.render,
+  _DropshipperListReport_vue_vue_type_template_id_4b32ac3a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/reports/fis/DropshipperListReport.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/reports/fis/HighStockProductReport.vue":
 /*!************************************************************************!*\
   !*** ./resources/js/components/reports/fis/HighStockProductReport.vue ***!
@@ -70603,6 +70832,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=script&lang=js":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperListReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperListReport.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperListReport_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/reports/fis/HighStockProductReport.vue?vue&type=script&lang=js":
 /*!************************************************************************************************!*\
   !*** ./resources/js/components/reports/fis/HighStockProductReport.vue?vue&type=script&lang=js ***!
@@ -71726,6 +71971,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveredOrderDetailsReport_vue_vue_type_template_id_0cffdbbc__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DeliveredOrderDetailsReport_vue_vue_type_template_id_0cffdbbc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DeliveredOrderDetailsReport.vue?vue&type=template&id=0cffdbbc */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DeliveredOrderDetailsReport.vue?vue&type=template&id=0cffdbbc");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=template&id=4b32ac3a":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=template&id=4b32ac3a ***!
+  \*****************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperListReport_vue_vue_type_template_id_4b32ac3a__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperListReport_vue_vue_type_template_id_4b32ac3a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_DropshipperListReport_vue_vue_type_template_id_4b32ac3a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./DropshipperListReport.vue?vue&type=template&id=4b32ac3a */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/DropshipperListReport.vue?vue&type=template&id=4b32ac3a");
 
 
 /***/ }),

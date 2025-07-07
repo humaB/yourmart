@@ -98,6 +98,12 @@
                                     <a href="#" @click="closingReport()"><i class="fas fa-fax"></i> Daily Business Report</a>
                                 </h6>
                             </div>
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    14.
+                                    <a href="#" @click="dropshipperList()"><i class="fas fa-fax"></i> Dropshippers List</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -146,6 +152,9 @@
         <ClosingReport v-if="report == 'closing-report'" :data="closingReportData"
             :loader="loader" @closingReportFilter="closingReportFilter($event)" />
 
+        <DropshipperListReport v-if="report == 'dropshipper-list-report'" :data="dropshipperListData"
+            :loader="loader" @dropshipperListFilter="dropshipperListFilter($event)" />
+
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -187,6 +196,7 @@
 <script>
 import ClosingReport from '../../components/reports/fis/ClosingReport.vue';
 import DeliveredOrderDetailsReport from '../../components/reports/fis/DeliveredOrderDetailsReport.vue';
+import DropshipperListReport from '../../components/reports/fis/DropshipperListReport.vue';
 import HighStockProductReport from '../../components/reports/fis/HighStockProductReport.vue';
 import InventoryControlRegisterReport from '../../components/reports/fis/InventoryControlRegisterReport.vue';
 import InventoryGoodIssuanceReport from '../../components/reports/fis/InventoryGoodIssuanceReport.vue';
@@ -217,7 +227,8 @@ export default {
         HighStockProductReport,
         LowStockProductReport,
         ShopListForPostEx,
-        ClosingReport
+        ClosingReport,
+        DropshipperListReport
     },
     data() {
         return {
@@ -247,13 +258,27 @@ export default {
             lowStockProductData : [],
             highStockProductData : [],
             shopListPostExData : [],
-            closingReportData : []
+            closingReportData : [],
+            dropshipperListData : []
         }
     },
     created() {
         this.fetchProducts();
     },
     methods: {
+        dropshipperList() {
+            this.report = 'dropshipper-list-report'
+        },
+        dropshipperListFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/dropshipper-list-report')
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.dropshipperListData = results;
+                    vm.loader = false;
+                })
+        },
         closingReport() {
             this.report = 'closing-report'
         },
