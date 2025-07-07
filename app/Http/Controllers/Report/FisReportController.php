@@ -433,12 +433,7 @@ class FisReportController extends Controller
     public function dropshipperList(){
 
         // Apply filters to the query
-        $dropshippers = DropShipper::with([
-            'user' => function ($query) {
-                $query->withCount(['totalOrders', 'deliveredOrders', 'returnedOrders']);
-            },
-        ])
-            ->orderBy('id', 'desc')
+        $dropshippers = DropShipper::orderBy('id', 'desc')
             ->get();
 
 
