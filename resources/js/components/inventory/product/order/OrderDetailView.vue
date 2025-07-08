@@ -481,11 +481,11 @@
                                                                 </tr>
                                                                 <tr>
                                                                     <td colspan="10" class="h5 text-right">Tax On Profit</td>
-                                                                    <td>{{ details.profit_tax }} </td>
+                                                                    <td class="h5">{{ details.profit_tax }} </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td colspan="10" class="h5 text-right">Balance</td>
-                                                                    <td> {{totalPaybale - details.profit_tax }} </td>
+                                                                    <td class="h5"> {{totalPaybale - details.profit_tax }} </td>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>

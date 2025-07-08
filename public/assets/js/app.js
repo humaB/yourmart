@@ -14593,12 +14593,16 @@ var render = function render() {
     attrs: {
       colspan: "10"
     }
-  }, [_vm._v("Tax On Profit")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.details.profit_tax) + " ")])]), _vm._v(" "), _c("tr", [_c("td", {
+  }, [_vm._v("Tax On Profit")]), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(_vm._s(_vm.details.profit_tax) + " ")])]), _vm._v(" "), _c("tr", [_c("td", {
     staticClass: "h5 text-right",
     attrs: {
       colspan: "10"
     }
-  }, [_vm._v("Balance")]), _vm._v(" "), _c("td", [_vm._v(" " + _vm._s(_vm.totalPaybale - _vm.details.profit_tax) + " ")])])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
+  }, [_vm._v("Balance")]), _vm._v(" "), _c("td", {
+    staticClass: "h5"
+  }, [_vm._v(" " + _vm._s(_vm.totalPaybale - _vm.details.profit_tax) + " ")])])])])])])]), _vm._v(" "), _vm.details.returns ? _c("div", {
     staticClass: "card"
   }, [_vm._m(22), _vm._v(" "), _c("div", {
     staticClass: "card-body"
