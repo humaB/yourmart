@@ -423,13 +423,13 @@
                                                                     <td v-else>{{ item.sell_price }}</td>
 
                                                                     <td v-if="details.is_replacement == 1">0</td>
-                                                                    <td v-else>{{ parseFloat(item.subtotal_tax) - parseFloat(item.shipping_tax) }}</td>
+                                                                    <td v-else>{{ parseFloat(item.subtotal_tax) + parseFloat(item.shipping_tax) }}</td>
 
                                                                     <td v-if="details.is_replacement == 1">0</td>
                                                                     <td v-else>{{ parseFloat(item.sell_price) - (
                                                                         (parseFloat(item.quantity) * parseFloat(item.price)
                                                                         ) + (parseFloat(item.packaging_cost) +
-                                                                            parseFloat(item.courier_cost))) }}</td>
+                                                                            parseFloat(item.courier_cost))) - (parseFloat(item.subtotal_tax) + parseFloat(item.shipping_tax)) }}</td>
                                                                     <!-- <td v-if="details.is_replacement == 1">0</td>
                                                                     <td v-else>
                                                                         {{
