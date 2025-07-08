@@ -29,6 +29,7 @@ use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
 use App\Http\Controllers\Pages\EmailTemplateController;
+use App\Http\Controllers\Pages\NotificationController;
 use App\Http\Controllers\Report\FisReportController;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Product\Variation\ProductVariation;
@@ -193,21 +194,19 @@ Route::prefix('accounts')->group(function () {
 
 });
 
-Route::group(['prefix' => '/couriers', 'middleware' => 'auth'], function () {
-    Route::get('/', [CourierController::class, 'index'])->name('couriers');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/couriers', [CourierController::class, 'index'])->name('couriers');
+    Route::get('/email-templates', [EmailTemplateController::class, 'index'])->name('email_template');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notification');
 });
 
-Route::group(['prefix' => '/email-templates', 'middleware' => 'auth'], function () {
-    Route::get('/', [EmailTemplateController::class, 'index'])->name('email_template');
-});
 
-
-
-Route::get('/update-produt-cost', function(){
-    $orders = Order::select('id', 'total_bill', 'product_cost', 'courier_service_price', 'packaging_price')->get();
-    foreach( $orders as $order){
-        $order->update([
-            'product_cost' => $order->total_bill - ( $order->courier_service_price + $order->packaging_price)
-        ]);
-    }
-});
+// Route::get('/update-produt-cost', function(){
+//     $orders = Order::select('id', 'total_bill', 'product_cost', 'courier_service_price', 'packaging_price')->get();
+//     foreach( $orders as $order){
+//         $order->update([
+//             'product_cost' => $order->total_bill - ( $order->courier_service_price + $order->packaging_price)
+//         ]);
+//     }
+// });

@@ -238,7 +238,7 @@
         </ul>
     </li>
 
-    <li class="dropdown {{ request()->routeIs('inventory.products.moq', 'inventory.products.shipping_classes', 'couriers', 'packaging.class', 'inventory.products.other_charges', 'email_template') ? 'active' : '' }}">
+    <li class="dropdown {{ request()->routeIs('inventory.products.moq', 'inventory.products.shipping_classes', 'couriers', 'packaging.class', 'inventory.products.other_charges', 'email_template', 'notification') ? 'active' : '' }}">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-cog"></i>
             <span>Setting's</span>
         </a>
@@ -277,6 +277,12 @@
                 <a class="nav-link {{ request()->routeIs('email_template') ? 'active' : '' }}"
                     href="{{ route('email_template') }}">
                     <i data-feather="file-text"></i>Email Templates
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->routeIs('notification') ? 'active' : '' }}"
+                    href="{{ route('notification') }}">
+                    <i data-feather="file-text"></i> Notifications
                 </a>
             </li>
         </ul>

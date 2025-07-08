@@ -36,6 +36,7 @@ use App\Http\Controllers\Inventory\Setting\ProductOtherChargesController;
 use App\Http\Controllers\Inventory\Store\CourierReturnController;
 use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
 use App\Http\Controllers\Pages\EmailTemplateController;
+use App\Http\Controllers\Pages\NotificationController;
 use App\Http\Controllers\Report\FisReportController;
 use App\Http\Controllers\User\DashboardController;
 use App\Http\Controllers\User\DropshipperPreviewController;
@@ -147,9 +148,16 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
         Route::group(['prefix' => 'email-templates'], function(){
             Route::get('/',  [ EmailTemplateController::class , 'fectTemplates']);
             Route::post('/',  [ EmailTemplateController::class , 'store']);
-            Route::post('/update',  [ EmailTemplateController::class , 'helpCenterPageSettingUpdate']);
+            Route::post('/update',  [ EmailTemplateController::class , 'update']);
 
             Route::post('/send-test-mail',  [ EmailTemplateController::class , 'sendTestMail']);
+        });
+
+        Route::group(['prefix' => 'notifications'], function(){
+            Route::get('/',  [ NotificationController::class , 'fectPublicNotification']);
+            Route::post('/',  [ NotificationController::class , 'store']);
+            Route::post('/update',  [ NotificationController::class , 'update']);
+            Route::post('/delete',  [ NotificationController::class , 'delete']);
         });
     });
 });

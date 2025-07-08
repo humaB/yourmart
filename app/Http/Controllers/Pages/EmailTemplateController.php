@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Mail;
 
 class EmailTemplateController extends Controller
 {
+    public function __construct()
+    {
+
+    }
+
     public function index(Request $request)
     {
         return view('pages.email_template_page');
@@ -36,7 +41,7 @@ class EmailTemplateController extends Controller
         return response()->json(['message' => 'Email Template saved successfully!'], 200);
     }
 
-    public function helpCenterPageSettingUpdate( Request $request )
+    public function update( Request $request )
     {
         EmailTemplate::where("id",$request->id)->update([
             'type'        => $request->type,

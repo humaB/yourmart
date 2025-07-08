@@ -42,6 +42,7 @@ Vue.component('ticket-page', require('./pages/TicketPage.vue').default );
 Vue.component('profile-setting-page', require('./pages/setting/ProfileSettingPage.vue').default );
 
 Vue.component('email-template-page', require('./pages/pages/EmailTemplatePage.vue').default );
+Vue.component('notification-page', require('./pages/pages/NotificationPage.vue').default );
 
 //Reports
 Vue.component('fis-report-page', require('./pages/reports/FisReportsPage.vue').default );
