@@ -18,6 +18,7 @@ class OrderItem extends Model
         'subtotal_tax',
         'sell_price',
         'packaging_cost',
+        'tax_on_profit',
         'courier_cost',
         'discount',
         'belongs_to'
