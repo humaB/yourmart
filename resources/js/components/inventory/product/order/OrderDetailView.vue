@@ -355,123 +355,141 @@
                                                 <div class="card-header">
                                                     <h5>Items</h5>
                                                 </div>
-                                                <div class="card-body">
-                                                    <table class="table table-bordered" id="products_items_table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th></th>
-                                                                <th>Product</th>
-                                                                <th>Item Price</th>
-                                                                <th>Quantity</th>
-                                                                <th>Total Price</th>
-                                                                <th>Packing Price</th>
-                                                                <th>Shipping</th>
-                                                                <th>Total Cost</th>
-                                                                <th>Sell Price</th>
-                                                                <th>Total Payable</th>
-                                                                <!-- <th>Net Profit</th> -->
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr v-for="item in details.items" :key="item.id">
-                                                                <td class="text-truncate" v-if="item.variation">
-                                                                    <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                                        <li class="team-member team-member-sm">
-                                                                            <a v-if="item.variation.images?.[0]?.attachment?.attachment"
-                                                                                :href="getImageUrl(item.variation.images[0].attachment.attachment)"
-                                                                                target="_blank">
-                                                                                <img class="rounded-circle"
-                                                                                    :src="getImageUrl(item.variation.images[0].attachment.attachment)">
-                                                                            </a>
+                                                <div class="card-body row">
+                                                    <div class="col-md-12 table-responsive">
+                                                        <table class="table table-bordered" id="products_items_table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th></th>
+                                                                    <th>Product</th>
+                                                                    <th>Item Price</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Total Price</th>
+                                                                    <th>Packing Price</th>
+                                                                    <th>Shipping</th>
+                                                                    <th>Total Cost</th>
+                                                                    <th>Sell Price</th>
+                                                                    <th>Total Tax</th>
+                                                                    <th>Total Payable</th>
+                                                                    <!-- <th>Net Profit</th> -->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="item in details.items" :key="item.id">
+                                                                    <td class="text-truncate" v-if="item.variation">
+                                                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                                            <li class="team-member team-member-sm">
+                                                                                <a v-if="item.variation.images?.[0]?.attachment?.attachment"
+                                                                                    :href="getImageUrl(item.variation.images[0].attachment.attachment)"
+                                                                                    target="_blank">
+                                                                                    <img class="rounded-circle"
+                                                                                        :src="getImageUrl(item.variation.images[0].attachment.attachment)">
+                                                                                </a>
 
-                                                                        </li>
-                                                                    </ul>
-                                                                </td>
-                                                                <td v-else>
-                                                                    -
-                                                                </td>
-                                                                <td v-if="item.variation">
-                                                                    <b>SKU : </b>{{ item.variation.sku }}<br>
-                                                                    <b>Title : </b>{{ item.variation.product.title
-                                                                    }}<br>
-                                                                    <b>Description : </b>{{
-                                                                        item.variation.product.short_description }}<br>
-                                                                    <b>Color : </b>{{ item.variation.color
-                                                                        ? item.variation.color.name : '-' }}<br>
-                                                                    <b>Size : </b>{{ item.variation.size
-                                                                        ? item.variation.size.name : '-' }}
-                                                                </td>
-                                                                <td v-else>
-                                                                    Packing Only
-                                                                </td>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </td>
+                                                                    <td v-else>
+                                                                        -
+                                                                    </td>
+                                                                    <td v-if="item.variation">
+                                                                        <b>SKU : </b>{{ item.variation.sku }}<br>
+                                                                        <b>Title : </b>{{ item.variation.product.title
+                                                                        }}
 
-                                                                <td>{{ parseFloat(item.price) }}</td>
-                                                                <td>{{ item.quantity }}</td>
-                                                                <td>{{ parseFloat(item.quantity) * (
-                                                                    parseFloat(item.price)) }}</td>
-                                                                <td>{{ item.packaging_cost }}</td>
-                                                                <td>{{ item.courier_cost }}</td>
-                                                                <td>{{ (parseFloat(item.quantity) *
-                                                                    parseFloat(item.price)) +
-                                                                    (parseFloat(item.packaging_cost) +
-                                                                        parseFloat(item.courier_cost)) }}</td>
+                                                                        <!-- <b>Description : </b>{{
+                                                                            item.variation.product.short_description }}<br>
+                                                                        <b>Color : </b>{{ item.variation.color
+                                                                            ? item.variation.color.name : '-' }}<br>
+                                                                        <b>Size : </b>{{ item.variation.size
+                                                                            ? item.variation.size.name : '-' }} -->
+                                                                    </td>
+                                                                    <td v-else>
+                                                                        Packing Only
+                                                                    </td>
 
-                                                                <td v-if="details.is_replacement == 1">0</td>
-                                                                <td v-else>{{ item.sell_price }}</td>
+                                                                    <td>{{ parseFloat(item.price) }}</td>
+                                                                    <td>{{ item.quantity }}</td>
+                                                                    <td>{{ parseFloat(item.quantity) * (
+                                                                        parseFloat(item.price)) }}</td>
+                                                                    <td>{{ item.packaging_cost }}</td>
+                                                                    <td>{{ item.courier_cost }}</td>
+                                                                    <td>{{ (parseFloat(item.quantity) *
+                                                                        parseFloat(item.price)) +
+                                                                        (parseFloat(item.packaging_cost) +
+                                                                            parseFloat(item.courier_cost)) }}</td>
 
-                                                                <td v-if="details.is_replacement == 1">0</td>
-                                                                <td v-else>{{ parseFloat(item.sell_price) - (
-                                                                    (parseFloat(item.quantity) * parseFloat(item.price)
-                                                                    ) + (parseFloat(item.packaging_cost) +
-                                                                        parseFloat(item.courier_cost))) }}</td>
-                                                                <!-- <td v-if="details.is_replacement == 1">0</td>
-                                                                <td v-else>
-                                                                    {{
-                                                                      parseFloat(item.sell_price) === (
-                                                                        (parseFloat(item.quantity) * parseFloat(item.price))
-                                                                        + parseFloat(item.packaging_cost)
-                                                                        + parseFloat(item.courier_cost)
-                                                                      )
-                                                                      ? 0
-                                                                      : (
-                                                                          parseFloat(item.sell_price)
-                                                                          - (
-                                                                              (parseFloat(item.quantity) * parseFloat(item.price))
-                                                                              + parseFloat(item.packaging_cost)
-                                                                              + parseFloat(item.courier_cost)
-                                                                              + (
-                                                                                (parseFloat(details.advance_amount) / (parseFloat(details.total_bill) - (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))))
-                                                                                * (parseFloat(item.price) * parseFloat(item.quantity))
-                                                                              )
-                                                                            )
-                                                                        ).toFixed(0)
-                                                                    }}
-                                                                  </td> -->
+                                                                    <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td v-else>{{ item.sell_price }}</td>
 
-                                                            </tr>
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <tr>
-                                                                <td></td>
-                                                                <td><b>Total</b></td>
-                                                                <td><!-- Total quantity (if needed) --></td>
-                                                                <td><!-- Total quantity (if needed) --></td>
-                                                                <td class="h5">{{ totalPrice }}</td>
-                                                                <td class="h5">{{ totalPackagingCost }}</td>
-                                                                <td class="h5">{{ totalCourierCost }}</td>
-                                                                <td class="h5">{{ totalBasePrice }}</td>
+                                                                    <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td v-else>{{ parseFloat(item.subtotal_tax) - parseFloat(item.shipping_tax) }}</td>
 
-                                                                <td v-if="details.is_replacement == 1">0</td>
-                                                                <td v-else class="h5">{{ totalSellPrice }}</td>
+                                                                    <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td v-else>{{ parseFloat(item.sell_price) - (
+                                                                        (parseFloat(item.quantity) * parseFloat(item.price)
+                                                                        ) + (parseFloat(item.packaging_cost) +
+                                                                            parseFloat(item.courier_cost))) }}</td>
+                                                                    <!-- <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td v-else>
+                                                                        {{
+                                                                          parseFloat(item.sell_price) === (
+                                                                            (parseFloat(item.quantity) * parseFloat(item.price))
+                                                                            + parseFloat(item.packaging_cost)
+                                                                            + parseFloat(item.courier_cost)
+                                                                          )
+                                                                          ? 0
+                                                                          : (
+                                                                              parseFloat(item.sell_price)
+                                                                              - (
+                                                                                  (parseFloat(item.quantity) * parseFloat(item.price))
+                                                                                  + parseFloat(item.packaging_cost)
+                                                                                  + parseFloat(item.courier_cost)
+                                                                                  + (
+                                                                                    (parseFloat(details.advance_amount) / (parseFloat(details.total_bill) - (parseFloat(details.courier_service_price) + parseFloat(details.packaging_price))))
+                                                                                    * (parseFloat(item.price) * parseFloat(item.quantity))
+                                                                                  )
+                                                                                )
+                                                                            ).toFixed(0)
+                                                                        }}
+                                                                      </td> -->
 
-                                                                <td v-if="details.is_replacement == 1">0</td>
-                                                                <td class="h5" v-else>{{ totalPaybale }}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td><b>Total</b></td>
+                                                                    <td><!-- Total quantity (if needed) --></td>
+                                                                    <td><!-- Total quantity (if needed) --></td>
+                                                                    <td class="h5">{{ totalPrice }}</td>
+                                                                    <td class="h5">{{ totalPackagingCost }}</td>
+                                                                    <td class="h5">{{ totalCourierCost }}</td>
+                                                                    <td class="h5">{{ totalBasePrice }}</td>
 
-                                                                <!-- <td v-if="details.is_replacement == 1">0</td>
-                                                                <td v-else class="h5">{{ totalNetProfit }}</td> -->
-                                                            </tr>
-                                                        </tfoot>
-                                                    </table>
+                                                                    <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td v-else class="h5">{{ totalSellPrice }}</td>
+
+                                                                    <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td class="h5" v-else>{{ totalTax }}</td>
+
+                                                                    <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td class="h5" v-else>{{ totalPaybale }}</td>
+
+                                                                    <!-- <td v-if="details.is_replacement == 1">0</td>
+                                                                    <td v-else class="h5">{{ totalNetProfit }}</td> -->
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="10" class="h5 text-right">Tax On Profit</td>
+                                                                    <td>{{ details.profit_tax }} </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan="10" class="h5 text-right">Balance</td>
+                                                                    <td> {{totalPaybale - details.profit_tax }} </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -1011,7 +1029,12 @@ export default {
         },
         totalPaybale() {
             return this.details && this.details.items ? this.details.items.reduce((total, item) => {
-                return total + (parseFloat(item.sell_price) - ((parseFloat(item.price) * item.quantity) + parseFloat(item.courier_cost) + parseFloat(item.packaging_cost)));
+                return total + (parseFloat(item.sell_price) - ((parseFloat(item.price) * item.quantity) + parseFloat(item.courier_cost) + parseFloat(item.packaging_cost)) - (parseFloat(item.subtotal_tax) + parseFloat(item.shipping_tax)));
+            }, 0).toFixed(0) : 0;
+        },
+        totalTax() {
+            return this.details && this.details.items ? this.details.items.reduce((total, item) => {
+                return total + (parseFloat(item.subtotal_tax) + parseFloat(item.shipping_tax));
             }, 0).toFixed(0) : 0;
         },
         totalNetProfit() {
