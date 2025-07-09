@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Models\Ticket;
 use App\Models\TicketMessage;
 use App\Models\Inventory\Order\Order;
@@ -93,6 +95,32 @@ class TicketController extends Controller
         Ticket::where("id",$request->ticketId)->update([
             "status" => $request->selectedStatus
         ]);
+
+        $link = env('MIX_WEB_URL').'tickets/'.$request->ticketId;
+
+        if( $request->selectedStatus == 'Closed'){
+            NotificationHelper::addNotification(
+                $title = 'Support Ticket Closed',
+                $message = "Your support ticket $request->ticketId has been closed. If you need further assistance, feel free to reach out.",
+                $link,
+                $image = null,
+                $directImage = null,
+                $color = 'orange',
+                $isPublic = 0,
+                $user = null
+            );
+        }else{
+            NotificationHelper::addNotification(
+                $title = 'Support Ticket Replied',
+                $message = "You’ve received a response to your support ticket $request->ticketId Please check for updates.",
+                $link,
+                $image = null,
+                $directImage = null,
+                $color = 'orange',
+                $isPublic = 0,
+                $user = null
+            );
+        }
 
         return response()->json(['message' => 'Message successfully added'], 201);
     }

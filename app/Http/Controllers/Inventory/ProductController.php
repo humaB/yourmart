@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Exports\ProductExport;
 use App\Helpers\SlugHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Models\Inventory\Product\Color;
@@ -219,10 +220,11 @@ class ProductController extends Controller
             }
 
             $userID = auth()->user()->id;
+            $slug = SlugHelper::generateSlug($request->title);
             // Create the product
             $product = Product::create([
                 'title' => $request->input('title'),
-                'slug' => SlugHelper::generateSlug($request->title),
+                'slug' => $slug,
                 'short_description'   => $request->input('shortDescription'),
                 'brand_id'            => $request->input('brand'),
                 'category_id'         => $request->input('category'),
@@ -391,6 +393,19 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+            $link = env('MIX_WEB_URL').'products/'.$slug;
+
+            NotificationHelper::addNotification(
+                $title = 'New Product Added',
+                $messge = "This product is now available: $request->title",
+                $link = $link,
+                $image = null,
+                $directImage = $request->input('heroImage'),
+                $color    = 'blue',
+                $isPublic = 0,
+                $user = null
+            );
         });
 
         return $lock;

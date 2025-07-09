@@ -91,7 +91,6 @@
                                     <select v-model="ticketFilter.status" class="border form-control" style="height: 50px">
                                         <option selected value="" disabled>Please Select Status</option>
                                         <option value="Awaiting Your Reply">Awaiting Your Reply</option>
-                                        <option value="Awaiting YourMart Reply">Awaiting YourMart Reply</option>
                                         <option value="Closed">Closed</option>
                                         <option value="Expired">Expired</option>
                                         <option value="Reviewed">Reviewed</option>

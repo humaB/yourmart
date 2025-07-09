@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Setting\HomePageSetting;
 use App\Models\Setting\LibraryPageSetting;
@@ -28,13 +29,27 @@ class LibraryPageController extends Controller
         $data = json_decode($request->data);
 
         // Create the record in the page_library_contents table
-        LibraryPageSetting::create([
+        $video = LibraryPageSetting::create([
             'name' => $data->name,
             'description' => $data->description,
             'attachment' => $this->image($request->image),  // Store the image path if available
             'video_links' => $data->video_links,
             'added_by' => auth()->user()->id, // Assuming you're using authentication
         ]);
+
+        $link = env('MIX_WEB_URL').'courses/'.$video->id;
+        foreach($data->video_links as $video){
+            NotificationHelper::addNotification(
+                $title = 'New Learning Video Added',
+                $messge = "Watch in: $data->name",
+                $link = $link,
+                $image = null,
+                $directImage = null,
+                $color    = 'blue',
+                $isPublic = 0,
+                $user = null
+            );
+        }
 
         return response()->json(['message' => 'Library page settings saved successfully!'], 200);
     }
@@ -45,12 +60,18 @@ class LibraryPageController extends Controller
         $data = json_decode($request->data);
 
         // Create the record in the page_library_contents table
-        LibraryPageSetting::where("id",$data->id)->update([
-            'name' => $data->name,
+        $library = LibraryPageSetting::where("id",$data->id)->first();
+
+        $newVideos = array_diff($data->video_links, $library->video_links);
+
+
+        $library->update([
+            'name'        => $data->name,
             'description' => $data->description,
             'video_links' => $data->video_links,
-            'added_by' => auth()->user()->id, // Assuming you're using authentication
+            'added_by'    => auth()->user()->id, // Assuming you're using authentication
         ]);
+
 
         if(isset($request->image))
         {
@@ -58,6 +79,20 @@ class LibraryPageController extends Controller
                 'attachment' => $this->image($request->image),  // Store the image path if available
             ]);
 
+        }
+
+        $link = env('MIX_WEB_URL').'courses/'.$data->id;
+        foreach($newVideos as $video){
+            NotificationHelper::addNotification(
+                $title = 'New Learning Video Added',
+                $messge = "Watch in: $data->name",
+                $link = $link,
+                $image = null,
+                $directImage = null,
+                $color    = 'blue',
+                $isPublic = 0,
+                $user = null
+            );
         }
 
         return response()->json(['message' => 'Library page settings saved successfully!'], 200);
