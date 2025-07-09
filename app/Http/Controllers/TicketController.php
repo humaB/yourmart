@@ -106,8 +106,8 @@ class TicketController extends Controller
                 $image = null,
                 $directImage = null,
                 $color = 'orange',
-                $isPublic = 0,
-                $user = null
+                $isPublic = 1,
+                $user = auth()->user()->id
             );
         }else{
             NotificationHelper::addNotification(
@@ -117,8 +117,8 @@ class TicketController extends Controller
                 $image = null,
                 $directImage = null,
                 $color = 'orange',
-                $isPublic = 0,
-                $user = null
+                $isPublic = 1,
+                $user = auth()->user()->id
             );
         }
 

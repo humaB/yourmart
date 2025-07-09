@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Log;
 
 class PostExApiHelper
 {
+    /*
+    *   FORMAT
+        {
+            'trackingNumber' : "",
+            'orderStatus' : ""
+        }
+    */
     private $token = 'ZWExMGNhYWFkYjM3NGM3MzhkZWZkN2M0M2M5YjhhZjU6MTY2ZjRiMmQ1YWVmNDkyOTg5OTE5NmUwMTkzNjdiYjg=';
     private $url = 'https://api.postex.pk/services/partnerintegration/api';
 
