@@ -92,7 +92,8 @@ class TicketController extends Controller
             'added_by' => auth()->user()->id
         ]);
 
-        Ticket::where("id",$request->ticketId)->update([
+        $ticket = Ticket::where("id",$request->ticketId)->first();
+        $ticket->update([
             "status" => $request->selectedStatus
         ]);
 
@@ -107,7 +108,7 @@ class TicketController extends Controller
                 $directImage = null,
                 $color = 'orange',
                 $isPublic = 1,
-                $user = auth()->user()->id
+                $user = $ticket->added_by
             );
         }else{
             NotificationHelper::addNotification(
@@ -118,7 +119,7 @@ class TicketController extends Controller
                 $directImage = null,
                 $color = 'orange',
                 $isPublic = 1,
-                $user = auth()->user()->id
+                $user = $ticket->added_by
             );
         }
 
