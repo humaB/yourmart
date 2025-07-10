@@ -13,6 +13,7 @@ use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class LeopardApiHelper
 {
@@ -176,6 +177,7 @@ class LeopardApiHelper
             return strtotime($a['activity_date']) <=> strtotime($b['activity_date']);
         });
 
+        Log::info($request);
         foreach( $data as $order ){
 
             $detail = Order::with('range')->where('tracking_number', $order['cn_number'])->first();
@@ -196,12 +198,27 @@ class LeopardApiHelper
                     ]
                 );
 
+                $link = env('MIX_WEB_URL').'dropshipper/orders';
+
+                $order_no = substr($detail->shop->store_name, 0, 3) . '-' . $detail->order_no;
+
                 //If product is delivered
                 if( $status['label'] == 'Delivered' && $detail->status != '8'){
                     $this->parcelDelivered($detail);
                     $detail->update([
                         'status' => '8'
                     ]);
+
+                    NotificationHelper::addNotification(
+                        $title = 'Order Delivered',
+                        $messge = "Order $order_no has been delivered successfully.",
+                        $link = $link,
+                        $image = null,
+                        $directImage = null,
+                        $color    = 'green',
+                        $isPublic = 1,
+                        $user = $detail->belongs_to
+                    );
                 }
                   //If product is not delivered and returned
                 if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
@@ -213,6 +230,17 @@ class LeopardApiHelper
                     $detail->update([
                         'status' => '9'
                     ]);
+
+                    NotificationHelper::addNotification(
+                        $title = 'Order Returned',
+                        $messge = "Order $order_no is marked as returned by the courier.",
+                        $link = $link,
+                        $image = null,
+                        $directImage = null,
+                        $color    = 'red',
+                        $isPublic = 1,
+                        $user = $detail->belongs_to
+                    );
                 }
 
                 if( $order['status'] == 'AC'){
@@ -226,6 +254,17 @@ class LeopardApiHelper
                     $detail->update([
                         'status' => '12'
                     ]);
+
+                    NotificationHelper::addNotification(
+                        $title = 'Re-Attempt Request Active',
+                        $messge = "Order $order_no marked for re-attempt. Call customer and apply it.",
+                        $link = $link,
+                        $image = null,
+                        $directImage = null,
+                        $color    = 'orange',
+                        $isPublic = 1,
+                        $user = $detail->belongs_to
+                    );
                 }
             }
         }
