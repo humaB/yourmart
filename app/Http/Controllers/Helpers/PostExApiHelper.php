@@ -276,7 +276,7 @@ class PostExApiHelper
                 ]);
             }
         }
-
+        return $request;
         Log::info($request);
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
 
