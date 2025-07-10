@@ -192,6 +192,7 @@
                     </div>
 
                 <div class="modal-footer">
+                    <button class="btn btn-warning" data-toggle="modal" data-target="#invalidBank">In-valid Bank</button>
                     <button type="button" class="btn btn-primary" @click="add()" v-if="!loader">Add Payment</button>
                     <button type="button" class="btn btn-primary btn-progress disabled" v-else>Add Payment</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -202,6 +203,8 @@
 </template>
 
 <script>
+import { invalid } from 'moment';
+
 export default {
     name: 'DropshipperPayment',
     props: ['orders', 'addData', 'loader','accountCash','accountBanks', 'details', 'reservedAmount'],

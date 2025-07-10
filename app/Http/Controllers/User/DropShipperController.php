@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Http\Resources\ResponseCollection;
 use App\Mail\DropshipperDecision;
 use App\Models\Account\Bank;
@@ -544,6 +545,23 @@ class DropShipperController extends Controller
             ->setStatusCode(200);
     }
 
+    public function invalidBankNotification( Request $request ){
+        $dropshipper = DropShipper::find($request->id);
+
+        $link = env('MIX_WEB_URL').'new-ticket';
+
+        NotificationHelper::addNotification(
+            $title = 'Invalid Bank Details',
+            $messge = "Your current bank details are not valid. Please raise a ticket to update your bank details.",
+            $link = $link,
+            $image = null,
+            $directImage = null,
+            $color    = 'orange',
+            $isPublic = 1,
+            $user = $dropshipper->user_id
+        );
+    }
+
     public function paymentData(Request $request)
     {
         $banks = Bank::join('account_heads', 'banks.account_head_id', 'account_heads.id')
@@ -752,6 +770,20 @@ class DropShipperController extends Controller
 
         // Bank Cash Credit
         $ledger->accountTransaction($request->from_account, $head_id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
+
+        $link = env('MIX_WEB_URL').'dropshipper/orders';
+        $type = $request->type == 'cash' ? 'CP' : 'BP';
+
+        NotificationHelper::addNotification(
+            $title = 'Payout Sent',
+            $messge = "Your payout Receipt # $type-$document has been sent successfully.",
+            $link = $link,
+            $image = null,
+            $directImage = null,
+            $color    = 'green',
+            $isPublic = 1,
+            $user = $dropshipper->user_id
+        );
 
         return response()->json([], 200);
     }

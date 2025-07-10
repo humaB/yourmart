@@ -526,6 +526,11 @@
             @markasReplacementConfirmation="markasReplacementConfirmation($event)"
         />
 
+        <DropshipperInvalidBankConfirmation
+            :loader="markasReplacementLoader"
+            @markasInValid="markasInValid($event)"
+        />
+
         <!-- Summary PRINT -->
         <form method="POST" :action="public_url + '/requests/dropshippers/pdf'" target="_blank" ref="requestForm">
             <input type="hidden" name="_token" :value="csrf">
@@ -544,7 +549,7 @@ import DropshipperPaymentHistory from "../../../components/admin/request/Dropshi
 import TrackingDetailPopup from "../../../components/inventory/product/order/TrackingDetailPopup.vue";
 import OrderDetailView from "../../../components/inventory/product/order/OrderDetailView.vue";
 import OrderMarkasReplacementConfirmation from "../../../components/inventory/product/order/OrderMarkasReplacementConfirmation.vue";
-import { filter } from "lodash";
+import DropshipperInvalidBankConfirmation from "../../../components/admin/request/DropshipperInvalidBankConfirmation.vue";
 
 export default {
     name: 'DropShipperPayOutPage',
@@ -556,7 +561,8 @@ export default {
         DropshipperPaymentHistory,
         TrackingDetailPopup,
         OrderDetailView,
-        OrderMarkasReplacementConfirmation
+        OrderMarkasReplacementConfirmation,
+        DropshipperInvalidBankConfirmation
     },
     data() {
         return {
@@ -724,6 +730,24 @@ export default {
                     return swal({
                         title: "Success",
                         text: "Marked as Replacement Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
+        markasInValid(){
+            let vm = this;
+            vm.markasReplacementLoader = true;
+            axios
+                .post(this.api_url + "dropshippers/invalid-bank", { id : this.selectedDropshipper })
+                .then((response) => {
+                    vm.markasReplacementLoader = false;
+
+                    $("#invalidBank").modal('hide');
+                    this.fetchDetail(this.orderID);
+                    return swal({
+                        title: "Success",
+                        text: "Notification Sent Successfully",
                         icon: "success",
                         timer: 3000,
                     });

@@ -105,6 +105,8 @@ Route::group(['prefix' => 'dropshippers','middleware' => 'auth:sanctum'], functi
 
     Route::post('/details',  [ DropShipperController::class , 'fetchDetails']);
 
+    Route::post('/invalid-bank',  [ DropShipperController::class , 'invalidBankNotification']);
+
     Route::post('/update-levels',  [ DropShipperController::class , 'updateLevels']);
     Route::group(['prefix' => 'levels'], function(){
         Route::post('/update-requirements',  [ DropShipperController::class , 'updateLevelRequirements']);

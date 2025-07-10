@@ -276,7 +276,7 @@ class PostExApiHelper
                 ]);
             }
         }
-        
+
         Log::info($request);
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
 
@@ -326,6 +326,26 @@ class PostExApiHelper
                     $isPublic = 1,
                     $user = $detail->belongs_to
                 );
+
+                //Check if balance is negative or not
+                $totalProfit = Order::where('belongs_to', $detail->belongs_to)->sum('total_profit');
+                $totalPaidProfit = Order::where('belongs_to', $detail->belongs_to)->sum('total_paid_profit');
+
+                $remainingProfit = $totalProfit - $totalPaidProfit;
+                if( $remainingProfit < 0 ){
+                    $link = env('MIX_WEB_URL').'new-ticket';
+
+                    NotificationHelper::addNotification(
+                        $title = 'Account Deactivated - Negative Balance',
+                        $messge = "Your account is deactivated due to negative balance of PKR $remainingProfit. Raise a ticket to reactivate. You can sign in but cannot place orders.",
+                        $link = $link,
+                        $image = null,
+                        $directImage = null,
+                        $color    = 'red',
+                        $isPublic = 1,
+                        $user = $detail->belongs_to
+                    );
+                }
             }
 
             //out for delivery
