@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Inventory\Order;
 use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helpers\LeopardApiHelper;
+use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Http\Controllers\Helpers\PostExApiHelper;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
@@ -95,7 +96,7 @@ class OrderController extends Controller
                 $dropshipper = DropShipper::where('id', $dropshipper)->first();
                 $dropshipper = $dropshipper->user_id ?? 0;
             }
-            
+
             $from = $request->from;
             $to = $request->to;
 
@@ -309,6 +310,22 @@ class OrderController extends Controller
             'added_by'        => auth()->user()->id
         ]);
 
+        $order = Order::find($request->id);
+        $link = env('MIX_WEB_URL').'dropshipper/orders';
+
+        $order_no = substr($order->shop->store_name, 0, 3) . '-' . $order->order_no;
+
+        NotificationHelper::addNotification(
+            $title = 'Order Dispatched',
+            $messge = "Order $order_no has been dispatched. Track via courier details.",
+            $link = $link,
+            $image = null,
+            $directImage = null,
+            $color    = 'blue',
+            $isPublic = 1,
+            $user = $order->belongs_to
+        );
+
         return ['message' => 'Order Dispatched'];
     }
 
@@ -438,6 +455,31 @@ class OrderController extends Controller
         }
 
         return ['message' => 'Marked as Not Delivered'];
+    }
+
+    public function markasHold( Request $request ){
+
+        $detail = Order::find($request->id);
+        $link = env('MIX_WEB_URL').'dropshipper/orders';
+
+        $order_no = substr($detail->shop->store_name, 0, 3) . '-' . $detail->order_no;
+
+        NotificationHelper::addNotification(
+            $title = 'Order On Hold — Action Required',
+            $messge = "Action needed on order $order_no",
+            $link = $link,
+            $image = null,
+            $directImage = null,
+            $color    = 'orange',
+            $isPublic = 1,
+            $user = $detail->belongs_to
+        );
+
+        OrderActivity::create([
+            'order_id'  => $request->id,
+            'activity'  => 'Order mark as hold',
+            'added_by'  => auth()->user()->id,
+        ]);
     }
 
     public function multipleActions(Request $request)
@@ -602,7 +644,7 @@ class OrderController extends Controller
             'inventory manager'          => 1,  // Role for inventory issuance
             'qc manager'                 => 2,         // Role for quality control
             'packing & dispatch manager' => 3,    // Role for packing and dispatch
-            'auditor' => 4   // Role for audit
+            'auditor'                    => 4   // Role for audit
         ];
 
         // Get current order status
@@ -760,6 +802,21 @@ class OrderController extends Controller
             }
         }
         if ($order->type != 'Cash') {
+             if( $order->status == '1'){
+                $link = env('MIX_WEB_URL').'dropshipper/orders';
+
+                $order_no = substr($order->shop->store_name, 0, 3) . '-' . $order->order_no;
+                NotificationHelper::addNotification(
+                    $title = 'Order Confirmed',
+                    $messge = "Order $order_no has been confirmed and is ready for dispatch.",
+                    $link = $link,
+                    $image = null,
+                    $directImage = null,
+                    $color    = 'green',
+                    $isPublic = 1,
+                    $user = $order->belongs_to
+                );
+            }
             $order->increment('status');
         } else {
             $order->update([
@@ -864,6 +921,22 @@ class OrderController extends Controller
                 $postEx = new PostExApiHelper();
                 $postEx->cancelOrder($order->tracking_number);
             }
+
+
+            $link = env('MIX_WEB_URL').'dropshipper/orders';
+
+            $order_no = substr($order->shop->store_name, 0, 3) . '-' . $order->order_no;
+
+            NotificationHelper::addNotification(
+                $title = 'Oops! Order Cancelled',
+                $messge = "Order $order_no is cancelled. Read comments in order details.",
+                $link = $link,
+                $image = null,
+                $directImage = null,
+                $color    = 'red',
+                $isPublic = 1,
+                $user = $order->belongs_to
+            );
 
             $order->update(['status' => '7']);
         } else {

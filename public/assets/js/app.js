@@ -2303,6 +2303,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         id: this.details.id
       });
     },
+    markAsHold: function markAsHold() {
+      this.$emit('markAsHold', {
+        id: this.details.id
+      });
+    },
     markAsBeingReturn: function markAsBeingReturn() {
       this.$emit('markAsBeingReturn', {
         id: this.details.id
@@ -15121,7 +15126,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection" || _vm.role == "admin" ? _c("button", {
+    staticClass: "btn btn-warning",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#markasHold"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markAsHold();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-pause-circle"
+  }), _vm._v(" Mark as Hold\n                        ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {

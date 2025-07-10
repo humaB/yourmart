@@ -254,7 +254,7 @@ import { BulletListLoader } from "vue-content-loader";
                 pendingDispatchs : [],
                 detail : '',
                 filter: {
-                    from: new Date().toISOString().substr(0, 10),
+                   from: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().substr(0, 10),
                     to: new Date().toISOString().substr(0, 10),
                     courier : ""
                 },
@@ -278,7 +278,7 @@ import { BulletListLoader } from "vue-content-loader";
             }
         },
         created(){
-            this.fetchPendingDispatchs({ from : null , to : null});
+            this.fetchPendingDispatchs(this.filter);
         },
         methods : {
             fetchTracking(id) {
@@ -308,7 +308,7 @@ import { BulletListLoader } from "vue-content-loader";
                     axios
                     .post(this.api_url + "inventory/products/orders/dispatched-scanned", scanned )
                     .then((response) => {
-                        this.fetchPendingDispatchs({ from : null , to : null});
+                        this.fetchPendingDispatchs(this.filter);
                         this.orderNumber = "";
                         vm.loader = false;
                         return swal({
@@ -319,7 +319,7 @@ import { BulletListLoader } from "vue-content-loader";
                         });
                     })
                 }else{
-                    vm.loader = false;
+                    this.loader = false;
                     return swal({
                         title: "Error",
                         text: 'No Order Found',
@@ -346,7 +346,7 @@ import { BulletListLoader } from "vue-content-loader";
                 if ($.fn.DataTable.isDataTable("#dispatched-order_table")) {
                     $('#dispatched-order_table').DataTable().destroy();
                 }
-                
+
                 axios
                 .post(this.api_url + "inventory/products/orders/pending-dispatchs", data)
                 .then((response) => {

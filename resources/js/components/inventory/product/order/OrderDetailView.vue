@@ -833,6 +833,12 @@
                                 <i class="fas fa-arrow-right"></i> Mark as Replacement
                             </button>
 
+                            <button class="btn btn-warning" data-toggle="modal" data-target="#markasHold"
+                                @click="markAsHold()"
+                                v-if="(role == 'order collection' || role == 'admin')">
+                                <i class="fas fa-pause-circle"></i> Mark as Hold
+                            </button>
+
                             <button class="btn btn-danger" @click="revertBack()"
                                 v-if="details.status > 0 && !revertLoader && role != 'supervisor'">
                                 <i class="fas fa-undo-alt"></i> Revert to Pre Step
@@ -1194,6 +1200,9 @@ export default {
         },
         markasReplacement() {
             this.$emit('markasReplacement', { id: this.details.id });
+        },
+        markAsHold() {
+            this.$emit('markAsHold', { id: this.details.id });
         },
         markAsBeingReturn() {
             this.$emit('markAsBeingReturn', { id: this.details.id });

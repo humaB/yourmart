@@ -571,6 +571,7 @@
             @markAsDelivered="markasReplacement($event)"
             @addDiscount="addDiscount($event)"
             @deleteComment="deleteComment($event)"
+            @markAsHold="markasReplacement($event)"
         />
 
         <DropshipperDetails :details="dropShipperDetails" />
@@ -612,6 +613,12 @@
             @markasNotDelivered="markasNotDelivered($event)"
         />
 
+        <OrderMarkasHoldConfirmation
+            :orderID="orderID"
+            :loader="markasReplacementLoader"
+            @markasHoldConfirmation="markasHoldConfirmation($event)"
+        />
+
     </div>
 </template>
 <script>
@@ -629,6 +636,7 @@ import OrderSelectedProductList from "../../../../components/inventory/product/o
 import OrderSelectedLabelPrint from "../../../../components/inventory/product/order/OrderSelectedLabelPrint.vue";
 import OrderReattempt from "../../../../components/inventory/product/order/OrderReattempt.vue";
 import OrderAdjustmentConfirmation from "../../../../components/inventory/product/order/OrderAdjustmentConfirmation.vue";
+import OrderMarkasHoldConfirmation from "../../../../components/inventory/product/order/OrderMarkasHoldConfirmation.vue";
 
 export default {
     name: 'ProductOrderPage',
@@ -644,7 +652,8 @@ export default {
         OrderSelectedProductList,
         OrderSelectedLabelPrint,
         OrderReattempt,
-        OrderAdjustmentConfirmation
+        OrderAdjustmentConfirmation,
+        OrderMarkasHoldConfirmation
     },
     data() {
         return {
@@ -1057,6 +1066,24 @@ export default {
                     return swal({
                         title: "Success",
                         text: "Marked as Delivered Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                });
+        },
+        markasHoldConfirmation() {
+            let vm = this;
+            vm.markasReplacementLoader = true;
+            axios
+            .post(this.api_url + "inventory/products/orders/mark-as-hold", { id: this.orderID })
+                .then((response) => {
+                    vm.markasReplacementLoader = false;
+
+                    $("#markasHold").modal('hide');
+                    this.fetchDetail(this.orderID);
+                    return swal({
+                        title: "Success",
+                        text: "Marked as Hold Successfully",
                         icon: "success",
                         timer: 3000,
                     });

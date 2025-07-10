@@ -1614,6 +1614,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         id: this.details.id
       });
     },
+    markAsHold: function markAsHold() {
+      this.$emit('markAsHold', {
+        id: this.details.id
+      });
+    },
     markAsBeingReturn: function markAsBeingReturn() {
       this.$emit('markAsBeingReturn', {
         id: this.details.id
@@ -1772,6 +1777,31 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     markasDeliveredConfirmation: function markasDeliveredConfirmation() {
       this.$emit('markasDeliveredConfirmation', {
+        id: this.orderID
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'OrderMarkasHoldConfirmation',
+  props: ['loader', 'orderID'],
+  methods: {
+    markasHoldConfirmation: function markasHoldConfirmation() {
+      this.$emit('markasHoldConfirmation', {
         id: this.orderID
       });
     }
@@ -3953,7 +3983,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
@@ -3967,6 +3997,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_inventory_product_order_OrderSelectedLabelPrint_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderSelectedLabelPrint.vue */ "./resources/js/components/inventory/product/order/OrderSelectedLabelPrint.vue");
 /* harmony import */ var _components_inventory_product_order_OrderReattempt_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderReattempt.vue */ "./resources/js/components/inventory/product/order/OrderReattempt.vue");
 /* harmony import */ var _components_inventory_product_order_OrderAdjustmentConfirmation_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderAdjustmentConfirmation.vue */ "./resources/js/components/inventory/product/order/OrderAdjustmentConfirmation.vue");
+/* harmony import */ var _components_inventory_product_order_OrderMarkasHoldConfirmation_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../../../components/inventory/product/order/OrderMarkasHoldConfirmation.vue */ "./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue");
+
 
 
 
@@ -3984,7 +4016,7 @@ __webpack_require__.r(__webpack_exports__);
   name: 'ProductOrderPage',
   components: {
     TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_12__.BulletListLoader,
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_13__.BulletListLoader,
     OrderDetailView: _components_inventory_product_order_OrderDetailView_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     OrderMarkasReplacementConfirmation: _components_inventory_product_order_OrderMarkasReplacementConfirmation_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
@@ -3994,7 +4026,8 @@ __webpack_require__.r(__webpack_exports__);
     OrderSelectedProductList: _components_inventory_product_order_OrderSelectedProductList_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
     OrderSelectedLabelPrint: _components_inventory_product_order_OrderSelectedLabelPrint_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
     OrderReattempt: _components_inventory_product_order_OrderReattempt_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
-    OrderAdjustmentConfirmation: _components_inventory_product_order_OrderAdjustmentConfirmation_vue__WEBPACK_IMPORTED_MODULE_11__["default"]
+    OrderAdjustmentConfirmation: _components_inventory_product_order_OrderAdjustmentConfirmation_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
+    OrderMarkasHoldConfirmation: _components_inventory_product_order_OrderMarkasHoldConfirmation_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
   },
   data: function data() {
     return {
@@ -4403,6 +4436,24 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
+    markasHoldConfirmation: function markasHoldConfirmation() {
+      var _this6 = this;
+      var vm = this;
+      vm.markasReplacementLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/mark-as-hold", {
+        id: this.orderID
+      }).then(function (response) {
+        vm.markasReplacementLoader = false;
+        $("#markasHold").modal('hide');
+        _this6.fetchDetail(_this6.orderID);
+        return swal({
+          title: "Success",
+          text: "Marked as Hold Successfully",
+          icon: "success",
+          timer: 3000
+        });
+      });
+    },
     fetchTracking: function fetchTracking(id) {
       var vm = this;
       axios.post(this.api_url + "inventory/products/orders/tracking", {
@@ -4441,11 +4492,11 @@ __webpack_require__.r(__webpack_exports__);
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
     updatePaidAmount: function updatePaidAmount(data) {
-      var _this6 = this;
+      var _this7 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data).then(function (response) {
-        _this6.fetchDetail(data.id);
+        _this7.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -4464,11 +4515,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addDiscount: function addDiscount(data) {
-      var _this7 = this;
+      var _this8 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/add-discount", data).then(function (response) {
-        _this7.fetchDetail(data.id);
+        _this8.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -4487,11 +4538,11 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updatePackagingAmount: function updatePackagingAmount(data) {
-      var _this8 = this;
+      var _this9 = this;
       var vm = this;
       vm.paidAmountLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data).then(function (response) {
-        _this8.fetchDetail(data.id);
+        _this9.fetchDetail(data.id);
         vm.paidAmountLoader = false;
         return swal({
           title: "Success",
@@ -4510,7 +4561,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     fetchOrders: function fetchOrders() {
-      var _this9 = this;
+      var _this10 = this;
       var vm = this;
       vm.loader = true;
       if ($.fn.DataTable.isDataTable("#moq_table")) {
@@ -4601,7 +4652,7 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
         setTimeout(function () {
-          _this9.dataTable();
+          _this10.dataTable();
         }, 300);
         vm.loader = false;
       });
@@ -4708,10 +4759,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deleteComment: function deleteComment(data) {
-      var _this10 = this;
+      var _this11 = this;
       var vm = this;
       axios.post(this.api_url + "inventory/products/orders/comments/delete", data).then(function (response) {
-        _this10.fetchDetail(data.id);
+        _this11.fetchDetail(data.id);
         return swal({
           title: "Success",
           text: "Comment deleted successfully",
@@ -4779,7 +4830,7 @@ __webpack_require__.r(__webpack_exports__);
       pendingDispatchs: [],
       detail: '',
       filter: {
-        from: new Date().toISOString().substr(0, 10),
+        from: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10),
         courier: ""
       },
@@ -4803,10 +4854,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    this.fetchPendingDispatchs({
-      from: null,
-      to: null
-    });
+    this.fetchPendingDispatchs(this.filter);
   },
   methods: {
     fetchTracking: function fetchTracking(id) {
@@ -4828,15 +4876,12 @@ __webpack_require__.r(__webpack_exports__);
         return order.tracking_number === _this.orderNumber;
       });
       if (scanned) {
-        var _vm = this;
-        _vm.loader = true;
+        var vm = this;
+        vm.loader = true;
         axios.post(this.api_url + "inventory/products/orders/dispatched-scanned", scanned).then(function (response) {
-          _this.fetchPendingDispatchs({
-            from: null,
-            to: null
-          });
+          _this.fetchPendingDispatchs(_this.filter);
           _this.orderNumber = "";
-          _vm.loader = false;
+          vm.loader = false;
           return swal({
             title: "Success",
             text: 'Order Dispatched',
@@ -4845,7 +4890,7 @@ __webpack_require__.r(__webpack_exports__);
           });
         });
       } else {
-        vm.loader = false;
+        this.loader = false;
         return swal({
           title: "Error",
           text: 'No Order Found',
@@ -10293,7 +10338,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection" || _vm.role == "admin" ? _c("button", {
+    staticClass: "btn btn-warning",
+    attrs: {
+      "data-toggle": "modal",
+      "data-target": "#markasHold"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markAsHold();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-pause-circle"
+  }), _vm._v(" Mark as Hold\n                        ")]) : _vm._e(), _vm._v(" "), _vm.details.status > 0 && !_vm.revertLoader && _vm.role != "supervisor" ? _c("button", {
     staticClass: "btn btn-danger",
     on: {
       click: function click($event) {
@@ -10780,6 +10838,98 @@ var staticRenderFns = [function () {
   }, [_c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Are you sure you want to mark this as delivered ?")]), _vm._v(" "), _c("code", [_vm._v("This will have impact on accounting")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "markasHold",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-labelledby": "markasHoldTitle",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-dialog-centered modal-lg",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content"
+  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "modal-footer"
+  }, [!_vm.loader ? _c("button", {
+    staticClass: "btn btn-danger",
+    attrs: {
+      type: "button"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.markasHoldConfirmation();
+      }
+    }
+  }, [_vm._v("Yes, Mark as Hold")]) : _c("button", {
+    staticClass: "btn btn-danger btn-progress disabled",
+    attrs: {
+      type: "button"
+    }
+  }, [_vm._v("Yes, Mark as Hold")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal"
+    }
+  }, [_vm._v("Close")])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-header"
+  }, [_c("h5", {
+    staticClass: "modal-title",
+    attrs: {
+      id: "exampleModalLongTitle"
+    }
+  }, [_vm._v("Confirmation")]), _vm._v(" "), _c("button", {
+    staticClass: "close",
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true"
+    }
+  }, [_vm._v("×")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "modal-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Are you sure you want to mark this as Hold")])])]);
 }];
 render._withStripped = true;
 
@@ -15210,6 +15360,9 @@ var render = function render() {
       },
       deleteComment: function deleteComment($event) {
         return _vm.deleteComment($event);
+      },
+      markAsHold: function markAsHold($event) {
+        return _vm.markasReplacement($event);
       }
     }
   }), _vm._v(" "), _c("DropshipperDetails", {
@@ -15276,6 +15429,16 @@ var render = function render() {
     on: {
       markasNotDelivered: function markasNotDelivered($event) {
         return _vm.markasNotDelivered($event);
+      }
+    }
+  }), _vm._v(" "), _c("OrderMarkasHoldConfirmation", {
+    attrs: {
+      orderID: _vm.orderID,
+      loader: _vm.markasReplacementLoader
+    },
+    on: {
+      markasHoldConfirmation: function markasHoldConfirmation($event) {
+        return _vm.markasHoldConfirmation($event);
       }
     }
   })], 1);
@@ -42479,6 +42642,45 @@ component.options.__file = "resources/js/components/inventory/product/order/Orde
 
 /***/ }),
 
+/***/ "./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _OrderMarkasHoldConfirmation_vue_vue_type_template_id_ecd0791c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c */ "./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c");
+/* harmony import */ var _OrderMarkasHoldConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js */ "./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrderMarkasHoldConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrderMarkasHoldConfirmation_vue_vue_type_template_id_ecd0791c__WEBPACK_IMPORTED_MODULE_0__.render,
+  _OrderMarkasHoldConfirmation_vue_vue_type_template_id_ecd0791c__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue":
 /*!************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue ***!
@@ -43526,6 +43728,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasHoldConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasHoldConfirmation_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue?vue&type=script&lang=js":
 /*!************************************************************************************************************************!*\
   !*** ./resources/js/components/inventory/product/order/OrderMarkasReplacementConfirmation.vue?vue&type=script&lang=js ***!
@@ -44096,6 +44314,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasDeliveredConfirmation_vue_vue_type_template_id_44c2286b__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasDeliveredConfirmation_vue_vue_type_template_id_44c2286b__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderMarkasDeliveredConfirmation.vue?vue&type=template&id=44c2286b */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasDeliveredConfirmation.vue?vue&type=template&id=44c2286b");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c":
+/*!***********************************************************************************************************************!*\
+  !*** ./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c ***!
+  \***********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasHoldConfirmation_vue_vue_type_template_id_ecd0791c__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasHoldConfirmation_vue_vue_type_template_id_ecd0791c__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrderMarkasHoldConfirmation_vue_vue_type_template_id_ecd0791c__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/inventory/product/order/OrderMarkasHoldConfirmation.vue?vue&type=template&id=ecd0791c");
 
 
 /***/ }),

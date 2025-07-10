@@ -331,6 +331,7 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/mark-as-being-return',  [ OrderController::class , 'markasBeingReturn']);
             Route::post('/mark-as-delivered',  [ OrderController::class , 'markasDelivered']);
             Route::post('/mark-as-not-delivered',  [ OrderController::class , 'markasNotDelivered']);
+            Route::post('/mark-as-hold',  [ OrderController::class , 'markasHold']);
 
             Route::post('/actions',  [ OrderController::class , 'multipleActions']);
         });

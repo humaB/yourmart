@@ -281,6 +281,9 @@ class PostExApiHelper
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
 
             $status = $this->shipmentStatuses[$order['orderStatus']];
+            $link = env('MIX_WEB_URL').'dropshipper/orders';
+
+            $order_no = substr($detail->shop->store_name, 0, 3) . '-' . $detail->order_no;
 
             //If product is delivered
             if ($status['label'] == 'Delivered' && $detail->status != '8') {
@@ -289,6 +292,17 @@ class PostExApiHelper
                 $detail->update([
                     'status' => '8'
                 ]);
+
+                NotificationHelper::addNotification(
+                    $title = 'Order Delivered',
+                    $messge = "Order $order_no has been delivered successfully.",
+                    $link = $link,
+                    $image = null,
+                    $directImage = null,
+                    $color    = 'green',
+                    $isPublic = 1,
+                    $user = $detail->belongs_to
+                );
             }
 
             //If product is not delivered and returned
@@ -301,6 +315,17 @@ class PostExApiHelper
                 $detail->update([
                     'status' => '9'
                 ]);
+
+                NotificationHelper::addNotification(
+                    $title = 'Order Returned',
+                    $messge = "Order $order_no is marked as returned by the courier.",
+                    $link = $link,
+                    $image = null,
+                    $directImage = null,
+                    $color    = 'red',
+                    $isPublic = 1,
+                    $user = $detail->belongs_to
+                );
             }
 
             //out for delivery
@@ -315,6 +340,17 @@ class PostExApiHelper
                 $detail->update([
                     'status' => '12'
                 ]);
+
+                NotificationHelper::addNotification(
+                    $title = 'Re-Attempt Request Active',
+                    $messge = "Order $order_no marked for re-attempt. Call customer and apply it.",
+                    $link = $link,
+                    $image = null,
+                    $directImage = null,
+                    $color    = 'orange',
+                    $isPublic = 1,
+                    $user = $detail->belongs_to
+                );
             }
 
             OrderLeopardStatus::updateOrCreate(
