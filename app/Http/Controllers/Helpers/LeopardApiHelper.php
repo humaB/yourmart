@@ -366,7 +366,7 @@ class LeopardApiHelper
         //Sale Credit
         $ledger->accountTransaction(74, $mainAccount, 0, $productPrice + $packingCharges + $courierExtraCharges, 'Product + Packaging Cost', $document, 'JV', 'order', $order->id, $approved = 1);
         //leopard Credit
-        $ledger->accountTransaction(73, $mainAccount, 0, $courierCharges - $courierExtraCharges, 'Courier Cost', $document, 'JV', 'order', $order->id, $approved = 1);
+        $ledger->accountTransaction(73, $mainAccount, 0, ($courierCharges - $courierExtraCharges) + ($order->shipping_tax + $order->subtotal_tax), 'Courier Cost & Tax', $document, 'JV', 'order', $order->id, $approved = 1);
 
         //Advance payment Entry if
         /*

@@ -18,8 +18,12 @@ class PostExApiHelper
     /*
     *   FORMAT
         {
-            'trackingNumber' : "",
-            'orderStatus' : ""
+            'trackingNumber' => '21142430000415',
+            'orderReferenceNumber' => 'Asm-UpT-1012',
+            'statusUpdateDatetime' => '2025-05-09 16:50:16.0',
+            'orderStatus' => 'Unbooked',
+            'returnRequested' => false,
+            'lastAttemptReason' => NULL,
         }
     */
     private $token = 'ZWExMGNhYWFkYjM3NGM3MzhkZWZkN2M0M2M5YjhhZjU6MTY2ZjRiMmQ1YWVmNDkyOTg5OTE5NmUwMTkzNjdiYjg=';
@@ -274,6 +278,7 @@ class PostExApiHelper
         }
 
         if (isset($this->shipmentStatuses[$order['orderStatus']]) && $detail && $detail->status != 8 && $detail->status != 9) {
+
             $status = $this->shipmentStatuses[$order['orderStatus']];
 
             //If product is delivered
