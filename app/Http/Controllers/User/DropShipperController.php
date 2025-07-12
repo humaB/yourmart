@@ -280,6 +280,22 @@ class DropShipperController extends Controller
                 'level'          => $sellerLevel, // New Seller || Level 01 || Level 02 || Level 03 || Top Rated Seller
                 'is_completed'   => $sellerLevel == 'New Seller' ? '1' : '0', // 0 => Not Complete || 1 => Completed
             ]);
+            if( $sellerLevel == 'Top Rated Seller'){
+                $message = "Congrats! You've been promoted to $sellerLevel Keep selling.";
+            }else{
+                $message = "Congrats! You've been promoted to $sellerLevel Seller Keep selling to reach Top Rated Seller status.";
+            }
+
+            NotificationHelper::addNotification(
+                $title = 'You Leveled Up!',
+                $messge = $message,
+                $link = null,
+                $image = null,
+                $directImage = null,
+                $color    = 'blue',
+                $isPublic = 1,
+                $user = $dropshipper->user_id
+            );
 
             $requirementArray = $this->getRequirementArray($sellerLevel);
 

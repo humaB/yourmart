@@ -14,7 +14,7 @@ use App\Http\Controllers\Auth\AuthController;
 class LoginController extends Controller
 {
     public function index(){
-        
+
         if ( Auth::check() ) {
             if(auth()->user()->role == 'admin' || auth()->user()->role == 'supervisor'){
                 return view('dashboard');
