@@ -157,10 +157,10 @@
                                                                             }}</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td><strong>Courier Charges:</strong></td>
+                                                                            <td><strong>Courier Charges + Our Charges:</strong></td>
                                                                             <td class="text-left">{{
-                                                                                formatPrice(details.courier_service_price)
-                                                                                }}</td>
+                                                                                formatPrice(details.courier_service_price - details.courier_service_internal_price)
+                                                                                }} + {{ formatPrice(details.courier_service_internal_price) }} = {{ formatPrice(details.courier_service_price) }}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Packing Charges:</strong></td>
@@ -320,7 +320,6 @@
                                                                 <table class="table table-bordered table-sm">
                                                                     <tbody>
                                                                         <tr>
-
                                                                             <td><strong>COD + Advance : </strong></td>
                                                                             <td class="h5">{{ formatPrice(
                                                                                 parseFloat(details.selling_price) +
@@ -340,6 +339,45 @@
                                                                             <td class="h5">{{  (parseFloat(details.selling_price) +
                                                                                 parseFloat(details.advance_amount)) -
                                                                                 (parseFloat(details.total_bill) + parseFloat(details.profit_tax)) }}</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+
+                                                                   <div class="col-md-12" v-if="details.type == 'Normal'">
+                                                                <h6>Overall Tax Stats</h6>
+                                                                <table class="table table-bordered table-sm">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td><strong>4% of COD</strong></td>
+                                                                            <td><strong>2% Sales Tax on COD</strong></td>
+                                                                            <td><strong>Product Tax</strong></td>
+                                                                            <td><strong>Courier Tax</strong></td>
+                                                                            <td><strong>Profit Tax</strong></td>
+                                                                            <td><strong>Total Tax Charged</strong></td>
+                                                                            <td><strong>Profit on Courier</strong></td>
+                                                                            <td><strong>Net Impact</strong></td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td class="h5">{{ formatPrice((parseFloat(details.selling_price)) * 0.04) }}</td>
+                                                                            <td class="h5">{{ formatPrice((parseFloat(details.selling_price)) * 0.02) }}
+                                                                            <td class="h5">{{ formatPrice(details.subtotal_tax) }}</td>
+                                                                            <td class="h5">{{ details.shipping_tax }}</td>
+                                                                            <td class="h5">{{ details.profit_tax }}</td>
+                                                                            <td class="h5">{{ formatPrice(details.profit_tax +  details.shipping_tax + details.subtotal_tax) }}</td>
+                                                                            <td class="h5">{{ formatPrice(details.courier_service_internal_price) }}</td>
+                                                                           <td class="h5">
+                                                                                {{ formatPrice(
+                                                                                    (
+                                                                                    parseFloat(details.profit_tax) +
+                                                                                    parseFloat(details.shipping_tax) +
+                                                                                    parseFloat(details.subtotal_tax) +
+                                                                                    parseFloat(details.courier_service_internal_price)
+                                                                                    ) - (
+                                                                                    (parseFloat(details.selling_price)) * 0.04
+                                                                                    )
+                                                                                ) }}
+                                                                            </td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>

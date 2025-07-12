@@ -15,11 +15,12 @@ class OrderItem extends Model
         'product_variation_id',
         'price',
         'quantity',
-        'subtotal_tax',
+        'subtotal_tax', // Product Tax
         'sell_price',
         'packaging_cost',
         'tax_on_profit',
         'courier_cost',
+        'shipping_tax',
         'discount',
         'belongs_to'
     ];

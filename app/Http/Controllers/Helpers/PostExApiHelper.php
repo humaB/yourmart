@@ -263,6 +263,7 @@ class PostExApiHelper
     {
         $order = $request;
 
+
         $detail = Order::with('range')->where('tracking_number', trim($order['trackingNumber']))->first();
 
         if( $detail && $detail->status == 8 ){
@@ -284,9 +285,58 @@ class PostExApiHelper
             $link = env('MIX_WEB_URL').'dropshipper/orders';
 
             $order_no = substr($detail->shop->store_name, 0, 3) . '-' . $detail->order_no;
+            $trackingNumber = $order['trackingNumber'];
 
             //If product is delivered
             if ($status['label'] == 'Delivered' && $detail->status != '8') {
+
+                $response = Http::withHeaders([
+                    'token' => $this->token,
+                ])->get($this->url . "/payment/cpr/order/$trackingNumber/detail");
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    $totalTax = ceil($data['dist'][0]['totalTax'] ?? 0);
+                    $totalCharges = ceil($data['dist'][0]['totalCharges'] ?? 0);
+
+                    $courierCharges = $totalCharges + $totalTax;
+
+                    if ($courierCharges > 0) {
+                        $totalBill = $detail->product_cost + $courierCharges + $detail->courier_service_internal_price + $detail->packaging_price + $detail->subtotal_tax;
+                        $totalRemaining = $totalBill - $detail->paid_amount;
+                        $shippingTax = ($courierCharges + $detail->courier_service_internal_price + $detail->packaging_price) * 0.02;
+                        $taxOnProfit = (($detail->selling_price + $detail->advance_amount) - ($totalBill - $detail->subtotal_tax)) * 0.02;
+
+                        $detail->update([
+                            'total_bill'            => ceil($totalBill + $shippingTax),
+                            'remaining_amount'      => ceil($totalRemaining + $shippingTax),
+                            'courier_service_price' => ceil($courierCharges + $detail->courier_service_internal_price),
+                            'shipping_tax'          => ceil($shippingTax),
+                            'profit_tax'            => ceil($taxOnProfit)
+                        ]);
+
+                        $items = OrderItem::where('order_id', $detail->id)->get();
+                        $totalCourierAmount = $detail->courier_service_price;
+                        $subTotal = $detail->product_cost;
+
+                        foreach( $items as $item ){
+                            $totalItemPrice = $item->price * $item->quantity;
+                            // 181  / 2963 * 1950 =
+                            $extraCourierCharges = ((float)$totalCourierAmount / (float)$subTotal) * (float)$totalItemPrice;
+
+                            $taxOnProfit   = ((float)$detail->profit_tax / (float)$subTotal) * (float)$totalItemPrice;
+                            $taxOnShipping = ((float)$detail->shipping_tax / (float)$subTotal) * (float)$totalItemPrice;
+
+                            $item->update([
+                                'courier_cost'   => round($extraCourierCharges),
+                                'shipping_tax'   => round($taxOnShipping),
+                                'tax_on_profit'  => round($taxOnProfit)
+                            ]);
+                        }
+                    }
+                }
+
                 $helper = new LeopardApiHelper();
                 $helper->parcelDelivered($detail);
                 $detail->update([
@@ -307,6 +357,54 @@ class PostExApiHelper
 
             //If product is not delivered and returned
             if ($status['label'] == 'Returned' && $detail->status != '9') {
+
+                $response = Http::withHeaders([
+                    'token' => $this->token,
+                ])->get($this->url . "/payment/cpr/order/$trackingNumber/detail");
+
+                if ($response->successful()) {
+                    $data = $response->json();
+
+                    $totalTax = ceil($data['dist'][0]['totalTax'] ?? 0);
+                    $totalCharges = ceil($data['dist'][0]['totalCharges'] ?? 0);
+
+                    $courierCharges = $totalCharges + $totalTax;
+
+                    if ($courierCharges > 0) {
+                        $totalBill = $detail->product_cost + $courierCharges + $detail->courier_service_internal_price + $detail->packaging_price + $detail->subtotal_tax;
+                        $totalRemaining = $totalBill - $detail->paid_amount;
+                        $shippingTax = ($courierCharges + $detail->courier_service_internal_price + $detail->packaging_price) * 0.02;
+                        $taxOnProfit = (($detail->selling_price + $detail->advance_amount) - ($totalBill - $detail->subtotal_tax)) * 0.02;
+
+                        $detail->update([
+                            'total_bill'            => ceil($totalBill + $shippingTax),
+                            'remaining_amount'      => ceil($totalRemaining + $shippingTax),
+                            'courier_service_price' => ceil($courierCharges + $detail->courier_service_internal_price),
+                            'shipping_tax'          => ceil($shippingTax),
+                            'profit_tax'            => ceil($taxOnProfit)
+                        ]);
+
+                        $items = OrderItem::where('order_id', $detail->id)->get();
+                        $totalCourierAmount = $detail->courier_service_price;
+                        $subTotal = $detail->product_cost;
+
+                        foreach( $items as $item ){
+                            $totalItemPrice = $item->price * $item->quantity;
+                            // 181  / 2963 * 1950 =
+                            $extraCourierCharges = ((float)$totalCourierAmount / (float)$subTotal) * (float)$totalItemPrice;
+
+                            $taxOnProfit   = ((float)$detail->profit_tax / (float)$subTotal) * (float)$totalItemPrice;
+                            $taxOnShipping = ((float)$detail->shipping_tax / (float)$subTotal) * (float)$totalItemPrice;
+
+                            $item->update([
+                                'courier_cost'   => round($extraCourierCharges),
+                                'shipping_tax'   => round($taxOnShipping),
+                                'tax_on_profit'  => round($taxOnProfit)
+                            ]);
+                        }
+                    }
+                }
+
                 $helper = new LeopardApiHelper();
                 $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
                 $shop = DropShipperShop::where('id', $detail->shop_id)->first();

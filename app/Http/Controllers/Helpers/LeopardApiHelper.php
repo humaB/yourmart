@@ -7,6 +7,7 @@ use App\Models\Account\AccountTransaction;
 use App\Models\Inventory\Courier\CourierCategory;
 use App\Models\Inventory\Courier\CourierDisclaimer;
 use App\Models\Inventory\Order\Order;
+use App\Models\Inventory\Order\OrderItem;
 use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\Inventory\Product\Setting\OtherCharge;
 use App\Models\User\DropShipper;
@@ -17,6 +18,22 @@ use Illuminate\Support\Facades\Log;
 
 class LeopardApiHelper
 {
+
+    /*
+    *   FORMAT
+        {
+        "data": [
+            {
+            "cn_number": "FS0875827294",
+            "status": "PN1",
+            "receiver_name": null,
+            "reason": "NEED BLOCK/SECTOR/PHASE #",
+            "activity_date": "2025-07-12 17:16:55",
+            "booked_packet_order_id": "Muh-Dis-1000"
+            }
+        ]
+    }
+    */
     private $apiKey = '487F7B22F68312D2C1BBC93B1AEA445B1726751602';
     private $apiPassword = 'Allah@001#';
     public $shipmentStatuses = [
@@ -116,8 +133,8 @@ class LeopardApiHelper
     public function bookAPacket($weight, $request, $order_no, $shop, $city, $package)
     {
         $package = CourierCategory::where('id', $package)->first();
-        $courierDisclaimer = CourierDisclaimer::where('courier_id',$request->courier_service_id)->first();
-        $instruction = $request->instructions ? ($request->instructions. ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' .$courierDisclaimer->disclaimer ?? "");
+        $courierDisclaimer = CourierDisclaimer::where('courier_id', $request->courier_service_id)->first();
+        $instruction = $request->instructions ? ($request->instructions . ', Dislaimer : ' . $courierDisclaimer->disclaimer) : ('Dislaimer : ' . $courierDisclaimer->disclaimer ?? "");
 
 
         $shop = DropShipperShop::with('dropshipper')->where('id', $shop)->first();
@@ -169,8 +186,10 @@ class LeopardApiHelper
         }
     }
 
-    public function webHook($request){
+    public function webHook($request)
+    {
         $data = $request['data'];
+
 
         // Sort the data array by 'activity_date' in ascending order
         usort($data, function ($a, $b) {
@@ -178,10 +197,10 @@ class LeopardApiHelper
         });
 
         Log::info($request);
-        foreach( $data as $order ){
+        foreach ($data as $order) {
 
             $detail = Order::with('range')->where('tracking_number', $order['cn_number'])->first();
-            if (isset($this->shipmentStatuses[$order['status']]) && $detail && $detail->status != 8 && $detail->status != 9 ) {
+            if (isset($this->shipmentStatuses[$order['status']]) && $detail && $detail->status != 8 && $detail->status != 9) {
                 $status = $this->shipmentStatuses[$order['status']];
 
                 OrderLeopardStatus::updateOrCreate(
@@ -198,12 +217,57 @@ class LeopardApiHelper
                     ]
                 );
 
-                $link = env('MIX_WEB_URL').'dropshipper/orders';
+                $link = env('MIX_WEB_URL') . 'dropshipper/orders';
 
                 $order_no = substr($detail->shop->store_name, 0, 3) . '-' . $detail->order_no;
 
                 //If product is delivered
-                if( $status['label'] == 'Delivered' && $detail->status != '8'){
+                if ($status['label'] == 'Delivered' && $detail->status != '8') {
+                    $response = Http::get('https://merchantapi.leopardscourier.com/api/getShippingCharges/format/json/', [
+                        'api_key'      => $this->apiKey,
+                        'api_password' => $this->apiPassword,
+                        'cn_numbers'   => $order['cn_number'], // or 'XXYYYYYYYY,XXYYYYYYYY,XXYYYYYY'
+                    ]);
+
+                    if ($response->successful()) {
+                        $data = $response->json();
+
+                        $courierCharges = ceil($data['data'][0]['net_charges'] * 1.16 ?? 0);
+
+                        if ($courierCharges > 0) {
+                            $totalBill = $detail->product_cost + $courierCharges + $detail->courier_service_internal_price + $detail->packaging_price + $detail->subtotal_tax;
+                            $totalRemaining = $totalBill - $detail->paid_amount;
+                            $shippingTax = ($courierCharges + $detail->courier_service_internal_price + $detail->packaging_price) * 0.02;
+                            $taxOnProfit = (($detail->selling_price + $detail->advance_amount) - ($totalBill - $detail->subtotal_tax)) * 0.02;
+
+                            $detail->update([
+                                'total_bill'            => ceil($totalBill + $shippingTax),
+                                'remaining_amount'      => ceil($totalRemaining + $shippingTax),
+                                'courier_service_price' => ceil($courierCharges + $detail->courier_service_internal_price),
+                                'shipping_tax'          => ceil($shippingTax),
+                                'profit_tax'            => ceil($taxOnProfit)
+                            ]);
+
+                            $items = OrderItem::where('order_id', $detail->id)->get();
+                            $totalCourierAmount = $detail->courier_service_price;
+                            $subTotal = $detail->product_cost;
+
+                            foreach ($items as $item) {
+                                $totalItemPrice = $item->price * $item->quantity;
+                                // 181  / 2963 * 1950 =
+                                $extraCourierCharges = ((float)$totalCourierAmount / (float)$subTotal) * (float)$totalItemPrice;
+
+                                $taxOnProfit   = ((float)$detail->profit_tax / (float)$subTotal) * (float)$totalItemPrice;
+                                $taxOnShipping = ((float)$detail->shipping_tax / (float)$subTotal) * (float)$totalItemPrice;
+
+                                $item->update([
+                                    'courier_cost'   => round($extraCourierCharges),
+                                    'shipping_tax'   => round($taxOnShipping),
+                                    'tax_on_profit'  => round($taxOnProfit)
+                                ]);
+                            }
+                        }
+                    }
                     $this->parcelDelivered($detail);
                     $detail->update([
                         'status' => '8'
@@ -220,11 +284,57 @@ class LeopardApiHelper
                         $user = $detail->belongs_to
                     );
                 }
-                  //If product is not delivered and returned
-                if( $status['leopard_id'] == 'Being Return' && $detail->status != '9'){
+                //If product is not delivered and returned
+                if ($status['leopard_id'] == 'Being Return' && $detail->status != '9') {
 
                     $dropshipper = DropShipper::where('user_id', $detail->belongs_to)->first();
                     $shop = DropShipperShop::where('id', $detail->shop_id)->first();
+
+                    $response = Http::get('https://merchantapi.leopardscourier.com/api/getShippingCharges/format/json/', [
+                        'api_key'      => $this->apiKey,
+                        'api_password' => $this->apiPassword,
+                        'cn_numbers'   => $order['cn_number'], // or 'XXYYYYYYYY,XXYYYYYYYY,XXYYYYYY'
+                    ]);
+
+                    if ($response->successful()) {
+                        $data = $response->json();
+
+                        $courierCharges = ceil($data['data'][0]['net_charges'] * 1.16 ?? 0);
+
+                        if ($courierCharges > 0) {
+                            $totalBill = $detail->product_cost + $courierCharges + $detail->courier_service_internal_price + $detail->packaging_price + $detail->subtotal_tax;
+                            $totalRemaining = $totalBill - $detail->paid_amount;
+                            $shippingTax = ($courierCharges + $detail->courier_service_internal_price + $detail->packaging_price) * 0.02;
+                            $taxOnProfit = (($detail->selling_price + $detail->advance_amount) - ($totalBill - $detail->subtotal_tax)) * 0.02;
+
+                            $detail->update([
+                                'total_bill'            => ceil($totalBill + $shippingTax),
+                                'remaining_amount'      => ceil($totalRemaining + $shippingTax),
+                                'courier_service_price' => ceil($courierCharges + $detail->courier_service_internal_price),
+                                'shipping_tax'          => ceil($shippingTax),
+                                'profit_tax'            => ceil($taxOnProfit)
+                            ]);
+
+                            $items = OrderItem::where('order_id', $detail->id)->get();
+                            $totalCourierAmount = $detail->courier_service_price;
+                            $subTotal = $detail->product_cost;
+
+                            foreach ($items as $item) {
+                                $totalItemPrice = $item->price * $item->quantity;
+                                // 181  / 2963 * 1950 =
+                                $extraCourierCharges = ((float)$totalCourierAmount / (float)$subTotal) * (float)$totalItemPrice;
+
+                                $taxOnProfit   = ((float)$detail->profit_tax / (float)$subTotal) * (float)$totalItemPrice;
+                                $taxOnShipping = ((float)$detail->shipping_tax / (float)$subTotal) * (float)$totalItemPrice;
+
+                                $item->update([
+                                    'courier_cost'   => round($extraCourierCharges),
+                                    'shipping_tax'   => round($taxOnShipping),
+                                    'tax_on_profit'  => round($taxOnProfit)
+                                ]);
+                            }
+                        }
+                    }
                     $this->parcelCancel($dropshipper, $shop, $detail);
 
                     $detail->update([
@@ -243,13 +353,13 @@ class LeopardApiHelper
                     );
                 }
 
-                if( $order['status'] == 'AC'){
+                if ($order['status'] == 'AC') {
                     $detail->update([
                         'status' => '11'
                     ]);
                 }
 
-                if( $order['status'] == 'NR'){
+                if ($order['status'] == 'NR') {
                     //Ready to return
                     $detail->update([
                         'status' => '12'
@@ -270,7 +380,8 @@ class LeopardApiHelper
         }
     }
 
-    public function parcelDelivered( $order ){
+    public function parcelDelivered($order)
+    {
 
         //Customer Selling Price - ( (Product Price + courier + packaging) - Advance )
         //3500 - ( ( 1000 + 200 + 40 ) - 500)
@@ -281,30 +392,31 @@ class LeopardApiHelper
 
         $courierExtraCharges = $order->range->our_charges;
         $payableAmount = (float)$order->total_bill - $advance; //Amount Yourmart must receive
-        $profit      = (((float)$order->selling_price + $advance) - (float)$order->total_bill ) - $order->profit_tax;
+        $profit      = (((float)$order->selling_price + $advance) - (float)$order->total_bill) - $order->profit_tax;
 
 
         $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
         $shop = DropShipperShop::where('id', $order->shop_id)->first();
-        $this->accountOnDelivered( $dropshipper, $shop, $order, $productPrice, $packingCharges, $courierCharges, $courierExtraCharges );
+        $this->accountOnDelivered($dropshipper, $shop, $order, $productPrice, $packingCharges, $courierCharges, $courierExtraCharges);
 
         //Check if order is Replacement or normal
-        if($order->is_replacement == '0'){
-            $order->decrement('remaining_amount' , $payableAmount);
-            $order->increment('paid_amount' , $payableAmount);
+        if ($order->is_replacement == '0') {
+            $order->decrement('remaining_amount', $payableAmount);
+            $order->increment('paid_amount', $payableAmount);
             $order->update([
                 'total_profit'  => $profit
             ]);
 
-            $dropshipper->increment('total_payable' , $profit);
-            $dropshipper->increment('remaining_amount' , $profit);
+            $dropshipper->increment('total_payable', $profit);
+            $dropshipper->increment('remaining_amount', $profit);
 
-            $shop->increment('total_payable' , $profit);
-            $shop->increment('total_remaining' , $profit);
+            $shop->increment('total_payable', $profit);
+            $shop->increment('total_remaining', $profit);
         }
     }
 
-    public function parcelCancel( $dropshipper, $shop , $order ){
+    public function parcelCancel($dropshipper, $shop, $order)
+    {
 
         $ledger = new AccountHeadHelper();
         $document = $ledger->voucherType('JV');
@@ -318,13 +430,13 @@ class LeopardApiHelper
         $otherCharges = (float)$otherCharges->amount;
 
         //60 are extra charges which will in future be set by admin
-        $dropshipper->decrement('total_payable' , $courierCharges + $packingCharges +  $otherCharges);
-        $dropshipper->decrement('remaining_amount' , $courierCharges + $packingCharges +  $otherCharges);
+        $dropshipper->decrement('total_payable', $courierCharges + $packingCharges +  $otherCharges);
+        $dropshipper->decrement('remaining_amount', $courierCharges + $packingCharges +  $otherCharges);
 
-        $shop->decrement('total_payable' , $courierCharges + $packingCharges +  $otherCharges);
-        $shop->decrement('total_remaining' , $courierCharges + $packingCharges +  $otherCharges);
+        $shop->decrement('total_payable', $courierCharges + $packingCharges +  $otherCharges);
+        $shop->decrement('total_remaining', $courierCharges + $packingCharges +  $otherCharges);
 
-        $remainingPayable = $advance - ( $courierCharges + $packingCharges + $otherCharges );
+        $remainingPayable = $advance - ($courierCharges + $packingCharges + $otherCharges);
         $order->update([
             'total_profit'  => $remainingPayable
         ]);
@@ -332,13 +444,13 @@ class LeopardApiHelper
         //Checks account if or not they are open
         //General Ledger
         $group_id = $dropshipper->group_id;
-        if( !$dropshipper->group_id ){
-            $group_id = $this->openDropShipperLedger( $ledger, $dropshipper);
+        if (!$dropshipper->group_id) {
+            $group_id = $this->openDropShipperLedger($ledger, $dropshipper);
         }
 
         $head_id = $shop->account_head_id;
-        if( !$shop->account_head_id ){
-            $head_id = $this->openShopLedger( $shop , $ledger, $group_id);
+        if (!$shop->account_head_id) {
+            $head_id = $this->openShopLedger($shop, $ledger, $group_id);
         }
 
         //Book Total Packaging and Courier + 60 RS as charge
@@ -347,35 +459,35 @@ class LeopardApiHelper
         *   Total Packaging and Courier + 60 Credit in leopard and sales account
         */
         $document = $ledger->voucherType('JV');
-        $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + $otherCharges , 0, 'Total Receivable Amount', $document, 'JV', 'order', $order->id, $approved = 1);
+        $ledger->accountTransaction($head_id, 74, $courierCharges + $packingCharges + $otherCharges, 0, 'Total Receivable Amount', $document, 'JV', 'order', $order->id, $approved = 1);
         //Leopard Credit
         $ledger->accountTransaction(73, $head_id, 0, $courierCharges -  $courierExtraCharges, 'Courier Charges', $document, 'JV', 'order', $order->id, $approved = 1);
         //Sale Credit
         $ledger->accountTransaction(74, $head_id, 0, $packingCharges + $otherCharges + $courierExtraCharges, 'Packaging Charges', $document, 'JV', 'order', $order->id, $approved = 1);
 
-           //Advance payment Entry if
+        //Advance payment Entry if
         /*
         *   Advance Amount Debit to Bank
         *   Advance Amount Credit to Dropshipper
         */
         //Meezan Bank Debit
-        if($order->paid_amount > 0 ){
+        if ($order->paid_amount > 0) {
             $document = $ledger->voucherType('bank');
             //Bank Cash Debit
             $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order', $document, 'BR', 'order', $order->id, $approved = 1);
             //Dropshipper Credit
             $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order', $document, 'BR', 'order', $order->id, $approved = 1);
 
-            $dropshipper->increment('total_payable' , $order->paid_amount);
-            $dropshipper->increment('remaining_amount' , $order->paid_amount);
+            $dropshipper->increment('total_payable', $order->paid_amount);
+            $dropshipper->increment('remaining_amount', $order->paid_amount);
 
-            $shop->increment('total_payable' , $order->paid_amount);
-            $shop->increment('total_remaining' , $order->paid_amount);
+            $shop->increment('total_payable', $order->paid_amount);
+            $shop->increment('total_remaining', $order->paid_amount);
         }
-
     }
 
-    private function accountOnDelivered( $dropshipper, $shop , $order, $productPrice , $packingCharges, $courierCharges, $courierExtraCharges){
+    private function accountOnDelivered($dropshipper, $shop, $order, $productPrice, $packingCharges, $courierCharges, $courierExtraCharges)
+    {
 
         $ledger = new AccountHeadHelper();
         $document = $ledger->voucherType('JV');
@@ -383,13 +495,13 @@ class LeopardApiHelper
         //Checks account if or not they are open
         //General Ledger
         $group_id = $dropshipper->group_id;
-        if( !$dropshipper->group_id ){
-            $group_id = $this->openDropShipperLedger( $ledger, $dropshipper);
+        if (!$dropshipper->group_id) {
+            $group_id = $this->openDropShipperLedger($ledger, $dropshipper);
         }
 
         $head_id = $shop->account_head_id;
-        if( !$shop->account_head_id ){
-            $head_id = $this->openShopLedger( $shop , $ledger, $group_id);
+        if (!$shop->account_head_id) {
+            $head_id = $this->openShopLedger($shop, $ledger, $group_id);
         }
 
         //Book Total Payable
@@ -401,7 +513,7 @@ class LeopardApiHelper
         */
         $document = $ledger->voucherType('JV');
         $mainAccount = $order->is_replacement == '1' ? 164 : $head_id;
-        $ledger->accountTransaction($mainAccount, 74, $order->total_bill, 0, $order->is_replacement == '1' ? 'Expense amount on company for product replacement' : 'Total Receivable Amount for order #'.$order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
+        $ledger->accountTransaction($mainAccount, 74, $order->total_bill, 0, $order->is_replacement == '1' ? 'Expense amount on company for product replacement' : 'Total Receivable Amount for order #' . $order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
         //Sale Credit
         $ledger->accountTransaction(74, $mainAccount, 0, $productPrice + $packingCharges + $courierExtraCharges, 'Product + Packaging Cost', $document, 'JV', 'order', $order->id, $approved = 1);
         //leopard Credit
@@ -413,21 +525,21 @@ class LeopardApiHelper
         *   Advance Amount Credit to Dropshipper
         */
         //Meezan Bank Debit
-        if($order->paid_amount > 0 ){
+        if ($order->paid_amount > 0) {
             $document = $ledger->voucherType('bank');
-            $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order # '.$order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction(75, $head_id, $order->paid_amount, 0, 'Advance Payment received against order # ' . $order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order # '.$order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 75, 0, $order->paid_amount, 'Advance Payment against order # ' . $order->order_no, $document, 'BR', 'order', $order->id, $approved = 1);
         }
 
-        if($order->is_replacement == '1' && $order->paid_amount > 0  ){
+        if ($order->is_replacement == '1' && $order->paid_amount > 0) {
             //Adjust advance payment with expense
             /*
             *   Advance Amount Debit to Dropshipper as this is expense on his/her end
             *   Expense Account 164 debit to decrease expense
             */
             $document = $ledger->voucherType('JV');
-            $ledger->accountTransaction( $head_id, 164, $order->paid_amount, 0, 'Advance Payment adjusted against courier and packaging expense', $document, 'JV', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 164, $order->paid_amount, 0, 'Advance Payment adjusted against courier and packaging expense', $document, 'JV', 'order', $order->id, $approved = 1);
             //Sale Credit
             $ledger->accountTransaction(164, $head_id, 0, $order->paid_amount, 'Advance Payment adjusted against courier and packaging expense', $document, 'JV', 'order', $order->id, $approved = 1);
         }
@@ -438,34 +550,36 @@ class LeopardApiHelper
         *   Dropshipper Credit with selling price
         */
         $document = $ledger->voucherType('JV');
-        if( $order->selling_price != 0 ){
-            $ledger->accountTransaction(73, $head_id, $order->selling_price, 0, 'COD amount received from customer, order # '.$order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
+        if ($order->selling_price != 0) {
+            $ledger->accountTransaction(73, $head_id, $order->selling_price, 0, 'COD amount received from customer, order # ' . $order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
             //Sale Credit
-            $ledger->accountTransaction($head_id, 73, 0, $order->selling_price, 'COD amount received from customer, order # '.$order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
+            $ledger->accountTransaction($head_id, 73, 0, $order->selling_price, 'COD amount received from customer, order # ' . $order->order_no, $document, 'JV', 'order', $order->id, $approved = 1);
         }
     }
 
-    private function openShopLedger( $shop , $ledger, $group){
-            //Shop Ledger
-            $head = $ledger->accountHeadCreate(
-                $shop->store_name.'-'.$shop->dropshipper_id,
-                1, // Asset
-                6, // Current asset
-                50, // Account Receivable
-                $group, // Dropshipper
-            );
+    private function openShopLedger($shop, $ledger, $group)
+    {
+        //Shop Ledger
+        $head = $ledger->accountHeadCreate(
+            $shop->store_name . '-' . $shop->dropshipper_id,
+            1, // Asset
+            6, // Current asset
+            50, // Account Receivable
+            $group, // Dropshipper
+        );
 
-            $shop->update([
-                'account_head_id' => $head->id
-            ]);
+        $shop->update([
+            'account_head_id' => $head->id
+        ]);
 
-            return $head_id = $head->id;
+        return $head_id = $head->id;
     }
 
-    private function openDropShipperLedger( $ledger, $dropshipper){
+    private function openDropShipperLedger($ledger, $dropshipper)
+    {
 
         $group = $ledger->accountGroupFourthCreate(
-            $dropshipper->full_name.'-'.$dropshipper->cnic_number,
+            $dropshipper->full_name . '-' . $dropshipper->cnic_number,
             6, // Current asset
             50, // Account Receivable
         );
@@ -477,11 +591,12 @@ class LeopardApiHelper
         return $group_id = $group->id;
     }
 
-    public function reverseAccountOnDelivered($order){
+    public function reverseAccountOnDelivered($order)
+    {
 
         $transactions = AccountTransaction::where('posting_type', 'order')
             ->where('posting_id', $order->id)
-            ->where(function( $q ){
+            ->where(function ($q) {
                 $q->where('type', 'JV')->orWhere('type', 'BR');
             })
             ->delete();
@@ -489,8 +604,8 @@ class LeopardApiHelper
         $payableAmount = (float)$order->total_bill - ($advance->advance_amount ?? 0);
         $profit      = $order->total_profit;
 
-        $order->increment('remaining_amount' , $payableAmount);
-        $order->decrement('paid_amount' , $payableAmount);
+        $order->increment('remaining_amount', $payableAmount);
+        $order->decrement('paid_amount', $payableAmount);
         $order->update([
             'total_profit'  => 0,
         ]);
@@ -498,11 +613,10 @@ class LeopardApiHelper
         $dropshipper = DropShipper::where('user_id', $order->belongs_to)->first();
         $shop = DropShipperShop::where('id', $order->shop_id)->first();
 
-        $dropshipper->decrement('total_payable' , $profit);
-        $dropshipper->decrement('remaining_amount' , $profit);
+        $dropshipper->decrement('total_payable', $profit);
+        $dropshipper->decrement('remaining_amount', $profit);
 
-        $shop->decrement('total_payable' , $profit);
-        $shop->decrement('total_remaining' , $profit);
+        $shop->decrement('total_payable', $profit);
+        $shop->decrement('total_remaining', $profit);
     }
-
 }
