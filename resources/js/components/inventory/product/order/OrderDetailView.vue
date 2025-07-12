@@ -1143,7 +1143,7 @@ export default {
             this.$emit('updatePackagingAmount', { id: this.details.id, amount: this.packagingAmount });
         },
         formatPrice: function formatPrice(price) {
-            var string = parseFloat(price).toString();
+            var string = parseFloat(price).toFixed(0).toString();
             return string
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");

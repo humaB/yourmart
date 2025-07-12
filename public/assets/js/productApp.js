@@ -1517,7 +1517,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       });
     },
     formatPrice: function formatPrice(price) {
-      var string = parseFloat(price).toString();
+      var string = parseFloat(price).toFixed(0).toString();
       return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     },
     formatNormalDate: function formatNormalDate(date) {
