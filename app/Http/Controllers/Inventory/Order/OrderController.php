@@ -852,7 +852,7 @@ class OrderController extends Controller
     public function reject(Request $request)
     {
 
-        $order = Order::with('items')->find($request->id);
+        $order = Order::with('items', 'shop')->find($request->id);
         if (auth()->user()->role == 'admin') {
 
             if ($order->type == 'Cash') {
