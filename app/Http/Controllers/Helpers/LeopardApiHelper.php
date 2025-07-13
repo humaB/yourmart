@@ -196,7 +196,7 @@ class LeopardApiHelper
             return strtotime($a['activity_date']) <=> strtotime($b['activity_date']);
         });
 
-        Log::info($request);
+        // Log::info($request);
         foreach ($data as $order) {
 
             $detail = Order::with('range')->where('tracking_number', $order['cn_number'])->first();
