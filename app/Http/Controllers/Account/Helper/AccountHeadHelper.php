@@ -27,11 +27,20 @@ class AccountHeadHelper {
 
     public function accountHeadCreate($name, $first, $second, $third, $fourth) {
 
+        $name = strtoupper($name);
+
+        // Check if account head already exists
+        $existing = AccountHead::where('name', $name)->where('group_id', $fourth)->first();
+
+        if ($existing) {
+            return $existing;
+        }
+
         $code = AccountHead::latest('id')->where('group_id', $fourth )->limit(1)->value('code') + 1;
         $code = str_pad($code, 4, '0', STR_PAD_LEFT);
 
         $head = AccountHead::create([
-            'name'              => strtoupper($name),
+            'name'              => $name,
             'code'              => $code,
             'parent_account_id' => $first,
             'account_id'        => $second,

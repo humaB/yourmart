@@ -2,9 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
+use App\Http\Resources\ValidationCollection;
 use App\Mail\SupplierDecisionMail;
+use App\Models\Account\AccountHead;
+use App\Models\Account\AccountTransaction;
+use App\Models\Account\Bank;
+use App\Models\Account\Cash;
+use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Setting\EmailTemplate;
 use App\Models\User;
 use App\Models\User\DropShipper;
@@ -19,6 +26,11 @@ class SupplierController extends Controller
 {
     public function index() {
         return view('user.supplier');
+    }
+
+    public function payOuts()
+    {
+        return view('user.supplier_payout');
     }
 
     public function getRequests() {
@@ -48,6 +60,46 @@ class SupplierController extends Controller
         ->setStatusCode( 200 );
     }
 
+    public function update(Request $request)
+    {
+        // Update supplier Information
+        $supplier = Supplier::findOrFail($request->id);
+
+        if ($supplier->email != $request->input('email')) {
+            //Check if email is already registered or not for status approved
+            $user = User::where('email', $request->input('email'))->first();
+            if ($user) {
+                return (new ValidationCollection(["This Email already registered with another account"]))
+                    ->response()
+                    ->setStatusCode(400);
+            }
+        }
+
+        if ($request->filled('changedPassword')) {
+            User::where('id', $supplier->user_id)->update([
+                'password' => Hash::make($request->input('changedPassword')),
+            ]);
+        }
+
+        User::where('id', $supplier->user_id)->update([
+            'email'   => $request->input('email'),
+        ]);
+
+        $supplier->update([
+            'full_name'       => $request->input('full_name'),
+            'email'           => $request->input('email'),
+            'cnic_number'     => $request->input('cnic_number'),
+            'whatsapp_number' => $request->input('whatsapp_number'),
+            'address'         => $request->input('address'),
+            'account_number'  => $request->input('account_number'),
+            'account_title'   => $request->input('account_title'),
+            'account_iban'    => $request->input('account_iban'),
+            'payment_cycle'   => $request->input('payment_cycle')
+        ]);
+
+        return response()->json(['message' => 'Dropshipper information updated successfully.']);
+    }
+
     public function decision( Request $request ){
 
         $supplier = Supplier::where('id', $request->id)->first();
@@ -67,20 +119,173 @@ class SupplierController extends Controller
             'status'  => $request->action == 'reject' ? '2' : '1' // 0 => Pending | 1 => Approved | 2 => Rejected
         ]);
 
-               // Prepare the data
-               $mailData = [
-                'request'         => $supplier->id,
-                'full_name'       => $supplier->full_name,
-                'whatsapp_number' => $supplier->whatsapp_number,
-                'address'         => $supplier->address,
-                'decision'        => $request->action
-            ];
+        // Prepare the data
+        $mailData = [
+            'request'         => $supplier->id,
+            'full_name'       => $supplier->full_name,
+            'whatsapp_number' => $supplier->whatsapp_number,
+            'address'         => $supplier->address,
+            'decision'        => $request->action
+        ];
 
         $template = EmailTemplate::where('type', $request->action == 'reject' ? 'supplier_application_rejected' : 'supplier_application_approved')->first();
 
         Mail::to($supplier->email)->send(new SupplierDecisionMail($mailData , $template));
 
         return ['message', 'successfully updated'];
+    }
+
+    public function pendingPayment(){
+
+       $suppliers = Supplier::withSum([
+            'orders as total_remaining_amount' => function ($q) {
+                $q->where('remaining_amount', '>', 0)
+                ->where('status', 1);
+            }
+        ], 'remaining_amount')
+        ->withSum([
+            'orders as total_order_amount' => function ($q) {
+                $q->where('remaining_amount', '>', 0)
+                ->where('status', 1);
+            }
+        ], 'total_amount')
+        ->having('total_remaining_amount', '>', 0)
+        ->orderByDesc('id')
+        ->get();
+
+
+
+
+        $totalPayable = PurchaseOrder::where('status', '1')->sum('total_amount');
+        $totalRemaining   = PurchaseOrder::where('status', '1')->sum('remaining_amount');
+        $totalPayablePaid = $totalPayable - $totalRemaining;
+        $remainingDropshippers = $suppliers->count();
+
+        $data = [
+            'total_payable' => $totalPayable,
+            'total_paid' => $totalPayablePaid,
+            'total_remaining' => $totalRemaining,
+            'remaining_dropshippers' => $remainingDropshippers,
+            'suppliers'             => $suppliers
+        ];
+
+        return ( new ResponseCollection ( $data ) )
+        ->response()
+        ->setStatusCode( 200 );
+    }
+
+    public function paymentData(Request $request)
+    {
+        $banks = Bank::join('account_heads', 'banks.account_head_id', 'account_heads.id')
+            ->select('account_heads.*', 'account_heads.id as code', 'account_heads.name as label')
+            ->get();
+
+        $cash = Cash::join('account_heads', 'cash.account_head_id', 'account_heads.id')
+            ->select('account_heads.*', 'account_heads.id as code', 'account_heads.name as label')
+            ->get();
+
+        $supplier = Supplier::with('bank')->where('id', $request->id)->first();
+
+        $orders = PurchaseOrder::where('supplier_id', $supplier->id)->get();
+
+        $supplier->total_profit = $orders->sum('total_amount');
+        $supplier->total_paid_profit = $orders->sum('total_amount') - $orders->sum('remaining_amount');
+
+        $data = [
+            'orders'  => $orders,
+            'banks'   => $banks,
+            'cash'    => $cash,
+            'supplier' =>  $supplier,
+        ];
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function addPayment(Request $request)
+    {
+        $request->validate([
+            'type'         => ['required'],
+            'from_account' => ['required'],
+            'amount'       => ['required'],
+        ]);
+
+        $supplier = Supplier::where('id', $request->id)->first();
+
+        $orders = PurchaseOrder::where('supplier_id', $supplier->id)
+            ->where('remaining_amount', '>', '0')
+            ->where('status', '1')
+            ->get();
+
+        $ledger = new AccountHeadHelper();
+
+        // Initialize remaining amount to the requested amount
+        $remainingAmount = $request->amount;
+        $document = $ledger->voucherType($request->type);
+
+        $attachment = $request->attachment ? $this->attachment($request->attachment) : null;
+        $addedAmount = 0;
+        foreach ($orders as $order) {
+
+            // Checks account if or not they are open
+            $supplierLedger = $ledger->accountHeadCreate(
+                $supplier->full_name . '-' . $supplier->cnic_number,
+                    2, // LIABILITIES
+                    8, // CURRENT LIABILITIES
+                    40, // TRADE CREDITORS
+                    41, // AP-SUPPLIERS
+                );
+
+            // Calculate the amount to pay for this order
+            $orderProfit = $order->remaining_amount;
+
+            if ($remainingAmount <= 0) {
+                // If no remaining amount, exit the loop
+                break;
+            }
+
+            // Determine the amount to pay for this order
+            $amountToPay = min($orderProfit, $remainingAmount);
+
+            // Only proceed if there is an amount to pay
+            if ($amountToPay > 0) {
+
+                // Shop Debit
+                $ledger->accountTransaction($supplierLedger->id, $request->from_account, $amountToPay, 0, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'PO', $order->id, $approved = 1, $attachment);
+
+                $order->decrement('remaining_amount', $amountToPay);
+
+                // Reduce the remaining amount
+                $remainingAmount -= $amountToPay;
+            }
+        }
+
+        // Bank Cash Credit
+        $ledger->accountTransaction($request->from_account, $supplierLedger->id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
+
+        return response()->json([], 200);
+    }
+
+    public function paymentHistory(Request $request)
+    {
+        $supplier = Supplier::where('id', $request->id)->first();
+
+        $name = $supplier->full_name .'-'.$supplier->cnic_number;
+        $ledger = AccountHead::where('name', $name)->first();
+
+        $transactions = AccountTransaction::with('po')
+            ->where('posting_type', 'po')
+            ->where('account_head_id', $ledger->id)
+            ->where(function ($query) {
+                $query->where('type', 'BP')
+                    ->orWhere('type', 'CP');
+            })
+            ->get();
+
+        return (new ResponseCollection($transactions))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function pdf(Request $request)

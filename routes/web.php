@@ -34,6 +34,7 @@ use App\Http\Controllers\Report\FisReportController;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreReturnDetail;
+use App\Models\User\Supplier;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -152,6 +153,8 @@ Route::group(['prefix' => '/dropshippers', 'middleware' => 'auth'], function () 
 
 });
 
+Route::get('/suppliers/pay-outs', [SupplierController::class, 'payOuts'])->name('supplier.payouts');
+
 Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
     Route::get('/dropshippers', [DropShipperController::class, 'index'])->name('request.dropshipper');
     Route::post('/dropshippers/pdf', [DropShipperController::class, 'pdf']);
@@ -161,6 +164,7 @@ Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
     });
 
     Route::get('/suppliers', [SupplierController::class, 'index'])->name('request.supplier');
+
     Route::post('/suppliers/pdf', [SupplierController::class, 'pdf']);
 
 });
@@ -202,11 +206,13 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
-// Route::get('/update-produt-cost', function(){
-//     $orders = Order::select('id', 'total_bill', 'product_cost', 'courier_service_price', 'packaging_price')->get();
-//     foreach( $orders as $order){
-//         $order->update([
-//             'product_cost' => $order->total_bill - ( $order->courier_service_price + $order->packaging_price)
-//         ]);
-//     }
-// });
+use App\Models\User;
+Route::get('/update-supplier', function(){
+    $users = User::where('role', 'supplier')->get();
+
+    foreach( $users as $user){
+       Supplier::where('email', $user->email)->update([
+            'user_id' => $user->id
+       ]);
+    }
+});

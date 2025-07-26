@@ -4,6 +4,7 @@ namespace App\Models\User;
 
 use App\Models\CustomerBank;
 use App\Models\City;
+use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,7 +36,9 @@ class Supplier extends Model
         'cnic_front_image',
         'cnic_back_image',
         'profile_image',
-        'status' // 0 => Pending | 1 => Approved | 2 => Rejected
+        'status', // 0 => Pending | 1 => Approved | 2 => Rejected
+        
+        'user_id'
     ];
 
     public function city(){
@@ -48,6 +51,10 @@ class Supplier extends Model
 
     public function shops(){
         return $this->hasMany(SupplierShop::class,'supplier_id','id');
+    }
+
+    public function orders(){
+        return $this->hasMany(PurchaseOrder::class,'supplier_id','id');
     }
 
 }

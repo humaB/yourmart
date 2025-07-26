@@ -167,11 +167,19 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
 
 Route::group(['prefix' => 'suppliers','middleware' => 'auth:sanctum'], function(){
     Route::get('/',  [ SupplierController::class , 'getRequests']);
+    Route::post('/',  [ SupplierController::class , 'update']);
 
     Route::get('/drop-down',  [ SupplierController::class , 'dropDown']);
-    Route::post('/',  [ SupplierController::class , 'store']);
+
     Route::post('/details',  [ SupplierController::class , 'fetchDetails']);
     Route::post('/decisions',  [ SupplierController::class , 'decision']);
+
+    Route::group(['prefix' => 'payments'], function(){
+        Route::get('/',  [ SupplierController::class , 'pendingPayment']);
+        Route::post('/data',  [ SupplierController::class , 'paymentData']);
+        Route::post('/add',  [ SupplierController::class , 'addPayment']);
+        Route::post('/history',  [ SupplierController::class , 'paymentHistory']);
+    });
 });
 
 Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function(){

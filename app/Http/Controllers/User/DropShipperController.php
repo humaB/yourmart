@@ -659,6 +659,7 @@ class DropShipperController extends Controller
         $ledgers = AccountHead::where('group_id', $dropshipper->group_id)->pluck('id');
 
         $transactions = AccountTransaction::with('order.shop')->whereIn('account_head_id', $ledgers)
+            ->where('posting_type', 'order')
             ->where(function ($query) {
                 $query->where('type', 'BP')
                     ->orWhere('type', 'CP');
@@ -698,7 +699,7 @@ class DropShipperController extends Controller
 
         // Initialize remaining amount to the requested amount
         $remainingAmount = $request->amount;
-        $document = $ledger->voucherType('bank');
+        $document = $ledger->voucherType($request->type);
 
         $attachment = $request->attachment ? $this->attachment($request->attachment) : null;
         $addedAmount = 0;

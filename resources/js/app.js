@@ -33,6 +33,8 @@ Vue.component('dropshipper-payouts-page', require('./pages/admin/user/DropShippe
 Vue.component('dropshipper-preview-page', require('./pages/admin/user/DropShipperDashboard.vue').default );
 
 Vue.component('supplier-requests', require('./pages/admin/request/SupplierRequestPage.vue').default );
+Vue.component('supplier-payouts-page', require('./pages/admin/user/SupplierPayoutPage.vue').default );
+
 Vue.component('courier-page', require('./pages/inventory/product/setting/CourierPage.vue').default );
 Vue.component('page-setting-page', require('./pages/pages/PageSettingPage.vue').default );
 Vue.component('library-setting-page', require('./pages/pages/LibrarySettingPage.vue').default );

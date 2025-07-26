@@ -66,19 +66,39 @@
                 @endif
             </a>
         </li>
-
-
-        <li class="dropdown {{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}">
-            <a href="{{ route('dropshipper.payouts') }}" class="nav-link"><i class="fas fa-money-check"
-                    aria-hidden="true"></i><span>Pay Out's</span>
+        <li class="dropdown {{ request()->routeIs('dropshipper.payouts', 'supplier.payouts') ? 'active' : '' }}">
+            <a href="#" class="menu-toggle nav-link has-dropdown">
+                <i class="fas fa-money-check-alt"></i> {{-- Updated from calendar-check --}}
+                <span>Pay Out's</span>
                 @if ($payOuts > 0)
                     <span class="badge headerBadge1"
-                        style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                            style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
                         {{ $payOuts }}
                     </span>
                 @endif
             </a>
+            <ul class="dropdown-menu">
+                <li class="{{ request()->routeIs('dropshipper.payouts') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('dropshipper.payouts') }}">
+                        <i class="fas fa-hand-holding-usd"></i> {{-- Updated from calendar-plus --}}
+                        Dropshiper's
+                        @if ($payOuts > 0)
+                            <span class="badge headerBadge1"
+                                style="width:35px; color:white;top: 0px; right: 40px;font-size:14px; font-weight: 700; padding: 7px 0px; background: rgb(102, 119, 239); border-radius: 20px; position: absolute;">
+                                {{ $payOuts }}
+                            </span>
+                        @endif
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('supplier.payouts') ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('supplier.payouts') }}">
+                        <i class="fas fa-user-tag"></i> {{-- Updated from history --}}
+                        Suppliers
+                    </a>
+                </li>
+            </ul>
         </li>
+
 
     </ul>
 
@@ -238,7 +258,8 @@
         </ul>
     </li>
 
-    <li class="dropdown {{ request()->routeIs('inventory.products.moq', 'inventory.products.shipping_classes', 'couriers', 'packaging.class', 'inventory.products.other_charges', 'email_template', 'notification') ? 'active' : '' }}">
+    <li
+        class="dropdown {{ request()->routeIs('inventory.products.moq', 'inventory.products.shipping_classes', 'couriers', 'packaging.class', 'inventory.products.other_charges', 'email_template', 'notification') ? 'active' : '' }}">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-cog"></i>
             <span>Setting's</span>
         </a>

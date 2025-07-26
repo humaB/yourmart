@@ -3,6 +3,7 @@
 namespace App\Models\Account;
 
 use App\Models\Inventory\Order\Order;
+use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -78,5 +79,9 @@ class AccountTransaction extends Model
 
     public function order(){
         return $this->belongsTo( Order::class, 'posting_id', 'id');
+    }
+
+    public function po(){
+        return $this->belongsTo( PurchaseOrder::class, 'posting_id', 'id');
     }
 }
