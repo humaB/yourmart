@@ -91,9 +91,25 @@ class ProductController extends Controller
         }
         else
         {
-            Product::whereIn('id', $request->products)->update([
+            $product = Product::whereIn('id', $request->products)->first();
+            $product->update([
                'status' => $request->action == 'Published' ? '0' : '1'
             ]);
+
+            if( $request->action == 'Published' ){
+                $link = env('MIX_WEB_URL').'products/'.$product->slug;
+
+                NotificationHelper::addNotification(
+                    $title = 'New Product Added',
+                    $messge = "This product is now available: $product->title",
+                    $link = $link,
+                    $image = null,
+                    $directImage = $product->hero_image,
+                    $color    = 'blue',
+                    $isPublic = 0,
+                    $user = null
+                );
+            }
         }
     }
 
@@ -394,18 +410,6 @@ class ProductController extends Controller
                 }
             }
 
-            $link = env('MIX_WEB_URL').'products/'.$slug;
-
-            NotificationHelper::addNotification(
-                $title = 'New Product Added',
-                $messge = "This product is now available: $request->title",
-                $link = $link,
-                $image = null,
-                $directImage = $request->input('heroImage'),
-                $color    = 'blue',
-                $isPublic = 0,
-                $user = null
-            );
         });
 
         return $lock;
