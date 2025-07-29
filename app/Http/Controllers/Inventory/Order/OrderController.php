@@ -922,21 +922,22 @@ class OrderController extends Controller
                 $postEx->cancelOrder($order->tracking_number);
             }
 
+            if ($order->type != 'Cash') {
+                $link = env('MIX_WEB_URL').'dropshipper/orders';
 
-            $link = env('MIX_WEB_URL').'dropshipper/orders';
+                $order_no = substr($order->shop->store_name, 0, 3) . '-' . $order->order_no;
 
-            $order_no = substr($order->shop->store_name, 0, 3) . '-' . $order->order_no;
-
-            NotificationHelper::addNotification(
-                $title = 'Oops! Order Cancelled',
-                $messge = "Order $order_no is cancelled. Read comments in order details.",
-                $link = $link,
-                $image = null,
-                $directImage = null,
-                $color    = 'red',
-                $isPublic = 1,
-                $user = $order->belongs_to
-            );
+                NotificationHelper::addNotification(
+                    $title = 'Oops! Order Cancelled',
+                    $messge = "Order $order_no is cancelled. Read comments in order details.",
+                    $link = $link,
+                    $image = null,
+                    $directImage = null,
+                    $color    = 'red',
+                    $isPublic = 1,
+                    $user = $order->belongs_to
+                );
+            }
 
             $order->update(['status' => '7']);
         } else {
