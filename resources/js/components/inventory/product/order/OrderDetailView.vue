@@ -867,13 +867,13 @@
                         <div>
                             <button class="btn btn-info" data-toggle="modal" data-target="#markasReplacement"
                                 @click="markasReplacement()"
-                                v-if="(role == 'order collection' || role == 'admin') && details.is_replacement == 0">
+                                v-if="(role == 'order collection manager' || role == 'admin') && details.is_replacement == 0">
                                 <i class="fas fa-arrow-right"></i> Mark as Replacement
                             </button>
 
                             <button class="btn btn-warning" data-toggle="modal" data-target="#markasHold"
                                 @click="markAsHold()"
-                                v-if="(role == 'order collection' || role == 'admin')">
+                                v-if="(role == 'order collection manager' || role == 'admin')">
                                 <i class="fas fa-pause-circle"></i> Mark as Hold
                             </button>
 

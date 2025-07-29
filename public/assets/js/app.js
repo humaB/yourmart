@@ -16346,7 +16346,7 @@ var render = function render() {
     staticClass: "btn btn-primary btn-progress disabled"
   }, [_vm._v("Update\n                                        Amount")])])])]) : _vm._e()])]), _vm._v(" "), _vm.view != "viewOnly" && _vm.details.type != "Cash" && _vm.details.status < 8 ? _c("div", {
     staticClass: "modal-footer d-dlex justify-content-between"
-  }, [_c("div", [(_vm.role == "order collection" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
+  }, [_c("div", [(_vm.role == "order collection manager" || _vm.role == "admin") && _vm.details.is_replacement == 0 ? _c("button", {
     staticClass: "btn btn-info",
     attrs: {
       "data-toggle": "modal",
@@ -16359,7 +16359,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection" || _vm.role == "admin" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection manager" || _vm.role == "admin" ? _c("button", {
     staticClass: "btn btn-warning",
     attrs: {
       "data-toggle": "modal",
