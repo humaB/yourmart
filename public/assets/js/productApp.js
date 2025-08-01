@@ -4678,11 +4678,9 @@ __webpack_require__.r(__webpack_exports__);
       vm.commentLoader = true;
       axios.post(this.api_url + "inventory/products/orders/update-status", data).then(function (response) {
         vm.fetchOrders();
+        $("#ticket").modal('hide');
         vm.commentLoader = false;
         vm.$emit('commentAdded', true);
-        setTimeout(function () {
-          $("#ticket").modal('hide');
-        }, 2000);
         return swal({
           title: "Success",
           text: "Forwarded successfully",

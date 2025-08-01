@@ -1317,11 +1317,12 @@ export default {
                 .then((response) => {
 
                     vm.fetchOrders();
+                    $("#ticket").modal('hide');
+                    
                     vm.commentLoader = false;
                     vm.$emit('commentAdded', true);
-                    setTimeout(() => {
-                        $("#ticket").modal('hide');
-                    }, 2000)
+
+
                     return swal({
                         title: "Success",
                         text: "Forwarded successfully",
