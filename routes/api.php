@@ -222,6 +222,7 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
         Route::post('/closing-report',  [ FisReportController::class , 'closingReport']);
 
         Route::get('/dropshipper-list-report',  [FisReportController::class , 'dropshipperList']);
+        Route::get('/supplier-wise-stock-report',  [FisReportController::class , 'supplierWiseStock']);
 
     });
 });

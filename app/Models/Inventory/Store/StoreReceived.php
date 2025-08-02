@@ -15,6 +15,7 @@ class StoreReceived extends Model
 
     protected $fillable = [
         'po_id',
+        'supplier_id',
         'added_by',
     ];
 

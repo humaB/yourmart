@@ -104,6 +104,12 @@
                                     <a href="#" @click="dropshipperList()"><i class="fas fa-fax"></i> Dropshippers List</a>
                                 </h6>
                             </div>
+                            <div class="col-md-4 col-6">
+                                <h6>
+                                    15.
+                                    <a href="#" @click="supplierStock()"><i class="fas fa-fax"></i> Supplier Wise Stock</a>
+                                </h6>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -154,6 +160,9 @@
 
         <DropshipperListReport v-if="report == 'dropshipper-list-report'" :data="dropshipperListData"
             :loader="loader" @dropshipperListFilter="dropshipperListFilter($event)" />
+
+        <SupplierWiseStock v-if="report == 'supplier-stock-report'" :data="supplierStockData"
+            :loader="loader" @supplierStockFilter="supplierStockFilter($event)" />
 
 
         <!-- Modal -->
@@ -206,6 +215,7 @@ import LeopardReturnReceivedReport from '../../components/reports/fis/LeopardRet
 import LowStockProductReport from '../../components/reports/fis/LowStockProductReport.vue';
 import OrderIssuanceReport from '../../components/reports/fis/OrderIssuanceReport.vue';
 import ShopListForPostEx from '../../components/reports/fis/ShopListForPostEx.vue';
+import SupplierWiseStock from '../../components/reports/fis/SupplierWiseStock.vue';
 import Top10DropshipperReport from '../../components/reports/fis/Top10DropshipperReport.vue';
 import TopSellingProduct from '../../components/reports/fis/TopSellingProduct.vue';
 
@@ -228,7 +238,8 @@ export default {
         LowStockProductReport,
         ShopListForPostEx,
         ClosingReport,
-        DropshipperListReport
+        DropshipperListReport,
+        SupplierWiseStock
     },
     data() {
         return {
@@ -259,13 +270,27 @@ export default {
             highStockProductData : [],
             shopListPostExData : [],
             closingReportData : [],
-            dropshipperListData : []
+            dropshipperListData : [],
+            supplierStockData : []
         }
     },
     created() {
         this.fetchProducts();
     },
     methods: {
+        supplierStock() {
+            this.report = 'supplier-stock-report'
+        },
+        supplierStockFilter( data ) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/supplier-wise-stock-report')
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.supplierStockData = results;
+                    vm.loader = false;
+                })
+        },
         dropshipperList() {
             this.report = 'dropshipper-list-report'
         },

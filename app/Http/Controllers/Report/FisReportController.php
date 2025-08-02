@@ -18,6 +18,7 @@ use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\Ticket;
 use App\Models\User\DropShipper;
+use App\Models\User\SupplierStock;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -434,6 +435,18 @@ class FisReportController extends Controller
 
         // Apply filters to the query
         $dropshippers = DropShipper::orderBy('id', 'desc')
+            ->get();
+
+
+        return (new ResponseCollection($dropshippers))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function supplierWiseStock(){
+
+        // Apply filters to the query
+        $dropshippers = SupplierStock::with('supplier:id,full_name', 'product:id,title')->orderBy('id', 'desc')
             ->get();
 
 

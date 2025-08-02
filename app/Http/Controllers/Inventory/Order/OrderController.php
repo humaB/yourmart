@@ -17,6 +17,7 @@ use App\Models\Inventory\Order\OrderActivity;
 use App\Models\Inventory\Order\OrderComment;
 use App\Models\Inventory\Order\OrderDispatchedRecord;
 use App\Models\Inventory\Order\OrderItem;
+use App\Models\Inventory\Order\OrderItemSupplier;
 use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\Inventory\Order\OrderReAttempt;
 use App\Models\Inventory\Product\Setting\OtherCharge;
@@ -28,6 +29,7 @@ use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
+use App\Models\User\SupplierStock;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -733,6 +735,36 @@ class OrderController extends Controller
                             'total'      => (float)$product->quantity * (float)$product->price,
                             'added_by'  => auth()->user()->id,
                         ]);
+
+                       // Step 3: Deduct supplier stock and log in OrderItemSupplier
+                        $requiredQty = $product->quantity;
+
+                        // Get suppliers with available stock
+                        $suppliers = SupplierStock::where('product_id', $variation->product_id)
+                            ->where('quantity', '>', '0')
+                            ->orderBy('id') // optional: for consistent distribution
+                            ->get();
+
+                        foreach ($suppliers as $supplierStock) {
+                            if ($requiredQty <= 0) break;
+
+                            $availableQty = $supplierStock->quantity;
+                            $usedQty = min($availableQty, $requiredQty);
+
+                            // Reduce stock from supplier
+                            $supplierStock->decrement('quantity', $usedQty);
+
+                            // Log which supplier fulfilled what amount
+                            OrderItemSupplier::create([
+                                'order_id'       => $order->id,
+                                'order_item_id'  => $product->id,
+                                'supplier_id'    => $supplierStock->supplier_id,
+                                'product_id'     => $variation->product_id,
+                                'quantity'       => $usedQty,
+                            ]);
+
+                            $requiredQty -= $usedQty;
+                        }
                     }
                 }
             }
@@ -797,6 +829,36 @@ class OrderController extends Controller
                             'total'      => (float)$product->quantity * (float)$product->price,
                             'added_by'  => auth()->user()->id,
                         ]);
+
+                        // Step 3: Deduct supplier stock and log in OrderItemSupplier
+                        $requiredQty = $product->quantity;
+
+                        // Get suppliers with available stock
+                        $suppliers = SupplierStock::where('product_id', $variation->product_id)
+                            ->where('quantity', '>', '0')
+                            ->orderBy('id') // optional: for consistent distribution
+                            ->get();
+
+                        foreach ($suppliers as $supplierStock) {
+                            if ($requiredQty <= 0) break;
+
+                            $availableQty = $supplierStock->quantity;
+                            $usedQty = min($availableQty, $requiredQty);
+
+                            // Reduce stock from supplier
+                            $supplierStock->decrement('quantity', $usedQty);
+
+                            // Log which supplier fulfilled what amount
+                            OrderItemSupplier::create([
+                                'order_id'       => $order->id,
+                                'order_item_id'  => $product->id,
+                                'supplier_id'    => $supplierStock->supplier_id,
+                                'product_id'     => $variation->product_id,
+                                'quantity'       => $usedQty,
+                            ]);
+
+                            $requiredQty -= $usedQty;
+                        }
                     }
                 }
             }
@@ -904,6 +966,16 @@ class OrderController extends Controller
 
                     ProductVariation::where('id', $product->product_variation_id)
                         ->increment('stock', $product->quantity);
+
+                    // Step 3: Return stock to suppliers based on what they issued
+                    $supplierItems = OrderItemSupplier::where('order_item_id', $product->id)->get();
+
+                    foreach ($supplierItems as $item) {
+                        // Step 4: Return stock to SupplierStock
+                        SupplierStock::where('product_id', $item->product_id)
+                            ->where('supplier_id', $item->supplier_id)
+                            ->increment('quantity', $item->quantity);
+                    }
                 }
             }
 

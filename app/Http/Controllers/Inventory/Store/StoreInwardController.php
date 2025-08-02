@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Inventory\Store;
 
+use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
+use App\Models\Account\AccountHead;
 use App\Models\Inventory\Product\ProductQrCode;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
@@ -17,6 +19,8 @@ use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceived;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturnDetail;
+use App\Models\User\Supplier;
+use App\Models\User\SupplierStock;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use TCPDF;
@@ -237,12 +241,13 @@ class StoreInwardController extends Controller
             try {
                 $products = json_decode($request['details']);
 
-                $grn = StoreReceived::create([
-                    'po_id'     => $request['po'],
-                    'added_by'  => auth()->user()->id,
-                ]);
-
                 $po = PurchaseOrder::where('id', $request['po'])->first();
+
+                $grn = StoreReceived::create([
+                    'po_id'       => $request['po'],
+                    'supplier_id' => $po->supplier_id,
+                    'added_by'    => auth()->user()->id,
+                ]);
 
                 foreach ($products as $product) {
                     if ($product) {
@@ -256,6 +261,21 @@ class StoreInwardController extends Controller
                     }
                 }
 
+                $supplier = Supplier::find($po->supplier_id);
+
+                $ledger = new AccountHeadHelper();
+                $document = $ledger->voucherType('JV');
+                $productHead = AccountHead::where('name', 'STOCK-IN-HAND – ALL PRODUCTS')->first();
+                $supplierHead = $ledger->accountHeadCreate(
+                    $supplier->full_name . '-' . $supplier->cnic_number,
+                    2, // LIABILITIES
+                    8, // CURRENT LIABILITIES
+                    40, // TRADE CREDITORS
+                    41, // AP-SUPPLIERS
+                );
+
+                $overAllTotal = 0;
+
                 foreach ($products as $product) {
                     if ($product) {
                         $data = PurchaseOrderDetail::where('id', $product->id)->first();
@@ -263,7 +283,7 @@ class StoreInwardController extends Controller
                             $receivedQty = $product->qty;
                             if( $receivedQty > 0 ){
 
-                                $variation = ProductVariation::where('id', $data->product_variation_id)->first();
+                                $variation = ProductVariation::with('product:id,title')->where('id', $data->product_variation_id)->first();
 
                                 // Proportion of tax and discount based on total price
                                 $taxForReceivedQty  = ($data->tax /  $data->quantity) * $receivedQty;
@@ -272,17 +292,40 @@ class StoreInwardController extends Controller
 
                                 PurchaseOrderDetail::where('id', $product->id)->increment('store_received_quantity', $receivedQty);
 
+                                $total =  round(($data->price * $receivedQty) - $discountForReceivedQty + ($taxForReceivedQty + $deliveryChargesForReceivedQty));
+
                                 StoreReceivedDetail::create([
                                     'grn_id' => $grn->id,
+                                    'supplier_id' => $po->supplier_id,
                                     'product_id' => $data->product_id,
                                     'quantity' => $receivedQty,
                                     'price' => $data->price,
                                     'tax' => round($taxForReceivedQty),
                                     'delivery_charges' => round($deliveryChargesForReceivedQty),
                                     'discount' => round($discountForReceivedQty),
-                                    'total' => round(($data->price * $receivedQty) - $discountForReceivedQty + ($taxForReceivedQty + $deliveryChargesForReceivedQty)),
+                                    'total'    => $total,
                                     'added_by' => auth()->user()->id,
                                 ]);
+
+                               $supplierStock = SupplierStock::where('product_id', $data->product_id)
+                                    ->where('supplier_id', $po->supplier_id)
+                                    ->first();
+
+                                if ($supplierStock) {
+                                    $supplierStock->increment('quantity', $receivedQty);
+                                } else {
+                                    SupplierStock::create([
+                                        'product_id'  => $data->product_id,
+                                        'supplier_id' => $po->supplier_id,
+                                        'quantity'    => $receivedQty,
+                                    ]);
+                                }
+
+                                $overAllTotal += $total;
+
+                                $comment = $variation->product->title." received Qty@$receivedQty, Price@$data->price, Tax@$taxForReceivedQty, DC@$deliveryChargesForReceivedQty and Discount@$discountForReceivedQty";
+                                //Accounts Entry
+                                $ledger->accountTransaction($productHead->id, $supplierHead->id, $total, 0, $comment, $document, 'JV', 'grn', $grn->id, $approved = 1);
 
                                 // Calculate Weighted Average Rate
                                 $totalCost = ($data->price * $receivedQty) - $discountForReceivedQty + ($taxForReceivedQty + $deliveryChargesForReceivedQty);
@@ -305,6 +348,8 @@ class StoreInwardController extends Controller
                         }
                     }
                 }
+
+                $ledger->accountTransaction($supplierHead->id, $productHead->id, 0, $overAllTotal, 'Against product received', $document, 'JV', 'grn', $grn->id, $approved = 1);
 
                 DB::commit();
             } catch (\Exception $e) {

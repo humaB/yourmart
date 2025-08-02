@@ -328,8 +328,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['inventoryStatus'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/",
-      public_url: window.location.origin + "" + '/'
+      web_url: "http://localhost/dropshipping-frontend/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/'
     };
   },
   methods: {
@@ -435,7 +435,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['topFiveDropshippers'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/"
+      web_url: "http://localhost/dropshipping-frontend/"
     };
   },
   methods: {
@@ -464,8 +464,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['topFiveProduct'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/",
-      public_url: window.location.origin + "" + '/'
+      web_url: "http://localhost/dropshipping-frontend/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/'
     };
   },
   methods: {
@@ -501,7 +501,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['topFiveSuppliers'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/"
+      web_url: "http://localhost/dropshipping-frontend/"
     };
   },
   methods: {
@@ -532,8 +532,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
-      web_url: "https://yourmart.pk/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      web_url: "http://localhost/dropshipping-frontend/",
       editMode: false,
       // This controls whether the user is in edit mode
       banks: _data_banks__WEBPACK_IMPORTED_MODULE_0__.Banks,
@@ -595,7 +595,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader", "id", 'role', 'statuses', 'users'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -747,8 +747,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details', 'reservedAmount'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/",
-      api_url: window.location.origin + "/public/api/",
+      web_url: "http://localhost/dropshipping-frontend/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       shopPayments: [],
       shop: []
     };
@@ -870,7 +870,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['history', 'selectedDropshipper'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       id: '',
       csrf: ''
     };
@@ -940,7 +940,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['details', 'loader'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/",
+      web_url: "http://localhost/dropshipping-frontend/",
       isEditing: false
     };
   },
@@ -982,8 +982,8 @@ __webpack_require__.r(__webpack_exports__);
   props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
   data: function data() {
     return {
-      web_url: "https://yourmart.pk/",
-      api_url: window.location.origin + "/public/api/",
+      web_url: "http://localhost/dropshipping-frontend/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       shopPayments: [],
       shop: []
     };
@@ -1105,7 +1105,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['history', 'selectedDropshipper'],
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       id: '',
       csrf: ''
     };
@@ -1172,7 +1172,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["details", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       name: "",
       email: "",
       password: "",
@@ -1229,7 +1229,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["accounts", "accountChilds", "fields", "loader"],
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       name: "",
       email: "",
       password: "",
@@ -1291,7 +1291,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -2089,7 +2089,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ["id", "th", "tbody", "edit_form"],
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -2271,7 +2271,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       comment: '',
       attachment: '',
       searchQuery: '',
@@ -2290,7 +2290,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       cursorPosition: 0,
       highlightedIndex: -1,
       taggedUsers: [],
-      web_url: "https://yourmart.pk/",
+      web_url: "http://localhost/dropshipping-frontend/",
       scannedTrackingNumber: '',
       // Store the scanned QR code for tracking number
       paidAmount: '',
@@ -2716,7 +2716,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   props: ['tags', 'loader', 'settings', 'categories', 'products'],
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       form: {
         headline: {
           text: ''
@@ -3518,7 +3518,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
@@ -3625,7 +3625,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
@@ -3695,7 +3695,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      public_url: window.location.origin + "/dropshipping-admin"
     };
   },
   methods: {
@@ -3761,7 +3761,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -3975,7 +3975,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4060,7 +4060,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4166,7 +4166,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4240,7 +4240,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         courier: "",
         from: new Date().toISOString().substr(0, 10),
@@ -4310,7 +4310,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4384,7 +4384,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
@@ -4508,7 +4508,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4558,6 +4558,72 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=script&lang=js":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'SupplierWiseStock',
+  props: ['data', 'loader'],
+  components: {
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
+  },
+  data: function data() {
+    return {
+      public_url: window.location.origin + "/dropshipping-admin"
+    };
+  },
+  methods: {
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price).toFixed(2);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    submitFunction: function submitFunction() {
+      this.clearDataTable();
+      this.$emit('supplierStockFilter', this.filter);
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $('#supplier_wise_stock').DataTable();
+      table.destroy();
+    }
+  },
+  watch: {
+    data: function data(newLedger) {
+      setTimeout(function () {
+        $('#supplier_wise_stock').DataTable({
+          "bSort": false,
+          dom: 'Bfrtip',
+          buttons: [{
+            extend: 'copy',
+            title: 'Dropshipper List'
+          }, 'csv', {
+            extend: 'excel',
+            title: 'Dropshipper List'
+          }]
+        });
+      }, 300);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=script&lang=js":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=script&lang=js ***!
@@ -4582,7 +4648,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4688,7 +4754,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         product: {
           code: 0,
@@ -4814,8 +4880,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   data: function data() {
     var _ref;
     return _ref = {
-      api_url: "/public/api/",
-      public_url: window.location.origin + "",
+      api_url: "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
       filter: {
         dropshipper: 0,
         shop: 0,
@@ -5058,9 +5124,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "" + '/',
-      api_url: window.location.origin + "/public/api/",
-      web_url: "https://yourmart.pk/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      web_url: "http://localhost/dropshipping-frontend/",
       tickets: [],
       chats: [],
       showModal: false,
@@ -5408,8 +5474,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -5752,8 +5818,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Supplier Request's"
       },
@@ -5861,8 +5927,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + "/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + "/",
       topSaleProducts: [],
       tickets: [],
       ticketFilter: {
@@ -6066,7 +6132,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Orders"
       },
@@ -6229,8 +6295,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return _defineProperty(_defineProperty({
-      public_url: window.location.origin + "",
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Dropshipper Pay outs"
       },
@@ -6773,8 +6839,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + "",
-      api_url: window.location.origin + "/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Pending Payouts"
       },
@@ -6985,7 +7051,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Users",
         link: "#",
@@ -7227,7 +7293,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Couriers",
         link: "#",
@@ -7423,8 +7489,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       dropshipperData: {
@@ -7585,8 +7651,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -7746,8 +7812,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -7893,8 +7959,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allCourses: [],
@@ -8121,8 +8187,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin" + '/',
       btnLoading: false,
       tableLoading: false,
       allData: [],
@@ -8284,7 +8350,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
       tableHeader: {
         heading: "Page Setting's"
       },
@@ -8391,9 +8457,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_reports_fis_LowStockProductReport_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../components/reports/fis/LowStockProductReport.vue */ "./resources/js/components/reports/fis/LowStockProductReport.vue");
 /* harmony import */ var _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../components/reports/fis/OrderIssuanceReport.vue */ "./resources/js/components/reports/fis/OrderIssuanceReport.vue");
 /* harmony import */ var _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../components/reports/fis/ShopListForPostEx.vue */ "./resources/js/components/reports/fis/ShopListForPostEx.vue");
-/* harmony import */ var _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/reports/fis/Top10DropshipperReport.vue */ "./resources/js/components/reports/fis/Top10DropshipperReport.vue");
-/* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
-/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/reports/fis/SupplierWiseStock.vue */ "./resources/js/components/reports/fis/SupplierWiseStock.vue");
+/* harmony import */ var _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/reports/fis/Top10DropshipperReport.vue */ "./resources/js/components/reports/fis/Top10DropshipperReport.vue");
+/* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+
 
 
 
@@ -8412,7 +8480,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FisReportsPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
     InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
@@ -8420,18 +8488,19 @@ __webpack_require__.r(__webpack_exports__);
     DeliveredOrderDetailsReport: _components_reports_fis_DeliveredOrderDetailsReport_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     LeopardReturnReceivedReport: _components_reports_fis_LeopardReturnReceivedReport_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
     OrderIssuanceReport: _components_reports_fis_OrderIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
-    TopSellingProduct: _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
-    Top10DropshipperReport: _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+    TopSellingProduct: _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+    Top10DropshipperReport: _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
     HighStockProductReport: _components_reports_fis_HighStockProductReport_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     LowStockProductReport: _components_reports_fis_LowStockProductReport_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
     ShopListForPostEx: _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
     ClosingReport: _components_reports_fis_ClosingReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    DropshipperListReport: _components_reports_fis_DropshipperListReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    DropshipperListReport: _components_reports_fis_DropshipperListReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    SupplierWiseStock: _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
   },
   data: function data() {
     return {
-      api_url: "/public/api/",
-      public_url: window.location.origin + "",
+      api_url: "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
       tableHeader: {
         heading: "FIS Reports"
       },
@@ -8457,13 +8526,26 @@ __webpack_require__.r(__webpack_exports__);
       highStockProductData: [],
       shopListPostExData: [],
       closingReportData: [],
-      dropshipperListData: []
+      dropshipperListData: [],
+      supplierStockData: []
     };
   },
   created: function created() {
     this.fetchProducts();
   },
   methods: {
+    supplierStock: function supplierStock() {
+      this.report = 'supplier-stock-report';
+    },
+    supplierStockFilter: function supplierStockFilter(data) {
+      var vm = this;
+      vm.loader = true;
+      axios.get(vm.api_url + 'reports/fis/supplier-wise-stock-report').then(function (res) {
+        var results = res.data.response;
+        vm.supplierStockData = results;
+        vm.loader = false;
+      });
+    },
     dropshipperList: function dropshipperList() {
       this.report = 'dropshipper-list-report';
     },
@@ -8691,8 +8773,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      api_url: window.location.origin + "/public/api/",
-      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/dropshipping-admin/public/api/",
+      public_url: window.location.origin + "/dropshipping-admin",
       profileData: {},
       btnLoading: false,
       oldPassword: ''
@@ -21136,6 +21218,83 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_vm._m(1)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "supplier_wise_stock"
+    }
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.product.title))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))])]);
+  }), 0)])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Supplier Wise Stock")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Fetch Record")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Product")]), _vm._v(" "), _c("th", [_vm._v("Quantity #")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=template&id=5db9b9ec":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=template&id=5db9b9ec ***!
@@ -26806,7 +26965,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Dropshippers List")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Dropshippers List")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4 col-6"
+  }, [_c("h6", [_vm._v("\n                                15.\n                                "), _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.supplierStock();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fax"
+  }), _vm._v(" Supplier Wise Stock")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -26951,6 +27123,16 @@ var render = function render() {
     on: {
       dropshipperListFilter: function dropshipperListFilter($event) {
         return _vm.dropshipperListFilter($event);
+      }
+    }
+  }) : _vm._e(), _vm._v(" "), _vm.report == "supplier-stock-report" ? _c("SupplierWiseStock", {
+    attrs: {
+      data: _vm.supplierStockData,
+      loader: _vm.loader
+    },
+    on: {
+      supplierStockFilter: function supplierStockFilter($event) {
+        return _vm.supplierStockFilter($event);
       }
     }
   }) : _vm._e(), _vm._v(" "), _c("div", {
@@ -54925,6 +55107,45 @@ component.options.__file = "resources/js/components/reports/fis/ShopListForPostE
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/SupplierWiseStock.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/reports/fis/SupplierWiseStock.vue ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SupplierWiseStock.vue?vue&type=template&id=38544dfc */ "./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc");
+/* harmony import */ var _SupplierWiseStock_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SupplierWiseStock.vue?vue&type=script&lang=js */ "./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SupplierWiseStock_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__.render,
+  _SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/reports/fis/SupplierWiseStock.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/reports/fis/Top10DropshipperReport.vue":
 /*!************************************************************************!*\
   !*** ./resources/js/components/reports/fis/Top10DropshipperReport.vue ***!
@@ -56665,6 +56886,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=script&lang=js":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=script&lang=js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SupplierWiseStock.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=script&lang=js":
 /*!************************************************************************************************!*\
   !*** ./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=script&lang=js ***!
@@ -57948,6 +58185,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShopListForPostEx_vue_vue_type_template_id_c3c5dc44__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ShopListForPostEx_vue_vue_type_template_id_c3c5dc44__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ShopListForPostEx.vue?vue&type=template&id=c3c5dc44 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/ShopListForPostEx.vue?vue&type=template&id=c3c5dc44");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SupplierWiseStock.vue?vue&type=template&id=38544dfc */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc");
 
 
 /***/ }),

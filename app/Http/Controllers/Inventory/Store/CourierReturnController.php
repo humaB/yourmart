@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Inventory\Store;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
+use App\Models\Inventory\Order\OrderItemSupplier;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
+use App\Models\User\SupplierStock;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -123,6 +125,16 @@ class CourierReturnController extends Controller
 
             ProductVariation::where('id', $product->product_variation_id)
                 ->increment('stock', $product->quantity);
+
+            // Step 3: Return stock to suppliers based on what they issued
+            $supplierItems = OrderItemSupplier::where('order_item_id', $product->id)->get();
+
+            foreach ($supplierItems as $item) {
+                // Step 4: Return stock to SupplierStock
+                SupplierStock::where('product_id', $item->product_id)
+                    ->where('supplier_id', $item->supplier_id)
+                    ->increment('quantity', $item->quantity);
+            }
         }
 
         return ['message' => 'Successfully added to stock'];

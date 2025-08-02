@@ -14,6 +14,7 @@ class StoreReceivedDetail extends Model
 
     protected $fillable = [
         'grn_id',
+        'supplier_id',
         'product_id',
         'quantity',
         'price',
