@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\Supplier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use TCPDF;
@@ -135,44 +136,74 @@ class SupplierController extends Controller
         return ['message', 'successfully updated'];
     }
 
-    public function pendingPayment(){
-
-       $suppliers = Supplier::withSum([
-            'orders as total_remaining_amount' => function ($q) {
-                $q->where('remaining_amount', '>', 0)
-                ->where('status', 1);
-            }
-        ], 'remaining_amount')
-        ->withSum([
-            'orders as total_order_amount' => function ($q) {
-                $q->where('remaining_amount', '>', 0)
-                ->where('status', 1);
-            }
-        ], 'total_amount')
+    public function pendingSupplierPayment()
+    {
+        // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
+        $suppliers = PurchaseOrder::select(
+            'supplier_id',
+            DB::raw('SUM(total_amount) as total_order_amount'),
+            DB::raw('SUM(remaining_amount) as total_remaining_amount')
+        )
+        ->where('status', '1')
+        ->where('supplier_stock', '1')
+        ->groupBy('supplier_id')
         ->having('total_remaining_amount', '>', 0)
-        ->orderByDesc('id')
+        ->with('supplier:id,full_name,email') // eager load supplier if needed
+        ->orderByDesc('supplier_id')
         ->get();
 
-
-
-
-        $totalPayable = PurchaseOrder::where('status', '1')->sum('total_amount');
-        $totalRemaining   = PurchaseOrder::where('status', '1')->sum('remaining_amount');
-        $totalPayablePaid = $totalPayable - $totalRemaining;
+        $totalPayable = $suppliers->sum('total_order_amount');
+        $totalRemaining = $suppliers->sum('total_remaining_amount');
+        $totalPaid = $totalPayable - $totalRemaining;
         $remainingDropshippers = $suppliers->count();
 
         $data = [
             'total_payable' => $totalPayable,
-            'total_paid' => $totalPayablePaid,
+            'total_paid' => $totalPaid,
             'total_remaining' => $totalRemaining,
             'remaining_dropshippers' => $remainingDropshippers,
-            'suppliers'             => $suppliers
+            'suppliers' => $suppliers
         ];
 
-        return ( new ResponseCollection ( $data ) )
-        ->response()
-        ->setStatusCode( 200 );
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
     }
+
+    public function pendingYourmartPayment()
+    {
+        // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
+        $suppliers = PurchaseOrder::select(
+            'supplier_id',
+            DB::raw('SUM(total_amount) as total_order_amount'),
+            DB::raw('SUM(remaining_amount) as total_remaining_amount')
+        )
+        ->where('status', '1')
+        ->where('supplier_stock', '0')
+        ->groupBy('supplier_id')
+        ->having('total_remaining_amount', '>', 0)
+        ->with('supplier:id,full_name,email') // eager load supplier if needed
+        ->orderByDesc('supplier_id')
+        ->get();
+
+        $totalPayable = $suppliers->sum('total_order_amount');
+        $totalRemaining = $suppliers->sum('total_remaining_amount');
+        $totalPaid = $totalPayable - $totalRemaining;
+        $remainingDropshippers = $suppliers->count();
+
+        $data = [
+            'total_payable' => $totalPayable,
+            'total_paid' => $totalPaid,
+            'total_remaining' => $totalRemaining,
+            'remaining_dropshippers' => $remainingDropshippers,
+            'suppliers' => $suppliers
+        ];
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
 
     public function paymentData(Request $request)
     {
@@ -186,7 +217,7 @@ class SupplierController extends Controller
 
         $supplier = Supplier::with('bank')->where('id', $request->id)->first();
 
-        $orders = PurchaseOrder::where('supplier_id', $supplier->id)->get();
+        $orders = PurchaseOrder::where('status', '1')->where('supplier_stock', $request->type)->where('supplier_id', $supplier->id)->get();
 
         $supplier->total_profit = $orders->sum('total_amount');
         $supplier->total_paid_profit = $orders->sum('total_amount') - $orders->sum('remaining_amount');
@@ -216,6 +247,7 @@ class SupplierController extends Controller
         $orders = PurchaseOrder::where('supplier_id', $supplier->id)
             ->where('remaining_amount', '>', '0')
             ->where('status', '1')
+            ->where('supplier_stock', $request->inventoryType)
             ->get();
 
         $ledger = new AccountHeadHelper();
@@ -262,7 +294,7 @@ class SupplierController extends Controller
         }
 
         // Bank Cash Credit
-        $ledger->accountTransaction($request->from_account, $supplierLedger->id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'order', $order->id, $approved = 1, $attachment);
+        $ledger->accountTransaction($request->from_account, $supplierLedger->id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'PO', '0', $approved = 1, $attachment);
 
         return response()->json([], 200);
     }

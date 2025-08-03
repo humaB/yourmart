@@ -6875,19 +6875,28 @@ __webpack_require__.r(__webpack_exports__);
       totalPaid: 0,
       totalRemaining: 0,
       remainingDropshippers: 0,
-      selectedSupplier: "",
-      paymentHistorys: []
+      selectedSupplier: {
+        id: "",
+        type: ""
+      },
+      paymentHistorys: [],
+      suppliertotalPayable: 0,
+      suppliertotalPaid: 0,
+      suppliertotalRemaining: 0,
+      supplierremainingDropshippers: 0,
+      supplierrecords: []
     };
   },
   created: function created() {
     this.csrf = $('meta[name=csrf-token]').attr('content');
-    this.fetchRecord();
+    this.fetchSupplierRecord();
+    this.fetchYourmartRecord();
     this.addDataReset = JSON.parse(JSON.stringify(this.addData));
   },
   methods: {
     paymentHistory: function paymentHistory(id) {
       var vm = this;
-      vm.selectedDropshipper = id;
+      vm.selectedSupplier.id = id;
       axios.post(this.api_url + "suppliers/payments/history", {
         id: id
       }).then(function (response) {
@@ -6927,7 +6936,8 @@ __webpack_require__.r(__webpack_exports__);
       }
       var fd = new FormData();
       // Append each field from addData to the FormData object
-      fd.append('id', this.selectedSupplier);
+      fd.append('id', this.selectedSupplier.id);
+      fd.append('inventoryType', this.selectedSupplier.type);
       fd.append('type', this.addData.type);
       fd.append('from_account', this.addData.from_account); // Sending only the code (adjust as needed)
       fd.append('amount', this.addData.amount);
@@ -6937,7 +6947,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.addData.attachment instanceof File) {
         fd.append('attachment', this.addData.attachment);
       }
-      this.addData.id = this.selectedSupplier;
+      this.addData.id = this.selectedSupplier.id;
       this.btnLoader = true;
       axios.post(this.api_url + "suppliers/payments/add", fd).then(function (response) {
         _this.paymentDetail(_this.addData.id);
@@ -6966,11 +6976,13 @@ __webpack_require__.r(__webpack_exports__);
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
-    paymentDetail: function paymentDetail(id) {
+    paymentDetail: function paymentDetail(id, type) {
       var vm = this;
-      vm.selectedSupplier = id;
+      vm.selectedSupplier.id = id;
+      vm.selectedSupplier.type = type;
       axios.post(this.api_url + "suppliers/payments/data", {
-        id: id
+        id: id,
+        type: type
       }).then(function (response) {
         var results = response.data.response;
         vm.orders = results.orders;
@@ -6979,10 +6991,25 @@ __webpack_require__.r(__webpack_exports__);
         vm.details = results.supplier;
       });
     },
-    fetchRecord: function fetchRecord() {
+    fetchSupplierRecord: function fetchSupplierRecord() {
       var vm = this;
       vm.loader = false;
-      axios.get(this.api_url + "suppliers/payments").then(function (response) {
+      axios.get(this.api_url + "suppliers/payments/suppliers").then(function (response) {
+        var results = response.data.response;
+        vm.suppliertotalPayable = results.total_payable;
+        vm.suppliertotalPaid = results.total_paid;
+        vm.suppliertotalRemaining = results.total_remaining;
+        vm.supplierremainingDropshippers = results.remaining_dropshippers;
+        vm.supplierrecords = results.suppliers;
+        setTimeout(function () {
+          vm.dataTable();
+        }, 300);
+      });
+    },
+    fetchYourmartRecord: function fetchYourmartRecord() {
+      var vm = this;
+      vm.loader = false;
+      axios.get(this.api_url + "suppliers/payments/yourmart").then(function (response) {
         var results = response.data.response;
         vm.totalPayable = results.total_payable;
         vm.totalPaid = results.total_paid;
@@ -6990,7 +7017,7 @@ __webpack_require__.r(__webpack_exports__);
         vm.remainingDropshippers = results.remaining_dropshippers;
         vm.records = results.suppliers;
         setTimeout(function () {
-          vm.dataTable();
+          vm.dataTable2();
         }, 300);
       });
     },
@@ -7005,6 +7032,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     dataTable: function dataTable() {
       $("#moq_table").DataTable({
+        "bSort": false,
+        dom: 'Bfrtip',
+        buttons: [{
+          extend: 'excel',
+          title: 'Pending Payouts'
+        }]
+      });
+    },
+    dataTable2: function dataTable2() {
+      $("#moq_table2").DataTable({
         "bSort": false,
         dom: 'Bfrtip',
         buttons: [{
@@ -13418,61 +13455,7 @@ var render = function render() {
         href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(group.attachment)
       }
     }, [_vm._v("Preview")])]) : _c("td", [_vm._v("-")])]);
-  }), 0)])])]), _vm._v(" "), _vm._m(2)])]), _vm._v(" "), _c("form", {
-    ref: "paymentHistory",
-    attrs: {
-      method: "POST",
-      action: _vm.public_url + "/dropshippers/payment-history",
-      target: "_blank"
-    }
-  }, [_c("input", {
-    attrs: {
-      type: "hidden",
-      name: "_token"
-    },
-    domProps: {
-      value: _vm.csrf
-    }
-  }), _vm._v(" "), _c("input", {
-    attrs: {
-      type: "hidden",
-      name: "document"
-    },
-    domProps: {
-      value: _vm.id
-    }
-  }), _vm._v(" "), _c("input", {
-    attrs: {
-      type: "hidden",
-      name: "dropshipper"
-    },
-    domProps: {
-      value: _vm.selectedDropshipper
-    }
-  })]), _vm._v(" "), _c("form", {
-    ref: "paymentLedger",
-    attrs: {
-      method: "POST",
-      action: _vm.public_url + "/dropshippers/ledger",
-      target: "_blank"
-    }
-  }, [_c("input", {
-    attrs: {
-      type: "hidden",
-      name: "_token"
-    },
-    domProps: {
-      value: _vm.csrf
-    }
-  }), _vm._v(" "), _c("input", {
-    attrs: {
-      type: "hidden",
-      name: "dropshipper"
-    },
-    domProps: {
-      value: _vm.selectedDropshipper
-    }
-  })])]);
+  }), 0)])])]), _vm._v(" "), _vm._m(2)])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -25076,31 +25059,25 @@ var render = function render() {
     staticClass: "col-12 col-md-12 col-lg-12"
   }, [_c("div", {
     staticClass: "card card-primary"
-  }, [_c("TableHeader", {
-    attrs: {
-      tableHeader: _vm.tableHeader
-    }
-  }), _vm._v(" "), _c("div", {
+  }, [_c("div", {
     staticClass: "card-body row"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "tab-content",
+    attrs: {
+      id: "myTabContent2"
+    }
+  }, [_c("div", {
+    staticClass: "tab-pane fade show active",
+    attrs: {
+      id: "yourmart3",
+      role: "tabpanel",
+      "aria-labelledby": "yourmart-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-12 row px-4"
   }, [_c("div", {
-    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPayable)) + "\n                                            ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
@@ -25114,9 +25091,9 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                            ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPayable)) + "\n                                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
@@ -25130,9 +25107,9 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                            ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalPaid)) + "\n                                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
   }, [_c("div", {
     staticClass: "card card-statistic-1"
@@ -25146,7 +25123,23 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                            ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalRemaining)) + "\n                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.remainingDropshippers) + "\n                                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Total Suppliers")])])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 mt-3"
@@ -25176,7 +25169,7 @@ var render = function render() {
   }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.records, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_order_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_order_amount - item.total_remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_remaining_amount)))]), _vm._v(" "), _c("td", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_order_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_order_amount - item.total_remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_remaining_amount)))]), _vm._v(" "), _c("td", {
       staticClass: "d-flex justify-content-between"
     }, [_c("button", {
       staticClass: "btn btn-primary mr-2",
@@ -25187,7 +25180,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.paymentDetail(item.id);
+          return _vm.paymentDetail(item.supplier.id, "0");
         }
       }
     }, [_c("i", {
@@ -25215,13 +25208,161 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.paymentHistory(item.id);
+          return _vm.paymentHistory(item.supplier.id);
         }
       }
     }, [_c("i", {
       staticClass: "far fa-clock"
     })])])]);
-  }), 0)])])])])])])])], 1)])]), _vm._v(" "), _c("SupplierDetails", {
+  }), 0)])])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
+    attrs: {
+      id: "supplier3",
+      role: "tabpanel",
+      "aria-labelledby": "supplier-tab3"
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12 row px-4"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.suppliertotalPayable)) + "\n                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Payouts")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.suppliertotalPaid)) + "\n                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Paid")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(7), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.suppliertotalRemaining)) + "\n                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Remaining")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(8), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.supplierremainingDropshippers) + "\n                                                        ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Total Suppliers")])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12 mt-3"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_c("div", {
+    staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("div", {
+    staticClass: "col-md-12 table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "moq_table2"
+    }
+  }, [_c("thead", [_c("tr", _vm._l(_vm.th, function (item, index) {
+    return _c("th", {
+      key: item
+    }, [_vm._v(_vm._s(item))]);
+  }), 0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.supplierrecords, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_order_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_order_amount - item.total_remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_remaining_amount)))]), _vm._v(" "), _c("td", {
+      staticClass: "d-flex justify-content-between"
+    }, [_c("button", {
+      staticClass: "btn btn-primary mr-2",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#supplierPayment",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentDetail(item.supplier.id, "1");
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fas fa-credit-card"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-info mr-2",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#supplierDetail",
+        title: "View Details"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchDetail(item.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#dropshipperHistory",
+        title: "Payment"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.paymentHistory(item.supplier.id);
+        }
+      }
+    }, [_c("i", {
+      staticClass: "far fa-clock"
+    })])])]);
+  }), 0)])])])])])])])])])])])])]), _vm._v(" "), _c("SupplierDetails", {
     attrs: {
       details: _vm.details,
       loader: _vm.btnLoader
@@ -25277,6 +25418,72 @@ var render = function render() {
   })], 1);
 };
 var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("ul", {
+    staticClass: "nav nav-pills mb-3",
+    attrs: {
+      id: "myTab3",
+      role: "tablist"
+    }
+  }, [_c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link active",
+    attrs: {
+      id: "yourmart-tab3",
+      "data-toggle": "tab",
+      href: "#yourmart3",
+      role: "tab",
+      "aria-controls": "yourmart",
+      "aria-selected": "true"
+    }
+  }, [_vm._v("Pending Payouts YourMart")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
+    attrs: {
+      id: "supplier-tab3",
+      "data-toggle": "tab",
+      href: "#supplier3",
+      role: "tab",
+      "aria-controls": "supplier",
+      "aria-selected": "false"
+    }
+  }, [_vm._v("Pending Payouts Suppliers")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fa fa-hand-holding-usd"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fa fa-thumbs-up"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-calculator"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fa fa-clipboard-list"
+  })]);
+}, function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {

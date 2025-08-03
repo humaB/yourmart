@@ -307,19 +307,21 @@ class StoreInwardController extends Controller
                                     'added_by' => auth()->user()->id,
                                 ]);
 
-                               $supplierStock = SupplierStock::where('product_id', $data->product_id)
-                                    ->where('supplier_id', $po->supplier_id)
-                                    ->first();
+                               if( $po->supplier_stock == '1'){
+                                   $supplierStock = SupplierStock::where('product_id', $data->product_id)
+                                        ->where('supplier_id', $po->supplier_id)
+                                        ->first();
 
-                                if ($supplierStock) {
-                                    $supplierStock->increment('quantity', $receivedQty);
-                                } else {
-                                    SupplierStock::create([
-                                        'product_id'  => $data->product_id,
-                                        'supplier_id' => $po->supplier_id,
-                                        'quantity'    => $receivedQty,
-                                    ]);
-                                }
+                                    if ($supplierStock) {
+                                        $supplierStock->increment('quantity', $receivedQty);
+                                    } else {
+                                        SupplierStock::create([
+                                            'product_id'  => $data->product_id,
+                                            'supplier_id' => $po->supplier_id,
+                                            'quantity'    => $receivedQty,
+                                        ]);
+                                    }
+                               }
 
                                 $overAllTotal += $total;
 

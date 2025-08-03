@@ -3,132 +3,276 @@
         <div class="row">
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card card-primary">
-                    <TableHeader :tableHeader="tableHeader" />
 
                     <div class="card-body row">
-                        <div class="col-md-12 row px-4">
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-purple">
-                                        <i class="fa fa-hand-holding-usd"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{
-                                                    formatPrice(totalPayable) }}
-                                                </h3>
-                                                <span class="text-muted">Total Payouts</span>
+                        <ul class="nav nav-pills mb-3" id="myTab3" role="tablist">
+                             <li class="nav-item">
+                                 <a class="nav-link active" id="yourmart-tab3" data-toggle="tab" href="#yourmart3" role="tab" aria-controls="yourmart" aria-selected="true">Pending Payouts YourMart</a>
+                             </li>
+                             <li class="nav-item">
+                                 <a class="nav-link" id="supplier-tab3" data-toggle="tab" href="#supplier3" role="tab" aria-controls="supplier" aria-selected="false">Pending Payouts Suppliers</a>
+                             </li>
+
+                         </ul>
+                        <div class="tab-content" id="myTabContent2">
+
+                            <div class="tab-pane fade show active" id="yourmart3" role="tabpanel" aria-labelledby="yourmart-tab3">
+                                <div class="row">
+                                    <div class="col-md-12 row px-4">
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-purple">
+                                                    <i class="fa fa-hand-holding-usd"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                formatPrice(totalPayable) }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Payouts</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-green">
+                                                    <i class="fa fa-thumbs-up"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid)
+                                                                }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Paid</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-cyan">
+                                                    <i class="fa fa-calculator"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                    formatPrice(totalRemaining)
+                                                                }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Remaining</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-orange">
+                                                    <i class="fa fa-clipboard-list"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Suppliers</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <!-- Table -->
+                                    <div class="col-md-12 mt-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="card-body table-responsive" v-if="loader">
+                                                        <bullet-list-loader :width="250"> </bullet-list-loader>
+                                                    </div>
+                                                    <div class="col-md-12 table-responsive" v-else>
+                                                        <table class="table table-bordered" :id="table_id">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="(item, index) in records" :key="item.id">
+                                                                    <td>{{ index + 1 }}</td>
+                                                                    <td>{{ item.supplier.full_name }}</td>
+                                                                    <td>{{ item.supplier.email }}</td>
+                                                                    <td>{{ formatPrice(item.total_order_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_order_amount -
+                                                                        item.total_remaining_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}</td>
+
+                                                                    <td class="d-flex justify-content-between">
+                                                                        <button class="btn btn-primary mr-2"
+                                                                            @click="paymentDetail(item.supplier.id , '0')" data-toggle="modal"
+                                                                            data-target="#supplierPayment" title="Payment"><i
+                                                                                class="fas fa-credit-card"></i></button>
+                                                                        <button class="btn btn-info mr-2"
+                                                                            @click="fetchDetail(item.id)" data-toggle="modal"
+                                                                            data-target="#supplierDetail" title="View Details"><i
+                                                                                class="fa fa-eye"></i></button>
+
+                                                                        <button class="btn btn-primary"
+                                                                            @click="paymentHistory(item.supplier.id)" data-toggle="modal"
+                                                                            data-target="#dropshipperHistory" title="Payment"><i
+                                                                            class="far fa-clock"></i></button>
+
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-green">
-                                        <i class="fa fa-thumbs-up"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid)
-                                                    }}
-                                                </h3>
-                                                <span class="text-muted">Total Paid</span>
+
+                            <div class="tab-pane fade" id="supplier3" role="tabpanel" aria-labelledby="supplier-tab3">
+                                <div class="row">
+                                    <div class="col-md-12 row px-4">
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-purple">
+                                                    <i class="fa fa-hand-holding-usd"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                formatPrice(suppliertotalPayable) }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Payouts</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-green">
+                                                    <i class="fa fa-thumbs-up"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(suppliertotalPaid)
+                                                                }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Paid</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-cyan">
+                                                    <i class="fa fa-calculator"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                    formatPrice(suppliertotalRemaining)
+                                                                }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Remaining</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3 col-md-6 col-sm-6 col-12">
+                                            <div class="card card-statistic-1">
+                                                <div class="card-icon l-bg-orange">
+                                                    <i class="fa fa-clipboard-list"></i>
+                                                </div>
+                                                <div class="card-wrap">
+                                                    <div class="padding-20">
+                                                        <div class="text-right">
+                                                            <h3 class="font-light mb-0">
+                                                                <i class="ti-arrow-up text-success"></i> {{ supplierremainingDropshippers }}
+                                                            </h3>
+                                                            <span class="text-muted">Total Suppliers</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-cyan">
-                                        <i class="fa fa-calculator"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{
-                                                        formatPrice(totalRemaining)
-                                                    }}
-                                                </h3>
-                                                <span class="text-muted">Total Remaining</span>
+                                    <!-- Table -->
+                                    <div class="col-md-12 mt-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="card-body table-responsive" v-if="loader">
+                                                        <bullet-list-loader :width="250"> </bullet-list-loader>
+                                                    </div>
+                                                    <div class="col-md-12 table-responsive" v-else>
+                                                        <table class="table table-bordered" id="moq_table2">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr v-for="(item, index) in supplierrecords" :key="item.id">
+                                                                    <td>{{ index + 1 }}</td>
+                                                                    <td>{{ item.supplier.full_name }}</td>
+                                                                    <td>{{ item.supplier.email }}</td>
+                                                                    <td>{{ formatPrice(item.total_order_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_order_amount -
+                                                                        item.total_remaining_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}</td>
+
+                                                                    <td class="d-flex justify-content-between">
+                                                                        <button class="btn btn-primary mr-2"
+                                                                            @click="paymentDetail(item.supplier.id , '1')" data-toggle="modal"
+                                                                            data-target="#supplierPayment" title="Payment"><i
+                                                                                class="fas fa-credit-card"></i></button>
+                                                                        <button class="btn btn-info mr-2"
+                                                                            @click="fetchDetail(item.id)" data-toggle="modal"
+                                                                            data-target="#supplierDetail" title="View Details"><i
+                                                                                class="fa fa-eye"></i></button>
+
+                                                                        <button class="btn btn-primary"
+                                                                            @click="paymentHistory(item.supplier.id)" data-toggle="modal"
+                                                                            data-target="#dropshipperHistory" title="Payment"><i
+                                                                            class="far fa-clock"></i></button>
+
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-orange">
-                                        <i class="fa fa-clipboard-list"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
-                                                </h3>
-                                                <span class="text-muted">Total Suppliers</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Table -->
-                        <div class="col-md-12 mt-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="card-body table-responsive" v-if="loader">
-                                            <bullet-list-loader :width="250"> </bullet-list-loader>
-                                        </div>
-                                        <div class="col-md-12 table-responsive" v-else>
-                                            <table class="table table-bordered" :id="table_id">
-                                                <thead>
-                                                    <tr>
-                                                        <th v-for="(item, index) in th" :key="item">{{ item }}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(item, index) in records" :key="item.id">
-                                                        <td>{{ index + 1 }}</td>
-                                                        <td>{{ item.full_name }}</td>
-                                                        <td>{{ item.email }}</td>
-                                                        <td>{{ formatPrice(item.total_order_amount) }}</td>
-                                                        <td>{{ formatPrice(item.total_order_amount -
-                                                            item.total_remaining_amount) }}</td>
-                                                        <td>{{ formatPrice(item.total_remaining_amount) }}</td>
-
-                                                        <td class="d-flex justify-content-between">
-                                                            <button class="btn btn-primary mr-2"
-                                                                @click="paymentDetail(item.id)" data-toggle="modal"
-                                                                data-target="#supplierPayment" title="Payment"><i
-                                                                    class="fas fa-credit-card"></i></button>
-                                                            <button class="btn btn-info mr-2"
-                                                                @click="fetchDetail(item.id)" data-toggle="modal"
-                                                                data-target="#supplierDetail" title="View Details"><i
-                                                                    class="fa fa-eye"></i></button>
-
-                                                            <button class="btn btn-primary"
-                                                                @click="paymentHistory(item.id)" data-toggle="modal"
-                                                                data-target="#dropshipperHistory" title="Payment"><i
-                                                                class="far fa-clock"></i></button>
-
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                         <!-- END TABLE -->
                     </div>
@@ -204,19 +348,26 @@ export default {
             totalPaid: 0,
             totalRemaining: 0,
             remainingDropshippers: 0,
-            selectedSupplier: "",
-            paymentHistorys : []
+            selectedSupplier: { id : "", type : ""},
+            paymentHistorys : [],
+
+            suppliertotalPayable: 0,
+            suppliertotalPaid: 0,
+            suppliertotalRemaining: 0,
+            supplierremainingDropshippers: 0,
+            supplierrecords : []
         };
     },
     created() {
         this.csrf = $('meta[name=csrf-token]').attr('content');
-        this.fetchRecord();
+        this.fetchSupplierRecord();
+        this.fetchYourmartRecord();
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
         paymentHistory( id ){
             let vm = this;
-            vm.selectedDropshipper = id;
+            vm.selectedSupplier.id = id;
             axios
                 .post(this.api_url + "suppliers/payments/history", { id: id })
                 .then((response) => {
@@ -261,7 +412,9 @@ export default {
 
             const fd = new FormData()
             // Append each field from addData to the FormData object
-            fd.append('id', this.selectedSupplier);
+            fd.append('id', this.selectedSupplier.id);
+            fd.append('inventoryType', this.selectedSupplier.type);
+
             fd.append('type', this.addData.type);
             fd.append('from_account', this.addData.from_account); // Sending only the code (adjust as needed)
             fd.append('amount', this.addData.amount);
@@ -272,7 +425,7 @@ export default {
                 fd.append('attachment', this.addData.attachment);
             }
 
-            this.addData.id = this.selectedSupplier;
+            this.addData.id = this.selectedSupplier.id;
             this.btnLoader = true;
 
             axios
@@ -310,12 +463,14 @@ export default {
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },
-        paymentDetail(id) {
+        paymentDetail(id , type) {
             let vm = this;
 
-            vm.selectedSupplier = id;
+            vm.selectedSupplier.id = id;
+            vm.selectedSupplier.type = type;
+
             axios
-                .post(this.api_url + "suppliers/payments/data", { id: id })
+                .post(this.api_url + "suppliers/payments/data", { id: id, type : type })
                 .then((response) => {
                     const results = response.data.response
                     vm.orders = results.orders;
@@ -324,12 +479,32 @@ export default {
                     vm.details = results.supplier;
                 });
         },
-        fetchRecord() {
+        fetchSupplierRecord() {
             let vm = this;
 
             vm.loader = false;
             axios
-                .get(this.api_url + "suppliers/payments")
+                .get(this.api_url + "suppliers/payments/suppliers")
+                .then((response) => {
+                    const results = response.data.response
+
+                    vm.suppliertotalPayable = results.total_payable;
+                    vm.suppliertotalPaid = results.total_paid;
+                    vm.suppliertotalRemaining = results.total_remaining;
+                    vm.supplierremainingDropshippers = results.remaining_dropshippers;
+                    vm.supplierrecords = results.suppliers;
+
+                    setTimeout(() => {
+                        vm.dataTable();
+                    }, 300);
+                });
+        },
+        fetchYourmartRecord() {
+            let vm = this;
+
+            vm.loader = false;
+            axios
+                .get(this.api_url + "suppliers/payments/yourmart")
                 .then((response) => {
                     const results = response.data.response
 
@@ -340,7 +515,7 @@ export default {
                     vm.records = results.suppliers;
 
                     setTimeout(() => {
-                        vm.dataTable();
+                        vm.dataTable2();
                     }, 300);
                 });
         },
@@ -356,6 +531,18 @@ export default {
         },
         dataTable() {
             $("#moq_table").DataTable({
+                "bSort": false,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: 'Pending Payouts',
+                    }
+                ]
+            });
+        },
+        dataTable2() {
+            $("#moq_table2").DataTable({
                 "bSort": false,
                 dom: 'Bfrtip',
                 buttons: [

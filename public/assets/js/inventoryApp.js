@@ -182,7 +182,8 @@ __webpack_require__.r(__webpack_exports__);
       delivery: 0,
       discount: 0,
       tax: 0,
-      deliveryCharges: 0
+      deliveryCharges: 0,
+      inventoryType: '0'
     };
   },
   computed: {
@@ -279,6 +280,7 @@ __webpack_require__.r(__webpack_exports__);
       fd.append('discount', vm.discount);
       fd.append('deliveryCharges', vm.deliveryCharges);
       fd.append('tax', vm.tax);
+      fd.append('inventoryType', vm.inventoryType);
 
       // Append the expenses array (convert to JSON string)
       fd.append('expenses', JSON.stringify(vm.expenses));
@@ -2437,7 +2439,7 @@ var render = function render() {
   }, [_c("div", {
     staticClass: "form-row"
   }, [_c("div", {
-    staticClass: "form-group form-float col-6 col-md-4 col-lg-4"
+    staticClass: "form-group form-float col-6 col-md-3 col-lg-4"
   }, [_c("div", {
     staticClass: "form-line"
   }, [_vm._m(1), _vm._v(" "), _c("v-select", {
@@ -2452,7 +2454,7 @@ var render = function render() {
       expression: "vendor"
     }
   })], 1)]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4"
+    staticClass: "col-md-3"
   }, [_vm._m(2), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -2476,7 +2478,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-4"
+    staticClass: "col-md-3"
   }, [_vm._m(3), _vm._v(" "), _c("input", {
     directives: [{
       name: "model",
@@ -2499,7 +2501,67 @@ var render = function render() {
         _vm.delivery = $event.target.value;
       }
     }
-  })]), _vm._v(" "), _vm._l(_vm.expenses, function (expense, index) {
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "form-group col-md-3"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "form-check"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.inventoryType,
+      expression: "inventoryType"
+    }],
+    staticClass: "form-check-input",
+    attrs: {
+      type: "radio",
+      name: "inventoryType",
+      id: "supplierInventory",
+      value: "1"
+    },
+    domProps: {
+      checked: _vm._q(_vm.inventoryType, "1")
+    },
+    on: {
+      change: function change($event) {
+        _vm.inventoryType = "1";
+      }
+    }
+  }), _vm._v(" "), _c("label", {
+    staticClass: "form-check-label",
+    attrs: {
+      "for": "supplierInventory"
+    }
+  }, [_vm._v("\n                                    Supplier Inventory\n                                ")])]), _vm._v(" "), _c("div", {
+    staticClass: "form-check"
+  }, [_c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.inventoryType,
+      expression: "inventoryType"
+    }],
+    staticClass: "form-check-input",
+    attrs: {
+      type: "radio",
+      name: "inventoryType",
+      id: "yourmartInventory",
+      value: "0"
+    },
+    domProps: {
+      checked: _vm._q(_vm.inventoryType, "0")
+    },
+    on: {
+      change: function change($event) {
+        _vm.inventoryType = "0";
+      }
+    }
+  }), _vm._v(" "), _c("label", {
+    staticClass: "form-check-label",
+    attrs: {
+      "for": "yourmartInventory"
+    }
+  }, [_vm._v("\n                                    Yourmart Inventory\n                                ")])])]), _vm._v(" "), _vm._l(_vm.expenses, function (expense, index) {
     return _c("div", {
       key: index,
       staticClass: "row col-md-12"
@@ -2507,7 +2569,7 @@ var render = function render() {
       staticClass: "form-group form-float col-md-5 mt-3"
     }, [_c("div", {
       staticClass: "form-line"
-    }, [_vm._m(4, true), _vm._v(" "), _c("v-select", {
+    }, [_vm._m(5, true), _vm._v(" "), _c("v-select", {
       attrs: {
         options: _vm.products
       },
@@ -2523,7 +2585,7 @@ var render = function render() {
       }
     }), _vm._v(" "), _c("code", [_vm._v("Please Enter 3 or more characters to Search Product")])], 1)]), _vm._v(" "), _c("div", {
       staticClass: "form-group form-float col-md-2 mt-3"
-    }, [_vm._m(5, true), _vm._v(" "), _c("input", {
+    }, [_vm._m(6, true), _vm._v(" "), _c("input", {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -2550,7 +2612,7 @@ var render = function render() {
       }
     })]), _vm._v(" "), _c("div", {
       staticClass: "form-group form-float col-md-2 mt-3"
-    }, [_vm._m(6, true), _vm._v(" "), _c("input", {
+    }, [_vm._m(7, true), _vm._v(" "), _c("input", {
       directives: [{
         name: "model",
         rawName: "v-model",
@@ -2748,7 +2810,11 @@ var staticRenderFns = [function () {
     staticStyle: {
       color: "red"
     }
-  }, [_vm._v("* ( in Percentage % )")])]);
+  }, [_vm._v("* ( in Percentage %\n                                    )")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("label", [_c("strong", [_vm._v("Inventory Type")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -3481,7 +3547,7 @@ var render = function render() {
   }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.purchaseOrders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier_stock == "1" ? "Supplier" : "YourMart"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
       staticClass: "badge badge-success"
@@ -3617,7 +3683,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Inventory Type")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 
@@ -3855,7 +3921,7 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.purchaseOrders, function (item, index) {
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier ? item.supplier.full_name : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.remaining_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier ? item.supplier.full_name : ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.supplier_stock == "1" ? "Supplier" : "YourMart"))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.remaining_amount))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
       staticClass: "badge badge-warning text-dark"
     }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
       staticClass: "badge badge-success"
@@ -3913,7 +3979,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("PO #")]), _vm._v(" "), _c("th", [_vm._v("Supplier")]), _vm._v(" "), _c("th", [_vm._v("Inventory Type")]), _vm._v(" "), _c("th", [_vm._v("Total Amount")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Created Date")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]);
 }];
 render._withStripped = true;
 

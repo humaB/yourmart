@@ -206,6 +206,7 @@ class InventoryPurchaseOrderController extends Controller
                 'payment_term_advance' => $request->advance,
                 'payment_term_after_delivery' => $request->delivery,
                 'status' => 0, // 0 => Pending || 1 => Approved || 2 => Rejected
+                'supplier_stock' => $request->inventoryType,
                 'added_by' => auth()->user()->id,
             ]);
 

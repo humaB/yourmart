@@ -11,23 +11,44 @@
                         <div class="form-row">
 
 
-                            <div class="form-group form-float col-6 col-md-4 col-lg-4">
+                            <div class="form-group form-float col-6 col-md-3 col-lg-4">
                                 <div class="form-line">
                                     <h6 class="form-label">Select Supplier <span style="color: red">*</span></h6>
                                     <v-select :options="suppliers" v-model="vendor">
                                     </v-select>
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <h6 class="form-label">Advance <span style="color: red">* ( in Percentage % )</span></h6>
+                            <div class="col-md-3">
+                                <h6 class="form-label">Advance <span style="color: red">* ( in Percentage % )</span>
+                                </h6>
                                 <input type="text" class="form-control" v-model="advance" required
                                     @keypress="onlyNumber" />
                             </div>
-                            <div class="col-md-4">
-                                <h6 class="form-label">After Delivery <span style="color: red">* ( in Percentage % )</span></h6>
+                            <div class="col-md-3">
+                                <h6 class="form-label">After Delivery <span style="color: red">* ( in Percentage %
+                                        )</span></h6>
                                 <input type="text" class="form-control" v-model="delivery" @keypress="onlyNumber"
                                     required />
                             </div>
+
+                            <div class="form-group col-md-3">
+                                <label><strong>Inventory Type</strong></label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="inventoryType"
+                                        id="supplierInventory" value="1" v-model="inventoryType">
+                                    <label class="form-check-label" for="supplierInventory">
+                                        Supplier Inventory
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="inventoryType"
+                                        id="yourmartInventory" value="0" v-model="inventoryType">
+                                    <label class="form-check-label" for="yourmartInventory">
+                                        Yourmart Inventory
+                                    </label>
+                                </div>
+                            </div>
+
 
                             <div v-for="(expense, index) in expenses" :key="index" class="row col-md-12">
                                 <div class="form-group form-float col-md-5 mt-3">
@@ -41,14 +62,14 @@
 
                                 <div class="form-group form-float col-md-2 mt-3">
                                     <h6>Rate <span class="text-danger">*</span></h6>
-                                    <input type="text" style="font-size:22px" v-model="expense.rate" class="form-control" required
-                                        @keypress="onlyNumber" />
+                                    <input type="text" style="font-size:22px" v-model="expense.rate"
+                                        class="form-control" required @keypress="onlyNumber" />
                                 </div>
 
                                 <div class="form-group form-float col-md-2 mt-3">
                                     <h6>Quantity <span class="text-danger">*</span></h6>
-                                    <input type="text" style="font-size:22px" v-model="expense.qty" class="form-control" required
-                                        @keypress="onlyNumber" />
+                                    <input type="text" style="font-size:22px" v-model="expense.qty" class="form-control"
+                                        required @keypress="onlyNumber" />
                                 </div>
 
                                 <!-- Display the total (rate * qty) next to the quantity input -->
@@ -62,12 +83,14 @@
                                     <div class="form-line d-flex">
 
                                         <!-- Show plus button if it's the last row -->
-                                        <button v-if="index === expenses.length - 1" type="button" @click="addExpense" class="btn btn-icon btn-info mr-2">
+                                        <button v-if="index === expenses.length - 1" type="button" @click="addExpense"
+                                            class="btn btn-icon btn-info mr-2">
                                             <i class="fas fa-plus"></i>
                                         </button>
 
                                         <!-- Show remove button if there's more than one row -->
-                                        <button v-if="expenses.length > 1" type="button" @click="removeExpense(index)" class="btn btn-icon btn-danger">
+                                        <button v-if="expenses.length > 1" type="button" @click="removeExpense(index)"
+                                            class="btn btn-icon btn-danger">
                                             <i class="fas fa-minus"></i>
                                         </button>
                                     </div>
@@ -76,33 +99,36 @@
 
                             <!-- Summary Section -->
 
-                                <div class="col-md-12">
-                                    <h4 class="text-right">Summary</h4>
-                                    <div class="float-right col-md-4">
-                                        <table class="table table-bordered">
-                                            <tr>
-                                                <td>Subtotal:</td>
-                                                <td>{{ subtotal }}</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Discount Amount:</td>
-                                                <td><input type="text" v-model="discount" class="form-control" @input="calculateTotals" @keypress="onlyNumber" ></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Tax Amount:</td>
-                                                <td><input type="text" v-model="tax" class="form-control" @input="calculateTotals" @keypress="onlyNumber" ></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Delivery Charges:</td>
-                                                <td><input type="text" v-model="deliveryCharges" class="form-control" @input="calculateTotals" @keypress="onlyNumber" ></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Net Amount:</td>
-                                                <td>{{ netAmount }}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
+                            <div class="col-md-12">
+                                <h4 class="text-right">Summary</h4>
+                                <div class="float-right col-md-4">
+                                    <table class="table table-bordered">
+                                        <tr>
+                                            <td>Subtotal:</td>
+                                            <td>{{ subtotal }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Discount Amount:</td>
+                                            <td><input type="text" v-model="discount" class="form-control"
+                                                    @input="calculateTotals" @keypress="onlyNumber"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tax Amount:</td>
+                                            <td><input type="text" v-model="tax" class="form-control"
+                                                    @input="calculateTotals" @keypress="onlyNumber"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Delivery Charges:</td>
+                                            <td><input type="text" v-model="deliveryCharges" class="form-control"
+                                                    @input="calculateTotals" @keypress="onlyNumber"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Net Amount:</td>
+                                            <td>{{ netAmount }}</td>
+                                        </tr>
+                                    </table>
                                 </div>
+                            </div>
 
 
 
@@ -135,14 +161,15 @@ export default {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             api_url: window.location.origin + process.env.MIX_API_URL,
             expenses: [
-                { product: { code : 0 , label : "Select from the following"}, rate: '', qty: '' } // Initialize with one row
+                { product: { code: 0, label: "Select from the following" }, rate: '', qty: '' } // Initialize with one row
             ],
             vendor: { code: 0, label: "Select From the Following" },
             advance: 0,
             delivery: 0,
             discount: 0,
-            tax : 0,
-            deliveryCharges : 0
+            tax: 0,
+            deliveryCharges: 0,
+            inventoryType : '0'
         };
     },
     computed: {
@@ -192,7 +219,7 @@ export default {
             }
         },
         addExpense() {
-            this.expenses.push({ product: { code : 0, label : "Select from the following"}, rate: '', qty: '' });
+            this.expenses.push({ product: { code: 0, label: "Select from the following" }, rate: '', qty: '' });
 
         },
         add() {
@@ -232,6 +259,7 @@ export default {
             fd.append('discount', vm.discount);
             fd.append('deliveryCharges', vm.deliveryCharges);
             fd.append('tax', vm.tax);
+            fd.append('inventoryType', vm.inventoryType);
 
             // Append the expenses array (convert to JSON string)
             fd.append('expenses', JSON.stringify(vm.expenses));
@@ -261,7 +289,7 @@ export default {
             vm.delivery = 0;
             vm.deliveryCharges = 0;
             vm.expenses = [
-                { product: { code : 0 , label : "Select from the following"}, rate: '', qty: '' } // Initialize with one row
+                { product: { code: 0, label: "Select from the following" }, rate: '', qty: '' } // Initialize with one row
             ];
         },
     },

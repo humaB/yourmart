@@ -24,6 +24,7 @@ class PurchaseOrder extends Model
         'payment_term_after_delivery',
         'approved_by',
         'approved_date',
+        'supplier_stock', // 0 => Your Mart || 1 => Supplier Stock
         'status', // 0 => Pending || 1 => Approved || 2 => Rejected
         'added_by',
     ];

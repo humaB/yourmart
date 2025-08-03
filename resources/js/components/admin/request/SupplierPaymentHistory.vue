@@ -53,18 +53,7 @@
                 </div>
             </div>
         </div>
-        <!-- Summary PRINT -->
-        <form method="POST" :action="public_url + '/dropshippers/payment-history'" target="_blank" ref="paymentHistory">
-            <input type="hidden" name="_token" :value="csrf">
-            <input type="hidden" name="document" :value="id">
-            <input type="hidden" name="dropshipper" :value="selectedDropshipper">
-        </form>
-
-        <!-- Summary PRINT -->
-        <form method="POST" :action="public_url + '/dropshippers/ledger'" target="_blank" ref="paymentLedger">
-            <input type="hidden" name="_token" :value="csrf">
-            <input type="hidden" name="dropshipper" :value="selectedDropshipper">
-        </form>
+  
     </div>
 </template>
 <script>

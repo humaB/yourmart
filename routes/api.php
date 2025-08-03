@@ -175,7 +175,9 @@ Route::group(['prefix' => 'suppliers','middleware' => 'auth:sanctum'], function(
     Route::post('/decisions',  [ SupplierController::class , 'decision']);
 
     Route::group(['prefix' => 'payments'], function(){
-        Route::get('/',  [ SupplierController::class , 'pendingPayment']);
+        Route::get('/suppliers',  [ SupplierController::class , 'pendingSupplierPayment']);
+        Route::get('/yourmart',  [ SupplierController::class , 'pendingYourmartPayment']);
+
         Route::post('/data',  [ SupplierController::class , 'paymentData']);
         Route::post('/add',  [ SupplierController::class , 'addPayment']);
         Route::post('/history',  [ SupplierController::class , 'paymentHistory']);

@@ -17,6 +17,7 @@
                                         <th>Sr #</th>
                                         <th>PO #</th>
                                         <th>Supplier</th>
+                                        <th>Inventory Type</th>
                                         <th>Total Amount</th>
                                         <th>Remaining Amount</th>
                                         <th>Created Date</th>
@@ -29,6 +30,7 @@
                                         <td>{{ index + 1 }}</td>
                                         <td>{{ item.id }}</td>
                                         <td>{{ item.supplier ? item.supplier.full_name : '' }}</td>
+                                        <td>{{ item.supplier_stock == '1' ? 'Supplier' : 'YourMart' }}</td>
                                         <td>{{ item.total_amount }}</td>
                                         <td>{{ item.remaining_amount }}</td>
                                         <td>{{ formatDate(item.created_at) }}</td>
