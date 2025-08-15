@@ -170,7 +170,7 @@ class SupplierController extends Controller
 
     public function inTake(Request $request)
     {
-        $supplierId = $request->supplier['code'] ?? null;
+        return $supplierId = $request->supplier['code'] ?? null;
 
         $receivedQuery = StoreReceivedDetail::with(['product.variation'])
             ->when($supplierId, function ($q) use ($supplierId) {

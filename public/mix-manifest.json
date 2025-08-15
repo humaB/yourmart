@@ -1,6 +1,6 @@
 {
-    "/assets/js/app.js": "/assets/js/app.js?id=33d5c212fb4e5d7614e1fb36e5feb1df",
-    "/assets/js/productApp.js": "/assets/js/productApp.js?id=e2eaf93644b1a638d17de4354aa63dd8",
-    "/assets/js/inventoryApp.js": "/assets/js/inventoryApp.js?id=56f5fe98583137b1cd0335f589894f9a",
-    "/assets/js/accountApp.js": "/assets/js/accountApp.js?id=cf7d4263b2d2dc1fe46b9b94ae485d52"
+    "/assets/js/app.js": "/assets/js/app.js",
+    "/assets/js/productApp.js": "/assets/js/productApp.js",
+    "/assets/js/inventoryApp.js": "/assets/js/inventoryApp.js",
+    "/assets/js/accountApp.js": "/assets/js/accountApp.js"
 }
