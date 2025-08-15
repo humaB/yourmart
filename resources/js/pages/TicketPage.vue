@@ -6,89 +6,99 @@
                     <h4>Open Tickets</h4>
                 </div>
                 <div class="card mx-3">
-                <div class="card-header">
-                    <h4>Ticket Status</h4>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <tr>
-                                <th>Total Tickets</th>
-                                <th>Awaiting Your Reply</th>
-                                <th>Awaiting YourMart Reply</th>
-                                <th>Closed</th>
-                                <th>Expired</th>
-                                <th>Reviewed</th>
-                                <th>In-Process</th>
-                            </tr>
-                            <tr>
-                                <td>{{ totalTicketSum.total_tickets }}</td>
-                                <td class="align-middle">
-                                    <div class="progress-text text-right text-secondary">
-                                        {{ getPercentage(totalTicketSum.awaiting_your_reply) }}%
-                                    </div>
-                                    <div class="progress" data-height="6">
-                                        <div class="progress-bar bg-success" :style="{ width: getPercentage(totalTicketSum.awaiting_your_reply) + '%' }"></div>
-                                    </div>
-                                    {{ getPercentage(totalTicketSum.awaiting_your_reply) }}
-                                </td>
-                                <td class="align-middle">
-                                    <div class="progress-text text-right text-secondary">
-                                        {{ getPercentage(totalTicketSum.awaiting_yourmart_reply) }}%
-                                    </div>
-                                    <div class="progress" data-height="6">
-                                        <div class="progress-bar bg-primary" :style="{ width: getPercentage(totalTicketSum.awaiting_yourmart_reply) + '%' }"></div>
-                                    </div>
-                                    {{ totalTicketSum.awaiting_yourmart_reply }}
-                                </td>
-                                <td class="align-middle">
-                                    <div class="progress-text text-right text-secondary">
-                                        {{ getPercentage(totalTicketSum.closed) }}%
-                                    </div>
-                                    <div class="progress"  data-height="6">
-                                        <div class="progress-bar bg-danger" :style="{ width: getPercentage(totalTicketSum.closed) + '%' }"></div>
-                                    </div>
-                                    {{ totalTicketSum.closed }}
-                                </td>
-                                <td class="align-middle">
-                                    <div class="progress-text text-right text-secondary">
-                                        {{ getPercentage(totalTicketSum.expired) }}%
-                                    </div>
-                                    <div class="progress" data-height="6">
-                                        <div class="progress-bar bg-success" :style="{ width: getPercentage(totalTicketSum.expired) + '%' }"></div>
-                                    </div>
-                                    {{ totalTicketSum.expired }}
-                                </td>
-                                <td class="align-middle">
-                                    <div class="progress-text text-right text-secondary">
-                                        {{ getPercentage(totalTicketSum.reviewed) }}%
-                                    </div>
-                                    <div class="progress" data-height="6" >
-                                        <div class="progress-bar bg-info" :style="{ width: getPercentage(totalTicketSum.reviewed) + '%' }"></div>
-                                    </div>
-                                    {{ totalTicketSum.reviewed }}
-                                </td>
-                                <td class="align-middle">
-                                    <div class="progress-text text-right text-secondary">
-                                        {{ getPercentage(totalTicketSum.in_process) }}%
-                                    </div>
-                                    <div class="progress" data-height="6" >
-                                        <div class="progress-bar bg-info" :style="{ width: getPercentage(totalTicketSum.in_process) + '%' }"></div>
-                                    </div>
-                                    {{ totalTicketSum.in_process }}
-                                </td>
-                            </tr>
-                        </table>
+                    <div class="card-header">
+                        <h4>Ticket Status</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Total Tickets</th>
+                                    <th>Awaiting Your Reply</th>
+                                    <th>Awaiting YourMart Reply</th>
+                                    <th>Closed</th>
+                                    <th>Expired</th>
+                                    <th>Reviewed</th>
+                                    <th>In-Process</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ totalTicketSum.total_tickets }}</td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.awaiting_your_reply) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-success"
+                                                :style="{ width: getPercentage(totalTicketSum.awaiting_your_reply) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ getPercentage(totalTicketSum.awaiting_your_reply) }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.awaiting_yourmart_reply) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-primary"
+                                                :style="{ width: getPercentage(totalTicketSum.awaiting_yourmart_reply) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ totalTicketSum.awaiting_yourmart_reply }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.closed) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-danger"
+                                                :style="{ width: getPercentage(totalTicketSum.closed) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.closed }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.expired) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-success"
+                                                :style="{ width: getPercentage(totalTicketSum.expired) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.expired }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.reviewed) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-info"
+                                                :style="{ width: getPercentage(totalTicketSum.reviewed) + '%' }"></div>
+                                        </div>
+                                        {{ totalTicketSum.reviewed }}
+                                    </td>
+                                    <td class="align-middle">
+                                        <div class="progress-text text-right text-secondary">
+                                            {{ getPercentage(totalTicketSum.in_process) }}%
+                                        </div>
+                                        <div class="progress" data-height="6">
+                                            <div class="progress-bar bg-info"
+                                                :style="{ width: getPercentage(totalTicketSum.in_process) + '%' }">
+                                            </div>
+                                        </div>
+                                        {{ totalTicketSum.in_process }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
                 <div class="mx-4">
                     <form role="form" @submit.prevent="fetchTicketData">
                         <h6>Filter</h6>
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <select v-model="ticketFilter.status" class="border form-control" style="height: 50px">
+                                    <select v-model="ticketFilter.status" class="border form-control"
+                                        style="height: 50px">
                                         <option selected value="" disabled>Please Select Status</option>
                                         <option value="Awaiting Your Reply">Awaiting Your Reply</option>
                                         <option value="Awaiting YourMart Reply">Awaiting YourMart Reply</option>
@@ -101,7 +111,8 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <select v-model="ticketFilter.ticket_number_type" class="border form-control" style="height: 50px">
+                                    <select v-model="ticketFilter.ticket_number_type" class="border form-control"
+                                        style="height: 50px">
                                         <option value="" selected disabled>Ticket Number</option>
                                         <option value="yourmart_ticket_number">YourMart Ticket Number</option>
                                         <option value="order_number">Your Order Number</option>
@@ -110,14 +121,16 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
-                                    <input v-model="ticketFilter.ticket_number" type="text" class="form-control" placeholder="Please Enter Ticket Number" style="height: 50px" />
+                                    <input v-model="ticketFilter.ticket_number" type="text" class="form-control"
+                                        placeholder="Please Enter Ticket Number" style="height: 50px" />
                                 </div>
                             </div>
                             <div class="col-md-2">
                                 <button type="submit" class="btn btn-primary px-5 p-2 btn-block">Search</button>
                             </div>
                             <div class="col-md-2">
-                                <button type="button" @click="clearFilters" class="btn btn-outline-primary p-2 px-3 btn-block">Clear</button>
+                                <button type="button" @click="clearFilters"
+                                    class="btn btn-outline-primary p-2 px-3 btn-block">Clear</button>
                             </div>
                         </div>
                     </form>
@@ -141,8 +154,11 @@
                                 <tr v-for="ticket in tickets" :key="ticket.id">
                                     <td>{{ ticket.id }}</td>
                                     <td>
-                                        <a v-if="ticket.order" href="#" data-toggle="modal" data-target="#ticket" @click="fetchOrderDetails(ticket.order_no)">
-                                            {{ ticket.order_no ? ticket.order.shop ? `${ticket.order.shop.store_name.substring(0, 3)}-${ticket.order.order_no}` : ticket.order_no : 'N/A' }}
+                                        <a v-if="ticket.order" href="#" data-toggle="modal" data-target="#ticket"
+                                            @click="fetchOrderDetails(ticket.order_no)">
+                                            {{ ticket.order_no ? ticket.order.shop ?
+                                                `${ticket.order.shop.store_name.substring(0, 3)}-${ticket.order.order_no}` :
+                                            ticket.order_no : 'N/A' }}
                                         </a>
                                         <span v-else>N/A</span>
                                     </td>
@@ -151,10 +167,9 @@
                                     <td>{{ ticket.status || 'Pending' }}</td>
                                     <td>
                                         <a href="#"
-                                        @click="fetchDropshipperDetails(ticket.added_by_name?.dropshipper?.id)"
-                                        data-toggle="modal"
-                                        data-target="#dropShipperDetail">{{
-                                            ticket.added_by_name.name }}</a>
+                                            @click="fetchDropshipperDetails(ticket.added_by_name?.dropshipper?.id)"
+                                            data-toggle="modal" data-target="#dropShipperDetail">{{
+                                                ticket.added_by_name.name }}</a>
                                     </td>
 
                                     <td>{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
@@ -172,7 +187,8 @@
 
 
         <!-- Modal for Ticket Details -->
-        <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-labelledby="ticketDetailsModalLabel" aria-hidden="true">
+        <div class="modal fade" id="ticketDetailsModal" tabindex="-1" aria-labelledby="ticketDetailsModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-xl"> <!-- Add 'modal-lg' for a larger modal -->
                 <div class="modal-content">
                     <div class="modal-header">
@@ -197,19 +213,23 @@
                                     <div class="mb-2 d-flex justify-content-between">
                                         <p class="mb-1"><strong>Ticket Added By:</strong></p>
                                         <p class="mb-1"><a href="#"
-                                            @click="fetchDropshipperDetails(selectedTicket.added_by_name?.dropshipper?.id)"
-                                            data-toggle="modal"
-                                            data-target="#dropShipperDetail">{{
-                                                selectedTicket.added_by_name?.name }}
-                                        </a>
+                                                @click="fetchDropshipperDetails(selectedTicket.added_by_name?.dropshipper?.id)"
+                                                data-toggle="modal" data-target="#dropShipperDetail">{{
+                                                    selectedTicket.added_by_name?.name }}
+                                            </a>
                                         </p>
                                     </div>
 
                                     <div class="mb-2 d-flex justify-content-between">
                                         <p class="mb-1"><strong>Order Number:</strong></p>
                                         <p class="mb-1">
-                                            <a v-if="selectedTicket.order_no" href="#" data-toggle="modal" data-target="#ticket" @click="fetchOrderDetails(selectedTicket.order_no)">
-                                                {{ selectedTicket.order_no ? selectedTicket.order.shop ? `${selectedTicket.order.shop.store_name.substring(0, 3)}-${selectedTicket.order.order_no}` : selectedTicket.order_no : 'N/A' }}
+                                            <a v-if="selectedTicket.order_no" href="#" data-toggle="modal"
+                                                data-target="#ticket"
+                                                @click="fetchOrderDetails(selectedTicket.order_no)">
+                                                {{ selectedTicket.order_no ? selectedTicket.order.shop ?
+                                                    `${selectedTicket.order.shop.store_name.substring(0,
+                                                3)}-${selectedTicket.order.order_no}` : selectedTicket.order_no : 'N/A'
+                                                }}
                                             </a>
                                             <span v-else>N/A</span>
                                         </p>
@@ -237,38 +257,61 @@
 
                                     <div class="mb-2 d-flex justify-content-between">
                                         <p class="mb-1"><strong>Date:</strong></p>
-                                        <p class="mb-1">{{ new Date(selectedTicket.created_at).toLocaleDateString() }}</p>
+                                        <p class="mb-1">{{ new Date(selectedTicket.created_at).toLocaleDateString() }}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-4">
                                 <div class="card p-3" v-if="selectedTicket.file_path">
-                                    <h6 class="card-title mb-3"><strong>Image</strong></h6>
-                                    <img :src="web_url + 'storage/uploads/tickets/' + selectedTicket.file_path"
-                                         alt="Ticket Image" class="img-fluid rounded border" style="max-width: 100%; height: auto;">
+                                    <h6 class="card-title mb-3"><strong>Attachment</strong></h6>
+
+                                    <!-- Image Display -->
+                                    <img v-if="isImage(selectedTicket.file_path)"
+                                        :src="web_url + 'storage/uploads/tickets/' + selectedTicket.file_path"
+                                        alt="Ticket Image" class="img-fluid rounded border"
+                                        style="max-width: 100%; height: auto;">
+
+                                    <!-- Video Display -->
+                                    <video v-else-if="isVideo(selectedTicket.file_path)"
+                                        :src="web_url + 'storage/uploads/tickets/' + selectedTicket.file_path" controls
+                                        class="img-fluid rounded border" style="max-width: 100%; height: auto;">
+                                        Your browser does not support the video tag.
+                                    </video>
                                 </div>
                             </div>
+
                         </div>
 
 
                         <!-- Chat Box -->
                         <div>
                             <strong>Chat:</strong>
-                            <div class="border rounded p-2 mb-2" ref="chatContainer" style="height: 200px; overflow-y: auto;">
+                            <div class="border rounded p-2 mb-2" ref="chatContainer"
+                                style="height: 200px; overflow-y: auto;">
                                 <!-- Display Previous Chat Messages -->
                                 <div v-for="(chat, index) in chats" :key="index" class="mb-2">
-                                    <div :class="{'text-white bg-primary w-75 rounded float-right px-2': user.id === chat.added_by,
-                                                'text-dark bg-secondary w-75 rounded float-left px-2': user.id !== chat.added_by}">
+                                    <div
+                                        :class="{
+                                            'text-white bg-primary w-75 rounded float-right px-2': user.id === chat.added_by,
+                                            'text-dark bg-secondary w-75 rounded float-left px-2': user.id !== chat.added_by
+                                        }">
                                         <p class="d-flex justify-content-between mb-0">
-                                            <strong>{{ chat.added_by === user.id ? 'You' : chat.added_by_name.name }}:</strong>
-                                            <strong :class="chat.added_by === user.id ? 'text-white' : 'text-dark'"><small>{{ chat.status }}</small></strong>
+                                            <strong>{{ chat.added_by === user.id ? 'You' : chat.added_by_name.name
+                                                }}:</strong>
+                                            <strong
+                                                :class="chat.added_by === user.id ? 'text-white' : 'text-dark'"><small>{{
+                                                    chat.status }}</small></strong>
                                             <span>
-                                                <a :class="chat.added_by === user.id ? 'text-white' : 'text-dark'" v-if="chat.file_path != null" :href="public_url + 'storage/uploads/tickets/message/'+chat.file_path" target="_blank"><small>Attachment</small></a>
+                                                <a :class="chat.added_by === user.id ? 'text-white' : 'text-dark'"
+                                                    v-if="chat.file_path != null"
+                                                    :href="public_url + 'storage/uploads/tickets/message/' + chat.file_path"
+                                                    target="_blank"><small>Attachment</small></a>
                                             </span>
                                         </p>
                                         <p class="mb-0">{{ chat.chat_message }}</p>
-                                        <div class="text-right"><small style="font-size:10px">{{ timeFormat(chat.created_at,'HH:mm | DD-MM-YYYY') }}</small></div>
+                                        <div class="text-right"><small style="font-size:10px">{{
+                                                timeFormat(chat.created_at,'HH:mm | DD-MM-YYYY') }}</small></div>
                                     </div>
                                     <div class="clearfix"></div> <!-- This ensures proper clearing of floats -->
                                 </div>
@@ -279,7 +322,8 @@
                             <!-- New Fields for Message, Attachment, and Status -->
                             <div class="mb-2 row">
                                 <div class="col-12"> <!-- Half width for the file input -->
-                                    <textarea v-model="postMessage.chatMessage" placeholder="Type your message here..." rows="3" class="form-control mb-2"></textarea>
+                                    <textarea v-model="postMessage.chatMessage" placeholder="Type your message here..."
+                                        rows="3" class="form-control mb-2"></textarea>
                                 </div>
                                 <div class="col-6"> <!-- Half width for the file input -->
                                     <input type="file" class="form-control" @change="onFileChange" />
@@ -299,17 +343,14 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
-                        <button :disabled="btnLoading" type="button" class="btn btn-primary" @click="addMessage">Send</button>
+                        <button :disabled="btnLoading" type="button" class="btn btn-primary"
+                            @click="addMessage">Send</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <OrderDetailView
-            :details="orderDetails"
-            :loader="commentLoader"
-            :role="'admin'"
-        />
+        <OrderDetailView :details="orderDetails" :loader="commentLoader" :role="'admin'" />
 
         <DropshipperDetails :details="dropShipperDetails" />
 
@@ -360,9 +401,9 @@ export default {
                 selectedFile: null,
                 ticketId: null
             },
-            commentLoader : false,
-            orderDetails : {},
-            dropShipperDetails : {}
+            commentLoader: false,
+            orderDetails: {},
+            dropShipperDetails: {}
         };
     },
     created() {
@@ -401,27 +442,27 @@ export default {
                 formData.append('selectedFile', this.postMessage.selectedFile);
             }
 
-            axios.post(this.api_url + "tickets/messages/add", formData,{
+            axios.post(this.api_url + "tickets/messages/add", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data' // Set the content type for file uploads
                 }
             })
-            .then((response) => {
+                .then((response) => {
 
-                this.$emit('saved', true);
-                this.getMessages();
-                this.chatScrollBottom();
-                this.postMessage = {
-                    chatMessage: '',
-                    selectedStatus: this.postMessage.selectedStatus,
-                    selectedFile: null,
-                    ticketId: this.selectedTicket.id,
-                },
-                this.fetchTicketData();
-                this.btnLoading = false;
-            }).catch((err) => {
-                this.btnLoading = false;
-            });
+                    this.$emit('saved', true);
+                    this.getMessages();
+                    this.chatScrollBottom();
+                    this.postMessage = {
+                        chatMessage: '',
+                        selectedStatus: this.postMessage.selectedStatus,
+                        selectedFile: null,
+                        ticketId: this.selectedTicket.id,
+                    },
+                        this.fetchTicketData();
+                    this.btnLoading = false;
+                }).catch((err) => {
+                    this.btnLoading = false;
+                });
         },
         onFileChange(event) {
             const file = event.target.files[0]; // Get the selected file
@@ -432,10 +473,10 @@ export default {
             axios
                 .post(this.api_url + "tickets", this.ticketFilter)
                 .then((response) => {
-                this.tickets = response.data.response;
+                    this.tickets = response.data.response;
                 })
                 .catch((error) => {
-                console.error("Error fetching tickets:", error);
+                    console.error("Error fetching tickets:", error);
                 });
         },
         clearFilters() {
@@ -449,7 +490,7 @@ export default {
             this.fetchTicketData();
         },
         getMessages() {
-            axios.post(this.api_url + 'tickets/messages/particular',{ticket_id:this.selectedTicket.id}).then((response) => {
+            axios.post(this.api_url + 'tickets/messages/particular', { ticket_id: this.selectedTicket.id }).then((response) => {
                 this.chats = response.data.messages;
                 this.user = response.data.user;
                 this.chatScrollBottom();
@@ -476,13 +517,13 @@ export default {
             });
         },
         viewTicketDetails(ticket) {
-            axios.post(this.api_url + 'tickets/particular',{ticket_id:ticket.id}).then((response) => {
+            axios.post(this.api_url + 'tickets/particular', { ticket_id: ticket.id }).then((response) => {
                 this.selectedTicket = response.data.ticket;
                 this.selectedTicket.file_path = response.data.ticket.file_path ? response.data.ticket.file_path : 'blank_image.jpg';
                 this.postMessage.selectedStatus = ticket.status;
                 this.getMessages();
             });
-             // Set the selected ticket
+            // Set the selected ticket
 
 
             $('#ticketDetailsModal').modal('show'); // Open the modal using jQuery
@@ -495,7 +536,7 @@ export default {
             if (this.totalTicketSum.total_tickets === 0) return 0;
             return Math.round((statusCount / this.totalTicketSum.total_tickets) * 100);
         },
-        timeFormat(time,format) {
+        timeFormat(time, format) {
             return moment(time).format(format)
         },
         fetchOrderDetails(id) {
@@ -527,129 +568,135 @@ export default {
                     vm.commentLoader = false;
                 });
         },
-        forward( data ){
+        forward(data) {
             let vm = this;
             vm.commentLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-status", data)
-            .then((response) => {
+                .then((response) => {
 
-            vm.fetchOrders();
-            vm.commentLoader = false;
-            vm.$emit('commentAdded', true);
-            setTimeout( () => {
-                $("#ticket").modal('hide');
-            },2000)
-            return swal({
-                title: "Success",
-                text: "Forwarded successfully",
-                icon: "success",
-                timer: 3000,
-            });
-            })
-            .catch((err) => {
-                vm.commentLoader = false;
-            });
+                    vm.fetchOrders();
+                    vm.commentLoader = false;
+                    vm.$emit('commentAdded', true);
+                    setTimeout(() => {
+                        $("#ticket").modal('hide');
+                    }, 2000)
+                    return swal({
+                        title: "Success",
+                        text: "Forwarded successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.commentLoader = false;
+                });
         },
-        reject( data ){
+        reject(data) {
             let vm = this;
             vm.rejectLoader = true;
             axios.post(this.api_url + "inventory/products/orders/reject", data)
-            .then((response) => {
+                .then((response) => {
 
-            vm.fetchOrders();
-            vm.rejectLoader = false;
+                    vm.fetchOrders();
+                    vm.rejectLoader = false;
 
-            setTimeout( () => {
-                $("#ticket").modal('hide');
-            },2000);
+                    setTimeout(() => {
+                        $("#ticket").modal('hide');
+                    }, 2000);
 
-            return swal({
-                title: "Success",
-                text: "Order Rejected Successfully",
-                icon: "success",
-                timer: 3000,
-            });
-            })
-            .catch((err) => {
-                vm.rejectLoader = false;
-            });
+                    return swal({
+                        title: "Success",
+                        text: "Order Rejected Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.rejectLoader = false;
+                });
         },
-        revert( data ){
+        revert(data) {
             let vm = this;
             vm.revertLoader = true;
             axios.post(this.api_url + "inventory/products/orders/revert", data)
-            .then((response) => {
+                .then((response) => {
 
-            vm.fetchOrders();
-            vm.revertLoader = false;
+                    vm.fetchOrders();
+                    vm.revertLoader = false;
 
-            setTimeout( () => {
-                $("#ticket").modal('hide');
-            },2000);
+                    setTimeout(() => {
+                        $("#ticket").modal('hide');
+                    }, 2000);
 
-            return swal({
-                title: "Success",
-                text: "Order Revert Successfully",
-                icon: "success",
-                timer: 3000,
-            });
-            })
-            .catch((err) => {
-                vm.revertLoader = false;
-            });
+                    return swal({
+                        title: "Success",
+                        text: "Order Revert Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.revertLoader = false;
+                });
         },
-        updatePaidAmount( data ){
+        updatePaidAmount(data) {
             let vm = this;
             vm.paidAmountLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-paid-amount", data)
-            .then((response) => {
+                .then((response) => {
 
-            this.fetchDetail(data.id);
+                    this.fetchDetail(data.id);
 
-            vm.paidAmountLoader = false;
-                return swal({
-                    title: "Success",
-                    text: "Amount Updated Successfully",
-                    icon: "success",
-                    timer: 3000,
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: "Amount Updated Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: "Oops.. Something went wrong",
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
-            })
-            .catch((err) => {
-                vm.paidAmountLoader = false;
-                return swal({
-                    title: "Error",
-                    text: "Oops.. Something went wrong",
-                    icon: "error",
-                    timer: 3000,
-                });
-            });
         },
-        updatePackagingAmount( data ){
+        updatePackagingAmount(data) {
             let vm = this;
             vm.paidAmountLoader = true;
             axios.post(this.api_url + "inventory/products/orders/update-packaging-amount", data)
-            .then((response) => {
+                .then((response) => {
 
-            this.fetchDetail(data.id);
+                    this.fetchDetail(data.id);
 
-            vm.paidAmountLoader = false;
-                return swal({
-                    title: "Success",
-                    text: "Amount Updated Successfully",
-                    icon: "success",
-                    timer: 3000,
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: "Amount Updated Successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.paidAmountLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: "Oops.. Something went wrong",
+                        icon: "error",
+                        timer: 3000,
+                    });
                 });
-            })
-            .catch((err) => {
-                vm.paidAmountLoader = false;
-                return swal({
-                    title: "Error",
-                    text: "Oops.. Something went wrong",
-                    icon: "error",
-                    timer: 3000,
-                });
-            });
         },
+        isImage(file) {
+            return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(file);
+        },
+        isVideo(file) {
+            return /\.(mp4|webm|ogg|mov|avi)$/i.test(file);
+        }
     },
     mounted() {
         this.fetchTicketStatusCounts();

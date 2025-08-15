@@ -5430,6 +5430,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           timer: 3000
         });
       });
+    },
+    isImage: function isImage(file) {
+      return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(file);
+    },
+    isVideo: function isVideo(file) {
+      return /\.(mp4|webm|ogg|mov|avi)$/i.test(file);
     }
   },
   mounted: function mounted() {
@@ -21917,7 +21923,7 @@ var render = function render() {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "%\n                                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -21927,11 +21933,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply) + "%"
     }
-  })]), _vm._v("\n                                " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "\n                            ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_your_reply)) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_yourmart_reply)) + "%\n                                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.awaiting_yourmart_reply)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -21941,11 +21947,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.awaiting_yourmart_reply) + "%"
     }
-  })]), _vm._v("\n                                " + _vm._s(_vm.totalTicketSum.awaiting_yourmart_reply) + "\n                            ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.awaiting_yourmart_reply) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.closed)) + "%\n                                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.closed)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -21955,11 +21961,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.closed) + "%"
     }
-  })]), _vm._v("\n                                " + _vm._s(_vm.totalTicketSum.closed) + "\n                            ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.closed) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.expired)) + "%\n                                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.expired)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -21969,11 +21975,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.expired) + "%"
     }
-  })]), _vm._v("\n                                " + _vm._s(_vm.totalTicketSum.expired) + "\n                            ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.expired) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.reviewed)) + "%\n                                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.reviewed)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -21983,11 +21989,11 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.reviewed) + "%"
     }
-  })]), _vm._v("\n                                " + _vm._s(_vm.totalTicketSum.reviewed) + "\n                            ")]), _vm._v(" "), _c("td", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.reviewed) + "\n                                ")]), _vm._v(" "), _c("td", {
     staticClass: "align-middle"
   }, [_c("div", {
     staticClass: "progress-text text-right text-secondary"
-  }, [_vm._v("\n                                    " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.in_process)) + "%\n                                ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                        " + _vm._s(_vm.getPercentage(_vm.totalTicketSum.in_process)) + "%\n                                    ")]), _vm._v(" "), _c("div", {
     staticClass: "progress",
     attrs: {
       "data-height": "6"
@@ -21997,7 +22003,7 @@ var render = function render() {
     style: {
       width: _vm.getPercentage(_vm.totalTicketSum.in_process) + "%"
     }
-  })]), _vm._v("\n                                " + _vm._s(_vm.totalTicketSum.in_process) + "\n                            ")])])])])])]), _vm._v(" "), _c("div", {
+  })]), _vm._v("\n                                    " + _vm._s(_vm.totalTicketSum.in_process) + "\n                                ")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "mx-4"
   }, [_c("form", {
     attrs: {
@@ -22249,7 +22255,7 @@ var render = function render() {
         return _vm.fetchDropshipperDetails((_vm$selectedTicket$ad = _vm.selectedTicket.added_by_name) === null || _vm$selectedTicket$ad === void 0 || (_vm$selectedTicket$ad = _vm$selectedTicket$ad.dropshipper) === null || _vm$selectedTicket$ad === void 0 ? void 0 : _vm$selectedTicket$ad.id);
       }
     }
-  }, [_vm._v(_vm._s((_vm$selectedTicket$ad2 = _vm.selectedTicket.added_by_name) === null || _vm$selectedTicket$ad2 === void 0 ? void 0 : _vm$selectedTicket$ad2.name) + "\n                                    ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s((_vm$selectedTicket$ad2 = _vm.selectedTicket.added_by_name) === null || _vm$selectedTicket$ad2 === void 0 ? void 0 : _vm$selectedTicket$ad2.name) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(8), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
@@ -22284,11 +22290,11 @@ var render = function render() {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(13), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
-  }, [_vm._v(_vm._s(new Date(_vm.selectedTicket.created_at).toLocaleDateString()))])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(new Date(_vm.selectedTicket.created_at).toLocaleDateString()) + "\n                                    ")])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4"
   }, [_vm.selectedTicket.file_path ? _c("div", {
     staticClass: "card p-3"
-  }, [_vm._m(14), _vm._v(" "), _c("img", {
+  }, [_vm._m(14), _vm._v(" "), _vm.isImage(_vm.selectedTicket.file_path) ? _c("img", {
     staticClass: "img-fluid rounded border",
     staticStyle: {
       "max-width": "100%",
@@ -22298,7 +22304,17 @@ var render = function render() {
       src: _vm.web_url + "storage/uploads/tickets/" + _vm.selectedTicket.file_path,
       alt: "Ticket Image"
     }
-  })]) : _vm._e()])]), _vm._v(" "), _c("div", [_c("strong", [_vm._v("Chat:")]), _vm._v(" "), _c("div", {
+  }) : _vm.isVideo(_vm.selectedTicket.file_path) ? _c("video", {
+    staticClass: "img-fluid rounded border",
+    staticStyle: {
+      "max-width": "100%",
+      height: "auto"
+    },
+    attrs: {
+      src: _vm.web_url + "storage/uploads/tickets/" + _vm.selectedTicket.file_path,
+      controls: ""
+    }
+  }, [_vm._v("\n                                    Your browser does not support the video tag.\n                                ")]) : _vm._e()]) : _vm._e()])]), _vm._v(" "), _c("div", [_c("strong", [_vm._v("Chat:")]), _vm._v(" "), _c("div", {
     ref: "chatContainer",
     staticClass: "border rounded p-2 mb-2",
     staticStyle: {
@@ -22536,7 +22552,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("h6", {
     staticClass: "card-title mb-3"
-  }, [_c("strong", [_vm._v("Image")])]);
+  }, [_c("strong", [_vm._v("Attachment")])]);
 }];
 render._withStripped = true;
 
