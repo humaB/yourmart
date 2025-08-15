@@ -175,7 +175,7 @@ class SupplierController extends Controller
 
         // Explicit supplier filtering
         if (!empty($supplierId) && $supplierId !== '0') {
-            $receivedQuery->where('supplier_id', $supplierId);
+            return $receivedQuery->where('supplier_id', $supplierId)->get();
         } else {
             $receivedQuery->where('supplier_id', '>', 0);
         }
