@@ -71,7 +71,7 @@ class SupplierController extends Controller
         $from = $request->from;
         $to = $request->to;
 
-        $received = StoreReceivedDetail::when(
+       $received = StoreReceivedDetail::when(
             $supplierId,
             function ($q) use ($supplierId) {
                 $q->where('supplier_id', $supplierId);
@@ -86,7 +86,11 @@ class SupplierController extends Controller
         ->when($to, function ($q) use ($to) {
             $q->whereDate('created_at', '<=', $to);
         })
+        ->whereHas('grn.purchase_order', function ($q) {
+            $q->where('supplier_stock', '1');
+        })
         ->get();
+
 
 
         $soldOut = OrderItemSupplier::with('order')
@@ -179,7 +183,11 @@ class SupplierController extends Controller
             })
             ->when($request->to, function ($q) use ($request) {
                 $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->whereHas('grn.purchase_order', function ($q) {
+                $q->where('supplier_stock', '1');
             });
+
 
 
         $received = $receivedQuery->get()
