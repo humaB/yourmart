@@ -169,18 +169,18 @@ class SupplierController extends Controller
 
     public function inTake(Request $request)
     {
-        $supplierId = $request->supplier['code'];
+        $supplierId = $request->supplier['code'] ?? null;
 
         $receivedQuery = StoreReceivedDetail::with(['product.variation'])
-            ->when(
-                isset($supplierId) && $supplierId != '0',
-                function ($q) use ($supplierId) {
-                    $q->where('supplier_id', $supplierId);
-                },
-                function ($q) {
-                    $q->where('supplier_id', '>', 0);
-                }
-            )
+               ->when(
+                    $supplierId !== null && $supplierId !== '' && $supplierId !== '0',
+                    function ($q) use ($supplierId) {
+                        $q->where('supplier_id', $supplierId);
+                    },
+                    function ($q) {
+                        $q->where('supplier_id', '>', 0);
+                    }
+                )
             ->when($request->from, function ($q) use ($request) {
                 $q->whereDate('created_at', '>=', $request->from);
             })
