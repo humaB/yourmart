@@ -171,26 +171,28 @@ class SupplierController extends Controller
     {
         $supplierId = $request->supplier['code'] ?? null;
 
-        $receivedQuery = StoreReceivedDetail::with(['product.variation'])
-               ->when(
-                    $supplierId !== null && $supplierId !== '' && $supplierId !== '0',
-                    function ($q) use ($supplierId) {
-                        $q->where('supplier_id', $supplierId);
-                    },
-                    function ($q) {
-                        $q->where('supplier_id', '>', 0);
-                    }
-                )
-            ->when($request->from, function ($q) use ($request) {
-                $q->whereDate('created_at', '>=', $request->from);
-            })
-            ->when($request->to, function ($q) use ($request) {
-                $q->whereDate('created_at', '<=', $request->to);
-            })
-            ->whereHas('grn.purchase_order', function ($q) {
-                $q->where('supplier_stock', '1');
-            });
+       $receivedQuery = StoreReceivedDetail::with(['product.variation']);
 
+        // Explicit supplier filtering
+        if (!empty($supplierId) && $supplierId !== '0') {
+            $receivedQuery->where('supplier_id', $supplierId);
+        } else {
+            $receivedQuery->where('supplier_id', '>', 0);
+        }
+
+        // Date range filtering
+        if (!empty($request->from)) {
+            $receivedQuery->whereDate('created_at', '>=', $request->from);
+        }
+
+        if (!empty($request->to)) {
+            $receivedQuery->whereDate('created_at', '<=', $request->to);
+        }
+
+        // Relation filter
+        $receivedQuery->whereHas('grn.purchase_order', function ($q) {
+            $q->where('supplier_stock', '1');
+        });
 
 
         $received = $receivedQuery->get()
