@@ -166,16 +166,16 @@ class SupplierController extends Controller
     }
 
 
+    public function inTake(Request $request){
 
-    public function inTake(Request $request)
-    {
         $supplierId = $request->supplier['code'] ?? null;
 
        $receivedQuery = StoreReceivedDetail::with(['product.variation']);
 
         // Explicit supplier filtering
         if (!empty($supplierId) && $supplierId !== '0') {
-            return $receivedQuery->where('supplier_id', $supplierId)->get();
+            return "sad";
+            $receivedQuery->where('supplier_id', $supplierId);
         } else {
             $receivedQuery->where('supplier_id', '>', 0);
         }
