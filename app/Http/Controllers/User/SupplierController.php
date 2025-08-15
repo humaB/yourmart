@@ -92,7 +92,6 @@ class SupplierController extends Controller
         ->get();
 
 
-
         $soldOut = OrderItemSupplier::with('order')
             ->when($supplierId, function ($q) use ($supplierId) {
                 $q->where('supplier_id', $supplierId);
@@ -104,7 +103,7 @@ class SupplierController extends Controller
                 $q->whereDate('created_at', '<=', $to);
             })
             ->whereHas('order', function ($query) {
-                $query->where('status', 8); // Delivered
+                $query->where('status', '8'); // Delivered
             })
             ->get();
 
@@ -170,7 +169,7 @@ class SupplierController extends Controller
 
     public function inTake(Request $request)
     {
-        return $supplierId = $request->supplier['code'] ?? null;
+        $supplierId = $request->supplier['code'] ?? null;
 
         $receivedQuery = StoreReceivedDetail::with(['product.variation'])
             ->when($supplierId, function ($q) use ($supplierId) {
