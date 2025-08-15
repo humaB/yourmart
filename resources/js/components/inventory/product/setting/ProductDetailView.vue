@@ -439,9 +439,13 @@
                                                 </div>
                                                 <div>
                                                     <ul>
-                                                        <li v-for="item in product.up_sells" :key="item.id" class="mb-1 border-bottom">
-                                                            {{ item.product.title }} <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
+                                                   <li v-for="item in product.up_sells" :key="item.id" class="mb-1 border-bottom">
+                                                        {{ item?.product?.title ? item.product.title : 'Untitled Product' }}
+                                                        <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
                                                         </li>
+
                                                     </ul>
                                                 </div>
                                             </td>
@@ -461,8 +465,11 @@
                                                 <div class="mt-3">
 
                                                     <ul>
-                                                        <li v-for="item in product.cross_sells" :key="item.id" class=" mb-1 border-bottom">
-                                                            {{ item.product.title }} <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
+                                                     <li v-for="item in product.cross_sells" :key="item.id" class="mb-1 border-bottom">
+                                                            {{ item?.product?.title ? item.product.title : 'Untitled Product' }}
+                                                            <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -482,9 +489,13 @@
                                                 </div>
                                                 <div class="mt-3">
                                                     <ul>
-                                                        <li v-for="item in product.bought_togethers" :key="item.id" class=" mb-1 border-bottom">
-                                                            {{ item.product.title }} <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
+                                                        <li v-for="item in product.bought_togethers" :key="item.id" class="mb-1 border-bottom">
+                                                            {{ item?.product?.title ? item.product.title : 'Untitled Product' }}
+                                                            <button @click="removeRelatedProduct(item.id)" class="btn btn-sm btn-danger float-right">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
                                                         </li>
+
                                                     </ul>
                                                 </div>
                                             </td>

@@ -13379,10 +13379,11 @@ var render = function render() {
       }
     }
   }, [_vm._v("Add")])])]), _vm._v(" "), _c("div", [_c("ul", _vm._l(_vm.product.up_sells, function (item) {
+    var _item$product;
     return _c("li", {
       key: item.id,
       staticClass: "mb-1 border-bottom"
-    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + " "), _c("button", {
+    }, [_vm._v("\n                                                        " + _vm._s(item !== null && item !== void 0 && (_item$product = item.product) !== null && _item$product !== void 0 && _item$product.title ? item.product.title : "Untitled Product") + "\n                                                        "), _c("button", {
       staticClass: "btn btn-sm btn-danger float-right",
       on: {
         click: function click($event) {
@@ -13427,10 +13428,11 @@ var render = function render() {
   }, [_vm._v("Add")])])]), _vm._v(" "), _c("div", {
     staticClass: "mt-3"
   }, [_c("ul", _vm._l(_vm.product.cross_sells, function (item) {
+    var _item$product2;
     return _c("li", {
       key: item.id,
       staticClass: "mb-1 border-bottom"
-    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + " "), _c("button", {
+    }, [_vm._v("\n                                                            " + _vm._s(item !== null && item !== void 0 && (_item$product2 = item.product) !== null && _item$product2 !== void 0 && _item$product2.title ? item.product.title : "Untitled Product") + "\n                                                            "), _c("button", {
       staticClass: "btn btn-sm btn-danger float-right",
       on: {
         click: function click($event) {
@@ -13475,10 +13477,11 @@ var render = function render() {
   }, [_vm._v("Add")])])]), _vm._v(" "), _c("div", {
     staticClass: "mt-3"
   }, [_c("ul", _vm._l(_vm.product.bought_togethers, function (item) {
+    var _item$product3;
     return _c("li", {
       key: item.id,
       staticClass: "mb-1 border-bottom"
-    }, [_vm._v("\n                                                            " + _vm._s(item.product.title) + " "), _c("button", {
+    }, [_vm._v("\n                                                            " + _vm._s(item !== null && item !== void 0 && (_item$product3 = item.product) !== null && _item$product3 !== void 0 && _item$product3.title ? item.product.title : "Untitled Product") + "\n                                                            "), _c("button", {
       staticClass: "btn btn-sm btn-danger float-right",
       on: {
         click: function click($event) {
