@@ -4,19 +4,30 @@
             <div class="col-12 col-md-12 col-lg-12">
                 <div class="card card-primary">
 
-                    <div class="card-body row">
-                        <ul class="nav nav-pills mb-3" id="myTab3" role="tablist">
-                             <li class="nav-item">
-                                 <a class="nav-link active" id="yourmart-tab3" data-toggle="tab" href="#yourmart3" role="tab" aria-controls="yourmart" aria-selected="true">Pending Payouts YourMart</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a class="nav-link" id="supplier-tab3" data-toggle="tab" href="#supplier3" role="tab" aria-controls="supplier" aria-selected="false">Pending Payouts Suppliers</a>
-                             </li>
+                    <div class="card-body">
+                        <div class="col-md-12">
 
-                         </ul>
+                            <ul class="nav nav-pills mb-3" id="myTab3" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="yourmart-tab3" data-toggle="tab" href="#yourmart3"
+                                        role="tab" aria-controls="yourmart" aria-selected="true">Pending Payouts
+                                        YourMart</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="supplier-tab3" data-toggle="tab" href="#supplier3" role="tab"
+                                        aria-controls="supplier" aria-selected="false">Pending Payouts Suppliers</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="overall-tab3" data-toggle="tab" href="#overall" role="tab"
+                                        aria-controls="overall" aria-selected="false">Over All Record</a>
+                                </li>
+
+                            </ul>
+                        </div>
                         <div class="tab-content" id="myTabContent2">
 
-                            <div class="tab-pane fade show active" id="yourmart3" role="tabpanel" aria-labelledby="yourmart-tab3">
+                            <div class="tab-pane fade show active" id="yourmart3" role="tabpanel"
+                                aria-labelledby="yourmart-tab3">
                                 <div class="row">
                                     <div class="col-md-12 row px-4">
                                         <div class="col-lg-3 col-md-6 col-sm-6 col-12">
@@ -29,7 +40,7 @@
                                                         <div class="text-right">
                                                             <h3 class="font-light mb-0">
                                                                 <i class="ti-arrow-up text-success"></i> {{
-                                                                formatPrice(totalPayable) }}
+                                                                    formatPrice(totalPayable) }}
                                                             </h3>
                                                             <span class="text-muted">Total Payouts</span>
                                                         </div>
@@ -46,7 +57,8 @@
                                                     <div class="padding-20">
                                                         <div class="text-right">
                                                             <h3 class="font-light mb-0">
-                                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalPaid)
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                    formatPrice(totalPaid)
                                                                 }}
                                                             </h3>
                                                             <span class="text-muted">Total Paid</span>
@@ -83,7 +95,8 @@
                                                     <div class="padding-20">
                                                         <div class="text-right">
                                                             <h3 class="font-light mb-0">
-                                                                <i class="ti-arrow-up text-success"></i> {{ remainingDropshippers }}
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                    remainingDropshippers }}
                                                             </h3>
                                                             <span class="text-muted">Total Suppliers</span>
                                                         </div>
@@ -104,7 +117,8 @@
                                                         <table class="table table-bordered" :id="table_id">
                                                             <thead>
                                                                 <tr>
-                                                                    <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                                    <th v-for="(item, index) in th" :key="item">{{ item
+                                                                    }}</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -115,22 +129,29 @@
                                                                     <td>{{ formatPrice(item.total_order_amount) }}</td>
                                                                     <td>{{ formatPrice(item.total_order_amount -
                                                                         item.total_remaining_amount) }}</td>
-                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}
+                                                                    </td>
 
                                                                     <td class="d-flex justify-content-between">
                                                                         <button class="btn btn-primary mr-2"
-                                                                            @click="paymentDetail(item.supplier.id , '0')" data-toggle="modal"
-                                                                            data-target="#supplierPayment" title="Payment"><i
+                                                                            @click="paymentDetail(item.supplier.id, '0')"
+                                                                            data-toggle="modal"
+                                                                            data-target="#supplierPayment"
+                                                                            title="Payment"><i
                                                                                 class="fas fa-credit-card"></i></button>
                                                                         <button class="btn btn-info mr-2"
-                                                                            @click="fetchDetail(item.id)" data-toggle="modal"
-                                                                            data-target="#supplierDetail" title="View Details"><i
+                                                                            @click="fetchDetail(item.id)"
+                                                                            data-toggle="modal"
+                                                                            data-target="#supplierDetail"
+                                                                            title="View Details"><i
                                                                                 class="fa fa-eye"></i></button>
 
                                                                         <button class="btn btn-primary"
-                                                                            @click="paymentHistory(item.supplier.id)" data-toggle="modal"
-                                                                            data-target="#dropshipperHistory" title="Payment"><i
-                                                                            class="far fa-clock"></i></button>
+                                                                            @click="paymentHistory(item.supplier.id)"
+                                                                            data-toggle="modal"
+                                                                            data-target="#dropshipperHistory"
+                                                                            title="Payment"><i
+                                                                                class="far fa-clock"></i></button>
 
                                                                     </td>
                                                                 </tr>
@@ -158,7 +179,7 @@
                                                         <div class="text-right">
                                                             <h3 class="font-light mb-0">
                                                                 <i class="ti-arrow-up text-success"></i> {{
-                                                                formatPrice(suppliertotalPayable) }}
+                                                                    formatPrice(suppliertotalPayable) }}
                                                             </h3>
                                                             <span class="text-muted">Total Payouts</span>
                                                         </div>
@@ -175,7 +196,8 @@
                                                     <div class="padding-20">
                                                         <div class="text-right">
                                                             <h3 class="font-light mb-0">
-                                                                <i class="ti-arrow-up text-success"></i> {{ formatPrice(suppliertotalPaid)
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                    formatPrice(suppliertotalPaid)
                                                                 }}
                                                             </h3>
                                                             <span class="text-muted">Total Paid</span>
@@ -212,7 +234,8 @@
                                                     <div class="padding-20">
                                                         <div class="text-right">
                                                             <h3 class="font-light mb-0">
-                                                                <i class="ti-arrow-up text-success"></i> {{ supplierremainingDropshippers }}
+                                                                <i class="ti-arrow-up text-success"></i> {{
+                                                                    supplierremainingDropshippers }}
                                                             </h3>
                                                             <span class="text-muted">Total Suppliers</span>
                                                         </div>
@@ -233,33 +256,42 @@
                                                         <table class="table table-bordered" id="moq_table2">
                                                             <thead>
                                                                 <tr>
-                                                                    <th v-for="(item, index) in th" :key="item">{{ item }}</th>
+                                                                    <th v-for="(item, index) in th" :key="item">{{ item
+                                                                    }}</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="(item, index) in supplierrecords" :key="item.id">
+                                                                <tr v-for="(item, index) in supplierrecords"
+                                                                    :key="item.id">
                                                                     <td>{{ index + 1 }}</td>
                                                                     <td>{{ item.supplier.full_name }}</td>
                                                                     <td>{{ item.supplier.email }}</td>
                                                                     <td>{{ formatPrice(item.total_order_amount) }}</td>
                                                                     <td>{{ formatPrice(item.total_order_amount -
                                                                         item.total_remaining_amount) }}</td>
-                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}
+                                                                    </td>
 
                                                                     <td class="d-flex justify-content-between">
                                                                         <button class="btn btn-primary mr-2"
-                                                                            @click="paymentDetail(item.supplier.id , '1')" data-toggle="modal"
-                                                                            data-target="#supplierPayment" title="Payment"><i
+                                                                            @click="paymentDetail(item.supplier.id, '1')"
+                                                                            data-toggle="modal"
+                                                                            data-target="#supplierPayment"
+                                                                            title="Payment"><i
                                                                                 class="fas fa-credit-card"></i></button>
                                                                         <button class="btn btn-info mr-2"
-                                                                            @click="fetchDetail(item.id)" data-toggle="modal"
-                                                                            data-target="#supplierDetail" title="View Details"><i
+                                                                            @click="fetchDetail(item.id)"
+                                                                            data-toggle="modal"
+                                                                            data-target="#supplierDetail"
+                                                                            title="View Details"><i
                                                                                 class="fa fa-eye"></i></button>
 
                                                                         <button class="btn btn-primary"
-                                                                            @click="paymentHistory(item.supplier.id)" data-toggle="modal"
-                                                                            data-target="#dropshipperHistory" title="Payment"><i
-                                                                            class="far fa-clock"></i></button>
+                                                                            @click="paymentHistory(item.supplier.id)"
+                                                                            data-toggle="modal"
+                                                                            data-target="#dropshipperHistory"
+                                                                            title="Payment"><i
+                                                                                class="far fa-clock"></i></button>
 
                                                                     </td>
                                                                 </tr>
@@ -270,6 +302,64 @@
                                             </div>
                                         </div>
 
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="overall" role="tabpanel" aria-labelledby="overall-tab3">
+                                <div class="row">
+                                    <div class="col-md-12 mt-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="">
+
+                                                    <table class="table w-100 table-bordered" id="moq_table3">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Sr</th>
+                                                                <th>Name</th>
+                                                                <th>Email</th>
+                                                                <th>Total Payable</th>
+                                                                <th>Total Paid</th>
+                                                                <th>Remaining Amount</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                                <tr v-for="(item, index) in overall"
+                                                                    :key="item.id">
+                                                                    <td>{{ index + 1 }}</td>
+                                                                    <td>{{ item.supplier.full_name }}</td>
+                                                                    <td>{{ item.supplier.email }}</td>
+                                                                    <td>{{ formatPrice(item.total_order_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_order_amount -
+                                                                        item.total_remaining_amount) }}</td>
+                                                                    <td>{{ formatPrice(item.total_remaining_amount) }}
+                                                                    </td>
+
+                                                                    <td class="d-flex justify-content-between">
+                                                                
+                                                                        <button class="btn btn-info mr-2"
+                                                                            @click="fetchDetail(item.id)"
+                                                                            data-toggle="modal"
+                                                                            data-target="#supplierDetail"
+                                                                            title="View Details"><i
+                                                                                class="fa fa-eye"></i></button>
+
+                                                                        <button class="btn btn-primary"
+                                                                            @click="paymentHistory(item.supplier.id)"
+                                                                            data-toggle="modal"
+                                                                            data-target="#dropshipperHistory"
+                                                                            title="Payment"><i
+                                                                                class="far fa-clock"></i></button>
+
+                                                                    </td>
+                                                                </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -292,10 +382,7 @@
         <SupplierPayment :orders="orders" :addData="addData" :loader="btnLoader" :details="details"
             :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
 
-        <SupplierPaymentHistory
-            :selectedSupplier="selectedSupplier"
-            :history="paymentHistorys"
-        />
+        <SupplierPaymentHistory :selectedSupplier="selectedSupplier" :history="paymentHistorys" />
     </div>
 </template>
 <script>
@@ -348,24 +435,26 @@ export default {
             totalPaid: 0,
             totalRemaining: 0,
             remainingDropshippers: 0,
-            selectedSupplier: { id : "", type : ""},
-            paymentHistorys : [],
+            selectedSupplier: { id: "", type: "" },
+            paymentHistorys: [],
 
             suppliertotalPayable: 0,
             suppliertotalPaid: 0,
             suppliertotalRemaining: 0,
             supplierremainingDropshippers: 0,
-            supplierrecords : []
+            supplierrecords: [],
+            overall : []
         };
     },
     created() {
         this.csrf = $('meta[name=csrf-token]').attr('content');
         this.fetchSupplierRecord();
         this.fetchYourmartRecord();
+        this.fetchOverallRecord();
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
-        paymentHistory( id ){
+        paymentHistory(id) {
             let vm = this;
             vm.selectedSupplier.id = id;
             axios
@@ -375,7 +464,7 @@ export default {
                     vm.paymentHistorys = results
                 });
         },
-        updateInformation( data ) {
+        updateInformation(data) {
             let vm = this;
             this.clearDataTable();
             axios
@@ -463,14 +552,14 @@ export default {
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },
-        paymentDetail(id , type) {
+        paymentDetail(id, type) {
             let vm = this;
 
             vm.selectedSupplier.id = id;
             vm.selectedSupplier.type = type;
 
             axios
-                .post(this.api_url + "suppliers/payments/data", { id: id, type : type })
+                .post(this.api_url + "suppliers/payments/data", { id: id, type: type })
                 .then((response) => {
                     const results = response.data.response
                     vm.orders = results.orders;
@@ -519,6 +608,22 @@ export default {
                     }, 300);
                 });
         },
+        fetchOverallRecord() {
+            let vm = this;
+
+            vm.loader = false;
+            axios
+                .get(this.api_url + "suppliers/payments/overalls")
+                .then((response) => {
+                    const results = response.data.response
+
+                    vm.overall = results;
+
+                    setTimeout(() => {
+                        vm.dataTable3();
+                    }, 300);
+                });
+        },
         fetchDetail(id, status) {
             let vm = this;
             vm.activeStatus = status;
@@ -549,6 +654,18 @@ export default {
                     {
                         extend: 'excel',
                         title: 'Pending Payouts',
+                    }
+                ]
+            });
+        },
+        dataTable3() {
+            $("#moq_table3").DataTable({
+                "bSort": false,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        title: 'Overall Payouts',
                     }
                 ]
             });

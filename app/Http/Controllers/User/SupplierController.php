@@ -457,6 +457,24 @@ class SupplierController extends Controller
             ->setStatusCode(200);
     }
 
+    public function overallPayments()
+    {
+        // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
+        $suppliers = PurchaseOrder::select(
+            'supplier_id',
+            DB::raw('SUM(total_amount) as total_order_amount'),
+            DB::raw('SUM(remaining_amount) as total_remaining_amount')
+        )
+            ->where('status', '1')
+            ->groupBy('supplier_id')
+            ->with('supplier:id,full_name,email') // eager load supplier if needed
+            ->orderByDesc('supplier_id')
+            ->get();
+
+        return (new ResponseCollection($suppliers))
+            ->response()
+            ->setStatusCode(200);
+    }
 
     public function paymentData(Request $request)
     {
