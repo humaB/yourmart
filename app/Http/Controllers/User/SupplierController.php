@@ -71,16 +71,23 @@ class SupplierController extends Controller
         $from = $request->from;
         $to = $request->to;
 
-        $received = StoreReceivedDetail::when($supplierId, function ($q) use ($supplierId) {
-            $q->where('supplier_id', $supplierId);
+        $received = StoreReceivedDetail::when(
+            $supplierId,
+            function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            },
+            function ($q) {
+                $q->where('supplier_id', '>', 0);
+            }
+        )
+        ->when($from, function ($q) use ($from) {
+            $q->whereDate('created_at', '>=', $from);
         })
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->get();
+        ->when($to, function ($q) use ($to) {
+            $q->whereDate('created_at', '<=', $to);
+        })
+        ->get();
+
 
         $soldOut = OrderItemSupplier::with('order')
             ->when($supplierId, function ($q) use ($supplierId) {
@@ -164,6 +171,8 @@ class SupplierController extends Controller
         $receivedQuery = StoreReceivedDetail::with(['product.variation'])
             ->when($supplierId, function ($q) use ($supplierId) {
                 $q->where('supplier_id', $supplierId);
+            }, function ($q) {
+                $q->where('supplier_id', '>', 0);
             })
             ->when($request->from, function ($q) use ($request) {
                 $q->whereDate('created_at', '>=', $request->from);
@@ -171,6 +180,7 @@ class SupplierController extends Controller
             ->when($request->to, function ($q) use ($request) {
                 $q->whereDate('created_at', '<=', $request->to);
             });
+
 
         $received = $receivedQuery->get()
             ->groupBy('product_id')
@@ -201,7 +211,7 @@ class SupplierController extends Controller
                 $q->whereDate('created_at', '<=', $request->to);
             })
             ->whereHas('order', function ($query) {
-                $query->where('status', 8); // delivered
+                $query->where('status', '8'); // delivered
             });
 
         $soldOut = $soldOutQuery->get()
@@ -250,7 +260,7 @@ class SupplierController extends Controller
     }
 
     public function purchaseOrders(Request $request){
-        
+
         $supplierId = $request->supplier['code'] ?? null;
         $from = $request->from;
         $to = $request->to;
