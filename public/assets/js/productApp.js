@@ -14174,6 +14174,7 @@ var render = function render() {
   })]), _vm._v(" "), _c("th", {
     staticClass: "width:22%"
   }, [_vm._v("Product Title")]), _vm._v(" "), _c("th", [_vm._v("SKU")]), _vm._v(" "), _c("th", [_vm._v("Stock")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Category")]), _vm._v(" "), _c("th", [_vm._v("Tags")]), _vm._v(" "), _c("th", [_vm._v("Added Date")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (item, index) {
+    var _item$category;
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", {
@@ -14243,7 +14244,7 @@ var render = function render() {
       staticClass: "text-success"
     }, [_vm._v("In stock " + _vm._s(item.variation.stock))]) : _vm._e(), _vm._v(" "), item.variation.stock == 0 ? _c("p", {
       staticClass: "text-danger"
-    }, [_vm._v("Out of stock")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("del", [_vm._v("PKR " + _vm._s(item.variation.regular_price))]), _c("br"), _vm._v("\n                                                            PKR " + _vm._s(item.variation.sale_price) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(item.category.name) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(_vm.formattedTags(item.tags)) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
+    }, [_vm._v("Out of stock")]) : _vm._e()]), _vm._v(" "), _c("td", [_c("del", [_vm._v("PKR " + _vm._s(item.variation.regular_price))]), _c("br"), _vm._v("\n                                                            PKR " + _vm._s(item.variation.sale_price) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(item !== null && item !== void 0 && (_item$category = item.category) !== null && _item$category !== void 0 && _item$category.name ? item.category.name : "No Category") + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                            " + _vm._s(_vm.formattedTags(item.tags)) + "\n                                                        ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
       staticClass: "d-flex"
     }, [_c("button", {
       staticClass: "btn btn-info",

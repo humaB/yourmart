@@ -211,7 +211,7 @@
                                                                 PKR {{ item.variation.sale_price }}
                                                             </td>
                                                             <td>
-                                                                {{ item.category.name }}
+                                                                {{ item?.category?.name ? item.category.name : 'No Category' }}
                                                             </td>
                                                             <td>
                                                                 {{ formattedTags(item.tags) }}
