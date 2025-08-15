@@ -72,7 +72,7 @@ class SupplierController extends Controller
         $to = $request->to;
 
        $received = StoreReceivedDetail::when(
-            $supplierId,
+            isset($supplierId) && $supplierId !== '',
             function ($q) use ($supplierId) {
                 $q->where('supplier_id', $supplierId);
             },
@@ -172,11 +172,15 @@ class SupplierController extends Controller
         $supplierId = $request->supplier['code'] ?? null;
 
         $receivedQuery = StoreReceivedDetail::with(['product.variation'])
-            ->when($supplierId, function ($q) use ($supplierId) {
-                $q->where('supplier_id', $supplierId);
-            }, function ($q) {
-                $q->where('supplier_id', '>', 0);
-            })
+            ->when(
+                isset($supplierId) && $supplierId !== '',
+                function ($q) use ($supplierId) {
+                    $q->where('supplier_id', $supplierId);
+                },
+                function ($q) {
+                    $q->where('supplier_id', '>', 0);
+                }
+            )
             ->when($request->from, function ($q) use ($request) {
                 $q->whereDate('created_at', '>=', $request->from);
             })
