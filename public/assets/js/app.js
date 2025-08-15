@@ -24411,6 +24411,8 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "card-body"
+  }, [_c("div", {
+    staticClass: "row col-md-12"
   }, [_c("ul", {
     staticClass: "nav nav-pills",
     attrs: {
@@ -24431,7 +24433,7 @@ var render = function render() {
     }
   }, [_vm._v("Level & Rewards "), _c("span", {
     staticClass: "badge badge-primary"
-  }, [_vm._v(_vm._s(_vm.incompleteLevelsCount))])])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.incompleteLevelsCount))])])])])]), _vm._v(" "), _c("div", {
     staticClass: "tab-content",
     attrs: {
       id: "myTabContent2"

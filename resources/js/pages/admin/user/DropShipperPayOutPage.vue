@@ -2,17 +2,19 @@
     <div>
         <div class="row">
             <div class="card-body">
-                <ul class="nav nav-pills" id="myTab3" role="tablist">
-                  <li class="nav-item">
-                    <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab" aria-controls="home" aria-selected="true">Pending Payouts</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile" aria-selected="false">Overall Record</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="level-tab3" data-toggle="tab" href="#level3" role="tab" aria-controls="level" aria-selected="false">Level & Rewards <span class="badge badge-primary">{{ incompleteLevelsCount  }}</span></a>
-                  </li>
-                </ul>
+                <div class="row col-md-12">
+                    <ul class="nav nav-pills" id="myTab3" role="tablist">
+                      <li class="nav-item">
+                        <a class="nav-link active" id="home-tab3" data-toggle="tab" href="#home3" role="tab" aria-controls="home" aria-selected="true">Pending Payouts</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="profile-tab3" data-toggle="tab" href="#profile3" role="tab" aria-controls="profile" aria-selected="false">Overall Record</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" id="level-tab3" data-toggle="tab" href="#level3" role="tab" aria-controls="level" aria-selected="false">Level & Rewards <span class="badge badge-primary">{{ incompleteLevelsCount  }}</span></a>
+                      </li>
+                    </ul>
+                </div>
                 <div class="tab-content" id="myTabContent2">
 
                   <div class="tab-pane fade show active" id="home3" role="tabpanel" aria-labelledby="home-tab3">
