@@ -11,7 +11,11 @@ use App\Models\Account\AccountHead;
 use App\Models\Account\AccountTransaction;
 use App\Models\Account\Bank;
 use App\Models\Account\Cash;
+use App\Models\Inventory\Order\OrderItemSupplier;
+use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
+use App\Models\Inventory\Store\StoreReceived;
+use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Setting\EmailTemplate;
 use App\Models\User;
 use App\Models\User\DropShipper;
@@ -21,12 +25,19 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use TCPDF;
-include(public_path().'/assets/tcpdf/tcpdf.php');
+
+include(public_path() . '/assets/tcpdf/tcpdf.php');
 
 class SupplierController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return view('user.supplier');
+    }
+
+    public function dashboard()
+    {
+        return view('user.supplier_dashboard');
     }
 
     public function payOuts()
@@ -34,31 +45,250 @@ class SupplierController extends Controller
         return view('user.supplier_payout');
     }
 
-    public function getRequests() {
+    public function getRequests()
+    {
 
         $suppliers = Supplier::orderBy('id', 'desc')->get();
 
-        return ( new ResponseCollection ( $suppliers  ) )
-        ->response()
-        ->setStatusCode( 200 );
+        return (new ResponseCollection($suppliers))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function dropDown() {
+    public function dropDown()
+    {
 
         $suppliers = Supplier::select('id as code', 'full_name as label')->where('status', '1')->get();
 
-        return ( new ResponseCollection ( $suppliers  ) )
-        ->response()
-        ->setStatusCode( 200 );
+        return (new ResponseCollection($suppliers))
+            ->response()
+            ->setStatusCode(200);
     }
 
-    public function fetchDetails( Request $request ) {
+    public function fetchData(Request $request)
+    {
+        $supplierId = $request->supplier['code'] ?? null;
+        $from = $request->from;
+        $to = $request->to;
 
-        $suppliers = Supplier::with('bank', 'city','shops')->where('id', $request->id)->get();
+        $received = StoreReceivedDetail::when($supplierId, function ($q) use ($supplierId) {
+            $q->where('supplier_id', $supplierId);
+        })
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->get();
 
-        return ( new ResponseCollection ( $suppliers  ) )
-        ->response()
-        ->setStatusCode( 200 );
+        $soldOut = OrderItemSupplier::with('order')
+            ->when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->whereHas('order', function ($query) {
+                $query->where('status', 8); // Delivered
+            })
+            ->get();
+
+        $totalSoldOutValue = 0;
+        foreach ($soldOut as $sold) {
+            $product = StoreReceivedDetail::when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
+                ->when($from, function ($q) use ($from) {
+                    $q->whereDate('created_at', '>=', $from);
+                })
+                ->when($to, function ($q) use ($to) {
+                    $q->whereDate('created_at', '<=', $to);
+                })
+                ->where('product_id', $sold->product_id)
+                ->get();
+
+            $avg_price = $product->sum('quantity') > 0
+                ? round($product->sum('total') / $product->sum('quantity'))
+                : 0;
+
+            $totalSoldOutValue += (float) $avg_price * (float) $sold->quantity;
+        }
+
+        $grn = StoreReceived::when($supplierId, function ($q) use ($supplierId) {
+            $q->where('supplier_id', $supplierId);
+        })
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->pluck('po_id');
+
+        $purchase_orders = PurchaseOrder::whereIn('id', $grn)
+            ->when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->get();
+
+        $totalPaid = $purchase_orders->sum('total_amount') - $purchase_orders->sum('remaining_amount');
+
+        $data = [
+            'totalStockValue'   => $received->sum('total'),
+            'totalSoldOutValue' => $totalSoldOutValue,
+            'totalPaid'         => $totalPaid,
+            'balance'           => $totalSoldOutValue - $totalPaid
+        ];
+
+        return (new ResponseCollection($data))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+
+
+    public function inTake(Request $request)
+    {
+        $supplierId = $request->supplier['code'] ?? null;
+
+        $receivedQuery = StoreReceivedDetail::with(['product.variation'])
+            ->when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            });
+
+        $received = $receivedQuery->get()
+            ->groupBy('product_id')
+            ->map(function ($items, $productId) {
+                $total_qty = $items->sum('quantity');
+                $total_amount = $items->sum('total');
+                $latest_price = $total_qty ? round($total_amount / $total_qty) : 0;
+
+                return [
+                    'product_id' => $productId,
+                    'product_name' => $items->first()->product->title ?? '',
+                    'slug'         => $items->first()->product->slug ?? '',
+                    'sku'          => $items->first()->product->variation->sku ?? '',
+                    'stock_in_qty' => $total_qty,
+                    'stock_in_price' => $latest_price,
+                    'stock_in_amount' => $total_qty * $latest_price,
+                ];
+            });
+
+        $soldOutQuery = OrderItemSupplier::with(['order', 'product'])
+            ->when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
+            ->when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->whereHas('order', function ($query) {
+                $query->where('status', 8); // delivered
+            });
+
+        $soldOut = $soldOutQuery->get()
+            ->groupBy('product_id')
+            ->map(function ($items, $productId) {
+                $total_qty = $items->sum('quantity');
+                $amount = $items->sum(function ($i) {
+                    return $i->quantity * $i->price;
+                });
+
+                return [
+                    'product_id' => $productId,
+                    'sold_out_qty' => $total_qty,
+                    'sold_out_amount' => $amount,
+                ];
+            });
+
+        $final = $received->map(function ($item) use ($soldOut) {
+            $productId = $item['product_id'];
+            $soldItem = $soldOut->get($productId);
+
+            $sold_qty = $soldItem['sold_out_qty'] ?? 0;
+            $sold_amount = $soldItem['sold_out_amount'] ?? 0;
+
+            $balance_qty = $item['stock_in_qty'] - $sold_qty;
+            $balance_amount = $balance_qty * $item['stock_in_price'];
+
+            return [
+                'product_name' => $item['product_name'],
+                'slug'         => $item['slug'],
+                'sku'          => $item['sku'],
+                'stock_in_qty' => $item['stock_in_qty'],
+                'stock_in_price' => $item['stock_in_price'],
+                'stock_in_amount' => $item['stock_in_amount'],
+                'sold_out_qty' => $sold_qty,
+                'sold_out_amount' => $sold_amount,
+                'balance_qty' => $balance_qty,
+                'balance_amount' => $balance_amount,
+                'po' => null, // you can fill this later
+            ];
+        })->values();
+
+        return (new ResponseCollection($final))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function purchaseOrders(Request $request){
+        
+        $supplierId = $request->supplier['code'] ?? null;
+        $from = $request->from;
+        $to = $request->to;
+
+        $product = Product::where('slug', $request->slug)->first();
+
+        $purchase_orders = PurchaseOrder::with('details.product')
+            ->where('supplier_stock', '1')
+            ->where('status', '1')
+            ->when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
+            ->when($from, function ($q) use ($from) {
+                $q->whereDate('created_at', '>=', $from);
+            })
+            ->when($to, function ($q) use ($to) {
+                $q->whereDate('created_at', '<=', $to);
+            })
+            ->whereHas('details', function ($query) use ($product) {
+                $query->where('product_id', $product->id);
+            })
+            ->get();
+
+        return (new ResponseCollection($purchase_orders))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+
+
+    public function fetchDetails(Request $request)
+    {
+
+        $suppliers = Supplier::with('bank', 'city', 'shops')->where('id', $request->id)->get();
+
+        return (new ResponseCollection($suppliers))
+            ->response()
+            ->setStatusCode(200);
     }
 
     public function update(Request $request)
@@ -101,11 +331,12 @@ class SupplierController extends Controller
         return response()->json(['message' => 'Dropshipper information updated successfully.']);
     }
 
-    public function decision( Request $request ){
+    public function decision(Request $request)
+    {
 
         $supplier = Supplier::where('id', $request->id)->first();
 
-        if($request->action != 'reject'){
+        if ($request->action != 'reject') {
             $user = User::create([
                 'name'     => $supplier->full_name,
                 'email'    => $supplier->email,
@@ -131,7 +362,7 @@ class SupplierController extends Controller
 
         $template = EmailTemplate::where('type', $request->action == 'reject' ? 'supplier_application_rejected' : 'supplier_application_approved')->first();
 
-        Mail::to($supplier->email)->send(new SupplierDecisionMail($mailData , $template));
+        Mail::to($supplier->email)->send(new SupplierDecisionMail($mailData, $template));
 
         return ['message', 'successfully updated'];
     }
@@ -144,13 +375,13 @@ class SupplierController extends Controller
             DB::raw('SUM(total_amount) as total_order_amount'),
             DB::raw('SUM(remaining_amount) as total_remaining_amount')
         )
-        ->where('status', '1')
-        ->where('supplier_stock', '1')
-        ->groupBy('supplier_id')
-        ->having('total_remaining_amount', '>', 0)
-        ->with('supplier:id,full_name,email') // eager load supplier if needed
-        ->orderByDesc('supplier_id')
-        ->get();
+            ->where('status', '1')
+            ->where('supplier_stock', '1')
+            ->groupBy('supplier_id')
+            ->having('total_remaining_amount', '>', 0)
+            ->with('supplier:id,full_name,email') // eager load supplier if needed
+            ->orderByDesc('supplier_id')
+            ->get();
 
         $totalPayable = $suppliers->sum('total_order_amount');
         $totalRemaining = $suppliers->sum('total_remaining_amount');
@@ -178,13 +409,13 @@ class SupplierController extends Controller
             DB::raw('SUM(total_amount) as total_order_amount'),
             DB::raw('SUM(remaining_amount) as total_remaining_amount')
         )
-        ->where('status', '1')
-        ->where('supplier_stock', '0')
-        ->groupBy('supplier_id')
-        ->having('total_remaining_amount', '>', 0)
-        ->with('supplier:id,full_name,email') // eager load supplier if needed
-        ->orderByDesc('supplier_id')
-        ->get();
+            ->where('status', '1')
+            ->where('supplier_stock', '0')
+            ->groupBy('supplier_id')
+            ->having('total_remaining_amount', '>', 0)
+            ->with('supplier:id,full_name,email') // eager load supplier if needed
+            ->orderByDesc('supplier_id')
+            ->get();
 
         $totalPayable = $suppliers->sum('total_order_amount');
         $totalRemaining = $suppliers->sum('total_remaining_amount');
@@ -263,11 +494,11 @@ class SupplierController extends Controller
             // Checks account if or not they are open
             $supplierLedger = $ledger->accountHeadCreate(
                 $supplier->full_name . '-' . $supplier->cnic_number,
-                    2, // LIABILITIES
-                    8, // CURRENT LIABILITIES
-                    40, // TRADE CREDITORS
-                    41, // AP-SUPPLIERS
-                );
+                2, // LIABILITIES
+                8, // CURRENT LIABILITIES
+                40, // TRADE CREDITORS
+                41, // AP-SUPPLIERS
+            );
 
             // Calculate the amount to pay for this order
             $orderProfit = $order->remaining_amount;
@@ -303,7 +534,7 @@ class SupplierController extends Controller
     {
         $supplier = Supplier::where('id', $request->id)->first();
 
-        $name = $supplier->full_name .'-'.$supplier->cnic_number;
+        $name = $supplier->full_name . '-' . $supplier->cnic_number;
         $ledger = AccountHead::where('name', $name)->first();
 
         $transactions = AccountTransaction::with('po')
@@ -417,9 +648,9 @@ class SupplierController extends Controller
         ';
 
         // Add shops information in a loop
-if (!empty($details->shops)) {
-    foreach ($details->shops as $index => $shop) {
-        $html .= '<br><h4>Shop ' . ($index + 1) . ' Details</h4>
+        if (!empty($details->shops)) {
+            foreach ($details->shops as $index => $shop) {
+                $html .= '<br><h4>Shop ' . ($index + 1) . ' Details</h4>
         <table cellpadding="5" cellspacing="0" border="1">
             <tr>
                 <td><strong>Store Name</strong></td>
@@ -438,8 +669,8 @@ if (!empty($details->shops)) {
                 <td>' . ($shop->business_description ?? 'N/A') . '</td>
             </tr>
         </table>';
-    }
-}
+            }
+        }
 
         // Output the HTML content to the PDF
         $pdf->writeHTML($html, true, false, true, false, '');
@@ -447,44 +678,40 @@ if (!empty($details->shops)) {
         // Set PDF to display as inline in the browser
         $pdf->Output('supplier_form.pdf', 'I');
     }
-
 }
 
 class MYPDF extends TCPDF
+{
+
+    //Page header
+    public function Header()
     {
+        // Logo
+        // $image_file = K_PATH_IMAGES . '';
+        // $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
+        // // Set font
+        $this->SetFont('helvetica', 'B', 14);
+        $this->Ln(5);
+        // Title
+        $this->Cell(0, 15, 'Supplier Form', 0, 1, 'L', 0, '', 0, false, 'M', 'M');
+        $this->SetFont('helvetica', '', 12);
 
-      //Page header
-      public function Header()
-      {
-          // Logo
-          // $image_file = K_PATH_IMAGES . '';
-          // $this->Image($image_file, 10, 10, 15, '', 'JPG', '', 'T', false, 300, '', false, false, 0, false, false, false);
-          // // Set font
-          $this->SetFont('helvetica', 'B', 14);
-          $this->Ln(5);
-          // Title
-          $this->Cell(0, 15, 'Supplier Form', 0, 1, 'L', 0, '', 0, false, 'M', 'M');
-          $this->SetFont('helvetica', '', 12);
+        $this->Cell(0, 0, "", 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
+    }
 
-          $this->Cell(0, 0, "" , 'B', 1, 'L', 0, '', 0, false, 'M', 'M');
-
-      }
-
-      // Page footer
-      public function Footer()
-      {
+    // Page footer
+    public function Footer()
+    {
         $user_name = auth()->user()->name;
         $date_now = date('d-M-Y h:i A', strtotime(now()));
         $this->SetFont('times', '', 9);
         //   Position at 15 mm from bottom
         $this->Ln(-15);
         $this->SetFont('times', '', 8);
-        $this->Cell(0, 0,'"Errors and omissions excepted" (E&OE)', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
+        $this->Cell(0, 0, '"Errors and omissions excepted" (E&OE)', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
         $this->SetFont('times', 'B', 9);
         $this->Cell(0, 0, 'Printed By : ' . $user_name . ' || ' . $date_now, 0, 1, 'C', 0, '', 0, false, 'T', 'M');
         $this->SetFont('times', '', 8);
-        $this->Cell(0, 0,'Developed By SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
-
-      }
+        $this->Cell(0, 0, 'Developed By SAR ZONE', 0, 1, 'C', 0, '', 0, false, 'T', 'M');
     }
-
+}

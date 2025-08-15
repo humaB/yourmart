@@ -210,7 +210,7 @@
                                                                 <del>PKR {{ item.variation.regular_price }}</del><br>
                                                                 PKR {{ item.variation.sale_price }}
                                                             </td>
-                                                            <td>
+                                                           <td>
                                                                 {{ item?.category?.name ? item.category.name : 'No Category' }}
                                                             </td>
                                                             <td>

@@ -1,5 +1,12 @@
 <ul class="sidebar-menu">
 
+    <li class="dropdown {{ request()->is('supplier') ? 'active' : '' }}">
+        <a href="{{ route('supplier.dashboard') }}" class="nav-link">
+            <i class="fa fa-warehouse" aria-hidden="true"></i>
+            <span>Supplier Dashboard</span>
+        </a>
+    </li>
+
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i class="fa fa-bell"></i><span>Pages</span></a>
         <ul class="dropdown-menu">

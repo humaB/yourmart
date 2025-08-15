@@ -153,7 +153,10 @@ Route::group(['prefix' => '/dropshippers', 'middleware' => 'auth'], function () 
 
 });
 
-Route::get('/suppliers/pay-outs', [SupplierController::class, 'payOuts'])->name('supplier.payouts');
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/suppliers/pay-outs', [SupplierController::class, 'payOuts'])->name('supplier.payouts');
+    Route::get('/suppliers/dashboard', [SupplierController::class, 'dashboard'])->name('supplier.dashboard');
+});
 
 Route::group(['prefix' => '/requests', 'middleware' => 'auth'], function () {
     Route::get('/dropshippers', [DropShipperController::class, 'index'])->name('request.dropshipper');
@@ -203,16 +206,4 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/couriers', [CourierController::class, 'index'])->name('couriers');
     Route::get('/email-templates', [EmailTemplateController::class, 'index'])->name('email_template');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notification');
-});
-
-
-use App\Models\User;
-Route::get('/update-supplier', function(){
-    $users = User::where('role', 'supplier')->get();
-
-    foreach( $users as $user){
-       Supplier::where('email', $user->email)->update([
-            'user_id' => $user->id
-       ]);
-    }
 });

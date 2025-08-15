@@ -169,6 +169,10 @@ Route::group(['prefix' => 'suppliers','middleware' => 'auth:sanctum'], function(
     Route::get('/',  [ SupplierController::class , 'getRequests']);
     Route::post('/',  [ SupplierController::class , 'update']);
 
+    Route::post('/dashboard',  [ SupplierController::class , 'fetchData']);
+    Route::post('/products',  [ SupplierController::class , 'inTake']);
+    Route::post('/purchase-orders',  [ SupplierController::class , 'purchaseOrders']);
+
     Route::get('/drop-down',  [ SupplierController::class , 'dropDown']);
 
     Route::post('/details',  [ SupplierController::class , 'fetchDetails']);
