@@ -125,7 +125,7 @@
                                                     </td>
                                                     <td>{{ item?.courier?.courier_name}}</td>
                                                     <td>{{ item.tracking_number}}</td>
-                                                    <td>{{ item.user.name }}</td>
+                                                    <td>{{ item?.user?.name }}</td>
                                                     <td>{{ formatPrice(item.total_bill) }}</td>
                                                     <td>{{ formatDate(item.created_at) }}</td>
 

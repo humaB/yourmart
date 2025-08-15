@@ -15792,10 +15792,10 @@ var render = function render() {
       id: "order_table"
     }
   }, [_vm._m(3), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingDispatchs, function (item, index) {
-    var _item$courier;
+    var _item$courier, _item$user;
     return _c("tr", {
       key: "pending-" + item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$courier = item.courier) === null || _item$courier === void 0 ? void 0 : _item$courier.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                                    " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$courier = item.courier) === null || _item$courier === void 0 ? void 0 : _item$courier.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$user = item.user) === null || _item$user === void 0 ? void 0 : _item$user.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_bill)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))])]);
   }), 0)])])])])], 1)])])]), _vm._v(" "), _c("div", {
     staticClass: "tab-pane fade",
     attrs: {
