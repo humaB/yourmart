@@ -591,6 +591,19 @@ class SupplierController extends Controller
             ->setStatusCode(200);
     }
 
+    public function attachment($image)
+    {
+        $filenameWithExt = $image->getClientOriginalName();
+        //get just filename
+        $filename        = pathinfo($filenameWithExt);
+        //get just extension
+        $extension       = $image->extension();
+        $nameToStore     = str_replace(' ', '', $filename['filename']) . "_" . time() . "." . $extension;
+        //Move to folder
+        $path            = $image->storeAs('public/uploads/dropshipper/payments/', $nameToStore);
+        return $nameToStore;
+    }
+
     public function pdf(Request $request)
     {
         // Fetch the DropShipper details with related bank and city data

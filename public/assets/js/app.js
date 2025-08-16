@@ -7094,10 +7094,16 @@ __webpack_require__.r(__webpack_exports__);
       this.addData.id = this.selectedSupplier.id;
       this.btnLoader = true;
       axios.post(this.api_url + "suppliers/payments/add", fd).then(function (response) {
-        _this.paymentDetail(_this.addData.id);
+        _this.paymentDetail(_this.addData.id, 0);
         _this.addData = JSON.parse(JSON.stringify(_this.addDataReset));
         _this.btnLoader = false;
-        _this.fetchRecord();
+        if (_this.selectedSupplier.type == '0') {
+          _this.clearDataTable();
+          _this.fetchYourmartRecord();
+        } else if (_this.selectedSupplier.type == '1') {
+          _this.clearDataTable2();
+          _this.fetchSupplierRecord();
+        }
         return swal({
           title: "Success",
           text: 'Saved',
@@ -7217,6 +7223,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     clearDataTable: function clearDataTable() {
       var table = $("#moq_table").DataTable();
+      table.destroy();
+    },
+    clearDataTable2: function clearDataTable2() {
+      var table = $("#moq_table2").DataTable();
       table.destroy();
     }
   }

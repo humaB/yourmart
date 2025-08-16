@@ -338,7 +338,7 @@
                                                                     </td>
 
                                                                     <td class="d-flex justify-content-between">
-                                                                
+
                                                                         <button class="btn btn-info mr-2"
                                                                             @click="fetchDetail(item.id)"
                                                                             data-toggle="modal"
@@ -521,13 +521,18 @@ export default {
                 .post(this.api_url + "suppliers/payments/add", fd)
                 .then((response) => {
 
-                    this.paymentDetail(this.addData.id);
+                    this.paymentDetail(this.addData.id, 0);
                     this.addData = JSON.parse(JSON.stringify(this.addDataReset));
 
                     this.btnLoader = false;
 
-                    this.fetchRecord();
-
+                    if( this.selectedSupplier.type == '0'){
+                        this.clearDataTable();
+                        this.fetchYourmartRecord();
+                    }else if( this.selectedSupplier.type == '1'){
+                        this.clearDataTable2();
+                        this.fetchSupplierRecord();
+                    }
                     return swal({
                         title: "Success",
                         text: 'Saved',
@@ -672,6 +677,10 @@ export default {
         },
         clearDataTable() {
             const table = $("#moq_table").DataTable();
+            table.destroy();
+        },
+        clearDataTable2() {
+            const table = $("#moq_table2").DataTable();
             table.destroy();
         },
     }
