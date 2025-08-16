@@ -457,7 +457,7 @@ class SupplierController extends Controller
             ->setStatusCode(200);
     }
 
-    public function overallPayments()
+    public function overallPayments( Request $request )
     {
         // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
         $suppliers = PurchaseOrder::select(
@@ -466,6 +466,9 @@ class SupplierController extends Controller
             DB::raw('SUM(remaining_amount) as total_remaining_amount')
         )
             ->where('status', '1')
+            ->when(!empty($request->inventoryType), function ($query) use ($request) {
+                return $query->where('supplier_stock', $request->inventoryType);
+            })
             ->groupBy('supplier_id')
             ->with('supplier:id,full_name,email') // eager load supplier if needed
             ->orderByDesc('supplier_id')

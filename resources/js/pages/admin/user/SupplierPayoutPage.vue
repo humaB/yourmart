@@ -307,6 +307,27 @@
                             </div>
 
                             <div class="tab-pane fade" id="overall" role="tabpanel" aria-labelledby="overall-tab3">
+                                      <div class="row">
+                            <div class="col-md-12">
+                                <form @submit.prevent="submitFunction">
+                                    <div class="row">
+
+                                        <div class="col-md-6 form-group">
+                                            <label for="date">Inventory Type</label>
+                                            <select class="form-control" v-model="filter.inventoryType">
+                                                <option value="">--Inventory Type-- </option>
+                                                <option value="0">YourMart</option>
+                                                <option value="1">Supplier</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-6 form-group pt-4">
+                                            <button class="btn btn-block btn-primary">Filter</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                                 <div class="row">
                                     <div class="col-md-12 mt-3">
                                         <div class="card">
@@ -393,6 +414,7 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
 import SupplierDetails from "../../../components/admin/request/SupplierDetails.vue";
 import SupplierPayment from "../../../components/admin/request/SupplierPayment.vue";
 import SupplierPaymentHistory from "../../../components/admin/request/SupplierPaymentHistory.vue";
+import { filter } from "lodash";
 
 export default {
     name: 'SupplierRequestPage',
@@ -443,17 +465,23 @@ export default {
             suppliertotalRemaining: 0,
             supplierremainingDropshippers: 0,
             supplierrecords: [],
-            overall : []
+            overall : [],
+            filter : {
+                inventoryType : ""
+            }
         };
     },
     created() {
         this.csrf = $('meta[name=csrf-token]').attr('content');
         this.fetchSupplierRecord();
         this.fetchYourmartRecord();
-        this.fetchOverallRecord();
+        this.fetchOverallRecord("");
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        submitFunction(){
+            this.fetchOverallRecord(this.filter.inventoryType);
+        },
         paymentHistory(id) {
             let vm = this;
             vm.selectedSupplier.id = id;
@@ -613,12 +641,12 @@ export default {
                     }, 300);
                 });
         },
-        fetchOverallRecord() {
+        fetchOverallRecord( type ) {
             let vm = this;
 
             vm.loader = false;
             axios
-                .get(this.api_url + "suppliers/payments/overalls")
+                .post(this.api_url + "suppliers/payments/overalls", { type })
                 .then((response) => {
                     const results = response.data.response
 
