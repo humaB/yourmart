@@ -26218,7 +26218,7 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-md-6 form-group pt-4"
+    staticClass: "col-md-6 form-group"
   }, [_c("button", {
     staticClass: "btn btn-block btn-primary"
   }, [_vm._v("Filter")])]);

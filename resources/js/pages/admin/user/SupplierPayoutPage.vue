@@ -320,7 +320,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-md-6 form-group pt-4">
+                                        <div class="col-md-6 form-group">
                                             <button class="btn btn-block btn-primary">Filter</button>
                                         </div>
                                     </div>
