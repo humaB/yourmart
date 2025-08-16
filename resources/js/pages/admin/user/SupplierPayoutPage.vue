@@ -480,6 +480,7 @@ export default {
     },
     methods: {
         submitFunction(){
+            this.clearDataTable3();
             this.fetchOverallRecord(this.filter.inventoryType);
         },
         paymentHistory(id) {
@@ -709,6 +710,10 @@ export default {
         },
         clearDataTable2() {
             const table = $("#moq_table2").DataTable();
+            table.destroy();
+        },
+        clearDataTable3() {
+            const table = $("#moq_table3").DataTable();
             table.destroy();
         },
     }

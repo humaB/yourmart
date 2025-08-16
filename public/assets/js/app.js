@@ -7045,6 +7045,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submitFunction: function submitFunction() {
+      this.clearDataTable3();
       this.fetchOverallRecord(this.filter.inventoryType);
     },
     paymentHistory: function paymentHistory(id) {
@@ -7238,6 +7239,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     clearDataTable2: function clearDataTable2() {
       var table = $("#moq_table2").DataTable();
+      table.destroy();
+    },
+    clearDataTable3: function clearDataTable3() {
+      var table = $("#moq_table3").DataTable();
       table.destroy();
     }
   }
