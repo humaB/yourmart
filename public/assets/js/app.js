@@ -25969,11 +25969,7 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6 form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("Inventory Type")]), _vm._v(" "), _c("select", {
+  }, [_c("select", {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -25996,7 +25992,7 @@ var render = function render() {
     attrs: {
       value: ""
     }
-  }, [_vm._v("--Inventory Type-- ")]), _vm._v(" "), _c("option", {
+  }, [_vm._v("--Select Inventory Type-- ")]), _vm._v(" "), _c("option", {
     attrs: {
       value: "0"
     }

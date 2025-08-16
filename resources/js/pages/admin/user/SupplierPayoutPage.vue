@@ -313,9 +313,8 @@
                                     <div class="row">
 
                                         <div class="col-md-6 form-group">
-                                            <label for="date">Inventory Type</label>
                                             <select class="form-control" v-model="filter.inventoryType">
-                                                <option value="">--Inventory Type-- </option>
+                                                <option value="">--Select Inventory Type-- </option>
                                                 <option value="0">YourMart</option>
                                                 <option value="1">Supplier</option>
                                             </select>
