@@ -7193,7 +7193,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     dataTable: function dataTable() {
       $("#moq_table").DataTable({
-        "bSort": false,
+        "bSort": true,
         dom: 'Bfrtip',
         buttons: [{
           extend: 'excel',
@@ -7203,7 +7203,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     dataTable2: function dataTable2() {
       $("#moq_table2").DataTable({
-        "bSort": false,
+        "bSort": true,
         dom: 'Bfrtip',
         buttons: [{
           extend: 'excel',
@@ -7213,7 +7213,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     dataTable3: function dataTable3() {
       $("#moq_table3").DataTable({
-        "bSort": false,
+        "bSort": true,
         dom: 'Bfrtip',
         buttons: [{
           extend: 'excel',

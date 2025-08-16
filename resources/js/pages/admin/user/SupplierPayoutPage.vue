@@ -641,7 +641,7 @@ export default {
         },
         dataTable() {
             $("#moq_table").DataTable({
-                "bSort": false,
+                "bSort": true,
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -653,7 +653,7 @@ export default {
         },
         dataTable2() {
             $("#moq_table2").DataTable({
-                "bSort": false,
+                "bSort": true,
                 dom: 'Bfrtip',
                 buttons: [
                     {
@@ -665,7 +665,7 @@ export default {
         },
         dataTable3() {
             $("#moq_table3").DataTable({
-                "bSort": false,
+                "bSort": true,
                 dom: 'Bfrtip',
                 buttons: [
                     {
