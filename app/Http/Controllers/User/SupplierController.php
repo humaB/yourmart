@@ -466,8 +466,8 @@ class SupplierController extends Controller
             DB::raw('SUM(remaining_amount) as total_remaining_amount')
         )
             ->where('status', '1')
-            ->when(!empty($request->inventoryType), function ($query) use ($request) {
-                return $query->where('supplier_stock', $request->inventoryType);
+            ->when(!empty($request->type), function ($query) use ($request) {
+                return $query->where('supplier_stock', $request->type);
             })
             ->groupBy('supplier_id')
             ->with('supplier:id,full_name,email') // eager load supplier if needed
