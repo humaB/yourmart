@@ -754,6 +754,22 @@ class ProductController extends Controller
 
         $product->save();
 
+        if( $request->status == 'publish' ){
+            $link = env('MIX_WEB_URL').'products/'.$product->slug;
+
+            NotificationHelper::addNotification(
+                $title = 'New Product Added',
+                $messge = "This product is now available: $product->title",
+                $link = $link,
+                $image = null,
+                $directImage = $product->hero_image,
+                $color    = 'blue',
+                $isPublic = 0,
+                $user = null
+            );
+        }
+
+
         return response()->json(['message' => 'Status changed successfully'], 200);
     }
 
