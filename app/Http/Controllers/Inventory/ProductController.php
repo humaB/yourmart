@@ -91,24 +91,27 @@ class ProductController extends Controller
         }
         else
         {
-            $product = Product::whereIn('id', $request->products)->first();
-            $product->update([
-               'status' => $request->action == 'Published' ? '0' : '1'
-            ]);
+            $products = Product::whereIn('id', $request->products)->get();
 
             if( $request->action == 'Published' ){
-                $link = env('MIX_WEB_URL').'products/'.$product->slug;
+                foreach( $products as $product ){
+                    $link = env('MIX_WEB_URL').'products/'.$product->slug;
 
-                NotificationHelper::addNotification(
-                    $title = 'New Product Added',
-                    $messge = "This product is now available: $product->title",
-                    $link = $link,
-                    $image = null,
-                    $directImage = $product->hero_image,
-                    $color    = 'blue',
-                    $isPublic = 0,
-                    $user = null
-                );
+                    NotificationHelper::addNotification(
+                        $title = 'New Product Added',
+                        $messge = "This product is now available: $product->title",
+                        $link = $link,
+                        $image = null,
+                        $directImage = $product->hero_image,
+                        $color    = 'blue',
+                        $isPublic = 0,
+                        $user = null
+                    );
+
+                    $product->update([
+                        'status' => $request->action == 'Published' ? '0' : '1'
+                    ]);
+                }
             }
         }
     }

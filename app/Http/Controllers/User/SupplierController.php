@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Account\Helper\AccountHeadHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Http\Resources\ResponseCollection;
 use App\Http\Resources\ValidationCollection;
 use App\Mail\SupplierDecisionMail;
@@ -17,6 +18,7 @@ use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\Store\StoreReceived;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Setting\EmailTemplate;
+use App\Models\Setting\Notification;
 use App\Models\User;
 use App\Models\User\DropShipper;
 use App\Models\User\Supplier;
@@ -569,6 +571,18 @@ class SupplierController extends Controller
 
         // Bank Cash Credit
         $ledger->accountTransaction($request->from_account, $supplierLedger->id, 0, $request->amount, $request->narration, $document, $request->type == 'cash' ? 'CP' : 'BP', 'PO', '0', $approved = 1, $attachment);
+        $type = $request->type == 'cash' ? 'CP' : 'BP';
+
+        NotificationHelper::addNotification(
+            $title = 'Payout Sent',
+            $messge = "Your payout Receipt # $type-$document has been sent successfully.",
+            $link = null,
+            $image = null,
+            $directImage = null,
+            $color    = 'green',
+            $isPublic = 1,
+            $user = $supplier ->user_id
+        );
 
         return response()->json([], 200);
     }

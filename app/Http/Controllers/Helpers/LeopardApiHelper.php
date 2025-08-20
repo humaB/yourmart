@@ -8,10 +8,12 @@ use App\Models\Inventory\Courier\CourierCategory;
 use App\Models\Inventory\Courier\CourierDisclaimer;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
+use App\Models\Inventory\Order\OrderItemSupplier;
 use App\Models\Inventory\Order\OrderLeopardStatus;
 use App\Models\Inventory\Product\Setting\OtherCharge;
 use App\Models\User\DropShipper;
 use App\Models\User\DropShipperShop;
+use App\Models\User\Supplier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -283,6 +285,22 @@ class LeopardApiHelper
                         $isPublic = 1,
                         $user = $detail->belongs_to
                     );
+
+                    $orderSuppliers = OrderItemSupplier::where('order_id', $detail->id)->get();
+                    foreach( $orderSuppliers as $supplier ){
+                        $user = Supplier::find($supplier->supplier_id);
+
+                        NotificationHelper::addNotification(
+                            $title = 'Order Delivered',
+                            $messge = "Order $order_no has been delivered successfully.",
+                            $link = null,
+                            $image = null,
+                            $directImage = null,
+                            $color    = 'blue',
+                            $isPublic = 1,
+                            $user = $user->user_id
+                        );
+                    }
                 }
                 //If product is not delivered and returned
                 if ($status['leopard_id'] == 'Being Return' && $detail->status != '9') {
