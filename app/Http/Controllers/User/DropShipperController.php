@@ -820,8 +820,8 @@ class DropShipperController extends Controller
 
     public function decision(Request $request)
     {
-        DB::beginTransaction();
-        try {
+        // DB::beginTransaction();
+        // try {
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
             $group_id = null;
@@ -911,14 +911,14 @@ class DropShipperController extends Controller
             $template = EmailTemplate::where('type', $request->action == 'reject' ? 'dropshipper_application_rejected' : 'dropshipper_application_approved')->first();
             Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData , $template));
 
-            DB::commit();
-            return response()->json(['message' => 'Sale created successfully'], 201);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return (new ValidationCollection(["Something went wrong please try again"]))
-                ->response()
-                ->setStatusCode(400);
-        }
+        //     DB::commit();
+        //     return response()->json(['message' => 'Sale created successfully'], 201);
+        // } catch (\Exception $e) {
+        //     DB::rollBack();
+        //     return (new ValidationCollection(["Something went wrong please try again"]))
+        //         ->response()
+        //         ->setStatusCode(400);
+        // }
     }
 
     function accountGroupFourthCreate($name, $second, $third,)
