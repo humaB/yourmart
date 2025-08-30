@@ -30,7 +30,7 @@ class Order extends Model
         'shipping_tax',
         'courier_service_internal_price',// Amount Received by YourMart
         'shop_id',
-        'instructions',
+        'instructions', // Courier Instruction which is print on label
         'order_note',
         'additional_information',
         'total_bill',

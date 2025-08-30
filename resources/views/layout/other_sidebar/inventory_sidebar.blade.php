@@ -9,7 +9,7 @@
     </li>
 
 
-  
+
 
     <li class="dropdown">
         <a href="#" class="menu-toggle nav-link has-dropdown"><i
@@ -32,5 +32,8 @@
                         <i data-feather="file-text"></i>Record</a></li>
                 </ul>
     </li>
+
+    <li><a class="nav-link" href="{{ route('reports.fis') }}">
+                    <i data-feather="file-text"></i>FIS</a></li>
 
 </ul>

@@ -6,7 +6,7 @@
                     <TableHeader :tableHeader="tableHeader" />
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     1.
                                     <a href="#" @click="controlRegister()"><i class="fas fa-fax"></i> Inventory Control
@@ -14,7 +14,7 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     2.
                                     <a href="#" @click="goodReceived()"><i class="fas fa-fax"></i> Inventory Good
@@ -22,7 +22,7 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     3.
                                     <a href="#" @click="goodIssued()"><i class="fas fa-fax"></i> Inventory Good
@@ -38,73 +38,73 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     5.
                                     <a href="#" @click="deliveredOrder()"><i class="fas fa-fax"></i> Delivered Order Detail</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     6.
                                     <a href="#" @click="leopardReturnReceived()"><i class="fas fa-fax"></i> Returns Received</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     7.
                                     <a href="#" @click="orderIssuanceReport()"><i class="fas fa-fax"></i> Order Issuance Report</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     8.
                                     <a href="#" @click="topSellingProducts()"><i class="fas fa-fax"></i> Top Selling Product</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     9.
                                     <a href="#" @click="top10Dropshipper()"><i class="fas fa-fax"></i> Top 10 Dropshippers</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     10.
                                     <a href="#" @click="highStockProduct()"><i class="fas fa-fax"></i> High Stock Products</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     11.
                                     <a href="#" @click="lowStockProduct()"><i class="fas fa-fax"></i> Low Stock Products</a>
                                 </h6>
                             </div>
-                             <div class="col-md-4 col-6">
+                             <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     12.
                                     <a href="#" @click="shopListPostEx()"><i class="fas fa-fax"></i> Shop List for PostEx</a>
                                 </h6>
                             </div>
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     13.
                                     <a href="#" @click="closingReport()"><i class="fas fa-fax"></i> Daily Business Report</a>
                                 </h6>
                             </div>
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     14.
                                     <a href="#" @click="dropshipperList()"><i class="fas fa-fax"></i> Dropshippers List</a>
                                 </h6>
                             </div>
-                            <div class="col-md-4 col-6">
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
                                 <h6>
                                     15.
                                     <a href="#" @click="supplierStock()"><i class="fas fa-fax"></i> Supplier Wise Stock</a>
@@ -271,13 +271,23 @@ export default {
             shopListPostExData : [],
             closingReportData : [],
             dropshipperListData : [],
-            supplierStockData : []
+            supplierStockData : [],
+            role : ""
         }
     },
     created() {
         this.fetchProducts();
+        this.fetchRole();
     },
     methods: {
+        fetchRole(){
+            let vm = this;
+            axios
+                .get(this.api_url + "users/role")
+                .then((response) => {
+                    vm.role = response.data.role;
+                })
+        },
         supplierStock() {
             this.report = 'supplier-stock-report'
         },

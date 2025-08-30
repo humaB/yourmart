@@ -38,10 +38,10 @@ class GateInWardController extends Controller
         ->pluck('po_id');
 
         $data = PurchaseOrder::whereIn('id', $data)
-        ->with('supplier:id,full_name', 'details.product')
-        ->where('status', '1')
-        ->orderBy('id','desc')
-        ->get();
+            ->with('supplier:id,full_name', 'details.product.variation')
+            ->where('status', '1')
+            ->orderBy('id','desc')
+            ->get();
 
         return (new ResponseCollection($data))
         ->response()

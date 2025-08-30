@@ -31,6 +31,7 @@
                                             <thead>
                                                 <tr>
                                                     <th>Product Name</th>
+                                                    <th>Sku</th>
                                                     <th>Quantity</th>
                                                     <th>Already Received Quantity</th>
                                                     <th>Received Quantity</th>
@@ -39,6 +40,7 @@
                                             <tbody v-if="details">
                                                 <tr v-for="(item, index) in details.details" :key="item.id">
                                                     <td class="h5">{{ item.product ? item.product.title : '-' }}</td>
+                                                    <td class="h5">{{ item.product ? item.product.variation.sku : '-' }}</td>
                                                     <td class="h5">{{ item.quantity }}</td>
                                                     <td class="h5">{{ item.gate_received_quantity }}</td>
                                                     <td>

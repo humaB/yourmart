@@ -62,11 +62,13 @@
                                                         Your browser does not support the video tag.
                                                     </video>
 
-                                                    <img v-else
+                                                   <img
+                                                        v-else
                                                         v-lazy="public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
-                                                        :alt="image.alt" class="imagecheck-image" />
-                                                </span>
-
+                                                        :alt="image.alt"
+                                                        :key="image.attachment"
+                                                        class="imagecheck-image"
+                                                    />
                                                 </span>
                                             </label>
                                         </div>

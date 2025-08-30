@@ -73,6 +73,9 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
     Route::post('/update',  [ UserController::class , 'update']);
     Route::post('/delete',  [ UserController::class , 'delete']);
 
+    Route::get('/role',  [ UserController::class , 'role']);
+
+
     Route::group(['prefix' => 'dashboard'], function(){
         Route::post('/',  [ DashboardController::class , 'fetchData']);
         Route::get('/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
@@ -206,6 +209,8 @@ Route::group(['prefix' => 'couriers','middleware' => 'auth:sanctum'], function()
     Route::post('/categories/update', [CourierController::class, 'updateCategory']);
 
     Route::post('/categories/ranges', [CourierController::class, 'fetchCategoryRanges']);
+
+    Route::get('/cities', [CourierController::class, 'fetchCourierCities']);
 });
 
 //Reports
@@ -329,6 +334,9 @@ Route::group(['prefix' => 'inventory','middleware' => 'auth:sanctum'], function(
             Route::post('/comments/delete',  [ OrderController::class , 'deleteComment']);
 
             Route::post('/re-attempts',  [ OrderController::class , 'reAttempt']);
+
+            Route::post('/update-customer',  [ OrderController::class , 'updateCustomerInformation']);
+            Route::post('/update-courier-instructions',  [ OrderController::class , 'updateCourierInstruction']);
 
             Route::post('/update-status',  [ OrderController::class , 'updateStatus']);
             Route::post('/update-status/test',  [ OrderController::class , 'updateStatusTest']);

@@ -13,6 +13,7 @@ use App\Models\Inventory\Courier\CourierDisclaimer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class CourierController extends Controller
 {
@@ -43,6 +44,48 @@ class CourierController extends Controller
         return (new ResponseCollection($courier))
         ->response()
         ->setStatusCode(200);
+    }
+
+    public function fetchCourierCities()
+    {
+        // Cache for 7 days (10080 minutes = 7 * 24 * 60)
+        $cities = Cache::remember('courier_cities_cache', now()->addDays(7), function () {
+            // 🐆 Leopard Courier API Call
+            $leopardResponse = Http::post('https://merchantapi.leopardscourier.com/api/getAllCities/format/json/', [
+                'api_key'      => '487F7B22F68312D2C1BBC93B1AEA445B1726751602',
+                'api_password' => 'Allah@001#',
+            ]);
+
+            $leopardBuffer = $leopardResponse->json();
+            $leopardCities = collect($leopardBuffer['city_list'])->map(function ($city) {
+                return [
+                    'code' => $city['id'],
+                    'label' => $city['name'],
+                ];
+            })->toArray();
+
+            // 📦 PostEx API Call
+            $postExResponse = Http::withHeaders([
+                'token' => 'ZWExMGNhYWFkYjM3NGM3MzhkZWZkN2M0M2M5YjhhZjU6MTY2ZjRiMmQ1YWVmNDkyOTg5OTE5NmUwMTkzNjdiYjg=',
+            ])->get('https://api.postex.pk/services/partnerintegration/api/lookup/operational-city?active=true&operationalCityType=all');
+
+            $postExBuffer = $postExResponse->json();
+            $postExCities = collect($postExBuffer['dist'])->map(function ($city) {
+                return [
+                    'code'  => 0,
+                    'label' => $city,
+                ];
+            })->toArray();
+
+            return [
+                'leopardCities' => $leopardCities,
+                'postExCities' => $postExCities,
+            ];
+        });
+
+        return (new ResponseCollection($cities))
+            ->response()
+            ->setStatusCode(200);
     }
 
     /**

@@ -78,4 +78,7 @@
         </a>
     </li>
 
+    <li><a class="nav-link" href="{{ route('reports.fis') }}">
+        <i data-feather="file-text"></i>FIS</a></li>
+
 </ul>

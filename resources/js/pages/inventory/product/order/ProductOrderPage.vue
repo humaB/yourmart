@@ -437,6 +437,7 @@
                                                                 @change="toggleAllOrders">
                                                         </th>
                                                         <th>Reference ID</th>
+                                                        <th>Order Time</th>
                                                         <th>Type</th>
                                                         <th>Dropshipper</th>
                                                         <th>Order #</th>
@@ -469,6 +470,9 @@
                                                             </div>
                                                         </td>
                                                         <td>{{ item.id }}</td>
+                                                        <td :class="getTimeClass(item.created_at)">
+                                                            {{ formatTime(item.created_at) }}
+                                                        </td>
                                                         <td>{{ item.type }}</td>
                                                         <td>{{ item.user ? item.user.name : '-' }}</td>
                                                         <td>
@@ -572,6 +576,8 @@
             @addDiscount="addDiscount($event)"
             @deleteComment="deleteComment($event)"
             @markAsHold="markasReplacement($event)"
+            @saveCustomerEdit="saveCustomerEdit($event)"
+            @saveInstructions="saveInstructions($event)"
         />
 
         <DropshipperDetails :details="dropShipperDetails" />
@@ -914,6 +920,79 @@ export default {
         this.fetchDropshippers();
     },
     methods: {
+        getTimeClass(datetime) {
+            // Parse full datetime
+            let orderDateTime = moment(datetime, 'YYYY-MM-DD HH:mm:ss');
+
+            // Today (at 00:00:00)
+            let today = moment().startOf('day');
+
+            // If order is from a previous date → always green
+            if (orderDateTime.isBefore(today, 'day')) {
+                return 'bg-success';
+            }
+
+            // Compare time only if order is today
+            let currentSeconds = orderDateTime.hours() * 3600
+                                + orderDateTime.minutes() * 60
+                                + orderDateTime.seconds();
+
+            let cutoffSeconds = 16 * 3600; // 16:00:00
+
+            return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
+        },
+        saveInstructions( data ){
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/update-courier-instructions", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.fetchDetail(data.id);
+                    vm.fetchOrders();
+                    return swal({
+                        title: "Success",
+                        text: "Instruction updated successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });;
+        },
+        saveCustomerEdit( data ){
+            let vm = this;
+            vm.btnLoader = true;
+            axios
+                .post(this.api_url + "inventory/products/orders/update-customer", data)
+                .then((response) => {
+                    vm.btnLoader = false;
+                    vm.fetchDetail(data.id);
+                    vm.fetchOrders();
+                    return swal({
+                        title: "Success",
+                        text: "Customer Information updated successfully",
+                        icon: "success",
+                        timer: 3000,
+                    });
+                })
+                .catch((err) => {
+                    vm.btnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });;
+        },
         reAttempt( data ){
             let vm = this;
             vm.btnLoader = true;
@@ -1120,6 +1199,9 @@ export default {
         formatDate(date) {
             return date ? moment.utc(date).format('DD-MMM-YYYY') : 'N/A';
         },
+        formatTime(date) {
+            return date ? moment.utc(date).format('HH:mm:ss') : 'N/A';
+        },
         formatPrice(price) {
             var string = parseFloat(price).toString();
             return string
@@ -1318,7 +1400,7 @@ export default {
 
                     vm.fetchOrders();
                     $("#ticket").modal('hide');
-                    
+
                     vm.commentLoader = false;
                     vm.$emit('commentAdded', true);
 

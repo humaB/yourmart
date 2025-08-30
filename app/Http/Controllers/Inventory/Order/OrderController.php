@@ -259,6 +259,64 @@ class OrderController extends Controller
         return response()->json([], 200);
     }
 
+    public function updateCustomerInformation(Request $request)
+    {
+        $order = Order::findOrFail($request->id);
+
+        $oldValues = $order->only(['customer_name', 'address', 'phone_number', 'phone_number2', 'city_id']);
+
+        if (is_array($request->city['name'])) {
+            $attributes = [ 'name' => $request->city['name']['label'] ];
+            $valuesToUpdate = [ 'name' => $request->city['name']['label'] ];
+
+            if ($request->city['name']['code'] != 0){
+                $valuesToUpdate['courier_city_id'] = $request->city['name']['code'];
+            }
+
+           $city = City::updateOrCreate($attributes, $valuesToUpdate);
+        }else{
+            $city = City::where('name', $request->city['name'])->first();
+        }
+
+        $order->update([
+            'customer_name' => $request->customer_name,
+            'address'       => $request->address,
+            'phone_number'  => $request->phone_number,
+            'phone_number2' => $request->phone_number2,
+            'city_id'       => $city->id
+        ]);
+
+        $changes = [];
+        foreach ($oldValues as $field => $oldValue) {
+            $newValue = $order->$field;
+            if ($oldValue != $newValue) {
+                $changes[] = ucfirst(str_replace('_', ' ', $field)) . " changed from '{$oldValue}' to '{$newValue}'";
+            }
+        }
+
+        $activityMessage = $changes
+            ? 'Customer information updated: ' . implode(', ', $changes)
+            : 'Customer information updated.';
+
+        OrderActivity::create([
+            'order_id'  => $order->id,
+            'activity'  => $activityMessage,
+            'added_by'  => auth('sanctum')->id()
+        ]);
+
+        return response()->json([], 200);
+    }
+
+    public function updateCourierInstruction( Request $request ){
+
+        Order::where('id', $request->id)->update([
+            'instructions' => $request->instructions
+        ]);
+        
+        return response()->json([], 200);
+    }
+
+
     public function pendingDispatchs(Request $request)
     {
 
@@ -512,7 +570,6 @@ class OrderController extends Controller
 
     public function details(Request $request)
     {
-
         $orders = Order::with(
             'city',
             'shop',

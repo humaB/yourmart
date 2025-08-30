@@ -58,7 +58,9 @@
                                         <td>{{ item.user.name }}</td>
                                         <td>
                                             <ul>
-                                                <li v-for="product in item.items" :key="'items-'+item.id">{{ product?.variation?.product?.title }}</li>
+                                               <li v-for="product in item.items" :key="'items-' + item.created_at">
+                                                {{ product?.variation?.product?.title }} (Qty: {{ product.quantity }})
+                                                </li>
                                             </ul>
                                         </td>
                                         <td>{{ item.total_bill }}</td>

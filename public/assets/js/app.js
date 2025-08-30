@@ -2271,6 +2271,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return {
+      api_url: window.location.origin + "/public/api/",
       public_url: window.location.origin + "",
       comment: '',
       attachment: '',
@@ -2296,7 +2297,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       paidAmount: '',
       packagingAmount: '',
       discount: '',
-      csrf: ""
+      csrf: "",
+      isCustomerEditing: false,
+      editCustomerData: {},
+      cities: [],
+      isCourierInstructionEditing: false,
+      editedInstructions: ''
     };
   },
   mounted: function mounted() {
@@ -2313,6 +2319,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     this.csrf = $('meta[name=csrf-token]').attr('content');
   },
   computed: {
+    isAllowed: function isAllowed() {
+      return ["admin", "auditor"].includes(this.role);
+    },
     filteredComments: function filteredComments() {
       if (!this.searchQuery) {
         return this.details.comments;
@@ -2378,10 +2387,45 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
-    printPostExSlip: function printPostExSlip(order) {
+    startCourierInstructionEditing: function startCourierInstructionEditing() {
+      this.isCourierInstructionEditing = true;
+      this.editedInstructions = this.details.instructions;
+    },
+    saveInstructions: function saveInstructions() {
+      this.details.instructions = this.editedInstructions;
+      this.$emit("saveInstructions", this.details);
+      this.isCourierInstructionEditing = false;
+    },
+    cancelEditing: function cancelEditing() {
+      this.isCourierInstructionEditing = false;
+    },
+    fetchCities: function fetchCities() {
       var _this4 = this;
+      axios.get(this.api_url + 'couriers/cities').then(function (response) {
+        var result = response.data.response;
+        if (_this4.details.courier_service_id == '1') {
+          _this4.cities = result.leopardCities;
+        } else {
+          _this4.cities = result.postExCities;
+        }
+      });
+    },
+    startEdit: function startEdit() {
+      this.editCustomerData = JSON.parse(JSON.stringify(this.details)); // deep copy
+      this.isCustomerEditing = true;
+    },
+    saveCustomerEdit: function saveCustomerEdit() {
+      // Emit back to parent or call API here
+      this.$emit("saveCustomerEdit", this.editCustomerData);
+      this.isCustomerEditing = false;
+    },
+    cancelCustomerEdit: function cancelCustomerEdit() {
+      this.isCustomerEditing = false;
+    },
+    printPostExSlip: function printPostExSlip(order) {
+      var _this5 = this;
       setTimeout(function () {
-        _this4.$refs.printAirBill.submit();
+        _this5.$refs.printAirBill.submit();
       }, 500);
     },
     deleteComment: function deleteComment(comment) {
@@ -2633,6 +2677,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   watch: {
     details: function details(newLedger) {
       this.clearDataTable();
+      this.fetchCities();
       setTimeout(function () {
         $("#products_items_table").DataTable({
           paging: false,
@@ -8689,6 +8734,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/reports/fis/Top10DropshipperReport.vue */ "./resources/js/components/reports/fis/Top10DropshipperReport.vue");
 /* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
 /* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -8726,7 +8775,7 @@ __webpack_require__.r(__webpack_exports__);
     SupplierWiseStock: _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
   },
   data: function data() {
-    return {
+    return _defineProperty({
       api_url: "/public/api/",
       public_url: window.location.origin + "",
       tableHeader: {
@@ -8756,12 +8805,19 @@ __webpack_require__.r(__webpack_exports__);
       closingReportData: [],
       dropshipperListData: [],
       supplierStockData: []
-    };
+    }, "role", "");
   },
   created: function created() {
     this.fetchProducts();
+    this.fetchRole();
   },
   methods: {
+    fetchRole: function fetchRole() {
+      var vm = this;
+      axios.get(this.api_url + "users/role").then(function (response) {
+        vm.role = response.data.role;
+      });
+    },
     supplierStock: function supplierStock() {
       this.report = 'supplier-stock-report';
     },
@@ -15906,7 +15962,101 @@ var render = function render() {
     staticClass: "card-body row"
   }, [_c("div", {
     staticClass: "col-md-8"
-  }, [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number) + "\n                                                    ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2) + "\n                                                    ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
+  }, [!_vm.isCustomerEditing ? _c("div", [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))]), _vm._v(" "), _vm.isAllowed ? _c("button", {
+    staticClass: "btn btn-sm btn-primary",
+    on: {
+      click: _vm.startEdit
+    }
+  }, [_vm._v("\n                                                            Edit\n                                                        ")]) : _vm._e()]) : _c("div", [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.customer_name,
+      expression: "editCustomerData.customer_name"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.customer_name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "customer_name", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.address,
+      expression: "editCustomerData.address"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.address
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "address", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.phone_number,
+      expression: "editCustomerData.phone_number"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.phone_number
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "phone_number", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.phone_number2,
+      expression: "editCustomerData.phone_number2"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.phone_number2
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "phone_number2", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Customer`s City")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.cities
+    },
+    model: {
+      value: _vm.editCustomerData.city.name,
+      callback: function callback($$v) {
+        _vm.$set(_vm.editCustomerData.city, "name", $$v);
+      },
+      expression: "editCustomerData.city.name"
+    }
+  })], 1), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-success",
+    on: {
+      click: _vm.saveCustomerEdit
+    }
+  }, [_vm._v("Update Customer Data")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-secondary",
+    on: {
+      click: _vm.cancelCustomerEdit
+    }
+  }, [_vm._v("Cancel")])])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
     staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "card author-box"
@@ -15964,7 +16114,39 @@ var render = function render() {
     }
   }, [_vm._v("Press to\n                                                            Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", {
     staticClass: "mt-2"
-  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A") + "\n                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Courier\n                                                                Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                        ")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A") + "\n                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && !_vm.isCourierInstructionEditing ? _c("p", [_c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                            "), _vm.isAllowed ? _c("button", {
+    staticClass: "btn btn-primary btn-sm",
+    on: {
+      click: _vm.startCourierInstructionEditing
+    }
+  }, [_vm._v("Edit")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && _vm.isCourierInstructionEditing ? _c("div", [_c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" "), _c("textarea", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editedInstructions,
+      expression: "editedInstructions"
+    }],
+    staticClass: "form-control mb-2",
+    domProps: {
+      value: _vm.editedInstructions
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.editedInstructions = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-success btn-sm",
+    on: {
+      click: _vm.saveInstructions
+    }
+  }, [_vm._v("Save Instructions")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary btn-sm",
+    on: {
+      click: _vm.cancelEditing
+    }
+  }, [_vm._v("Cancel")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 text-right"
   }, [_c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Order Notes:")]), _vm._v(" " + _vm._s(_vm.details.order_note) + "\n                                                        ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("No of labels:")]), _vm._v(" " + _vm._s(_vm.details.no_of_labels) + "\n                                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -16026,9 +16208,9 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) * 0.02)) + "\n                                                                        ")]), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.subtotal_tax)))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.subtotal_tax)) + "\n                                                                        ")]), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.details.shipping_tax))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.details.shipping_tax) + "\n                                                                        ")]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.details.profit_tax))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -16087,7 +16269,7 @@ var render = function render() {
     attrs: {
       colspan: "10"
     }
-  }, [_vm._v("Tax On Profit")]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Tax On Profit\n                                                                ")]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.details.profit_tax) + " ")])]), _vm._v(" "), _c("tr", [_c("td", {
     staticClass: "h5 text-right",
@@ -16615,7 +16797,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection manager" || _vm.role == "admin" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection manager" || _vm.role == "admin" || _vm.role == "inventory manager" || _vm.role == "auditor" ? _c("button", {
     staticClass: "btn btn-warning",
     attrs: {
       "data-toggle": "modal",
@@ -16812,7 +16994,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("td", [_c("strong", [_vm._v("Courier Charges + Our Charges:")])]);
+  return _c("td", [_c("strong", [_vm._v("Courier Charges + Our\n                                                                                Charges:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -27701,7 +27883,7 @@ var render = function render() {
     staticClass: "card-body"
   }, [_c("div", {
     staticClass: "row"
-  }, [_c("div", {
+  }, [_vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                1.\n                                "), _c("a", {
     attrs: {
@@ -27714,7 +27896,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Control\n                                    Register")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Control\n                                    Register")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                2.\n                                "), _c("a", {
     attrs: {
@@ -27727,7 +27909,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good\n                                    Received")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Good\n                                    Received")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                3.\n                                "), _c("a", {
     attrs: {
@@ -27740,7 +27922,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good\n                                    Issued")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Good\n                                    Issued")])])]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                4.\n                                "), _c("a", {
     attrs: {
@@ -27753,7 +27935,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good\n                                    Returns")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Good\n                                    Returns")])])]), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                5.\n                                "), _c("a", {
     attrs: {
@@ -27766,7 +27948,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Delivered Order Detail")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Delivered Order Detail")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                6.\n                                "), _c("a", {
     attrs: {
@@ -27779,7 +27961,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Returns Received")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Returns Received")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                7.\n                                "), _c("a", {
     attrs: {
@@ -27792,7 +27974,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Order Issuance Report")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Order Issuance Report")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                8.\n                                "), _c("a", {
     attrs: {
@@ -27805,7 +27987,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Top Selling Product")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Top Selling Product")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                9.\n                                "), _c("a", {
     attrs: {
@@ -27818,7 +28000,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Top 10 Dropshippers")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Top 10 Dropshippers")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                10.\n                                "), _c("a", {
     attrs: {
@@ -27831,7 +28013,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" High Stock Products")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" High Stock Products")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                11.\n                                "), _c("a", {
     attrs: {
@@ -27844,7 +28026,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Low Stock Products")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Low Stock Products")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                12.\n                                "), _c("a", {
     attrs: {
@@ -27857,7 +28039,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Shop List for PostEx")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Shop List for PostEx")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                13.\n                                "), _c("a", {
     attrs: {
@@ -27870,7 +28052,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Daily Business Report")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Daily Business Report")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                14.\n                                "), _c("a", {
     attrs: {
@@ -27883,7 +28065,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Dropshippers List")])])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" Dropshippers List")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("h6", [_vm._v("\n                                15.\n                                "), _c("a", {
     attrs: {
@@ -27896,7 +28078,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Supplier Wise Stock")])])])])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Supplier Wise Stock")])])]) : _vm._e()])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader

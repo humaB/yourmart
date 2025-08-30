@@ -57,15 +57,51 @@
                                                 </div>
                                                 <div class="card-body row">
                                                     <div class="col-md-8">
-                                                        <p><strong>Name:</strong> {{ details.customer_name }}</p>
-                                                        <p><strong>Address:</strong> {{ details.address }}</p>
-                                                        <p><strong>Phone Number 1:</strong> {{ details.phone_number }}
-                                                        </p>
-                                                        <p><strong>Phone Number 2:</strong> {{ details.phone_number2 }}
-                                                        </p>
-                                                        <p><strong>City:</strong> {{ details.city ? details.city.name :
-                                                            ''
-                                                            }}</p>
+                                                        <div v-if="!isCustomerEditing">
+                                                            <p><strong>Name:</strong> {{ details.customer_name }}</p>
+                                                            <p><strong>Address:</strong> {{ details.address }}</p>
+                                                            <p><strong>Phone Number 1:</strong> {{ details.phone_number
+                                                                }}</p>
+                                                            <p><strong>Phone Number 2:</strong> {{ details.phone_number2
+                                                                }}</p>
+                                                            <p><strong>City:</strong> {{ details.city ?
+                                                                details.city.name : '' }}</p>
+
+                                                            <!-- Show Edit button only for admin or auditor -->
+                                                            <button v-if="isAllowed" class="btn btn-sm btn-primary"
+                                                                @click="startEdit">
+                                                                Edit
+                                                            </button>
+                                                        </div>
+
+                                                        <div v-else>
+                                                            <p><strong>Name:</strong>
+                                                                <input v-model="editCustomerData.customer_name"
+                                                                    class="form-control" />
+                                                            </p>
+                                                            <p><strong>Address:</strong>
+                                                                <input v-model="editCustomerData.address"
+                                                                    class="form-control" />
+                                                            </p>
+                                                            <p><strong>Phone Number 1:</strong>
+                                                                <input v-model="editCustomerData.phone_number"
+                                                                    class="form-control" />
+                                                            </p>
+                                                            <p><strong>Phone Number 2:</strong>
+                                                                <input v-model="editCustomerData.phone_number2"
+                                                                    class="form-control" />
+                                                            </p>
+                                                            <p>
+                                                                <strong>Customer`s City</strong>
+                                                                <v-select :options="cities" v-model="editCustomerData.city.name"></v-select>
+                                                            </p>
+
+
+                                                            <button class="btn btn-sm btn-success"
+                                                                @click="saveCustomerEdit">Update Customer Data</button>
+                                                            <button class="btn btn-sm btn-secondary"
+                                                                @click="cancelCustomerEdit">Cancel</button>
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-4"
                                                         v-if="details.user && details.user.dropshipper">
@@ -107,7 +143,7 @@
                                                             details.shop.store_name.substring(0, 3) + '-' : '' }}{{
                                                                 details.order_no }}</span>
                                                         <span>Date/Time : {{ formatNormalDate(details.created_at)
-                                                            }}</span>
+                                                        }}</span>
                                                     </h5>
                                                     <div class="row mt-3">
                                                         <div class="col-md-8">
@@ -129,9 +165,17 @@
                                                             <p v-if="details.type == 'Normal'"><strong>Selected Package
                                                                     :</strong> {{ details.range ?
                                                                         details.range.category.name : 'N/A' }}</p>
-                                                            <p v-if="details.type == 'Normal'"><strong>Courier
-                                                                    Instructions:</strong> {{ details.instructions }}
+                                                          <p v-if="details.type == 'Normal' && !isCourierInstructionEditing">
+                                                                <strong>Courier Instructions:</strong> {{ details.instructions }}
+                                                                <button @click="startCourierInstructionEditing" class="btn btn-primary btn-sm" v-if="isAllowed">Edit</button>
                                                             </p>
+
+                                                            <div v-if="details.type == 'Normal' && isCourierInstructionEditing">
+                                                                <strong>Courier Instructions:</strong>
+                                                                <textarea v-model="editedInstructions" class="form-control mb-2"></textarea>
+                                                                <button class="btn btn-success btn-sm" @click="saveInstructions">Save Instructions</button>
+                                                                <button class="btn btn-secondary btn-sm" @click="cancelEditing">Cancel</button>
+                                                            </div>
                                                         </div>
                                                         <div class="col-md-4 text-right">
                                                             <p><strong>Shop:</strong> {{ details.shop ?
@@ -154,13 +198,20 @@
                                                                             <td><strong>Product Cost:</strong></td>
                                                                             <td class="text-left">{{
                                                                                 formatPrice(details.product_cost)
-                                                                            }}</td>
+                                                                                }}</td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td><strong>Courier Charges + Our Charges:</strong></td>
+                                                                            <td><strong>Courier Charges + Our
+                                                                                    Charges:</strong></td>
                                                                             <td class="text-left">{{
-                                                                                formatPrice(details.courier_service_price - details.courier_service_internal_price)
-                                                                                }} + {{ formatPrice(details.courier_service_internal_price) }} = {{ formatPrice(details.courier_service_price) }}</td>
+                                                                                formatPrice(details.courier_service_price
+                                                                                    -
+                                                                                details.courier_service_internal_price)
+                                                                                }} + {{
+                                                                                formatPrice(details.courier_service_internal_price)
+                                                                                }} = {{
+                                                                                formatPrice(details.courier_service_price)
+                                                                                }}</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td><strong>Packing Charges:</strong></td>
@@ -171,7 +222,8 @@
                                                                         <tr>
                                                                             <td><strong>Total Tax:</strong></td>
                                                                             <td class="text-left">{{
-                                                                                formatPrice(details.shipping_tax + details.subtotal_tax) }}
+                                                                                formatPrice(details.shipping_tax +
+                                                                                details.subtotal_tax) }}
                                                                             </td>
                                                                         </tr>
 
@@ -335,22 +387,25 @@
                                                                                 parseFloat(details.total_bill)) }}</td>
                                                                             <td><strong>Tax</strong></td>
                                                                             <td class="h5">{{ details.profit_tax }}</td>
-                                                                             <td><strong>Profit</strong></td>
-                                                                            <td class="h5">{{  (parseFloat(details.selling_price) +
-                                                                                parseFloat(details.advance_amount)) -
-                                                                                (parseFloat(details.total_bill) + parseFloat(details.profit_tax)) }}</td>
+                                                                            <td><strong>Profit</strong></td>
+                                                                            <td class="h5">{{
+                                                                                (parseFloat(details.selling_price) +
+                                                                                    parseFloat(details.advance_amount)) -
+                                                                                (parseFloat(details.total_bill) +
+                                                                                parseFloat(details.profit_tax)) }}</td>
                                                                         </tr>
                                                                     </tbody>
                                                                 </table>
                                                             </div>
 
-                                                                   <div class="col-md-12" v-if="details.type == 'Normal'">
+                                                            <div class="col-md-12" v-if="details.type == 'Normal'">
                                                                 <h6>Overall Tax Stats</h6>
                                                                 <table class="table table-bordered table-sm">
                                                                     <tbody>
                                                                         <tr>
                                                                             <td><strong>4% of COD</strong></td>
-                                                                            <td><strong>2% Sales Tax on COD</strong></td>
+                                                                            <td><strong>2% Sales Tax on COD</strong>
+                                                                            </td>
                                                                             <td><strong>Product Tax</strong></td>
                                                                             <td><strong>Courier Tax</strong></td>
                                                                             <td><strong>Profit Tax</strong></td>
@@ -359,22 +414,35 @@
                                                                             <td><strong>Net Impact</strong></td>
                                                                         </tr>
                                                                         <tr>
-                                                                            <td class="h5">{{ formatPrice((parseFloat(details.selling_price)) * 0.04) }}</td>
-                                                                            <td class="h5">{{ formatPrice((parseFloat(details.selling_price)) * 0.02) }}
-                                                                            <td class="h5">{{ formatPrice(details.subtotal_tax) }}</td>
-                                                                            <td class="h5">{{ details.shipping_tax }}</td>
+                                                                            <td class="h5">{{
+                                                                                formatPrice((parseFloat(details.selling_price))
+                                                                                * 0.04) }}</td>
+                                                                            <td class="h5">{{
+                                                                                formatPrice((parseFloat(details.selling_price))
+                                                                                * 0.02) }}
+                                                                            <td class="h5">{{
+                                                                                formatPrice(details.subtotal_tax) }}
+                                                                            </td>
+                                                                            <td class="h5">{{ details.shipping_tax }}
+                                                                            </td>
                                                                             <td class="h5">{{ details.profit_tax }}</td>
-                                                                            <td class="h5">{{ formatPrice(details.profit_tax +  details.shipping_tax + details.subtotal_tax) }}</td>
-                                                                            <td class="h5">{{ formatPrice(details.courier_service_internal_price) }}</td>
-                                                                           <td class="h5">
+                                                                            <td class="h5">{{
+                                                                                formatPrice(details.profit_tax +
+                                                                                details.shipping_tax +
+                                                                                details.subtotal_tax) }}</td>
+                                                                            <td class="h5">{{
+                                                                                formatPrice(details.courier_service_internal_price)
+                                                                                }}</td>
+                                                                            <td class="h5">
                                                                                 {{ formatPrice(
                                                                                     (
-                                                                                    parseFloat(details.profit_tax) +
-                                                                                    parseFloat(details.shipping_tax) +
-                                                                                    parseFloat(details.subtotal_tax) +
-                                                                                    parseFloat(details.courier_service_internal_price)
+                                                                                        parseFloat(details.profit_tax) +
+                                                                                        parseFloat(details.shipping_tax) +
+                                                                                        parseFloat(details.subtotal_tax) +
+                                                                                        parseFloat(details.courier_service_internal_price)
                                                                                     ) - (
-                                                                                    (parseFloat(details.selling_price)) * 0.04
+                                                                                        (parseFloat(details.selling_price)) *
+                                                                                        0.04
                                                                                     )
                                                                                 ) }}
                                                                             </td>
@@ -415,7 +483,8 @@
                                                             <tbody>
                                                                 <tr v-for="item in details.items" :key="item.id">
                                                                     <td class="text-truncate" v-if="item.variation">
-                                                                        <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                                        <ul
+                                                                            class="list-unstyled order-list m-b-0 m-b-0">
                                                                             <li class="team-member team-member-sm">
                                                                                 <a v-if="item.variation.images?.[0]?.attachment?.attachment"
                                                                                     :href="getImageUrl(item.variation.images[0].attachment.attachment)"
@@ -461,13 +530,17 @@
                                                                     <td v-else>{{ item.sell_price }}</td>
 
                                                                     <td v-if="details.is_replacement == 1">0</td>
-                                                                    <td v-else>{{ parseFloat(item.subtotal_tax) + parseFloat(item.shipping_tax) }}</td>
+                                                                    <td v-else>{{ parseFloat(item.subtotal_tax) +
+                                                                        parseFloat(item.shipping_tax) }}</td>
 
                                                                     <td v-if="details.is_replacement == 1">0</td>
                                                                     <td v-else>{{ parseFloat(item.sell_price) - (
-                                                                        (parseFloat(item.quantity) * parseFloat(item.price)
+                                                                        (parseFloat(item.quantity) *
+                                                                            parseFloat(item.price)
                                                                         ) + (parseFloat(item.packaging_cost) +
-                                                                            parseFloat(item.courier_cost))) - (parseFloat(item.subtotal_tax) + parseFloat(item.shipping_tax)) }}</td>
+                                                                            parseFloat(item.courier_cost))) -
+                                                                        (parseFloat(item.subtotal_tax) +
+                                                                        parseFloat(item.shipping_tax)) }}</td>
                                                                     <!-- <td v-if="details.is_replacement == 1">0</td>
                                                                     <td v-else>
                                                                         {{
@@ -518,12 +591,14 @@
                                                                     <td v-else class="h5">{{ totalNetProfit }}</td> -->
                                                                 </tr>
                                                                 <tr>
-                                                                    <td colspan="10" class="h5 text-right">Tax On Profit</td>
+                                                                    <td colspan="10" class="h5 text-right">Tax On Profit
+                                                                    </td>
                                                                     <td class="h5">{{ details.profit_tax }} </td>
                                                                 </tr>
                                                                 <tr>
                                                                     <td colspan="10" class="h5 text-right">Balance</td>
-                                                                    <td class="h5"> {{totalPaybale - details.profit_tax }} </td>
+                                                                    <td class="h5"> {{ totalPaybale - details.profit_tax
+                                                                        }} </td>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
@@ -861,7 +936,7 @@
 
 
                     <!-- Normal Admin rights -->
-                     <!-- 6 < 5 -->
+                    <!-- 6 < 5 -->
                     <div class="modal-footer d-dlex justify-content-between"
                         v-if="view != 'viewOnly' && details.type != 'Cash' && details.status < 8">
                         <div>
@@ -872,8 +947,7 @@
                             </button>
 
                             <button class="btn btn-warning" data-toggle="modal" data-target="#markasHold"
-                                @click="markAsHold()"
-                                v-if="(role == 'order collection manager' || role == 'admin')">
+                                @click="markAsHold()" v-if="(role == 'order collection manager' || role == 'admin' || role == 'inventory manager' || role == 'auditor')">
                                 <i class="fas fa-pause-circle"></i> Mark as Hold
                             </button>
 
@@ -906,7 +980,8 @@
                                     <i class="fas fa-shipping-fast"></i> With PostEx
                                 </a>
                             </div> -->
-                            <button class="btn btn-primary" @click="forwardToTest()" v-if="!loader && role != 'supervisor'">
+                            <button class="btn btn-primary" @click="forwardToTest()"
+                                v-if="!loader && role != 'supervisor'">
                                 <i class="fas fa-clipboard-check"></i> Test Order With Courier
                             </button>
                             <button class="btn btn-primary" @click="forward()" v-if="!loader && role != 'supervisor'">
@@ -954,11 +1029,13 @@
                             </button>
                         </div> -->
                         <button class="btn btn-danger" @click="markAsBeingReturn()" data-toggle="modal"
-                            data-target="#markasBeingReturn" v-if="role == 'admin' && ( details.status != 8 || details.status != 9 || details.status != 10 )">
+                            data-target="#markasBeingReturn"
+                            v-if="role == 'admin' && (details.status != 8 || details.status != 9 || details.status != 10)">
                             <i class="fas fa-undo-alt"></i> Mark as Being Return
                         </button>
                         <button class="btn btn-success" @click="markAsDelivered()" data-toggle="modal"
-                            data-target="#markasDelivered" v-if="role == 'admin' && ( details.status != 8 || details.status != 9 || details.status != 10 )">
+                            data-target="#markasDelivered"
+                            v-if="role == 'admin' && (details.status != 8 || details.status != 9 || details.status != 10)">
                             <i class="fas fa-check"></i> Mark as Delivered
                         </button>
                         <button class="btn btn-danger" @click="markAsDelivered()" data-toggle="modal"
@@ -992,6 +1069,7 @@ export default {
     },
     data() {
         return {
+            api_url: window.location.origin + process.env.MIX_API_URL,
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             comment: '',
             attachment: '',
@@ -1016,7 +1094,12 @@ export default {
             paidAmount: '',
             packagingAmount: '',
             discount: '',
-            csrf: ""
+            csrf: "",
+            isCustomerEditing: false,
+            editCustomerData: {},
+            cities : [],
+            isCourierInstructionEditing: false,
+            editedInstructions: ''
         }
     },
     mounted() {
@@ -1032,6 +1115,9 @@ export default {
         this.csrf = $('meta[name=csrf-token]').attr('content');
     },
     computed: {
+        isAllowed() {
+            return ["admin", "auditor"].includes(this.role);
+        },
         filteredComments() {
             if (!this.searchQuery) {
                 return this.details.comments;
@@ -1103,6 +1189,41 @@ export default {
 
     },
     methods: {
+        startCourierInstructionEditing() {
+            this.isCourierInstructionEditing = true;
+            this.editedInstructions = this.details.instructions;
+        },
+        saveInstructions() {
+            this.details.instructions = this.editedInstructions;
+            this.$emit("saveInstructions", this.details);
+            this.isCourierInstructionEditing = false;
+        },
+        cancelEditing() {
+            this.isCourierInstructionEditing = false;
+        },
+        fetchCities() {
+            axios.get(this.api_url + 'couriers/cities')
+                .then(response => {
+                    const result = response.data.response;
+                    if (this.details.courier_service_id == '1') {
+                        this.cities = result.leopardCities;
+                    } else {
+                        this.cities = result.postExCities;
+                    }
+                });
+        },
+        startEdit() {
+            this.editCustomerData = JSON.parse(JSON.stringify(this.details)); // deep copy
+            this.isCustomerEditing = true;
+        },
+        saveCustomerEdit() {
+            // Emit back to parent or call API here
+            this.$emit("saveCustomerEdit", this.editCustomerData);
+            this.isCustomerEditing = false;
+        },
+        cancelCustomerEdit() {
+            this.isCustomerEditing = false;
+        },
         printPostExSlip(order) {
             setTimeout(() => {
                 this.$refs.printAirBill.submit();
@@ -1202,7 +1323,7 @@ export default {
             }
             return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
         },
-        forwardToTest(){
+        forwardToTest() {
             this.$emit('forwardToTest', { id: this.details.id });
         },
         forward() {
@@ -1335,7 +1456,8 @@ export default {
     },
     watch: {
         details(newLedger) {
-            this.clearDataTable()
+            this.clearDataTable();
+            this.fetchCities();
             setTimeout(() => {
                 $("#products_items_table").DataTable({
                     paging: false,

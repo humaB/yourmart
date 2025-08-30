@@ -1355,6 +1355,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return {
+      api_url: window.location.origin + "/public/api/",
       public_url: window.location.origin + "",
       comment: '',
       attachment: '',
@@ -1380,7 +1381,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       paidAmount: '',
       packagingAmount: '',
       discount: '',
-      csrf: ""
+      csrf: "",
+      isCustomerEditing: false,
+      editCustomerData: {},
+      cities: [],
+      isCourierInstructionEditing: false,
+      editedInstructions: ''
     };
   },
   mounted: function mounted() {
@@ -1397,6 +1403,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     this.csrf = $('meta[name=csrf-token]').attr('content');
   },
   computed: {
+    isAllowed: function isAllowed() {
+      return ["admin", "auditor"].includes(this.role);
+    },
     filteredComments: function filteredComments() {
       if (!this.searchQuery) {
         return this.details.comments;
@@ -1462,10 +1471,45 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     }
   },
   methods: {
-    printPostExSlip: function printPostExSlip(order) {
+    startCourierInstructionEditing: function startCourierInstructionEditing() {
+      this.isCourierInstructionEditing = true;
+      this.editedInstructions = this.details.instructions;
+    },
+    saveInstructions: function saveInstructions() {
+      this.details.instructions = this.editedInstructions;
+      this.$emit("saveInstructions", this.details);
+      this.isCourierInstructionEditing = false;
+    },
+    cancelEditing: function cancelEditing() {
+      this.isCourierInstructionEditing = false;
+    },
+    fetchCities: function fetchCities() {
       var _this4 = this;
+      axios.get(this.api_url + 'couriers/cities').then(function (response) {
+        var result = response.data.response;
+        if (_this4.details.courier_service_id == '1') {
+          _this4.cities = result.leopardCities;
+        } else {
+          _this4.cities = result.postExCities;
+        }
+      });
+    },
+    startEdit: function startEdit() {
+      this.editCustomerData = JSON.parse(JSON.stringify(this.details)); // deep copy
+      this.isCustomerEditing = true;
+    },
+    saveCustomerEdit: function saveCustomerEdit() {
+      // Emit back to parent or call API here
+      this.$emit("saveCustomerEdit", this.editCustomerData);
+      this.isCustomerEditing = false;
+    },
+    cancelCustomerEdit: function cancelCustomerEdit() {
+      this.isCustomerEditing = false;
+    },
+    printPostExSlip: function printPostExSlip(order) {
+      var _this5 = this;
       setTimeout(function () {
-        _this4.$refs.printAirBill.submit();
+        _this5.$refs.printAirBill.submit();
       }, 500);
     },
     deleteComment: function deleteComment(comment) {
@@ -1717,6 +1761,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   watch: {
     details: function details(newLedger) {
       this.clearDataTable();
+      this.fetchCities();
       setTimeout(function () {
         $("#products_items_table").DataTable({
           paging: false,
@@ -4285,6 +4330,72 @@ __webpack_require__.r(__webpack_exports__);
     this.fetchDropshippers();
   },
   methods: {
+    getTimeClass: function getTimeClass(datetime) {
+      // Parse full datetime
+      var orderDateTime = moment__WEBPACK_IMPORTED_MODULE_0___default()(datetime, 'YYYY-MM-DD HH:mm:ss');
+
+      // Today (at 00:00:00)
+      var today = moment__WEBPACK_IMPORTED_MODULE_0___default()().startOf('day');
+
+      // If order is from a previous date → always green
+      if (orderDateTime.isBefore(today, 'day')) {
+        return 'bg-success';
+      }
+
+      // Compare time only if order is today
+      var currentSeconds = orderDateTime.hours() * 3600 + orderDateTime.minutes() * 60 + orderDateTime.seconds();
+      var cutoffSeconds = 16 * 3600; // 16:00:00
+
+      return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
+    },
+    saveInstructions: function saveInstructions(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/update-courier-instructions", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchDetail(data.id);
+        vm.fetchOrders();
+        return swal({
+          title: "Success",
+          text: "Instruction updated successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+      ;
+    },
+    saveCustomerEdit: function saveCustomerEdit(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "inventory/products/orders/update-customer", data).then(function (response) {
+        vm.btnLoader = false;
+        vm.fetchDetail(data.id);
+        vm.fetchOrders();
+        return swal({
+          title: "Success",
+          text: "Customer Information updated successfully",
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+      ;
+    },
     reAttempt: function reAttempt(data) {
       var vm = this;
       vm.btnLoader = true;
@@ -4486,6 +4597,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     formatDate: function formatDate(date) {
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).format('DD-MMM-YYYY') : 'N/A';
+    },
+    formatTime: function formatTime(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).format('HH:mm:ss') : 'N/A';
     },
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
@@ -7513,6 +7627,7 @@ var render = function render() {
         value: _vm.public_url + "storage/uploads/inventory/products/media/" + image.attachment,
         expression: "public_url + 'storage/uploads/inventory/products/media/' + image.attachment"
       }],
+      key: image.attachment,
       staticClass: "imagecheck-image",
       attrs: {
         alt: image.alt
@@ -9647,7 +9762,101 @@ var render = function render() {
     staticClass: "card-body row"
   }, [_c("div", {
     staticClass: "col-md-8"
-  }, [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number) + "\n                                                    ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2) + "\n                                                    ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
+  }, [!_vm.isCustomerEditing ? _c("div", [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" " + _vm._s(_vm.details.customer_name))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" " + _vm._s(_vm.details.address))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" " + _vm._s(_vm.details.phone_number))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" " + _vm._s(_vm.details.phone_number2))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("City:")]), _vm._v(" " + _vm._s(_vm.details.city ? _vm.details.city.name : ""))]), _vm._v(" "), _vm.isAllowed ? _c("button", {
+    staticClass: "btn btn-sm btn-primary",
+    on: {
+      click: _vm.startEdit
+    }
+  }, [_vm._v("\n                                                            Edit\n                                                        ")]) : _vm._e()]) : _c("div", [_c("p", [_c("strong", [_vm._v("Name:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.customer_name,
+      expression: "editCustomerData.customer_name"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.customer_name
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "customer_name", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Address:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.address,
+      expression: "editCustomerData.address"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.address
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "address", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 1:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.phone_number,
+      expression: "editCustomerData.phone_number"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.phone_number
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "phone_number", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Phone Number 2:")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editCustomerData.phone_number2,
+      expression: "editCustomerData.phone_number2"
+    }],
+    staticClass: "form-control",
+    domProps: {
+      value: _vm.editCustomerData.phone_number2
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.editCustomerData, "phone_number2", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Customer`s City")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.cities
+    },
+    model: {
+      value: _vm.editCustomerData.city.name,
+      callback: function callback($$v) {
+        _vm.$set(_vm.editCustomerData.city, "name", $$v);
+      },
+      expression: "editCustomerData.city.name"
+    }
+  })], 1), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-success",
+    on: {
+      click: _vm.saveCustomerEdit
+    }
+  }, [_vm._v("Update Customer Data")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-sm btn-secondary",
+    on: {
+      click: _vm.cancelCustomerEdit
+    }
+  }, [_vm._v("Cancel")])])]), _vm._v(" "), _vm.details.user && _vm.details.user.dropshipper ? _c("div", {
     staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "card author-box"
@@ -9705,7 +9914,39 @@ var render = function render() {
     }
   }, [_vm._v("Press to\n                                                            Print")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", {
     staticClass: "mt-2"
-  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A") + "\n                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Courier\n                                                                Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                        ")]) : _vm._e()]), _vm._v(" "), _c("div", {
+  }, [_c("strong", [_vm._v("Courier Service:")]), _vm._v(" " + _vm._s(_vm.details.courier ? _vm.details.courier.courier_name : "N/A") + "\n                                                        ")]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" ? _c("p", [_c("strong", [_vm._v("Selected Package\n                                                                :")]), _vm._v(" " + _vm._s(_vm.details.range ? _vm.details.range.category.name : "N/A"))]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && !_vm.isCourierInstructionEditing ? _c("p", [_c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" " + _vm._s(_vm.details.instructions) + "\n                                                            "), _vm.isAllowed ? _c("button", {
+    staticClass: "btn btn-primary btn-sm",
+    on: {
+      click: _vm.startCourierInstructionEditing
+    }
+  }, [_vm._v("Edit")]) : _vm._e()]) : _vm._e(), _vm._v(" "), _vm.details.type == "Normal" && _vm.isCourierInstructionEditing ? _c("div", [_c("strong", [_vm._v("Courier Instructions:")]), _vm._v(" "), _c("textarea", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.editedInstructions,
+      expression: "editedInstructions"
+    }],
+    staticClass: "form-control mb-2",
+    domProps: {
+      value: _vm.editedInstructions
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.editedInstructions = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-success btn-sm",
+    on: {
+      click: _vm.saveInstructions
+    }
+  }, [_vm._v("Save Instructions")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-secondary btn-sm",
+    on: {
+      click: _vm.cancelEditing
+    }
+  }, [_vm._v("Cancel")])]) : _vm._e()]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 text-right"
   }, [_c("p", [_c("strong", [_vm._v("Shop:")]), _vm._v(" " + _vm._s(_vm.details.shop ? _vm.details.shop.store_name : "N/A"))]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("Order Notes:")]), _vm._v(" " + _vm._s(_vm.details.order_note) + "\n                                                        ")]), _vm._v(" "), _c("p", [_c("strong", [_vm._v("No of labels:")]), _vm._v(" " + _vm._s(_vm.details.no_of_labels) + "\n                                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -9767,9 +10008,9 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.formatPrice(parseFloat(_vm.details.selling_price) * 0.02)) + "\n                                                                        ")]), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.subtotal_tax)))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.subtotal_tax)) + "\n                                                                        ")]), _vm._v(" "), _c("td", {
     staticClass: "h5"
-  }, [_vm._v(_vm._s(_vm.details.shipping_tax))]), _vm._v(" "), _c("td", {
+  }, [_vm._v(_vm._s(_vm.details.shipping_tax) + "\n                                                                        ")]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.details.profit_tax))]), _vm._v(" "), _c("td", {
     staticClass: "h5"
@@ -9828,7 +10069,7 @@ var render = function render() {
     attrs: {
       colspan: "10"
     }
-  }, [_vm._v("Tax On Profit")]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Tax On Profit\n                                                                ")]), _vm._v(" "), _c("td", {
     staticClass: "h5"
   }, [_vm._v(_vm._s(_vm.details.profit_tax) + " ")])]), _vm._v(" "), _c("tr", [_c("td", {
     staticClass: "h5 text-right",
@@ -10356,7 +10597,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-arrow-right"
-  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection manager" || _vm.role == "admin" ? _c("button", {
+  }), _vm._v(" Mark as Replacement\n                        ")]) : _vm._e(), _vm._v(" "), _vm.role == "order collection manager" || _vm.role == "admin" || _vm.role == "inventory manager" || _vm.role == "auditor" ? _c("button", {
     staticClass: "btn btn-warning",
     attrs: {
       "data-toggle": "modal",
@@ -10553,7 +10794,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("td", [_c("strong", [_vm._v("Courier Charges + Our Charges:")])]);
+  return _c("td", [_c("strong", [_vm._v("Courier Charges + Our\n                                                                                Charges:")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -15209,7 +15450,7 @@ var render = function render() {
         }
       }, _vm.toggleAllOrders]
     }
-  })]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Type")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Tax")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Received")]), _vm._v(" "), _c("th", [_vm._v("Remaining")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Re-attempt")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
+  })]), _vm._v(" "), _c("th", [_vm._v("Reference ID")]), _vm._v(" "), _c("th", [_vm._v("Order Time")]), _vm._v(" "), _c("th", [_vm._v("Type")]), _vm._v(" "), _c("th", [_vm._v("Dropshipper")]), _vm._v(" "), _c("th", [_vm._v("Order #")]), _vm._v(" "), _c("th", [_vm._v("Tracking Number")]), _vm._v(" "), _c("th", [_vm._v("Product Price")]), _vm._v(" "), _c("th", [_vm._v("Courier")]), _vm._v(" "), _c("th", [_vm._v("Packaging")]), _vm._v(" "), _c("th", [_vm._v("Total Tax")]), _vm._v(" "), _c("th", [_vm._v("Total Cost")]), _vm._v(" "), _c("th", [_vm._v("Received")]), _vm._v(" "), _c("th", [_vm._v("Remaining")]), _vm._v(" "), _c("th", [_vm._v("COD")]), _vm._v(" "), _c("th", [_vm._v("Advance")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Date")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Re-attempt")]), _vm._v(" "), _c("th", [_vm._v("Action")])])]), _vm._v(" "), _c("tbody", _vm._l(_vm.orders, function (item, index) {
     return _c("tr", {
       key: item.id
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_c("div", {
@@ -15247,7 +15488,9 @@ var render = function render() {
           }
         }
       }
-    })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "-"))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
+    })])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.id))]), _vm._v(" "), _c("td", {
+      "class": _vm.getTimeClass(item.created_at)
+    }, [_vm._v("\n                                                        " + _vm._s(_vm.formatTime(item.created_at)) + "\n                                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user ? item.user.name : "-"))]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.shop ? "".concat(item.shop.store_name.substring(0, 3), "-").concat(item.order_no) : item.order_no) + "\n                                                    ")]), _vm._v(" "), _c("td", [item.type === "Normal" ? _c("span", [_c("a", {
       attrs: {
         href: "#",
         "data-toggle": "modal",
@@ -15390,6 +15633,12 @@ var render = function render() {
       },
       markAsHold: function markAsHold($event) {
         return _vm.markasReplacement($event);
+      },
+      saveCustomerEdit: function saveCustomerEdit($event) {
+        return _vm.saveCustomerEdit($event);
+      },
+      saveInstructions: function saveInstructions($event) {
+        return _vm.saveInstructions($event);
       }
     }
   }), _vm._v(" "), _c("DropshipperDetails", {

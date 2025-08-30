@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\RegMail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -112,6 +113,10 @@ class UserController extends Controller
 
         // Redirect with success
         return redirect()->back()->with('success', 'Successfully Updated!');
+    }
+
+    public function role(){
+        return Auth::user();
     }
 
     public function delete( Request $request ){

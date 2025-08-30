@@ -2177,6 +2177,8 @@ var render = function render() {
       staticClass: "h5"
     }, [_vm._v(_vm._s(item.product ? item.product.title : "-"))]), _vm._v(" "), _c("td", {
       staticClass: "h5"
+    }, [_vm._v(_vm._s(item.product ? item.product.variation.sku : "-"))]), _vm._v(" "), _c("td", {
+      staticClass: "h5"
     }, [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", {
       staticClass: "h5"
     }, [_vm._v(_vm._s(item.gate_received_quantity))]), _vm._v(" "), _c("td", [_c("input", {
@@ -2236,7 +2238,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product Name")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Already Received Quantity")]), _vm._v(" "), _c("th", [_vm._v("Received Quantity")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product Name")]), _vm._v(" "), _c("th", [_vm._v("Sku")]), _vm._v(" "), _c("th", [_vm._v("Quantity")]), _vm._v(" "), _c("th", [_vm._v("Already Received Quantity")]), _vm._v(" "), _c("th", [_vm._v("Received Quantity")])])]);
 }];
 render._withStripped = true;
 
@@ -5105,8 +5107,8 @@ var render = function render() {
     }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$courier = item.courier) === null || _item$courier === void 0 ? void 0 : _item$courier.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_c("ul", _vm._l(item.items, function (product) {
       var _product$variation;
       return _c("li", {
-        key: "items-" + item.id
-      }, [_vm._v(_vm._s(product === null || product === void 0 || (_product$variation = product.variation) === null || _product$variation === void 0 || (_product$variation = _product$variation.product) === null || _product$variation === void 0 ? void 0 : _product$variation.title))]);
+        key: "items-" + item.created_at
+      }, [_vm._v("\n                                            " + _vm._s(product === null || product === void 0 || (_product$variation = product.variation) === null || _product$variation === void 0 || (_product$variation = _product$variation.product) === null || _product$variation === void 0 ? void 0 : _product$variation.title) + " (Qty: " + _vm._s(product.quantity) + ")\n                                            ")]);
     }), 0)]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.total_bill))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-primary",
       attrs: {
