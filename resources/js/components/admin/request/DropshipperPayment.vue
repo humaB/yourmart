@@ -300,6 +300,15 @@ export default {
 
             });
         },
+    },
+    watch: {
+        details: {
+            deep: true,
+            handler() {
+            this.addData.amount =
+                (this.details.total_profit - this.details.total_paid_profit) - this.reservedAmount;
+            }
+        },
     }
 }
 </script>
