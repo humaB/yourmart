@@ -15248,6 +15248,10 @@ var render = function render() {
     }
   }, [_vm._v("Auditor")]), _vm._v(" "), _c("option", {
     attrs: {
+      value: "5"
+    }
+  }, [_vm._v("Dispatched")]), _vm._v(" "), _c("option", {
+    attrs: {
       value: "6"
     }
   }, [_vm._v("Under Review")]), _vm._v(" "), _c("option", {
