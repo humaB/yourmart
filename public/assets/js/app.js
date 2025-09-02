@@ -849,6 +849,14 @@ __webpack_require__.r(__webpack_exports__);
         _this.shop = response.data.shop;
       });
     }
+  },
+  watch: {
+    details: {
+      deep: true,
+      handler: function handler() {
+        this.addData.amount = this.details.total_profit - this.details.total_paid_profit - this.reservedAmount;
+      }
+    }
   }
 });
 
