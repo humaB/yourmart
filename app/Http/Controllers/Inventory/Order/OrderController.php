@@ -312,7 +312,7 @@ class OrderController extends Controller
         Order::where('id', $request->id)->update([
             'instructions' => $request->instructions
         ]);
-        
+
         return response()->json([], 200);
     }
 
@@ -369,6 +369,8 @@ class OrderController extends Controller
             'total_amount'    => $request->total_bill,
             'added_by'        => auth()->user()->id
         ]);
+
+        Order::where('id', $request->id)->update(['status', '4']);
 
         $order = Order::find($request->id);
         $link = env('MIX_WEB_URL').'dropshipper/orders';
@@ -699,6 +701,14 @@ class OrderController extends Controller
 
         // Map roles to corresponding statuses
         $statusMap = [
+            'order collection manager'   => 1,    // Role for order collection
+            'inventory manager'          => 2,  // Role for inventory issuance
+            'qc manager'                 => 3,         // Role for quality control
+            'packing & dispatch manager' => 5,    // Role for packing and dispatch
+            'auditor'                    => 5   // Role for audit
+        ];
+
+        $sentTo = [
             'order collection manager'   => 0,    // Role for order collection
             'inventory manager'          => 1,  // Role for inventory issuance
             'qc manager'                 => 2,         // Role for quality control
@@ -713,28 +723,38 @@ class OrderController extends Controller
         if (auth()->user()->role === 'admin') {
             // Allow admin to forward to any role
             $nextStatus = $currentStatus + 1;
+            $sentToStatus = $currentStatus + 1;
             if ($nextStatus > max($statusMap)) {
                 $nextStatus = max($statusMap); // Prevent exceeding max status
+            }
+            if ($sentToStatus > max($sentTo)) {
+                $sentToStatus = max($sentTo);
             }
         } else {
             // Get user's role
             $userRole = auth()->user()->role;
             // Find next status based on user's role
-
-            $nextStatus = array_search($userRole, array_keys($statusMap)) + 1;
-            $nextStatus = $statusMap[array_search($nextStatus, $statusMap)] ?? $currentStatus;
+            $nextStatus = $statusMap[$userRole] ?? $currentStatus;
+            $sentToStatus = $sentTo[$userRole] ?? $currentStatus;
         }
 
         // Get next role based on next status
-        $nextRole = array_search($nextStatus, $statusMap);
+         $nextRole = array_search($sentToStatus, $sentTo);
 
         if ($nextRole) {
-            // Create activity log
-            OrderActivity::create([
-                'order_id'  => $request->id,
-                'activity'  => 'Order sent to ' . $nextRole,
-                'added_by'  => auth()->user()->id,
-            ]);
+            if( $nextStatus == '5' ){
+                OrderActivity::create([
+                    'order_id'  => $request->id,
+                    'activity'  => 'Order sent to dispatch manager',
+                    'added_by'  => auth()->user()->id,
+                ]);
+            }else{
+                OrderActivity::create([
+                    'order_id'  => $request->id,
+                    'activity'  => 'Order sent to ' . $nextRole,
+                    'added_by'  => auth()->user()->id,
+                ]);
+            }
         }
 
         if (array_key_exists($userRole, $statusMap)) {
@@ -936,7 +956,13 @@ class OrderController extends Controller
                     $user = $order->belongs_to
                 );
             }
-            $order->increment('status');
+            if ($userRole == 'admin'){
+                $order->increment('status');
+            }else{
+                $order->update([
+                    'status' => $nextStatus
+                ]);
+            }
         } else {
             $order->update([
                 'status' => '5'
