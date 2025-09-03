@@ -370,7 +370,7 @@ class OrderController extends Controller
             'added_by'        => auth()->user()->id
         ]);
 
-        Order::where('id', $request->id)->update(['status', '4']);
+        Order::where('id', $request->id)->update(['status' => '4']);
 
         $order = Order::find($request->id);
         $link = env('MIX_WEB_URL').'dropshipper/orders';
