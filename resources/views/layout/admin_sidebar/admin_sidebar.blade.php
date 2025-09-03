@@ -45,7 +45,7 @@
 
         $shipments = DB::table('orders')
             ->where('type', 'Normal')
-            ->whereIn('status', ['4', '5'])
+            ->where('status', '13')
             ->whereNotIn('id', $dispatched)
             ->count();
     @endphp

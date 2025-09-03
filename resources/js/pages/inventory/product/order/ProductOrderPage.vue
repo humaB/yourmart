@@ -208,7 +208,8 @@
                                         <th>Collection</th>
                                         <th>Inventory</th>
                                         <th>QC Manager</th>
-                                        <th>Packing </th>
+                                        <th>Packing</th>
+                                        <th>Shipment</th>
                                         <th>Audit Manager</th>
                                         <th>Dispatched</th>
                                         <th>Under Review</th>
@@ -262,6 +263,16 @@
                                                     :style="{ width: getPercentage(totalOrders.packing) + '%' }"></div>
                                             </div>
                                             {{ totalOrders.packing }}
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="progress-text text-right text-secondary">
+                                                {{ getPercentage(totalOrders.shipment ) }}%
+                                            </div>
+                                            <div class="progress" data-height="6">
+                                                <div class="progress-bar bg-light"
+                                                    :style="{ width: getPercentage(totalOrders.shipment ) + '%' }"></div>
+                                            </div>
+                                            {{ totalOrders.shipment  }}
                                         </td>
                                         <td class="align-middle">
                                             <div class="progress-text text-right text-secondary">
@@ -376,6 +387,7 @@
                                     <option value="2">QA Manager</option>
                                     <option value="3">Packing/Dispatch</option>
                                     <option value="4">Auditor</option>
+                                    <option value="13">Shipment</option>
                                     <option value="5">Dispatched</option>
                                     <option value="6">Under Review</option>
                                     <option value="7">Rejected</option>
@@ -533,6 +545,8 @@
                                                                 v-else-if="item.status == 11">Out for delivery</span>
                                                             <span class="badge badge-warning"
                                                                 v-else-if="item.status == 12">Ready for Return</span>
+                                                            <span class="badge badge-warning"
+                                                                v-else-if="item.status == 13">Pending Shipment</span>
                                                         </td>
                                                         <td v-if="item.status == 12 && (role == 'admin' || role == 'supervisor' || role == 'auditor')">
                                                             <button v-if="!item.re_attempt" class="btn btn-primary" @click="fetchDetail(item.id)" data-toggle="modal" data-target="#orderReattempt" title="Press to reattempt">
@@ -687,6 +701,7 @@ export default {
                 qcManager: 0,
                 packing: 0,
                 audit: 0,
+                shipment : 0,
                 dispatched: 0,
                 underReview: 0,
                 rejected: 0,
@@ -1317,6 +1332,7 @@ export default {
                         inventoryManager: 0,
                         qcManager: 0,
                         packing: 0,
+                        shipment : 0,
                         audit: 0,
                         underReview: 0,
                         rejected: 0,
@@ -1366,6 +1382,9 @@ export default {
                                 break;
                             case 12: //Ready for return
                                 vm.totalOrders.readyForReturn++;
+                                break;
+                            case 13: //Pending Shipment
+                                vm.totalOrders.shipment++;
                                 break;
                         }
                     });

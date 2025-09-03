@@ -337,7 +337,7 @@ class OrderController extends Controller
 
         $orders = Order::with('shop', 'user', 'courier')
             ->where('type', 'Normal')
-            ->whereIn('status', ['4', '5'])
+            ->where('status', '13')
             ->when($request->from, function ($query, $from) {
                 return $query->whereDate('created_at', '>=', $from);
             })
@@ -362,7 +362,6 @@ class OrderController extends Controller
 
     public function addDispatched(Request $request)
     {
-
         OrderDispatchedRecord::create([
             'order_id'        => $request->id,
             'tracking_number' => $request->tracking_number,
@@ -704,7 +703,7 @@ class OrderController extends Controller
             'order collection manager'   => 1,    // Role for order collection
             'inventory manager'          => 2,  // Role for inventory issuance
             'qc manager'                 => 3,         // Role for quality control
-            'packing & dispatch manager' => 5,    // Role for packing and dispatch
+            'packing & dispatch manager' => 13,    // Role for packing and dispatch
             'auditor'                    => 5   // Role for audit
         ];
 
@@ -713,7 +712,8 @@ class OrderController extends Controller
             'inventory manager'          => 1,  // Role for inventory issuance
             'qc manager'                 => 2,         // Role for quality control
             'packing & dispatch manager' => 3,    // Role for packing and dispatch
-            'auditor'                    => 4   // Role for audit
+            'auditor'                    => 4,   // Role for audit
+            'dispatched'                 => 5   // Role for audit
         ];
 
         // Get current order status
@@ -739,13 +739,13 @@ class OrderController extends Controller
         }
 
         // Get next role based on next status
-         $nextRole = array_search($sentToStatus, $sentTo);
+        $nextRole = array_search($sentToStatus, $sentTo);
 
         if ($nextRole) {
-            if( $nextStatus == '5' ){
+            if( $nextStatus == '13' ){
                 OrderActivity::create([
                     'order_id'  => $request->id,
-                    'activity'  => 'Order sent to dispatch manager',
+                    'activity'  => 'Order sent for shippment',
                     'added_by'  => auth()->user()->id,
                 ]);
             }else{
