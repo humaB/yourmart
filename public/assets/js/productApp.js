@@ -1404,7 +1404,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   computed: {
     isAllowed: function isAllowed() {
-      return ["admin", "auditor"].includes(this.role);
+      return ["admin", "auditor", "order collection manager"].includes(this.role);
     },
     filteredComments: function filteredComments() {
       if (!this.searchQuery) {

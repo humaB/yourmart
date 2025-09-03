@@ -1116,7 +1116,7 @@ export default {
     },
     computed: {
         isAllowed() {
-            return ["admin", "auditor"].includes(this.role);
+            return ["admin", "auditor", "order collection manager"].includes(this.role);
         },
         filteredComments() {
             if (!this.searchQuery) {
