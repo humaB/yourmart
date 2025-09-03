@@ -13224,7 +13224,87 @@ var render = function render() {
     }
   })]) : _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.address))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.address))])]), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._l(_vm.details.shops, function (shop, index) {
+    return _c("div", {
+      key: shop.id,
+      staticClass: "col-md-12 row"
+    }, [_c("div", {
+      staticClass: "col-md-12"
+    }, [_c("h5", [_vm._v("Shop " + _vm._s(index + 1) + " Details")]), _vm._v(" "), _c("hr")]), _vm._v(" "), _c("div", {
+      staticClass: "col-md-3 col-6"
+    }, [_c("strong", [_vm._v("Store Name:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+      staticClass: "text-muted"
+    }, [_vm._v(_vm._s(shop.store_name || "N/A"))])]), _vm._v(" "), _c("div", {
+      staticClass: "col-md-3 col-6"
+    }, [_c("strong", [_vm._v("Store URL:")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
+      staticClass: "text-muted"
+    }, [_vm._v(_vm._s(shop.store_url || "N/A"))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: shop.store_url,
+        expression: "shop.store_url"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: shop.store_url
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(shop, "store_url", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "col-md-3 col-6"
+    }, [_c("strong", [_vm._v("Social Media Link:")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
+      staticClass: "text-muted"
+    }, [_vm._v(_vm._s(shop.social_media_profile_link || "N/A"))]) : _c("input", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: shop.social_media_profile_link,
+        expression: "shop.social_media_profile_link"
+      }],
+      staticClass: "form-control",
+      attrs: {
+        type: "text"
+      },
+      domProps: {
+        value: shop.social_media_profile_link
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(shop, "social_media_profile_link", $event.target.value);
+        }
+      }
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "col-md-12 col-12"
+    }, [_c("strong", [_vm._v("Business Description:")]), _vm._v(" "), _c("br"), _vm._v(" "), !_vm.editMode ? _c("p", {
+      staticClass: "text-muted"
+    }, [_vm._v(_vm._s(shop.business_description || "N/A"))]) : _c("textarea", {
+      directives: [{
+        name: "model",
+        rawName: "v-model",
+        value: shop.business_description,
+        expression: "shop.business_description"
+      }],
+      staticClass: "form-control",
+      domProps: {
+        value: shop.business_description
+      },
+      on: {
+        input: function input($event) {
+          if ($event.target.composing) return;
+          _vm.$set(shop, "business_description", $event.target.value);
+        }
+      }
+    })])]);
+  }), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Bank Name:")]), _c("br"), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
@@ -13324,11 +13404,11 @@ var render = function render() {
     }
   })]) : _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_vm.details.profile_image ? _c("div", {
     staticClass: "col-md-4"
-  }, [_vm._m(3), _vm._v(" "), _c("img", {
+  }, [_vm._m(4), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(_vm.details.profile_image),
@@ -13336,7 +13416,7 @@ var render = function render() {
     }
   })]) : _vm._e(), _vm._v(" "), _vm.details.cnic_front_image ? _c("div", {
     staticClass: "col-md-4"
-  }, [_vm._m(4), _vm._v(" "), _c("img", {
+  }, [_vm._m(5), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(_vm.details.cnic_front_image),
@@ -13344,7 +13424,7 @@ var render = function render() {
     }
   })]) : _vm._e(), _vm._v(" "), _vm.details.cnic_back_image ? _c("div", {
     staticClass: "col-md-4"
-  }, [_vm._m(5), _vm._v(" "), _c("img", {
+  }, [_vm._m(6), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(_vm.details.cnic_back_image),
@@ -13410,6 +13490,12 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Basic Information")]), _vm._v(" "), _c("hr")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Store Information")]), _vm._v(" "), _c("hr")]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

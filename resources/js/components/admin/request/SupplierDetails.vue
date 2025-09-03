@@ -69,6 +69,45 @@
               <p v-else class="text-muted">{{ details.address }}</p>
             </div>
 
+                 <div class="col-md-12">
+                          <h5>Store Information</h5>
+                          <hr>
+                        </div>
+
+                        <div class="col-md-12 row" v-for="(shop, index) in details.shops" :key="shop.id">
+                          <div class="col-md-12">
+                            <h5>Shop {{ index + 1 }} Details</h5>
+                            <hr>
+                          </div>
+
+                          <div class="col-md-3 col-6">
+                            <strong>Store Name:</strong>
+                            <br>
+                            <p class="text-muted">{{ shop.store_name || 'N/A' }}</p>
+                          </div>
+
+                          <div class="col-md-3 col-6">
+                            <strong>Store URL:</strong>
+                            <br>
+                            <p v-if="!editMode" class="text-muted">{{ shop.store_url || 'N/A' }}</p>
+                            <input v-else type="text" v-model="shop.store_url" class="form-control">
+                          </div>
+
+                          <div class="col-md-3 col-6">
+                            <strong>Social Media Link:</strong>
+                            <br>
+                            <p v-if="!editMode" class="text-muted">{{ shop.social_media_profile_link || 'N/A' }}</p>
+                            <input v-else type="text" v-model="shop.social_media_profile_link" class="form-control">
+                          </div>
+
+                          <div class="col-md-12 col-12">
+                            <strong>Business Description:</strong>
+                            <br>
+                            <p v-if="!editMode" class="text-muted">{{ shop.business_description || 'N/A' }}</p>
+                            <textarea v-else v-model="shop.business_description" class="form-control"></textarea>
+                          </div>
+                        </div>
+
             <div class="col-md-12">
               <h5>Account Information</h5>
               <hr>
