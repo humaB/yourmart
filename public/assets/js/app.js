@@ -3563,21 +3563,35 @@ __webpack_require__.r(__webpack_exports__);
   props: ['helper', 'loader', 'supplierFaqs'],
   methods: {
     addFaq: function addFaq() {
-      if (!this.helper.title || !this.helper.description) {
+      var description = $('.summernote').summernote('code');
+      if (!this.helper.title || !description) {
         return swal({
           icon: 'error',
           title: 'Error',
           text: 'Title, Description field are required'
         });
       }
+      this.helper.description = description;
       this.$emit('addFaq', this.helper);
+      $('.summernote').summernote('code', '');
     },
     editFaq: function editFaq(faq) {
       faq.editing = true;
       faq.originalDescription = faq.description;
+      this.$nextTick(function () {
+        $(".descriptionEdit").summernote({
+          dialogsInBody: true,
+          minHeight: 200,
+          toolbar: [["style", ["bold"]], ["para", ["ul", "ol", "paragraph"]]]
+        });
+
+        // Initialize Summernote on the correct class
+        $('.descriptionEdit').summernote('code', faq.description);
+      });
     },
     saveFaq: function saveFaq(faq) {
       faq.editing = false;
+      faq.description = $('.descriptionEdit').summernote('code');
       this.$emit('updateSupplierFaq', faq);
     },
     cancelEdit: function cancelEdit(faq) {
@@ -19548,30 +19562,7 @@ var render = function render() {
         _vm.$set(_vm.helper, "title", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "form-group col-md-12"
-  }, [_vm._m(2), _vm._v(" "), _c("textarea", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.helper.description,
-      expression: "helper.description"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      rows: "3",
-      cols: "50"
-    },
-    domProps: {
-      value: _vm.helper.description
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.helper, "description", $event.target.value);
-      }
-    }
-  })]), _vm._v(" "), _c("div", {
+  })]), _vm._v(" "), _vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "col-md-12 text-right"
   }, [!_vm.loader ? _c("button", {
     staticClass: "btn btn-primary",
@@ -19619,27 +19610,12 @@ var render = function render() {
           _vm.$set(faq, "attachment", $event.target.value);
         }
       }
-    })]), _vm._v(" "), !faq.editing ? _c("td", [_vm._v(_vm._s(faq.description))]) : _c("td", [_c("textarea", {
-      directives: [{
-        name: "model",
-        rawName: "v-model",
-        value: faq.description,
-        expression: "faq.description"
-      }],
-      staticClass: "form-control",
-      attrs: {
-        rows: "3",
-        cols: "50"
-      },
+    })]), _vm._v(" "), !faq.editing ? _c("td", {
       domProps: {
-        value: faq.description
-      },
-      on: {
-        input: function input($event) {
-          if ($event.target.composing) return;
-          _vm.$set(faq, "description", $event.target.value);
-        }
+        innerHTML: _vm._s(faq.description)
       }
+    }) : _c("td", [_c("textarea", {
+      staticClass: "summernote descriptionEdit"
     })]), _vm._v(" "), _c("td", [_c("div", {
       staticClass: "btn-group"
     }, [!faq.editing ? _c("button", {
@@ -19697,9 +19673,13 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("label", [_vm._v("Description "), _c("span", {
+  return _c("div", {
+    staticClass: "form-group col-md-12"
+  }, [_c("label", [_vm._v("Description "), _c("span", {
     staticClass: "text-danger"
-  }, [_vm._v("*")])]);
+  }, [_vm._v("*")])]), _vm._v(" "), _c("textarea", {
+    staticClass: "summernote"
+  })]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

@@ -19,7 +19,7 @@
 
                         <div class="form-group col-md-12">
                             <label>Description <span class="text-danger">*</span></label>
-                             <textarea v-model="helper.description" rows="3" cols="50" class="form-control"></textarea>
+                            <textarea class="summernote"></textarea>
                         </div>
 
                         <div class="col-md-12 text-right">
@@ -45,9 +45,9 @@
                                     <td v-else>
                                         <input type="text" class="form-control" v-model="faq.attachment"/>
                                     </td>
-                                    <td v-if="!faq.editing">{{ faq.description }}</td>
+                                    <td v-if="!faq.editing" v-html="faq.description"></td>
                                     <td v-else>
-                                        <textarea v-model="faq.description" rows="3" cols="50" class="form-control"></textarea>
+                                        <textarea class="summernote descriptionEdit"></textarea>
                                     </td>
                                     <td>
                                         <div class="btn-group">
@@ -76,23 +76,39 @@ export default {
     props : ['helper', 'loader', 'supplierFaqs'],
     methods : {
         addFaq(){
-            if (!this.helper.title || !this.helper.description) {
+            const description = $('.summernote').summernote('code');
+            if (!this.helper.title || !description) {
                 return swal({
                     icon: 'error',
                     title: 'Error',
                     text: 'Title, Description field are required',
                 });
             }
-
+            this.helper.description = description;
             this.$emit('addFaq' , this.helper);
 
+             $('.summernote').summernote('code', '');
         },
         editFaq(faq) {
             faq.editing = true;
             faq.originalDescription = faq.description;
+            this.$nextTick(() => {
+                    $(".descriptionEdit").summernote({
+                        dialogsInBody: true,
+                        minHeight: 200,
+                        toolbar: [
+                            ["style", ["bold"]],
+                            ["para", ["ul", "ol", "paragraph"]]
+                        ]
+                    });
+
+                    // Initialize Summernote on the correct class
+                    $('.descriptionEdit').summernote('code', faq.description);
+            });
         },
         saveFaq(faq) {
             faq.editing = false;
+            faq.description = $('.descriptionEdit').summernote('code');
             this.$emit('updateSupplierFaq', faq)
         },
         cancelEdit(faq) {
