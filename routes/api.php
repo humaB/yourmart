@@ -137,6 +137,9 @@ Route::group(['prefix' => 'pages','middleware' => 'auth:sanctum'], function(){
 
         Route::get('/dropshipper-page',  [ LibraryPageController::class , 'fetchDropshipperSetting']);
         Route::post('/dropshipper-page',  [ LibraryPageController::class , 'dropshipperSettingStore']);
+        Route::get('/dropshipper-page/faqs',  [ LibraryPageController::class , 'fetchSupplierFaqs']);
+        Route::post('/dropshipper-page/faqs',  [ LibraryPageController::class , 'supplierFaqStore']);
+        Route::post('/dropshipper-page/faqs/update',  [ LibraryPageController::class , 'updateSupplierFaq']);
 
         Route::group(['prefix' => 'library-page'], function(){
             Route::get('/',  [ LibraryPageController::class , 'fetchCourses']);

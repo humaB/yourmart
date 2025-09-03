@@ -142,6 +142,38 @@ class LibraryPageController extends Controller
         return response()->json(['message' => 'DS/SP PAGE settings saved successfully!'], 200);
     }
 
+    public function fetchSupplierFaqs(){
+        $faqs = LibraryPageSetting::where('name', 'supplier-faq-page')->get();
+
+        return (new ResponseCollection( $faqs ))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function supplierFaqStore( Request $request ){
+
+        LibraryPageSetting::create([
+            'name'        => 'supplier-faq-page',
+            'description' => $request->description,
+            'attachment'  => $request->title,
+            'added_by'    => auth()->user()->id
+         ]);
+
+        return response()->json(['message' => 'DS/SP PAGE settings saved successfully!'], 200);
+    }
+
+
+    public function updateSupplierFaq( Request $request ){
+
+        LibraryPageSetting::where('id', $request->id)->update([
+            'description' => $request->description,
+            'attachment'  => $request->attachment,
+            'added_by'    => auth()->user()->id
+         ]);
+
+        return response()->json(['message' => 'DS/SP PAGE settings saved successfully!'], 200);
+    }
+
     public function image( $image  ){
         $filenameWithExt = $image->getClientOriginalName();
         //get just filename

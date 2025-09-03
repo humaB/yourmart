@@ -3,12 +3,10 @@
         <div class="card">
             <div class="card-header justify-content-between">
                 <h4>Dropshipper/Supplier Page settings</h4>
-
+                <button class="btn btn-primary" data-toggle="modal" data-target="#supplierFaq">Suppliers FAQ's</button>
             </div>
             <div class="card-body">
-                <!-- <div class="table-responsive" v-if="tableLoading">
-                    <bullet-list-loader :width="250"> </bullet-list-loader>
-                </div> -->
+
                 <div class="table-responsive">
                     <table class="table table-bordered" id="course_table">
                         <thead>
@@ -99,6 +97,7 @@
                 </div>
             </div>
         </div>
+        <SupplierFaq :helper="helper" :loader="btnLoading" :supplierFaqs="supplierFaqs" @addFaq="addFaq($event)" @updateSupplierFaq="updateSupplierFaq($event)"/>
 
     </section>
 </template>
@@ -107,11 +106,13 @@ import { BulletListLoader } from "vue-content-loader";
 import NewLibraryCourse from '../../components/pages/library/NewLibraryCourse.vue';
 import EditLibraryCourse from '../../components/pages/library/EditLibraryCourse.vue';
 import axios from 'axios';
+import SupplierFaq from "../../components/pages/supplier/SupplierFaq.vue";
 export default {
     name: "DropshipperSettingPage",
     components: {
         NewLibraryCourse,
         EditLibraryCourse,
+        SupplierFaq
     },
     data() {
         return {
@@ -133,12 +134,58 @@ export default {
                 video : "",
                 attachment : ""
             },
+            helper : {
+                title : "",
+                description : ""
+            },
+            supplierFaqs : []
         };
     },
     created() {
         this.settings();
+        this.fetchSupplierFaqs();
     },
     methods: {
+        fetchSupplierFaqs() {
+            this.tableLoading = true;
+            axios.get(this.api_url + "pages/settings/dropshipper-page/faqs")
+                .then((response) => {
+                    this.supplierFaqs = response.data.response;
+                    this.supplierFaqs = this.supplierFaqs.map(faq => ({
+                        ...faq,
+                        editing: false,
+                        originalDescription: faq.description
+                    }));
+                })
+        },
+        updateSupplierFaq( data ){
+            axios.post(this.api_url + "pages/settings/dropshipper-page/faqs/update", data)
+            .then((response) => {
+                this.fetchSupplierFaqs();
+                return swal({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data Successfully Updated',
+                });
+            })
+        },
+        addFaq( data ){
+            this.btnLoading = true;
+            axios.post(this.api_url + "pages/settings/dropshipper-page/faqs", data)
+            .then((response) => {
+                this.btnLoading = false;
+                this.helper = {
+                    title : "",
+                    description : ""
+                }
+                this.fetchSupplierFaqs();
+                return swal({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data Successfully added',
+                });
+            })
+        },
         setDropshipperAttachment( event ){
             this.dropshipper.attachment = event.target.files[0];
         },
