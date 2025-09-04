@@ -5268,7 +5268,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       ticketFilter: {
         status: '',
         ticket_number_type: '',
-        ticket_number: ''
+        ticket_number: '',
+        ticket_type: ''
       },
       totalTicketSum: {
         total_tickets: 0,
@@ -22947,6 +22948,104 @@ var render = function render() {
       value: "In-Process"
     }
   }, [_vm._v("In-Process")])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-8"
+  }, [_c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.ticketFilter.ticket_type,
+      expression: "ticketFilter.ticket_type"
+    }],
+    staticClass: "border form-control w-100",
+    attrs: {
+      name: "ticket_type"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.ticketFilter, "ticket_type", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: "",
+      selected: "",
+      disabled: ""
+    }
+  }, [_vm._v("Please Select Ticket Type")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Account Re-Activation"
+    }
+  }, [_vm._v("Account Re-Activation")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Order Issues"
+    }
+  }, [_vm._v("Order Issues")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Product Replacement Claim"
+    }
+  }, [_vm._v("Product Replacement Claim")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Payment Issues"
+    }
+  }, [_vm._v("Payment Issues")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Invoice Issues"
+    }
+  }, [_vm._v("Invoice Issues")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Change Your Bank  Account"
+    }
+  }, [_vm._v("Change Your Bank  Account")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Shipping Issues"
+    }
+  }, [_vm._v("Shipping Issues")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Services Issues"
+    }
+  }, [_vm._v("Services Issues")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Technical Guidance Required"
+    }
+  }, [_vm._v("Technical Guidance Required")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Business Report Issues"
+    }
+  }, [_vm._v("Business Report Issues")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Send feedback to YourMart"
+    }
+  }, [_vm._v("Send feedback to YourMart")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Suggestion for YourMart"
+    }
+  }, [_vm._v("Suggestion for YourMart")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Request for YourMart Services"
+    }
+  }, [_vm._v("Request for YourMart Services")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Request for New Product"
+    }
+  }, [_vm._v("Request for New Product")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Request for Earlier Payout"
+    }
+  }, [_vm._v("Request for Early Payout")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Product Stock/Information"
+    }
+  }, [_vm._v("Product Stock/Information")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Wrong Parcel Status"
+    }
+  }, [_vm._v("Wrong Parcel Status")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-2"
   }, [_c("div", {
     staticClass: "form-group"

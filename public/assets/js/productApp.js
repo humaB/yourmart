@@ -15557,7 +15557,7 @@ var render = function render() {
       staticClass: "badge badge-warning"
     }, [_vm._v("Ready for Return")]) : item.status == 13 ? _c("span", {
       staticClass: "badge badge-warning"
-    }, [_vm._v("Pending Shipment")]) : _vm._e()]), _vm._v(" "), item.status == 12 && (_vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "auditor") ? _c("td", [!item.re_attempt ? _c("button", {
+    }, [_vm._v("Shipment")]) : _vm._e()]), _vm._v(" "), item.status == 12 && (_vm.role == "admin" || _vm.role == "supervisor" || _vm.role == "auditor") ? _c("td", [!item.re_attempt ? _c("button", {
       staticClass: "btn btn-primary",
       attrs: {
         "data-toggle": "modal",

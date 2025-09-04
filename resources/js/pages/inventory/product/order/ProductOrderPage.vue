@@ -546,7 +546,7 @@
                                                             <span class="badge badge-warning"
                                                                 v-else-if="item.status == 12">Ready for Return</span>
                                                             <span class="badge badge-warning"
-                                                                v-else-if="item.status == 13">Pending Shipment</span>
+                                                                v-else-if="item.status == 13">Shipment</span>
                                                         </td>
                                                         <td v-if="item.status == 12 && (role == 'admin' || role == 'supervisor' || role == 'auditor')">
                                                             <button v-if="!item.re_attempt" class="btn btn-primary" @click="fetchDetail(item.id)" data-toggle="modal" data-target="#orderReattempt" title="Press to reattempt">

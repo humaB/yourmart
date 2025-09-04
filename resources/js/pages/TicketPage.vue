@@ -109,6 +109,28 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-8">
+                                <select name="ticket_type" class="border form-control w-100" v-model="ticketFilter.ticket_type">
+                                    <option value="" selected disabled>Please Select Ticket Type</option>
+                                    <option value="Account Re-Activation">Account Re-Activation</option>
+                                    <option value="Order Issues">Order Issues</option>
+                                    <option value="Product Replacement Claim">Product Replacement Claim</option>
+                                    <option value="Payment Issues">Payment Issues</option>
+                                    <option value="Invoice Issues">Invoice Issues</option>
+                                    <option value="Change Your Bank  Account">Change Your Bank  Account</option>
+                                    <option value="Shipping Issues">Shipping Issues</option>
+                                    <option value="Services Issues">Services Issues</option>
+                                    <option value="Technical Guidance Required">Technical Guidance Required</option>
+                                    <option value="Business Report Issues">Business Report Issues</option>
+                                    <option value="Send feedback to YourMart">Send feedback to YourMart</option>
+                                    <option value="Suggestion for YourMart">Suggestion for YourMart</option>
+                                    <option value="Request for YourMart Services">Request for YourMart Services</option>
+                                    <option value="Request for New Product">Request for New Product</option>
+                                    <option value="Request for Earlier Payout">Request for Early Payout</option>
+                                    <option value="Product Stock/Information">Product Stock/Information</option>
+                                    <option value="Wrong Parcel Status">Wrong Parcel Status</option>
+                                </select>
+                            </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <select v-model="ticketFilter.ticket_number_type" class="border form-control"
@@ -384,7 +406,8 @@ export default {
             ticketFilter: {
                 status: '',
                 ticket_number_type: '',
-                ticket_number: ''
+                ticket_number: '',
+                ticket_type : ''
             },
             totalTicketSum: {
                 total_tickets: 0,

@@ -30,6 +30,10 @@ class TicketController extends Controller
            $query->where('status', $request->status);
        }
 
+        if ($request->has('ticket_type') && $request->ticket_type != '') {
+           $query->where('ticket_type', $request->ticket_type);
+        }
+
        // Filter by ticket number or order number
        if ($request->has('ticket_number_type') && $request->ticket_number_type != '') {
            if ($request->ticket_number_type == 'yourmart_ticket_number' && $request->ticket_number != '') {
