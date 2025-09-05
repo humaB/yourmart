@@ -1213,10 +1213,10 @@ export default {
             return Math.round((statusCount / this.totalOrders.totalOrders) * 100);
         },
         formatDate(date) {
-            return date ? moment.utc(date).format('DD-MMM-YYYY') : 'N/A';
+            return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },
         formatTime(date) {
-            return date ? moment.utc(date).format('HH:mm:ss') : 'N/A';
+            return date ? moment(date).format('HH:mm:ss') : 'N/A';
         },
         formatPrice(price) {
             var string = parseFloat(price).toString();

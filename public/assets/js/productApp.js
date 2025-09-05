@@ -4597,10 +4597,10 @@ __webpack_require__.r(__webpack_exports__);
       return Math.round(statusCount / this.totalOrders.totalOrders * 100);
     },
     formatDate: function formatDate(date) {
-      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).format('DD-MMM-YYYY') : 'N/A';
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
     formatTime: function formatTime(date) {
-      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default().utc(date).format('HH:mm:ss') : 'N/A';
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('HH:mm:ss') : 'N/A';
     },
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
