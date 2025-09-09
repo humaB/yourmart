@@ -943,7 +943,7 @@ export default {
     if (orderDateTime.isBefore(today, 'day')) {
         return 'bg-success';
     }
-    let order = moment(datetime, 'HH');
+    let order = moment(datetime).format('HH');
     console.log(order);
 
     return orderDateTime.hour() >= 16 ? 'bg-danger' : 'bg-success';
