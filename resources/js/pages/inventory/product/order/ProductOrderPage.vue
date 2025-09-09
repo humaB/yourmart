@@ -937,17 +937,16 @@ export default {
     },
     methods: {
         getTimeClass(datetime) {
-    let orderDateTime = moment(datetime, 'YYYY-MM-DD HH:mm:ss');
-    let today = moment().startOf('day');
+            let orderDateTime = moment(datetime, 'YYYY-MM-DD HH:mm:ss');
+            let today = moment().startOf('day');
 
-    if (orderDateTime.isBefore(today, 'day')) {
-        return 'bg-success';
-    }
-    let order = moment(datetime).format('HH');
-    console.log(order);
+            if (orderDateTime.isBefore(today, 'day')) {
+                return 'bg-success';
+            }
+            let order = moment(datetime).format('HH');
 
-    return orderDateTime.hour() >= 16 ? 'bg-danger' : 'bg-success';
-},
+            return parseFloat(order) >= 16 ? 'bg-danger' : 'bg-success';
+        },
         saveInstructions( data ){
             let vm = this;
             vm.btnLoader = true;

@@ -4338,8 +4338,7 @@ __webpack_require__.r(__webpack_exports__);
         return 'bg-success';
       }
       var order = moment__WEBPACK_IMPORTED_MODULE_0___default()(datetime).format('HH');
-      console.log(order);
-      return orderDateTime.hour() >= 16 ? 'bg-danger' : 'bg-success';
+      return parseFloat(order) >= 16 ? 'bg-danger' : 'bg-success';
     },
     saveInstructions: function saveInstructions(data) {
       var vm = this;
