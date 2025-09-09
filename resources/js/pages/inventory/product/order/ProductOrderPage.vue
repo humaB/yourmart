@@ -937,23 +937,22 @@ export default {
     },
     methods: {
         getTimeClass(datetime) {
-            // Parse full datetime
             let orderDateTime = moment(datetime, 'YYYY-MM-DD HH:mm:ss');
-
-            // Today (at 00:00:00)
             let today = moment().startOf('day');
 
-            // If order is from a previous date → always green
+            console.log('Order Datetime:', orderDateTime.format());
+            console.log('Today:', today.format());
+
             if (orderDateTime.isBefore(today, 'day')) {
+                console.log('Order is from a previous date');
                 return 'bg-success';
             }
 
-            // Compare time only if order is today
-            let currentSeconds = orderDateTime.hour() * 3600
-                    + orderDateTime.minute() * 60
-                    + orderDateTime.second();
+            let currentSeconds = orderDateTime.hour() * 3600 + orderDateTime.minute() * 60 + orderDateTime.second();
+            let cutoffSeconds = 16 * 3600;
 
-            let cutoffSeconds = 16 * 3600; // 16:00:00
+            console.log('Current Seconds:', currentSeconds);
+            console.log('Cutoff Seconds:', cutoffSeconds);
 
             return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
         },

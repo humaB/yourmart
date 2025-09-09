@@ -4332,21 +4332,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getTimeClass: function getTimeClass(datetime) {
-      // Parse full datetime
       var orderDateTime = moment__WEBPACK_IMPORTED_MODULE_0___default()(datetime, 'YYYY-MM-DD HH:mm:ss');
-
-      // Today (at 00:00:00)
       var today = moment__WEBPACK_IMPORTED_MODULE_0___default()().startOf('day');
-
-      // If order is from a previous date → always green
+      console.log('Order Datetime:', orderDateTime.format());
+      console.log('Today:', today.format());
       if (orderDateTime.isBefore(today, 'day')) {
+        console.log('Order is from a previous date');
         return 'bg-success';
       }
-
-      // Compare time only if order is today
       var currentSeconds = orderDateTime.hour() * 3600 + orderDateTime.minute() * 60 + orderDateTime.second();
-      var cutoffSeconds = 16 * 3600; // 16:00:00
-
+      var cutoffSeconds = 16 * 3600;
+      console.log('Current Seconds:', currentSeconds);
+      console.log('Cutoff Seconds:', cutoffSeconds);
       return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
     },
     saveInstructions: function saveInstructions(data) {
