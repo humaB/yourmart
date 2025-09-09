@@ -949,9 +949,9 @@ export default {
             }
 
             // Compare time only if order is today
-            let currentSeconds = orderDateTime.hours() * 3600
-                                + orderDateTime.minutes() * 60
-                                + orderDateTime.seconds();
+            let currentSeconds = orderDateTime.hour() * 3600
+                    + orderDateTime.minute() * 60
+                    + orderDateTime.second();
 
             let cutoffSeconds = 16 * 3600; // 16:00:00
 

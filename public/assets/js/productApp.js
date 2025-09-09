@@ -4344,7 +4344,7 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       // Compare time only if order is today
-      var currentSeconds = orderDateTime.hours() * 3600 + orderDateTime.minutes() * 60 + orderDateTime.seconds();
+      var currentSeconds = orderDateTime.hour() * 3600 + orderDateTime.minute() * 60 + orderDateTime.second();
       var cutoffSeconds = 16 * 3600; // 16:00:00
 
       return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
