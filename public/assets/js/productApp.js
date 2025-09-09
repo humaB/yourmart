@@ -4337,7 +4337,8 @@ __webpack_require__.r(__webpack_exports__);
       if (orderDateTime.isBefore(today, 'day')) {
         return 'bg-success';
       }
-      console.log(orderDateTime.hour());
+      var order = moment__WEBPACK_IMPORTED_MODULE_0___default()(datetime, 'HH');
+      console.log(order);
       return orderDateTime.hour() >= 16 ? 'bg-danger' : 'bg-success';
     },
     saveInstructions: function saveInstructions(data) {
