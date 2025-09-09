@@ -937,25 +937,15 @@ export default {
     },
     methods: {
         getTimeClass(datetime) {
-            let orderDateTime = moment(datetime, 'YYYY-MM-DD HH:mm:ss');
-            let today = moment().startOf('day');
+    let orderDateTime = moment(datetime, 'YYYY-MM-DD HH:mm:ss');
+    let today = moment().startOf('day');
 
-            console.log('Order Datetime:', orderDateTime.format());
-            console.log('Today:', today.format());
+    if (orderDateTime.isBefore(today, 'day')) {
+        return 'bg-success';
+    }
 
-            if (orderDateTime.isBefore(today, 'day')) {
-                console.log('Order is from a previous date');
-                return 'bg-success';
-            }
-
-            let currentSeconds = orderDateTime.hour() * 3600 + orderDateTime.minute() * 60 + orderDateTime.second();
-            let cutoffSeconds = 16 * 3600;
-
-            console.log('Current Seconds:', currentSeconds);
-            console.log('Cutoff Seconds:', cutoffSeconds);
-
-            return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
-        },
+    return orderDateTime.hour() >= 16 ? 'bg-danger' : 'bg-success';
+},
         saveInstructions( data ){
             let vm = this;
             vm.btnLoader = true;

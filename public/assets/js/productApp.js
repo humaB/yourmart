@@ -4334,17 +4334,10 @@ __webpack_require__.r(__webpack_exports__);
     getTimeClass: function getTimeClass(datetime) {
       var orderDateTime = moment__WEBPACK_IMPORTED_MODULE_0___default()(datetime, 'YYYY-MM-DD HH:mm:ss');
       var today = moment__WEBPACK_IMPORTED_MODULE_0___default()().startOf('day');
-      console.log('Order Datetime:', orderDateTime.format());
-      console.log('Today:', today.format());
       if (orderDateTime.isBefore(today, 'day')) {
-        console.log('Order is from a previous date');
         return 'bg-success';
       }
-      var currentSeconds = orderDateTime.hour() * 3600 + orderDateTime.minute() * 60 + orderDateTime.second();
-      var cutoffSeconds = 16 * 3600;
-      console.log('Current Seconds:', currentSeconds);
-      console.log('Cutoff Seconds:', cutoffSeconds);
-      return currentSeconds >= cutoffSeconds ? 'bg-danger' : 'bg-success';
+      return orderDateTime.hour() >= 16 ? 'bg-danger' : 'bg-success';
     },
     saveInstructions: function saveInstructions(data) {
       var vm = this;
