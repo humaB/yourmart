@@ -3142,6 +3142,9 @@ var render = function render() {
         type: "text",
         placeholder: "Please scan QR code here"
       },
+      domProps: {
+        value: item.product && item.product.variation ? item.product.variation.sku : ""
+      },
       on: {
         keyup: function keyup($event) {
           return _vm.addedQr($event, index, item.id);

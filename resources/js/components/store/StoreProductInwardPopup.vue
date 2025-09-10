@@ -54,7 +54,13 @@
                                                              <span v-if="received[index] && received[index].qty > item.gate_received_quantity" style="color: red;">Received quantity cannot be greater than gate received quantity</span>
                                                     </td>
                                                     <td>
-                                                        <input  type="text" class="form-control" placeholder="Please scan QR code here" @keyup="addedQr($event, index, item.id)">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Please scan QR code here"
+                                                            :value="item.product && item.product.variation ? item.product.variation.sku : ''"
+                                                            @keyup="addedQr($event, index, item.id)"
+                                                        >
                                                     </td>
                                                     <td>
                                                         <button class="btn btn-sm btn-primary" @click="generateQRCode(index, received ,item.product, details.supplier)">
@@ -149,7 +155,7 @@ export default {
             const remainingQuantity = this.details.details[index].gate_received_quantity - this.details.details[index].store_received_quantity;
             if (value > remainingQuantity) {
                 this.received[index] = { qty: remainingQuantity, id  };
-                
+
                 return swal({
                         title: "Error",
                         text: "Received quantity cannot be greater than remaining quantity",

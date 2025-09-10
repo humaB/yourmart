@@ -212,7 +212,7 @@ class StoreInwardController extends Controller
         ->pluck('po_id');
 
         $data = PurchaseOrder::whereIn('id', $data)
-        ->with('supplier:id,full_name', 'details.product')
+        ->with('supplier:id,full_name', 'details.product.variation')
         ->where('status', '1')
         ->orderBy('id','desc')
         ->get();
