@@ -37,7 +37,7 @@ class Supplier extends Model
         'cnic_back_image',
         'profile_image',
         'status', // 0 => Pending | 1 => Approved | 2 => Rejected
-        
+
         'user_id'
     ];
 
@@ -55,6 +55,10 @@ class Supplier extends Model
 
     public function orders(){
         return $this->hasMany(PurchaseOrder::class,'supplier_id','id');
+    }
+
+    public function products(){
+        return $this->hasMany(SupplierProductAttachment::class,'supplier_id','id');
     }
 
 }

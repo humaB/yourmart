@@ -13304,7 +13304,11 @@ var render = function render() {
           _vm.$set(shop, "business_description", $event.target.value);
         }
       }
-    })])]);
+    })]), _vm._v(" "), _c("div", {
+      staticClass: "col-md-12 col-12"
+    }, [_c("strong", [_vm._v("Product Description:")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("p", {
+      staticClass: "text-muted"
+    }, [_vm._v(_vm._s(shop.prodcut_description || "N/A"))])])]);
   }), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("div", {
     staticClass: "col-md-3 col-6"
   }, [_c("strong", [_vm._v("Bank Name:")]), _c("br"), _vm._v(" "), _c("p", {
@@ -13405,11 +13409,26 @@ var render = function render() {
     }
   })]) : _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.details.payment_cycle || "N/A"))])])], 2), _vm._v(" "), _vm._m(4), _vm._v(" "), _vm.details && _vm.details.products && _vm.details.products.length ? _c("div", {
+    staticClass: "col-md-12 col-12 mt-3"
+  }, [_c("strong", [_vm._v("Product Attachments:")]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-2"
+  }, _vm._l(_vm.details.products, function (product, index) {
+    return _c("div", {
+      key: index,
+      staticClass: "col-md-3 col-6 mb-3"
+    }, [_c("img", {
+      staticClass: "img-fluid rounded shadow-sm",
+      attrs: {
+        src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(product.attachment),
+        alt: "Product Attachment"
+      }
+    })]);
+  }), 0)]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_vm.details.profile_image ? _c("div", {
     staticClass: "col-md-4"
-  }, [_vm._m(4), _vm._v(" "), _c("img", {
+  }, [_vm._m(5), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(_vm.details.profile_image),
@@ -13417,7 +13436,7 @@ var render = function render() {
     }
   })]) : _vm._e(), _vm._v(" "), _vm.details.cnic_front_image ? _c("div", {
     staticClass: "col-md-4"
-  }, [_vm._m(5), _vm._v(" "), _c("img", {
+  }, [_vm._m(6), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(_vm.details.cnic_front_image),
@@ -13425,7 +13444,7 @@ var render = function render() {
     }
   })]) : _vm._e(), _vm._v(" "), _vm.details.cnic_back_image ? _c("div", {
     staticClass: "col-md-4"
-  }, [_vm._m(6), _vm._v(" "), _c("img", {
+  }, [_vm._m(7), _vm._v(" "), _c("img", {
     staticClass: "img-fluid",
     attrs: {
       src: "".concat(_vm.web_url, "public/storage/uploads/supplier/").concat(_vm.details.cnic_back_image),
@@ -13503,6 +13522,12 @@ var staticRenderFns = [function () {
   return _c("div", {
     staticClass: "col-md-12"
   }, [_c("h5", [_vm._v("Account Information")]), _vm._v(" "), _c("hr")]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("h5", [_vm._v("Product Information")]), _vm._v(" "), _c("hr")]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;

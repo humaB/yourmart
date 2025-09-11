@@ -308,7 +308,7 @@ class SupplierController extends Controller
     public function fetchDetails(Request $request)
     {
 
-        $suppliers = Supplier::with('bank', 'city', 'shops')->where('id', $request->id)->get();
+        $suppliers = Supplier::with('bank', 'city', 'shops', 'products')->where('id', $request->id)->get();
 
         return (new ResponseCollection($suppliers))
             ->response()

@@ -106,6 +106,12 @@
                             <p v-if="!editMode" class="text-muted">{{ shop.business_description || 'N/A' }}</p>
                             <textarea v-else v-model="shop.business_description" class="form-control"></textarea>
                           </div>
+
+                            <div class="col-md-12 col-12">
+                                <strong>Product Description:</strong>
+                                <br>
+                                <p class="text-muted">{{ shop.prodcut_description || 'N/A' }}</p>
+                            </div>
                         </div>
 
             <div class="col-md-12">
@@ -150,6 +156,30 @@
               <p v-else class="text-muted">{{ details.payment_cycle || 'N/A' }}</p>
             </div>
           </div>
+
+          <div class="col-md-12">
+              <h5>Product Information</h5>
+              <hr>
+            </div>
+
+            <!-- Product Attachments -->
+                <div class="col-md-12 col-12 mt-3" v-if="details && details.products && details.products.length">
+                <strong>Product Attachments:</strong>
+                <div class="row mt-2">
+                    <div
+                    class="col-md-3 col-6 mb-3"
+                    v-for="(product, index) in details.products"
+                    :key="index"
+                    >
+                    <img
+                        :src="`${web_url}public/storage/uploads/supplier/${product.attachment}`"
+                        alt="Product Attachment"
+                        class="img-fluid rounded shadow-sm"
+                    />
+                    </div>
+                </div>
+                </div>
+
 
           <div class="row">
             <div class="col-md-4" v-if="details.profile_image">
