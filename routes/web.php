@@ -54,7 +54,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [LoginController::class, 'index'])->name('dashboard');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('profile-settings', [LoginController::class, 'profileSettingIndex'])->name('profile.setting');
-
+Route::get('/test-level/{order}/{success}/{revenue}', [DropshipperPreviewController::class, 'determineSellerLevel2']);
 
 Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
@@ -208,4 +208,4 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 
-Route::get('/test-level/{order}/{success}/{revenue}', [DropshipperPreviewController::class, 'determineSellerLevel2']);
+
