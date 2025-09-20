@@ -76,8 +76,9 @@ export default {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + "/",
             filter: {
                 supplier: { code: "0", label: "Select from the following" },
-                from: new Date().toISOString().substr(0, 10),
+                from: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().substr(0, 10),
                 to: new Date().toISOString().substr(0, 10),
+
             },
             supplierStats : {
                 totalStockValue: 0,
@@ -105,9 +106,9 @@ export default {
         }
     },
     created() {
-        this.fetchData({ from: "", to: "" });
+        this.fetchData(this.filter);
         this.fetchSupplier();
-        this.fetchProducts({ from: "", to: "" });
+        this.fetchProducts(this.filter);
     },
     methods: {
         submitFunction() {
