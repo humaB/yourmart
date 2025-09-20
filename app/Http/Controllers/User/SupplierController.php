@@ -12,6 +12,7 @@ use App\Models\Account\AccountHead;
 use App\Models\Account\AccountTransaction;
 use App\Models\Account\Bank;
 use App\Models\Account\Cash;
+use App\Models\CustomerBank;
 use App\Models\Inventory\Order\OrderItemSupplier;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
@@ -464,12 +465,17 @@ class SupplierController extends Controller
             'email'   => $request->input('email'),
         ]);
 
+        $customerBank = CustomerBank::firstOrCreate(
+            ['name' => $request->bank['name']], // Conditions to check
+        );
+
         $supplier->update([
             'full_name'       => $request->input('full_name'),
             'email'           => $request->input('email'),
             'cnic_number'     => $request->input('cnic_number'),
             'whatsapp_number' => $request->input('whatsapp_number'),
             'address'         => $request->input('address'),
+            'bank_id'         => $customerBank->id,
             'account_number'  => $request->input('account_number'),
             'account_title'   => $request->input('account_title'),
             'account_iban'    => $request->input('account_iban'),

@@ -56,6 +56,7 @@
             :details="details"
             :loader="btnLoader"
             @decision="decision($event)"
+            @updateInformation="updateInformation($event)"
           />
 
                 <!-- Summary PRINT -->
@@ -104,6 +105,29 @@ import SupplierDetails from "../../../components/admin/request/SupplierDetails.v
             this.fetchRecord();
         },
         methods : {
+            updateInformation(data) {
+                let vm = this;
+                axios
+                    .post(this.api_url + "suppliers", data)
+                    .then((response) => {
+                        vm.fetchRecord(vm.page);
+
+                        return swal({
+                            title: "Success",
+                            text: 'Information updated successfully',
+                            icon: "success",
+                            timer: 3000,
+                        });
+                    }).catch((err) => {
+
+                        return swal({
+                            title: "Error",
+                            text: err.response.data.response[0],
+                            icon: "error",
+                            timer: 3000,
+                        });
+                    });
+            },
             printRequest( id ){
                 this.id = id;
                 const form = this.$refs.requestForm;

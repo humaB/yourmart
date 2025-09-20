@@ -121,7 +121,8 @@
 
             <div class="col-md-3 col-6">
               <strong>Bank Name:</strong><br>
-              <p class="text-muted">{{ details.bank ? details.bank.name : '-' }}</p>
+                <p class="text-muted" v-if="!isEditing">{{ details.bank ? details.bank.name : '-' }}</p>
+                <v-select :options="banks" v-model="details.bank.name" v-else></v-select>
             </div>
 
             <div class="col-md-3 col-6">
@@ -213,6 +214,8 @@
 
 
 <script>
+import { Banks } from '../../../data/banks';
+
 export default {
     name: 'SupplierDetails',
     props: ['details', 'loader'],
@@ -220,6 +223,7 @@ export default {
           return {
             web_url : process.env.MIX_WEB_URL,
             isEditing: false,
+            banks : Banks,
           };
       },
     methods : {
