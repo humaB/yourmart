@@ -126,7 +126,11 @@
                         <!-- Example empty rows -->
                         <tr v-for="(row, index) in supplierStats.products" :key="index">
                             <td>{{ index + 1 }}</td>
-                            <td>{{ row.product_name }}</td>
+                            <td>
+                                <a :href="web_url+'products/'+row.slug" target="_blank">
+                                    {{ row.product_name }}
+                                </a>
+                            </td>
                             <td>{{ row.sku }}</td>
                             <td>{{ row.stock_in_qty }}</td>
                             <td>{{ row.stock_in_price }}</td>
@@ -152,6 +156,11 @@
 export default {
     name: "SupplierInventoryTab",
     props : [ 'supplierStats', 'filter', 'suppliers'],
+    data(){
+        return {
+            web_url: MIX_WEB_URL,
+        }
+    },
     methods : {
         formatPrice(price) {
             var string = parseFloat(price).toString();

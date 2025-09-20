@@ -4983,6 +4983,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SupplierInventoryTab",
   props: ['supplierStats', 'filter', 'suppliers'],
+  data: function data() {
+    return {
+      web_url: MIX_WEB_URL
+    };
+  },
   methods: {
     formatPrice: function formatPrice(price) {
       var string = parseFloat(price).toString();
@@ -22998,7 +23003,12 @@ var render = function render() {
   }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.supplierStats.products, function (row, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.sold_out_qty * row.stock_in_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount)))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_c("a", {
+      attrs: {
+        href: _vm.web_url + "products/" + row.slug,
+        target: "_blank"
+      }
+    }, [_vm._v("\n                                " + _vm._s(row.product_name) + "\n                            ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.sold_out_qty * row.stock_in_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount)))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-primary",
       attrs: {
         "data-toggle": "modal",
