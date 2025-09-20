@@ -4985,7 +4985,7 @@ __webpack_require__.r(__webpack_exports__);
   props: ['supplierStats', 'filter', 'suppliers'],
   data: function data() {
     return {
-      web_url: MIX_WEB_URL
+      web_url: "https://yourmart.pk/"
     };
   },
   methods: {

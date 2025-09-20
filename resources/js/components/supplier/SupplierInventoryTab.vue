@@ -158,7 +158,7 @@ export default {
     props : [ 'supplierStats', 'filter', 'suppliers'],
     data(){
         return {
-            web_url: MIX_WEB_URL,
+            web_url : process.env.MIX_WEB_URL,
         }
     },
     methods : {
