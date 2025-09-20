@@ -207,4 +207,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notification');
 });
 
- Route::get('/test-level/{order}/{success}/{revenue}', [DropshipperPreviewController::class, 'determineSellerLevel2'])->name('couriers');
+
+Route::get('/test-level/{order}/{success}/{revenue}', [DropshipperPreviewController::class, 'determineSellerLevel2']);
