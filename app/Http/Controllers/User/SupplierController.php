@@ -72,13 +72,13 @@ class SupplierController extends Controller
     public function fetchData(Request $request)
     {
 
-        $supplierId = $request->supplier['code'] ?? null;
+        $supplierId = $request->supplier['code'] == 0 ? null : $request->supplier['code'];
         $from = $request->from;
         $to   = $request->to;
 
         // ---------------- SUPPLIER STOCK ----------------
         $supplierReceived = StoreReceivedDetail::when(
-            isset($supplierId) && $supplierId !== '',
+            isset($supplierId),
             fn($q) => $q->where('supplier_id', $supplierId),
             fn($q) => $q->where('supplier_id', '>', 0)
         )
