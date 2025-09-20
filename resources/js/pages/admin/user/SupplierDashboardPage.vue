@@ -27,6 +27,7 @@
                                 <div class="col-12 col-md-12 col-lg-12">
                                     <SupplierInventoryTab :supplierStats="supplierStats" :suppliers="suppliers" :filter='filter'
                                         @fetchPurchaseOrders="fetchPurchaseOrders($event)"
+                                        @submitFunction="submitFunction($event)"
                                     />
                                 </div>
                             </div>
@@ -34,7 +35,8 @@
                                 aria-labelledby="yourmart-tab3">
                                 <div class="col-12 col-md-12 col-lg-12">
                                      <YourmartInventoryTab :yourmartStats="yourmartStats" :suppliers="suppliers" :filter='filter'
-
+                                        @fetchPurchaseOrders="fetchPurchaseOrders($event)"
+                                        @submitFunction="submitFunction($event)"
                                     />
                                 </div>
                             </div>
@@ -42,7 +44,8 @@
                                 aria-labelledby="overall-tab3">
                                 <div class="col-12 col-md-12 col-lg-12">
                                      <OverallInventoryTab :overallStats="overallStats" :suppliers="suppliers" :filter='filter'
-
+                                        @fetchPurchaseOrders="fetchPurchaseOrders($event)"
+                                        @submitFunction="submitFunction($event)"
                                     />
                                 </div>
                             </div>

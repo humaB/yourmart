@@ -161,6 +161,9 @@ export default {
         },
         fetchPurchaseOrders( slug, type){
             this.$emit('fetchPurchaseOrders', { slug, type });
+        },
+        submitFunction(){
+            this.$emit('submitFunction')
         }
     }
 }

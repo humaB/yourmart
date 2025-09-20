@@ -4937,6 +4937,9 @@ __webpack_require__.r(__webpack_exports__);
         slug: slug,
         type: type
       });
+    },
+    submitFunction: function submitFunction() {
+      this.$emit('submitFunction');
     }
   }
 });
@@ -4990,6 +4993,9 @@ __webpack_require__.r(__webpack_exports__);
         slug: slug,
         type: type
       });
+    },
+    submitFunction: function submitFunction() {
+      this.$emit('submitFunction');
     }
   }
 });
@@ -5020,6 +5026,9 @@ __webpack_require__.r(__webpack_exports__);
         slug: slug,
         type: type
       });
+    },
+    submitFunction: function submitFunction() {
+      this.$emit('submitFunction');
     }
   }
 });
@@ -27031,6 +27040,9 @@ var render = function render() {
     on: {
       fetchPurchaseOrders: function fetchPurchaseOrders($event) {
         return _vm.fetchPurchaseOrders($event);
+      },
+      submitFunction: function submitFunction($event) {
+        return _vm.submitFunction($event);
       }
     }
   })], 1)]), _vm._v(" "), _c("div", {
@@ -27047,6 +27059,14 @@ var render = function render() {
       yourmartStats: _vm.yourmartStats,
       suppliers: _vm.suppliers,
       filter: _vm.filter
+    },
+    on: {
+      fetchPurchaseOrders: function fetchPurchaseOrders($event) {
+        return _vm.fetchPurchaseOrders($event);
+      },
+      submitFunction: function submitFunction($event) {
+        return _vm.submitFunction($event);
+      }
     }
   })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "tab-pane fade",
@@ -27062,6 +27082,14 @@ var render = function render() {
       overallStats: _vm.overallStats,
       suppliers: _vm.suppliers,
       filter: _vm.filter
+    },
+    on: {
+      fetchPurchaseOrders: function fetchPurchaseOrders($event) {
+        return _vm.fetchPurchaseOrders($event);
+      },
+      submitFunction: function submitFunction($event) {
+        return _vm.submitFunction($event);
+      }
     }
   })], 1)])])])])])]), _vm._v(" "), _c("PurchaseOrderDetails", {
     attrs: {
