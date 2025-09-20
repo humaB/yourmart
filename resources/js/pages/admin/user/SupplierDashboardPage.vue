@@ -4,195 +4,119 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <!-- Stock -->
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-purple">
-                                        <i class="fas fa-boxes"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{ formatPrice(totalStockValue) }}
-                                                </h3>
-                                                <span class="text-muted">Stock</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                        <div class="row col-md-12 mb-5">
+                            <ul class="nav nav-pills" id="myTab3" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="supplier-tab3" data-toggle="tab" href="#supplier3" role="tab"
+                                        aria-controls="supplier" aria-selected="true">Supplier Inventory</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="yourmart-tab3" data-toggle="tab" href="#yourmart3" role="tab"
+                                        aria-controls="yourmart" aria-selected="false">YourMart Inventory</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="overall-tab3" data-toggle="tab" href="#overall3" role="tab"
+                                        aria-controls="overall" aria-selected="false">Over all</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-content" id="myTabContent2">
+
+                            <div class="tab-pane fade show active" id="supplier3" role="tabpanel"
+                                aria-labelledby="supplier-tab3">
+                                <div class="col-12 col-md-12 col-lg-12">
+                                    <SupplierInventoryTab :supplierStats="supplierStats" :suppliers="suppliers" :filter='filter'
+                                        @fetchPurchaseOrders="fetchPurchaseOrders($event)"
+                                    />
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="yourmart3" role="tabpanel"
+                                aria-labelledby="yourmart-tab3">
+                                <div class="col-12 col-md-12 col-lg-12">
+                                     <YourmartInventoryTab :yourmartStats="yourmartStats" :suppliers="suppliers" :filter='filter'
 
-                            <!-- Sold Out -->
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-green">
-                                        <i class="fas fa-shopping-basket"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{ totalSoldOutValue }}
-                                                </h3>
-                                                <span class="text-muted">Sold Out</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    />
                                 </div>
                             </div>
+                            <div class="tab-pane fade" id="overall3" role="tabpanel"
+                                aria-labelledby="overall-tab3">
+                                <div class="col-12 col-md-12 col-lg-12">
+                                     <OverallInventoryTab :overallStats="overallStats" :suppliers="suppliers" :filter='filter'
 
-                            <!-- Payment Received -->
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-cyan">
-                                        <i class="fas fa-credit-card"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{ totalPaid }}
-                                                </h3>
-                                                <span class="text-muted">Payment Received</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Balance -->
-                            <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                                <div class="card card-statistic-1">
-                                    <div class="card-icon l-bg-orange">
-                                        <i class="fas fa-wallet"></i>
-                                    </div>
-                                    <div class="card-wrap">
-                                        <div class="padding-20">
-                                            <div class="text-right">
-                                                <h3 class="font-light mb-0">
-                                                    <i class="ti-arrow-up text-success"></i> {{ balance }}
-                                                </h3>
-                                                <span class="text-muted">Balance</span>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    />
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form @submit.prevent="submitFunction">
-                                    <div class="row">
 
-                                        <div class="col-md-3 form-group">
-                                            <label for="date">Supplier</label>
-                                             <v-select :options="suppliers" v-model="filter.supplier"></v-select>
-                                        </div>
-                                        <div class="col-md-3 form-group">
-                                            <label for="date">From</label>
-                                            <input type="date" name="from" class="form-control" v-model="filter.from" />
-                                        </div>
-                                        <div class="col-md-3 form-group">
-                                            <label for="date">To</label>
-                                            <input type="date" name="to" class="form-control" v-model="filter.to" />
-                                        </div>
-                                        <div class="col-md-3 form-group pt-4">
-                                            <button class="btn btn-block btn-primary">Filter</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <table class="table table-bordered text-center align-middle" id="dataTable">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2">#</th>
-                                    <th rowspan="2">Product</th>
-                                    <th rowspan="2">SKU</th>
-                                    <th colspan="3">STOCK IN-TAKE</th>
-                                    <th colspan="2">SOLD OUT</th>
-                                    <th colspan="2">BALANCE</th>
-                                    <th rowspan="2">P.O.s</th>
-                                </tr>
-                                <tr>
-                                    <th>QTY</th>
-                                    <th>Price</th>
-                                    <th>Amount</th>
-                                    <th>QTY</th>
-                                    <th>Amount</th>
-                                    <th>QTY</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Example empty rows -->
-                                     <tr v-for="(row, index) in products" :key="index">
-                                        <td>{{ index + 1 }}</td>
-                                        <td>{{ row.product_name }}</td>
-                                        <td>{{ row.sku }}</td>
-                                        <td>{{ row.stock_in_qty }}</td>
-                                        <td>{{ row.stock_in_price }}</td>
-                                        <td>{{ formatPrice(row.stock_in_amount) }}</td>
-                                        <td>{{ row.sold_out_qty }}</td>
-                                        <td>{{ formatPrice(row.sold_out_qty * row.stock_in_price ) }}</td>
-                                        <td>{{ row.balance_qty }}</td>
-                                        <td>{{ formatPrice(row.balance_amount) }}</td>
-                                        <td>
-                                            <button class="btn btn-primary" @click="fetchPurchaseOrders(row.slug)" data-toggle="modal" data-target="#purchaseOrderDetails">
-                                                <i class="fa fa-eye"></i>
-                                            </button>
-                                        </td>
-                                        </tr>
-                            </tbody>
-                        </table>
+
                     </div>
                 </div>
             </div>
         </div>
-        <PurchaseOrderDetails :purchaseOrders="purchaseOrders"/>
+        <PurchaseOrderDetails :purchaseOrders="purchaseOrders" />
     </div>
 </template>
 <script>
+import OverallInventoryTab from '../../../components/supplier/OverallInventoryTab.vue';
 import PurchaseOrderDetails from '../../../components/supplier/PurchaseOrderDetails.vue';
+import SupplierInventoryTab from '../../../components/supplier/SupplierInventoryTab.vue';
+import YourmartInventoryTab from '../../../components/supplier/YourmartInventoryTab.vue';
 
 export default {
     name: "SupplierDashboardPage",
-    components : {
-        PurchaseOrderDetails
+    components: {
+        PurchaseOrderDetails,
+        SupplierInventoryTab,
+        YourmartInventoryTab,
+        OverallInventoryTab
     },
-    data(){
+    data() {
         return {
             api_url: window.location.origin + process.env.MIX_API_URL,
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + "/",
             filter: {
-                supplier : { code : "0" , label : "Select from the following"},
+                supplier: { code: "0", label: "Select from the following" },
                 from: new Date().toISOString().substr(0, 10),
                 to: new Date().toISOString().substr(0, 10),
             },
-            totalStockValue : 0,
-            totalSoldOutValue : 0,
-            totalPaid : 0,
-            balance : 0,
-            products : [],
-            purchaseOrders : [],
-            suppliers : []
+            supplierStats : {
+                totalStockValue: 0,
+                totalSoldOutValue: 0,
+                totalPaid: 0,
+                balance: 0,
+                products: [],
+            },
+            yourmartStats : {
+                totalStockValue: 0,
+                totalSoldOutValue: 0,
+                totalPaid: 0,
+                balance: 0,
+                products: [],
+            },
+            overallStats : {
+                totalStockValue: 0,
+                totalSoldOutValue: 0,
+                totalPaid: 0,
+                balance: 0,
+                products: [],
+            },
+            purchaseOrders: [],
+            suppliers: []
         }
     },
-    created(){
-        this.fetchData({ from : "", to : ""});
+    created() {
+        this.fetchData({ from: "", to: "" });
         this.fetchSupplier();
-        this.fetchProducts({ from : "", to : ""} );
+        this.fetchProducts({ from: "", to: "" });
     },
-    methods : {
-        submitFunction(){
+    methods: {
+        submitFunction() {
             this.fetchProducts(this.filter);
             this.fetchData(this.filter);
         },
-        fetchPurchaseOrders( slug ){
+        fetchPurchaseOrders(data) {
             axios
-                .post(this.api_url + "suppliers/purchase-orders", { slug })
+                .post(this.api_url + "suppliers/purchase-orders", data)
                 .then((response) => {
                     const result = response.data.response;
                     this.purchaseOrders = result;
@@ -224,16 +148,27 @@ export default {
                 .post(this.api_url + "suppliers/dashboard", filter)
                 .then((response) => {
                     const result = response.data.response;
-                    this.totalStockValue = result.totalStockValue;
-                    this.totalSoldOutValue = result.totalSoldOutValue;
-                    this.totalPaid = result.totalPaid;
-                    this.balance = result.balance;
+
+                    this.supplierStats.totalStockValue = result.supplierReceived;
+                    this.supplierStats.totalSoldOutValue = result.supplierIssued;
+                    this.supplierStats.totalPaid = result.supplierPaid;
+                    this.supplierStats.balance = result.supplierBalance;
+
+                    this.yourmartStats.totalStockValue = result.yourmartReceived;
+                    this.yourmartStats.totalSoldOutValue = result.yourmartIssued;
+                    this.yourmartStats.totalPaid = result.yourmartPaid;
+                    this.yourmartStats.balance = result.yourmartBalance;
+
+                    this.overallStats.totalStockValue = result.overallReceived;
+                    this.overallStats.totalSoldOutValue = result.overallIssued;
+                    this.overallStats.totalPaid = result.overallPaid;
+                    this.overallStats.balance = result.overallBalance;
                 })
                 .catch((err) => {
 
                 });
         },
-        fetchProducts( filter ) {
+        fetchProducts(filter) {
             if ($.fn.DataTable.isDataTable("#dataTable")) {
                 $('#dataTable').DataTable().destroy();
             }
@@ -241,22 +176,33 @@ export default {
                 .post(this.api_url + "suppliers/products", filter)
                 .then((response) => {
                     const result = response.data.response;
-                    this.products = result;
+                    this.supplierStats.products = result.supplier;
+                    this.yourmartStats.products = result.yourmart;
+                    this.overallStats.products = result.overall;
+
                     setTimeout(function () {
-                    $("#dataTable").DataTable({
-                        "bSort": false,
-                        dom: 'Bfrtip',
-                        buttons: [
-                            {
-                                extend: 'copy',
-                                title: 'Booked Sale Details',
-                            }, 'csv', {
-                                extend: 'excel',
-                                title: 'Booked Sale Details',
-                            }
-                        ]
-                    });
-                }, 300);
+                        $("#dataTable").DataTable({
+                            "bSort": false,
+                            dom: 'Bfrtip',
+                            buttons: ['excel']
+                        });
+                    }, 300);
+
+                    setTimeout(function () {
+                        $("#dataTable2").DataTable({
+                            "bSort": false,
+                            dom: 'Bfrtip',
+                            buttons: ['excel']
+                        });
+                    }, 300);
+
+                    setTimeout(function () {
+                        $("#dataTable3").DataTable({
+                            "bSort": false,
+                            dom: 'Bfrtip',
+                            buttons: ['excel']
+                        });
+                    }, 300);
                 })
                 .catch((err) => {
 

@@ -4913,6 +4913,36 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=script&lang=js":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=script&lang=js ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "OverallInventoryTab",
+  props: ['overallStats', 'filter', 'suppliers'],
+  methods: {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    fetchPurchaseOrders: function fetchPurchaseOrders(slug, type) {
+      this.$emit('fetchPurchaseOrders', {
+        slug: slug,
+        type: type
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=script&lang=js":
 /*!***********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=script&lang=js ***!
@@ -4930,6 +4960,66 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     formatDate: function formatDate(date) {
       return date ? moment(date).format("DD-MMM-YYYY") : "N/A";
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=script&lang=js":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "SupplierInventoryTab",
+  props: ['supplierStats', 'filter', 'suppliers'],
+  methods: {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    fetchPurchaseOrders: function fetchPurchaseOrders(slug, type) {
+      this.$emit('fetchPurchaseOrders', {
+        slug: slug,
+        type: type
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=script&lang=js":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=script&lang=js ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: "YourmartInventoryTab",
+  props: ['yourmartStats', 'filter', 'suppliers'],
+  methods: {
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    fetchPurchaseOrders: function fetchPurchaseOrders(slug, type) {
+      this.$emit('fetchPurchaseOrders', {
+        slug: slug,
+        type: type
+      });
     }
   }
 });
@@ -6954,12 +7044,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _components_supplier_PurchaseOrderDetails_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/supplier/PurchaseOrderDetails.vue */ "./resources/js/components/supplier/PurchaseOrderDetails.vue");
+/* harmony import */ var _components_supplier_OverallInventoryTab_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../components/supplier/OverallInventoryTab.vue */ "./resources/js/components/supplier/OverallInventoryTab.vue");
+/* harmony import */ var _components_supplier_PurchaseOrderDetails_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/supplier/PurchaseOrderDetails.vue */ "./resources/js/components/supplier/PurchaseOrderDetails.vue");
+/* harmony import */ var _components_supplier_SupplierInventoryTab_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../components/supplier/SupplierInventoryTab.vue */ "./resources/js/components/supplier/SupplierInventoryTab.vue");
+/* harmony import */ var _components_supplier_YourmartInventoryTab_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/supplier/YourmartInventoryTab.vue */ "./resources/js/components/supplier/YourmartInventoryTab.vue");
+
+
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "SupplierDashboardPage",
   components: {
-    PurchaseOrderDetails: _components_supplier_PurchaseOrderDetails_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    PurchaseOrderDetails: _components_supplier_PurchaseOrderDetails_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    SupplierInventoryTab: _components_supplier_SupplierInventoryTab_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    YourmartInventoryTab: _components_supplier_YourmartInventoryTab_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    OverallInventoryTab: _components_supplier_OverallInventoryTab_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
@@ -6973,11 +7072,27 @@ __webpack_require__.r(__webpack_exports__);
         from: new Date().toISOString().substr(0, 10),
         to: new Date().toISOString().substr(0, 10)
       },
-      totalStockValue: 0,
-      totalSoldOutValue: 0,
-      totalPaid: 0,
-      balance: 0,
-      products: [],
+      supplierStats: {
+        totalStockValue: 0,
+        totalSoldOutValue: 0,
+        totalPaid: 0,
+        balance: 0,
+        products: []
+      },
+      yourmartStats: {
+        totalStockValue: 0,
+        totalSoldOutValue: 0,
+        totalPaid: 0,
+        balance: 0,
+        products: []
+      },
+      overallStats: {
+        totalStockValue: 0,
+        totalSoldOutValue: 0,
+        totalPaid: 0,
+        balance: 0,
+        products: []
+      },
       purchaseOrders: [],
       suppliers: []
     };
@@ -6998,11 +7113,9 @@ __webpack_require__.r(__webpack_exports__);
       this.fetchProducts(this.filter);
       this.fetchData(this.filter);
     },
-    fetchPurchaseOrders: function fetchPurchaseOrders(slug) {
+    fetchPurchaseOrders: function fetchPurchaseOrders(data) {
       var _this = this;
-      axios.post(this.api_url + "suppliers/purchase-orders", {
-        slug: slug
-      }).then(function (response) {
+      axios.post(this.api_url + "suppliers/purchase-orders", data).then(function (response) {
         var result = response.data.response;
         _this.purchaseOrders = result;
       })["catch"](function (err) {});
@@ -7022,10 +7135,18 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
       axios.post(this.api_url + "suppliers/dashboard", filter).then(function (response) {
         var result = response.data.response;
-        _this3.totalStockValue = result.totalStockValue;
-        _this3.totalSoldOutValue = result.totalSoldOutValue;
-        _this3.totalPaid = result.totalPaid;
-        _this3.balance = result.balance;
+        _this3.supplierStats.totalStockValue = result.supplierReceived;
+        _this3.supplierStats.totalSoldOutValue = result.supplierIssued;
+        _this3.supplierStats.totalPaid = result.supplierPaid;
+        _this3.supplierStats.balance = result.supplierBalance;
+        _this3.yourmartStats.totalStockValue = result.yourmartReceived;
+        _this3.yourmartStats.totalSoldOutValue = result.yourmartIssued;
+        _this3.yourmartStats.totalPaid = result.yourmartPaid;
+        _this3.yourmartStats.balance = result.yourmartBalance;
+        _this3.overallStats.totalStockValue = result.overallReceived;
+        _this3.overallStats.totalSoldOutValue = result.overallIssued;
+        _this3.overallStats.totalPaid = result.overallPaid;
+        _this3.overallStats.balance = result.overallBalance;
       })["catch"](function (err) {});
     },
     fetchProducts: function fetchProducts(filter) {
@@ -7035,18 +7156,28 @@ __webpack_require__.r(__webpack_exports__);
       }
       axios.post(this.api_url + "suppliers/products", filter).then(function (response) {
         var result = response.data.response;
-        _this4.products = result;
+        _this4.supplierStats.products = result.supplier;
+        _this4.yourmartStats.products = result.yourmart;
+        _this4.overallStats.products = result.overall;
         setTimeout(function () {
           $("#dataTable").DataTable({
             "bSort": false,
             dom: 'Bfrtip',
-            buttons: [{
-              extend: 'copy',
-              title: 'Booked Sale Details'
-            }, 'csv', {
-              extend: 'excel',
-              title: 'Booked Sale Details'
-            }]
+            buttons: ['excel']
+          });
+        }, 300);
+        setTimeout(function () {
+          $("#dataTable2").DataTable({
+            "bSort": false,
+            dom: 'Bfrtip',
+            buttons: ['excel']
+          });
+        }, 300);
+        setTimeout(function () {
+          $("#dataTable3").DataTable({
+            "bSort": false,
+            dom: 'Bfrtip',
+            buttons: ['excel']
           });
         }, 300);
       })["catch"](function (err) {});
@@ -22317,6 +22448,275 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=template&id=670d64ee":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=template&id=670d64ee ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.overallStats.totalStockValue)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Stock")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.overallStats.totalSoldOutValue)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Sold Out")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.overallStats.totalPaid)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Payment Received")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.overallStats.balance)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Balance")])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("Supplier")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.suppliers
+    },
+    model: {
+      value: _vm.filter.supplier,
+      callback: function callback($$v) {
+        _vm.$set(_vm.filter, "supplier", $$v);
+      },
+      expression: "filter.supplier"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "from"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "to"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(4)])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered text-center align-middle w-100",
+    attrs: {
+      id: "dataTable3"
+    }
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.overallStats.products, function (row, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.sold_out_qty * row.stock_in_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount)))]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#purchaseOrderDetails"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchPurchaseOrders(row.slug, "overall");
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })])])]);
+  }), 0)])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-shopping-basket"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-credit-card"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-wallet"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-3 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("Product")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("SKU")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "3"
+    }
+  }, [_vm._v("STOCK IN-TAKE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v("SOLD OUT")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v("BALANCE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("P.O.s")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=template&id=c6444e06":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=template&id=c6444e06 ***!
@@ -22414,6 +22814,544 @@ var staticRenderFns = [function () {
       "data-dismiss": "modal"
     }
   }, [_vm._v("Close")])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.supplierStats.totalStockValue)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Stock")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.supplierStats.totalSoldOutValue)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Sold Out")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.supplierStats.totalPaid)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Payment Received")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.supplierStats.balance)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Balance")])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("Supplier")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.suppliers
+    },
+    model: {
+      value: _vm.filter.supplier,
+      callback: function callback($$v) {
+        _vm.$set(_vm.filter, "supplier", $$v);
+      },
+      expression: "filter.supplier"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "from"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "to"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(4)])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered text-center align-middle",
+    attrs: {
+      id: "dataTable"
+    }
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.supplierStats.products, function (row, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.sold_out_qty * row.stock_in_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount)))]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#purchaseOrderDetails"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchPurchaseOrders(row.slug, "supplier");
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })])])]);
+  }), 0)])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-shopping-basket"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-credit-card"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-wallet"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-3 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("Product")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("SKU")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "3"
+    }
+  }, [_vm._v("STOCK IN-TAKE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v("SOLD OUT")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v("BALANCE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("P.O.s")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=template&id=3989708a":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=template&id=3989708a ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.yourmartStats.totalStockValue)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Stock")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.yourmartStats.totalSoldOutValue)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Sold Out")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.yourmartStats.totalPaid)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Payment Received")])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.yourmartStats.balance)) + "\n                            ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Balance")])])])])])])]), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.submitFunction.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("Supplier")]), _vm._v(" "), _c("v-select", {
+    attrs: {
+      options: _vm.suppliers
+    },
+    model: {
+      value: _vm.filter.supplier,
+      callback: function callback($$v) {
+        _vm.$set(_vm.filter, "supplier", $$v);
+      },
+      expression: "filter.supplier"
+    }
+  })], 1), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "from"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      name: "to"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _vm._m(4)])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticClass: "table table-bordered text-center align-middle w-100",
+    attrs: {
+      id: "dataTable2"
+    }
+  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.yourmartStats.products, function (row, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.sold_out_qty * row.stock_in_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount)))]), _vm._v(" "), _c("td", [_c("button", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        "data-toggle": "modal",
+        "data-target": "#purchaseOrderDetails"
+      },
+      on: {
+        click: function click($event) {
+          return _vm.fetchPurchaseOrders(row.slug, "yourmart");
+        }
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    })])])]);
+  }), 0)])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-boxes"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-shopping-basket"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-credit-card"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-wallet"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "col-md-3 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Filter")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("Product")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("SKU")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "3"
+    }
+  }, [_vm._v("STOCK IN-TAKE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v("SOLD OUT")]), _vm._v(" "), _c("th", {
+    attrs: {
+      colspan: "2"
+    }
+  }, [_vm._v("BALANCE")]), _vm._v(" "), _c("th", {
+    attrs: {
+      rowspan: "2"
+    }
+  }, [_vm._v("P.O.s")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
 }];
 render._withStripped = true;
 
@@ -26076,179 +27014,62 @@ var render = function render() {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-body"
-  }, [_c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
   }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.formatPrice(_vm.totalStockValue)) + "\n                                            ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Stock")])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(1), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalSoldOutValue) + "\n                                            ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Sold Out")])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(2), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalPaid) + "\n                                            ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Payment Received")])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(3), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.balance) + "\n                                            ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Balance")])])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-md-12"
-  }, [_c("form", {
-    on: {
-      submit: function submit($event) {
-        $event.preventDefault();
-        return _vm.submitFunction.apply(null, arguments);
-      }
+    staticClass: "tab-content",
+    attrs: {
+      id: "myTabContent2"
     }
   }, [_c("div", {
-    staticClass: "row"
+    staticClass: "tab-pane fade show active",
+    attrs: {
+      id: "supplier3",
+      role: "tabpanel",
+      "aria-labelledby": "supplier-tab3"
+    }
   }, [_c("div", {
-    staticClass: "col-md-3 form-group"
-  }, [_c("label", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("SupplierInventoryTab", {
     attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("Supplier")]), _vm._v(" "), _c("v-select", {
-    attrs: {
-      options: _vm.suppliers
-    },
-    model: {
-      value: _vm.filter.supplier,
-      callback: function callback($$v) {
-        _vm.$set(_vm.filter, "supplier", $$v);
-      },
-      expression: "filter.supplier"
-    }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 form-group"
-  }, [_c("label", {
-    attrs: {
-      "for": "date"
-    }
-  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.from,
-      expression: "filter.from"
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "date",
-      name: "from"
-    },
-    domProps: {
-      value: _vm.filter.from
+      supplierStats: _vm.supplierStats,
+      suppliers: _vm.suppliers,
+      filter: _vm.filter
     },
     on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.filter, "from", $event.target.value);
+      fetchPurchaseOrders: function fetchPurchaseOrders($event) {
+        return _vm.fetchPurchaseOrders($event);
       }
     }
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 form-group"
-  }, [_c("label", {
+  })], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
     attrs: {
-      "for": "date"
+      id: "yourmart3",
+      role: "tabpanel",
+      "aria-labelledby": "yourmart-tab3"
     }
-  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.filter.to,
-      expression: "filter.to"
-    }],
-    staticClass: "form-control",
+  }, [_c("div", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("YourmartInventoryTab", {
     attrs: {
-      type: "date",
-      name: "to"
-    },
-    domProps: {
-      value: _vm.filter.to
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.filter, "to", $event.target.value);
-      }
+      yourmartStats: _vm.yourmartStats,
+      suppliers: _vm.suppliers,
+      filter: _vm.filter
     }
-  })]), _vm._v(" "), _vm._m(4)])])])]), _vm._v(" "), _c("table", {
-    staticClass: "table table-bordered text-center align-middle",
+  })], 1)]), _vm._v(" "), _c("div", {
+    staticClass: "tab-pane fade",
     attrs: {
-      id: "dataTable"
+      id: "overall3",
+      role: "tabpanel",
+      "aria-labelledby": "overall-tab3"
     }
-  }, [_vm._m(5), _vm._v(" "), _c("tbody", _vm._l(_vm.products, function (row, index) {
-    return _c("tr", {
-      key: index
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.product_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.sold_out_qty * row.stock_in_price)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount)))]), _vm._v(" "), _c("td", [_c("button", {
-      staticClass: "btn btn-primary",
-      attrs: {
-        "data-toggle": "modal",
-        "data-target": "#purchaseOrderDetails"
-      },
-      on: {
-        click: function click($event) {
-          return _vm.fetchPurchaseOrders(row.slug);
-        }
-      }
-    }, [_c("i", {
-      staticClass: "fa fa-eye"
-    })])])]);
-  }), 0)])])])])]), _vm._v(" "), _c("PurchaseOrderDetails", {
+  }, [_c("div", {
+    staticClass: "col-12 col-md-12 col-lg-12"
+  }, [_c("OverallInventoryTab", {
+    attrs: {
+      overallStats: _vm.overallStats,
+      suppliers: _vm.suppliers,
+      filter: _vm.filter
+    }
+  })], 1)])])])])])]), _vm._v(" "), _c("PurchaseOrderDetails", {
     attrs: {
       purchaseOrders: _vm.purchaseOrders
     }
@@ -26258,74 +27079,50 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "card-icon l-bg-purple"
-  }, [_c("i", {
-    staticClass: "fas fa-boxes"
-  })]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-icon l-bg-green"
-  }, [_c("i", {
-    staticClass: "fas fa-shopping-basket"
-  })]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-icon l-bg-cyan"
-  }, [_c("i", {
-    staticClass: "fas fa-credit-card"
-  })]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "card-icon l-bg-orange"
-  }, [_c("i", {
-    staticClass: "fas fa-wallet"
-  })]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "col-md-3 form-group pt-4"
-  }, [_c("button", {
-    staticClass: "btn btn-block btn-primary"
-  }, [_vm._v("Filter")])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", {
+    staticClass: "row col-md-12 mb-5"
+  }, [_c("ul", {
+    staticClass: "nav nav-pills",
     attrs: {
-      rowspan: "2"
+      id: "myTab3",
+      role: "tablist"
     }
-  }, [_vm._v("#")]), _vm._v(" "), _c("th", {
+  }, [_c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link active",
     attrs: {
-      rowspan: "2"
+      id: "supplier-tab3",
+      "data-toggle": "tab",
+      href: "#supplier3",
+      role: "tab",
+      "aria-controls": "supplier",
+      "aria-selected": "true"
     }
-  }, [_vm._v("Product")]), _vm._v(" "), _c("th", {
+  }, [_vm._v("Supplier Inventory")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
     attrs: {
-      rowspan: "2"
+      id: "yourmart-tab3",
+      "data-toggle": "tab",
+      href: "#yourmart3",
+      role: "tab",
+      "aria-controls": "yourmart",
+      "aria-selected": "false"
     }
-  }, [_vm._v("SKU")]), _vm._v(" "), _c("th", {
+  }, [_vm._v("YourMart Inventory")])]), _vm._v(" "), _c("li", {
+    staticClass: "nav-item"
+  }, [_c("a", {
+    staticClass: "nav-link",
     attrs: {
-      colspan: "3"
+      id: "overall-tab3",
+      "data-toggle": "tab",
+      href: "#overall3",
+      role: "tab",
+      "aria-controls": "overall",
+      "aria-selected": "false"
     }
-  }, [_vm._v("STOCK IN-TAKE")]), _vm._v(" "), _c("th", {
-    attrs: {
-      colspan: "2"
-    }
-  }, [_vm._v("SOLD OUT")]), _vm._v(" "), _c("th", {
-    attrs: {
-      colspan: "2"
-    }
-  }, [_vm._v("BALANCE")]), _vm._v(" "), _c("th", {
-    attrs: {
-      rowspan: "2"
-    }
-  }, [_vm._v("P.O.s")])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Price")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")]), _vm._v(" "), _c("th", [_vm._v("QTY")]), _vm._v(" "), _c("th", [_vm._v("Amount")])])]);
+  }, [_vm._v("Over all")])])])]);
 }];
 render._withStripped = true;
 
@@ -74122,6 +74919,45 @@ component.options.__file = "resources/js/components/reports/fis/TopSellingProduc
 
 /***/ }),
 
+/***/ "./resources/js/components/supplier/OverallInventoryTab.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/supplier/OverallInventoryTab.vue ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _OverallInventoryTab_vue_vue_type_template_id_670d64ee__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OverallInventoryTab.vue?vue&type=template&id=670d64ee */ "./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=template&id=670d64ee");
+/* harmony import */ var _OverallInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OverallInventoryTab.vue?vue&type=script&lang=js */ "./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OverallInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OverallInventoryTab_vue_vue_type_template_id_670d64ee__WEBPACK_IMPORTED_MODULE_0__.render,
+  _OverallInventoryTab_vue_vue_type_template_id_670d64ee__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/supplier/OverallInventoryTab.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/supplier/PurchaseOrderDetails.vue":
 /*!*******************************************************************!*\
   !*** ./resources/js/components/supplier/PurchaseOrderDetails.vue ***!
@@ -74157,6 +74993,84 @@ var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__
 /* hot reload */
 if (false) { var api; }
 component.options.__file = "resources/js/components/supplier/PurchaseOrderDetails.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/supplier/SupplierInventoryTab.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/supplier/SupplierInventoryTab.vue ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _SupplierInventoryTab_vue_vue_type_template_id_3dd01ecd__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd */ "./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd");
+/* harmony import */ var _SupplierInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SupplierInventoryTab.vue?vue&type=script&lang=js */ "./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SupplierInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SupplierInventoryTab_vue_vue_type_template_id_3dd01ecd__WEBPACK_IMPORTED_MODULE_0__.render,
+  _SupplierInventoryTab_vue_vue_type_template_id_3dd01ecd__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/supplier/SupplierInventoryTab.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/supplier/YourmartInventoryTab.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/supplier/YourmartInventoryTab.vue ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _YourmartInventoryTab_vue_vue_type_template_id_3989708a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./YourmartInventoryTab.vue?vue&type=template&id=3989708a */ "./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=template&id=3989708a");
+/* harmony import */ var _YourmartInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./YourmartInventoryTab.vue?vue&type=script&lang=js */ "./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _YourmartInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _YourmartInventoryTab_vue_vue_type_template_id_3989708a__WEBPACK_IMPORTED_MODULE_0__.render,
+  _YourmartInventoryTab_vue_vue_type_template_id_3989708a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/supplier/YourmartInventoryTab.vue"
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
 
 /***/ }),
@@ -75926,6 +76840,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=script&lang=js":
+/*!******************************************************************************************!*\
+  !*** ./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=script&lang=js ***!
+  \******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OverallInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OverallInventoryTab.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OverallInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=script&lang=js":
 /*!*******************************************************************************************!*\
   !*** ./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=script&lang=js ***!
@@ -75939,6 +76869,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PurchaseOrderDetails_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PurchaseOrderDetails.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=script&lang=js");
  /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PurchaseOrderDetails_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=script&lang=js":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=script&lang=js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SupplierInventoryTab.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=script&lang=js":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=script&lang=js ***!
+  \*******************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_YourmartInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./YourmartInventoryTab.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_YourmartInventoryTab_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
@@ -77281,6 +78243,23 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=template&id=670d64ee":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=template&id=670d64ee ***!
+  \************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OverallInventoryTab_vue_vue_type_template_id_670d64ee__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OverallInventoryTab_vue_vue_type_template_id_670d64ee__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OverallInventoryTab_vue_vue_type_template_id_670d64ee__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OverallInventoryTab.vue?vue&type=template&id=670d64ee */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/OverallInventoryTab.vue?vue&type=template&id=670d64ee");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=template&id=c6444e06":
 /*!*************************************************************************************************!*\
   !*** ./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=template&id=c6444e06 ***!
@@ -77294,6 +78273,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PurchaseOrderDetails_vue_vue_type_template_id_c6444e06__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PurchaseOrderDetails_vue_vue_type_template_id_c6444e06__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./PurchaseOrderDetails.vue?vue&type=template&id=c6444e06 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/PurchaseOrderDetails.vue?vue&type=template&id=c6444e06");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierInventoryTab_vue_vue_type_template_id_3dd01ecd__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierInventoryTab_vue_vue_type_template_id_3dd01ecd__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierInventoryTab_vue_vue_type_template_id_3dd01ecd__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=template&id=3dd01ecd");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=template&id=3989708a":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=template&id=3989708a ***!
+  \*************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_YourmartInventoryTab_vue_vue_type_template_id_3989708a__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_YourmartInventoryTab_vue_vue_type_template_id_3989708a__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_YourmartInventoryTab_vue_vue_type_template_id_3989708a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./YourmartInventoryTab.vue?vue&type=template&id=3989708a */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/YourmartInventoryTab.vue?vue&type=template&id=3989708a");
 
 
 /***/ }),
