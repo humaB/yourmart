@@ -200,6 +200,52 @@ class DropshipperPreviewController extends Controller
         return 'New Seller';
     }
 
+    public function determineSellerLevel2($orders, $successRate, $revenue)
+    {
+        $levels = [
+            'Top Rated Seller' => [
+                'orders' => 2000,
+                'success_rate' => 90,
+                'revenue' => 500000,
+            ],
+            'Level 03' => [
+                'orders' => 1000,
+                'success_rate' => 85,
+                'revenue' => 160000,
+            ],
+            'Level 02' => [
+                'orders' => 400,
+                'success_rate' => 80,
+                'revenue' => 60000,
+            ],
+            'Level 01' => [
+                'orders' => 100,
+                'success_rate' => 80,
+                'revenue' => 20000,
+            ],
+        ];
+
+        foreach ($levels as $level => $criteria) {
+            // ✅ Orders condition is MUST
+            if ($orders < $criteria['orders']) {
+                continue;
+            }
+
+            $matchCount = 1; // orders already satisfied
+
+            if ($successRate >= $criteria['success_rate']) $matchCount++;
+            if ($revenue >= $criteria['revenue']) $matchCount++;
+
+            // ✅ Now require at least 2 conditions including orders
+            if ($matchCount >= 2) {
+                return $level;
+            }
+        }
+
+        return 'New Seller';
+    }
+
+
     private function barChatData( $dropshipper ){
         $last12Months = [];
         $startDate = now()->subMonths(11); // 11 months ago (to include current month)

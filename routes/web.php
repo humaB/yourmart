@@ -31,6 +31,7 @@ use App\Http\Controllers\Inventory\Store\StoreCheckOutController;
 use App\Http\Controllers\Pages\EmailTemplateController;
 use App\Http\Controllers\Pages\NotificationController;
 use App\Http\Controllers\Report\FisReportController;
+use App\Http\Controllers\User\DropshipperPreviewController;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\Store\StoreReturnDetail;
@@ -197,8 +198,6 @@ Route::prefix('accounts')->group(function () {
         Route::post('general/trial/pdf', [TransactionPdfController::class,'generalTrialPdf']);
         Route::post('daily/report/pdf', [TransactionPdfController::class,'dailyReportPdf']);
     });
-
-
 });
 
 
@@ -207,3 +206,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/email-templates', [EmailTemplateController::class, 'index'])->name('email_template');
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notification');
 });
+
+ Route::get('/test-level/{order}/{success}/{revenue}', [DropshipperPreviewController::class, 'determineSellerLevel2'])->name('couriers');
