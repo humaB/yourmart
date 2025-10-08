@@ -4942,6 +4942,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     submitFunction: function submitFunction() {
+      this.filter.status = '';
       this.$emit('submitFunction');
     }
   }
@@ -5044,6 +5045,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     submitFunction: function submitFunction() {
+      this.filter.status = '';
       this.$emit('submitFunction');
     }
   }
@@ -7109,6 +7111,7 @@ __webpack_require__.r(__webpack_exports__);
       api_url: window.location.origin + "/public/api/",
       public_url: window.location.origin + "" + "/",
       filter: {
+        status: "",
         supplier: {
           code: "0",
           label: "Select from the following"
@@ -7191,8 +7194,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     fetchProducts: function fetchProducts(filter) {
       var _this4 = this;
-      if ($.fn.DataTable.isDataTable("#dataTable")) {
-        $('#dataTable').DataTable().destroy();
+      if ($.fn.DataTable.isDataTable("#supplierDataTable")) {
+        $('#supplierDataTable').DataTable().destroy();
+      }
+      if ($.fn.DataTable.isDataTable("#dataTable2")) {
+        $('#dataTable2').DataTable().destroy();
+      }
+      if ($.fn.DataTable.isDataTable("#dataTable3")) {
+        $('#dataTable3').DataTable().destroy();
       }
       axios.post(this.api_url + "suppliers/products", filter).then(function (response) {
         var result = response.data.response;
@@ -7200,7 +7209,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.yourmartStats.products = result.yourmart;
         _this4.overallStats.products = result.overall;
         setTimeout(function () {
-          $("#dataTable").DataTable({
+          $("#supplierDataTable").DataTable({
             "bSort": false,
             dom: 'Bfrtip',
             buttons: ['excel']
@@ -22967,6 +22976,51 @@ var render = function render() {
     staticClass: "col-md-3 form-group"
   }, [_c("label", {
     attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Status")]), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.status,
+      expression: "filter.status"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      name: "",
+      id: ""
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.filter, "status", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      value: ""
+    }
+  }, [_vm._v("-- Select Status -- ")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "In Stock"
+    }
+  }, [_vm._v("In Stock")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "In Process"
+    }
+  }, [_vm._v("In Process")]), _vm._v(" "), _c("option", {
+    attrs: {
+      value: "Sold Out"
+    }
+  }, [_vm._v("Sold Out")])])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-3 form-group"
+  }, [_c("label", {
+    attrs: {
       "for": "date"
     }
   }, [_vm._v("Supplier")]), _vm._v(" "), _c("v-select", {
@@ -22981,7 +23035,7 @@ var render = function render() {
       expression: "filter.supplier"
     }
   })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 form-group"
+    staticClass: "col-md-2 form-group"
   }, [_c("label", {
     attrs: {
       "for": "date"
@@ -23008,7 +23062,7 @@ var render = function render() {
       }
     }
   })]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-3 form-group"
+    staticClass: "col-md-2 form-group"
   }, [_c("label", {
     attrs: {
       "for": "date"
@@ -23039,7 +23093,7 @@ var render = function render() {
   }, [_c("table", {
     staticClass: "table table-bordered text-center align-middle",
     attrs: {
-      id: "dataTable"
+      id: "supplierDataTable"
     }
   }, [_vm._m(6), _vm._v(" "), _c("tbody", _vm._l(_vm.supplierStats.products, function (row, index) {
     return _c("tr", {
@@ -23125,8 +23179,12 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-md-3 form-group pt-4"
-  }, [_c("button", {
+    staticClass: "col-md-2 form-group"
+  }, [_c("label", {
+    attrs: {
+      "for": "date"
+    }
+  }, [_vm._v("Action")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-block btn-primary"
   }, [_vm._v("Filter")])]);
 }, function () {

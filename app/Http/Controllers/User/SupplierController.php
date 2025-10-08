@@ -236,6 +236,12 @@ class SupplierController extends Controller
         $from       = $request->from;
         $to         = $request->to;
 
+        $status = $request->status; // "In Stock", "In Process", "Sold Out"
+
+        if ($status != '') {
+            return $this->filterByStatus($status, $supplierId, $from, $to, $request);
+        }
+
         // ---------------- SUPPLIER STOCK ----------------
         $supplierReceived = StoreReceivedDetail::with(['product.variation'])
             ->when(
@@ -254,14 +260,14 @@ class SupplierController extends Controller
                 $latest_price = $total_qty ? round($total_amount / $total_qty) : 0;
 
                 return [
-                        'product_id'     => $productId,
-                        'product_name'   => $items->first()->product->title ?? '',
-                        'hero_image'     => $items->first()->product->hero_image ?? '',
-                        'slug'           => $items->first()->product->slug ?? '',
-                        'sku'            => $items->first()->product->variation->sku ?? '',
-                        'stock_in_qty'   => $total_qty,
-                        'stock_in_price' => $latest_price,
-                        'stock_in_amount' => $total_qty * $latest_price,
+                    'product_id'     => $productId,
+                    'product_name'   => $items->first()->product->title ?? '',
+                    'hero_image'     => $items->first()->product->hero_image ?? '',
+                    'slug'           => $items->first()->product->slug ?? '',
+                    'sku'            => $items->first()->product->variation->sku ?? '',
+                    'stock_in_qty'   => $total_qty,
+                    'stock_in_price' => $latest_price,
+                    'stock_in_amount' => $total_qty * $latest_price,
                 ];
             });
 
@@ -304,44 +310,44 @@ class SupplierController extends Controller
                     'sold_out_qty'     => $total_qty,
                     'sold_out_amount'  => $amount,
                 ];
-            });
+        });
 
         $supplierFinal = $supplierReceived->map(function ($item) use ($supplierSold, $inprocess) {
             $productId = $item['product_id'];
 
-                $soldItem = $supplierSold->get($productId);
-                $inprocessItem = $inprocess->get($productId);
+            $soldItem = $supplierSold->get($productId);
+            $inprocessItem = $inprocess->get($productId);
 
-                $sold_qty    = $soldItem['sold_out_qty'] ?? 0;
-                $sold_amount = $soldItem['sold_out_amount'] ?? 0;
+            $sold_qty    = $soldItem['sold_out_qty'] ?? 0;
+            $sold_amount = $soldItem['sold_out_amount'] ?? 0;
 
-                $inprocess_qty    = $inprocessItem['inprocess_qty'] ?? 0;
-                $inprocess_amount = $inprocessItem['inprocess_amount'] ?? 0;
+            $inprocess_qty    = $inprocessItem['inprocess_qty'] ?? 0;
+            $inprocess_amount = $inprocessItem['inprocess_amount'] ?? 0;
 
-                $balance_qty = $item['stock_in_qty'] - $sold_qty - $inprocess_qty;
-                $balance_amount = $balance_qty * $item['stock_in_price'];
+            $balance_qty = $item['stock_in_qty'] - $sold_qty - $inprocess_qty;
+            $balance_amount = $balance_qty * $item['stock_in_price'];
 
-                return [
-                    'product_name'     => $item['product_name'],
-                    'hero_image'       => $item['hero_image'],
-                    'slug'             => $item['slug'],
-                    'sku'              => $item['sku'],
-                    'stock_in_qty'     => $item['stock_in_qty'],
-                    'stock_in_price'   => $item['stock_in_price'],
-                    'stock_in_amount'  => $item['stock_in_amount'],
+            return [
+                'product_name'     => $item['product_name'],
+                'hero_image'       => $item['hero_image'],
+                'slug'             => $item['slug'],
+                'sku'              => $item['sku'],
+                'stock_in_qty'     => $item['stock_in_qty'],
+                'stock_in_price'   => $item['stock_in_price'],
+                'stock_in_amount'  => $item['stock_in_amount'],
 
-                    'inprocess_qty'    => $inprocess_qty,
-                    'inprocess_amount' => $inprocess_amount,
+                'inprocess_qty'    => $inprocess_qty,
+                'inprocess_amount' => $inprocess_amount,
 
-                    'sold_out_qty'     => $sold_qty,
-                    'sold_out_amount'  => $sold_amount,
+                'sold_out_qty'     => $sold_qty,
+                'sold_out_amount'  => $sold_amount,
 
-                    'balance_qty'      => $balance_qty,
-                    'balance_amount'   => $balance_amount,
+                'balance_qty'      => $balance_qty,
+                'balance_amount'   => $balance_amount,
 
-                    'po' => null, // placeholder
-                ];
-            })->values();
+                'po' => null, // placeholder
+            ];
+        })->values();
 
         // ---------------- YOURMART STOCK ----------------
         $yourmartReceived = StoreReceivedDetail::with(['product.variation'])
@@ -414,7 +420,7 @@ class SupplierController extends Controller
         })->values();;
 
         // ---------------- OVERALL ----------------
-       $overall = $supplierFinal->merge($yourmartFinal)
+        $overall = $supplierFinal->merge($yourmartFinal)
             ->groupBy('sku')
             ->map(function ($items) {
                 $first = $items->first();
@@ -462,6 +468,144 @@ class SupplierController extends Controller
             ->setStatusCode(200);
     }
 
+    public function filterByStatus($status, $supplierId, $from, $to, $request)
+    {
+        if ($status === 'In Stock') {
+            $final = StoreReceivedDetail::with(['product.variation'])
+                ->when(
+                    !empty($supplierId) && $supplierId !== '0',
+                    fn($q) => $q->where('supplier_id', $supplierId),
+                    fn($q) => $q->where('supplier_id', '>', 0)
+                )
+                ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
+                ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
+                ->whereHas('grn.purchase_order', fn($q) => $q->where('supplier_stock', '1'))
+                ->get()
+                ->groupBy('product_id')
+                ->map(function ($items, $productId) {
+                    $total_qty    = $items->sum('quantity');
+                    $total_amount = $items->sum('total');
+                    $latest_price = $total_qty ? round($total_amount / $total_qty) : 0;
+
+                    return [
+                        'product_id'     => $productId,
+                        'product_name'   => $items->first()->product->title ?? '',
+                        'hero_image'     => $items->first()->product->hero_image ?? '',
+                        'slug'           => $items->first()->product->slug ?? '',
+                        'sku'            => $items->first()->product->variation->sku ?? '',
+                        'stock_in_qty'   => $total_qty,
+                        'stock_in_price' => $latest_price,
+                        'stock_in_amount' => $total_qty * $latest_price,
+                    ];
+                });
+        }
+        if ($status == 'In Process') {
+
+            // ✅ In Process
+            $final = OrderItemSupplier::with('order')
+                ->when(
+                    !empty($supplierId) && $supplierId !== '0',
+                    fn($q) => $q->where('supplier_id', $supplierId),
+                    fn($q) => $q->where('supplier_id', '>', 0)
+                )
+                ->whereHas(
+                    'order',
+                    fn($query) =>
+                    $query->whereNotIn('status', ['6', '7', '8', '9', '10', '12'])
+                )
+                ->when($request->from, fn($q) => $q->whereDate('created_at', '>=', $request->from))
+                ->when($request->to, fn($q) => $q->whereDate('created_at', '<=', $request->to))
+                ->get()
+                ->groupBy('product_id')
+                ->map(function ($items, $productId) use ($supplierId, $from, $to) {
+                    $product = Product::find($productId);
+
+                    $received = StoreReceivedDetail::when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
+                        ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
+                        ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
+                        ->where('product_id', $productId)
+                        ->whereNotNull('supplier_id')
+                        ->get();
+
+                    $avg_price = $received->sum('quantity') > 0
+                        ? round($received->sum('total') / $received->sum('quantity'))
+                        : 0;
+
+                    return [
+                        'product_name'     => $product->title,
+                        'hero_image'       => $product->hero_image,
+                        'slug'             => $product->slug,
+                        'sku'              => $product->variation->sku,
+                        'stock_in_qty'     => 0,
+                        'stock_in_price'   => $avg_price,
+                        'stock_in_amount'  => 0,
+
+                        'inprocess_qty'    => $items->sum('quantity'),
+                        'inprocess_amount' => $items->sum('quantity') * $avg_price,
+
+                        'sold_out_qty'     => 0,
+                        'sold_out_amount'  => 0,
+
+                        'balance_qty'      => 0,
+                        'balance_amount'   => 0,
+
+                        'po' => null, // placeholder
+                    ];
+                });
+        }
+        if ($status == 'Sold Out') {
+             $final = OrderItemSupplier::with(['order', 'product'])
+                ->when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
+                ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
+                ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
+                ->whereHas('order', fn($q) => $q->where('status', '8'))
+                ->get()
+                ->groupBy('product_id')
+                ->map(function ($items, $productId) use ($supplierId, $from, $to) {
+                   $product = Product::find($productId);
+
+                    $received = StoreReceivedDetail::when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
+                        ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
+                        ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
+                        ->where('product_id', $productId)
+                        ->whereNotNull('supplier_id')
+                        ->get();
+
+                    $avg_price = $received->sum('quantity') > 0
+                        ? round($received->sum('total') / $received->sum('quantity'))
+                        : 0;
+
+                    return [
+                        'product_name'     => $product->title,
+                        'hero_image'       => $product->hero_image,
+                        'slug'             => $product->slug,
+                        'sku'              => $product->variation->sku,
+                        'stock_in_qty'     => 0,
+                        'stock_in_price'   => $avg_price,
+                        'stock_in_amount'  => 0,
+
+                        'inprocess_qty'    => 0,
+                        'inprocess_amount' => 0,
+
+                        'sold_out_qty'     => $items->sum('quantity'),
+                        'sold_out_amount'  => $items->sum('quantity') * $avg_price,
+
+                        'balance_qty'      => 0,
+                        'balance_amount'   => 0,
+
+                        'po' => null, // placeholder
+                    ];
+            });
+        }
+
+        $final = [
+            'supplier' => $final->values(),
+        ];
+        return (new ResponseCollection($final))
+            ->response()
+            ->setStatusCode(200);
+    }
+
 
     public function purchaseOrders(Request $request)
     {
@@ -474,7 +618,9 @@ class SupplierController extends Controller
 
         $purchaseOrdersQuery = PurchaseOrder::with('details.product')
             ->where('status', '1')
-            ->when($supplierId, function ($q) use ($supplierId) { $q->where('supplier_id', $supplierId); })
+            ->when($supplierId, function ($q) use ($supplierId) {
+                $q->where('supplier_id', $supplierId);
+            })
             ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
             ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
             ->whereHas('details', function ($query) use ($product) {

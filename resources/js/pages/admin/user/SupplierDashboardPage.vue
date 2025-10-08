@@ -78,6 +78,7 @@ export default {
             api_url: window.location.origin + process.env.MIX_API_URL,
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH + "/",
             filter: {
+                status : "",
                 supplier: { code: "0", label: "Select from the following" },
                 from: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().substr(0, 10),
                 to: new Date().toISOString().substr(0, 10),
@@ -175,8 +176,14 @@ export default {
                 });
         },
         fetchProducts(filter) {
-            if ($.fn.DataTable.isDataTable("#dataTable")) {
-                $('#dataTable').DataTable().destroy();
+            if ($.fn.DataTable.isDataTable("#supplierDataTable")) {
+                $('#supplierDataTable').DataTable().destroy();
+            }
+            if ($.fn.DataTable.isDataTable("#dataTable2")) {
+                $('#dataTable2').DataTable().destroy();
+            }
+            if ($.fn.DataTable.isDataTable("#dataTable3")) {
+                $('#dataTable3').DataTable().destroy();
             }
             axios
                 .post(this.api_url + "suppliers/products", filter)
@@ -187,7 +194,7 @@ export default {
                     this.overallStats.products = result.overall;
 
                     setTimeout(function () {
-                        $("#dataTable").DataTable({
+                        $("#supplierDataTable").DataTable({
                             "bSort": false,
                             dom: 'Bfrtip',
                             buttons: ['excel']

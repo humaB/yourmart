@@ -163,6 +163,7 @@ export default {
             this.$emit('fetchPurchaseOrders', { slug, type });
         },
         submitFunction(){
+            this.filter.status = '';
             this.$emit('submitFunction')
         }
     }

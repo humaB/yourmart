@@ -85,27 +85,37 @@
             <div class="col-md-12">
                 <form @submit.prevent="submitFunction">
                     <div class="row">
+                        <div class="col-md-3 form-group">
+                            <label for="">Status</label>
+                            <select name="" id="" class="form-control" v-model="filter.status">
+                                <option value="">-- Select Status -- </option>
+                                <option value="In Stock">In Stock</option>
+                                <option value="In Process">In Process</option>
+                                <option value="Sold Out">Sold Out</option>
+                            </select>
+                        </div>
 
                         <div class="col-md-3 form-group">
                             <label for="date">Supplier</label>
                             <v-select :options="suppliers" v-model="filter.supplier"></v-select>
                         </div>
-                        <div class="col-md-3 form-group">
+                        <div class="col-md-2 form-group">
                             <label for="date">From</label>
                             <input type="date" name="from" class="form-control" v-model="filter.from" />
                         </div>
-                        <div class="col-md-3 form-group">
+                        <div class="col-md-2 form-group">
                             <label for="date">To</label>
                             <input type="date" name="to" class="form-control" v-model="filter.to" />
                         </div>
-                        <div class="col-md-3 form-group pt-4">
+                        <div class="col-md-2 form-group">
+                             <label for="date">Action</label>
                             <button class="btn btn-block btn-primary">Filter</button>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="col-md-12">
-                <table class="table table-bordered text-center align-middle" id="dataTable">
+                <table class="table table-bordered text-center align-middle" id="supplierDataTable">
                     <thead>
                         <tr>
                             <th rowspan="2">#</th>
