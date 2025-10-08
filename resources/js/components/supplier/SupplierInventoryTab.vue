@@ -153,7 +153,7 @@
                                 </ul>
                             </td>
                             <td>
-                                <a :href="public_url + 'products/' + row.slug" target="_blank">
+                                <a :href="web_url + 'products/' + row.slug" target="_blank">
                                     {{ row.product_name }}
                                 </a>
                             </td>

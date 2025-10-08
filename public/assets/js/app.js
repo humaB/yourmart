@@ -23116,7 +23116,7 @@ var render = function render() {
       }
     })])])])]), _vm._v(" "), _c("td", [_c("a", {
       attrs: {
-        href: _vm.public_url + "products/" + row.slug,
+        href: _vm.web_url + "products/" + row.slug,
         target: "_blank"
       }
     }, [_vm._v("\n                                " + _vm._s(row.product_name) + "\n                            ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sku || ""))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_qty || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.stock_in_price || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.stock_in_amount || 0)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.inprocess_qty || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice((row.inprocess_qty || 0) * (row.stock_in_price || 0))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.sold_out_qty || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice((row.sold_out_qty || 0) * (row.stock_in_price || 0))))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(row.balance_qty || 0))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(row.balance_amount || 0)))]), _vm._v(" "), _c("td", [_c("button", {
