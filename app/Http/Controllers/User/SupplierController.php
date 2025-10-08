@@ -90,6 +90,32 @@ class SupplierController extends Controller
 
         $supplierReceivedValue = $supplierReceived->sum('total');
 
+        $inprocess = OrderItemSupplier::with('order')
+            ->when(
+                isset($supplierId),
+                fn($q) => $q->where('supplier_id', $supplierId),
+                fn($q) => $q->where('supplier_id', '>', 0)
+            )
+            ->whereHas('order', function ($query) {
+                $query->whereNotIn('status', ['6', '7', '8', '9', '10', '12']);
+            })
+            ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
+            ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
+            ->get();
+
+        $totalInprocessValue = 0;
+        foreach ($inprocess as $inprocess) {
+            $product = StoreReceivedDetail::when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
+                ->whereNotNull('supplier_id')
+                ->where('product_id', $inprocess->product_id)
+                ->get();
+
+            //Get Average Price
+            $avg_price = round($product->sum('total') / $product->sum('quantity'));
+
+            $totalInprocessValue += (float)$avg_price * (float)$inprocess->quantity;
+        }
+
         // Supplier Issued (sold out)
         $supplierSold = OrderItemSupplier::with('order')
             ->when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
@@ -183,6 +209,7 @@ class SupplierController extends Controller
             'supplierIssued'   => $supplierIssuedValue,
             'supplierPaid'     => $supplierPaid,
             'supplierBalance'  => $supplierIssuedValue - $supplierPaid,
+            'supplierTotalInprocessValue' => $totalInprocessValue,
 
             // YourMart Stock
             'yourmartReceived' => $yourmartReceivedValue,
@@ -201,8 +228,6 @@ class SupplierController extends Controller
             ->response()
             ->setStatusCode(200);
     }
-
-
 
 
     public function inTake(Request $request)
@@ -229,13 +254,37 @@ class SupplierController extends Controller
                 $latest_price = $total_qty ? round($total_amount / $total_qty) : 0;
 
                 return [
-                    'product_id'       => $productId,
-                    'product_name'     => $items->first()->product->title ?? '',
-                    'slug'             => $items->first()->product->slug ?? '',
-                    'sku'              => $items->first()->product->variation->sku ?? '',
-                    'stock_in_qty'     => $total_qty,
-                    'stock_in_price'   => $latest_price,
-                    'stock_in_amount'  => $total_qty * $latest_price,
+                        'product_id'     => $productId,
+                        'product_name'   => $items->first()->product->title ?? '',
+                        'hero_image'     => $items->first()->product->hero_image ?? '',
+                        'slug'           => $items->first()->product->slug ?? '',
+                        'sku'            => $items->first()->product->variation->sku ?? '',
+                        'stock_in_qty'   => $total_qty,
+                        'stock_in_price' => $latest_price,
+                        'stock_in_amount' => $total_qty * $latest_price,
+                ];
+            });
+
+        // ✅ In Process
+        $inprocess = OrderItemSupplier::with('order')
+            ->when(
+                !empty($supplierId) && $supplierId !== '0',
+                fn($q) => $q->where('supplier_id', $supplierId),
+                fn($q) => $q->where('supplier_id', '>', 0)
+            )
+            ->whereHas(
+                'order',
+                fn($query) =>
+                $query->whereNotIn('status', ['6', '7', '8', '9', '10', '12'])
+            )
+            ->when($request->from, fn($q) => $q->whereDate('created_at', '>=', $request->from))
+            ->when($request->to, fn($q) => $q->whereDate('created_at', '<=', $request->to))
+            ->get()
+            ->groupBy('product_id')
+            ->map(function ($items, $productId) {
+                return [
+                    'inprocess_qty'    => $items->sum('quantity'),
+                    'inprocess_amount' => $items->sum(fn($i) => $i->quantity * $i->price),
                 ];
             });
 
@@ -257,30 +306,42 @@ class SupplierController extends Controller
                 ];
             });
 
-        $supplierFinal = $supplierReceived->map(function ($item) use ($supplierSold) {
-            $productId   = $item['product_id'];
-            $soldItem    = $supplierSold->get($productId);
+        $supplierFinal = $supplierReceived->map(function ($item) use ($supplierSold, $inprocess) {
+            $productId = $item['product_id'];
 
-            $sold_qty    = $soldItem['sold_out_qty'] ?? 0;
-            $sold_amount = $soldItem['sold_out_amount'] ?? 0;
+                $soldItem = $supplierSold->get($productId);
+                $inprocessItem = $inprocess->get($productId);
 
-            $balance_qty    = $item['stock_in_qty'] - $sold_qty;
-            $balance_amount = $balance_qty * $item['stock_in_price'];
+                $sold_qty    = $soldItem['sold_out_qty'] ?? 0;
+                $sold_amount = $soldItem['sold_out_amount'] ?? 0;
 
-            return [
-                'product_name'     => $item['product_name'],
-                'slug'             => $item['slug'],
-                'sku'              => $item['sku'],
-                'stock_in_qty'     => $item['stock_in_qty'],
-                'stock_in_price'   => $item['stock_in_price'],
-                'stock_in_amount'  => $item['stock_in_amount'],
-                'sold_out_qty'     => $sold_qty,
-                'sold_out_amount'  => $sold_amount,
-                'balance_qty'      => $balance_qty,
-                'balance_amount'   => $balance_amount,
-                'source'           => 'Supplier',
-            ];
-        });
+                $inprocess_qty    = $inprocessItem['inprocess_qty'] ?? 0;
+                $inprocess_amount = $inprocessItem['inprocess_amount'] ?? 0;
+
+                $balance_qty = $item['stock_in_qty'] - $sold_qty - $inprocess_qty;
+                $balance_amount = $balance_qty * $item['stock_in_price'];
+
+                return [
+                    'product_name'     => $item['product_name'],
+                    'hero_image'       => $item['hero_image'],
+                    'slug'             => $item['slug'],
+                    'sku'              => $item['sku'],
+                    'stock_in_qty'     => $item['stock_in_qty'],
+                    'stock_in_price'   => $item['stock_in_price'],
+                    'stock_in_amount'  => $item['stock_in_amount'],
+
+                    'inprocess_qty'    => $inprocess_qty,
+                    'inprocess_amount' => $inprocess_amount,
+
+                    'sold_out_qty'     => $sold_qty,
+                    'sold_out_amount'  => $sold_amount,
+
+                    'balance_qty'      => $balance_qty,
+                    'balance_amount'   => $balance_amount,
+
+                    'po' => null, // placeholder
+                ];
+            })->values();
 
         // ---------------- YOURMART STOCK ----------------
         $yourmartReceived = StoreReceivedDetail::with(['product.variation'])
@@ -350,22 +411,23 @@ class SupplierController extends Controller
                 'balance_amount'   => $balance_amount,
                 'source'           => 'YourMart',
             ];
-        });
+        })->values();;
 
         // ---------------- OVERALL ----------------
        $overall = $supplierFinal->merge($yourmartFinal)
             ->groupBy('sku')
             ->map(function ($items) {
-                $first = $items->first(); // array
+                $first = $items->first();
 
                 $stock_in_qty    = $items->sum('stock_in_qty');
                 $stock_in_amount = $items->sum('stock_in_amount');
                 $sold_qty        = $items->sum('sold_out_qty');
                 $sold_amount     = $items->sum('sold_out_amount');
+                $inprocess_qty   = $items->sum('inprocess_qty');      // ✅ added
+                $inprocess_amt   = $items->sum('inprocess_amount');   // ✅ added
                 $balance_qty     = $items->sum('balance_qty');
                 $balance_amount  = $items->sum('balance_amount');
 
-                // Calculate latest average price safely
                 $stock_in_price  = $stock_in_qty > 0 ? round($stock_in_amount / $stock_in_qty) : 0;
 
                 return [
@@ -373,10 +435,15 @@ class SupplierController extends Controller
                     'slug'             => $first['slug'],
                     'sku'              => $first['sku'],
                     'stock_in_qty'     => $stock_in_qty,
-                    'stock_in_price'   => $stock_in_price,   // ✅ added here
+                    'stock_in_price'   => $stock_in_price,
                     'stock_in_amount'  => $stock_in_amount,
+
+                    'inprocess_qty'    => $inprocess_qty,       // ✅ included
+                    'inprocess_amount' => $inprocess_amt,       // ✅ included
+
                     'sold_out_qty'     => $sold_qty,
                     'sold_out_amount'  => $sold_amount,
+
                     'balance_qty'      => $balance_qty,
                     'balance_amount'   => $balance_amount,
                     'source'           => 'Overall',

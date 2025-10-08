@@ -85,6 +85,7 @@ export default {
             },
             supplierStats : {
                 totalStockValue: 0,
+                totalSaleInProcess : 0,
                 totalSoldOutValue: 0,
                 totalPaid: 0,
                 balance: 0,
@@ -157,6 +158,7 @@ export default {
                     this.supplierStats.totalSoldOutValue = result.supplierIssued;
                     this.supplierStats.totalPaid = result.supplierPaid;
                     this.supplierStats.balance = result.supplierBalance;
+                    this.supplierStats.totalSaleInProcess = result.supplierTotalInprocessValue;
 
                     this.yourmartStats.totalStockValue = result.yourmartReceived;
                     this.yourmartStats.totalSoldOutValue = result.yourmartIssued;
