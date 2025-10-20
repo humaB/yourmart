@@ -822,6 +822,7 @@ class DropShipperController extends Controller
     {
         DB::beginTransaction();
         try {
+
             $dropshipper = DropShipper::with('shop')->where('id', $request->id)->first();
             $shop = DropShipperShop::where('dropshipper_id', $dropshipper->id)->first();
             $group_id = null;
@@ -835,18 +836,21 @@ class DropShipperController extends Controller
             }
 
             if ($request->action == 'deactivate') {
+
                 User::where('id', $dropshipper->user_id)->delete();
+
                 $dropshipper->update([
                     'status'  => '3' // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
                 ]);
-
-                return ['message' => 'successfully updated'];
+                DB::commit();
+                return ['message' => 'successfully deactivate'];
             } else if ($request->action == 'activate') {
                 User::where('id', $dropshipper->user_id)->restore();
                 $dropshipper->update([
                     'status'  => '1' // 0 => Pending | 1 => Approved | 2 => Rejected | 3 => Deactivate
                 ]);
-                return ['message' => 'successfully updated'];
+                DB::commit();
+                return ['message' => 'successfully activate'];
             }
 
             $leopard = 0;
@@ -912,7 +916,7 @@ class DropShipperController extends Controller
             Mail::to($dropshipper->email)->send(new DropshipperDecisionMail($mailData , $template));
 
             DB::commit();
-            return response()->json(['message' => 'Sale created successfully'], 201);
+            return response()->json(['message' => "Account $request->action successfully"], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return (new ValidationCollection(["Something went wrong please try again"]))
