@@ -179,7 +179,7 @@
                                         <a v-if="ticket.order" href="#" data-toggle="modal" data-target="#ticket"
                                             @click="fetchOrderDetails(ticket.order_no)">
                                             {{ ticket.order_no ? ticket.order.shop ?
-                                                `${ticket.order.shop.store_name.substring(0, 3)}-${ticket.order.order_no}` :
+                                                `${ticket.order?.shop?.store_name.substring(0, 3)}-${ticket.order.order_no}` :
                                             ticket.order_no : 'N/A' }}
                                         </a>
                                         <span v-else>N/A</span>
@@ -189,9 +189,9 @@
                                     <td>{{ ticket.status || 'Pending' }}</td>
                                     <td>
                                         <a href="#"
-                                            @click="fetchDropshipperDetails(ticket.added_by_name?.dropshipper?.id)"
+                                            @click="fetchDropshipperDetails(ticket?.added_by_name?.dropshipper?.id)"
                                             data-toggle="modal" data-target="#dropShipperDetail">{{
-                                                ticket.added_by_name.name }}</a>
+                                                ticket?.added_by_name?.name }}</a>
                                     </td>
 
                                     <td>{{ new Date(ticket.created_at).toLocaleDateString() }}</td>
@@ -235,9 +235,9 @@
                                     <div class="mb-2 d-flex justify-content-between">
                                         <p class="mb-1"><strong>Ticket Added By:</strong></p>
                                         <p class="mb-1"><a href="#"
-                                                @click="fetchDropshipperDetails(selectedTicket.added_by_name?.dropshipper?.id)"
+                                                @click="fetchDropshipperDetails(selectedTicket?.added_by_name?.dropshipper?.id)"
                                                 data-toggle="modal" data-target="#dropShipperDetail">{{
-                                                    selectedTicket.added_by_name?.name }}
+                                                    selectedTicket?.added_by_name?.name }}
                                             </a>
                                         </p>
                                     </div>
@@ -249,7 +249,7 @@
                                                 data-target="#ticket"
                                                 @click="fetchOrderDetails(selectedTicket.order_no)">
                                                 {{ selectedTicket.order_no ? selectedTicket.order.shop ?
-                                                    `${selectedTicket.order.shop.store_name.substring(0,
+                                                    `${selectedTicket?.order?.shop?.store_name.substring(0,
                                                 3)}-${selectedTicket.order.order_no}` : selectedTicket.order_no : 'N/A'
                                                 }}
                                             </a>
@@ -319,7 +319,7 @@
                                             'text-dark bg-secondary w-75 rounded float-left px-2': user.id !== chat.added_by
                                         }">
                                         <p class="d-flex justify-content-between mb-0">
-                                            <strong>{{ chat.added_by === user.id ? 'You' : chat.added_by_name.name
+                                            <strong>{{ chat.added_by === user.id ? 'You' : chat?.added_by_name?.name
                                                 }}:</strong>
                                             <strong
                                                 :class="chat.added_by === user.id ? 'text-white' : 'text-dark'"><small>{{

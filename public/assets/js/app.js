@@ -23883,7 +23883,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
-  var _vm$selectedTicket$ad2;
+  var _vm$selectedTicket2, _vm$selectedTicket3;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
@@ -24243,6 +24243,7 @@ var render = function render() {
       id: "save-stage"
     }
   }, [_vm._m(4), _vm._v(" "), _c("tbody", _vm._l(_vm.tickets, function (ticket) {
+    var _ticket$order, _ticket$added_by_name2;
     return _c("tr", {
       key: ticket.id
     }, [_c("td", [_vm._v(_vm._s(ticket.id))]), _vm._v(" "), _c("td", [ticket.order ? _c("a", {
@@ -24256,7 +24257,7 @@ var render = function render() {
           return _vm.fetchOrderDetails(ticket.order_no);
         }
       }
-    }, [_vm._v("\n                                        " + _vm._s(ticket.order_no ? ticket.order.shop ? "".concat(ticket.order.shop.store_name.substring(0, 3), "-").concat(ticket.order.order_no) : ticket.order_no : "N/A") + "\n                                    ")]) : _c("span", [_vm._v("N/A")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.ticket_type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.message))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.status || "Pending"))]), _vm._v(" "), _c("td", [_c("a", {
+    }, [_vm._v("\n                                        " + _vm._s(ticket.order_no ? ticket.order.shop ? "".concat((_ticket$order = ticket.order) === null || _ticket$order === void 0 || (_ticket$order = _ticket$order.shop) === null || _ticket$order === void 0 ? void 0 : _ticket$order.store_name.substring(0, 3), "-").concat(ticket.order.order_no) : ticket.order_no : "N/A") + "\n                                    ")]) : _c("span", [_vm._v("N/A")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.ticket_type))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.message))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(ticket.status || "Pending"))]), _vm._v(" "), _c("td", [_c("a", {
       attrs: {
         href: "#",
         "data-toggle": "modal",
@@ -24265,10 +24266,10 @@ var render = function render() {
       on: {
         click: function click($event) {
           var _ticket$added_by_name;
-          return _vm.fetchDropshipperDetails((_ticket$added_by_name = ticket.added_by_name) === null || _ticket$added_by_name === void 0 || (_ticket$added_by_name = _ticket$added_by_name.dropshipper) === null || _ticket$added_by_name === void 0 ? void 0 : _ticket$added_by_name.id);
+          return _vm.fetchDropshipperDetails(ticket === null || ticket === void 0 || (_ticket$added_by_name = ticket.added_by_name) === null || _ticket$added_by_name === void 0 || (_ticket$added_by_name = _ticket$added_by_name.dropshipper) === null || _ticket$added_by_name === void 0 ? void 0 : _ticket$added_by_name.id);
         }
       }
-    }, [_vm._v(_vm._s(ticket.added_by_name.name))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(new Date(ticket.created_at).toLocaleDateString()))]), _vm._v(" "), _c("td", [_c("button", {
+    }, [_vm._v(_vm._s(ticket === null || ticket === void 0 || (_ticket$added_by_name2 = ticket.added_by_name) === null || _ticket$added_by_name2 === void 0 ? void 0 : _ticket$added_by_name2.name))])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(new Date(ticket.created_at).toLocaleDateString()))]), _vm._v(" "), _c("td", [_c("button", {
       staticClass: "btn btn-info",
       on: {
         click: function click($event) {
@@ -24330,11 +24331,11 @@ var render = function render() {
     },
     on: {
       click: function click($event) {
-        var _vm$selectedTicket$ad;
-        return _vm.fetchDropshipperDetails((_vm$selectedTicket$ad = _vm.selectedTicket.added_by_name) === null || _vm$selectedTicket$ad === void 0 || (_vm$selectedTicket$ad = _vm$selectedTicket$ad.dropshipper) === null || _vm$selectedTicket$ad === void 0 ? void 0 : _vm$selectedTicket$ad.id);
+        var _vm$selectedTicket;
+        return _vm.fetchDropshipperDetails((_vm$selectedTicket = _vm.selectedTicket) === null || _vm$selectedTicket === void 0 || (_vm$selectedTicket = _vm$selectedTicket.added_by_name) === null || _vm$selectedTicket === void 0 || (_vm$selectedTicket = _vm$selectedTicket.dropshipper) === null || _vm$selectedTicket === void 0 ? void 0 : _vm$selectedTicket.id);
       }
     }
-  }, [_vm._v(_vm._s((_vm$selectedTicket$ad2 = _vm.selectedTicket.added_by_name) === null || _vm$selectedTicket$ad2 === void 0 ? void 0 : _vm$selectedTicket$ad2.name) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s((_vm$selectedTicket2 = _vm.selectedTicket) === null || _vm$selectedTicket2 === void 0 || (_vm$selectedTicket2 = _vm$selectedTicket2.added_by_name) === null || _vm$selectedTicket2 === void 0 ? void 0 : _vm$selectedTicket2.name) + "\n                                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(8), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
@@ -24349,7 +24350,7 @@ var render = function render() {
         return _vm.fetchOrderDetails(_vm.selectedTicket.order_no);
       }
     }
-  }, [_vm._v("\n                                            " + _vm._s(_vm.selectedTicket.order_no ? _vm.selectedTicket.order.shop ? "".concat(_vm.selectedTicket.order.shop.store_name.substring(0, 3), "-").concat(_vm.selectedTicket.order.order_no) : _vm.selectedTicket.order_no : "N/A") + "\n                                        ")]) : _c("span", [_vm._v("N/A")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v("\n                                            " + _vm._s(_vm.selectedTicket.order_no ? _vm.selectedTicket.order.shop ? "".concat((_vm$selectedTicket3 = _vm.selectedTicket) === null || _vm$selectedTicket3 === void 0 || (_vm$selectedTicket3 = _vm$selectedTicket3.order) === null || _vm$selectedTicket3 === void 0 || (_vm$selectedTicket3 = _vm$selectedTicket3.shop) === null || _vm$selectedTicket3 === void 0 ? void 0 : _vm$selectedTicket3.store_name.substring(0, 3), "-").concat(_vm.selectedTicket.order.order_no) : _vm.selectedTicket.order_no : "N/A") + "\n                                        ")]) : _c("span", [_vm._v("N/A")])])]), _vm._v(" "), _c("div", {
     staticClass: "mb-2 d-flex justify-content-between"
   }, [_vm._m(9), _vm._v(" "), _c("p", {
     staticClass: "mb-1"
@@ -24401,6 +24402,7 @@ var render = function render() {
       "overflow-y": "auto"
     }
   }, _vm._l(_vm.chats, function (chat, index) {
+    var _chat$added_by_name;
     return _c("div", {
       key: index,
       staticClass: "mb-2"
@@ -24411,7 +24413,7 @@ var render = function render() {
       }
     }, [_c("p", {
       staticClass: "d-flex justify-content-between mb-0"
-    }, [_c("strong", [_vm._v(_vm._s(chat.added_by === _vm.user.id ? "You" : chat.added_by_name.name) + ":")]), _vm._v(" "), _c("strong", {
+    }, [_c("strong", [_vm._v(_vm._s(chat.added_by === _vm.user.id ? "You" : chat === null || chat === void 0 || (_chat$added_by_name = chat.added_by_name) === null || _chat$added_by_name === void 0 ? void 0 : _chat$added_by_name.name) + ":")]), _vm._v(" "), _c("strong", {
       "class": chat.added_by === _vm.user.id ? "text-white" : "text-dark"
     }, [_c("small", [_vm._v(_vm._s(chat.status))])]), _vm._v(" "), _c("span", [chat.file_path != null ? _c("a", {
       "class": chat.added_by === _vm.user.id ? "text-white" : "text-dark",
