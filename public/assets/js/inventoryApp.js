@@ -5104,10 +5104,10 @@ var render = function render() {
       id: "order_table"
     }
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.pendingReturns, function (item, index) {
-    var _item$courier;
+    var _item$shop, _item$shop2, _item$courier, _item$user;
     return _c("tr", {
       key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + "-" + item.order_no : item.order_no) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$courier = item.courier) === null || _item$courier === void 0 ? void 0 : _item$courier.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.user.name))]), _vm._v(" "), _c("td", [_c("ul", _vm._l(item.items, function (product) {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v("\n                                        " + _vm._s(item.shop && item !== null && item !== void 0 && (_item$shop = item.shop) !== null && _item$shop !== void 0 && _item$shop.store_name ? (item === null || item === void 0 || (_item$shop2 = item.shop) === null || _item$shop2 === void 0 ? void 0 : _item$shop2.store_name.substring(0, 3)) + "-" + item.order_no : item.order_no) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$courier = item.courier) === null || _item$courier === void 0 ? void 0 : _item$courier.courier_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.tracking_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item === null || item === void 0 || (_item$user = item.user) === null || _item$user === void 0 ? void 0 : _item$user.name))]), _vm._v(" "), _c("td", [_c("ul", _vm._l(item.items, function (product) {
       var _product$variation;
       return _c("li", {
         key: "items-" + item.created_at

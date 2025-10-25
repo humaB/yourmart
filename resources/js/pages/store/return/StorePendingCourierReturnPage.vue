@@ -51,11 +51,11 @@
                                     <tr v-for="(item,index) in pendingReturns" :key="item.id">
                                         <td>{{ index + 1 }}</td>
                                         <td>
-                                            {{ item.shop && item.shop.store_name ? item.shop.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
+                                            {{ item.shop && item?.shop?.store_name ? item?.shop?.store_name.substring(0, 3) + '-' + item.order_no : item.order_no }}
                                         </td>
                                         <td>{{ item?.courier?.courier_name }}</td>
                                         <td>{{ item.tracking_number }}</td>
-                                        <td>{{ item.user.name }}</td>
+                                        <td>{{ item?.user?.name }}</td>
                                         <td>
                                             <ul>
                                                <li v-for="product in item.items" :key="'items-' + item.created_at">
