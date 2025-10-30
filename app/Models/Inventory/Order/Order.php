@@ -61,7 +61,7 @@ class Order extends Model
     }
 
     public function user(){
-        return $this->hasOne(User::class, 'id', 'belongs_to');
+        return $this->hasOne(User::class, 'id', 'belongs_to')->withTrashed();
     }
 
     public function courier(){

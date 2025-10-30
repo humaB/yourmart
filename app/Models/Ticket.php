@@ -24,7 +24,7 @@ class Ticket extends Model
     ];
 
     public function added_by_name(){
-        return $this->belongsTo(User::class, 'added_by', 'id');
+        return $this->belongsTo(User::class, 'added_by', 'id')->withTrashed();
     }
 
     public function order(){
