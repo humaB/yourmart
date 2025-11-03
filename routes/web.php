@@ -60,9 +60,9 @@ Route::group(['prefix' => '/', 'middleware' => 'auth'], function () {
     Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 });
 
-//*******************************************
+//******************************************
 //            Users
-//*******************************************
+//******************************************
 
 Route::group(['prefix' => '/users', 'middleware' => 'auth'], function () {
     Route::get('/', [UserController::class, 'index'])->name('user');
