@@ -400,7 +400,6 @@ class LeopardApiHelper
 
     public function parcelDelivered($order)
     {
-
         //Customer Selling Price - ( (Product Price + courier + packaging) - Advance )
         //3500 - ( ( 1000 + 200 + 40 ) - 500)
         $courierCharges = $order->courier_service_price;

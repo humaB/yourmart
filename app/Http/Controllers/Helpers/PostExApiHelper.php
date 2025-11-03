@@ -263,8 +263,7 @@ class PostExApiHelper
     {
         $order = $request;
 
-
-        $detail = Order::with('range')->where('tracking_number', trim($order['trackingNumber']))->first();
+        return $detail = Order::with('range')->where('tracking_number', trim($order['trackingNumber']))->first();
 
         if( $detail && $detail->status == 8 ){
             $lastUpdatedStatus = OrderLeopardStatus::where('order_id', $detail->id)->orderBy('id', 'desc')->first();
