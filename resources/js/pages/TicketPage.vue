@@ -239,6 +239,7 @@
                                                 data-toggle="modal" data-target="#dropShipperDetail">{{
                                                     selectedTicket?.added_by_name?.name }}
                                             </a>
+                                            <!--  -->
                                         </p>
                                     </div>
 
