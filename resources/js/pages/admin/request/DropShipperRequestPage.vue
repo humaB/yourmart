@@ -80,6 +80,16 @@
                             </div>
                         </div>
 
+ <!-- / //  30 day graph  -->
+ <div class="col-12">
+                            <DropshipperApprovedGraph 
+                                :dropshipperGraphLast120Days="dropshipperGraphLast120Days" 
+                            />
+                        </div>
+
+
+ <!-- / //  30 day graph  -->
+
                         <form @submit.prevent="applyFilter" class="row col-md-12">
                             <div class="col-md-3">
                                 <label for="">Select Status</label>
@@ -246,20 +256,28 @@ import TableHeader from "../../../components/table/TableHeaderComponent.vue";
 import DropshipperDetails from "../../../components/admin/request/DropshipperDetails.vue";
 import DropshipperPayment from "../../../components/admin/request/DropshipperPayment.vue";
 import DropshipperPaymentHistory from "../../../components/admin/request/DropshipperPaymentHistory.vue";
+//  30 day graph 
+import DropshipperApprovedGraph from '../../../components/graphs/DropshipperApprovedGraph.vue';
 
 export default {
     name: 'DropShipperRequestPage',
     components: {
+        //  30 day graph 
         TableHeader,
         BulletListLoader,
         DropshipperDetails,
         DropshipperPayment,
-        DropshipperPaymentHistory
+        DropshipperPaymentHistory,
+        DropshipperApprovedGraph
     },
     data() {
         return {
+
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             api_url: window.location.origin + process.env.MIX_API_URL,
+            // api_url: process.env.MIX_API_URL,
+
+           
             tableHeader: {
                 heading: "Dropshipper Request's",
             },
@@ -303,6 +321,7 @@ export default {
             paymentHistorys: [],
             pagination: {},
             page: 1,
+            dropshipperGraphLast120Days: {}, 
         };
     },
     computed: {
@@ -345,6 +364,9 @@ export default {
         this.addDataReset = JSON.parse(JSON.stringify(this.addData));
     },
     methods: {
+        //  30 day graph 
+       
+        //  30 day graph 
         updateLevel(){
             let vm = this;
             vm.btnLoader = true;
@@ -464,9 +486,24 @@ export default {
                     vm.totalRequest = results.totalRequests;
                     vm.pendingRequest = results.totalPending;
                     vm.approvedRequest = results.totalApproved;
+                    vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
                     vm.rejectedRequest = results.totalRejected;
 
-                    vm.loader = false;
+                    
+                    // 30 days 
+                    // Get graph data from API response
+                    vm.dropshipperGraphLast120Days = response.data.response.dropshipperGraphLast120Days;
+    
+    // DEBUG: Check actual data values for dropshipper chart
+    const graphData = JSON.parse(JSON.stringify(vm.dropshipperGraphLast120Days));
+            console.log('ðŸ“Š Dropshipper graph data structure:', {
+                categories: graphData?.categories?.slice(0, 5),
+                seriesData: graphData?.series?.[0]?.data?.slice(0, 5),
+                totalPoints: graphData?.series?.[0]?.data?.length
+            });
+
+
+            vm.loader = false;
 
                     this.dataTable();
                 });

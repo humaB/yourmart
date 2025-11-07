@@ -190,4 +190,5 @@ class TicketController extends Controller
             'name' => $nameToStore // You can also return the path if needed
         ], 201);
     }
+
 }

@@ -14,7 +14,7 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     2.
                                     <a href="#" @click="goodReceived()"><i class="fas fa-fax"></i> Inventory Good
@@ -22,7 +22,7 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     3.
                                     <a href="#" @click="goodIssued()"><i class="fas fa-fax"></i> Inventory Good
@@ -38,7 +38,7 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     5.
                                     <a href="#" @click="deliveredOrder()"><i class="fas fa-fax"></i> Delivered Order Detail</a>
@@ -52,21 +52,21 @@
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     7.
                                     <a href="#" @click="orderIssuanceReport()"><i class="fas fa-fax"></i> Order Issuance Report</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     8.
                                     <a href="#" @click="topSellingProducts()"><i class="fas fa-fax"></i> Top Selling Product</a>
                                 </h6>
                             </div>
 
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     9.
                                     <a href="#" @click="top10Dropshipper()"><i class="fas fa-fax"></i> Top 10 Dropshippers</a>
@@ -92,7 +92,7 @@
                                     <a href="#" @click="shopListPostEx()"><i class="fas fa-fax"></i> Shop List for PostEx</a>
                                 </h6>
                             </div>
-                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+                            <div class="col-md-4 col-6" v-if="role == 'admin' || role == 'supervisor'">
                                 <h6>
                                     13.
                                     <a href="#" @click="closingReport()"><i class="fas fa-fax"></i> Daily Business Report</a>

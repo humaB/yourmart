@@ -38,6 +38,7 @@
                     :dropshipperGraph="dropshipperGraph"
                 />
 
+
                 <DashboardRevenueOrderChart
                     :revenueOrderGraph="revenueOrderGraph"
                 />
@@ -55,8 +56,65 @@
                     </div>
 
                 </div>
+                                   
+                    <!-- New products last 30 days -->
+
+                    <div class="row">
+    <!-- Orders Graph -->
+     
+    <div class="col-12 col-sm-12 col-lg-12">
+                <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
+            </div> 
+    <div class="col-12 col-sm-12 col-lg-12 mb-4">
+                <GenericBarChart 
+                    :graph-data="dashboardGraphs"
+                    graph-type="orders"
+                    title="Orders"
+                />
             </div>
 
+            <!-- Sales Graph -->
+            <div class="col-12 col-sm-12 col-lg-12 mb-4">
+                <GenericBarChart 
+                    :graph-data="dashboardGraphs"
+                    graph-type="sales"
+                    title="Sales"
+                    :is-currency="true"
+                />
+            </div>
+
+            <!-- Profit Graph -->
+            <div class="col-12 col-sm-12 col-lg-12 mb-4">
+                <GenericBarChart 
+                    :graph-data="dashboardGraphs"
+                    graph-type="profit"
+                    title="Profit"
+                    :is-currency="true"
+                />
+            </div>
+
+            <!-- Returns Graph -->
+            <div class="col-12 col-sm-12 col-lg-12 mb-4">
+                <GenericBarChart 
+                    :graph-data="dashboardGraphs"
+                    graph-type="returns"
+                    title="Returns"
+                />
+            </div>
+            <div class="col-md-12">
+                <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/>
+             </div>  
+
+            
+</div>
+ <!-- 30 days graph -->
+
+
+
+                
+            </div>
+
+        
             <div class="card-body table-responsive" v-if="loader">
                 <bullet-list-loader :width="250"> </bullet-list-loader>
             </div>
@@ -75,8 +133,7 @@
             <DashboardTopFiveSupplier :topFiveSuppliers='topFiveSuppliers' />
 
             <DashboardSectionFour :inventoryStatus="inventoryStatus" />
-
-
+ 
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
@@ -85,6 +142,7 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-striped">
+                                <thead>
                                 <tr>
                                     <th>Total Tickets</th>
                                     <th>Awaiting Your Reply</th>
@@ -94,6 +152,8 @@
                                     <th>Reviewed</th>
                                     <th>In-Process</th>
                                 </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <td>{{ totalTicketSum.total_tickets }}</td>
                                     <td class="align-middle">
@@ -160,12 +220,18 @@
                                         {{ totalTicketSum.in_process }}
                                     </td>
                                 </tr>
+                            </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
 
+            <div class="col-md-12">
+                <TicketTypesGraph :ticketTypesGraphData="ticketTypesGraphData"/>
+             </div> 
+             
             <div class="col-md-6 mt-5">
                 <div class="card">
                     <div class="card-header">
@@ -216,6 +282,12 @@ import DashboardTopFiveDropshipper from '../components/admin/dashboard/Dashboard
 import DashboardTopFiveProduct from '../components/admin/dashboard/DashboardTopFiveProduct.vue';
 import DashboardTopFiveSupplier from '../components/admin/dashboard/DashboardTopFiveSupplier.vue';
 import DropshipperDetails from '../components/admin/request/DropshipperDetails.vue';
+import DropshipperApprovedGraph from '../components/graphs/DropshipperApprovedGraph.vue';
+import NewProducts30DaysGraph from '../components/graphs/NewProducts30DaysGraph.vue'; 
+import GenericBarChart from '../components/graphs/GenericBarChart.vue';
+import TicketTypesGraph from "../components/graphs/TicketTypesGraph.vue";
+
+
 import { BulletListLoader } from "vue-content-loader";
 
 export default {
@@ -231,6 +303,12 @@ export default {
         DashboardSectionFour,
         DashboardDropshipperGraph,
         DashboardRevenueOrderChart,
+         // 30 days graphs
+        DropshipperApprovedGraph,
+        NewProducts30DaysGraph,
+        GenericBarChart ,
+        TicketTypesGraph,
+         // 30 days graphs
         CourierStatsGraph,
         BulletListLoader
     },
@@ -324,6 +402,13 @@ export default {
             topFiveDropshippers: [],
             topFiveProduct: [],
             topFiveSuppliers: [],
+            // 30 days graphs
+            dropshipperGraphLast120Days: {},
+            newproducts30daysgraph:{},
+            dashboardGraphs: {},
+            ticketTypesGraphData: {},
+           
+            // 30 days graphs
             dropshipperGraph : {},
             revenueOrderGraph : {},
             levelsWidget : {
@@ -404,7 +489,16 @@ export default {
                     };
                     vm.loader = false;
 
-                    vm.renderChart()
+                     // 30 days graphs
+        
+                    vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
+                    vm.dashboardGraphs = results.dashboardGraphs || {};
+                    vm.newproducts30daysgraph = results.newproducts30daysgraph;
+                    vm.ticketTypesGraphData = results.ticketTypesGraphData;
+                    
+             // 30 days graphs
+                   
+             vm.renderChart()
                 })
 
         },

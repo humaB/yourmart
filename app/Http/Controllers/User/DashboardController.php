@@ -27,6 +27,9 @@ class DashboardController extends Controller
 {
     public function fetchData(Request $request)
     {
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
+
 
         $orders = Order::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
@@ -35,11 +38,18 @@ class DashboardController extends Controller
                 $q->whereDate('created_at', '<=', $request->to);
             })->get();
 
+            $graphController = new GraphController();
+            $dashboardGraphs = $graphController->getDashboardGraphs();
+            $newproducts30daysgraph = $graphController->newproducts30daysgraph();
+            $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+            $ticketTypesGraphData = $graphController->ticketTypesGraphData();
+
+
 
         $approvedDropshipper = $this->getApprovedDropshippers($request);
         $activeSeller        = $this->getActiveSeller($request);
         $liveProduct        = $this->getLiveProducts();
-        $orderProcessed     = $this->orderProcessed($orders);
+        $orderProcessed     = $this->orderProcessed($orders); 
         $pendingPayouts     = $this->pendingPayouts();
         $pendingRequests    = $this->pendingRequests($request);
         $allProcessedOrders = $this->allProcessedOrder($orders, $request);
@@ -49,6 +59,12 @@ class DashboardController extends Controller
         $inventoryStatus    = $this->inventoryStatus($request);
         $dropshipperGraph   = $this->dropshipperGraph();
         $revenueOrderGraph  = $this->revenueOrderGraph();
+        // 30 days graphs
+        
+        
+        
+        // $dropshipperGraphLast120Days = (new DropShipperController())->dropshipperGraphLast120Days();
+           // 30 days graphs
 
         $courierPerformance  = $this->courierPerformance();
         $levels = DropShipperLevel::where('level', '!=', 'New Seller')->get();
@@ -65,7 +81,7 @@ class DashboardController extends Controller
             'approvedDropshipper' => $approvedDropshipper,
             'activeSeller'       => $activeSeller,
             'liveProduct'        => $liveProduct,
-            'orderProcessed'     => $orderProcessed,
+            'orderProcessed'     => $orderProcessed,  
             'payOuts'            => $pendingPayouts,
             'pendingRequests'    => $pendingRequests,
             'allProcessedOrders' => $allProcessedOrders,
@@ -75,6 +91,16 @@ class DashboardController extends Controller
             'inventoryStatus'       => $inventoryStatus,
             'dropshipperGraph'      => $dropshipperGraph,
             'revenueOrderGraph'     => $revenueOrderGraph,
+
+            // 30 days graphs
+            
+            'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days, // Use old name temporarily
+            'newproducts30daysgraph' => $newproducts30daysgraph,
+            'dashboardGraphs' => $dashboardGraphs,
+            'ticketTypesGraphData' => $ticketTypesGraphData ,
+            
+            // 30 days graphs
+            
             'levels'                => $levels,
 
             'courierPerformance'    => $courierPerformance
@@ -84,6 +110,8 @@ class DashboardController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+
+
 
     private function courierPerformance()
     {
@@ -152,6 +180,173 @@ class DashboardController extends Controller
         ];
     }
 
+    private function dailySalesGraph()
+{
+    // Generate last 30 days
+    $days = collect(range(0, 29))->map(function ($i) {
+        return [
+            'date' => now()->subDays($i)->format('Y-m-d'),
+            'label' => now()->subDays($i)->format('M d'),
+        ];
+    })->reverse();
+    
+    // Count orders instead of summing amount
+    $sales = Order::where('created_at', '>=', now()->subDays(30))
+        ->where('status', '!=', 'cancelled') // Exclude cancelled orders
+        ->selectRaw('DATE(created_at) as date, COUNT(*) as sales_count')
+        ->groupBy('date')
+        ->pluck('sales_count', 'date');
+
+    // Map sales count data to each day and reset keys
+    $data = $days->map(function ($day) use ($sales) {
+        return $sales->get($day['date'], 0);
+    })->values(); // Use values() to reset keys
+
+    $totalMonthlySales = array_sum($data->toArray());
+    $averageMonthlySales = $totalMonthlySales; // Since it's already monthly total
+
+    return [
+        'categories' => $days->pluck('label')->toArray(),
+        'series' => [
+            [
+                'name' => 'Daily Sales',
+                // 'data' => [...$data],
+                'data' => $data->toArray(), 
+            ],
+        ],
+        
+        'stats' => [
+            'total_monthly_sales' => $totalMonthlySales,
+            'average_monthly_sales' => $averageMonthlySales,
+            'period' => 'month'
+        ]
+    
+    ];
+}
+private function dailyReturnsGraph()
+{
+    // Generate last 30 days
+    $days = collect(range(0, 29))->map(function ($i) {
+        return [
+            'date' => now()->subDays($i)->format('Y-m-d'),
+            'label' => now()->subDays($i)->format('M d'),
+        ];
+    })->reverse();
+    
+    $returns = Order::where('created_at', '>=', now()->subDays(30))
+        ->where('status', 'returned') // Adjust this based on your return status
+        ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+        ->groupBy('date')
+        ->pluck('count', 'date');
+
+    // Map returns data to each day
+    $data = $days->map(function ($day) use ($returns) {
+        return $returns->get($day['date'], 0);
+    })->values(); 
+
+    return [
+        'categories' => $days->pluck('label')->toArray(),
+        'series' => [
+            [
+                'name' => 'Daily Returns',
+                'data' => $data->toArray(), 
+            ],
+        ],
+    ];
+}
+
+    private function dailyProfitGraph()
+    {
+    
+            $days = collect(range(0, 29))->map(function ($i) {
+                return [
+                    'date' => now()->subDays($i)->format('Y-m-d'),
+                    'label' => now()->subDays($i)->format('M d'),
+                ];
+            })->reverse();
+    
+            $profits = Order::where('created_at', '>=', now()->subDays(30))
+                ->whereIn('status', [5, 8]) // Delivered statuses
+                ->selectRaw('DATE(created_at) as date, SUM(total_profit) as total_profit')
+                ->groupBy('date')
+                ->pluck('total_profit', 'date');
+    
+            // Map profit data to each day - FIX: Use toArray() instead of spread
+            $data = $days->map(function ($day) use ($profits) {
+                return (float) $profits->get($day['date'], 0); // Ensure float
+            });
+    
+            return [
+                'categories' => $days->pluck('label')->toArray(),
+                'series' => [
+                    [
+                        'name' => 'Daily Profit',
+                        'data' => $data->values()->toArray(), // FIX: Use toArray()
+                    ],
+                ],
+            ];
+    
+        
+    }
+
+    private function dailyOrdersGraph()
+    {
+        // Generate last 30 days
+        $days = collect(range(0, 29))->map(function ($i) {
+            return [
+                'date' => now()->subDays($i)->format('Y-m-d'),
+                'label' => now()->subDays($i)->format('M d'),
+            ];
+        })->reverse();
+        $orders = Order::where('created_at', '>=', now()->subDays(30))
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->pluck('count', 'date');
+    
+        // Map order data to each day
+        $data = $days->map(function ($day) use ($orders) {
+            return $orders->get($day['date'], 0);
+        });
+    
+        return [
+            'categories' => $days->pluck('label')->toArray(),
+            'series' => [
+                [
+                    'name' => 'Daily Orders',
+                    'data' => [...$data],
+                    // 'data' => $data->toArray(),
+                ],
+            ],
+        ];
+    }
+
+    private function newproducts30daysgraph()
+    {
+        // Generate last 30 days
+        $days = collect(range(0, 29))->map(function ($i) {
+            return [
+                'date' => now()->subDays($i)->format('Y-m-d'),
+                'label' => now()->subDays($i)->format('M d'),
+            ];
+        })->reverse();
+        $products = Product::where('created_at', '>=', now()->subDays(30))
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->pluck('count', 'date');
+        $data = $days->map(function ($day) use ($products) {
+            return $products->get($day['date'], 0);
+        });
+    
+        return [
+            'categories' => $days->pluck('label')->toArray(),
+            'series' => [
+                [
+                    'name' => 'New Products',
+                    'data' => [...$data],
+                ],
+            ],
+        ];
+    }
 
 
     private function inventoryStatus($request)

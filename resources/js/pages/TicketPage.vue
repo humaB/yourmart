@@ -90,6 +90,10 @@
                             </table>
                         </div>
                     </div>
+
+                
+
+
                 </div>
                 <div class="mx-4">
                     <form role="form" @submit.prevent="fetchTicketData">
@@ -386,12 +390,13 @@ import moment from "moment";
 import OrderDetailView from "../components/inventory/product/order/OrderDetailView.vue";
 import DropshipperDetails from "../components/admin/request/DropshipperDetails.vue";
 
+
 export default {
     name: 'TicketPage',
     components: {
         BulletListLoader,
         OrderDetailView,
-        DropshipperDetails
+        DropshipperDetails,
     },
     data() {
         return {
@@ -425,6 +430,7 @@ export default {
                 selectedFile: null,
                 ticketId: null
             },
+        
             commentLoader: false,
             orderDetails: {},
             dropShipperDetails: {}
@@ -443,6 +449,7 @@ export default {
                 });
 
         },
+    
         async addMessage() {
             // Validation for chat message and status
             if (!this.postMessage.chatMessage || this.postMessage.chatMessage.trim() === '') {
@@ -715,6 +722,23 @@ export default {
                     });
                 });
         },
+
+        fetchTicketTypes() {
+        axios.get(this.api_url + 'tickets/types-last-30days')
+            .then(response => {
+                this.ticketTypes = response.data.ticketTypes;
+                this.totalTicketTypes = response.data.totalTickets;
+            })
+            .catch(error => {
+                console.error('Error fetching ticket types:', error);
+            });
+    },
+    
+    getTypePercentage(count) {
+        if (this.totalTicketTypes === 0) return 0;
+        return Math.round((count / this.totalTicketTypes) * 100);
+    },
+    
         isImage(file) {
             return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(file);
         },
@@ -724,6 +748,7 @@ export default {
     },
     mounted() {
         this.fetchTicketStatusCounts();
+        this.fetchTicketTypes();
     },
 }
 </script>
