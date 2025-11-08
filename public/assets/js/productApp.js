@@ -21580,7 +21580,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
 /* harmony export */ });
 var render = function render() {
-  var _vm$item;
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", [_c("div", {
@@ -21726,7 +21725,7 @@ var render = function render() {
         return _vm.cancelEdit("brand_id");
       }
     }
-  }, [_vm._v("Cancel")]) : _vm._e()])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Category")]), _vm._v(" "), _c("td", [!_vm.editingField.category_id ? _c("div", [_vm._v(_vm._s((_vm$item = _vm.item) !== null && _vm$item !== void 0 && (_vm$item = _vm$item.category) !== null && _vm$item !== void 0 && _vm$item.name ? _vm.item.category.name : "No Category"))]) : _c("div", [_c("v-select", {
+  }, [_vm._v("Cancel")]) : _vm._e()])]), _vm._v(" "), _c("tr", [_c("th", [_vm._v("Category")]), _vm._v(" "), _c("td", [!_vm.editingField.category_id ? _c("div", [_vm._v(_vm._s(_vm.product.category ? _vm.product.category.name : "No Category"))]) : _c("div", [_c("v-select", {
     attrs: {
       options: _vm.categories
     },

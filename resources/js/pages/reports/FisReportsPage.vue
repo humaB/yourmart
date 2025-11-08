@@ -110,6 +110,12 @@
                                     <a href="#" @click="supplierStock()"><i class="fas fa-fax"></i> Supplier Wise Stock</a>
                                 </h6>
                             </div>
+                            <div class="col-md-4 col-6" v-if="role == 'admin'">
+    <h6>
+        16.
+        <a href="#" @click="suspectedDuplicateDropshippers()"><i class="fas fa-fax"></i> Suspected Duplicate Dropshippers</a>
+    </h6>
+</div>
                         </div>
                     </div>
                 </div>
@@ -163,6 +169,9 @@
 
         <SupplierWiseStock v-if="report == 'supplier-stock-report'" :data="supplierStockData"
             :loader="loader" @supplierStockFilter="supplierStockFilter($event)" />
+
+        <SuspectedDuplicateDropshippers v-if="report == 'suspected-duplicate-dropshippers'" :data="suspectedDuplicateDropshippersData"
+            :loader="loader" @fetchDuplicateDropshippers="suspectedDuplicateDropshippersFilter($event)" />
 
 
         <!-- Modal -->
@@ -218,6 +227,7 @@ import ShopListForPostEx from '../../components/reports/fis/ShopListForPostEx.vu
 import SupplierWiseStock from '../../components/reports/fis/SupplierWiseStock.vue';
 import Top10DropshipperReport from '../../components/reports/fis/Top10DropshipperReport.vue';
 import TopSellingProduct from '../../components/reports/fis/TopSellingProduct.vue';
+import SuspectedDuplicateDropshippers from '../../components/reports/fis/SuspectedDuplicateDropshippers.vue';
 
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
@@ -239,7 +249,8 @@ export default {
         ShopListForPostEx,
         ClosingReport,
         DropshipperListReport,
-        SupplierWiseStock
+        SupplierWiseStock,
+        SuspectedDuplicateDropshippers
     },
     data() {
         return {
@@ -272,6 +283,7 @@ export default {
             closingReportData : [],
             dropshipperListData : [],
             supplierStockData : [],
+            suspectedDuplicateDropshippersData: [],
             role : ""
         }
     },
@@ -314,6 +326,25 @@ export default {
                     vm.loader = false;
                 })
         },
+
+        suspectedDuplicateDropshippers() {
+            this.report = 'suspected-duplicate-dropshippers'
+        },
+        suspectedDuplicateDropshippersFilter(data) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/suspected-duplicate-dropshippers')
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.suspectedDuplicateDropshippersData = results;
+                    vm.loader = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching duplicate dropshippers:', error);
+                    vm.loader = false;
+                });
+        },
+        
         closingReport() {
             this.report = 'closing-report'
         },

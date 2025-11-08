@@ -14261,6 +14261,95 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'SuspectedDuplicateDropshippers',
+  props: ['data', 'loader'],
+  components: {
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
+  },
+  data: function data() {
+    return {
+      public_url: window.location.origin + ""
+    };
+  },
+  methods: {
+    formatDate: function formatDate(date) {
+      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price).toFixed(2);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    fetchDuplicateDropshippers: function fetchDuplicateDropshippers() {
+      this.$emit('fetchDuplicateDropshippers');
+    },
+    clearDataTable: function clearDataTable() {
+      var table = $('#duplicate_dropshipper_list').DataTable();
+      if (table) {
+        table.destroy();
+      }
+    },
+    isEmailDuplicate: function isEmailDuplicate(item) {
+      return this.data.filter(function (d) {
+        return d.email === item.email && d.email;
+      }).length > 1;
+    },
+    isPhoneDuplicate: function isPhoneDuplicate(item) {
+      return this.data.filter(function (d) {
+        return d.whatsapp_number === item.whatsapp_number && d.whatsapp_number;
+      }).length > 1;
+    },
+    isNameDuplicate: function isNameDuplicate(item) {
+      return this.data.filter(function (d) {
+        return d.full_name === item.full_name && d.full_name;
+      }).length > 1;
+    }
+  },
+  watch: {
+    data: function data(newData) {
+      var _this = this;
+      this.$nextTick(function () {
+        setTimeout(function () {
+          _this.clearDataTable();
+          $('#duplicate_dropshipper_list').DataTable({
+            "bSort": false,
+            dom: 'Bfrtip',
+            buttons: [{
+              extend: 'copy',
+              title: 'Suspected Duplicate Dropshipper Accounts'
+            }, 'csv', {
+              extend: 'excel',
+              title: 'Suspected Duplicate Dropshipper Accounts'
+            }]
+          });
+        }, 300);
+      });
+    }
+  },
+  beforeDestroy: function beforeDestroy() {
+    this.clearDataTable();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=script&lang=js":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=script&lang=js ***!
@@ -18602,7 +18691,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../../components/reports/fis/SupplierWiseStock.vue */ "./resources/js/components/reports/fis/SupplierWiseStock.vue");
 /* harmony import */ var _components_reports_fis_Top10DropshipperReport_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../../components/reports/fis/Top10DropshipperReport.vue */ "./resources/js/components/reports/fis/Top10DropshipperReport.vue");
 /* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
-/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_reports_fis_SuspectedDuplicateDropshippers_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../components/reports/fis/SuspectedDuplicateDropshippers.vue */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue");
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
@@ -18623,10 +18713,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FisReportsPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
     InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
@@ -18641,7 +18732,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     ShopListForPostEx: _components_reports_fis_ShopListForPostEx_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
     ClosingReport: _components_reports_fis_ClosingReport_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     DropshipperListReport: _components_reports_fis_DropshipperListReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    SupplierWiseStock: _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
+    SupplierWiseStock: _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+    SuspectedDuplicateDropshippers: _components_reports_fis_SuspectedDuplicateDropshippers_vue__WEBPACK_IMPORTED_MODULE_15__["default"]
   },
   data: function data() {
     return _defineProperty({
@@ -18673,7 +18765,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       shopListPostExData: [],
       closingReportData: [],
       dropshipperListData: [],
-      supplierStockData: []
+      supplierStockData: [],
+      suspectedDuplicateDropshippersData: []
     }, "role", "");
   },
   created: function created() {
@@ -18708,6 +18801,21 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       axios.get(vm.api_url + 'reports/fis/dropshipper-list-report').then(function (res) {
         var results = res.data.response;
         vm.dropshipperListData = results;
+        vm.loader = false;
+      });
+    },
+    suspectedDuplicateDropshippers: function suspectedDuplicateDropshippers() {
+      this.report = 'suspected-duplicate-dropshippers';
+    },
+    suspectedDuplicateDropshippersFilter: function suspectedDuplicateDropshippersFilter(data) {
+      var vm = this;
+      vm.loader = true;
+      axios.get(vm.api_url + 'reports/fis/suspected-duplicate-dropshippers').then(function (res) {
+        var results = res.data.response;
+        vm.suspectedDuplicateDropshippersData = results;
+        vm.loader = false;
+      })["catch"](function (error) {
+        console.error('Error fetching duplicate dropshippers:', error);
         vm.loader = false;
       });
     },
@@ -31992,6 +32100,97 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0 ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
+    staticClass: "card"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
+    staticClass: "card-body row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.fetchDuplicateDropshippers.apply(null, arguments);
+      }
+    }
+  }, [_vm._m(1)])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-12"
+  }, [_vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("table", {
+    staticClass: "table table-bordered",
+    attrs: {
+      id: "duplicate_dropshipper_list"
+    }
+  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+    return _c("tr", {
+      key: item.id
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_payable)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.total_paid)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.status == 0 ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Pending")]) : _vm._e(), _vm._v(" "), item.status == 1 ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v("Approved")]) : _vm._e(), _vm._v(" "), item.status == 2 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Rejected")]) : _vm._e(), _vm._v(" "), item.status == 3 ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", [_vm.isEmailDuplicate(item) ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v("Duplicate Email")]) : _vm._e(), _vm._v(" "), _vm.isPhoneDuplicate(item) ? _c("span", {
+      staticClass: "badge badge-info"
+    }, [_vm._v("Duplicate Phone")]) : _vm._e(), _vm._v(" "), _vm.isNameDuplicate(item) ? _c("span", {
+      staticClass: "badge badge-secondary"
+    }, [_vm._v("Duplicate Name")]) : _vm._e()])]);
+  }), 0)])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-header"
+  }, [_c("h5", [_vm._v("Suspected Duplicate Dropshipper Accounts")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12 form-group pt-4"
+  }, [_c("button", {
+    staticClass: "btn btn-block btn-primary"
+  }, [_vm._v("Fetch Suspected Duplicates")])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Contact #")]), _vm._v(" "), _c("th", [_vm._v("Total Payable")]), _vm._v(" "), _c("th", [_vm._v("Total Paid")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Created At")]), _vm._v(" "), _c("th", [_vm._v("Duplicate Type")])])]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=template&id=5db9b9ec":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/Top10DropshipperReport.vue?vue&type=template&id=5db9b9ec ***!
@@ -39178,7 +39377,7 @@ var render = function render() {
     staticClass: "row"
   }, [_vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                1.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    1.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39189,9 +39388,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Control\n                                    Register")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
+  }), _vm._v(" Inventory Control\n                                        Register")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                2.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    2.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39202,9 +39401,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good\n                                    Received")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
+  }), _vm._v(" Inventory Good\n                                        Received")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                3.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    3.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39215,9 +39414,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good\n                                    Issued")])])]) : _vm._e(), _vm._v(" "), _c("div", {
+  }), _vm._v(" Inventory Good\n                                        Issued")])])]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                4.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    4.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39228,9 +39427,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Inventory Good\n                                    Returns")])])]), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
+  }), _vm._v(" Inventory Good\n                                        Returns")])])]), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                5.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    5.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39243,7 +39442,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Delivered Order Detail")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                6.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    6.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39256,7 +39455,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Returns Received")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                7.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    7.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39269,7 +39468,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Order Issuance Report")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                8.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    8.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39282,7 +39481,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Top Selling Product")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                9.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    9.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39295,7 +39494,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Top 10 Dropshippers")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                10.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    10.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39308,7 +39507,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" High Stock Products")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                11.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    11.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39321,7 +39520,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Low Stock Products")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                12.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    12.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39334,7 +39533,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Shop List for PostEx")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" || _vm.role == "supervisor" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                13.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    13.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39347,7 +39546,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Daily Business Report")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                14.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    14.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39360,7 +39559,7 @@ var render = function render() {
     staticClass: "fas fa-fax"
   }), _vm._v(" Dropshippers List")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
     staticClass: "col-md-4 col-6"
-  }, [_c("h6", [_vm._v("\n                                15.\n                                "), _c("a", {
+  }, [_c("h6", [_vm._v("\n                                    15.\n                                    "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -39371,7 +39570,20 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Supplier Wise Stock")])])]) : _vm._e()])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Supplier Wise Stock")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
+    staticClass: "col-md-4 col-6"
+  }, [_c("h6", [_vm._v("\n        16.\n        "), _c("a", {
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        return _vm.suspectedDuplicateDropshippers();
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fas fa-fax"
+  }), _vm._v(" Suspected Duplicate Dropshippers")])])]) : _vm._e()])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -39528,6 +39740,16 @@ var render = function render() {
         return _vm.supplierStockFilter($event);
       }
     }
+  }) : _vm._e(), _vm._v(" "), _vm.report == "suspected-duplicate-dropshippers" ? _c("SuspectedDuplicateDropshippers", {
+    attrs: {
+      data: _vm.suspectedDuplicateDropshippersData,
+      loader: _vm.loader
+    },
+    on: {
+      fetchDuplicateDropshippers: function fetchDuplicateDropshippers($event) {
+        return _vm.suspectedDuplicateDropshippersFilter($event);
+      }
+    }
   }) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "modal fade",
     attrs: {
@@ -39548,7 +39770,7 @@ var render = function render() {
     staticClass: "modal-body row"
   }, [_c("div", {
     staticClass: "col-md-12"
-  }, [_c("h5", [_vm._v("Are you sure you want to delete this " + _vm._s(_vm.grnDetails ? _vm.grnDetails.product.title : "") + "\n                            from GRN # " + _vm._s(_vm.grnDetails.id ? _vm.grnDetails.grn_id : "") + "?")]), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c("div", {
+  }, [_c("h5", [_vm._v("Are you sure you want to delete this " + _vm._s(_vm.grnDetails ? _vm.grnDetails.product.title : "") + "\n                                from GRN # " + _vm._s(_vm.grnDetails.id ? _vm.grnDetails.grn_id : "") + "?")]), _vm._v(" "), _vm._m(1)])]), _vm._v(" "), _c("div", {
     staticClass: "modal-footer"
   }, [!_vm.deleteLoader ? _c("button", {
     staticClass: "btn btn-danger",
@@ -39560,12 +39782,12 @@ var render = function render() {
         return _vm.deleteGRNConfirmation();
       }
     }
-  }, [_vm._v("Yes,\n                        Proceed")]) : _c("button", {
+  }, [_vm._v("Yes,\n                            Proceed")]) : _c("button", {
     staticClass: "btn btn-danger btn-progress danger",
     attrs: {
       type: "button"
     }
-  }, [_vm._v("Yes,\n                            Proceed")]), _vm._v(" "), _c("button", {
+  }, [_vm._v("Yes,\n                                Proceed")]), _vm._v(" "), _c("button", {
     staticClass: "btn btn-secondary",
     attrs: {
       type: "button",
@@ -39598,7 +39820,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("ul", [_c("li", [_vm._v("This will have impact on average price of this product")]), _vm._v(" "), _c("li", [_vm._v("This will have impact on total and remaining amount of PO")]), _vm._v(" "), _c("li", [_vm._v("This will only be delete if PO amount is not and remaining amount is equal or\n                                greater than this product cost")])]);
+  return _c("ul", [_c("li", [_vm._v("This will have impact on average price of this product")]), _vm._v(" "), _c("li", [_vm._v("This will have impact on total and remaining amount of PO")]), _vm._v(" "), _c("li", [_vm._v("This will only be delete if PO amount is not and remaining amount is equal or\n                                    greater than this product cost")])]);
 }];
 render._withStripped = true;
 
@@ -99395,6 +99617,79 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SupplierWiseStock_vue_vue_type_template_id_38544dfc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SupplierWiseStock.vue?vue&type=template&id=38544dfc */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SupplierWiseStock.vue?vue&type=template&id=38544dfc");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0 */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0");
+/* harmony import */ var _SuspectedDuplicateDropshippers_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SuspectedDuplicateDropshippers_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0__WEBPACK_IMPORTED_MODULE_0__.render,
+  _SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) // removed by dead control flow
+{ var api; }
+component.options.__file = "resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js":
+/*!********************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js ***!
+  \********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0":
+/*!**************************************************************************************************************!*\
+  !*** ./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0 ***!
+  \**************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0");
 
 
 /***/ }),

@@ -442,6 +442,43 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+    public function suspectedDuplicateDropshippers()
+    {
+        // Get dropshippers with same name, email, or phone
+        $duplicates = DropShipper::select('*')
+            ->whereIn('email', function($query) {
+                $query->select('email')
+                      ->from('drop_shippers')
+                      ->whereNotNull('email')
+                      ->where('email', '!=', '')
+                      ->groupBy('email')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('whatsapp_number', function($query) {
+                $query->select('whatsapp_number')
+                      ->from('drop_shippers')
+                      ->whereNotNull('whatsapp_number')
+                      ->where('whatsapp_number', '!=', '')
+                      ->groupBy('whatsapp_number')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('full_name', function($query) {
+                $query->select('full_name')
+                      ->from('drop_shippers')
+                      ->whereNotNull('full_name')
+                      ->where('full_name', '!=', '')
+                      ->groupBy('full_name')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orderBy('email')
+            ->orderBy('whatsapp_number')
+            ->orderBy('full_name')
+            ->get();
+    
+        return (new ResponseCollection($duplicates))
+            ->response()
+            ->setStatusCode(200);
+    }
 
     public function supplierWiseStock(){
 

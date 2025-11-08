@@ -238,6 +238,7 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
 
         Route::get('/dropshipper-list-report',  [FisReportController::class , 'dropshipperList']);
         Route::get('/supplier-wise-stock-report',  [FisReportController::class , 'supplierWiseStock']);
+        Route::get('/reports/fis/suspected-duplicate-dropshippers', [FisReportController::class, 'suspectedDuplicateDropshippers']);
 
     });
 });
