@@ -446,9 +446,11 @@ class FisReportController extends Controller
     {
         // Get dropshippers with same name, email, or phone
         $duplicates = DropShipper::select('*')
+            ->where('status', 1)
             ->whereIn('email', function($query) {
                 $query->select('email')
                       ->from('drop_shippers')
+                      ->where('status', 1)
                       ->whereNotNull('email')
                       ->where('email', '!=', '')
                       ->groupBy('email')
@@ -457,22 +459,43 @@ class FisReportController extends Controller
             ->orWhereIn('whatsapp_number', function($query) {
                 $query->select('whatsapp_number')
                       ->from('drop_shippers')
+                      ->where('status', 1)
                       ->whereNotNull('whatsapp_number')
                       ->where('whatsapp_number', '!=', '')
                       ->groupBy('whatsapp_number')
                       ->havingRaw('COUNT(*) > 1');
             })
-            ->orWhereIn('full_name', function($query) {
-                $query->select('full_name')
+            ->orWhereIn('account_iban', function($query) {
+                $query->select('account_iban')
                       ->from('drop_shippers')
-                      ->whereNotNull('full_name')
-                      ->where('full_name', '!=', '')
-                      ->groupBy('full_name')
+                      ->where('status', 1)
+                      ->whereNotNull('account_iban')
+                      ->where('account_iban', '!=', '')
+                      ->groupBy('account_iban')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('cnic_number', function($query) {
+                $query->select('cnic_number')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('cnic_number')
+                      ->where('cnic_number', '!=', '')
+                      ->groupBy('cnic_number')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('account_number', function($query) {
+                $query->select('account_number')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('account_number')
+                      ->where('account_number', '!=', '')
+                      ->groupBy('account_number')
                       ->havingRaw('COUNT(*) > 1');
             })
             ->orderBy('email')
             ->orderBy('whatsapp_number')
-            ->orderBy('full_name')
+            ->orderBy('account_number')
+            ->orderBy('cnic_number')
             ->get();
     
         return (new ResponseCollection($duplicates))
@@ -491,5 +514,100 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+
+    // In App\Http\Controllers\Report\FisReportController
+
+// ... (existing methods)
+
+/**
+ * Calculates Low Stock Levels and Recommended Reorder Quantity based on sales data.
+ * @param Request $request
+ * @return \Illuminate\Http\JsonResponse
+ */
+public function lowStockProducts(Request $request)
+{
+    try {
+        $products = Product::with(['variation'])
+            ->where('status', 1)
+            ->get();
+
+        $lowStockData = [];
+
+        foreach ($products as $product) {
+            if (!$product->variation) continue;
+
+            // Get sales for last 30 days
+            $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
+                ->where('created_at', '>=', Carbon::now()->subDays(30))
+                ->sum('quantity');
+
+            // Fixed values
+            $leadTime = 3;
+            $desiredDays = 10;
+            $currentStock = $product->variation->stock;
+            
+            // Average Daily Sales = Total units sold in the last 30 days ÷ 30
+            $avgDailySales = $sales30Days / 30;
+            
+            // Safety Stock = (Maximum Daily Sales × Lead Time) − (Average Daily Sales × Lead Time)
+            // Using 2x average as maximum for simplicity
+            $maxDailySales = $avgDailySales * 2;
+            $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
+            $safetyStock = max(1, ceil($safetyStock)); // Minimum 1
+            
+            // Low Stock Level = (Average Daily Sales × Lead Time) + Safety Stock
+            $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
+            $lowStockLevel = ceil($lowStockLevel);
+            
+            // Determine status
+            if ($currentStock <= 0) {
+                $status = 'Out of Stock';
+            } elseif ($currentStock <= $lowStockLevel) {
+                $status = 'Low Stock';
+            } else {
+                $status = 'Sufficient';
+            }
+            
+            // Recommended Reorder Quantity = (Average Daily Sales × 10) − Current Stock
+            $reorderQty = 0;
+            if ($status !== 'Sufficient') {
+                $reorderQty = ($avgDailySales * $desiredDays) - $currentStock;
+                $reorderQty = max(5, ceil($reorderQty)); // Minimum 5 units
+            }
+
+            $lowStockData[] = [
+                'sku' => $product->variation->sku,
+                'name' => $product->title,
+                'current_stock' => (int) $currentStock,
+                'sales_30_days' => (int) $sales30Days,
+                'avg_daily_sales' => round($avgDailySales, 2),
+                'lead_time' => $leadTime,
+                'safety_stock' => (int) $safetyStock,
+                'low_stock_level' => (int) $lowStockLevel,
+                'status' => $status,
+                'recommended_reorder_qty' => (int) $reorderQty,
+                'last_updated' => $product->variation->updated_at->format('Y-m-d'),
+            ];
+        }
+
+        // Simple status filter
+        if ($request->status && $request->status !== 'all') {
+            $lowStockData = array_values(array_filter($lowStockData, function($item) use ($request) {
+                return $item['status'] === $request->status;
+            }));
+        }
+
+        return (new ResponseCollection($lowStockData))
+            ->response()
+            ->setStatusCode(200);
+
+    } catch (\Exception $e) {
+        \Log::error('Low Stock Report Error: ' . $e->getMessage());
+        return (new ResponseCollection([]))
+            ->response()
+            ->setStatusCode(500);
+    }
+}
+
 
 }

@@ -113,7 +113,12 @@
                             <div class="col-md-4 col-6" v-if="role == 'admin'">
     <h6>
         16.
-        <a href="#" @click="suspectedDuplicateDropshippers()"><i class="fas fa-fax"></i> Suspected Duplicate Dropshippers</a>
+        <a href="#" @click="duplicateDropshipperslist()"><i class="fas fa-fax"></i> Duplicate Dropshippers Accounts</a>
+    </h6>
+
+    <h6>
+        17.
+        <a href="#" @click="lowStocklist()"><i class="fas fa-fax"></i> Low stock report</a>
     </h6>
 </div>
                         </div>
@@ -171,8 +176,9 @@
             :loader="loader" @supplierStockFilter="supplierStockFilter($event)" />
 
         <SuspectedDuplicateDropshippers v-if="report == 'suspected-duplicate-dropshippers'" :data="suspectedDuplicateDropshippersData"
-            :loader="loader" @fetchDuplicateDropshippers="suspectedDuplicateDropshippersFilter($event)" />
+            :loader="loader" @DuplicateDropshippersfilter="DuplicateDropshippersfilter($event)" />
 
+            <LowStockReport v-if="report == 'low-stock-products'" :data="lowStockData" :loader="loader"  @lowStockfilter="lowStockfilter" />
 
         <!-- Modal -->
         <div class="modal fade" id="deleteGRN" tabindex="-1" role="dialog" aria-labelledby="deleteGRNTitle"
@@ -228,6 +234,7 @@ import SupplierWiseStock from '../../components/reports/fis/SupplierWiseStock.vu
 import Top10DropshipperReport from '../../components/reports/fis/Top10DropshipperReport.vue';
 import TopSellingProduct from '../../components/reports/fis/TopSellingProduct.vue';
 import SuspectedDuplicateDropshippers from '../../components/reports/fis/SuspectedDuplicateDropshippers.vue';
+import LowStockReport from '../../components/reports/fis/LowStockReport.vue';
 
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
@@ -250,7 +257,8 @@ export default {
         ClosingReport,
         DropshipperListReport,
         SupplierWiseStock,
-        SuspectedDuplicateDropshippers
+        SuspectedDuplicateDropshippers,
+        LowStockReport
     },
     data() {
         return {
@@ -284,6 +292,8 @@ export default {
             dropshipperListData : [],
             supplierStockData : [],
             suspectedDuplicateDropshippersData: [],
+            lowStockData: [], 
+            lowStockLoader: false,
             role : ""
         }
     },
@@ -327,10 +337,10 @@ export default {
                 })
         },
 
-        suspectedDuplicateDropshippers() {
+         duplicateDropshipperslist() {
             this.report = 'suspected-duplicate-dropshippers'
         },
-        suspectedDuplicateDropshippersFilter(data) {
+        DuplicateDropshippersfilter(data) {
             let vm = this;
             vm.loader = true;
             axios.get(vm.api_url + 'reports/fis/suspected-duplicate-dropshippers')
@@ -344,7 +354,24 @@ export default {
                     vm.loader = false;
                 });
         },
-        
+        lowStocklist() {
+            this.report = 'low-stock-products'
+        },
+        lowStockfilter(data) {
+            let vm = this;
+            vm.loader = true;
+            axios.get(vm.api_url + 'reports/fis/low-stock-products')
+                .then((res) => {
+                    const results = res.data.response;
+                    vm.lowStockData = results;
+                    vm.loader = false;
+                })
+                .catch(error => {
+                    console.error('Error fetching low stock products:', error);
+                    vm.loader = false;
+                });
+        },
+    
         closingReport() {
             this.report = 'closing-report'
         },

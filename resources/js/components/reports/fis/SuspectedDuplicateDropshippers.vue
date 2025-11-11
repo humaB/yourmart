@@ -4,11 +4,11 @@
             <div class="col-12 col-sm-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Suspected Duplicate Dropshipper Accounts</h5>
+                        <h5>Duplicate Dropshipper Accounts</h5>
                     </div>
                     <div class="card-body row">
                         <div class="col-md-12">
-                            <form @submit.prevent="fetchDuplicateDropshippers">
+                            <form @submit.prevent="submitFunction">
                                 <div class="row">
                                     <div class="col-md-12 form-group pt-4">
                                         <button class="btn btn-block btn-primary">Fetch Suspected Duplicates</button>
@@ -28,12 +28,11 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Contact #</th>
-                                        <th>Total Payable</th>
-                                        <th>Total Paid</th>
+                                        <th>CNIC</th>
+                                        <th>Account Number</th>
+                                        <th>IBAN</th> 
                                         <th>Remaining Amount</th>
-                                        <th>Status</th>
-                                        <th>Created At</th>
-                                        <th>Duplicate Type</th>
+                                        <th>Reason/Similarity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -42,20 +41,17 @@
                                         <td>{{ item.full_name }}</td>
                                         <td>{{ item.email }}</td>
                                         <td>{{ item.whatsapp_number }}</td>
-                                        <td>{{ formatPrice(item.total_payable) }}</td>
-                                        <td>{{ formatPrice(item.total_paid) }}</td>
+                                        <td>{{ item.cnic_number }}</td>
+                                        <td>{{ item.account_number }}</td>
+                                        <td>{{ item.account_iban }}</td>
                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
+                                        
                                         <td>
-                                            <span v-if="item.status == 0" class="badge badge-warning">Pending</span>
-                                            <span v-if="item.status == 1" class="badge badge-success">Approved</span>
-                                            <span v-if="item.status == 2" class="badge badge-danger">Rejected</span>
-                                            <span v-if="item.status == 3" class="badge badge-danger">Deactivated</span>
-                                        </td>
-                                        <td>{{ formatDate(item.created_at) }}</td>
-                                        <td>
-                                            <span class="badge badge-warning" v-if="isEmailDuplicate(item)">Duplicate Email</span>
-                                            <span class="badge badge-info" v-if="isPhoneDuplicate(item)">Duplicate Phone</span>
-                                            <span class="badge badge-secondary" v-if="isNameDuplicate(item)">Duplicate Name</span>
+                                            <span class="custom-badge badge badge-warning" v-if="isEmailDuplicate(item)">Duplicate Email</span>
+                                            <span class="custom-badge badge badge-primary" v-if="isPhoneDuplicate(item)">Duplicate Phone</span>
+                                            <span class="custom-badge badge badge-success" v-if="isCNICDuplicate(item)">Duplicate CNIC</span>
+                                            <span class="custom-badge badge badge-danger" v-if="isAcoountDuplicate(item)">Duplicate Account</span>
+                                            <span class="custom-badge badge badge-warning" v-if="isIBANDuplicate(item)">Duplicate IBAN</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -94,8 +90,8 @@ export default {
                 .replace(/,/g, "")
                 .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
         },
-        fetchDuplicateDropshippers() {
-            this.$emit('fetchDuplicateDropshippers');
+        submitFunction() {
+            this.$emit('DuplicateDropshippersfilter');
         },
         clearDataTable() {
             const table = $('#duplicate_dropshipper_list').DataTable();
@@ -106,11 +102,17 @@ export default {
         isEmailDuplicate(item) {
             return this.data.filter(d => d.email === item.email && d.email).length > 1;
         },
+        isCNICDuplicate(item) {
+            return this.data.filter(d => d.cnic_number === item.cnic_number && d.cnic_number).length > 1;
+        },
         isPhoneDuplicate(item) {
             return this.data.filter(d => d.whatsapp_number === item.whatsapp_number && d.whatsapp_number).length > 1;
         },
-        isNameDuplicate(item) {
-            return this.data.filter(d => d.full_name === item.full_name && d.full_name).length > 1;
+        isAcoountDuplicate(item) {
+            return this.data.filter(d => d.account_number === item.account_number && d.account_number).length > 1;
+        },
+        isIBANDuplicate(item) {
+            return this.data.filter(d => d.account_iban === item.account_iban && d.account_iban).length > 1;
         }
     },
     watch: {
@@ -142,3 +144,10 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.custom-badge{
+    margin-top: 5px;;
+    margin-bottom: 5px;;
+}
+</style>
