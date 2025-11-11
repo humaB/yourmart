@@ -505,7 +505,6 @@ class FisReportController extends Controller
 
     public function supplierWiseStock(){
 
-        // Apply filters to the query
         $dropshippers = SupplierStock::with('supplier:id,full_name', 'product:id,title')->orderBy('id', 'desc')
             ->get();
 
@@ -514,16 +513,6 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
-
-    // In App\Http\Controllers\Report\FisReportController
-
-// ... (existing methods)
-
-/**
- * Calculates Low Stock Levels and Recommended Reorder Quantity based on sales data.
- * @param Request $request
- * @return \Illuminate\Http\JsonResponse
- */
 public function lowStockProducts(Request $request)
 {
     try {
@@ -545,21 +534,15 @@ public function lowStockProducts(Request $request)
             $leadTime = 3;
             $desiredDays = 10;
             $currentStock = $product->variation->stock;
-            
-            // Average Daily Sales = Total units sold in the last 30 days ÷ 30
+        
             $avgDailySales = $sales30Days / 30;
-            
-            // Safety Stock = (Maximum Daily Sales × Lead Time) − (Average Daily Sales × Lead Time)
-            // Using 2x average as maximum for simplicity
             $maxDailySales = $avgDailySales * 2;
             $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
-            $safetyStock = max(1, ceil($safetyStock)); // Minimum 1
-            
-            // Low Stock Level = (Average Daily Sales × Lead Time) + Safety Stock
+            $safetyStock = max(1, ceil($safetyStock)); 
             $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
             $lowStockLevel = ceil($lowStockLevel);
             
-            // Determine status
+            
             if ($currentStock <= 0) {
                 $status = 'Out of Stock';
             } elseif ($currentStock <= $lowStockLevel) {
@@ -567,12 +550,10 @@ public function lowStockProducts(Request $request)
             } else {
                 $status = 'Sufficient';
             }
-            
-            // Recommended Reorder Quantity = (Average Daily Sales × 10) − Current Stock
             $reorderQty = 0;
             if ($status !== 'Sufficient') {
                 $reorderQty = ($avgDailySales * $desiredDays) - $currentStock;
-                $reorderQty = max(5, ceil($reorderQty)); // Minimum 5 units
+                $reorderQty = max(5, ceil($reorderQty)); 
             }
 
             $lowStockData[] = [

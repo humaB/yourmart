@@ -54,13 +54,6 @@
                             </div>
                         </div>
                     </div>
-
-                </div>
-                                   
-                    <!-- New products last 30 days -->
-
-                    <div class="row">
-    <!-- Orders Graph -->
      
     <div class="col-12 col-sm-12 col-lg-12">
                 <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
@@ -107,9 +100,6 @@
 
             
 </div>
- <!-- 30 days graph -->
-
-
 
                 
             </div>

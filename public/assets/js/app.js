@@ -10441,8 +10441,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           this.initChart(newGraph.categories, [newGraph.series[0]]);
         }
       },
-      immediate: true,
-      // Ensures the chart initializes on the first load
+      // immediate: true, // Ensures the chart initializes on the first load
       deep: true
     }
   }
@@ -10669,7 +10668,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var gradients = {
         '#7367F0': '#5E50EE',
         '#28C76F': '#20A759',
-        '#e36cd9 ': '#9a56ff ',
+        '#9a56ff  ': '#e36cd9  ',
         '#EA5455': '#e03131',
         '#FF9F43': '#ff8a1e'
       };
@@ -10877,7 +10876,7 @@ __webpack_require__.r(__webpack_exports__);
         // Call initChart with safe data
         this.initChart(newGraph.categories, [newGraph.series[0]]);
       },
-      immediate: true,
+      // immediate: true,
       deep: true
     }
   },
@@ -33838,9 +33837,9 @@ var render = function render() {
     attrs: {
       revenueOrderGraph: _vm.revenueOrderGraph
     }
-  }), _vm._v(" "), _vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "row"
-  }, [_c("div", {
+  }), _vm._v(" "), _c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-sm-12 col-lg-12"
   }, [_c("DropshipperApprovedGraph", {
     attrs: {
@@ -34061,8 +34060,6 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header"
@@ -34075,7 +34072,7 @@ var staticRenderFns = [function () {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "statistic-details mt-1"
-  })])])]);
+  })])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -39843,7 +39840,9 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Duplicate Dropshippers Accounts")])]), _vm._v(" "), _c("h6", [_vm._v("\n        17.\n        "), _c("a", {
+  }), _vm._v(" Duplicate Dropshippers Accounts")])])]) : _vm._e(), _vm._v(" "), _vm.role == "admin" ? _c("div", {
+    staticClass: "col-md-4 col-6"
+  }, [_c("h6", [_vm._v("\n        17.\n        "), _c("a", {
     attrs: {
       href: "#"
     },
@@ -42427,7 +42426,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.recent-report__chart[data-v-55297374] {\r\n    width: 100%;\r\n    overflow: hidden;\n}\n#dropshipper120DaysChart[data-v-55297374] {\r\n    min-width: 100%;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.recent-report__chart[data-v-55297374], #dropshipper120DaysChart[data-v-55297374] {\r\n    width: 100%;\r\n    overflow: hidden;\n}\r\n\r\n/* #dropshipper120DaysChart {\r\n    min-width: 100%;\r\n} */\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -42547,7 +42546,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.table-responsive[data-v-008b7a50] {\r\n    max-height: 600px;\n}\n.badge[data-v-008b7a50] {\r\n    font-size: 0.85em;\r\n    padding: 0.4em 0.6em;\n}\n.table-danger[data-v-008b7a50] {\r\n    background-color: #f8d7da;\n}\n.table-warning[data-v-008b7a50] {\r\n    background-color: #fff3cd;\n}\n.table-success[data-v-008b7a50] {\r\n    background-color: #d1edff;\n}\n.text-danger[data-v-008b7a50] {\r\n    color: #dc3545 !important;\n}\n.text-warning[data-v-008b7a50] {\r\n    color: #ffc107 !important;\n}\n.text-success[data-v-008b7a50] {\r\n    color: #28a745 !important;\n}\n.font-weight-bold[data-v-008b7a50] {\r\n    font-weight: 700 !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.table-responsive[data-v-008b7a50] {\r\n    max-height: 600px;\n}\n.badge[data-v-008b7a50] {\r\n    font-size: 0.85em;\r\n    padding: 0.4em 0.6em;\n}\n.table-danger[data-v-008b7a50] {\r\n    background-color: #f8d7da;\n}\n.table-warning[data-v-008b7a50] {\r\n    background-color: #fff3cd;\n}\n.table-success[data-v-008b7a50] {\r\n    background-color: #d1edff;\n}\n.text-danger[data-v-008b7a50] {\r\n    color: #dc3545 !important;\n}\n.text-warning[data-v-008b7a50] {\r\n    color: #e6ac00 !important;\n}\n.text-success[data-v-008b7a50] {\r\n    color: #28a745 !important;\n}\n.font-weight-bold[data-v-008b7a50] {\r\n    font-weight: 700 !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -147,21 +147,21 @@
                    
                 }
             },
-            immediate: true, // Ensures the chart initializes on the first load
+            // immediate: true, // Ensures the chart initializes on the first load
             deep: true,
         },
     }
   }
-  </script>
+  </script>1
   
 
   <style scoped>
-.recent-report__chart {
+.recent-report__chart, #dropshipper120DaysChart {
     width: 100%;
     overflow: hidden;
 }
 
-#dropshipper120DaysChart {
+/* #dropshipper120DaysChart {
     min-width: 100%;
-}
+} */
 </style>

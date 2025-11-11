@@ -115,7 +115,8 @@
         16.
         <a href="#" @click="duplicateDropshipperslist()"><i class="fas fa-fax"></i> Duplicate Dropshippers Accounts</a>
     </h6>
-
+    </div>
+    <div class="col-md-4 col-6" v-if="role == 'admin'">
     <h6>
         17.
         <a href="#" @click="lowStocklist()"><i class="fas fa-fax"></i> Low stock report</a>
