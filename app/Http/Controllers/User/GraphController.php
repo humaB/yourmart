@@ -13,6 +13,7 @@ use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
+use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Models\Ticket;
