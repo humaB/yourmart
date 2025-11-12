@@ -161,15 +161,11 @@ class FisReportController extends Controller
             // Stock to delete
             $delete_quantity = $request->quantity;
             $delete_rate = $request->price;
-
-            // Adjust total quantity
             $new_total_quantity = $current_total_quantity - $delete_quantity;
 
             // Adjust total cost by removing deleted stock's cost
             $deleted_stock_cost = $delete_rate * $delete_quantity;
             $adjusted_total_cost = $current_total_cost - $deleted_stock_cost;
-
-            // Calculate new average rate
             $new_average_rate = $adjusted_total_cost / $new_total_quantity;
 
             // Round and return new average rate
@@ -184,9 +180,6 @@ class FisReportController extends Controller
             $po->delete();
             return ['message' => 'Successfully Deleted'];
         } else if ($request->grn['po_id'] == 0) {
-            //If GRN is created from adjustment module then direct delete and update average price
-            //Total average rate = ( average_rate * stock ) + (new_qty * new_rate) / total_stock + new_qty
-            // Calculate new average price after deletion
             $product = ProductVariation::where('product_id', $request->product_id)->first();
             $grns = StoreReceivedDetail::where('product_id', $request->product_id)->get();
             // Calculate new average price after deletion
@@ -206,10 +199,7 @@ class FisReportController extends Controller
             $deleted_stock_cost = $delete_rate * $delete_quantity;
             $adjusted_total_cost = $current_total_cost - $deleted_stock_cost;
 
-            // Calculate new average rate
             $new_average_rate = $adjusted_total_cost / $new_total_quantity;
-
-            // Round and return new average rate
             $product->update([
                 'avg_price' => round($new_average_rate)
             ]);
@@ -337,7 +327,6 @@ class FisReportController extends Controller
             $products[$singleProductGroup[0]->product_id]['quantity'] = $quantity;
 
 
-            //Calculate Avg Purchase Price
             $rate = StoreReceivedDetail::where('created_at', '<=', $request->to)
             ->where('product_id', $singleProductGroup[0]->product_id)
             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
