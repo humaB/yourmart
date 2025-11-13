@@ -192,7 +192,7 @@ export default {
                 // Call initChart with safe data
                 this.initChart(newGraph.categories, [newGraph.series[0]]);
             },
-            immediate: true,
+            // immediate: true,
             deep: true,
         },
     },

@@ -10656,21 +10656,21 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     getDefaultColor: function getDefaultColor() {
       var colors = {
-        'orders': '#4F46E5',
-        'sales': '#10B981',
-        'profit': '#8B5CF6',
-        'returns': '#EF4444',
-        'newproducts': '#F59E0B'
+        'orders': '#7367F0',
+        'sales': '#28C76F',
+        'profit': '#00E396',
+        'returns': '#EA5455',
+        'newproducts': '#FF9F43'
       };
       return colors[this.graphType] || '#7367F0';
     },
     getGradientColor: function getGradientColor(baseColor) {
       var gradients = {
-        '#4F46E5': '#4338CA',
-        '#10B981': '#059669',
-        '#8B5CF6': '#7C3AED',
-        '#EF4444': '#DC2626',
-        '#F59E0B': '#D97706'
+        '#7367F0': '#5E50EE',
+        '#28C76F': '#20A759',
+        '#9a56ff  ': '#e36cd9  ',
+        '#EA5455': '#e03131',
+        '#FF9F43': '#ff8a1e'
       };
       return gradients[baseColor] || baseColor;
     }

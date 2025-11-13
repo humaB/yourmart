@@ -11,7 +11,10 @@ use App\Models\Inventory\Product\Tag;
 use App\Models\Inventory\Product\Variation\Product;
 use App\Models\Inventory\Product\Variation\ProductVariation;
 use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
+use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
+use App\Models\Inventory\Store\StoreReceivedDetail;
+use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Models\Ticket;
@@ -27,127 +30,186 @@ use Illuminate\Support\Facades\DB;
 
 class GraphController extends Controller
 {
+   
     public function getDashboardGraphs()
-    {
-        try {
-            // Generate last 30 days
-            $days = collect(range(0, 29))->map(function ($i) {
-                return [
-                    'date' => now()->subDays($i)->format('Y-m-d'),
-                    'label' => now()->subDays($i)->format('M d'),
-                ];
-            })->reverse();
-    
-            $dates = [];
-            foreach ($days as $day) {
-                $currentDate = $day['date'];
-    
-                // Match exactly with your closingReport logic
-                $orders = Order::whereNotIn('status', ['6', '7'])
-                    ->whereDate('created_at', $currentDate)
-                    ->get();
-    
-                // Sales count (matching closingReport)
-                $salesCount = $orders->count();
-                $salesAmount = $orders->sum('total_bill');
-    
-                // Returns count (matching closingReport)
-                $postExReturns = StoreReturnDetail::with('srn.order')
-                    ->whereDate('created_at', $currentDate)
-                    ->whereHas('srn.order', function ($q) {
-                        $q->where('courier_service_id', '2');
-                    })
-                    ->count();
-    
-                $leopardReturns = StoreReturnDetail::with('srn.order')
-                    ->whereDate('created_at', $currentDate)
-                    ->whereHas('srn.order', function ($q) {
-                        $q->where('courier_service_id', '1');
-                    })
-                    ->count();
-    
-                $returnsCount = $postExReturns + $leopardReturns;
-    
-                $dates[$currentDate] = [
-                    'sales_count' => $salesCount,
-                    'sales_amount' => $salesAmount,
-                    'returns_count' => $returnsCount,
-                    'profit' => $orders->whereIn('status', [5, 8])->sum('total_profit')
-                ];
-            }
-    
-            // Build datasets
-            $ordersData = $days->map(function ($day) use ($dates) {
-                return (int) ($dates[$day['date']]['sales_count'] ?? 0);
-            });
-    
-            $salesData = $days->map(function ($day) use ($dates) {
-                return (int) ($dates[$day['date']]['sales_amount'] ?? 0); // Use count, not amount
-            });
-    
-            $profitData = $days->map(function ($day) use ($dates) {
-                return (float) ($dates[$day['date']]['profit'] ?? 0);
-            });
-    
-            $returnsData = $days->map(function ($day) use ($dates) {
-                return (int) ($dates[$day['date']]['returns_count'] ?? 0);
-            });
-    
-            // Calculate statistics
-            $stats = [
+{
+    try {
+        // Generate last 30 days
+        $days = collect(range(0, 29))->map(function ($i) {
+            return [
+                'date' => now()->subDays($i)->format('Y-m-d'),
+                'label' => now()->subDays($i)->format('M d'),
+            ];
+        })->reverse();
+
+        $dates = [];
+        foreach ($days as $day) {
+            $currentDate = $day['date'];
+
+            // Match exactly with your closingReport logic
+            $orders = Order::whereNotIn('status', ['6', '7'])
+                ->whereDate('created_at', $currentDate)
+                ->get();
+
+            // Sales count (matching closingReport)
+            $salesCount = $orders->count();
+            $salesAmount = $orders->sum('total_bill');
+
+            // Returns count (matching closingReport)
+            $postExReturns = StoreReturnDetail::with('srn.order')
+                ->whereDate('created_at', $currentDate)
+                ->whereHas('srn.order', function ($q) {
+                    $q->where('courier_service_id', '2');
+                })
+                ->count();
+
+            $leopardReturns = StoreReturnDetail::with('srn.order')
+                ->whereDate('created_at', $currentDate)
+                ->whereHas('srn.order', function ($q) {
+                    $q->where('courier_service_id', '1');
+                })
+                ->count();
+
+            $returnsCount = $postExReturns + $leopardReturns;
+
+            // NEW: Calculate Order Issuance Profit (same as your Vue calculation)
+            $orderIssuanceProfit = $this->calculateDailyOrderIssuanceProfit($currentDate);
+
+            $dates[$currentDate] = [
+                'sales_count' => $salesCount,
+                'sales_amount' => $salesAmount,
+                'returns_count' => $returnsCount,
+                'profit' => $orderIssuanceProfit // Use order issuance profit instead
+            ];
+        }
+
+        // Build datasets (rest remains the same)
+        $ordersData = $days->map(function ($day) use ($dates) {
+            return (int) ($dates[$day['date']]['sales_count'] ?? 0);
+        });
+
+        $salesData = $days->map(function ($day) use ($dates) {
+            return (int) ($dates[$day['date']]['sales_amount'] ?? 0);
+        });
+
+        $profitData = $days->map(function ($day) use ($dates) {
+            return (float) ($dates[$day['date']]['profit'] ?? 0);
+        });
+
+        $returnsData = $days->map(function ($day) use ($dates) {
+            return (int) ($dates[$day['date']]['returns_count'] ?? 0);
+        });
+
+        // Calculate statistics
+        $stats = [
+            'orders' => [
+                'total' => $ordersData->sum(),
+                'average' => round($ordersData->avg(), 1),
+            ],
+            'sales' => [
+                'total' => $salesData->sum(),
+                'average' => round($salesData->avg(), 1),
+            ],
+            'profit' => [
+                'total' => $profitData->sum(),
+                'average' => round($profitData->avg(), 1),
+            ],
+            'returns' => [
+                'total' => $returnsData->sum(),
+                'average' => round($returnsData->avg(), 1),
+            ],
+        ];
+
+        return [
+            'categories' => $days->pluck('label')->toArray(),
+            'datasets' => [
                 'orders' => [
-                    'total' => $ordersData->sum(),
-                    'average' => round($ordersData->avg(), 1),
+                    'name' => 'Daily Orders',
+                    'data' => $ordersData->values()->toArray(),
+                    'color' => '#7367F0',
+                    'stats' => $stats['orders'],
                 ],
                 'sales' => [
-                    'total' => $salesData->sum(),
-                    'average' => round($salesData->avg(), 1),
+                    'name' => 'Daily Sales',
+                    'data' => $salesData->values()->toArray(),
+                    'color' => '#28C76F',
+                    'stats' => $stats['sales'],
                 ],
                 'profit' => [
-                    'total' => $profitData->sum(),
-                    'average' => round($profitData->avg(), 1),
+                    'name' => 'Daily Profit',
+                    'data' => $profitData->values()->toArray(),
+                    'color' => '#00E396',
+                    'stats' => $stats['profit'],
                 ],
                 'returns' => [
-                    'total' => $returnsData->sum(),
-                    'average' => round($returnsData->avg(), 1),
+                    'name' => 'Daily Returns',
+                    'data' => $returnsData->values()->toArray(),
+                    'color' => '#EA5455',
+                    'stats' => $stats['returns'],
                 ],
-            ];
-    
-            return [
-                'categories' => $days->pluck('label')->toArray(),
-                'datasets' => [
-                    'orders' => [
-                        'name' => 'Daily Orders',
-                        'data' => $ordersData->values()->toArray(),
-                        'color' => '#7367F0',
-                        'stats' => $stats['orders'],
-                    ],
-                    'sales' => [
-                        'name' => 'Daily Sales',
-                        'data' => $salesData->values()->toArray(),
-                        'color' => '#28C76F',
-                        'stats' => $stats['sales'],
-                    ],
-                    'profit' => [
-                        'name' => 'Daily Profit',
-                        'data' => $profitData->values()->toArray(),
-                        'color' => '#00E396',
-                        'stats' => $stats['profit'],
-                    ],
-                    'returns' => [
-                        'name' => 'Daily Returns',
-                        'data' => $returnsData->values()->toArray(),
-                        'color' => '#EA5455',
-                        'stats' => $stats['returns'],
-                    ],
-                ],
-            ];
-    
-        } catch (\Exception $e) {
-            \Log::error('Dashboard Graphs Error: ' . $e->getMessage());
-            return $this->getSampleData();
-        }
+            ],
+        ];
+
+    } catch (\Exception $e) {
+        \Log::error('Dashboard Graphs Error: ' . $e->getMessage());
+        return $this->getSampleData();
     }
+}
+
+// NEW METHOD: Same calculation as your Vue component
+private function calculateDailyOrderIssuanceProfit($date)
+{
+    $orders = StoreIssuance::whereDate('created_at', $date)
+        ->where('order_id', '!=', '0')
+        ->pluck('id');
+
+    $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+        ->whereIn('sin_id', $orders)
+        ->get()->groupBy('product_id');
+
+    $totalProfit = 0;
+
+    foreach ($issues as $singleProductGroup) {
+        $quantity = $singleProductGroup->sum('quantity');
+
+        // Calculate Avg Purchase Price
+        $rate = StoreReceivedDetail::where('created_at', '<=', $date)
+            ->where('product_id', $singleProductGroup[0]->product_id)
+            ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+            ->first();
+
+        $purchaseRate = $rate->rate ?? 0;
+
+        // Calculate Avg Issuance Price
+        $issancePrice = $singleProductGroup->sum('total');
+        $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
+
+        // Get Return quantity
+        $returnQuantity = 0;
+        foreach ($singleProductGroup as $order) {
+            $orderNo = $order->sin->order_id;
+            $productId = $order->product_id;
+
+            $returned = StoreReturn::where('order_id', $orderNo)->first();
+            if ($returned) {
+                $returnRecord = StoreReturnDetail::where('product_id', $productId)
+                    ->where('srn_id', $returned->id)
+                    ->first();
+                $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
+            }
+        }
+
+        // Calculate profit (SAME AS YOUR VUE CALCULATION)
+        $netQuantity = $quantity - $returnQuantity;
+        $netSale = $avgIssuancePrice * $netQuantity;
+        $netPurchase = $netQuantity * $purchaseRate;
+        $profit = $netSale - $netPurchase;
+
+        $totalProfit += $profit;
+    }
+
+    return $totalProfit;
+}
 
     public function newproducts30daysgraph()
     {
@@ -237,9 +299,6 @@ class GraphController extends Controller
         ],
     
     ];
-    
-    
-    
     }
     
     public function ticketTypesGraphData()

@@ -75,7 +75,7 @@
                                         <tr>
                                             <th>Category</th>
                                             <td>
-                                                <div v-if="!editingField.category_id">{{ item?.category?.name ? item.category.name : 'No Category' }}</div>
+                                                <div v-if="!editingField.category_id">{{ product.category ? product.category.name : 'No Category' }}</div>
                                                 <div v-else>
                                                     <v-select :options="categories" v-model="category">
                                                     </v-select>

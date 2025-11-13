@@ -72,7 +72,7 @@ export default {
             const options = {
                 chart: {
                     type: 'bar',
-                    height: 400,
+                    height: 600,
                     width: '100%',
                     toolbar: {
                         show: true
@@ -82,7 +82,7 @@ export default {
                     bar: {
                         horizontal: true,
                         borderRadius: 4,
-                        columnWidth: '55%',
+                        columnWidth: '50%',
                         distributed: true,
                     }
                 },
@@ -91,11 +91,11 @@ export default {
                     formatter: function(val) {
                         return val;
                     },
-                    offsetY: -20,
-                    style: {
-                        fontSize: '12px',
-                        colors: ["#304758"]
-                    }
+                    // offsetY: -20,
+                    // style: {
+                    //     fontSize: '12px',
+                    //     colors: ["#304758"]
+                    // }
                 },
                 series: [{
                     name: 'Number of Tickets',

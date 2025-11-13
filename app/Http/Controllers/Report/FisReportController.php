@@ -161,15 +161,11 @@ class FisReportController extends Controller
             // Stock to delete
             $delete_quantity = $request->quantity;
             $delete_rate = $request->price;
-
-            // Adjust total quantity
             $new_total_quantity = $current_total_quantity - $delete_quantity;
 
             // Adjust total cost by removing deleted stock's cost
             $deleted_stock_cost = $delete_rate * $delete_quantity;
             $adjusted_total_cost = $current_total_cost - $deleted_stock_cost;
-
-            // Calculate new average rate
             $new_average_rate = $adjusted_total_cost / $new_total_quantity;
 
             // Round and return new average rate
@@ -184,9 +180,6 @@ class FisReportController extends Controller
             $po->delete();
             return ['message' => 'Successfully Deleted'];
         } else if ($request->grn['po_id'] == 0) {
-            //If GRN is created from adjustment module then direct delete and update average price
-            //Total average rate = ( average_rate * stock ) + (new_qty * new_rate) / total_stock + new_qty
-            // Calculate new average price after deletion
             $product = ProductVariation::where('product_id', $request->product_id)->first();
             $grns = StoreReceivedDetail::where('product_id', $request->product_id)->get();
             // Calculate new average price after deletion
@@ -206,10 +199,7 @@ class FisReportController extends Controller
             $deleted_stock_cost = $delete_rate * $delete_quantity;
             $adjusted_total_cost = $current_total_cost - $deleted_stock_cost;
 
-            // Calculate new average rate
             $new_average_rate = $adjusted_total_cost / $new_total_quantity;
-
-            // Round and return new average rate
             $product->update([
                 'avg_price' => round($new_average_rate)
             ]);
@@ -337,7 +327,6 @@ class FisReportController extends Controller
             $products[$singleProductGroup[0]->product_id]['quantity'] = $quantity;
 
 
-            //Calculate Avg Purchase Price
             $rate = StoreReceivedDetail::where('created_at', '<=', $request->to)
             ->where('product_id', $singleProductGroup[0]->product_id)
             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
@@ -442,10 +431,69 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+    public function suspectedDuplicateDropshippers()
+    {
+        // Get dropshippers with same name, email, or phone
+        $duplicates = DropShipper::select('*')
+            ->where('status', 1)
+            ->whereIn('email', function($query) {
+                $query->select('email')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('email')
+                      ->where('email', '!=', '')
+                      ->groupBy('email')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('whatsapp_number', function($query) {
+                $query->select('whatsapp_number')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('whatsapp_number')
+                      ->where('whatsapp_number', '!=', '')
+                      ->groupBy('whatsapp_number')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('account_iban', function($query) {
+                $query->select('account_iban')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('account_iban')
+                      ->where('account_iban', '!=', '')
+                      ->groupBy('account_iban')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('cnic_number', function($query) {
+                $query->select('cnic_number')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('cnic_number')
+                      ->where('cnic_number', '!=', '')
+                      ->groupBy('cnic_number')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orWhereIn('account_number', function($query) {
+                $query->select('account_number')
+                      ->from('drop_shippers')
+                      ->where('status', 1)
+                      ->whereNotNull('account_number')
+                      ->where('account_number', '!=', '')
+                      ->groupBy('account_number')
+                      ->havingRaw('COUNT(*) > 1');
+            })
+            ->orderBy('email')
+            ->orderBy('whatsapp_number')
+            ->orderBy('account_number')
+            ->orderBy('cnic_number')
+            ->get();
+    
+        return (new ResponseCollection($duplicates))
+            ->response()
+            ->setStatusCode(200);
+    }
 
     public function supplierWiseStock(){
 
-        // Apply filters to the query
         $dropshippers = SupplierStock::with('supplier:id,full_name', 'product:id,title')->orderBy('id', 'desc')
             ->get();
 
@@ -454,5 +502,82 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
+public function lowStockProducts(Request $request)
+{
+    try {
+        $products = Product::with(['variation'])
+            ->where('status', 1)
+            ->get();
+
+        $lowStockData = [];
+
+        foreach ($products as $product) {
+            if (!$product->variation) continue;
+
+            // Get sales for last 30 days
+            $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
+                ->where('created_at', '>=', Carbon::now()->subDays(30))
+                ->sum('quantity');
+
+            // Fixed values
+            $leadTime = 3;
+            $desiredDays = 10;
+            $currentStock = $product->variation->stock;
+        
+            $avgDailySales = $sales30Days / 30;
+            $maxDailySales = $avgDailySales * 2;
+            $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
+            $safetyStock = max(1, ceil($safetyStock)); 
+            $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
+            $lowStockLevel = ceil($lowStockLevel);
+            
+            
+            if ($currentStock <= 0) {
+                $status = 'Out of Stock';
+            } elseif ($currentStock <= $lowStockLevel) {
+                $status = 'Low Stock';
+            } else {
+                $status = 'Sufficient';
+            }
+            $reorderQty = 0;
+            if ($status !== 'Sufficient') {
+                $reorderQty = ($avgDailySales * $desiredDays) - $currentStock;
+                $reorderQty = max(5, ceil($reorderQty)); 
+            }
+
+            $lowStockData[] = [
+                'sku' => $product->variation->sku,
+                'name' => $product->title,
+                'current_stock' => (int) $currentStock,
+                'sales_30_days' => (int) $sales30Days,
+                'avg_daily_sales' => round($avgDailySales, 2),
+                'lead_time' => $leadTime,
+                'safety_stock' => (int) $safetyStock,
+                'low_stock_level' => (int) $lowStockLevel,
+                'status' => $status,
+                'recommended_reorder_qty' => (int) $reorderQty,
+                'last_updated' => $product->variation->updated_at->format('Y-m-d'),
+            ];
+        }
+
+        // Simple status filter
+        if ($request->status && $request->status !== 'all') {
+            $lowStockData = array_values(array_filter($lowStockData, function($item) use ($request) {
+                return $item['status'] === $request->status;
+            }));
+        }
+
+        return (new ResponseCollection($lowStockData))
+            ->response()
+            ->setStatusCode(200);
+
+    } catch (\Exception $e) {
+        \Log::error('Low Stock Report Error: ' . $e->getMessage());
+        return (new ResponseCollection([]))
+            ->response()
+            ->setStatusCode(500);
+    }
+}
+
 
 }
