@@ -30,7 +30,6 @@ class DashboardController extends Controller
         set_time_limit(300); // 5 minutes
         ini_set('memory_limit', '512M');
 
-
         $orders = Order::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
         })
@@ -49,7 +48,7 @@ class DashboardController extends Controller
         $approvedDropshipper = $this->getApprovedDropshippers($request);
         $activeSeller        = $this->getActiveSeller($request);
         $liveProduct        = $this->getLiveProducts();
-        $orderProcessed     = $this->orderProcessed($orders); 
+        $orderProcessed     = $this->orderProcessed($orders);
         $pendingPayouts     = $this->pendingPayouts();
         $pendingRequests    = $this->pendingRequests($request);
         $allProcessedOrders = $this->allProcessedOrder($orders, $request);
@@ -60,9 +59,7 @@ class DashboardController extends Controller
         $dropshipperGraph   = $this->dropshipperGraph();
         $revenueOrderGraph  = $this->revenueOrderGraph();
         // 30 days graphs
-        
-        
-        
+
         // $dropshipperGraphLast120Days = (new DropShipperController())->dropshipperGraphLast120Days();
            // 30 days graphs
 
@@ -81,7 +78,7 @@ class DashboardController extends Controller
             'approvedDropshipper' => $approvedDropshipper,
             'activeSeller'       => $activeSeller,
             'liveProduct'        => $liveProduct,
-            'orderProcessed'     => $orderProcessed,  
+            'orderProcessed'     => $orderProcessed,
             'payOuts'            => $pendingPayouts,
             'pendingRequests'    => $pendingRequests,
             'allProcessedOrders' => $allProcessedOrders,
@@ -93,14 +90,14 @@ class DashboardController extends Controller
             'revenueOrderGraph'     => $revenueOrderGraph,
 
             // 30 days graphs
-            
+
             'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days, // Use old name temporarily
             'newproducts30daysgraph' => $newproducts30daysgraph,
             'dashboardGraphs' => $dashboardGraphs,
             'ticketTypesGraphData' => $ticketTypesGraphData ,
-            
+
             // 30 days graphs
-            
+
             'levels'                => $levels,
 
             'courierPerformance'    => $courierPerformance
@@ -189,7 +186,7 @@ class DashboardController extends Controller
             'label' => now()->subDays($i)->format('M d'),
         ];
     })->reverse();
-    
+
     // Count orders instead of summing amount
     $sales = Order::where('created_at', '>=', now()->subDays(30))
         ->where('status', '!=', 'cancelled') // Exclude cancelled orders
@@ -211,16 +208,16 @@ class DashboardController extends Controller
             [
                 'name' => 'Daily Sales',
                 // 'data' => [...$data],
-                'data' => $data->toArray(), 
+                'data' => $data->toArray(),
             ],
         ],
-        
+
         'stats' => [
             'total_monthly_sales' => $totalMonthlySales,
             'average_monthly_sales' => $averageMonthlySales,
             'period' => 'month'
         ]
-    
+
     ];
 }
 private function dailyReturnsGraph()
@@ -232,7 +229,7 @@ private function dailyReturnsGraph()
             'label' => now()->subDays($i)->format('M d'),
         ];
     })->reverse();
-    
+
     $returns = Order::where('created_at', '>=', now()->subDays(30))
         ->where('status', 'returned') // Adjust this based on your return status
         ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
@@ -242,14 +239,14 @@ private function dailyReturnsGraph()
     // Map returns data to each day
     $data = $days->map(function ($day) use ($returns) {
         return $returns->get($day['date'], 0);
-    })->values(); 
+    })->values();
 
     return [
         'categories' => $days->pluck('label')->toArray(),
         'series' => [
             [
                 'name' => 'Daily Returns',
-                'data' => $data->toArray(), 
+                'data' => $data->toArray(),
             ],
         ],
     ];
@@ -257,25 +254,25 @@ private function dailyReturnsGraph()
 
     private function dailyProfitGraph()
     {
-    
+
             $days = collect(range(0, 29))->map(function ($i) {
                 return [
                     'date' => now()->subDays($i)->format('Y-m-d'),
                     'label' => now()->subDays($i)->format('M d'),
                 ];
             })->reverse();
-    
+
             $profits = Order::where('created_at', '>=', now()->subDays(30))
                 ->whereIn('status', [5, 8]) // Delivered statuses
                 ->selectRaw('DATE(created_at) as date, SUM(total_profit) as total_profit')
                 ->groupBy('date')
                 ->pluck('total_profit', 'date');
-    
+
             // Map profit data to each day - FIX: Use toArray() instead of spread
             $data = $days->map(function ($day) use ($profits) {
                 return (float) $profits->get($day['date'], 0); // Ensure float
             });
-    
+
             return [
                 'categories' => $days->pluck('label')->toArray(),
                 'series' => [
@@ -285,8 +282,8 @@ private function dailyReturnsGraph()
                     ],
                 ],
             ];
-    
-        
+
+
     }
 
     private function dailyOrdersGraph()
@@ -302,12 +299,12 @@ private function dailyReturnsGraph()
             ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
             ->groupBy('date')
             ->pluck('count', 'date');
-    
+
         // Map order data to each day
         $data = $days->map(function ($day) use ($orders) {
             return $orders->get($day['date'], 0);
         });
-    
+
         return [
             'categories' => $days->pluck('label')->toArray(),
             'series' => [
@@ -336,7 +333,7 @@ private function dailyReturnsGraph()
         $data = $days->map(function ($day) use ($products) {
             return $products->get($day['date'], 0);
         });
-    
+
         return [
             'categories' => $days->pluck('label')->toArray(),
             'series' => [
