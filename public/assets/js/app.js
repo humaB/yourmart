@@ -10460,12 +10460,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
-function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
-function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'GenericBarChart',
   props: {
@@ -10496,7 +10490,6 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       return "".concat(this.graphType, "Graph");
     },
     dataset: function dataset() {
-      // Handle both new structure (datasets) and old structure (series)
       if (this.graphData.datasets && this.graphData.datasets[this.graphType]) {
         return this.graphData.datasets[this.graphType];
       } else if (this.graphData.series && this.graphData.series[0]) {
@@ -10504,32 +10497,14 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       }
       return {};
     },
-    color: function color() {
-      return this.dataset.color || this.getDefaultColor();
+    chartColor: function chartColor() {
+      return this.getChartColor();
     },
     stats: function stats() {
       return this.dataset.stats || {
         total: 0,
         average: 0
       };
-    },
-    formattedTotal: function formattedTotal() {
-      if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-        return 'Rs. ' + (this.stats.total || 0).toLocaleString();
-      }
-      return (this.stats.total || 0).toLocaleString();
-    },
-    formattedAverage: function formattedAverage() {
-      if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-        return 'Rs. ' + (this.stats.average || 0).toLocaleString();
-      }
-      return (this.stats.average || 0).toLocaleString();
-    },
-    chartTitle: function chartTitle() {
-      var stats = this.stats || {};
-      var total = stats.total || 0;
-      var average = Math.round(stats.average || 0);
-      return "Daily ".concat(this.title, " (Total: ").concat(total.toLocaleString(), ", Avg: ").concat(average, ")");
     },
     seriesData: function seriesData() {
       return this.dataset.data || [];
@@ -10542,22 +10517,15 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         console.warn("No data available for ".concat(this.graphType));
         return;
       }
-
-      // Calculate max value
-      var maxValue = 100;
-      if (this.seriesData.length > 0) {
-        var currentMax = Math.max.apply(Math, _toConsumableArray(this.seriesData));
-        maxValue = currentMax > 0 ? currentMax * 1.2 : 100;
-      }
       var options = {
         chart: {
-          height: 300,
-          type: "bar"
+          height: 350,
+          type: 'bar'
         },
         plotOptions: {
           bar: {
             dataLabels: {
-              position: "top"
+              position: 'top'
             }
           }
         },
@@ -10567,11 +10535,11 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
             if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
               return 'Rs. ' + val.toLocaleString();
             }
-            return val.toString();
+            return val;
           },
           offsetY: -20,
           style: {
-            fontSize: "11px",
+            fontSize: '12px',
             colors: ["#9aa0ac"]
           }
         },
@@ -10581,12 +10549,11 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         }],
         xaxis: {
           categories: this.graphData.categories || [],
-          position: "top",
+          position: 'top',
           labels: {
             offsetY: -18,
             style: {
-              fontSize: "11px",
-              colors: "#9aa0ac"
+              colors: '#9aa0ac'
             }
           },
           axisBorder: {
@@ -10594,6 +10561,18 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           },
           axisTicks: {
             show: false
+          }
+        },
+        fill: {
+          gradient: {
+            shade: 'light',
+            type: "horizontal",
+            shadeIntensity: 0.25,
+            gradientToColors: undefined,
+            inverseColors: true,
+            opacityFrom: 1,
+            opacityTo: 1,
+            stops: [50, 0, 100, 100]
           }
         },
         yaxis: {
@@ -10605,40 +10584,16 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           },
           labels: {
             show: false
-          },
-          max: maxValue
-        },
-        title: {
-          text: this.chartTitle,
-          floating: true,
-          offsetY: 270,
-          align: "center",
-          style: {
-            color: "#9aa0ac",
-            fontSize: "14px"
           }
         },
-        colors: [this.color],
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'light',
-            type: "vertical",
-            shadeIntensity: 0.5,
-            gradientToColors: [this.getGradientColor(this.color)],
-            inverseColors: false,
-            opacityFrom: 1,
-            opacityTo: 0.8,
-            stops: [0, 100]
-          }
-        },
+        colors: [this.chartColor],
         tooltip: {
           y: {
             formatter: function formatter(val) {
               if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
-                return 'Rs.' + val.toLocaleString();
+                return 'Rs. ' + val.toLocaleString();
               }
-              return val.toString();
+              return val;
             }
           }
         }
@@ -10654,25 +10609,27 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         }
       });
     },
-    getDefaultColor: function getDefaultColor() {
-      var colors = {
-        'orders': '#4F46E5',
-        'sales': '#10B981',
-        'profit': '#8B5CF6',
-        'returns': '#EF4444',
-        'newproducts': '#F59E0B'
+    getChartColor: function getChartColor() {
+      // Assign specific colors based on chart order or type
+      var colorMap = {
+        // First chart: rgb(0, 143, 251)
+        1: 'rgb(0, 143, 251)',
+        first: 'rgb(0, 143, 251)',
+        orders: 'rgb(0, 143, 251)',
+        // Second chart: rgb(0, 227, 150)
+        2: 'rgb(0, 227, 150)',
+        second: 'rgb(0, 227, 150)',
+        sales: 'rgb(0, 227, 150)',
+        // Third chart: rgb(254, 176, 25)
+        3: 'rgb(254, 176, 25)',
+        third: 'rgb(254, 176, 25)',
+        profit: 'rgb(254, 176, 25)',
+        // Fourth chart: rgb(119, 93, 208)
+        4: 'rgb(119, 93, 208)',
+        fourth: 'rgb(119, 93, 208)',
+        returns: 'rgb(119, 93, 208)'
       };
-      return colors[this.graphType] || '#7367F0';
-    },
-    getGradientColor: function getGradientColor(baseColor) {
-      var gradients = {
-        '#4F46E5': '#4338CA',
-        '#10B981': '#059669',
-        '#8B5CF6': '#7C3AED',
-        '#EF4444': '#DC2626',
-        '#F59E0B': '#D97706'
-      };
-      return gradients[baseColor] || baseColor;
+      return colorMap[this.graphType] || colorMap[1]; // Default to first color
     }
   },
   watch: {
@@ -42450,7 +42407,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.graph-stats[data-v-00694943] {\n  background-color: #f8f9fa;\n  border-radius: 0.375rem;\n}\n.stat-item[data-v-00694943] {\n  padding: 0.5rem;\n}\n.stat-label[data-v-00694943] {\n  font-size: 0.75rem;\n  margin-bottom: 0.25rem;\n}\n.stat-value[data-v-00694943] {\n  font-size: 1.25rem;\n  font-weight: 600;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.card[data-v-00694943] {\r\n    margin-bottom: 1rem;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
