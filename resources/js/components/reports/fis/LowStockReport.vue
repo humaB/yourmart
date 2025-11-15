@@ -4,7 +4,7 @@
             <div class="col-12 col-sm-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Low Stock Products Report</h5>
+                        <h5>Stock Report</h5> <!-- Updated title -->
                     </div>
                     <div class="card-body row">
                         <div class="col-md-12">
@@ -29,11 +29,12 @@
                             <div class="card-body table-responsive" v-if="loader">
                                 <bullet-list-loader :width="250"></bullet-list-loader>
                             </div>
-                            <table class="table table-bordered" id="low-stock-report-table" v-else>
+                            <table class="table table-striped dataTable no-footer" id="low-stock-report-table" v-else>
                                 <thead>
                                     <tr>
                                         <th>Product SKU</th>
-                                        <th>Product Name</th>
+                                        <th>Image</th>
+                                        <th>Product Link</th>
                                         <th>Current Stock</th>
                                         <th>Sales (30 Days)</th>
                                         <th>Avg Daily Sales</th>
@@ -46,11 +47,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="product in data" :key="product.sku" 
-                                        :class="getStatusRowClass(product.status)">
+                                    <!-- <tr v-for="product in data" :key="product.sku" 
+                                        :class="getStatusRowClass(product.status)"> -->
+                                        <tr v-for="product in data" :key="product.sku" 
+                                        >
                                         <td>{{ product.sku }}</td>
-                                        <td>{{ product.name }}</td>
-                                        <td :class="getStockClass(product.current_stock, product.low_stock_level)">
+                                        <td><img class="rounded-circle" :src="product.image" alt="Product Image" width="35"></td>
+                                        <!-- <td>{{ product.image }}</td> -->
+                                        <td><a :href="'/products/' + product.name" target="_blank">
+        {{ product.name }}
+    </a></td>
+                                        <td :class="getStockClass(product.current_stock, product.low_stock_level, product.status)">
                                             {{ product.current_stock }}
                                         </td>
                                         <td>{{ product.sales_30_days }}</td>
@@ -59,7 +66,7 @@
                                         <td>{{ product.safety_stock }}</td>
                                         <td>{{ product.low_stock_level }}</td>
                                         <td>
-                                            <span class="badge" :class="getStatusBadgeClass(product.status)">
+                                            <span class="badge badge-shadow" :class="getStatusBadgeClass(product.status)">
                                                 {{ product.status }}
                                             </span>
                                         </td>
@@ -88,7 +95,7 @@
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
-    name: 'LowStockReport',
+    name: 'StockReport', // Updated name
     props: ['data', 'loader'],
     components: {
         BulletListLoader
@@ -101,22 +108,22 @@ export default {
         }
     },
     methods: {
-        getStatusRowClass(status) {
-            switch (status) {
-                case 'Out of Stock':
-                    return 'table-danger';
-                case 'Low Stock':
-                    return 'table-warning';
-                case 'Sufficient':
-                    return 'table-success';
-                default:
-                    return '';
-            }
-        },
-        getStockClass(currentStock, lowStockLevel) {
-            if (currentStock === 0) return 'text-danger font-weight-bold';
-            if (currentStock <= lowStockLevel) return 'text-warning font-weight-bold';
-            return 'text-success';
+        // getStatusRowClass(status) {
+        //     switch (status) {
+        //         case 'Out of Stock':
+        //             return 'table-danger';
+        //         case 'Low Stock':
+        //             return 'table-warning';
+        //         case 'Sufficient':
+        //             return ''; // 
+        //         default:
+        //             return '';
+        //     }
+        // },
+        getStockClass(currentStock, lowStockLevel, status) {
+            if (status === 'Out of Stock') return 'text-danger font-weight-bold';
+            if (status === 'Low Stock') return 'text-warning font-weight-bold';
+            return 'text-success'; // Sufficient stock in green
         },
         getStatusBadgeClass(status) {
             switch (status) {
@@ -134,6 +141,11 @@ export default {
     watch: {
         data(newData) {
             this.$nextTick(() => {
+                // Destroy existing DataTable if it exists
+                if ($.fn.DataTable.isDataTable('#low-stock-report-table')) {
+                    $('#low-stock-report-table').DataTable().destroy();
+                }
+                
                 $('#low-stock-report-table').DataTable({
                     "bSort": true,
                     "order": [[2, "asc"]], // Sort by Current Stock ascending
@@ -143,35 +155,35 @@ export default {
                     buttons: [
                         {
                             extend: 'copy',
-                            title: 'Low Stock Products Report',
+                            title: 'Stock Products Report', // Updated title
                             exportOptions: {
                                 columns: ':visible'
                             }
                         }, 
                         {
                             extend: 'csv',
-                            title: 'Low Stock Products Report',
+                            title: 'Stock Products Report', // Updated title
                             exportOptions: {
                                 columns: ':visible'
                             }
                         }, 
                         {
                             extend: 'excel',
-                            title: 'Low Stock Products Report',
+                            title: 'Stock Products Report', // Updated title
                             exportOptions: {
                                 columns: ':visible'
                             }
                         },
                         {
                             extend: 'pdf',
-                            title: 'Low Stock Products Report',
+                            title: 'Stock Products Report', // Updated title
                             exportOptions: {
                                 columns: ':visible'
                             }
                         },
                         {
                             extend: 'print',
-                            title: 'Low Stock Products Report',
+                            title: 'Stock Products Report', // Updated title
                             exportOptions: {
                                 columns: ':visible'
                             }
@@ -185,7 +197,7 @@ export default {
 </script>
 
 <style scoped>
-.table-responsive {
+/* .table-responsive {
     max-height: 600px;
 }
 
@@ -202,9 +214,6 @@ export default {
     background-color: #fff3cd;
 }
 
-.table-success {
-    background-color: #d1edff;
-}
 
 .text-danger {
     color: #dc3545 !important;
@@ -220,5 +229,5 @@ export default {
 
 .font-weight-bold {
     font-weight: 700 !important;
-}
+} */
 </style>

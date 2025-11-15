@@ -119,7 +119,7 @@
     <div class="col-md-4 col-6" v-if="role == 'admin'">
     <h6>
         17.
-        <a href="#" @click="lowStocklist()"><i class="fas fa-fax"></i> Low stock report</a>
+        <a href="#" @click="lowStocklist()"><i class="fas fa-fax"></i> Stock Report</a>
     </h6>
 </div>
                         </div>

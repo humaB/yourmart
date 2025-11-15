@@ -10460,6 +10460,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'GenericBarChart',
   props: {
@@ -10497,14 +10507,32 @@ __webpack_require__.r(__webpack_exports__);
       }
       return {};
     },
-    chartColor: function chartColor() {
-      return this.getChartColor();
+    color: function color() {
+      return this.dataset.color || this.getDefaultColor();
     },
     stats: function stats() {
       return this.dataset.stats || {
         total: 0,
         average: 0
       };
+    },
+    formattedTotal: function formattedTotal() {
+      if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
+        return (this.stats.total || 0).toLocaleString();
+      }
+      return (this.stats.total || 0).toLocaleString();
+    },
+    formattedAverage: function formattedAverage() {
+      if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
+        return (this.stats.average || 0).toLocaleString();
+      }
+      return (this.stats.average || 0).toLocaleString();
+    },
+    chartTitle: function chartTitle() {
+      var stats = this.stats || {};
+      var total = stats.total || 0;
+      var average = Math.round(stats.average || 0);
+      return "Daily ".concat(this.title, " (Total: ").concat(total.toLocaleString(), ", Avg: ").concat(average, ")");
     },
     seriesData: function seriesData() {
       return this.dataset.data || [];
@@ -10517,15 +10545,25 @@ __webpack_require__.r(__webpack_exports__);
         console.warn("No data available for ".concat(this.graphType));
         return;
       }
-      var options = {
+
+      // Calculate max value
+      var maxValue = 100;
+      if (this.seriesData.length > 0) {
+        var currentMax = Math.max.apply(Math, _toConsumableArray(this.seriesData));
+        maxValue = currentMax > 0 ? currentMax * 1.2 : 100;
+      }
+      var options = _defineProperty(_defineProperty({
         chart: {
-          height: 350,
-          type: 'bar'
+          height: 300,
+          type: "bar"
+        },
+        toolbar: {
+          show: false
         },
         plotOptions: {
           bar: {
             dataLabels: {
-              position: 'top'
+              position: "top"
             }
           }
         },
@@ -10533,13 +10571,13 @@ __webpack_require__.r(__webpack_exports__);
           enabled: true,
           formatter: function formatter(val) {
             if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
-              return 'Rs. ' + val.toLocaleString();
+              return val.toLocaleString();
             }
-            return val;
+            return val.toString();
           },
           offsetY: -20,
           style: {
-            fontSize: '12px',
+            fontSize: "11px",
             colors: ["#9aa0ac"]
           }
         },
@@ -10549,11 +10587,12 @@ __webpack_require__.r(__webpack_exports__);
         }],
         xaxis: {
           categories: this.graphData.categories || [],
-          position: 'top',
+          position: "top",
           labels: {
             offsetY: -18,
             style: {
-              colors: '#9aa0ac'
+              fontSize: "11px",
+              colors: "#9aa0ac"
             }
           },
           axisBorder: {
@@ -10561,18 +10600,6 @@ __webpack_require__.r(__webpack_exports__);
           },
           axisTicks: {
             show: false
-          }
-        },
-        fill: {
-          gradient: {
-            shade: 'light',
-            type: "horizontal",
-            shadeIntensity: 0.25,
-            gradientToColors: undefined,
-            inverseColors: true,
-            opacityFrom: 1,
-            opacityTo: 1,
-            stops: [50, 0, 100, 100]
           }
         },
         yaxis: {
@@ -10584,20 +10611,45 @@ __webpack_require__.r(__webpack_exports__);
           },
           labels: {
             show: false
+          },
+          max: maxValue
+        },
+        title: {
+          text: this.chartTitle,
+          floating: true,
+          offsetY: 270,
+          align: "center",
+          style: {
+            color: "#9aa0ac",
+            fontSize: "14px"
           }
         },
-        colors: [this.chartColor],
-        tooltip: {
-          y: {
-            formatter: function formatter(val) {
-              if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
-                return 'Rs. ' + val.toLocaleString();
-              }
-              return val;
-            }
+        colors: [this.color],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 0.5,
+            gradientToColors: [this.getGradientColor(this.color)],
+            inverseColors: false,
+            opacityFrom: 1,
+            opacityTo: 0.8,
+            stops: [0, 100]
           }
         }
-      };
+      }, "toolbar", {
+        show: false
+      }), "tooltip", {
+        y: {
+          formatter: function formatter(val) {
+            if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
+              return val.toLocaleString();
+            }
+            return val.toString();
+          }
+        }
+      });
       if (this.chart) {
         this.chart.destroy();
       }
@@ -10609,27 +10661,25 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    getChartColor: function getChartColor() {
-      // Assign specific colors based on chart order or type
-      var colorMap = {
-        // First chart: rgb(0, 143, 251)
-        1: 'rgb(0, 143, 251)',
-        first: 'rgb(0, 143, 251)',
-        orders: 'rgb(0, 143, 251)',
-        // Second chart: rgb(0, 227, 150)
-        2: 'rgb(0, 227, 150)',
-        second: 'rgb(0, 227, 150)',
-        sales: 'rgb(0, 227, 150)',
-        // Third chart: rgb(254, 176, 25)
-        3: 'rgb(254, 176, 25)',
-        third: 'rgb(254, 176, 25)',
-        profit: 'rgb(254, 176, 25)',
-        // Fourth chart: rgb(119, 93, 208)
-        4: 'rgb(119, 93, 208)',
-        fourth: 'rgb(119, 93, 208)',
-        returns: 'rgb(119, 93, 208)'
+    getDefaultColor: function getDefaultColor() {
+      var colors = {
+        'orders': '#4F46E5',
+        'sales': '#10B981',
+        'profit': '#8B5CF6',
+        'returns': '#EF4444',
+        'newproducts': '#F59E0B'
       };
-      return colorMap[this.graphType] || colorMap[1]; // Default to first color
+      return colors[this.graphType] || '#7367F0';
+    },
+    getGradientColor: function getGradientColor(baseColor) {
+      var gradients = {
+        '#4F46E5': '#4338CA',
+        '#10B981': '#059669',
+        '#8B5CF6': '#7C3AED',
+        '#EF4444': '#DC2626',
+        '#F59E0B': '#D97706'
+      };
+      return gradients[baseColor] || baseColor;
     }
   },
   watch: {
@@ -10663,6 +10713,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'NewProducts30DaysGraph',
   props: ['newproducts30daysgraph'],
@@ -10678,37 +10734,9 @@ __webpack_require__.r(__webpack_exports__);
         return sum + value;
       }, 0);
       var average = seriesData.length > 0 ? (total / seriesData.length).toFixed(1) : 0;
-      // Comprehensive safety checks
-      if (!series) {
-        console.warn('No series data provided');
-        return;
-      }
-      if (!Array.isArray(series)) {
-        console.warn('Series is not an array:', series);
-        return;
-      }
-      if (series.length === 0) {
-        console.warn('Series array is empty');
-        return;
-      }
-      if (!series[0]) {
-        console.warn('First series item is undefined');
-        return;
-      }
-      if (!series[0].data) {
-        console.warn('Series data is undefined');
-        return;
-      }
-      if (!Array.isArray(series[0].data)) {
-        console.warn('Series data is not an array:', series[0].data);
-        return;
-      }
-
-      // Safe max calculation - NO SPREAD OPERATOR
       var maxValue = 100; // Default fallback
 
       if (seriesData.length > 0) {
-        // Use reduce instead of Math.max(...array) to avoid spread operator
         var currentMax = seriesData[0];
         for (var i = 1; i < seriesData.length; i++) {
           if (seriesData[i] > currentMax) {
@@ -10720,7 +10748,16 @@ __webpack_require__.r(__webpack_exports__);
       var options = {
         chart: {
           height: 350,
-          type: "bar"
+          type: "bar",
+          toolbar: {
+            show: false,
+            tools: {
+              download: false
+            }
+          }
+        },
+        toolbar: {
+          show: false
         },
         plotOptions: {
           bar: {
@@ -10732,7 +10769,7 @@ __webpack_require__.r(__webpack_exports__);
         dataLabels: {
           enabled: true,
           formatter: function formatter(val) {
-            return String(val);
+            return "".concat(val);
           },
           offsetY: -20,
           style: {
@@ -10742,7 +10779,7 @@ __webpack_require__.r(__webpack_exports__);
         },
         series: series,
         xaxis: {
-          categories: Array.isArray(categories) ? categories : [],
+          categories: categories,
           position: "top",
           labels: {
             offsetY: -18,
@@ -10767,29 +10804,15 @@ __webpack_require__.r(__webpack_exports__);
           labels: {
             show: false
           },
-          max: maxValue
+          max: Math.max.apply(Math, _toConsumableArray(series[0].data)) * 1.2 // Add 20% space above the highest value
         },
         title: {
-          text: "Daily Products (Total: ".concat(total, ", Avg: ").concat(average, ")"),
+          text: "New Products Added (Last 30 Days)",
           floating: true,
           offsetY: 320,
           align: "center",
           style: {
             color: "#9aa0ac"
-          }
-        },
-        colors: ['#00E396'],
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shade: 'light',
-            type: "vertical",
-            shadeIntensity: 0.5,
-            gradientToColors: ['#00a76f'],
-            inverseColors: false,
-            opacityFrom: 1,
-            opacityTo: 0.8,
-            stops: [0, 100]
           }
         }
       };
@@ -10806,32 +10829,9 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     newproducts30daysgraph: {
       handler: function handler(newGraph) {
-        console.log('Watcher triggered with:', newGraph);
-
-        // Comprehensive null checks
-        if (!newGraph) {
-          console.warn('newGraph is null or undefined');
-          return;
+        if (newGraph.series && newGraph.series.length > 0) {
+          this.initChart(newGraph.categories, [newGraph.series[0]]);
         }
-        if (!newGraph.series) {
-          console.warn('newGraph.series is null or undefined');
-          return;
-        }
-        if (!Array.isArray(newGraph.series)) {
-          console.warn('newGraph.series is not an array:', newGraph.series);
-          return;
-        }
-        if (newGraph.series.length === 0) {
-          console.warn('newGraph.series array is empty');
-          return;
-        }
-        if (!newGraph.series[0]) {
-          console.warn('First series item is undefined');
-          return;
-        }
-
-        // Call initChart with safe data
-        this.initChart(newGraph.categories, [newGraph.series[0]]);
       },
       // immediate: true,
       deep: true
@@ -13967,7 +13967,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'LowStockReport',
+  name: 'StockReport',
+  // Updated name
   props: ['data', 'loader'],
   components: {
     BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_0__.BulletListLoader
@@ -13980,22 +13981,22 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getStatusRowClass: function getStatusRowClass(status) {
-      switch (status) {
-        case 'Out of Stock':
-          return 'table-danger';
-        case 'Low Stock':
-          return 'table-warning';
-        case 'Sufficient':
-          return 'table-success';
-        default:
-          return '';
-      }
-    },
-    getStockClass: function getStockClass(currentStock, lowStockLevel) {
-      if (currentStock === 0) return 'text-danger font-weight-bold';
-      if (currentStock <= lowStockLevel) return 'text-warning font-weight-bold';
-      return 'text-success';
+    // getStatusRowClass(status) {
+    //     switch (status) {
+    //         case 'Out of Stock':
+    //             return 'table-danger';
+    //         case 'Low Stock':
+    //             return 'table-warning';
+    //         case 'Sufficient':
+    //             return ''; // 
+    //         default:
+    //             return '';
+    //     }
+    // },
+    getStockClass: function getStockClass(currentStock, lowStockLevel, status) {
+      if (status === 'Out of Stock') return 'text-danger font-weight-bold';
+      if (status === 'Low Stock') return 'text-warning font-weight-bold';
+      return 'text-success'; // Sufficient stock in green
     },
     getStatusBadgeClass: function getStatusBadgeClass(status) {
       switch (status) {
@@ -14013,6 +14014,10 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     data: function data(newData) {
       this.$nextTick(function () {
+        // Destroy existing DataTable if it exists
+        if ($.fn.DataTable.isDataTable('#low-stock-report-table')) {
+          $('#low-stock-report-table').DataTable().destroy();
+        }
         $('#low-stock-report-table').DataTable({
           "bSort": true,
           "order": [[2, "asc"]],
@@ -14022,31 +14027,36 @@ __webpack_require__.r(__webpack_exports__);
           dom: 'Bfrtip',
           buttons: [{
             extend: 'copy',
-            title: 'Low Stock Products Report',
+            title: 'Stock Products Report',
+            // Updated title
             exportOptions: {
               columns: ':visible'
             }
           }, {
             extend: 'csv',
-            title: 'Low Stock Products Report',
+            title: 'Stock Products Report',
+            // Updated title
             exportOptions: {
               columns: ':visible'
             }
           }, {
             extend: 'excel',
-            title: 'Low Stock Products Report',
+            title: 'Stock Products Report',
+            // Updated title
             exportOptions: {
               columns: ':visible'
             }
           }, {
             extend: 'pdf',
-            title: 'Low Stock Products Report',
+            title: 'Stock Products Report',
+            // Updated title
             exportOptions: {
               columns: ':visible'
             }
           }, {
             extend: 'print',
-            title: 'Low Stock Products Report',
+            title: 'Stock Products Report',
+            // Updated title
             exportOptions: {
               columns: ':visible'
             }
@@ -31733,18 +31743,29 @@ var render = function render() {
       width: 250
     }
   })], 1) : _c("table", {
-    staticClass: "table table-bordered",
+    staticClass: "table table-striped dataTable no-footer",
     attrs: {
       id: "low-stock-report-table"
     }
   }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (product) {
     return _c("tr", {
-      key: product.sku,
-      "class": _vm.getStatusRowClass(product.status)
-    }, [_c("td", [_vm._v(_vm._s(product.sku))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.name))]), _vm._v(" "), _c("td", {
-      "class": _vm.getStockClass(product.current_stock, product.low_stock_level)
+      key: product.sku
+    }, [_c("td", [_vm._v(_vm._s(product.sku))]), _vm._v(" "), _c("td", [_c("img", {
+      staticClass: "rounded-circle",
+      attrs: {
+        src: product.image,
+        alt: "Product Image",
+        width: "35"
+      }
+    })]), _vm._v(" "), _c("td", [_c("a", {
+      attrs: {
+        href: "/products/" + product.name,
+        target: "_blank"
+      }
+    }, [_vm._v("\n    " + _vm._s(product.name) + "\n")])]), _vm._v(" "), _c("td", {
+      "class": _vm.getStockClass(product.current_stock, product.low_stock_level, product.status)
     }, [_vm._v("\n                                        " + _vm._s(product.current_stock) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sales_30_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.lead_time) + " days")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.safety_stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.low_stock_level))]), _vm._v(" "), _c("td", [_c("span", {
-      staticClass: "badge",
+      staticClass: "badge badge-shadow",
       "class": _vm.getStatusBadgeClass(product.status)
     }, [_vm._v("\n                                            " + _vm._s(product.status) + "\n                                        ")])]), _vm._v(" "), _c("td", [product.recommended_reorder_qty > 0 ? _c("span", {
       staticClass: "text-danger font-weight-bold"
@@ -31762,7 +31783,7 @@ var staticRenderFns = [function () {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "card-header"
-  }, [_c("h5", [_vm._v("Low Stock Products Report")])]);
+  }, [_c("h5", [_vm._v("Stock Report")])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -31774,7 +31795,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product SKU")]), _vm._v(" "), _c("th", [_vm._v("Product Name")]), _vm._v(" "), _c("th", [_vm._v("Current Stock")]), _vm._v(" "), _c("th", [_vm._v("Sales (30 Days)")]), _vm._v(" "), _c("th", [_vm._v("Avg Daily Sales")]), _vm._v(" "), _c("th", [_vm._v("Lead Time")]), _vm._v(" "), _c("th", [_vm._v("Safety Stock")]), _vm._v(" "), _c("th", [_vm._v("Low Stock Level")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Recommended Reorder Qty")]), _vm._v(" "), _c("th", [_vm._v("Last Updated")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product SKU")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Product Link")]), _vm._v(" "), _c("th", [_vm._v("Current Stock")]), _vm._v(" "), _c("th", [_vm._v("Sales (30 Days)")]), _vm._v(" "), _c("th", [_vm._v("Avg Daily Sales")]), _vm._v(" "), _c("th", [_vm._v("Lead Time")]), _vm._v(" "), _c("th", [_vm._v("Safety Stock")]), _vm._v(" "), _c("th", [_vm._v("Low Stock Level")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Recommended Reorder Qty")]), _vm._v(" "), _c("th", [_vm._v("Last Updated")])])]);
 }];
 render._withStripped = true;
 
@@ -39810,7 +39831,7 @@ var render = function render() {
     }
   }, [_c("i", {
     staticClass: "fas fa-fax"
-  }), _vm._v(" Low stock report")])])]) : _vm._e()])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
+  }), _vm._v(" Stock Report")])])]) : _vm._e()])])], 1)])]), _vm._v(" "), _vm.report == "control-register-report" ? _c("InventoryControlRegisterReport", {
     attrs: {
       data: _vm.controlRegisterData,
       loader: _vm.loader
@@ -42407,7 +42428,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.card[data-v-00694943] {\r\n    margin-bottom: 1rem;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.graph-stats[data-v-00694943] {\n  background-color: #f8f9fa;\n  border-radius: 0.375rem;\n}\n.stat-item[data-v-00694943] {\n  padding: 0.5rem;\n}\n.stat-label[data-v-00694943] {\n  font-size: 0.75rem;\n  margin-bottom: 0.25rem;\n}\n.stat-value[data-v-00694943] {\n  font-size: 1.25rem;\n  font-weight: 600;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -42503,7 +42524,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.table-responsive[data-v-008b7a50] {\r\n    max-height: 600px;\n}\n.badge[data-v-008b7a50] {\r\n    font-size: 0.85em;\r\n    padding: 0.4em 0.6em;\n}\n.table-danger[data-v-008b7a50] {\r\n    background-color: #f8d7da;\n}\n.table-warning[data-v-008b7a50] {\r\n    background-color: #fff3cd;\n}\n.table-success[data-v-008b7a50] {\r\n    background-color: #d1edff;\n}\n.text-danger[data-v-008b7a50] {\r\n    color: #dc3545 !important;\n}\n.text-warning[data-v-008b7a50] {\r\n    color: #e6ac00 !important;\n}\n.text-success[data-v-008b7a50] {\r\n    color: #28a745 !important;\n}\n.font-weight-bold[data-v-008b7a50] {\r\n    font-weight: 700 !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* .table-responsive {\r\n    max-height: 600px;\r\n}\r\n\r\n.badge {\r\n    font-size: 0.85em;\r\n    padding: 0.4em 0.6em;\r\n}\r\n\r\n.table-danger {\r\n    background-color: #f8d7da;\r\n}\r\n\r\n.table-warning {\r\n    background-color: #fff3cd;\r\n}\r\n\r\n\r\n.text-danger {\r\n    color: #dc3545 !important;\r\n}\r\n\r\n.text-warning {\r\n    color: #e6ac00 !important;\r\n}\r\n\r\n.text-success {\r\n    color: #28a745 !important;\r\n}\r\n\r\n.font-weight-bold {\r\n    font-weight: 700 !important;\r\n} */\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
