@@ -3,6 +3,7 @@
 namespace App\Models\Inventory\Store;
 
 use App\Models\Inventory\Product\Variation\Product;
+use App\Models\User\Supplier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +29,10 @@ class StoreReceivedDetail extends Model
 
     public function product(){
         return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+
+    public function supplier(){
+        return $this->hasOne(Supplier::class, 'id', 'supplier_id');
     }
 
     public function grn(){

@@ -310,7 +310,7 @@ class SupplierController extends Controller
                     'sold_out_qty'     => $total_qty,
                     'sold_out_amount'  => $amount,
                 ];
-        });
+            });
 
         $supplierFinal = $supplierReceived->map(function ($item) use ($supplierSold, $inprocess) {
             $productId = $item['product_id'];
@@ -554,7 +554,7 @@ class SupplierController extends Controller
                 });
         }
         if ($status == 'Sold Out') {
-             $final = OrderItemSupplier::with(['order', 'product'])
+            $final = OrderItemSupplier::with(['order', 'product'])
                 ->when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
                 ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
                 ->when($to, fn($q) => $q->whereDate('created_at', '<=', $to))
@@ -562,7 +562,7 @@ class SupplierController extends Controller
                 ->get()
                 ->groupBy('product_id')
                 ->map(function ($items, $productId) use ($supplierId, $from, $to) {
-                   $product = Product::find($productId);
+                    $product = Product::find($productId);
 
                     $received = StoreReceivedDetail::when($supplierId, fn($q) => $q->where('supplier_id', $supplierId))
                         ->when($from, fn($q) => $q->whereDate('created_at', '>=', $from))
@@ -595,7 +595,7 @@ class SupplierController extends Controller
 
                         'po' => null, // placeholder
                     ];
-            });
+                });
         }
 
         $final = [
@@ -736,7 +736,6 @@ class SupplierController extends Controller
 
     public function pendingSupplierPayment()
     {
-        // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
         $suppliers = PurchaseOrder::select(
             'supplier_id',
             DB::raw('SUM(total_amount) as total_order_amount'),
@@ -746,21 +745,187 @@ class SupplierController extends Controller
             ->where('supplier_stock', '1')
             ->groupBy('supplier_id')
             ->having('total_remaining_amount', '>', 0)
-            ->with('supplier:id,full_name,email') // eager load supplier if needed
             ->orderByDesc('supplier_id')
             ->get();
+
+
+        // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
+         // ---------------- PURCHASE ORDER FINANCIALS ----------------
+        $poFinancials = PurchaseOrder::select(
+            'supplier_id',
+            DB::raw('SUM(total_amount) as total_order_amount'),
+            DB::raw('SUM(remaining_amount) as total_remaining_amount')
+        )
+            ->where('status', '1')       // Assuming '1' means the PO is active/open
+            ->where('supplier_stock', '1') // Only POs linked to supplier-managed stock
+            ->groupBy('supplier_id')
+            ->having('total_remaining_amount', '>', 0)
+            ->orderByDesc('supplier_id')
+            ->get()
+            // Convert the Collection to a keyed map for fast lookup in the final loop
+            ->keyBy('supplier_id');
+
+        // ---------------- SUPPLIER STOCK ----------------
+        $supplierReceived = StoreReceivedDetail::whereHas('grn.purchase_order', fn($q) => $q->where('supplier_stock', '1'))
+            ->get();
+
+        // Supplier Issued (sold out)
+        $supplierSold = OrderItemSupplier::with('order')
+            ->whereHas('order', fn($q) => $q->where('status', '8'))
+            ->get();
+
+        $supplierIssuedValue = 0;
+        foreach ($supplierSold as $sold) {
+            $product = StoreReceivedDetail::where('product_id', $sold->product_id)
+                ->get();
+
+            $avg_price = $product->sum('quantity') > 0
+                ? round($product->sum('total') / $product->sum('quantity'))
+                : 0;
+
+            $supplierIssuedValue += (float) $avg_price * (float) $sold->quantity;
+        }
 
         $totalPayable = $suppliers->sum('total_order_amount');
         $totalRemaining = $suppliers->sum('total_remaining_amount');
         $totalPaid = $totalPayable - $totalRemaining;
         $remainingDropshippers = $suppliers->count();
+        $supplierReceivedValue = $supplierReceived->sum('total');
+
+
+        // ---------------- SUPPLIER STOCK ----------------
+        $supplierReceived = StoreReceivedDetail::with('supplier')
+            ->whereHas('grn.purchase_order', fn($q) => $q->where('supplier_stock', '1'))
+            ->whereNotNull('supplier_id')
+            ->get()
+            ->groupBy('supplier_id')
+            ->filter(fn($items, $supplierId) => $supplierId !== null) // Added filter after groupBy for robustness
+            ->map(function ($items, $supplierId) {
+                $total_qty    = $items->sum('quantity');
+                $total_amount = $items->sum('total');
+                $latest_price = $total_qty ? round($total_amount / $total_qty, 2) : 0;
+
+                $supplier = $items->first()->supplier ?? (object)['id' => $supplierId, 'name' => 'Unknown', 'email' => '', 'whatsapp_number' => ''];
+
+                return [
+                    'name'            => $supplier->full_name ?? '',
+                    'email'           => $supplier->email ?? '',
+                    'contact'         => $supplier->whatsapp_number ?? '',
+                    'supplier_id'     => $supplier->id,
+                    'stock_in_qty'    => (int) $total_qty,
+                    'stock_in_price'  => (float) $latest_price,
+                    'stock_in_amount' => (float) ($total_qty * $latest_price),
+                ];
+            });
+
+        // ---
+        // ✅ In Process
+       $inprocess = OrderItemSupplier::with('order','product.variation')
+            ->whereHas(
+                'order',
+                fn($query) =>
+                $query->whereNotIn('status', ['6', '7', '8', '9', '10', '12'])
+            )
+            ->get()
+            ->groupBy('supplier_id')
+            ->map(function ($items, $supplierId) {
+                $total_qty = $items->sum('quantity');
+
+                // Access the price from the 'product' relationship
+                $total_amount = $items->sum(fn($i) =>
+                    // Access product relationship, casting for safety
+                    (float) $i->quantity * (float) optional($i->product->variation)->avg_price
+                );
+
+                return [
+                    'supplier_id'      => (int) $supplierId,
+                    'inprocess_qty'    => (int) $total_qty,
+                    'inprocess_amount' => (float) $total_amount,
+                ];
+            });
+        // ---
+        // 💸 Supplier Sold
+        $supplierSold = OrderItemSupplier::with(['order', 'product'])
+            // Added direct filter on the table column 'supplier_id'
+            ->whereNotNull('supplier_id')
+            ->whereHas('order', fn($q) => $q->where('status', '8'))
+            ->get()
+            ->groupBy('supplier_id')
+            ->map(function ($items, $supplierId) {
+                $total_qty = $items->sum('quantity');
+                $amount    = $items->sum(fn($i) => $i->quantity * $i->price);
+
+                return [
+                    'supplier_id'      => (int) $supplierId,
+                    'sold_out_qty'     => (int) $total_qty,
+                    'sold_out_amount'  => (float) $amount,
+                ];
+            });
+
+        // ---
+        // 📈 Final Calculation (Including PO Financials)
+        $supplierFinal = $supplierReceived->map(function ($item) use ($supplierSold, $inprocess, $poFinancials) {
+            $supplierId = $item['supplier_id'];
+
+            // --- Inventory Calculations (from previous steps) ---
+            $soldItem      = $supplierSold->get($supplierId);
+            $inprocessItem = $inprocess->get($supplierId);
+
+            $sold_qty          = $soldItem['sold_out_qty'] ?? 0;
+            $sold_amount       = $soldItem['sold_out_amount'] ?? 0;
+
+            $inprocess_qty     = $inprocessItem['inprocess_qty'] ?? 0;
+            $inprocess_amount  = $inprocessItem['inprocess_amount'] ?? 0;
+
+            $balance_qty    = $item['stock_in_qty'] - $sold_qty - $inprocess_qty;
+            $balance_amount = $balance_qty * $item['stock_in_price'];
+
+
+            // --- New PO Financial Calculations ---
+            $poItem = $poFinancials->get($supplierId);
+
+            // Get aggregated amounts (default to 0 if no matching PO data is found)
+            $total_order_amount    = (float) optional($poItem)->total_order_amount ?? 0;
+            $total_remaining_amount = (float) optional($poItem)->total_remaining_amount ?? 0;
+
+            // Calculate total paid amount
+            $total_paid_amount = $sold_amount - $total_remaining_amount;
+
+
+            // --- Return Final Array ---
+            return [
+                'id'               => $supplierId,
+                'name'             => $item['name'],
+                'email'            => $item['email'],
+                'contact'          => $item['contact'],
+
+                // Inventory metrics
+                'stock_in_qty'     => $item['stock_in_qty'],
+                'stock_in_price'   => $item['stock_in_price'],
+                'stock_in_amount'  => round($item['stock_in_amount']),
+                'inprocess_qty'    => (int) $inprocess_qty,
+                'inprocess_amount' => round((float) $inprocess_amount),
+                'sold_out_qty'     => (int) $sold_qty,
+                'sold_out_amount'  => round((float) $sold_amount),
+                'balance_qty'      => (int) $balance_qty,
+                'balance_amount'   => round((float) $balance_amount),
+
+                // PO Financial metrics
+                'po_total_order_amount'    => (float) $total_order_amount,
+                'po_total_paid_amount'     => (float) $total_paid_amount,
+                'po_total_remaining_amount' => (float) $total_remaining_amount,
+
+            ];
+        })->values();
 
         $data = [
-            'total_payable' => $totalPayable,
-            'total_paid' => $totalPaid,
+            'stock'           => $supplierReceivedValue,
+            'total_payable'   => $totalPayable,
+            'total_paid'      => $totalPaid,
             'total_remaining' => $totalRemaining,
             'remaining_dropshippers' => $remainingDropshippers,
-            'suppliers' => $suppliers
+            'suppliers' => $supplierFinal,
+            'soldOut'   => $supplierIssuedValue
         ];
 
         return (new ResponseCollection($data))
