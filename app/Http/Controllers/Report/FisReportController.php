@@ -431,18 +431,6 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
-   
-    public function supplierWiseStock(){
-
-        $dropshippers = SupplierStock::with('supplier:id,full_name', 'product:id,title')->orderBy('id', 'desc')
-            ->get();
-
-
-        return (new ResponseCollection($dropshippers))
-            ->response()
-            ->setStatusCode(200);
-    }
-
     public function suspectedDuplicateDropshippers()
     {
         // Get dropshippers with same name, email, or phone
@@ -504,7 +492,16 @@ class FisReportController extends Controller
             ->setStatusCode(200);
     }
 
-    
+    public function supplierWiseStock(){
+
+        $dropshippers = SupplierStock::with('supplier:id,full_name', 'product:id,title')->orderBy('id', 'desc')
+            ->get();
+
+
+        return (new ResponseCollection($dropshippers))
+            ->response()
+            ->setStatusCode(200);
+    }
     public function lowStockProducts(Request $request)
     {
         try {
@@ -549,8 +546,8 @@ class FisReportController extends Controller
     
                 return [
                     'sku' => $product->variation->sku,
+                    'name' => $product->slug,
                     'image' => $product->hero_image,
-                'name' => $product->slug,
                     'current_stock' => (int) $currentStock,
                     'sales_30_days' => (int) $sales30Days,
                     'avg_daily_sales' => round($avgDailySales, 2),
