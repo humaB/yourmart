@@ -52,9 +52,9 @@
                                         <tr v-for="product in data" :key="product.sku" 
                                         >
                                         <td>{{ product.sku }}</td>
-                                        <td><img class="rounded-circle" :src="product.image" alt="Product Image" width="35"></td>
+                                        <td><span class="team-member team-member-sm"><img class="rounded-circle" :src="product.image" alt="Product Image"></span></td>
                                         <!-- <td>{{ product.image }}</td> -->
-                                        <td><a :href="'/products/' + product.name" target="_blank">
+                                        <td><a :href="'https://yourmart.pk/products/' + product.name" target="_blank">
         {{ product.name }}
     </a></td>
                                         <td :class="getStockClass(product.current_stock, product.low_stock_level, product.status)">

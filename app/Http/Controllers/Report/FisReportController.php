@@ -505,17 +505,21 @@ class FisReportController extends Controller
     public function lowStockProducts(Request $request)
     {
         try {
-            // Get all active products with variations
-            $products = Product::with(['variation'])
-                ->where('status', 1)
-                ->whereHas('variation') // Only products with variations
-                ->get();
+            $products = Product::with(['variation'])->get();
     
             $stockData = $products->map(function($product) {
                 // Get sales for last 30 days
-                $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
-                    ->where('created_at', '>=', Carbon::now()->subDays(30))
-                    ->sum('quantity');
+                // $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
+                //     ->where('created_at', '>=', Carbon::now()->subDays(30))
+                //     ->sum('quantity');
+
+                $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
+    ->where('created_at', '>=', Carbon::now()->subDays(30))
+    ->pluck('id');
+
+$sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
+    ->whereIn('sin_id', $orderIssuances)
+    ->sum('quantity');
     
                 // Fixed values
                 $leadTime = 3;
@@ -579,6 +583,5 @@ class FisReportController extends Controller
                 ->setStatusCode(500);
         }
     }
-
-
+   
 }
