@@ -527,7 +527,8 @@ $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
                 $currentStock = $product->variation->stock;
             
                 $avgDailySales = $sales30Days / 30;
-                $maxDailySales = $avgDailySales * 2;
+                // $maxDailySales = $avgDailySales * 2;
+                 $maxDailySales = $dailySales->max('daily_total') ?? 0;
                 $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
                 $safetyStock = max(1, ceil($safetyStock)); 
                 $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
