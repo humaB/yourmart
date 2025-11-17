@@ -38,7 +38,7 @@
                                         <th>Current Stock</th>
                                         <th>Sales (30 Days)</th>
                                         <th>Avg Daily Sales</th>
-                                        <th>Lead Time</th>
+                                        <th>Lead Time (Days)</th>
                                         <th>Safety Stock</th>
                                         <th>Low Stock Level</th>
                                         <th>Status</th>
@@ -62,7 +62,7 @@
                                         </td>
                                         <td>{{ product.sales_30_days }}</td>
                                         <td>{{ product.avg_daily_sales }}</td>
-                                        <td>{{ product.lead_time }} days</td>
+                                        <td>{{ product.lead_time }}</td>
                                         <td>{{ product.safety_stock }}</td>
                                         <td>{{ product.low_stock_level }}</td>
                                         <td>

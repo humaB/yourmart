@@ -14347,6 +14347,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -14357,76 +14363,180 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      public_url: window.location.origin + ""
+      expandedGroups: {},
+      flatData: []
     };
   },
+  computed: {
+    groupedData: function groupedData() {
+      var _this = this;
+      if (!this.data || !this.data.length) return [];
+      var groups = [];
+      var processedIds = new Set();
+      this.data.forEach(function (item) {
+        if (processedIds.has(item.id)) return;
+        var duplicates = _this.data.filter(function (other) {
+          if (other.id === item.id || processedIds.has(other.id)) return false;
+          var emailA = (item.email || '').toString().trim().toLowerCase();
+          var emailB = (other.email || '').toString().trim().toLowerCase();
+          var phoneA = (item.whatsapp_number || '').toString().trim();
+          var phoneB = (other.whatsapp_number || '').toString().trim();
+          var cnicA = (item.cnic_number || '').toString().trim();
+          var cnicB = (other.cnic_number || '').toString().trim();
+          var accA = (item.account_number || '').toString().trim();
+          var accB = (other.account_number || '').toString().trim();
+          var ibanA = (item.account_iban || '').toString().trim();
+          var ibanB = (other.account_iban || '').toString().trim();
+          return emailA && emailA === emailB || phoneA && phoneA === phoneB || cnicA && cnicA === cnicB || accA && accA === accB || ibanA && ibanA === ibanB;
+        });
+        if (duplicates.length > 0) {
+          groups.push({
+            parent: item,
+            children: duplicates,
+            duplicateFields: _this.getDuplicateFields(item, duplicates)
+          });
+          processedIds.add(item.id);
+          duplicates.forEach(function (d) {
+            return processedIds.add(d.id);
+          });
+        }
+      });
+      return groups;
+    }
+  },
+  //     groupedData() {
+  //       if (!this.data || !this.data.length) return [];
+  //       const groups = [];
+  //       const processedIds = new Set();
+
+  //       this.data.forEach(item => {
+  //         if (processedIds.has(item.id)) return;
+
+  //         const duplicates = this.data.filter(other => {
+  //           if (other.id === item.id || processedIds.has(other.id)) return false;
+  //           return (
+  //             (item.email && item.email === other.email) ||
+  //             (item.whatsapp_number && item.whatsapp_number === other.whatsapp_number) ||
+  //             (item.cnic_number && item.cnic_number === other.cnic_number) ||
+  //             (item.account_number && item.account_number === other.account_number) ||
+  //             (item.account_iban && item.account_iban === other.account_iban)
+  //           );
+  //         });
+
+  //         if (duplicates.length > 0) {
+  //           groups.push({
+  //             parent: item,
+  //             children: duplicates,
+  //             duplicateFields: this.getDuplicateFields(item, duplicates)
+  //           });
+  //           processedIds.add(item.id);
+  //           duplicates.forEach(d => processedIds.add(d.id));
+  //         }
+  //       });
+
+  //       return groups;
+  //     }
+  //   },
+  watch: {
+    groupedData: {
+      handler: function handler(newGroups) {
+        this.buildFlatData(newGroups);
+      },
+      immediate: true
+    },
+    data: function data() {
+      var _this2 = this;
+      this.$nextTick(function () {
+        return setTimeout(_this2.initDataTable, 300);
+      });
+    }
+  },
   methods: {
-    formatDate: function formatDate(date) {
-      return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : '';
+    buildFlatData: function buildFlatData(groups) {
+      var _this3 = this;
+      this.flatData = [];
+      groups.forEach(function (group, idx) {
+        var groupId = "group-".concat(idx);
+        // parent row
+        _this3.flatData.push(_objectSpread(_objectSpread({}, group.parent), {}, {
+          isParent: true,
+          groupId: groupId,
+          groupIndex: idx,
+          duplicateCount: group.children.length
+          //   duplicateFields: group.duplicateFields
+        }));
+        // child rows
+        if (_this3.expandedGroups[groupId]) {
+          group.children.forEach(function (child, cidx) {
+            _this3.flatData.push(_objectSpread(_objectSpread({}, child), {}, {
+              isParent: false,
+              isDuplicate: true,
+              groupId: groupId,
+              groupIndex: idx,
+              duplicateFields: group.duplicateFields
+            }));
+          });
+        }
+      });
+    },
+    toggleGroup: function toggleGroup(groupId) {
+      this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
+      this.buildFlatData(this.groupedData);
+    },
+    getDuplicateFields: function getDuplicateFields(parent, children) {
+      var pEmail = (parent.email || '').toString().trim().toLowerCase();
+      var pPhone = (parent.whatsapp_number || '').toString().trim();
+      var pCnic = (parent.cnic_number || '').toString().trim();
+      var pAcc = (parent.account_number || '').toString().trim();
+      var pIban = (parent.account_iban || '').toString().trim();
+      return {
+        email: !!pEmail && children.some(function (c) {
+          return (c.email || '').toString().trim().toLowerCase() === pEmail;
+        }),
+        phone: !!pPhone && children.some(function (c) {
+          return (c.whatsapp_number || '').toString().trim() === pPhone;
+        }),
+        cnic: !!pCnic && children.some(function (c) {
+          return (c.cnic_number || '').toString().trim() === pCnic;
+        }),
+        account: !!pAcc && children.some(function (c) {
+          return (c.account_number || '').toString().trim() === pAcc;
+        }),
+        iban: !!pIban && children.some(function (c) {
+          return (c.account_iban || '').toString().trim() === pIban;
+        })
+      };
     },
     formatPrice: function formatPrice(price) {
-      var value = parseFloat(price).toFixed(2);
-      var string = value.toString();
-      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+      var val = parseFloat(price || 0).toFixed(2);
+      return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
     submitFunction: function submitFunction() {
       this.$emit('DuplicateDropshippersfilter');
     },
-    clearDataTable: function clearDataTable() {
+    initDataTable: function initDataTable() {
       var table = $('#duplicate_dropshipper_list').DataTable();
-      if (table) {
-        table.destroy();
-      }
-    },
-    isEmailDuplicate: function isEmailDuplicate(item) {
-      return this.data.filter(function (d) {
-        return d.email === item.email && d.email;
-      }).length > 1;
-    },
-    isCNICDuplicate: function isCNICDuplicate(item) {
-      return this.data.filter(function (d) {
-        return d.cnic_number === item.cnic_number && d.cnic_number;
-      }).length > 1;
-    },
-    isPhoneDuplicate: function isPhoneDuplicate(item) {
-      return this.data.filter(function (d) {
-        return d.whatsapp_number === item.whatsapp_number && d.whatsapp_number;
-      }).length > 1;
-    },
-    isAcoountDuplicate: function isAcoountDuplicate(item) {
-      return this.data.filter(function (d) {
-        return d.account_number === item.account_number && d.account_number;
-      }).length > 1;
-    },
-    isIBANDuplicate: function isIBANDuplicate(item) {
-      return this.data.filter(function (d) {
-        return d.account_iban === item.account_iban && d.account_iban;
-      }).length > 1;
-    }
-  },
-  watch: {
-    data: function data(newData) {
-      var _this = this;
-      this.$nextTick(function () {
-        setTimeout(function () {
-          _this.clearDataTable();
-          $('#duplicate_dropshipper_list').DataTable({
-            "bSort": false,
-            dom: 'Bfrtip',
-            buttons: [{
-              extend: 'copy',
-              title: 'Suspected Duplicate Dropshipper Accounts'
-            }, 'csv', {
-              extend: 'excel',
-              title: 'Suspected Duplicate Dropshipper Accounts'
-            }]
-          });
-        }, 300);
+      if (table) table.destroy();
+      $('#duplicate_dropshipper_list').DataTable({
+        bSort: false,
+        paging: true,
+        searching: true,
+        info: true,
+        autoWidth: false,
+        dom: 'Bfrtip',
+        buttons: [{
+          extend: 'copy',
+          title: 'Suspected Duplicate Dropshipper Accounts'
+        }, 'csv', {
+          extend: 'excel',
+          title: 'Suspected Duplicate Dropshipper Accounts'
+        }]
       });
     }
   },
   beforeDestroy: function beforeDestroy() {
-    this.clearDataTable();
+    var table = $('#duplicate_dropshipper_list').DataTable();
+    if (table) table.destroy();
   }
 });
 
@@ -31770,7 +31880,7 @@ var render = function render() {
       }
     }, [_vm._v("\n    " + _vm._s(product.name) + "\n")])]), _vm._v(" "), _c("td", {
       "class": _vm.getStockClass(product.current_stock, product.low_stock_level, product.status)
-    }, [_vm._v("\n                                        " + _vm._s(product.current_stock) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sales_30_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.lead_time) + " days")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.safety_stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.low_stock_level))]), _vm._v(" "), _c("td", [_c("span", {
+    }, [_vm._v("\n                                        " + _vm._s(product.current_stock) + "\n                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sales_30_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.lead_time))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.safety_stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.low_stock_level))]), _vm._v(" "), _c("td", [_c("span", {
       staticClass: "badge badge-shadow",
       "class": _vm.getStatusBadgeClass(product.status)
     }, [_vm._v("\n                                            " + _vm._s(product.status) + "\n                                        ")])]), _vm._v(" "), _c("td", [product.recommended_reorder_qty > 0 ? _c("span", {
@@ -31801,7 +31911,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product SKU")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Product Link")]), _vm._v(" "), _c("th", [_vm._v("Current Stock")]), _vm._v(" "), _c("th", [_vm._v("Sales (30 Days)")]), _vm._v(" "), _c("th", [_vm._v("Avg Daily Sales")]), _vm._v(" "), _c("th", [_vm._v("Lead Time")]), _vm._v(" "), _c("th", [_vm._v("Safety Stock")]), _vm._v(" "), _c("th", [_vm._v("Low Stock Level")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Recommended Reorder Qty")]), _vm._v(" "), _c("th", [_vm._v("Last Updated")])])]);
+  return _c("thead", [_c("tr", [_c("th", [_vm._v("Product SKU")]), _vm._v(" "), _c("th", [_vm._v("Image")]), _vm._v(" "), _c("th", [_vm._v("Product Link")]), _vm._v(" "), _c("th", [_vm._v("Current Stock")]), _vm._v(" "), _c("th", [_vm._v("Sales (30 Days)")]), _vm._v(" "), _c("th", [_vm._v("Avg Daily Sales")]), _vm._v(" "), _c("th", [_vm._v("Lead Time (Days)")]), _vm._v(" "), _c("th", [_vm._v("Safety Stock")]), _vm._v(" "), _c("th", [_vm._v("Low Stock Level")]), _vm._v(" "), _c("th", [_vm._v("Status")]), _vm._v(" "), _c("th", [_vm._v("Recommended Reorder Qty")]), _vm._v(" "), _c("th", [_vm._v("Last Updated")])])]);
 }];
 render._withStripped = true;
 
@@ -32365,47 +32475,64 @@ var render = function render() {
   return _c("div", [_c("div", {
     staticClass: "row"
   }, [_c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12"
+    staticClass: "col-12"
   }, [_c("div", {
     staticClass: "card"
   }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "card-body row"
-  }, [_c("div", {
-    staticClass: "col-md-12"
+    staticClass: "card-body"
   }, [_c("form", {
+    staticClass: "mb-3",
     on: {
       submit: function submit($event) {
         $event.preventDefault();
         return _vm.submitFunction.apply(null, arguments);
       }
     }
-  }, [_vm._m(1)])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
-  }, [_vm.loader ? _c("div", {
-    staticClass: "card-body table-responsive"
+  }, [_c("button", {
+    staticClass: "btn btn-primary btn-block"
+  }, [_vm._v("Fetch Suspected Duplicates")])]), _vm._v(" "), _vm.loader ? _c("div", {
+    staticClass: "text-center py-4"
   }, [_c("bullet-list-loader", {
     attrs: {
       width: 250
     }
-  })], 1) : _c("table", {
-    staticClass: "table table-bordered",
+  })], 1) : _c("div", {
+    staticClass: "table-responsive"
+  }, [_c("table", {
+    staticClass: "table table-striped dataTable no-footer",
     attrs: {
       id: "duplicate_dropshipper_list"
     }
-  }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (item, index) {
+  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.flatData, function (item, index) {
     return _c("tr", {
-      key: item.id
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cnic_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_iban))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [_vm.isEmailDuplicate(item) ? _c("span", {
-      staticClass: "custom-badge badge badge-warning"
-    }, [_vm._v("Duplicate Email")]) : _vm._e(), _vm._v(" "), _vm.isPhoneDuplicate(item) ? _c("span", {
-      staticClass: "custom-badge badge badge-primary"
-    }, [_vm._v("Duplicate Phone")]) : _vm._e(), _vm._v(" "), _vm.isCNICDuplicate(item) ? _c("span", {
-      staticClass: "custom-badge badge badge-success"
-    }, [_vm._v("Duplicate CNIC")]) : _vm._e(), _vm._v(" "), _vm.isAcoountDuplicate(item) ? _c("span", {
-      staticClass: "custom-badge badge badge-danger"
-    }, [_vm._v("Duplicate Account")]) : _vm._e(), _vm._v(" "), _vm.isIBANDuplicate(item) ? _c("span", {
-      staticClass: "custom-badge badge badge-warning"
-    }, [_vm._v("Duplicate IBAN")]) : _vm._e()])]);
+      key: item.id,
+      "class": item.isParent ? "" : item.isDuplicate ? "alert alert-danger" : ""
+    }, [item.isParent ? _c("td", [_vm._v(_vm._s(item.groupIndex + 1))]) : _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cnic_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_iban))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), item.isParent ? _c("td", [_c("span", {
+      staticClass: "badge badge-primary mr-2"
+    }, [_vm._v(_vm._s(item.duplicateCount) + " duplicates")]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-sm btn-outline-primary",
+      on: {
+        click: function click($event) {
+          return _vm.toggleGroup(item.groupId);
+        }
+      }
+    }, [_c("i", {
+      "class": _vm.expandedGroups[item.groupId] ? "fa fa-chevron-down" : "fa fa-chevron-right"
+    })])]) : _c("td", {
+      attrs: {
+        colspan: "2"
+      }
+    }, [item.isDuplicate ? [item.duplicateFields.email ? _c("span", {
+      staticClass: "badge badge-warning"
+    }, [_vm._v(" Email")]) : _vm._e(), _vm._v(" "), item.duplicateFields.phone ? _c("span", {
+      staticClass: "badge badge-primary"
+    }, [_vm._v(" Phone")]) : _vm._e(), _vm._v(" "), item.duplicateFields.cnic ? _c("span", {
+      staticClass: "badge badge-success"
+    }, [_vm._v(" CNIC")]) : _vm._e(), _vm._v(" "), item.duplicateFields.account ? _c("span", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v(" Account")]) : _vm._e(), _vm._v(" "), item.duplicateFields.iban ? _c("span", {
+      staticClass: "badge badge-info"
+    }, [_vm._v(" IBAN")]) : _vm._e()] : _vm._e()], 2)]);
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
@@ -32417,17 +32544,9 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("div", {
-    staticClass: "row"
-  }, [_c("div", {
-    staticClass: "col-md-12 form-group pt-4"
-  }, [_c("button", {
-    staticClass: "btn btn-block btn-primary"
-  }, [_vm._v("Fetch Suspected Duplicates")])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("thead", [_c("tr", [_c("th", [_vm._v("Sr #")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Contact #")]), _vm._v(" "), _c("th", [_vm._v("CNIC")]), _vm._v(" "), _c("th", [_vm._v("Account Number")]), _vm._v(" "), _c("th", [_vm._v("IBAN")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Reason/Similarity")])])]);
+  return _c("thead", {
+    staticClass: "thead-light"
+  }, [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Contact #")]), _vm._v(" "), _c("th", [_vm._v("CNIC")]), _vm._v(" "), _c("th", [_vm._v("Account Number")]), _vm._v(" "), _c("th", [_vm._v("IBAN")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Reason/Similarity")])])]);
 }];
 render._withStripped = true;
 
@@ -42558,7 +42677,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.custom-badge[data-v-7ba19df0]{\r\n    margin-top: 5px;;\r\n    margin-bottom: 5px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.alert.alert-danger[data-v-7ba19df0] {\r\n    background-color: #f8d7da!important;\r\n    color: #721c24;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -502,167 +502,86 @@ class FisReportController extends Controller
             ->response()
             ->setStatusCode(200);
     }
-//     public function lowStockProducts(Request $request)
-//     {
-//         try {
-//             $products = Product::with(['variation'])->get();
-    
-//             $stockData = $products->map(function($product) {
-//                 // Get sales for last 30 days
-//                 // $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
-//                 //     ->where('created_at', '>=', Carbon::now()->subDays(30))
-//                 //     ->sum('quantity');
 
-//                 $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
-//     ->where('created_at', '>=', Carbon::now()->subDays(30))
-//     ->pluck('id');
-
-// $sales30Days = StoreIssuanceDetail::where('product_id', $product->id)
-//     ->whereIn('sin_id', $orderIssuances)
-//     ->sum('quantity');
-    
-//                 // Fixed values
-//                 $leadTime = 3;
-//                 $desiredDays = 10;
-//                 $currentStock = $product->variation->stock;
-            
-//                 $avgDailySales = $sales30Days / 30;
-//                 $maxDailySales = $avgDailySales * 2;
-//                 $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
-//                 $safetyStock = max(1, ceil($safetyStock)); 
-//                 $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
-//                 $lowStockLevel = ceil($lowStockLevel);
-                
-//                 // Determine status
-//                 if ($currentStock <= 0) {
-//                     $status = 'Out of Stock';
-//                 } elseif ($currentStock <= $lowStockLevel) {
-//                     $status = 'Low Stock';
-//                 } else {
-//                     $status = 'Sufficient';
-//                 }
-                
-//                 $reorderQty = 0;
-//                 if ($status !== 'Sufficient') {
-//                     $reorderQty = ($avgDailySales * $desiredDays) - $currentStock;
-//                     $reorderQty = max(5, ceil($reorderQty)); 
-//                 }
-    
-//                 return [
-//                     'sku' => $product->variation->sku,
-//                     'name' => $product->slug,
-//                     'image' => $product->hero_image,
-//                     'current_stock' => (int) $currentStock,
-//                     'sales_30_days' => (int) $sales30Days,
-//                     'avg_daily_sales' => round($avgDailySales, 2),
-//                     'lead_time' => $leadTime,
-//                     'safety_stock' => (int) $safetyStock,
-//                     'low_stock_level' => (int) $lowStockLevel,
-//                     'status' => $status,
-//                     'recommended_reorder_qty' => (int) $reorderQty,
-//                     'last_updated' => $product->variation->updated_at->format('Y-m-d'),
-//                 ];
-//             })->toArray();
-    
-//             // Apply filter if provided and not 'all'
-//             if ($request->has('status') && $request->status !== 'all') {
-//                 $stockData = array_filter($stockData, function($item) use ($request) {
-//                     return $item['status'] === $request->status;
-//                 });
-//                 $stockData = array_values($stockData); // Reindex array
-//             }
-    
-//             return (new ResponseCollection($stockData))
-//                 ->response()
-//                 ->setStatusCode(200);
-    
-//         } catch (\Exception $e) {
-//             \Log::error('Low Stock Report Error: ' . $e->getMessage());
-//             return (new ResponseCollection([]))
-//                 ->response()
-//                 ->setStatusCode(500);
-//         }
-//     }
 
 public function lowStockProducts(Request $request)
 {
     try {
         $products = Product::with(['variation'])->get();
         $last30 = Carbon::now()->subDays(30);
-
-        // Preload Store Issuances (30 days)
         $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
             ->where('created_at', '>=', $last30)
             ->pluck('id');
-
-        // Preload Issuance Details
         $issuanceDetails = StoreIssuanceDetail::whereIn('sin_id', $orderIssuances)
             ->where('created_at', '>=', $last30)
             ->get()
             ->groupBy('product_id');
 
-        $stockData = $products->map(function ($product) use ($issuanceDetails) {
+       $stockData = $products->map(function ($product) use ($issuanceDetails) {
 
-            $details = $issuanceDetails[$product->id] ?? collect([]);
+    $details = $issuanceDetails[$product->id] ?? collect([]);
 
-            // Total sales in last 30 days
-            $sales30Days = $details->sum('quantity');
+    // Total sales in last 30 days
+    $sales30Days = $details->sum('quantity');
 
-            // DAILY grouping → to calculate max daily sales
-            $dailySales = $details
-                ->groupBy(function ($row) {
-                    return Carbon::parse($row->created_at)->format('Y-m-d');
-                })
-                ->map(function ($rows) {
-                    return $rows->sum('quantity');
-                });
+    // Group by date
+    $dailySales = $details
+        ->groupBy(function ($row) {
+            return Carbon::parse($row->created_at)->format('Y-m-d');
+        })
+        ->map(function ($rows) {
+            return $rows->sum('quantity');
+        });
 
-            $maxDailySales = $dailySales->max() ?? 0;
+    // REAL max sale in last 30 days (no forcing)
+    $maxDailySales = $dailySales->max() ?? 0;
 
-            // Formula variables
-            $leadTime = 3;
-            $desiredDays = 10;
-            $currentStock = (int) $product->variation->stock;
+    $leadTime = 3;
+    $desiredDays = 10;
 
-            // Avg daily sales
-            $avgDailySales = $sales30Days / 30;
+    $currentStock = (int) $product->variation->stock;
 
-            // Safety Stock formula
-            $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
-            $safetyStock = max(1, ceil($safetyStock));
+    // Pure Avg Daily Sales
+    $avgDailySales = $sales30Days > 0 ? ($sales30Days / 30) : 0;
 
-            // Low Stock Level formula
-            $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
-            $lowStockLevel = ceil($lowStockLevel);
+    // PURE Safety Stock — no forcing, no minimum
+    $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
 
-            // Status
-            if ($currentStock <= 0) $status = 'Out of Stock';
-            elseif ($currentStock <= $lowStockLevel) $status = 'Low Stock';
-            else $status = 'Sufficient';
+    // clamp negative
+    if ($safetyStock < 0) $safetyStock = 0;
+               // PURE Low Stock Level
+    $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
 
-            // Recommended reorder qty
-            $reorderQty = 0;
-            if ($status !== 'Sufficient') {
-                $reorderQty = ($avgDailySales * $desiredDays) - $currentStock;
-                $reorderQty = max(5, ceil($reorderQty));
-            }
+    // clamp negative
+    if ($lowStockLevel < 0) $lowStockLevel = 0;
 
-            return [
-                'sku' => $product->variation->sku,
-                'name' => $product->slug,
-                'image' => $product->hero_image,
-                'current_stock' => $currentStock,
-                'sales_30_days' => $sales30Days,
-                'avg_daily_sales' => round($avgDailySales, 2),
-                'max_daily_sales' => $maxDailySales,
-                'lead_time' => $leadTime,
-                'safety_stock' => $safetyStock,
-                'low_stock_level' => $lowStockLevel,
-                'status' => $status,
-                'recommended_reorder_qty' => $reorderQty,
-                'last_updated' => $product->variation->updated_at->format('Y-m-d'),
-            ];
-        })->toArray();
+    // Determine status
+    if ($currentStock <= 0) $status = 'Out of Stock';
+    elseif ($currentStock <= $lowStockLevel) $status = 'Low Stock';
+    else $status = 'Sufficient';
+    // PURE reorder quantity
+    $reorderQty = 0;
+    if ($status !== 'Sufficient') {
+        $raw = ($avgDailySales * $desiredDays) - $currentStock;
+        $reorderQty = $raw > 0 ? ceil($raw) : 0;
+    }
+
+           return [
+        'sku' => $product->variation->sku,
+        'name' => $product->slug,
+        'image' => $product->hero_image,
+        'current_stock' => $currentStock,
+        'sales_30_days' => $sales30Days,
+        'avg_daily_sales' => round($avgDailySales, 2),
+        'max_daily_sales' => $maxDailySales,
+        'lead_time' => $leadTime,
+        'safety_stock' => $safetyStock,
+        'low_stock_level' => $lowStockLevel,
+        'status' => $status,
+        'recommended_reorder_qty' => $reorderQty,
+        'last_updated' => $product->variation->updated_at->format('Y-m-d'),
+    ];
+})->toArray();
 
         // Filter
         if ($request->status && $request->status !== 'all') {
