@@ -278,7 +278,7 @@ export default {
                         <td>
                             ${badges.join(' ')}
                             <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${child.id}&contact=${child.whatsapp_number}" target="_blank">
-                                <i class="fa fa-eye"></i> View
+                                <i class="fa fa-eye"></i>
                             </a>
                         </td>
                     </tr>
