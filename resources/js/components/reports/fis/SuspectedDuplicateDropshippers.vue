@@ -11,28 +11,13 @@
                             <button class="btn btn-primary btn-block">Fetch Suspected Duplicates</button>
                         </form>
 
-                        <div class="row mt-3">
-                                <div class="col-md-12 mb-3">
-                                    <button class="btn btn-secondary buttons-html5 mr-2" @click="exportTable('copy')">
-                                        <i class="fa fa-copy"></i> Copy
-                                    </button>
-                                    <button class="btn btn-success mr-2" @click="exportTable('csv')">
-                                        <i class="fa fa-file-csv"></i> CSV
-                                    </button>
-                                    <button class="btn btn-primary" @click="exportTable('excel')">
-                                        <i class="fa fa-file-excel"></i> Excel
-                                    </button>
-                                </div>
-                            </div>
-
                         <div v-if="loader" class="text-center py-4">
                             <bullet-list-loader :width="250"></bullet-list-loader>
                         </div>
 
-                        <div v-else>
-                            <div class="table-responsive">
-                                <table class="table table-striped table-md">
-                                    <tbody>
+                        <div v-else class="table-responsive">
+                            <table class="table table-striped dataTable no-footer" id="duplicate_dropshipper_list">
+                                <thead class="thead-light">
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
@@ -44,70 +29,11 @@
                                         <th>Remaining Amount</th>
                                         <th>Reason/Similarity</th>
                                     </tr>
-                                    <tr v-for="(item, index) in paginatedData" :key="item.id"
-                                        :class="item.isDuplicate ? 'alert alert-danger danger-bs' : ''">
-                                        
-                                        <td v-if="item.isParent">{{ getSerialNumber(index) }}</td>
-                                        <td v-else></td>
-                                        
-                                        <td>{{ item.full_name }}</td>
-                                        <td>{{ item.email }}</td>
-                                        <td>{{ item.whatsapp_number }}</td>
-                                        <td>{{ item.cnic_number }}</td>
-                                        <td>{{ item.account_number }}</td>
-                                        <td>{{ item.account_iban }}</td>
-                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                        <td>
-                                            <template v-if="item.isParent">
-                                                <div class="badge badge-danger">{{ item.duplicateCount }} duplicates</div>
-                                                <button class="btn btn-info btn-sm" @click="toggleGroup(item.groupIndex)">
-                                                    <i :class="expandedGroups[`group-${item.groupIndex}`] ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"></i>
-                                                </button>
-                                                <a class="btn btn-primary btn-sm" :href="`${public_url}/dropshippers/preview?id=${item.id}&contact=${item.whatsapp_number}`" target="_blank">
-                                                    <i class="fa fa-eye"></i> 
-                                                </a>
-                                            </template>
-                                            <template v-else>
-                                                <span class="badge badge-warning mr-1" v-if="item.duplicateFields.email">Email</span>
-                                                <span class="badge badge-primary mr-1" v-if="item.duplicateFields.phone">Phone</span>
-                                                <span class="badge badge-success mr-1" v-if="item.duplicateFields.cnic">CNIC</span>
-                                                <span class="badge badge-danger mr-1" v-if="item.duplicateFields.account">Account</span>
-                                                <span class="badge badge-info mr-1" v-if="item.duplicateFields.iban">IBAN</span>
-                                            </template>
-                                        </td>
-                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- DataTables will populate this automatically -->
                                 </tbody>
-                                </table>
-                            </div>
-
-                            <!-- Pagination -->
-                            <div class="row mt-3">
-                                <div class="col-md-6">
-                                    <div class="dataTables_info">
-                                        Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ totalRows }} entries
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="dataTables_paginate paging_simple_numbers float-right">
-                                        <ul class="pagination">
-                                            <li class="paginate_button page-item previous" :class="{ disabled: currentPage === 1 }">
-                                                <a href="#" class="page-link" @click.prevent="changePage(currentPage - 1)">Previous</a>
-                                            </li>
-                                            
-                                            <li v-for="page in pages" :key="page" class="paginate_button page-item" :class="{ active: page === currentPage }">
-                                                <a href="#" class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
-                                            </li>
-                                            
-                                            <li class="paginate_button page-item next" :class="{ disabled: currentPage === totalPages }">
-                                                <a href="#" class="page-link" @click.prevent="changePage(currentPage + 1)">Next</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Export Buttons -->
-                           
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -131,9 +57,8 @@ export default {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             api_url: window.location.origin + process.env.MIX_API_URL,
             expandedGroups: {},
-            flatData: [],
-            currentPage: 1,
-            perPage: 10
+            dataTable: null,
+            tableData: []
         };
     },
     computed: {
@@ -180,86 +105,182 @@ export default {
             });
 
             return groups;
-        },
-        totalRows() {
-            return this.flatData.length;
-        },
-        totalPages() {
-            return Math.ceil(this.totalRows / this.perPage);
-        },
-        startIndex() {
-            return (this.currentPage - 1) * this.perPage;
-        },
-        endIndex() {
-            return Math.min(this.startIndex + this.perPage, this.totalRows);
-        },
-        paginatedData() {
-            return this.flatData.slice(this.startIndex, this.endIndex);
-        },
-        pages() {
-            const pages = [];
-            const startPage = Math.max(1, this.currentPage - 2);
-            const endPage = Math.min(this.totalPages, startPage + 4);
-            
-            for (let i = startPage; i <= endPage; i++) {
-                pages.push(i);
-            }
-            return pages;
         }
     },
     watch: {
         groupedData: {
             handler(newGroups) {
-                this.buildFlatData(newGroups);
+                this.prepareTableData(newGroups);
+                this.$nextTick(() => {
+                    this.initDataTable();
+                });
             },
             immediate: true
         }
     },
     methods: {
-        buildFlatData(groups) {
-            this.flatData = [];
-
+        prepareTableData(groups) {
+            this.tableData = [];
+            
             groups.forEach((group, idx) => {
                 const groupId = `group-${idx}`;
-                // parent row
-                this.flatData.push({
-                    ...group.parent,
-                    isParent: true,
-                    groupId,
+                
+                // Parent row
+                this.tableData.push({
+                    serial: idx + 1,
+                    id: group.parent.id,
+                    full_name: group.parent.full_name,
+                    email: group.parent.email,
+                    whatsapp_number: group.parent.whatsapp_number,
+                    cnic_number: group.parent.cnic_number,
+                    account_number: group.parent.account_number,
+                    account_iban: group.parent.account_iban,
+                    remaining_amount: group.parent.remaining_amount,
+                    duplicateCount: group.children.length,
                     groupIndex: idx,
-                    duplicateCount: group.children.length
+                    isParent: true,
+                    isDuplicate: false,
+                    duplicateFields: {},
+                    rowClass: ''
                 });
+                
+                // Child rows (if expanded)
                 if (this.expandedGroups[groupId]) {
-                    group.children.forEach((child, cidx) => {
-                        this.flatData.push({
-                            ...child,
+                    group.children.forEach((child, childIdx) => {
+                        this.tableData.push({
+                            serial: '',
+                            id: child.id,
+                            full_name: child.full_name,
+                            email: child.email,
+                            whatsapp_number: child.whatsapp_number,
+                            cnic_number: child.cnic_number,
+                            account_number: child.account_number,
+                            account_iban: child.account_iban,
+                            remaining_amount: child.remaining_amount,
+                            duplicateCount: 0,
+                            groupIndex: idx,
                             isParent: false,
                             isDuplicate: true,
-                            groupId,
-                            groupIndex: idx,
-                            duplicateFields: group.duplicateFields
+                            duplicateFields: group.duplicateFields,
+                            rowClass: 'alert child-row'
                         });
                     });
                 }
             });
         },
 
-        getSerialNumber(index) {
-            return this.startIndex + index + 1;
+        initDataTable() {
+            // Destroy existing DataTable if it exists
+            if (this.dataTable) {
+                this.dataTable.destroy();
+                $('#duplicate_dropshipper_list').off('click', '.expand-btn');
+            }
+
+            // Initialize DataTable with data
+            this.dataTable = $('#duplicate_dropshipper_list').DataTable({
+                data: this.tableData,
+                columns: [
+                    { 
+                        data: 'serial',
+                        render: (data, type, row) => {
+                            return row.isParent ? data : '';
+                        }
+                    },
+                    { data: 'full_name' },
+                    { data: 'email' },
+                    { data: 'whatsapp_number' },
+                    { data: 'cnic_number' },
+                    { data: 'account_number' },
+                    { data: 'account_iban' },
+                    { 
+                        data: 'remaining_amount',
+                        render: (data, type, row) => {
+                            return this.formatPrice(data || 0);
+                        }
+                    },
+                    {
+                        data: null,
+                        render: (data, type, row) => {
+                            if (row.isParent) {
+                                return `
+                                    <span class="badge badge-primary mr-2">${row.duplicateCount} duplicates</span>
+                                    <button class="btn btn-info btn-sm expand-btn" data-group-index="${row.groupIndex}">
+                                        <i class="fa ${this.expandedGroups[`group-${row.groupIndex}`] ? 'fa-chevron-down' : 'fa-chevron-right'}"></i>
+                                    </button>
+                                    <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${row.id}&contact=${row.whatsapp_number}" target="_blank">
+                                        <i class="fa fa-eye"></i> 
+                                    </a>
+                                `;
+                            } else {
+                                const badges = [];
+                                if (row.duplicateFields.email) badges.push('<span class="badge badge-warning mr-1">Email</span>');
+                                if (row.duplicateFields.phone) badges.push('<span class="badge badge-primary mr-1">Phone</span>');
+                                if (row.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
+                                if (row.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
+                                if (row.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
+                                return badges.join(' ');
+                            }
+                        }
+                    }
+                ],
+                bSort: false,
+                paging: true,
+                searching: true,
+                info: true,
+                autoWidth: false,
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', title: 'Suspected Duplicate Dropshipper Accounts' },
+                    'csv',
+                    { extend: 'excel', title: 'Suspected Duplicate Dropshipper Accounts' }
+                ],
+                createdRow: (row, data, dataIndex) => {
+                    // Add CSS classes to rows
+                    if (data.rowClass) {
+                        $(row).addClass(data.rowClass);
+                    }
+                },
+                drawCallback: () => {
+                    // Re-attach events after DataTable redraws
+                    this.attachExpandEvents();
+                },
+                initComplete: () => {
+                    // Attach events after initial load
+                    this.attachExpandEvents();
+                }
+            });
         },
 
-        changePage(page) {
-            if (page >= 1 && page <= this.totalPages) {
-                this.currentPage = page;
-            }
+        attachExpandEvents() {
+            // Remove any existing event handlers to prevent duplicates
+            $('#duplicate_dropshipper_list').off('click', '.expand-btn');
+            
+            // Attach event delegation for expand buttons
+            $('#duplicate_dropshipper_list').on('click', '.expand-btn', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                const groupIndex = $(event.currentTarget).data('group-index');
+                this.toggleGroup(groupIndex);
+            });
         },
 
         toggleGroup(groupIndex) {
             const groupId = `group-${groupIndex}`;
             this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
-            this.buildFlatData(this.groupedData);
-            // Reset to first page when expanding/collapsing
-            this.currentPage = 1;
+            
+            // Rebuild data and refresh DataTable
+            this.prepareTableData(this.groupedData);
+            
+            // Refresh DataTable with new data
+            this.$nextTick(() => {
+                if (this.dataTable) {
+                    this.dataTable.clear();
+                    this.dataTable.rows.add(this.tableData);
+                    this.dataTable.draw();
+                    this.attachExpandEvents();
+                }
+            });
         },
 
         getDuplicateFields(parent, children) {
@@ -285,78 +306,32 @@ export default {
 
         submitFunction() {
             this.$emit('DuplicateDropshippersfilter');
-        },
-
-        exportTable(type) {
-            const data = this.flatData.map(item => ({
-                'Name': item.full_name,
-                'Email': item.email,
-                'Contact #': item.whatsapp_number,
-                'CNIC': item.cnic_number,
-                'Account Number': item.account_number,
-                'IBAN': item.account_iban,
-                'Remaining Amount': this.formatPrice(item.remaining_amount),
-                'Type': item.isParent ? 'Parent' : 'Duplicate'
-            }));
-
-            let content, mimeType, filename;
-
-            switch (type) {
-                case 'csv':
-                    content = this.convertToCSV(data);
-                    mimeType = 'text/csv';
-                    filename = 'duplicate_dropshippers.csv';
-                    break;
-                case 'excel':
-                    content = this.convertToCSV(data);
-                    mimeType = 'application/vnd.ms-excel';
-                    filename = 'duplicate_dropshippers.xls';
-                    break;
-                case 'copy':
-                    const tableText = data.map(row => 
-                        Object.values(row).join('\t')
-                    ).join('\n');
-                    navigator.clipboard.writeText(tableText);
-                    alert('Data copied to clipboard!');
-                    return;
-            }
-
-            const blob = new Blob([content], { type: mimeType });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        },
-
-        convertToCSV(data) {
-            if (data.length === 0) return '';
-            
-            const headers = Object.keys(data[0]);
-            const csvRows = [
-                headers.join(','),
-                ...data.map(row => headers.map(header => {
-                    const value = row[header] || '';
-                    return `"${value.toString().replace(/"/g, '""')}"`;
-                }).join(','))
-            ];
-            
-            return csvRows.join('\n');
+        }
+    },
+    beforeDestroy() {
+        // Clean up DataTable and events when component is destroyed
+        if (this.dataTable) {
+            this.dataTable.destroy();
+            $('#duplicate_dropshipper_list').off('click', '.expand-btn');
         }
     }
 };
 </script>
 
-<style scoped>
-.danger-bs {
+<style>
+.child-row {
     background-color: #f8d7da !important;
     color: #721c24;
 }
+
 span.badge {
-    margin: 1px;
+    margin: 2px;
 }
-.btn-secondary{
-    background-color: #666 !important;
+
+/* Ensure expand buttons are clickable in DataTables */
+.expand-btn {
+    cursor: pointer;
+    z-index: 10;
+    position: relative;
 }
-</style> 
+</style>
