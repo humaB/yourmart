@@ -14355,6 +14355,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -14373,7 +14379,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       public_url: window.location.origin + "",
       api_url: window.location.origin + "/api/",
       expandedGroups: {},
-      flatData: []
+      flatData: [],
+      currentPage: 1,
+      perPage: 10
     };
   },
   computed: {
@@ -14411,6 +14419,30 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       });
       return groups;
+    },
+    totalRows: function totalRows() {
+      return this.flatData.length;
+    },
+    totalPages: function totalPages() {
+      return Math.ceil(this.totalRows / this.perPage);
+    },
+    startIndex: function startIndex() {
+      return (this.currentPage - 1) * this.perPage;
+    },
+    endIndex: function endIndex() {
+      return Math.min(this.startIndex + this.perPage, this.totalRows);
+    },
+    paginatedData: function paginatedData() {
+      return this.flatData.slice(this.startIndex, this.endIndex);
+    },
+    pages: function pages() {
+      var pages = [];
+      var startPage = Math.max(1, this.currentPage - 2);
+      var endPage = Math.min(this.totalPages, startPage + 4);
+      for (var i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      return pages;
     }
   },
   watch: {
@@ -14419,30 +14451,24 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         this.buildFlatData(newGroups);
       },
       immediate: true
-    },
-    data: function data() {
-      var _this2 = this;
-      this.$nextTick(function () {
-        return setTimeout(_this2.initDataTable, 300);
-      });
     }
   },
   methods: {
     buildFlatData: function buildFlatData(groups) {
-      var _this3 = this;
+      var _this2 = this;
       this.flatData = [];
       groups.forEach(function (group, idx) {
         var groupId = "group-".concat(idx);
         // parent row
-        _this3.flatData.push(_objectSpread(_objectSpread({}, group.parent), {}, {
+        _this2.flatData.push(_objectSpread(_objectSpread({}, group.parent), {}, {
           isParent: true,
           groupId: groupId,
           groupIndex: idx,
           duplicateCount: group.children.length
         }));
-        if (_this3.expandedGroups[groupId]) {
+        if (_this2.expandedGroups[groupId]) {
           group.children.forEach(function (child, cidx) {
-            _this3.flatData.push(_objectSpread(_objectSpread({}, child), {}, {
+            _this2.flatData.push(_objectSpread(_objectSpread({}, child), {}, {
               isParent: false,
               isDuplicate: true,
               groupId: groupId,
@@ -14453,14 +14479,20 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         }
       });
     },
-    decision: function decision(data) {
-      // Handle approve/reject/activate/deactivate
-      console.log('Decision:', data);
-      // Add your logic here
+    getSerialNumber: function getSerialNumber(index) {
+      return this.startIndex + index + 1;
     },
-    toggleGroup: function toggleGroup(groupId) {
+    changePage: function changePage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+      }
+    },
+    toggleGroup: function toggleGroup(groupIndex) {
+      var groupId = "group-".concat(groupIndex);
       this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
       this.buildFlatData(this.groupedData);
+      // Reset to first page when expanding/collapsing
+      this.currentPage = 1;
     },
     getDuplicateFields: function getDuplicateFields(parent, children) {
       var pEmail = (parent.email || '').toString().trim().toLowerCase();
@@ -14493,31 +14525,61 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     submitFunction: function submitFunction() {
       this.$emit('DuplicateDropshippersfilter');
     },
-    initDataTable: function initDataTable() {
-      var table = $('#duplicate_dropshipper_list').DataTable();
-      if (table) table.destroy();
-      $('#duplicate_dropshipper_list').DataTable({
-        bSort: false,
-        paging: false,
-        // Disable pagination
-        searching: true,
-        info: false,
-        // Hide page info since no pagination
-        autoWidth: false,
-        dom: 'Bfrtip',
-        buttons: [{
-          extend: 'copy',
-          title: 'Suspected Duplicate Dropshipper Accounts'
-        }, 'csv', {
-          extend: 'excel',
-          title: 'Suspected Duplicate Dropshipper Accounts'
-        }]
+    exportTable: function exportTable(type) {
+      var _this3 = this;
+      var data = this.flatData.map(function (item) {
+        return {
+          'Name': item.full_name,
+          'Email': item.email,
+          'Contact #': item.whatsapp_number,
+          'CNIC': item.cnic_number,
+          'Account Number': item.account_number,
+          'IBAN': item.account_iban,
+          'Remaining Amount': _this3.formatPrice(item.remaining_amount),
+          'Type': item.isParent ? 'Parent' : 'Duplicate'
+        };
       });
+      var content, mimeType, filename;
+      switch (type) {
+        case 'csv':
+          content = this.convertToCSV(data);
+          mimeType = 'text/csv';
+          filename = 'duplicate_dropshippers.csv';
+          break;
+        case 'excel':
+          content = this.convertToCSV(data);
+          mimeType = 'application/vnd.ms-excel';
+          filename = 'duplicate_dropshippers.xls';
+          break;
+        case 'copy':
+          var tableText = data.map(function (row) {
+            return Object.values(row).join('\t');
+          }).join('\n');
+          navigator.clipboard.writeText(tableText);
+          alert('Data copied to clipboard!');
+          return;
+      }
+      var blob = new Blob([content], {
+        type: mimeType
+      });
+      var url = window.URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    },
+    convertToCSV: function convertToCSV(data) {
+      if (data.length === 0) return '';
+      var headers = Object.keys(data[0]);
+      var csvRows = [headers.join(',')].concat(_toConsumableArray(data.map(function (row) {
+        return headers.map(function (header) {
+          var value = row[header] || '';
+          return "\"".concat(value.toString().replace(/"/g, '""'), "\"");
+        }).join(',');
+      })));
+      return csvRows.join('\n');
     }
-  },
-  beforeDestroy: function beforeDestroy() {
-    var table = $('#duplicate_dropshipper_list').DataTable();
-    if (table) table.destroy();
   }
 });
 
@@ -32477,54 +32539,145 @@ var render = function render() {
     }
   }, [_c("button", {
     staticClass: "btn btn-primary btn-block"
-  }, [_vm._v("Fetch Suspected Duplicates")])]), _vm._v(" "), _vm.loader ? _c("div", {
+  }, [_vm._v("Fetch Suspected Duplicates")])]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-3"
+  }, [_c("div", {
+    staticClass: "col-md-12 mb-3"
+  }, [_c("button", {
+    staticClass: "btn btn-secondary buttons-html5 mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.exportTable("copy");
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-copy"
+  }), _vm._v(" Copy\n                                ")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-success mr-2",
+    on: {
+      click: function click($event) {
+        return _vm.exportTable("csv");
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-file-csv"
+  }), _vm._v(" CSV\n                                ")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary",
+    on: {
+      click: function click($event) {
+        return _vm.exportTable("excel");
+      }
+    }
+  }, [_c("i", {
+    staticClass: "fa fa-file-excel"
+  }), _vm._v(" Excel\n                                ")])])]), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "text-center py-4"
   }, [_c("bullet-list-loader", {
     attrs: {
       width: 250
     }
-  })], 1) : _c("div", {
+  })], 1) : _c("div", [_c("div", {
     staticClass: "table-responsive"
   }, [_c("table", {
-    staticClass: "table table-striped dataTable no-footer",
-    attrs: {
-      id: "duplicate_dropshipper_list"
-    }
-  }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.flatData, function (item, index) {
+    staticClass: "table table-striped table-md"
+  }, [_c("tbody", [_vm._m(1), _vm._v(" "), _vm._l(_vm.paginatedData, function (item, index) {
     return _c("tr", {
       key: item.id,
-      "class": item.isParent ? "" : item.isDuplicate ? "alert alert-danger" : ""
-    }, [item.isParent ? _c("td", [_vm._v(_vm._s(item.groupIndex + 1))]) : _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cnic_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_iban))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), item.isParent ? _c("td", [_c("span", {
-      staticClass: "badge badge-primary mr-2"
-    }, [_vm._v(_vm._s(item.duplicateCount) + "\n                                            duplicates")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-info",
+      "class": item.isDuplicate ? "alert alert-danger danger-bs" : ""
+    }, [item.isParent ? _c("td", [_vm._v(_vm._s(_vm.getSerialNumber(index)))]) : _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cnic_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_iban))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), _c("td", [item.isParent ? [_c("div", {
+      staticClass: "badge badge-danger"
+    }, [_vm._v(_vm._s(item.duplicateCount) + " duplicates")]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-info btn-sm",
       on: {
         click: function click($event) {
-          return _vm.toggleGroup(item.groupId);
+          return _vm.toggleGroup(item.groupIndex);
         }
       }
     }, [_c("i", {
-      "class": _vm.expandedGroups[item.groupId] ? "fa fa-chevron-down" : "fa fa-chevron-right"
+      "class": _vm.expandedGroups["group-".concat(item.groupIndex)] ? "fa fa-chevron-down" : "fa fa-chevron-right"
     })]), _vm._v(" "), _c("a", {
-      staticClass: "btn btn-primary",
+      staticClass: "btn btn-primary btn-sm",
       attrs: {
         href: "".concat(_vm.public_url, "/dropshippers/preview?id=").concat(item.id, "&contact=").concat(item.whatsapp_number),
         target: "_blank"
       }
     }, [_c("i", {
       staticClass: "fa fa-eye"
-    })])]) : _c("td", [item.isDuplicate ? [item.duplicateFields.email ? _c("span", {
-      staticClass: "badge badge-warning"
-    }, [_vm._v("\n                                                Email")]) : _vm._e(), _vm._v(" "), item.duplicateFields.phone ? _c("span", {
-      staticClass: "badge badge-primary"
-    }, [_vm._v("\n                                                Phone")]) : _vm._e(), _vm._v(" "), item.duplicateFields.cnic ? _c("span", {
-      staticClass: "badge badge-success"
-    }, [_vm._v("\n                                                CNIC")]) : _vm._e(), _vm._v(" "), item.duplicateFields.account ? _c("span", {
-      staticClass: "badge badge-danger"
-    }, [_vm._v("\n                                                Account")]) : _vm._e(), _vm._v(" "), item.duplicateFields.iban ? _c("span", {
-      staticClass: "badge badge-info"
-    }, [_vm._v("\n                                                IBAN")]) : _vm._e()] : _vm._e()], 2)]);
-  }), 0)])])])])])])]);
+    })])] : [item.duplicateFields.email ? _c("span", {
+      staticClass: "badge badge-warning mr-1"
+    }, [_vm._v("Email")]) : _vm._e(), _vm._v(" "), item.duplicateFields.phone ? _c("span", {
+      staticClass: "badge badge-primary mr-1"
+    }, [_vm._v("Phone")]) : _vm._e(), _vm._v(" "), item.duplicateFields.cnic ? _c("span", {
+      staticClass: "badge badge-success mr-1"
+    }, [_vm._v("CNIC")]) : _vm._e(), _vm._v(" "), item.duplicateFields.account ? _c("span", {
+      staticClass: "badge badge-danger mr-1"
+    }, [_vm._v("Account")]) : _vm._e(), _vm._v(" "), item.duplicateFields.iban ? _c("span", {
+      staticClass: "badge badge-info mr-1"
+    }, [_vm._v("IBAN")]) : _vm._e()]], 2)]);
+  })], 2)])]), _vm._v(" "), _c("div", {
+    staticClass: "row mt-3"
+  }, [_c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "dataTables_info"
+  }, [_vm._v("\n                                    Showing " + _vm._s(_vm.startIndex + 1) + " to " + _vm._s(_vm.endIndex) + " of " + _vm._s(_vm.totalRows) + " entries\n                                ")])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "dataTables_paginate paging_simple_numbers float-right"
+  }, [_c("ul", {
+    staticClass: "pagination"
+  }, [_c("li", {
+    staticClass: "paginate_button page-item previous",
+    "class": {
+      disabled: _vm.currentPage === 1
+    }
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.changePage(_vm.currentPage - 1);
+      }
+    }
+  }, [_vm._v("Previous")])]), _vm._v(" "), _vm._l(_vm.pages, function (page) {
+    return _c("li", {
+      key: page,
+      staticClass: "paginate_button page-item",
+      "class": {
+        active: page === _vm.currentPage
+      }
+    }, [_c("a", {
+      staticClass: "page-link",
+      attrs: {
+        href: "#"
+      },
+      on: {
+        click: function click($event) {
+          $event.preventDefault();
+          return _vm.changePage(page);
+        }
+      }
+    }, [_vm._v(_vm._s(page))])]);
+  }), _vm._v(" "), _c("li", {
+    staticClass: "paginate_button page-item next",
+    "class": {
+      disabled: _vm.currentPage === _vm.totalPages
+    }
+  }, [_c("a", {
+    staticClass: "page-link",
+    attrs: {
+      href: "#"
+    },
+    on: {
+      click: function click($event) {
+        $event.preventDefault();
+        return _vm.changePage(_vm.currentPage + 1);
+      }
+    }
+  }, [_vm._v("Next")])])], 2)])])])])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -32535,9 +32688,7 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("thead", {
-    staticClass: "thead-light"
-  }, [_c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Contact #")]), _vm._v(" "), _c("th", [_vm._v("CNIC")]), _vm._v(" "), _c("th", [_vm._v("Account Number")]), _vm._v(" "), _c("th", [_vm._v("IBAN")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Reason/Similarity")])])]);
+  return _c("tr", [_c("th", [_vm._v("#")]), _vm._v(" "), _c("th", [_vm._v("Name")]), _vm._v(" "), _c("th", [_vm._v("Email")]), _vm._v(" "), _c("th", [_vm._v("Contact #")]), _vm._v(" "), _c("th", [_vm._v("CNIC")]), _vm._v(" "), _c("th", [_vm._v("Account Number")]), _vm._v(" "), _c("th", [_vm._v("IBAN")]), _vm._v(" "), _c("th", [_vm._v("Remaining Amount")]), _vm._v(" "), _c("th", [_vm._v("Reason/Similarity")])]);
 }];
 render._withStripped = true;
 
@@ -42656,7 +42807,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.alert.alert-danger[data-v-7ba19df0] {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\nspan.badge[data-v-7ba19df0] {\r\n    margin: 2px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.danger-bs[data-v-7ba19df0] {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\nspan.badge[data-v-7ba19df0] {\r\n    margin: 1px;\n}\n.btn-secondary[data-v-7ba19df0]{\r\n    background-color: #666 !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

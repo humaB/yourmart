@@ -11,16 +11,30 @@
                             <button class="btn btn-primary btn-block">Fetch Suspected Duplicates</button>
                         </form>
 
+                        <div class="row mt-3">
+                                <div class="col-md-12 mb-3">
+                                    <button class="btn btn-secondary buttons-html5 mr-2" @click="exportTable('copy')">
+                                        <i class="fa fa-copy"></i> Copy
+                                    </button>
+                                    <button class="btn btn-success mr-2" @click="exportTable('csv')">
+                                        <i class="fa fa-file-csv"></i> CSV
+                                    </button>
+                                    <button class="btn btn-primary" @click="exportTable('excel')">
+                                        <i class="fa fa-file-excel"></i> Excel
+                                    </button>
+                                </div>
+                            </div>
+
                         <div v-if="loader" class="text-center py-4">
                             <bullet-list-loader :width="250"></bullet-list-loader>
                         </div>
 
-                        <div v-else class="table-responsive">
-                            <table class="table table-striped dataTable no-footer" id="duplicate_dropshipper_list">
-                                <thead class="thead-light">
+                        <div v-else>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-md">
+                                    <tbody>
                                     <tr>
                                         <th>#</th>
-
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Contact #</th>
@@ -30,15 +44,12 @@
                                         <th>Remaining Amount</th>
                                         <th>Reason/Similarity</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(item, index) in flatData" :key="item.id"
-                                        :class="item.isParent ? '' : item.isDuplicate ? 'alert alert-danger' : ''">
-
-                                        <td v-if="item.isParent">{{ item.groupIndex + 1 }}</td>
+                                    <tr v-for="(item, index) in paginatedData" :key="item.id"
+                                        :class="item.isDuplicate ? 'alert alert-danger danger-bs' : ''">
+                                        
+                                        <td v-if="item.isParent">{{ getSerialNumber(index) }}</td>
                                         <td v-else></td>
-
-
+                                        
                                         <td>{{ item.full_name }}</td>
                                         <td>{{ item.email }}</td>
                                         <td>{{ item.whatsapp_number }}</td>
@@ -46,44 +57,62 @@
                                         <td>{{ item.account_number }}</td>
                                         <td>{{ item.account_iban }}</td>
                                         <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                        <td v-if="item.isParent">
-                                            <span class="badge badge-primary mr-2">{{ item.duplicateCount }}
-                                                duplicates</span>
-
-                                            <button class="btn btn-info" @click="toggleGroup(item.groupId)">
-                                                <i
-                                                    :class="expandedGroups[item.groupId] ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"></i>
-                                            </button>
-                                           <a class="btn btn-primary" :href="`${public_url}/dropshippers/preview?id=${item.id}&contact=${item.whatsapp_number}`" target="_blank">
-                        <i class="fa fa-eye"></i> 
-                    </a>
-                                        </td>
-                                        <td v-else >
-                                            <template v-if="item.isDuplicate">
-                                                <span class="badge badge-warning" v-if="item.duplicateFields.email">
-                                                    Email</span>
-                                                <span class="badge badge-primary" v-if="item.duplicateFields.phone">
-                                                    Phone</span>
-                                                <span class="badge badge-success" v-if="item.duplicateFields.cnic">
-                                                    CNIC</span>
-                                                <span class="badge badge-danger" v-if="item.duplicateFields.account">
-                                                    Account</span>
-                                                <span class="badge badge-info" v-if="item.duplicateFields.iban">
-                                                    IBAN</span>
+                                        <td>
+                                            <template v-if="item.isParent">
+                                                <div class="badge badge-danger">{{ item.duplicateCount }} duplicates</div>
+                                                <button class="btn btn-info btn-sm" @click="toggleGroup(item.groupIndex)">
+                                                    <i :class="expandedGroups[`group-${item.groupIndex}`] ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"></i>
+                                                </button>
+                                                <a class="btn btn-primary btn-sm" :href="`${public_url}/dropshippers/preview?id=${item.id}&contact=${item.whatsapp_number}`" target="_blank">
+                                                    <i class="fa fa-eye"></i> 
+                                                </a>
+                                            </template>
+                                            <template v-else>
+                                                <span class="badge badge-warning mr-1" v-if="item.duplicateFields.email">Email</span>
+                                                <span class="badge badge-primary mr-1" v-if="item.duplicateFields.phone">Phone</span>
+                                                <span class="badge badge-success mr-1" v-if="item.duplicateFields.cnic">CNIC</span>
+                                                <span class="badge badge-danger mr-1" v-if="item.duplicateFields.account">Account</span>
+                                                <span class="badge badge-info mr-1" v-if="item.duplicateFields.iban">IBAN</span>
                                             </template>
                                         </td>
-
-
                                     </tr>
                                 </tbody>
-                            </table>
-                        </div>
+                                </table>
+                            </div>
 
+                            <!-- Pagination -->
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="dataTables_info">
+                                        Showing {{ startIndex + 1 }} to {{ endIndex }} of {{ totalRows }} entries
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="dataTables_paginate paging_simple_numbers float-right">
+                                        <ul class="pagination">
+                                            <li class="paginate_button page-item previous" :class="{ disabled: currentPage === 1 }">
+                                                <a href="#" class="page-link" @click.prevent="changePage(currentPage - 1)">Previous</a>
+                                            </li>
+                                            
+                                            <li v-for="page in pages" :key="page" class="paginate_button page-item" :class="{ active: page === currentPage }">
+                                                <a href="#" class="page-link" @click.prevent="changePage(page)">{{ page }}</a>
+                                            </li>
+                                            
+                                            <li class="paginate_button page-item next" :class="{ disabled: currentPage === totalPages }">
+                                                <a href="#" class="page-link" @click.prevent="changePage(currentPage + 1)">Next</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Export Buttons -->
+                           
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -96,7 +125,6 @@ export default {
     props: ['data', 'loader'],
     components: {
         BulletListLoader,
-        
     },
     data() {
         return {
@@ -104,7 +132,8 @@ export default {
             api_url: window.location.origin + process.env.MIX_API_URL,
             expandedGroups: {},
             flatData: [],
-           
+            currentPage: 1,
+            perPage: 10
         };
     },
     computed: {
@@ -151,6 +180,31 @@ export default {
             });
 
             return groups;
+        },
+        totalRows() {
+            return this.flatData.length;
+        },
+        totalPages() {
+            return Math.ceil(this.totalRows / this.perPage);
+        },
+        startIndex() {
+            return (this.currentPage - 1) * this.perPage;
+        },
+        endIndex() {
+            return Math.min(this.startIndex + this.perPage, this.totalRows);
+        },
+        paginatedData() {
+            return this.flatData.slice(this.startIndex, this.endIndex);
+        },
+        pages() {
+            const pages = [];
+            const startPage = Math.max(1, this.currentPage - 2);
+            const endPage = Math.min(this.totalPages, startPage + 4);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                pages.push(i);
+            }
+            return pages;
         }
     },
     watch: {
@@ -159,9 +213,6 @@ export default {
                 this.buildFlatData(newGroups);
             },
             immediate: true
-        },
-        data() {
-            this.$nextTick(() => setTimeout(this.initDataTable, 300));
         }
     },
     methods: {
@@ -177,7 +228,6 @@ export default {
                     groupId,
                     groupIndex: idx,
                     duplicateCount: group.children.length
-
                 });
                 if (this.expandedGroups[groupId]) {
                     group.children.forEach((child, cidx) => {
@@ -194,16 +244,22 @@ export default {
             });
         },
 
-        decision(data) {
-            // Handle approve/reject/activate/deactivate
-            console.log('Decision:', data);
-            // Add your logic here
+        getSerialNumber(index) {
+            return this.startIndex + index + 1;
         },
-        
 
-        toggleGroup(groupId) {
+        changePage(page) {
+            if (page >= 1 && page <= this.totalPages) {
+                this.currentPage = page;
+            }
+        },
+
+        toggleGroup(groupIndex) {
+            const groupId = `group-${groupIndex}`;
             this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
             this.buildFlatData(this.groupedData);
+            // Reset to first page when expanding/collapsing
+            this.currentPage = 1;
         },
 
         getDuplicateFields(parent, children) {
@@ -231,40 +287,76 @@ export default {
             this.$emit('DuplicateDropshippersfilter');
         },
 
-        initDataTable() {
-            const table = $('#duplicate_dropshipper_list').DataTable();
-    if (table) table.destroy();
+        exportTable(type) {
+            const data = this.flatData.map(item => ({
+                'Name': item.full_name,
+                'Email': item.email,
+                'Contact #': item.whatsapp_number,
+                'CNIC': item.cnic_number,
+                'Account Number': item.account_number,
+                'IBAN': item.account_iban,
+                'Remaining Amount': this.formatPrice(item.remaining_amount),
+                'Type': item.isParent ? 'Parent' : 'Duplicate'
+            }));
 
-    $('#duplicate_dropshipper_list').DataTable({
-        bSort: false,
-        paging: false, // Disable pagination
-        searching: true,
-        info: false,   // Hide page info since no pagination
-        autoWidth: false,
-        dom: 'Bfrtip',
-        buttons: [
-            { extend: 'copy', title: 'Suspected Duplicate Dropshipper Accounts' },
-            'csv',
-            { extend: 'excel', title: 'Suspected Duplicate Dropshipper Accounts' }
-        ]
-    });
+            let content, mimeType, filename;
+
+            switch (type) {
+                case 'csv':
+                    content = this.convertToCSV(data);
+                    mimeType = 'text/csv';
+                    filename = 'duplicate_dropshippers.csv';
+                    break;
+                case 'excel':
+                    content = this.convertToCSV(data);
+                    mimeType = 'application/vnd.ms-excel';
+                    filename = 'duplicate_dropshippers.xls';
+                    break;
+                case 'copy':
+                    const tableText = data.map(row => 
+                        Object.values(row).join('\t')
+                    ).join('\n');
+                    navigator.clipboard.writeText(tableText);
+                    alert('Data copied to clipboard!');
+                    return;
+            }
+
+            const blob = new Blob([content], { type: mimeType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        },
+
+        convertToCSV(data) {
+            if (data.length === 0) return '';
+            
+            const headers = Object.keys(data[0]);
+            const csvRows = [
+                headers.join(','),
+                ...data.map(row => headers.map(header => {
+                    const value = row[header] || '';
+                    return `"${value.toString().replace(/"/g, '""')}"`;
+                }).join(','))
+            ];
+            
+            return csvRows.join('\n');
         }
-    },
-    beforeDestroy() {
-        const table = $('#duplicate_dropshipper_list').DataTable();
-        if (table) table.destroy();
     }
 };
 </script>
 
-
 <style scoped>
-.alert.alert-danger {
+.danger-bs {
     background-color: #f8d7da !important;
     color: #721c24;
 }
-
 span.badge {
-    margin: 2px;
+    margin: 1px;
 }
-</style>
+.btn-secondary{
+    background-color: #666 !important;
+}
+</style> 
