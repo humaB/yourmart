@@ -19,6 +19,7 @@
                             <table class="table table-striped dataTable no-footer" id="duplicate_dropshipper_list">
                                 <thead class="thead-light">
                                     <tr>
+                                        <th></th> <!-- Expand/Collapse column -->
                                         <th>#</th>
                                         <th>Name</th>
                                         <th>Email</th>
@@ -56,9 +57,9 @@ export default {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
             api_url: window.location.origin + process.env.MIX_API_URL,
-            expandedGroups: {},
             dataTable: null,
-            tableData: []
+            tableData: [],
+            expandedGroups: new Set() // Track expanded groups
         };
     },
     computed: {
@@ -97,7 +98,8 @@ export default {
                     groups.push({
                         parent: item,
                         children: duplicates,
-                        duplicateFields: this.getDuplicateFields(item, duplicates)
+                        duplicateFields: this.getDuplicateFields(item, duplicates),
+                        groupIndex: groups.length
                     });
                     processedIds.add(item.id);
                     duplicates.forEach(d => processedIds.add(d.id));
@@ -123,11 +125,9 @@ export default {
             this.tableData = [];
             
             groups.forEach((group, idx) => {
-                const groupId = `group-${idx}`;
-                
-                // Parent row
+                // Only add parent rows to main table data
+                // Child rows will be shown via expandable rows
                 this.tableData.push({
-                    serial: idx + 1,
                     id: group.parent.id,
                     full_name: group.parent.full_name,
                     email: group.parent.email,
@@ -136,36 +136,12 @@ export default {
                     account_number: group.parent.account_number,
                     account_iban: group.parent.account_iban,
                     remaining_amount: group.parent.remaining_amount,
-                    duplicateCount: group.children.length,
                     groupIndex: idx,
                     isParent: true,
-                    isDuplicate: false,
-                    duplicateFields: {},
-                    rowClass: ''
+                    duplicateCount: group.children.length,
+                    children: group.children,
+                    duplicateFields: group.duplicateFields
                 });
-                
-                // Child rows (if expanded)
-                if (this.expandedGroups[groupId]) {
-                    group.children.forEach((child, childIdx) => {
-                        this.tableData.push({
-                            serial: '',
-                            id: child.id,
-                            full_name: child.full_name,
-                            email: child.email,
-                            whatsapp_number: child.whatsapp_number,
-                            cnic_number: child.cnic_number,
-                            account_number: child.account_number,
-                            account_iban: child.account_iban,
-                            remaining_amount: child.remaining_amount,
-                            duplicateCount: 0,
-                            groupIndex: idx,
-                            isParent: false,
-                            isDuplicate: true,
-                            duplicateFields: group.duplicateFields,
-                            rowClass: 'alert child-row'
-                        });
-                    });
-                }
             });
         },
 
@@ -176,14 +152,31 @@ export default {
                 $('#duplicate_dropshipper_list').off('click', '.expand-btn');
             }
 
-            // Initialize DataTable with data
+            // Initialize DataTable
             this.dataTable = $('#duplicate_dropshipper_list').DataTable({
                 data: this.tableData,
                 columns: [
-                    { 
-                        data: 'serial',
+                    {
+                        // Expand/Collapse button column
+                        data: null,
+                        className: 'dt-control',
+                        orderable: false,
+                        defaultContent: '',
                         render: (data, type, row) => {
-                            return row.isParent ? data : '';
+                            const isExpanded = this.expandedGroups.has(row.groupIndex);
+                            return `
+                                <button class="btn btn-sm expand-btn ${isExpanded ? 'btn-secondary' : 'btn-info'}" 
+                                        data-group-index="${row.groupIndex}"
+                                        title="${isExpanded ? 'Collapse' : 'Expand'}">
+                                    <i class="fa ${isExpanded ? 'fa-chevron-down' : 'fa-chevron-right'}"></i>
+                                </button>
+                            `;
+                        }
+                    },
+                    { 
+                        data: 'groupIndex',
+                        render: (data, type, row) => {
+                            return data + 1;
                         }
                     },
                     { data: 'full_name' },
@@ -201,25 +194,12 @@ export default {
                     {
                         data: null,
                         render: (data, type, row) => {
-                            if (row.isParent) {
-                                return `
-                                    <span class="badge badge-primary mr-2">${row.duplicateCount} duplicates</span>
-                                    <button class="btn btn-info btn-sm expand-btn" data-group-index="${row.groupIndex}">
-                                        <i class="fa ${this.expandedGroups[`group-${row.groupIndex}`] ? 'fa-chevron-down' : 'fa-chevron-right'}"></i>
-                                    </button>
-                                    <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${row.id}&contact=${row.whatsapp_number}" target="_blank">
-                                        <i class="fa fa-eye"></i> 
-                                    </a>
-                                `;
-                            } else {
-                                const badges = [];
-                                if (row.duplicateFields.email) badges.push('<span class="badge badge-warning mr-1">Email</span>');
-                                if (row.duplicateFields.phone) badges.push('<span class="badge badge-primary mr-1">Phone</span>');
-                                if (row.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
-                                if (row.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
-                                if (row.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
-                                return badges.join(' ');
-                            }
+                            return `
+                                <span class="badge badge-primary mr-2">${row.duplicateCount} duplicates</span>
+                                <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${row.id}&contact=${row.whatsapp_number}" target="_blank">
+                                    <i class="fa fa-eye"></i> View
+                                </a>
+                            `;
                         }
                     }
                 ],
@@ -234,25 +214,17 @@ export default {
                     'csv',
                     { extend: 'excel', title: 'Suspected Duplicate Dropshipper Accounts' }
                 ],
-                createdRow: (row, data, dataIndex) => {
-                    // Add CSS classes to rows
-                    if (data.rowClass) {
-                        $(row).addClass(data.rowClass);
-                    }
-                },
                 drawCallback: () => {
-                    // Re-attach events after DataTable redraws
                     this.attachExpandEvents();
                 },
                 initComplete: () => {
-                    // Attach events after initial load
                     this.attachExpandEvents();
                 }
             });
         },
 
         attachExpandEvents() {
-            // Remove any existing event handlers to prevent duplicates
+            // Remove any existing event handlers
             $('#duplicate_dropshipper_list').off('click', '.expand-btn');
             
             // Attach event delegation for expand buttons
@@ -260,27 +232,102 @@ export default {
                 event.preventDefault();
                 event.stopPropagation();
                 
-                const groupIndex = $(event.currentTarget).data('group-index');
-                this.toggleGroup(groupIndex);
+                const $btn = $(event.currentTarget);
+                const groupIndex = parseInt($btn.data('group-index'));
+                const tr = $btn.closest('tr');
+                const row = this.dataTable.row(tr);
+                
+                this.toggleGroup(row, groupIndex, $btn);
             });
         },
 
-        toggleGroup(groupIndex) {
-            const groupId = `group-${groupIndex}`;
-            this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
+        toggleGroup(row, groupIndex, $btn) {
+            if (this.expandedGroups.has(groupIndex)) {
+                // Collapse the group
+                this.collapseGroup(row, groupIndex, $btn);
+            } else {
+                // Expand the group
+                this.expandGroup(row, groupIndex, $btn);
+            }
+        },
+
+        expandGroup(row, groupIndex, $btn) {
+            const parentData = row.data();
             
-            // Rebuild data and refresh DataTable
-            this.prepareTableData(this.groupedData);
+            // Create child rows HTML
+            let childRowsHtml = '';
             
-            // Refresh DataTable with new data
-            this.$nextTick(() => {
-                if (this.dataTable) {
-                    this.dataTable.clear();
-                    this.dataTable.rows.add(this.tableData);
-                    this.dataTable.draw();
-                    this.attachExpandEvents();
-                }
+            parentData.children.forEach((child, index) => {
+                const badges = [];
+                if (parentData.duplicateFields.email) badges.push('<span class="badge badge-warning mr-1">Email</span>');
+                if (parentData.duplicateFields.phone) badges.push('<span class="badge badge-primary mr-1">Phone</span>');
+                if (parentData.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
+                if (parentData.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
+                if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
+                
+                childRowsHtml += `
+                    <tr class="child-row alert-danger">
+                        <td></td>
+                        <td></td>
+                        <td>${child.full_name}</td>
+                        <td>${child.email}</td>
+                        <td>${child.whatsapp_number}</td>
+                        <td>${child.cnic_number}</td>
+                        <td>${child.account_number}</td>
+                        <td>${child.account_iban}</td>
+                        <td>${this.formatPrice(child.remaining_amount)}</td>
+                        <td>
+                            ${badges.join(' ')}
+                            <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${child.id}&contact=${child.whatsapp_number}" target="_blank">
+                                <i class="fa fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                `;
             });
+
+            // Show child rows
+            row.child(
+                $(`
+                    <table class="table table-sm mb-0">
+                        <thead class="thead-light">
+                            <tr>
+                                <th colspan="10" class="bg-light">
+                                    <strong><i class="fa fa-users mr-2"></i>Duplicate Accounts</strong>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${childRowsHtml}
+                        </tbody>
+                    </table>
+                `)
+            ).show();
+
+            // Update button and state
+            $btn.removeClass('btn-info').addClass('btn-secondary');
+            $btn.find('i').removeClass('fa-chevron-right').addClass('fa-chevron-down');
+            $btn.attr('title', 'Collapse');
+            
+            this.expandedGroups.add(groupIndex);
+            
+            // Add class to parent row for styling
+            row.nodes().to$().addClass('shown');
+        },
+
+        collapseGroup(row, groupIndex, $btn) {
+            // Hide child rows
+            row.child.hide();
+            
+            // Update button and state
+            $btn.removeClass('btn-secondary').addClass('btn-info');
+            $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-right');
+            $btn.attr('title', 'Expand');
+            
+            this.expandedGroups.delete(groupIndex);
+            
+            // Remove class from parent row
+            row.nodes().to$().removeClass('shown');
         },
 
         getDuplicateFields(parent, children) {
@@ -309,7 +356,6 @@ export default {
         }
     },
     beforeDestroy() {
-        // Clean up DataTable and events when component is destroyed
         if (this.dataTable) {
             this.dataTable.destroy();
             $('#duplicate_dropshipper_list').off('click', '.expand-btn');
@@ -318,8 +364,8 @@ export default {
 };
 </script>
 
-<style>
-.child-row {
+<style scoped>
+.alert-danger {
     background-color: #f8d7da !important;
     color: #721c24;
 }
@@ -328,10 +374,33 @@ span.badge {
     margin: 2px;
 }
 
-/* Ensure expand buttons are clickable in DataTables */
-.expand-btn {
-    cursor: pointer;
-    z-index: 10;
-    position: relative;
+.btn-sm {
+    margin: 0 2px;
+}
+
+/* Style for expandable rows */
+tr.shown {
+    background-color: #f8f9fa !important;
+}
+
+.child-row td {
+    padding-left: 40px !important;
+    border-top: 1px solid #dee2e6;
+}
+
+.dt-control {
+    text-align: center;
+}
+</style>
+
+<style>
+/* Global styles for DataTables */
+table.dataTable tbody tr.child-row td {
+    background-color: #f8d7da !important;
+    color: #721c24;
+}
+
+table.dataTable tbody tr.shown td {
+    background-color: #e3f2fd !important;
 }
 </style>
