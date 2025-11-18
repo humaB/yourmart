@@ -14456,6 +14456,9 @@ __webpack_require__.r(__webpack_exports__);
       // Initialize DataTable
       this.dataTable = $('#duplicate_dropshipper_list').DataTable({
         data: this.tableData,
+        language: {
+          emptyTable: "" // This replaces the empty colspan row
+        },
         columns: [{
           // Expand/Collapse button column
           data: null,
