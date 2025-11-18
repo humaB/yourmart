@@ -14553,11 +14553,11 @@ __webpack_require__.r(__webpack_exports__);
         if (parentData.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
         if (parentData.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
         if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
-        childRowsHtml += "\n                    <tr class=\"child-row alert-danger\">\n                        <td></td>\n                        <td></td>\n                        <td>".concat(child.full_name, "</td>\n                        <td>").concat(child.email, "</td>\n                        <td>").concat(child.whatsapp_number, "</td>\n                        <td>").concat(child.cnic_number, "</td>\n                        <td>").concat(child.account_number, "</td>\n                        <td>").concat(child.account_iban, "</td>\n                        <td>").concat(_this6.formatPrice(child.remaining_amount), "</td>\n                        <td>\n                            ").concat(badges.join(' '), "\n                            <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this6.public_url, "/dropshippers/preview?id=").concat(child.id, "&contact=").concat(child.whatsapp_number, "\" target=\"_blank\">\n                                <i class=\"fa fa-eye\"></i> View\n                            </a>\n                        </td>\n                    </tr>\n                ");
+        childRowsHtml += "\n                    <tr class=\"child-row alert-danger\">\n                        <td></td>\n                        <td colspan=\"2\">".concat(child.full_name, "</td>\n                        <td>").concat(child.email, "</td>\n                        <td>").concat(child.whatsapp_number, "</td>\n                        <td>").concat(child.cnic_number, "</td>\n                        <td>").concat(child.account_number, "</td>\n                        <td>").concat(child.account_iban, "</td>\n                        <td>").concat(_this6.formatPrice(child.remaining_amount), "</td>\n                        <td>\n                            ").concat(badges.join(' '), "\n                            <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this6.public_url, "/dropshippers/preview?id=").concat(child.id, "&contact=").concat(child.whatsapp_number, "\" target=\"_blank\">\n                                <i class=\"fa fa-eye\"></i> View\n                            </a>\n                        </td>\n                    </tr>\n                ");
       });
 
       // Show child rows
-      row.child($("\n                    <table class=\"table table-sm mb-0\">\n                        <thead class=\"thead-light\">\n                            <tr>\n                                <th colspan=\"10\" class=\"bg-light\">\n                                    <strong><i class=\"fa fa-users mr-2\"></i>Duplicate Accounts</strong>\n                                </th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            ".concat(childRowsHtml, "\n                        </tbody>\n                    </table>\n                "))).show();
+      row.child($("".concat(childRowsHtml))).show();
 
       // Update button and state
       $btn.removeClass('btn-info').addClass('btn-secondary');
@@ -42746,7 +42746,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Global styles for DataTables */\ntable.dataTable tbody tr.child-row td {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\ntable.dataTable tbody tr.shown td {\r\n    background-color: #e3f2fd !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* Global styles for DataTables */\ntable.dataTable tbody tr.child-row td {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\ntable.dataTable tbody tr.shown td {\r\n    \r\n    background-color: #e3f2fd !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

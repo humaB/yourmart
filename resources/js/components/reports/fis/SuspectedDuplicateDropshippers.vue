@@ -268,8 +268,7 @@ export default {
                 childRowsHtml += `
                     <tr class="child-row alert-danger">
                         <td></td>
-                        <td></td>
-                        <td>${child.full_name}</td>
+                        <td colspan="2">${child.full_name}</td>
                         <td>${child.email}</td>
                         <td>${child.whatsapp_number}</td>
                         <td>${child.cnic_number}</td>
@@ -288,20 +287,7 @@ export default {
 
             // Show child rows
             row.child(
-                $(`
-                    <table class="table table-sm mb-0">
-                        <thead class="thead-light">
-                            <tr>
-                                <th colspan="10" class="bg-light">
-                                    <strong><i class="fa fa-users mr-2"></i>Duplicate Accounts</strong>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${childRowsHtml}
-                        </tbody>
-                    </table>
-                `)
+                $(`${childRowsHtml}`)
             ).show();
 
             // Update button and state
@@ -401,6 +387,7 @@ table.dataTable tbody tr.child-row td {
 }
 
 table.dataTable tbody tr.shown td {
+    
     background-color: #e3f2fd !important;
 }
 </style>
