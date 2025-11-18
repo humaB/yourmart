@@ -233,21 +233,21 @@ export default {
 
         initDataTable() {
             const table = $('#duplicate_dropshipper_list').DataTable();
-            if (table) table.destroy();
+    if (table) table.destroy();
 
-            $('#duplicate_dropshipper_list').DataTable({
-                bSort: false,
-                paging: true,
-                searching: true,
-                info: true,
-                autoWidth: false,
-                dom: 'Bfrtip',
-                buttons: [
-                    { extend: 'copy', title: 'Suspected Duplicate Dropshipper Accounts' },
-                    'csv',
-                    { extend: 'excel', title: 'Suspected Duplicate Dropshipper Accounts' }
-                ]
-            });
+    $('#duplicate_dropshipper_list').DataTable({
+        bSort: false,
+        paging: false, // Disable pagination
+        searching: true,
+        info: false,   // Hide page info since no pagination
+        autoWidth: false,
+        dom: 'Bfrtip',
+        buttons: [
+            { extend: 'copy', title: 'Suspected Duplicate Dropshipper Accounts' },
+            'csv',
+            { extend: 'excel', title: 'Suspected Duplicate Dropshipper Accounts' }
+        ]
+    });
         }
     },
     beforeDestroy() {

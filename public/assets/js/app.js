@@ -14498,9 +14498,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       if (table) table.destroy();
       $('#duplicate_dropshipper_list').DataTable({
         bSort: false,
-        paging: true,
+        paging: false,
+        // Disable pagination
         searching: true,
-        info: true,
+        info: false,
+        // Hide page info since no pagination
         autoWidth: false,
         dom: 'Bfrtip',
         buttons: [{
