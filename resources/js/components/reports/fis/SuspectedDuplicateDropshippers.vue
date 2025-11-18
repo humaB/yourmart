@@ -50,11 +50,13 @@
                                             <span class="badge badge-primary mr-2">{{ item.duplicateCount }}
                                                 duplicates</span>
 
-                                            <button class="btn btn-sm btn-outline-primary"
-                                                @click="toggleGroup(item.groupId)">
+                                            <button class="btn btn-primary" @click="toggleGroup(item.groupId)">
                                                 <i
                                                     :class="expandedGroups[item.groupId] ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"></i>
                                             </button>
+                                           <a class="btn btn-primary" :href="`${public_url}/dropshippers/preview?id=${item.id}&contact=${item.whatsapp_number}`" target="_blank">
+                        <i class="fa fa-eye"></i> 
+                    </a>
                                         </td>
                                         <td v-else colspan="2">
                                             <template v-if="item.isDuplicate">
@@ -70,6 +72,8 @@
                                                     IBAN</span>
                                             </template>
                                         </td>
+
+
                                     </tr>
                                 </tbody>
                             </table>
@@ -79,6 +83,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 
@@ -89,11 +94,17 @@ import { BulletListLoader } from 'vue-content-loader';
 export default {
     name: 'SuspectedDuplicateDropshippers',
     props: ['data', 'loader'],
-    components: { BulletListLoader },
+    components: {
+        BulletListLoader,
+        
+    },
     data() {
         return {
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
+            api_url: window.location.origin + process.env.MIX_API_URL,
             expandedGroups: {},
-            flatData: []
+            flatData: [],
+           
         };
     },
     computed: {
@@ -166,7 +177,7 @@ export default {
                     groupId,
                     groupIndex: idx,
                     duplicateCount: group.children.length
-                   
+
                 });
                 if (this.expandedGroups[groupId]) {
                     group.children.forEach((child, cidx) => {
@@ -182,6 +193,13 @@ export default {
                 }
             });
         },
+
+        decision(data) {
+            // Handle approve/reject/activate/deactivate
+            console.log('Decision:', data);
+            // Add your logic here
+        },
+        
 
         toggleGroup(groupId) {
             this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
@@ -245,7 +263,8 @@ export default {
     background-color: #f8d7da !important;
     color: #721c24;
 }
-span.badge{
+
+span.badge {
     margin: 2px;
 }
 </style>

@@ -55,48 +55,37 @@
                         </div>
                     </div>
      
-    <div class="col-12 col-sm-12 col-lg-12">
                 <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
-            </div> 
-    <div class="col-12 col-sm-12 col-lg-12 mb-4">
+           
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="orders"
                     title="Orders"
                 />
-            </div>
-
-            <!-- Sales Graph -->
-            <div class="col-12 col-sm-12 col-lg-12 mb-4">
+           
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="sales"
                     title="Sales"
                     :is-currency="true"
                 />
-            </div>
+           
 
-            <!-- Profit Graph -->
-            <div class="col-12 col-sm-12 col-lg-12 mb-4">
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="profit"
                     title="Profit"
                     :is-currency="true"
                 />
-            </div>
-
-            <!-- Returns Graph -->
-            <div class="col-12 col-sm-12 col-lg-12 mb-4">
+           
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="returns"
                     title="Returns"
                 />
-            </div>
-            <div class="col-md-12">
+           
                 <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/>
-             </div>  
+              
 
             
 </div>

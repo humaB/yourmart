@@ -13993,6 +13993,13 @@ __webpack_require__.r(__webpack_exports__);
     //             return '';
     //     }
     // },
+    getImageUrl: function getImageUrl(imageId) {
+      // Check if the image is null
+      if (!imageId) {
+        return this.public_url + 'assets/img/blank_image.jpg';
+      }
+      return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+    },
     getStockClass: function getStockClass(currentStock, lowStockLevel, status) {
       if (status === 'Out of Stock') return 'text-danger font-weight-bold';
       if (status === 'Low Stock') return 'text-warning font-weight-bold';
@@ -14363,6 +14370,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return {
+      public_url: window.location.origin + "",
+      api_url: window.location.origin + "/api/",
       expandedGroups: {},
       flatData: []
     };
@@ -14404,39 +14413,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       return groups;
     }
   },
-  //     groupedData() {
-  //       if (!this.data || !this.data.length) return [];
-  //       const groups = [];
-  //       const processedIds = new Set();
-
-  //       this.data.forEach(item => {
-  //         if (processedIds.has(item.id)) return;
-
-  //         const duplicates = this.data.filter(other => {
-  //           if (other.id === item.id || processedIds.has(other.id)) return false;
-  //           return (
-  //             (item.email && item.email === other.email) ||
-  //             (item.whatsapp_number && item.whatsapp_number === other.whatsapp_number) ||
-  //             (item.cnic_number && item.cnic_number === other.cnic_number) ||
-  //             (item.account_number && item.account_number === other.account_number) ||
-  //             (item.account_iban && item.account_iban === other.account_iban)
-  //           );
-  //         });
-
-  //         if (duplicates.length > 0) {
-  //           groups.push({
-  //             parent: item,
-  //             children: duplicates,
-  //             duplicateFields: this.getDuplicateFields(item, duplicates)
-  //           });
-  //           processedIds.add(item.id);
-  //           duplicates.forEach(d => processedIds.add(d.id));
-  //         }
-  //       });
-
-  //       return groups;
-  //     }
-  //   },
   watch: {
     groupedData: {
       handler: function handler(newGroups) {
@@ -14463,9 +14439,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           groupId: groupId,
           groupIndex: idx,
           duplicateCount: group.children.length
-          //   duplicateFields: group.duplicateFields
         }));
-        // child rows
         if (_this3.expandedGroups[groupId]) {
           group.children.forEach(function (child, cidx) {
             _this3.flatData.push(_objectSpread(_objectSpread({}, child), {}, {
@@ -14478,6 +14452,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           });
         }
       });
+    },
+    decision: function decision(data) {
+      // Handle approve/reject/activate/deactivate
+      console.log('Decision:', data);
+      // Add your logic here
     },
     toggleGroup: function toggleGroup(groupId) {
       this.$set(this.expandedGroups, groupId, !this.expandedGroups[groupId]);
@@ -31865,15 +31844,21 @@ var render = function render() {
   }, [_vm._m(2), _vm._v(" "), _c("tbody", _vm._l(_vm.data, function (product) {
     return _c("tr", {
       key: product.sku
-    }, [_c("td", [_vm._v(_vm._s(product.sku))]), _vm._v(" "), _c("td", [_c("span", {
+    }, [_c("td", [_vm._v(_vm._s(product.sku))]), _vm._v(" "), _c("td", [_c("ul", {
+      staticClass: "list-unstyled order-list m-b-0 m-b-0"
+    }, [_c("li", {
       staticClass: "team-member team-member-sm"
+    }, [_c("a", {
+      attrs: {
+        href: _vm.getImageUrl(product.image),
+        target: "_blank"
+      }
     }, [_c("img", {
       staticClass: "rounded-circle",
       attrs: {
-        src: product.image,
-        alt: "Product Image"
+        src: _vm.getImageUrl(product.image)
       }
-    })])]), _vm._v(" "), _c("td", [_c("a", {
+    })])])])]), _vm._v(" "), _c("td", [_c("a", {
       attrs: {
         href: "https://yourmart.pk/products/" + product.name,
         target: "_blank"
@@ -32509,8 +32494,8 @@ var render = function render() {
       "class": item.isParent ? "" : item.isDuplicate ? "alert alert-danger" : ""
     }, [item.isParent ? _c("td", [_vm._v(_vm._s(item.groupIndex + 1))]) : _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cnic_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_iban))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), item.isParent ? _c("td", [_c("span", {
       staticClass: "badge badge-primary mr-2"
-    }, [_vm._v(_vm._s(item.duplicateCount) + " duplicates")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-sm btn-outline-primary",
+    }, [_vm._v(_vm._s(item.duplicateCount) + "\n                                            duplicates")]), _vm._v(" "), _c("button", {
+      staticClass: "btn btn-primary",
       on: {
         click: function click($event) {
           return _vm.toggleGroup(item.groupId);
@@ -32518,21 +32503,29 @@ var render = function render() {
       }
     }, [_c("i", {
       "class": _vm.expandedGroups[item.groupId] ? "fa fa-chevron-down" : "fa fa-chevron-right"
-    })])]) : _c("td", {
+    })]), _vm._v(" "), _c("a", {
+      staticClass: "btn btn-primary",
+      attrs: {
+        href: "".concat(_vm.public_url, "/dropshippers/preview?id=").concat(item.id, "&contact=").concat(item.whatsapp_number),
+        target: "_blank"
+      }
+    }, [_c("i", {
+      staticClass: "fa fa-eye"
+    }), _vm._v(" Preview\n                ")])]) : _c("td", {
       attrs: {
         colspan: "2"
       }
     }, [item.isDuplicate ? [item.duplicateFields.email ? _c("span", {
       staticClass: "badge badge-warning"
-    }, [_vm._v(" Email")]) : _vm._e(), _vm._v(" "), item.duplicateFields.phone ? _c("span", {
+    }, [_vm._v("\n                                                Email")]) : _vm._e(), _vm._v(" "), item.duplicateFields.phone ? _c("span", {
       staticClass: "badge badge-primary"
-    }, [_vm._v(" Phone")]) : _vm._e(), _vm._v(" "), item.duplicateFields.cnic ? _c("span", {
+    }, [_vm._v("\n                                                Phone")]) : _vm._e(), _vm._v(" "), item.duplicateFields.cnic ? _c("span", {
       staticClass: "badge badge-success"
-    }, [_vm._v(" CNIC")]) : _vm._e(), _vm._v(" "), item.duplicateFields.account ? _c("span", {
+    }, [_vm._v("\n                                                CNIC")]) : _vm._e(), _vm._v(" "), item.duplicateFields.account ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v(" Account")]) : _vm._e(), _vm._v(" "), item.duplicateFields.iban ? _c("span", {
+    }, [_vm._v("\n                                                Account")]) : _vm._e(), _vm._v(" "), item.duplicateFields.iban ? _c("span", {
       staticClass: "badge badge-info"
-    }, [_vm._v(" IBAN")]) : _vm._e()] : _vm._e()], 2)]);
+    }, [_vm._v("\n                                                IBAN")]) : _vm._e()] : _vm._e()], 2)]);
   }), 0)])])])])])])]);
 };
 var staticRenderFns = [function () {
@@ -33942,53 +33935,41 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_vm._m(0), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_c("DropshipperApprovedGraph", {
+  }, [_vm._m(0), _vm._v(" "), _c("DropshipperApprovedGraph", {
     attrs: {
       dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
     }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12 mb-4"
-  }, [_c("GenericBarChart", {
+  }), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "orders",
       title: "Orders"
     }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12 mb-4"
-  }, [_c("GenericBarChart", {
+  }), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "sales",
       title: "Sales",
       "is-currency": true
     }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12 mb-4"
-  }, [_c("GenericBarChart", {
+  }), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "profit",
       title: "Profit",
       "is-currency": true
     }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12 mb-4"
-  }, [_c("GenericBarChart", {
+  }), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "returns",
       title: "Returns"
     }
-  })], 1), _vm._v(" "), _c("div", {
-    staticClass: "col-md-12"
-  }, [_c("NewProducts30DaysGraph", {
+  }), _vm._v(" "), _c("NewProducts30DaysGraph", {
     attrs: {
       newproducts30daysgraph: _vm.newproducts30daysgraph
     }
-  })], 1)])], 1), _vm._v(" "), _vm.loader ? _c("div", {
+  })], 1)], 1), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
@@ -42677,7 +42658,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.alert.alert-danger[data-v-7ba19df0] {\r\n    background-color: #f8d7da!important;\r\n    color: #721c24;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.alert.alert-danger[data-v-7ba19df0] {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\nspan.badge[data-v-7ba19df0] {\r\n    margin: 2px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

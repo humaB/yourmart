@@ -47,13 +47,21 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <!-- <tr v-for="product in data" :key="product.sku" 
-                                        :class="getStatusRowClass(product.status)"> -->
                                         <tr v-for="product in data" :key="product.sku" 
                                         >
                                         <td>{{ product.sku }}</td>
-                                        <td><span class="team-member team-member-sm"><img class="rounded-circle" :src="product.image" alt="Product Image"></span></td>
-                                        <!-- <td>{{ product.image }}</td> -->
+                                        <td>
+                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
+                                                                    <li class="team-member team-member-sm">
+                                                                        <a :href="getImageUrl(product.image)"
+                                                                            target="_blank">
+                                                                            <img class="rounded-circle"
+                                                                                :src="getImageUrl(product.image)">
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                                </td>
+                                       
                                         <td><a :href="'https://yourmart.pk/products/' + product.name" target="_blank">
         {{ product.name }}
     </a></td>
@@ -120,6 +128,13 @@ export default {
         //             return '';
         //     }
         // },
+            getImageUrl(imageId) {
+        // Check if the image is null
+        if (!imageId) {
+            return this.public_url + 'assets/img/blank_image.jpg';
+        }
+        return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+    },
         getStockClass(currentStock, lowStockLevel, status) {
             if (status === 'Out of Stock') return 'text-danger font-weight-bold';
             if (status === 'Low Stock') return 'text-warning font-weight-bold';
