@@ -58,7 +58,7 @@
                         <i class="fa fa-eye"></i> 
                     </a>
                                         </td>
-                                        <td v-else colspan="2">
+                                        <td v-else >
                                             <template v-if="item.isDuplicate">
                                                 <span class="badge badge-warning" v-if="item.duplicateFields.email">
                                                     Email</span>

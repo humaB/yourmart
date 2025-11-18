@@ -32511,11 +32511,7 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fa fa-eye"
-    })])]) : _c("td", {
-      attrs: {
-        colspan: "2"
-      }
-    }, [item.isDuplicate ? [item.duplicateFields.email ? _c("span", {
+    })])]) : _c("td", [item.isDuplicate ? [item.duplicateFields.email ? _c("span", {
       staticClass: "badge badge-warning"
     }, [_vm._v("\n                                                Email")]) : _vm._e(), _vm._v(" "), item.duplicateFields.phone ? _c("span", {
       staticClass: "badge badge-primary"
