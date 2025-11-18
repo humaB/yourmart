@@ -32495,7 +32495,7 @@ var render = function render() {
     }, [item.isParent ? _c("td", [_vm._v(_vm._s(item.groupIndex + 1))]) : _c("td"), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.full_name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.email))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.whatsapp_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.cnic_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_number))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.account_iban))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatPrice(item.remaining_amount)))]), _vm._v(" "), item.isParent ? _c("td", [_c("span", {
       staticClass: "badge badge-primary mr-2"
     }, [_vm._v(_vm._s(item.duplicateCount) + "\n                                            duplicates")]), _vm._v(" "), _c("button", {
-      staticClass: "btn btn-primary",
+      staticClass: "btn btn-info",
       on: {
         click: function click($event) {
           return _vm.toggleGroup(item.groupId);
@@ -32511,7 +32511,7 @@ var render = function render() {
       }
     }, [_c("i", {
       staticClass: "fa fa-eye"
-    }), _vm._v(" Preview\n                ")])]) : _c("td", {
+    })])]) : _c("td", {
       attrs: {
         colspan: "2"
       }

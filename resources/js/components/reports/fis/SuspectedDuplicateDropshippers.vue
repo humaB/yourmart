@@ -50,7 +50,7 @@
                                             <span class="badge badge-primary mr-2">{{ item.duplicateCount }}
                                                 duplicates</span>
 
-                                            <button class="btn btn-primary" @click="toggleGroup(item.groupId)">
+                                            <button class="btn btn-info" @click="toggleGroup(item.groupId)">
                                                 <i
                                                     :class="expandedGroups[item.groupId] ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"></i>
                                             </button>
