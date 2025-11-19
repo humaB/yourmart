@@ -8497,9 +8497,7 @@ __webpack_require__.r(__webpack_exports__);
       var vm = this;
       vm.selectedSupplier.id = id;
       vm.selectedSupplier.type = type;
-      if (data) {
-        vm.selectedSupplier.data = data;
-      }
+      vm.selectedSupplier.data = data;
       axios.post(this.api_url + "suppliers/payments/data", {
         id: id,
         type: type
