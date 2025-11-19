@@ -303,7 +303,7 @@ class SupplierController extends Controller
             ->groupBy('product_id')
             ->map(function ($items, $productId) {
                 $total_qty = $items->sum('quantity');
-                $amount    = $items->sum(fn($i) => $i->quantity * $i->price);
+                $amount    = $items->sum(fn($i) => $i->quantity * $i->product->variation->avg_price);
 
                 return [
                     'product_id'       => $productId,
@@ -845,7 +845,7 @@ class SupplierController extends Controller
             });
         // ---
         // 💸 Supplier Sold
-        $supplierSold = OrderItemSupplier::with(['order', 'product'])
+        $supplierSold = OrderItemSupplier::with(['order', 'product.variation'])
             // Added direct filter on the table column 'supplier_id'
             ->whereNotNull('supplier_id')
             ->whereHas('order', fn($q) => $q->where('status', '8'))
@@ -853,7 +853,7 @@ class SupplierController extends Controller
             ->groupBy('supplier_id')
             ->map(function ($items, $supplierId) {
                 $total_qty = $items->sum('quantity');
-                $amount    = $items->sum(fn($i) => $i->quantity * $i->price);
+                $amount    = $items->sum(fn($i) => $i->quantity * $i->product->variation->avg_price);
 
                 return [
                     'supplier_id'      => (int) $supplierId,
