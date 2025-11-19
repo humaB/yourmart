@@ -751,7 +751,7 @@ class SupplierController extends Controller
 
         // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
          // ---------------- PURCHASE ORDER FINANCIALS ----------------
-        $poFinancials = PurchaseOrder::select(
+       return $poFinancials = PurchaseOrder::select(
             'supplier_id',
             DB::raw('SUM(total_amount) as total_order_amount'),
             DB::raw('SUM(remaining_amount) as total_remaining_amount')
