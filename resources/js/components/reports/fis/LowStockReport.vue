@@ -4,7 +4,7 @@
             <div class="col-12 col-sm-12 col-lg-12">
                 <div class="card">
                     <div class="card-header">
-                        <h5>Stock Report</h5> <!-- Updated title -->
+                        <h5>Stock Report</h5>
                     </div>
                     <div class="card-body row">
                         <div class="col-md-12">
@@ -14,6 +14,7 @@
                                         <label>Status Filter</label>
                                         <select class="form-control" v-model="filter.status">
                                             <option value="all">All Status</option>
+                                            <option value="Negative Stock">Negative Stock</option>
                                             <option value="Out of Stock">Out of Stock</option>
                                             <option value="Low Stock">Low Stock</option>
                                             <option value="Sufficient">Sufficient</option>
@@ -34,53 +35,58 @@
                                     <tr>
                                         <th>Product SKU</th>
                                         <th>Image</th>
-                                        <th>Product Link</th>
+                                        <th>Product Title</th>
+                                        <th>30 Days Sale</th>
+                                        <th>Avg. Daily Sales</th>
+                                        <th>Desired Days</th>
+                                        <th>Stock Required</th>
                                         <th>Current Stock</th>
-                                        <th>Sales (30 Days)</th>
-                                        <th>Avg Daily Sales</th>
-                                        <th>Lead Time (Days)</th>
-                                        <th>Safety Stock</th>
-                                        <th>Low Stock Level</th>
                                         <th>Status</th>
-                                        <th>Recommended Reorder Qty</th>
+                                        <th>Restock Qty</th>
                                         <th>Last Updated</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                        <tr v-for="product in data" :key="product.sku" 
-                                        >
+                                    <tr v-for="product in data" :key="product.sku">
                                         <td>{{ product.sku }}</td>
                                         <td>
-                                            <ul class="list-unstyled order-list m-b-0 m-b-0">
-                                                                    <li class="team-member team-member-sm">
-                                                                        <a :href="getImageUrl(product.image)"
-                                                                            target="_blank">
-                                                                            <img class="rounded-circle"
-                                                                                :src="getImageUrl(product.image)">
-                                                                        </a>
-                                                                    </li>
-                                                                </ul>
-                                                                </td>
-                                       
-                                        <td><a :href="'https://yourmart.pk/products/' + product.name" target="_blank">
-        {{ product.name }}
-    </a></td>
-                                        <td :class="getStockClass(product.current_stock, product.low_stock_level, product.status)">
-                                            {{ product.current_stock }}
+                                            <ul class="list-unstyled order-list m-b-0">
+                                                <li class="team-member team-member-sm">
+                                                    <a :href="getImageUrl(product.image)" target="_blank">
+                                                        <img class="rounded-circle" :src="getImageUrl(product.image)" width="35" height="35">
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <a :href="'https://yourmart.pk/products/' + product.name" target="_blank">
+                                                {{ product.name }}
+                                            </a>
                                         </td>
                                         <td>{{ product.sales_30_days }}</td>
                                         <td>{{ product.avg_daily_sales }}</td>
-                                        <td>{{ product.lead_time }}</td>
-                                        <td>{{ product.safety_stock }}</td>
-                                        <td>{{ product.low_stock_level }}</td>
-                                        <td>
-                                            <span class="badge badge-shadow" :class="getStatusBadgeClass(product.status)">
-                                                {{ product.status }}
+                                        <td>{{ product.desired_days }}</td>
+                                        <td>{{ product.stock_required }}</td>
+                                        <td :class="getStockClass(product.current_stock, product.status)">
+                                            {{ product.current_stock }}
+                                            <span v-if="product.has_negative_stock" class="badge badge-danger badge-sm ml-1">
+                                                
                                             </span>
                                         </td>
                                         <td>
-                                            <span v-if="product.recommended_reorder_qty > 0" class="text-danger font-weight-bold">
-                                                {{ product.recommended_reorder_qty }}
+                                             <span class="badge" :class="getStatusBadgeClass(product.status)">
+                                                <i :class="getStatusIcon(product.status)"></i> {{ product.status }}
+                                            </span>
+                                            <!-- <span class="btn btn-icon" :class="getStatusBadgeClass(product.status)" :title="product.status">
+                                              <i class="getStatusIcon(product.status)"></i>  {{ product.status }}
+                                            </span> -->
+                                        </td>
+                                        <td>
+                                            <span v-if="product.restock_warning" class="text-danger font-weight-bold small">
+                                                ⚠️ {{ product.restock_warning }}
+                                            </span>
+                                            <span v-else-if="product.restock_qty > 0" class="text-danger font-weight-bold">
+                                                {{ product.restock_qty }}
                                             </span>
                                             <span v-else class="text-muted">-</span>
                                         </td>
@@ -103,7 +109,7 @@
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
-    name: 'StockReport', // Updated name
+    name: 'StockReport',
     props: ['data', 'loader'],
     components: {
         BulletListLoader
@@ -116,42 +122,46 @@ export default {
         }
     },
     methods: {
-        // getStatusRowClass(status) {
-        //     switch (status) {
-        //         case 'Out of Stock':
-        //             return 'table-danger';
-        //         case 'Low Stock':
-        //             return 'table-warning';
-        //         case 'Sufficient':
-        //             return ''; // 
-        //         default:
-        //             return '';
-        //     }
-        // },
-            getImageUrl(imageId) {
-        // Check if the image is null
-        if (!imageId) {
-            return this.public_url + 'assets/img/blank_image.jpg';
-        }
-        return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
-    },
-        getStockClass(currentStock, lowStockLevel, status) {
+        getImageUrl(imageId) {
+            if (!imageId) {
+                return this.public_url + 'assets/img/blank_image.jpg';
+            }
+            return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+        },
+        getStockClass(currentStock, status) {
+            if (status === 'Negative Stock') return 'text-danger font-weight-bold bg-light-danger';
             if (status === 'Out of Stock') return 'text-danger font-weight-bold';
             if (status === 'Low Stock') return 'text-warning font-weight-bold';
-            return 'text-success'; // Sufficient stock in green
+            return 'text-success';
         },
         getStatusBadgeClass(status) {
             switch (status) {
+                case 'Negative Stock':
+                    return 'text-warning';
                 case 'Out of Stock':
-                    return 'badge-danger';
+                    return 'text-danger';
                 case 'Low Stock':
-                    return 'badge-warning';
+                    return 'text-warning';
                 case 'Sufficient':
-                    return 'badge-success';
+                    return 'text-success';
                 default:
-                    return 'badge-secondary';
+                    return 'text-secondary';
             }
-        }
+        },
+        getStatusIcon(status) {
+    switch (status) {
+        case 'Negative Stock':
+            return 'fas fa-exclamation-circle';
+        case 'Out of Stock':
+            return 'fas fa-times';
+        case 'Low Stock':
+            return 'fas fa-exclamation-triangle';
+        case 'Sufficient':
+            return 'fas fa-check';
+        default:
+            return 'fas fa-circle';
+    }
+}
     },
     watch: {
         data(newData) {
@@ -163,42 +173,42 @@ export default {
                 
                 $('#low-stock-report-table').DataTable({
                     "bSort": true,
-                    "order": [[2, "asc"]], // Sort by Current Stock ascending
+                    "order": [[7, "asc"]], // Sort by Current Stock (column index 7)
                     "pageLength": 25,
                     "lengthMenu": [10, 25, 50, 100],
                     dom: 'Bfrtip',
                     buttons: [
                         {
                             extend: 'copy',
-                            title: 'Stock Products Report', // Updated title
+                            title: 'Stock Report',
                             exportOptions: {
                                 columns: ':visible'
                             }
                         }, 
                         {
                             extend: 'csv',
-                            title: 'Stock Products Report', // Updated title
+                            title: 'Stock Report',
                             exportOptions: {
                                 columns: ':visible'
                             }
                         }, 
                         {
                             extend: 'excel',
-                            title: 'Stock Products Report', // Updated title
+                            title: 'Stock Report',
                             exportOptions: {
                                 columns: ':visible'
                             }
                         },
                         {
                             extend: 'pdf',
-                            title: 'Stock Products Report', // Updated title
+                            title: 'Stock Report',
                             exportOptions: {
                                 columns: ':visible'
                             }
                         },
                         {
                             extend: 'print',
-                            title: 'Stock Products Report', // Updated title
+                            title: 'Stock Report',
                             exportOptions: {
                                 columns: ':visible'
                             }
@@ -210,39 +220,3 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-/* .table-responsive {
-    max-height: 600px;
-}
-
-.badge {
-    font-size: 0.85em;
-    padding: 0.4em 0.6em;
-}
-
-.table-danger {
-    background-color: #f8d7da;
-}
-
-.table-warning {
-    background-color: #fff3cd;
-}
-
-
-.text-danger {
-    color: #dc3545 !important;
-}
-
-.text-warning {
-    color: #e6ac00 !important;
-}
-
-.text-success {
-    color: #28a745 !important;
-}
-
-.font-weight-bold {
-    font-weight: 700 !important;
-} */
-</style>

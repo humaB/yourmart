@@ -506,7 +506,7 @@ class FisReportController extends Controller
 
 public function lowStockProducts(Request $request)
 {
-    try {
+   try {
         $products = Product::with(['variation'])->get();
         $last30 = Carbon::now()->subDays(30);
         $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
@@ -517,71 +517,64 @@ public function lowStockProducts(Request $request)
             ->get()
             ->groupBy('product_id');
 
-       $stockData = $products->map(function ($product) use ($issuanceDetails) {
+        $stockData = $products->map(function ($product) use ($issuanceDetails) {
+            $details = $issuanceDetails[$product->id] ?? collect([]);
 
-    $details = $issuanceDetails[$product->id] ?? collect([]);
+            // Total sales in last 30 days
+            $sales30Days = $details->sum('quantity');
 
-    // Total sales in last 30 days
-    $sales30Days = $details->sum('quantity');
+            // Fixed values
+            $desiredDays = 10;
+            $currentStock = (int) $product->variation->stock;
 
-    // Group by date
-    $dailySales = $details
-        ->groupBy(function ($row) {
-            return Carbon::parse($row->created_at)->format('Y-m-d');
-        })
-        ->map(function ($rows) {
-            return $rows->sum('quantity');
-        });
+            // Handle negative stock - show warning
+            $hasNegativeStock = $currentStock < 0;
 
-    // REAL max sale in last 30 days (no forcing)
-    $maxDailySales = $dailySales->max() ?? 0;
+            // Avg Daily Sales = 30 Days Sales / 30
+            $avgDailySales = $sales30Days > 0 ? ($sales30Days / 30) : 0;
 
-    $leadTime = 3;
-    $desiredDays = 10;
+            // Stock Required = Avg Daily Sales × Desired Days
+            $stockRequired = $avgDailySales * $desiredDays;
 
-    $currentStock = (int) $product->variation->stock;
+            // Determine status
+            if ($hasNegativeStock) {
+                $status = 'Negative Stock';
+            } elseif ($currentStock <= 0) {
+                $status = 'Out of Stock';
+            } elseif ($currentStock <= $stockRequired) {
+                $status = 'Low Stock';
+            } else {
+                $status = 'Sufficient';
+            }
 
-    // Pure Avg Daily Sales
-    $avgDailySales = $sales30Days > 0 ? ($sales30Days / 30) : 0;
+            // Restock Quantity = Stock Required - Current Stock
+            $restockQty = 0;
+            $restockWarning = '';
+            
+            if ($hasNegativeStock) {
+                $restockWarning = 'Stock Adjustment Needed';
+                $restockQty = 0; // Don't calculate reorder for negative stock
+            } elseif ($status !== 'Sufficient') {
+                $restockQty = $stockRequired - $currentStock;
+                $restockQty = max(0, ceil($restockQty)); // Ensure not negative
+            }
 
-    // PURE Safety Stock — no forcing, no minimum
-    $safetyStock = ($maxDailySales * $leadTime) - ($avgDailySales * $leadTime);
-
-    // clamp negative
-    if ($safetyStock < 0) $safetyStock = 0;
-               // PURE Low Stock Level
-    $lowStockLevel = ($avgDailySales * $leadTime) + $safetyStock;
-
-    // clamp negative
-    if ($lowStockLevel < 0) $lowStockLevel = 0;
-
-    // Determine status
-    if ($currentStock <= 0) $status = 'Out of Stock';
-    elseif ($currentStock <= $lowStockLevel) $status = 'Low Stock';
-    else $status = 'Sufficient';
-    // PURE reorder quantity
-    $reorderQty = 0;
-    if ($status !== 'Sufficient') {
-        $raw = ($avgDailySales * $desiredDays) - $currentStock;
-        $reorderQty = $raw > 0 ? ceil($raw) : 0;
-    }
-
-           return [
-        'sku' => $product->variation->sku,
-        'name' => $product->slug,
-        'image' => $product->hero_image,
-        'current_stock' => $currentStock,
-        'sales_30_days' => $sales30Days,
-        'avg_daily_sales' => round($avgDailySales, 2),
-        'max_daily_sales' => $maxDailySales,
-        'lead_time' => $leadTime,
-        'safety_stock' => $safetyStock,
-        'low_stock_level' => $lowStockLevel,
-        'status' => $status,
-        'recommended_reorder_qty' => $reorderQty,
-        'last_updated' => $product->variation->updated_at->format('Y-m-d'),
-    ];
-})->toArray();
+            return [
+                'sku' => $product->variation->sku,
+                'name' => $product->slug,
+                'image' => $product->hero_image,
+                'sales_30_days' => $sales30Days,
+                'avg_daily_sales' => round($avgDailySales, 2),
+                'desired_days' => $desiredDays,
+                'stock_required' => round($stockRequired, 2),
+                'current_stock' => $currentStock,
+                'has_negative_stock' => $hasNegativeStock,
+                'status' => $status,
+                'restock_qty' => (int) $restockQty,
+                'restock_warning' => $restockWarning,
+                'last_updated' => $product->variation->updated_at->format('Y-m-d'),
+            ];
+        })->toArray();
 
         // Filter
         if ($request->status && $request->status !== 'all') {

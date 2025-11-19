@@ -17,7 +17,7 @@
 
                         <div v-else class="table-responsive">
                             <table class="table table-striped dataTable no-footer" id="duplicate_dropshipper_list">
-                                <thead class="thead-light">
+                                <thead>
                                     <tr>
                                         <th></th> <!-- Expand/Collapse column -->
                                         <th>#</th>
@@ -198,6 +198,7 @@ export default {
                     },
                     {
                         data: null,
+                         orderable: false, 
                         render: (data, type, row) => {
                             return `
                                 <span class="badge badge-primary mr-2">${row.duplicateCount} duplicates</span>
@@ -208,7 +209,7 @@ export default {
                         }
                     }
                 ],
-                bSort: false,
+                 order: [[1, 'asc']],
                 paging: true,
                 searching: true,
                 info: true,
@@ -273,7 +274,8 @@ export default {
                 childRowsHtml += `
                     <tr class="child-row alert-danger">
                         <td></td>
-                        <td colspan="2">${child.full_name}</td>
+                        <td></td>
+                        <td >${child.full_name}</td>
                         <td>${child.email}</td>
                         <td>${child.whatsapp_number}</td>
                         <td>${child.cnic_number}</td>
@@ -290,34 +292,26 @@ export default {
                 `;
             });
 
-            // Show child rows
             row.child(
                 $(`${childRowsHtml}`)
             ).show();
-
-            // Update button and state
             $btn.removeClass('btn-info').addClass('btn-secondary');
             $btn.find('i').removeClass('fa-chevron-right').addClass('fa-chevron-down');
             $btn.attr('title', 'Collapse');
             
             this.expandedGroups.add(groupIndex);
-            
-            // Add class to parent row for styling
             row.nodes().to$().addClass('shown');
         },
 
         collapseGroup(row, groupIndex, $btn) {
-            // Hide child rows
             row.child.hide();
             
-            // Update button and state
             $btn.removeClass('btn-secondary').addClass('btn-info');
             $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-right');
             $btn.attr('title', 'Expand');
             
             this.expandedGroups.delete(groupIndex);
             
-            // Remove class from parent row
             row.nodes().to$().removeClass('shown');
         },
 
@@ -368,16 +362,14 @@ span.badge {
 .btn-sm {
     margin: 0 2px;
 }
-
-/* Style for expandable rows */
-tr.shown {
+/* tr.shown {
     background-color: #f8f9fa !important;
-}
+} */
 
-.child-row td {
+/* .child-row td {
     padding-left: 40px !important;
     border-top: 1px solid #dee2e6;
-}
+} */
 
 .dt-control {
     text-align: center;
@@ -385,14 +377,13 @@ tr.shown {
 </style>
 
 <style>
-/* Global styles for DataTables */
-table.dataTable tbody tr.child-row td {
+/* table.dataTable tbody tr.child-row td {
     background-color: #f8d7da !important;
     color: #721c24;
-}
-
+} */
+/* 
 table.dataTable tbody tr.shown td {
     
     background-color: #e3f2fd !important;
-}
+} */
 </style>
