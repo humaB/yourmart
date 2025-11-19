@@ -14011,11 +14011,11 @@ __webpack_require__.r(__webpack_exports__);
         case 'Negative Stock':
           return 'fas fa-exclamation-circle';
         case 'Out of Stock':
-          return 'fas fa-times';
+          return 'fas fa-times-circle';
         case 'Low Stock':
           return 'fas fa-exclamation-triangle';
         case 'Sufficient':
-          return 'fas fa-check';
+          return 'fas fa-check-circle';
         default:
           return 'fas fa-circle';
       }
