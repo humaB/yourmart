@@ -272,29 +272,23 @@ export default {
                 if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
                 
                 childRowsHtml += `
-                     <tr class="child-row alert-danger">
-        <td></td>
-        <td></td>
-        <td>${child.full_name}</td>
-        <td>${child.email}</td>
-        <td>${child.whatsapp_number}</td>
-        <td>${child.cnic_number}</td>
-        <td>${child.account_number}</td>
-        <td>${child.account_iban}</td>
-        <td>
-            ${this.formatPrice(child.remaining_amount)}<br>
-            <small class="text-muted">
-                Profit: ${child.profit}<br>
-                Paid: ${child.paid_profit}
-            </small>
-        </td>
-        <td>
-            ${badges.join(' ')}
-            <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${child.id}&contact=${child.whatsapp_number}" target="_blank">
-                <i class="fa fa-eye"></i>
-            </a>
-        </td>
-    </tr>
+                    <tr class="child-row alert-danger">
+                        <td></td>
+                        <td></td>
+                        <td >${child.full_name}</td>
+                        <td>${child.email}</td>
+                        <td>${child.whatsapp_number}</td>
+                        <td>${child.cnic_number}</td>
+                        <td>${child.account_number}</td>
+                        <td>${child.account_iban}</td>
+                        <td>${this.formatPrice(child.remaining_amount)}</td>
+                        <td>
+                            ${badges.join(' ')}
+                            <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${child.id}&contact=${child.whatsapp_number}" target="_blank">
+                                <i class="fa fa-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
                 `;
             });
 

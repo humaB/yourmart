@@ -493,30 +493,13 @@ class FisReportController extends Controller
 
 
              // ADD THIS CALCULATION LOOP
-     foreach ($duplicates as $dropshipper) {
+    foreach ($duplicates as $dropshipper) {
         $delivered = $dropshipper->user?->deliveredOrders ?? collect();
         $returned = $dropshipper->user?->returnedOrders ?? collect();
-
-        // Debug: Check what orders we're getting
-        \Log::info("Dropshipper ID: {$dropshipper->id}", [
-            'delivered_orders_count' => $delivered->count(),
-            'returned_orders_count' => $returned->count(),
-            'delivered_profits' => $delivered->pluck('total_profit'),
-            'returned_profits' => $returned->pluck('total_profit'),
-            'delivered_paid_profits' => $delivered->pluck('total_paid_profit'),
-            'returned_paid_profits' => $returned->pluck('total_paid_profit'),
-        ]);
 
         $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
         $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
         $dropshipper->remaining_amount = $dropshipper->profit - $dropshipper->paid_profit;
-
-        // Debug: Check the calculations
-        \Log::info("Calculations for Dropshipper ID: {$dropshipper->id}", [
-            'total_profit' => $dropshipper->profit,
-            'total_paid_profit' => $dropshipper->paid_profit,
-            'remaining_amount' => $dropshipper->remaining_amount,
-        ]);
     }
     
         return (new ResponseCollection($duplicates))
