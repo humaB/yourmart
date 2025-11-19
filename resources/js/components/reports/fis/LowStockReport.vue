@@ -75,7 +75,7 @@
                                         </td>
                                         <td>
                                              <span class="badge" :class="getStatusBadgeClass(product.status)">
-                                                <i :class="getStatusIcon(product.status)"></i> {{ product.status }}
+                                                {{ product.status }}
                                             </span>
                                             <!-- <span class="btn btn-icon" :class="getStatusBadgeClass(product.status)" :title="product.status">
                                               <i class="getStatusIcon(product.status)"></i>  {{ product.status }}
@@ -137,31 +137,31 @@ export default {
         getStatusBadgeClass(status) {
             switch (status) {
                 case 'Negative Stock':
-                    return 'text-warning';
+                    return 'badge-warning';
                 case 'Out of Stock':
-                    return 'text-danger';
+                    return 'badge-danger';
                 case 'Low Stock':
-                    return 'text-warning';
+                    return 'badge-warning';
                 case 'Sufficient':
-                    return 'text-success';
+                    return 'badge-success';
                 default:
-                    return 'text-secondary';
+                    return 'badge-secondary';
             }
         },
-        getStatusIcon(status) {
-    switch (status) {
-        case 'Negative Stock':
-            return 'fas fa-exclamation-circle';
-        case 'Out of Stock':
-            return 'fas fa-times-circle';
-        case 'Low Stock':
-            return 'fas fa-exclamation-triangle';
-        case 'Sufficient':
-            return 'fas fa-check-circle';
-        default:
-            return 'fas fa-circle';
-    }
-}
+//         getStatusIcon(status) {
+//     switch (status) {
+//         case 'Negative Stock':
+//             return 'fas fa-exclamation-circle';
+//         case 'Out of Stock':
+//             return 'fas fa-times-circle';
+//         case 'Low Stock':
+//             return 'fas fa-exclamation-triangle';
+//         case 'Sufficient':
+//             return 'fas fa-check-circle';
+//         default:
+//             return 'fas fa-circle';
+//     }
+// }
     },
     watch: {
         data(newData) {

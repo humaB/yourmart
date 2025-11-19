@@ -191,10 +191,10 @@ export default {
                     { data: 'account_number' },
                     { data: 'account_iban' },
                     { 
-                        data: 'remaining_amount',
-                        render: (data, type, row) => {
-                            return this.formatPrice(data || 0);
-                        }
+                         data: 'remaining_amount',
+    render: (data, type, row) => {
+        return this.formatPrice(data || 0);  // ← This is it!
+    }
                     },
                     {
                         data: null,

@@ -13995,31 +13995,30 @@ __webpack_require__.r(__webpack_exports__);
     getStatusBadgeClass: function getStatusBadgeClass(status) {
       switch (status) {
         case 'Negative Stock':
-          return 'text-warning';
+          return 'badge-warning';
         case 'Out of Stock':
-          return 'text-danger';
+          return 'badge-danger';
         case 'Low Stock':
-          return 'text-warning';
+          return 'badge-warning';
         case 'Sufficient':
-          return 'text-success';
+          return 'badge-success';
         default:
-          return 'text-secondary';
+          return 'badge-secondary';
       }
-    },
-    getStatusIcon: function getStatusIcon(status) {
-      switch (status) {
-        case 'Negative Stock':
-          return 'fas fa-exclamation-circle';
-        case 'Out of Stock':
-          return 'fas fa-times-circle';
-        case 'Low Stock':
-          return 'fas fa-exclamation-triangle';
-        case 'Sufficient':
-          return 'fas fa-check-circle';
-        default:
-          return 'fas fa-circle';
-      }
-    }
+    } //         getStatusIcon(status) {
+    //     switch (status) {
+    //         case 'Negative Stock':
+    //             return 'fas fa-exclamation-circle';
+    //         case 'Out of Stock':
+    //             return 'fas fa-times-circle';
+    //         case 'Low Stock':
+    //             return 'fas fa-exclamation-triangle';
+    //         case 'Sufficient':
+    //             return 'fas fa-check-circle';
+    //         default:
+    //             return 'fas fa-circle';
+    //     }
+    // }
   },
   watch: {
     data: function data(newData) {
@@ -14487,7 +14486,7 @@ __webpack_require__.r(__webpack_exports__);
         }, {
           data: 'remaining_amount',
           render: function render(data, type, row) {
-            return _this4.formatPrice(data || 0);
+            return _this4.formatPrice(data || 0); // ← This is it!
           }
         }, {
           data: null,
@@ -31969,9 +31968,7 @@ var render = function render() {
     }) : _vm._e()]), _vm._v(" "), _c("td", [_c("span", {
       staticClass: "badge",
       "class": _vm.getStatusBadgeClass(product.status)
-    }, [_c("i", {
-      "class": _vm.getStatusIcon(product.status)
-    }), _vm._v(" " + _vm._s(product.status) + "\n                                        ")])]), _vm._v(" "), _c("td", [product.restock_warning ? _c("span", {
+    }, [_vm._v("\n                                            " + _vm._s(product.status) + "\n                                        ")])]), _vm._v(" "), _c("td", [product.restock_warning ? _c("span", {
       staticClass: "text-danger font-weight-bold small"
     }, [_vm._v("\n                                            ⚠️ " + _vm._s(product.restock_warning) + "\n                                        ")]) : product.restock_qty > 0 ? _c("span", {
       staticClass: "text-danger font-weight-bold"

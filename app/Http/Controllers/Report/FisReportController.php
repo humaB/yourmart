@@ -433,7 +433,7 @@ class FisReportController extends Controller
     }
     public function suspectedDuplicateDropshippers()
     {
-        // Get dropshippers with same name, email, or phone
+        
         $duplicates = DropShipper::select('*')
             ->where('status', 1)
             ->whereIn('email', function($query) {
@@ -481,11 +481,26 @@ class FisReportController extends Controller
                       ->groupBy('account_number')
                       ->havingRaw('COUNT(*) > 1');
             })
+            ->with([ // ADD THIS WITH CLAUSE
+            'user.deliveredOrders:id,belongs_to,total_profit,total_paid_profit',
+            'user.returnedOrders:id,belongs_to,total_profit,total_paid_profit'
+        ])
             ->orderBy('email')
             ->orderBy('whatsapp_number')
             ->orderBy('account_number')
             ->orderBy('cnic_number')
             ->get();
+
+
+             // ADD THIS CALCULATION LOOP
+    foreach ($duplicates as $dropshipper) {
+        $delivered = $dropshipper->user?->deliveredOrders ?? collect();
+        $returned = $dropshipper->user?->returnedOrders ?? collect();
+
+        $dropshipper->profit = $delivered->sum('total_profit') + $returned->sum('total_profit');
+        $dropshipper->paid_profit = $delivered->sum('total_paid_profit') + $returned->sum('total_paid_profit');
+        $dropshipper->remaining_amount = $dropshipper->profit - $dropshipper->paid_profit;
+    }
     
         return (new ResponseCollection($duplicates))
             ->response()
