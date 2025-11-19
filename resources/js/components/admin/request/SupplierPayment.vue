@@ -113,17 +113,17 @@
                         <div class="col-md-4 col-6">
                             <strong>Total Payable</strong>
                             <br>
-                            <h5 class="text-muted">{{ formatPrice(details.total_profit) }}</h5>
+                            <h5 class="text-muted">{{ formatPrice( selectedSupplier.data ? selectedSupplier.data.po_total_order_amount : details.total_profit) }}</h5>
                         </div>
                         <div class="col-md-4 col-6">
                             <strong>Total Paid</strong>
                             <br>
-                            <h5 class="text-muted">{{ formatPrice(details.total_paid_profit) }}</h5>
+                            <h5 class="text-muted">{{ formatPrice( selectedSupplier.data ? selectedSupplier.data.po_total_paid_amount : details.total_paid_profit) }}</h5>
                         </div>
                         <div class="col-md-4 col-6">
                             <strong>Remaining Balance</strong>
                             <br>
-                            <h5 class="text-muted">{{ formatPrice(details.total_profit - details.total_paid_profit) }}
+                            <h5 class="text-muted">{{ formatPrice(selectedSupplier.data ? selectedSupplier.data.po_total_remaining_amount : details.total_profit - details.total_paid_profit) }}
                             </h5>
                         </div>
 
@@ -174,7 +174,7 @@ import { invalid } from 'moment';
 
 export default {
     name: 'SupplierPayment',
-    props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
+    props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details', 'selectedSupplier'],
     data() {
         return {
             web_url: process.env.MIX_WEB_URL,

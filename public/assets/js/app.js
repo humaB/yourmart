@@ -990,7 +990,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'SupplierPayment',
-  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
+  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details', 'selectedSupplier'],
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
@@ -8375,7 +8375,8 @@ __webpack_require__.r(__webpack_exports__);
       remainingDropshippers: 0,
       selectedSupplier: {
         id: "",
-        type: ""
+        type: "",
+        data: null
       },
       paymentHistorys: [],
       suppliertotalPayable: 0,
@@ -8492,9 +8493,13 @@ __webpack_require__.r(__webpack_exports__);
       return date ? moment__WEBPACK_IMPORTED_MODULE_0___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
     paymentDetail: function paymentDetail(id, type) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var vm = this;
       vm.selectedSupplier.id = id;
       vm.selectedSupplier.type = type;
+      if (data) {
+        vm.selectedSupplier.data = data;
+      }
       axios.post(this.api_url + "suppliers/payments/data", {
         id: id,
         type: type
@@ -15066,15 +15071,15 @@ var render = function render() {
     staticClass: "col-md-4 col-6"
   }, [_c("strong", [_vm._v("Total Payable")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit)))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.selectedSupplier.data ? _vm.selectedSupplier.data.po_total_order_amount : _vm.details.total_profit)))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("strong", [_vm._v("Total Paid")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.selectedSupplier.data ? _vm.selectedSupplier.data.po_total_paid_amount : _vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("strong", [_vm._v("Remaining Balance")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit - _vm.details.total_paid_profit)) + "\n                        ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.selectedSupplier.data ? _vm.selectedSupplier.data.po_total_remaining_amount : _vm.details.total_profit - _vm.details.total_paid_profit)) + "\n                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "py-1"
   }, [_c("table", {
     staticClass: "table"
@@ -29117,7 +29122,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.paymentDetail(item.id, "1");
+          return _vm.paymentDetail(item.id, "1", item);
         }
       }
     }, [_c("i", {
@@ -29294,7 +29299,8 @@ var render = function render() {
       loader: _vm.btnLoader,
       details: _vm.details,
       accountCash: _vm.accountCash,
-      accountBanks: _vm.accountBanks
+      accountBanks: _vm.accountBanks,
+      selectedSupplier: _vm.selectedSupplier
     },
     on: {
       add: _vm.addPayment
