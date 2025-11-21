@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
@@ -23,13 +23,17 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class DashboardController extends Controller
+class GrowthController extends Controller
 {
+
+    public function index()
+    {
+        return view('growthdashboard');
+    }
+
     public function fetchData(Request $request)
     {
-        set_time_limit(300); // 5 minutes
-        ini_set('memory_limit', '512M');
-
+      
         $orders = Order::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
         })
@@ -1014,3 +1018,5 @@ private function dailyReturnsGraph()
             ->setStatusCode(200);
     }
 }
+
+

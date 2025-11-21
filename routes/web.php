@@ -18,6 +18,7 @@ use App\Http\Controllers\Pages\HelpCenterPageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\User\SupplierController;
+use App\Http\Controllers\GrowthController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\AccountHeadController;
 use App\Http\Controllers\Account\BankTransactionController;
@@ -79,6 +80,9 @@ Route::group(['prefix' => '/reports', 'middleware' => 'auth'], function () {
 
 Route::group(['prefix' => '/tickets', 'middleware' => 'auth'], function () {
     Route::get('/', [TicketController::class, 'index'])->name('tickets');
+});
+Route::group(['prefix' => '/growthdashboard', 'middleware' => 'auth'], function () {
+    Route::get('/', [GrowthController::class, 'index'])->name('growthdashboard');
 });
 
 Route::group(['prefix' => '/pages', 'middleware' => 'auth'], function () {

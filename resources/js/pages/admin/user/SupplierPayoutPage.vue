@@ -287,7 +287,7 @@
 
                                                                     <td class="d-flex justify-content-between">
                                                                         <button class="btn btn-primary mr-2"
-                                                                            @click="paymentDetail(item.id, '1')"
+                                                                            @click="paymentDetail(item.id, '1', item)"
                                                                             data-toggle="modal"
                                                                             data-target="#supplierPayment"
                                                                             title="Payment"><i
@@ -412,7 +412,7 @@
         </form>
 
         <SupplierPayment :orders="orders" :addData="addData" :loader="btnLoader" :details="details"
-            :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" />
+            :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" :selectedSupplier="selectedSupplier"/>
 
         <SupplierPaymentHistory :selectedSupplier="selectedSupplier" :history="paymentHistorys" />
     </div>
@@ -469,7 +469,7 @@ export default {
             totalPaid: 0,
             totalRemaining: 0,
             remainingDropshippers: 0,
-            selectedSupplier: { id: "", type: "" },
+            selectedSupplier: { id: "", type: "", data : null },
             paymentHistorys: [],
 
             suppliertotalPayable: 0,
@@ -600,11 +600,12 @@ export default {
         formatDate(date) {
             return date ? moment(date).format('DD-MMM-YYYY') : 'N/A';
         },
-        paymentDetail(id, type) {
+        paymentDetail(id, type, data = null) {
             let vm = this;
 
             vm.selectedSupplier.id = id;
             vm.selectedSupplier.type = type;
+            vm.selectedSupplier.data = data;
 
             axios
                 .post(this.api_url + "suppliers/payments/data", { id: id, type: type })

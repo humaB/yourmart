@@ -303,7 +303,7 @@ class SupplierController extends Controller
             ->groupBy('product_id')
             ->map(function ($items, $productId) {
                 $total_qty = $items->sum('quantity');
-                $amount    = $items->sum(fn($i) => $i->quantity * $i->price);
+                $amount    = $items->sum(fn($i) => $i->quantity * $i->product->variation->avg_price);
 
                 return [
                     'product_id'       => $productId,
@@ -751,7 +751,7 @@ class SupplierController extends Controller
 
         // Group purchase orders by supplier_id where supplier_stock = 0 and status = 1
          // ---------------- PURCHASE ORDER FINANCIALS ----------------
-        $poFinancials = PurchaseOrder::select(
+       $poFinancials = PurchaseOrder::select(
             'supplier_id',
             DB::raw('SUM(total_amount) as total_order_amount'),
             DB::raw('SUM(remaining_amount) as total_remaining_amount')
@@ -845,7 +845,7 @@ class SupplierController extends Controller
             });
         // ---
         // 💸 Supplier Sold
-        $supplierSold = OrderItemSupplier::with(['order', 'product'])
+        $supplierSold = OrderItemSupplier::with(['order', 'product.variation'])
             // Added direct filter on the table column 'supplier_id'
             ->whereNotNull('supplier_id')
             ->whereHas('order', fn($q) => $q->where('status', '8'))
@@ -853,7 +853,7 @@ class SupplierController extends Controller
             ->groupBy('supplier_id')
             ->map(function ($items, $supplierId) {
                 $total_qty = $items->sum('quantity');
-                $amount    = $items->sum(fn($i) => $i->quantity * $i->price);
+                $amount    = $items->sum(fn($i) => $i->quantity * $i->product->variation->avg_price);
 
                 return [
                     'supplier_id'      => (int) $supplierId,
@@ -889,7 +889,8 @@ class SupplierController extends Controller
             $total_remaining_amount = (float) optional($poItem)->total_remaining_amount ?? 0;
 
             // Calculate total paid amount
-            $total_paid_amount = $sold_amount - $total_remaining_amount;
+            $total_paid_amount = $total_order_amount - $total_remaining_amount;
+            $balance = $sold_amount - $total_paid_amount;
 
 
             // --- Return Final Array ---
@@ -911,9 +912,9 @@ class SupplierController extends Controller
                 'balance_amount'   => round((float) $balance_amount),
 
                 // PO Financial metrics
-                'po_total_order_amount'    => (float) $total_order_amount,
+                'po_total_order_amount'    => (float) $sold_amount,
                 'po_total_paid_amount'     => (float) $total_paid_amount,
-                'po_total_remaining_amount' => (float) $total_remaining_amount,
+                'po_total_remaining_amount' => (float) $balance,
 
             ];
         })->values();

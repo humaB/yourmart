@@ -9244,6 +9244,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'OrdersectionGrowthDashboard',
+  props: ['dropshipper', 'applications', 'orders', 'pendingRequests'],
+  methods: {
+    getApplicationPercentage: function getApplicationPercentage(count, total) {
+      if (count === 0) return 0; // Correct check to prevent division by zero
+      var percentage = Math.round(count / total * 100);
+      return percentage;
+    },
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperDetails.vue?vue&type=script&lang=js":
 /*!**************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperDetails.vue?vue&type=script&lang=js ***!
@@ -9720,7 +9749,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'SupplierPayment',
-  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details'],
+  props: ['orders', 'addData', 'loader', 'accountCash', 'accountBanks', 'details', 'selectedSupplier'],
   data: function data() {
     return {
       web_url: "https://yourmart.pk/",
@@ -15241,6 +15270,299 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/GrowthDashboardPage.vue?vue&type=script&lang=js":
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/GrowthDashboardPage.vue?vue&type=script&lang=js ***!
+  \********************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _components_admin_dashboard_CourierStatsGraph_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/admin/dashboard/CourierStatsGraph.vue */ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardDropshipperGraph.vue */ "./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardRevenueOrderChart.vue */ "./resources/js/components/admin/dashboard/DashboardRevenueOrderChart.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionFour.vue */ "./resources/js/components/admin/dashboard/DashboardSectionFour.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionOne.vue */ "./resources/js/components/admin/dashboard/DashboardSectionOne.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionThree.vue */ "./resources/js/components/admin/dashboard/DashboardSectionThree.vue");
+/* harmony import */ var _components_admin_dashboard_OrdersectionGrowthDashboard_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/admin/dashboard/OrdersectionGrowthDashboard.vue */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveDropshipper.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveDropshipper.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveProduct.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveProduct.vue");
+/* harmony import */ var _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveSupplier.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveSupplier.vue");
+/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
+/* harmony import */ var _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/graphs/DropshipperApprovedGraph.vue */ "./resources/js/components/graphs/DropshipperApprovedGraph.vue");
+/* harmony import */ var _components_graphs_NewProducts30DaysGraph_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/graphs/NewProducts30DaysGraph.vue */ "./resources/js/components/graphs/NewProducts30DaysGraph.vue");
+/* harmony import */ var _components_graphs_GenericBarChart_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../components/graphs/GenericBarChart.vue */ "./resources/js/components/graphs/GenericBarChart.vue");
+/* harmony import */ var _components_graphs_TicketTypesGraph_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../components/graphs/TicketTypesGraph.vue */ "./resources/js/components/graphs/TicketTypesGraph.vue");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'DashboardPage',
+  components: {
+    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+    DashboardSectionOne: _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    OrdersectionGrowthDashboard: _components_admin_dashboard_OrdersectionGrowthDashboard_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    DashboardSectionThree: _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    DashboardTopFiveDropshipper: _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    DashboardTopFiveProduct: _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+    DashboardTopFiveSupplier: _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+    DashboardSectionFour: _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    DashboardDropshipperGraph: _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    DashboardRevenueOrderChart: _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    // 30 days graphs
+    DropshipperApprovedGraph: _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
+    NewProducts30DaysGraph: _components_graphs_NewProducts30DaysGraph_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+    GenericBarChart: _components_graphs_GenericBarChart_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+    TicketTypesGraph: _components_graphs_TicketTypesGraph_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+    // 30 days graphs
+    CourierStatsGraph: _components_admin_dashboard_CourierStatsGraph_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_15__.BulletListLoader
+  },
+  data: function data() {
+    var _ref;
+    return _ref = {
+      api_url: "/api/",
+      public_url: window.location.origin + "",
+      filter: {
+        dropshipper: 0,
+        shop: 0,
+        from: new Date().toISOString().substr(0, 10),
+        to: new Date().toISOString().substr(0, 10)
+      },
+      loader: true,
+      topTenProducts: [],
+      dropshipper: {},
+      topDropshippers: [],
+      totalOrders: 0,
+      totalTicketSum: {
+        total_tickets: 0,
+        awaiting_your_reply: 0,
+        awaiting_yourmart_reply: 0,
+        closed: 0,
+        expired: 0,
+        reviewed: 0,
+        in_process: 0
+      },
+      dropShipperDetails: {},
+      po: {
+        totalPo: 0,
+        approved: 0,
+        pending: 0,
+        rejected: 0,
+        totalAmount: 0,
+        remaining: 0,
+        paid: 0
+      },
+      orders: {
+        totalOrder: 0,
+        inProcess: 0,
+        outOfDelivery: 0,
+        delivered: 0,
+        returns: 0,
+        normalOrders: 0,
+        darazOrders: 0,
+        cashOrders: 0,
+        grossSales: 0,
+        itemSolds: 0,
+        productCost: 0,
+        packing: 0,
+        packingProfit: 0,
+        courier: 0,
+        courierProfit: 0,
+        costOfGood: 0,
+        grossProfit: 0
+      }
+    }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "dropshipper", {
+      total: 0,
+      paid: 0,
+      remaining: 0,
+      total_sellers: 0
+    }), "inventoryStatus", {}), "categoryWiseProducts", []), "tagWiseProducts", []), "fastMovingProducts", []), "slowMovingProducts", []), "lowStock", []), "highStock", []), "approvedDropshipper", {}), "activeSeller", {}), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "liveProduct", {}), "orderProcessed", {}), "pendingPayouts", {}), "pendingRequests", {
+      dropshippers: {
+        total: 0,
+        pending: 0,
+        approved: 0,
+        reject: 0
+      },
+      supplier: {
+        total: 0,
+        pending: 0,
+        approved: 0,
+        reject: 0
+      }
+    }), "allProcessedOrders", {}), "processOrders", {}), "topFiveDropshippers", []), "topFiveProduct", []), "topFiveSuppliers", []), "dropshipperGraphLast120Days", {}), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "newproducts30daysgraph", {}), "dashboardGraphs", {}), "ticketTypesGraphData", {}), "dropshipperGraph", {}), "revenueOrderGraph", {}), "levelsWidget", {
+      level1: 0,
+      level2: 0,
+      level3: 0,
+      topRatedSeller: 0
+    }), "courierPerformance", []);
+  },
+  created: function created() {
+    this.fetchData({
+      from: null,
+      to: null
+    });
+    this.fetchTicketStatusCounts();
+    this.fetchCategoryandTagWiseProducts();
+  },
+  methods: {
+    fetchCategoryandTagWiseProducts: function fetchCategoryandTagWiseProducts() {
+      var vm = this;
+      axios.get(this.api_url + "users/dashboard/product-wise-count").then(function (response) {
+        var results = response.data.response;
+        vm.categoryWiseProducts = results.categoryWiseProducts, vm.tagWiseProducts = results.tagWiseProducts;
+      });
+    },
+    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
+      var _this = this;
+      axios.get(this.api_url + 'tickets/status-counts').then(function (response) {
+        var data = response.data;
+        _this.totalTicketSum.total_tickets = data.total_tickets;
+        _this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
+        _this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
+        _this.totalTicketSum.closed = data.closed;
+        _this.totalTicketSum.expired = data.expired;
+        _this.totalTicketSum.reviewed = data.reviewed;
+        _this.totalTicketSum.in_process = data.in_process;
+      });
+    },
+    fetchDropshipperDetails: function fetchDropshipperDetails(id) {
+      var vm = this;
+      axios.post(this.api_url + "dropshippers/details", {
+        id: id
+      }).then(function (response) {
+        vm.dropShipperDetails = response.data.response[0];
+      });
+    },
+    fetchData: function fetchData(data) {
+      var vm = this;
+      vm.loader = true;
+      axios.post(this.api_url + "users/dashboard", data).then(function (response) {
+        var results = response.data.response;
+        vm.approvedDropshipper = results.approvedDropshipper;
+        vm.activeSeller = results.activeSeller;
+        vm.liveProduct = results.liveProduct;
+        vm.orderProcessed = results.orderProcessed;
+        vm.pendingPayouts = results.payOuts;
+        vm.pendingRequests = results.pendingRequests;
+        vm.allProcessedOrders = results.allProcessedOrders;
+        vm.processOrders = results.orders;
+        vm.topFiveDropshippers = results.topFiveDropshippers;
+        vm.topFiveProduct = results.topFiveSellingProduct;
+        vm.topFiveSuppliers = results.topFiveSuppliers;
+        vm.inventoryStatus = results.inventoryStatus;
+        vm.dropshipperGraph = results.dropshipperGraph;
+        vm.revenueOrderGraph = results.revenueOrderGraph;
+        vm.courierPerformance = results.courierPerformance;
+        var levels = results.levels;
+        vm.levelsWidget = {
+          level1: levels.filter(function (level) {
+            return level.level === 'Level 01';
+          }).length,
+          level2: levels.filter(function (level) {
+            return level.level === 'Level 02';
+          }).length,
+          level3: levels.filter(function (level) {
+            return level.level === 'Level 03';
+          }).length,
+          topRatedSeller: levels.filter(function (level) {
+            return level.level === 'Top Rated Seller';
+          }).length
+        };
+        vm.loader = false;
+
+        // 30 days graphs
+
+        vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
+        vm.dashboardGraphs = results.dashboardGraphs || {};
+        vm.newproducts30daysgraph = results.newproducts30daysgraph;
+        vm.ticketTypesGraphData = results.ticketTypesGraphData;
+
+        // 30 days graphs
+
+        vm.renderChart();
+      });
+    },
+    applyFilter: function applyFilter() {
+      this.fetchData(this.filter);
+      this.clearDatatable();
+    },
+    resetFilter: function resetFilter() {
+      this.fetchData({
+        from: null,
+        to: null
+      });
+    },
+    formatPrice: function formatPrice(price) {
+      var string = parseFloat(price).toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+    },
+    getPercentage: function getPercentage(statusCount) {
+      if (this.totalTicketSum.total_tickets === 0) return 0;
+      return Math.round(statusCount / this.totalTicketSum.total_tickets * 100);
+    },
+    renderChart: function renderChart() {
+      var ctx = document.getElementById("myChart20").getContext('2d');
+      this.chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.courierPerformance.labels,
+          datasets: this.courierPerformance.datasets
+        },
+        options: {
+          legend: {
+            display: true
+          },
+          scales: {
+            yAxes: [{
+              gridLines: {
+                drawBorder: false,
+                color: '#f2f2f2'
+              },
+              ticks: {
+                beginAtZero: true,
+                stepSize: 10,
+                fontColor: "#9aa0ac" // Font Color
+              }
+            }],
+            xAxes: [{
+              gridLines: {
+                display: false
+              },
+              ticks: {
+                fontColor: "#9aa0ac" // Font Color
+              }
+            }]
+          }
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/TicketPage.vue?vue&type=script&lang=js":
 /*!***********************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/TicketPage.vue?vue&type=script&lang=js ***!
@@ -17251,7 +17573,8 @@ __webpack_require__.r(__webpack_exports__);
       remainingDropshippers: 0,
       selectedSupplier: {
         id: "",
-        type: ""
+        type: "",
+        data: null
       },
       paymentHistorys: [],
       suppliertotalPayable: 0,
@@ -17368,9 +17691,11 @@ __webpack_require__.r(__webpack_exports__);
       return date ? moment__WEBPACK_IMPORTED_MODULE_1___default()(date).format('DD-MMM-YYYY') : 'N/A';
     },
     paymentDetail: function paymentDetail(id, type) {
+      var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var vm = this;
       vm.selectedSupplier.id = id;
       vm.selectedSupplier.type = type;
+      vm.selectedSupplier.data = data;
       axios.post(this.api_url + "suppliers/payments/data", {
         id: id,
         type: type
@@ -21590,6 +21915,173 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540 ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("table", {
+    staticStyle: {
+      "table-layout": "fixed",
+      width: "100%"
+    }
+  }, [_c("tr", [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                        " + _vm._s(_vm.pendingRequests.pendingPO || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Pending PO")])])])])])])])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-shopping-bag"
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  })]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Active Sellers")])])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  })]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("New Registrations\n                                    ")])])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticStyle: {
+      width: "25%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-shopping-cart"
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  })]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Pending Suppliers Applications")])])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_c("div", {
+    staticClass: "card-icon l-bg-green"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  })]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Returns Receivable")])])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]);
+}];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperDetails.vue?vue&type=template&id=7a4460fb&scoped=true":
 /*!*************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/request/DropshipperDetails.vue?vue&type=template&id=7a4460fb&scoped=true ***!
@@ -23922,15 +24414,15 @@ var render = function render() {
     staticClass: "col-md-4 col-6"
   }, [_c("strong", [_vm._v("Total Payable")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit)))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.selectedSupplier.data ? _vm.selectedSupplier.data.po_total_order_amount : _vm.details.total_profit)))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("strong", [_vm._v("Total Paid")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.selectedSupplier.data ? _vm.selectedSupplier.data.po_total_paid_amount : _vm.details.total_paid_profit)))])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 col-6"
   }, [_c("strong", [_vm._v("Remaining Balance")]), _vm._v(" "), _c("br"), _vm._v(" "), _c("h5", {
     staticClass: "text-muted"
-  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.details.total_profit - _vm.details.total_paid_profit)) + "\n                        ")])])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.formatPrice(_vm.selectedSupplier.data ? _vm.selectedSupplier.data.po_total_remaining_amount : _vm.details.total_profit - _vm.details.total_paid_profit)) + "\n                        ")])])]), _vm._v(" "), _c("div", {
     staticClass: "py-1"
   }, [_c("table", {
     staticClass: "table"
@@ -34247,6 +34739,159 @@ render._withStripped = true;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/GrowthDashboardPage.vue?vue&type=template&id=570aecc3":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/GrowthDashboardPage.vue?vue&type=template&id=570aecc3 ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render),
+/* harmony export */   staticRenderFns: () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function render() {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", [_c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-md-12"
+  }, [_c("form", {
+    staticClass: "row col-md-12 mb-3",
+    on: {
+      submit: function submit($event) {
+        $event.preventDefault();
+        return _vm.applyFilter.apply(null, arguments);
+      }
+    }
+  }, [_c("div", {
+    staticClass: "col-md-4"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("From")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.from,
+      expression: "filter.from"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.from
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "from", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("To")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.filter.to,
+      expression: "filter.to"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date"
+    },
+    domProps: {
+      value: _vm.filter.to
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.filter, "to", $event.target.value);
+      }
+    }
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-4"
+  }, [_c("label", {
+    attrs: {
+      "for": ""
+    }
+  }, [_vm._v("Action")]), _c("br"), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-primary mr-2",
+    on: {
+      click: _vm.applyFilter
+    }
+  }, [_vm._v("Filter")]), _vm._v(" "), _c("button", {
+    staticClass: "btn btn-danger",
+    on: {
+      click: _vm.resetFilter
+    }
+  }, [_vm._v("Reset")])])])])]), _vm._v(" "), _vm.loader ? _c("div", {
+    staticClass: "card-body table-responsive"
+  }, [_c("bullet-list-loader", {
+    attrs: {
+      width: 250
+    }
+  })], 1) : _c("div", {
+    staticClass: "row"
+  }, [_c("OrdersectionGrowthDashboard", {
+    attrs: {
+      dropshipper: _vm.pendingPayouts,
+      pendingRequests: _vm.pendingRequests,
+      allProcessedOrders: _vm.allProcessedOrders
+    }
+  })], 1), _vm._v(" "), _c("hr", {
+    staticClass: "border border-secondary border-2 opacity-50"
+  }), _vm._v(" "), _c("div", {
+    staticClass: "row"
+  }, [_c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("h2", [_vm._v(" Orders ")]), _vm._v(" "), _c("GenericBarChart", {
+    attrs: {
+      "graph-data": _vm.dashboardGraphs,
+      "graph-type": "orders",
+      title: "Orders"
+    }
+  }), _vm._v(" "), _c("hr", {
+    staticClass: "border border-secondary border-2 opacity-50"
+  }), _vm._v(" "), _c("h2", [_vm._v(" Sales ")]), _vm._v(" "), _c("GenericBarChart", {
+    attrs: {
+      "graph-data": _vm.dashboardGraphs,
+      "graph-type": "sales",
+      title: "Sales",
+      "is-currency": true
+    }
+  }), _vm._v(" "), _c("hr", {
+    staticClass: "border border-secondary border-2 opacity-50"
+  }), _vm._v(" "), _c("h2", [_vm._v(" Profit ")]), _vm._v(" "), _c("GenericBarChart", {
+    attrs: {
+      "graph-data": _vm.dashboardGraphs,
+      "graph-type": "profit",
+      title: "Profit",
+      "is-currency": true
+    }
+  }), _vm._v(" "), _c("hr", {
+    staticClass: "border border-secondary border-2 opacity-50"
+  }), _vm._v(" "), _c("h2", [_vm._v(" Registrations ")]), _vm._v(" "), _c("DropshipperApprovedGraph", {
+    attrs: {
+      dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
+    }
+  })], 1)])]);
+};
+var staticRenderFns = [];
+render._withStripped = true;
+
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/TicketPage.vue?vue&type=template&id=50b55884":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/TicketPage.vue?vue&type=template&id=50b55884 ***!
@@ -37966,7 +38611,7 @@ var render = function render() {
       },
       on: {
         click: function click($event) {
-          return _vm.paymentDetail(item.id, "1");
+          return _vm.paymentDetail(item.id, "1", item);
         }
       }
     }, [_c("i", {
@@ -38143,7 +38788,8 @@ var render = function render() {
       loader: _vm.btnLoader,
       details: _vm.details,
       accountCash: _vm.accountCash,
-      accountBanks: _vm.accountBanks
+      accountBanks: _vm.accountBanks,
+      selectedSupplier: _vm.selectedSupplier
     },
     on: {
       add: _vm.addPayment
@@ -96338,6 +96984,79 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540 */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540");
+/* harmony import */ var _OrdersectionGrowthDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrdersectionGrowthDashboard.vue?vue&type=script&lang=js */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _OrdersectionGrowthDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__.render,
+  _OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) // removed by dead control flow
+{ var api; }
+component.options.__file = "resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js ***!
+  \*********************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrdersectionGrowthDashboard.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540":
+/*!***************************************************************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540 ***!
+  \***************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/admin/request/DropshipperDetails.vue":
 /*!**********************************************************************!*\
   !*** ./resources/js/components/admin/request/DropshipperDetails.vue ***!
@@ -101001,6 +101720,79 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/pages/GrowthDashboardPage.vue":
+/*!****************************************************!*\
+  !*** ./resources/js/pages/GrowthDashboardPage.vue ***!
+  \****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _GrowthDashboardPage_vue_vue_type_template_id_570aecc3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GrowthDashboardPage.vue?vue&type=template&id=570aecc3 */ "./resources/js/pages/GrowthDashboardPage.vue?vue&type=template&id=570aecc3");
+/* harmony import */ var _GrowthDashboardPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./GrowthDashboardPage.vue?vue&type=script&lang=js */ "./resources/js/pages/GrowthDashboardPage.vue?vue&type=script&lang=js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _GrowthDashboardPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  _GrowthDashboardPage_vue_vue_type_template_id_570aecc3__WEBPACK_IMPORTED_MODULE_0__.render,
+  _GrowthDashboardPage_vue_vue_type_template_id_570aecc3__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) // removed by dead control flow
+{ var api; }
+component.options.__file = "resources/js/pages/GrowthDashboardPage.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/pages/GrowthDashboardPage.vue?vue&type=script&lang=js":
+/*!****************************************************************************!*\
+  !*** ./resources/js/pages/GrowthDashboardPage.vue?vue&type=script&lang=js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GrowthDashboardPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./GrowthDashboardPage.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/GrowthDashboardPage.vue?vue&type=script&lang=js");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_GrowthDashboardPage_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/pages/GrowthDashboardPage.vue?vue&type=template&id=570aecc3":
+/*!**********************************************************************************!*\
+  !*** ./resources/js/pages/GrowthDashboardPage.vue?vue&type=template&id=570aecc3 ***!
+  \**********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_GrowthDashboardPage_vue_vue_type_template_id_570aecc3__WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   staticRenderFns: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_GrowthDashboardPage_vue_vue_type_template_id_570aecc3__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_lib_loaders_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_lib_index_js_vue_loader_options_GrowthDashboardPage_vue_vue_type_template_id_570aecc3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./GrowthDashboardPage.vue?vue&type=template&id=570aecc3 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/lib/loaders/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/pages/GrowthDashboardPage.vue?vue&type=template&id=570aecc3");
+
+
+/***/ }),
+
 /***/ "./resources/js/pages/TicketPage.vue":
 /*!*******************************************!*\
   !*** ./resources/js/pages/TicketPage.vue ***!
@@ -102551,6 +103343,7 @@ Vue.component("v-select", (vue_select__WEBPACK_IMPORTED_MODULE_0___default()));
 
 Vue.component('dashboard-page', (__webpack_require__(/*! ./pages/DashboardPage.vue */ "./resources/js/pages/DashboardPage.vue")["default"]));
 Vue.component('users-page', (__webpack_require__(/*! ./pages/admin/user/UserPage.vue */ "./resources/js/pages/admin/user/UserPage.vue")["default"]));
+Vue.component('growthdashboard-page', (__webpack_require__(/*! ./pages/GrowthDashboardPage.vue */ "./resources/js/pages/GrowthDashboardPage.vue")["default"]));
 Vue.component('dropshipper-requests', (__webpack_require__(/*! ./pages/admin/request/DropShipperRequestPage.vue */ "./resources/js/pages/admin/request/DropShipperRequestPage.vue")["default"]));
 Vue.component('dropshipper-order-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperOrderPage.vue */ "./resources/js/pages/admin/user/DropShipperOrderPage.vue")["default"]));
 Vue.component('dropshipper-payouts-page', (__webpack_require__(/*! ./pages/admin/user/DropShipperPayOutPage.vue */ "./resources/js/pages/admin/user/DropShipperPayOutPage.vue")["default"]));
