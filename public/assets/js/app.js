@@ -21930,6 +21930,11 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
+  return _vm._m(0);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
   return _c("div", {
     staticClass: "row"
   }, [_c("div", {
@@ -21939,31 +21944,7 @@ var render = function render() {
       "table-layout": "fixed",
       width: "100%"
     }
-  }, [_c("tr", [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("td", {
-    staticStyle: {
-      width: "20%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_vm._m(4), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  }), _vm._v("\n                                        " + _vm._s(_vm.pendingRequests.pendingPO || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Pending PO")])])])])])])])])])]);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("td", {
+  }, [_c("tr", [_c("td", {
     staticStyle: {
       width: "20%",
       padding: "10px"
@@ -21986,11 +21967,7 @@ var staticRenderFns = [function () {
     staticClass: "ti-arrow-up text-success"
   })]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Active Sellers")])])])])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("td", {
+  }, [_vm._v("Today's Orders\n                                    ")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
       width: "20%",
       padding: "10px"
@@ -22013,11 +21990,7 @@ var staticRenderFns = [function () {
     staticClass: "ti-arrow-up text-success"
   })]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("New Registrations\n                                    ")])])])])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("td", {
+  }, [_vm._v("Net Sales\n                                    ")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
       width: "25%",
       padding: "10px"
@@ -22040,11 +22013,7 @@ var staticRenderFns = [function () {
     staticClass: "ti-arrow-up text-success"
   })]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Pending Suppliers Applications")])])])])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("td", {
+  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
       width: "20%",
       padding: "10px"
@@ -22067,15 +22036,30 @@ var staticRenderFns = [function () {
     staticClass: "ti-arrow-up text-success"
   })]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Returns Receivable")])])])])])]);
-}, function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("div", {
+  }, [_vm._v("Active Sellers")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_c("div", {
     staticClass: "card-icon l-bg-cyan"
   }, [_c("i", {
     staticClass: "fas fa-clock"
-  })]);
+  })]), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  })]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("New Registrations\n                                    ")])])])])])])])])])]);
 }];
 render._withStripped = true;
 

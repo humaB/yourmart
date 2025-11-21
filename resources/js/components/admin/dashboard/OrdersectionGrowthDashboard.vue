@@ -89,7 +89,8 @@
                                             <i class="ti-arrow-up text-success"></i>
                                            <!-- {{ pendingRequests.tickets || 0 }} -->
                                         </h3>
-                                        <span class="text-muted">Active Sellers</span>
+                                        <span class="text-muted">Today's Orders
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +108,7 @@
                                             <i class="ti-arrow-up text-success"></i>
                                             <!-- {{ pendingRequests.pendingDropshippers || 0 }} -->
                                         </h3>
-                                        <span class="text-muted">New Registrations
+                                        <span class="text-muted">Net Sales
                                         </span>
                                     </div>
                                 </div>
@@ -126,7 +127,7 @@
                                             <i class="ti-arrow-up text-success"></i>
                                             <!-- {{ pendingRequests.pendingSuppliers || 0 }} -->
                                         </h3>
-                                        <span class="text-muted">Pending Suppliers Applications</span>
+                                        <span class="text-muted">Est. Profit</span>
                                     </div>
                                 </div>
                             </div>
@@ -144,7 +145,7 @@
                                             <i class="ti-arrow-up text-success"></i>
                                             <!-- {{ pendingRequests.pendingReceivable || 0 }} -->
                                         </h3>
-                                        <span class="text-muted">Returns Receivable</span>
+                                        <span class="text-muted">Active Sellers</span>
                                     </div>
                                 </div>
                             </div>
@@ -160,9 +161,10 @@
                                     <div class="text-right">
                                         <h3 class="font-light mb-0">
                                             <i class="ti-arrow-up text-success"></i>
-                                            {{ pendingRequests.pendingPO || 0 }}
+                                            <!-- {{ pendingRequests.pendingPO || 0 }} -->
                                         </h3>
-                                        <span class="text-muted">Pending PO</span>
+                                        <span class="text-muted">New Registrations
+                                        </span>
                                     </div>
                                 </div>
                             </div>
