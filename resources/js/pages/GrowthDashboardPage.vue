@@ -1,6 +1,7 @@
 <template>
     <div>
 
+
             <div class="card-body table-responsive" v-if="loader">
                 <bullet-list-loader :width="250"> </bullet-list-loader>
             </div>
@@ -8,7 +9,7 @@
             <div class="row" v-else>
 
             <OrdersectionGrowthDashboard :dropshipper="pendingPayouts" :pendingRequests="pendingRequests"
-                :allProcessedOrders="allProcessedOrders" />
+                :allProcessedOrders="allProcessedOrders" :todaysData="todaysData"/>
     </div>
 
     <hr class="border border-secondary border-2 opacity-50">
@@ -277,6 +278,7 @@ export default {
                     vm.loader = false;
 
                      // 30 days graphs
+                     vm.todaysData = results.todaysData || {};
         
                     vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
                     vm.dashboardGraphs = results.dashboardGraphs || {};

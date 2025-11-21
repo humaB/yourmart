@@ -9257,7 +9257,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'OrdersectionGrowthDashboard',
-  props: ['dropshipper', 'applications', 'orders', 'pendingRequests'],
+  props: ['dropshipper', 'applications', 'orders', 'todaysData'],
   methods: {
     getApplicationPercentage: function getApplicationPercentage(count, total) {
       if (count === 0) return 0; // Correct check to prevent division by zero
@@ -15493,7 +15493,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         vm.loader = false;
 
         // 30 days graphs
-
+        vm.todaysData = results.todaysData || {};
         vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
         vm.dashboardGraphs = results.dashboardGraphs || {};
         vm.newproducts30daysgraph = results.newproducts30daysgraph;
@@ -21930,11 +21930,6 @@ __webpack_require__.r(__webpack_exports__);
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return _vm._m(0);
-};
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
   return _c("div", {
     staticClass: "row"
   }, [_c("div", {
@@ -21951,11 +21946,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_c("div", {
-    staticClass: "card-icon l-bg-cyan"
-  }, [_c("i", {
-    staticClass: "fa fa-shopping-bag"
-  })]), _vm._v(" "), _c("div", {
+  }, [_vm._m(0), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -21965,7 +21956,7 @@ var staticRenderFns = [function () {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                       " + _vm._s(_vm.todaysData.orders || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Today's Orders\n                                    ")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -21974,11 +21965,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_c("div", {
-    staticClass: "card-icon l-bg-orange"
-  }, [_c("i", {
-    staticClass: "fas fa-clock"
-  })]), _vm._v(" "), _c("div", {
+  }, [_vm._m(1), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -21988,7 +21975,7 @@ var staticRenderFns = [function () {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.sales || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Net Sales\n                                    ")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -21997,11 +21984,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("div", {
     staticClass: "card card-statistic-1"
-  }, [_c("div", {
-    staticClass: "card-icon l-bg-purple"
-  }, [_c("i", {
-    staticClass: "fas fa-shopping-cart"
-  })]), _vm._v(" "), _c("div", {
+  }, [_vm._m(2), _vm._v(" "), _c("div", {
     staticClass: "card-wrap"
   }, [_c("div", {
     staticClass: "padding-20"
@@ -22011,9 +21994,38 @@ var staticRenderFns = [function () {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.profit || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)])])])]);
+};
+var staticRenderFns = [function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-cyan"
+  }, [_c("i", {
+    staticClass: "fa fa-shopping-bag"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-orange"
+  }, [_c("i", {
+    staticClass: "fas fa-clock"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "card-icon l-bg-purple"
+  }, [_c("i", {
+    staticClass: "fas fa-shopping-cart"
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
     staticStyle: {
       width: "20%",
       padding: "10px"
@@ -22036,7 +22048,11 @@ var staticRenderFns = [function () {
     staticClass: "ti-arrow-up text-success"
   })]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Active Sellers")])])])])])]), _vm._v(" "), _c("td", {
+  }, [_vm._v("Active Sellers")])])])])])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("td", {
     staticStyle: {
       width: "20%",
       padding: "10px"
@@ -22059,7 +22075,7 @@ var staticRenderFns = [function () {
     staticClass: "ti-arrow-up text-success"
   })]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("New Registrations\n                                    ")])])])])])])])])])]);
+  }, [_vm._v("New Registrations\n                                    ")])])])])])]);
 }];
 render._withStripped = true;
 
@@ -34750,7 +34766,8 @@ var render = function render() {
     attrs: {
       dropshipper: _vm.pendingPayouts,
       pendingRequests: _vm.pendingRequests,
-      allProcessedOrders: _vm.allProcessedOrders
+      allProcessedOrders: _vm.allProcessedOrders,
+      todaysData: _vm.todaysData
     }
   })], 1), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
