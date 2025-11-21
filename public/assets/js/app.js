@@ -9263,10 +9263,6 @@ __webpack_require__.r(__webpack_exports__);
       if (count === 0) return 0; // Correct check to prevent division by zero
       var percentage = Math.round(count / total * 100);
       return percentage;
-    },
-    formatPrice: function formatPrice(price) {
-      var string = parseFloat(price).toString();
-      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
   }
 });
@@ -15427,26 +15423,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     this.fetchCategoryandTagWiseProducts();
   },
   methods: {
-    fetchCategoryandTagWiseProducts: function fetchCategoryandTagWiseProducts() {
-      var vm = this;
-      axios.get(this.api_url + "users/dashboard/product-wise-count").then(function (response) {
-        var results = response.data.response;
-        vm.categoryWiseProducts = results.categoryWiseProducts, vm.tagWiseProducts = results.tagWiseProducts;
-      });
-    },
-    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
-      var _this = this;
-      axios.get(this.api_url + 'tickets/status-counts').then(function (response) {
-        var data = response.data;
-        _this.totalTicketSum.total_tickets = data.total_tickets;
-        _this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
-        _this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
-        _this.totalTicketSum.closed = data.closed;
-        _this.totalTicketSum.expired = data.expired;
-        _this.totalTicketSum.reviewed = data.reviewed;
-        _this.totalTicketSum.in_process = data.in_process;
-      });
-    },
     fetchDropshipperDetails: function fetchDropshipperDetails(id) {
       var vm = this;
       axios.post(this.api_url + "dropshippers/details", {
@@ -15458,40 +15434,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     fetchData: function fetchData(data) {
       var vm = this;
       vm.loader = true;
-      axios.post(this.api_url + "users/dashboard", data).then(function (response) {
+      axios.post(this.api_url + "growthdashboard/", data).then(function (response) {
         var results = response.data.response;
         vm.approvedDropshipper = results.approvedDropshipper;
-        vm.activeSeller = results.activeSeller;
-        vm.liveProduct = results.liveProduct;
-        vm.orderProcessed = results.orderProcessed;
         vm.pendingPayouts = results.payOuts;
         vm.pendingRequests = results.pendingRequests;
-        vm.allProcessedOrders = results.allProcessedOrders;
-        vm.processOrders = results.orders;
-        vm.topFiveDropshippers = results.topFiveDropshippers;
-        vm.topFiveProduct = results.topFiveSellingProduct;
-        vm.topFiveSuppliers = results.topFiveSuppliers;
-        vm.inventoryStatus = results.inventoryStatus;
-        vm.dropshipperGraph = results.dropshipperGraph;
-        vm.revenueOrderGraph = results.revenueOrderGraph;
-        vm.courierPerformance = results.courierPerformance;
-        var levels = results.levels;
-        vm.levelsWidget = {
-          level1: levels.filter(function (level) {
-            return level.level === 'Level 01';
-          }).length,
-          level2: levels.filter(function (level) {
-            return level.level === 'Level 02';
-          }).length,
-          level3: levels.filter(function (level) {
-            return level.level === 'Level 03';
-          }).length,
-          topRatedSeller: levels.filter(function (level) {
-            return level.level === 'Top Rated Seller';
-          }).length
-        };
-        vm.loader = false;
-
         // 30 days graphs
         vm.todaysData = results.todaysData || {};
         vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;

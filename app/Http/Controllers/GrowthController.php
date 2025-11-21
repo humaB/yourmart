@@ -72,11 +72,9 @@ class GrowthController extends Controller
     public function getTodaysData()
     {
         $today = now()->format('Y-m-d');
-        
-        $orders = Order::whereNotIn('status', ['6', '7'])
-            ->whereDate('created_at', $today)
+            $orders = Order::whereNotIn('status', ['6', '7'])
+            ->whereDate('created_at', $currentDate)
             ->get();
-    
         $returns = StoreReturnDetail::whereDate('created_at', $today)->count();
         $profit = $this->calculateDailyOrderIssuanceProfit($today);
     
@@ -104,82 +102,6 @@ class GrowthController extends Controller
         ];
     }
 
-    private function pendingRequests($request)
-    {
-        $from = $request->from;
-        $to = $request->to;
-
-        $tickets = Ticket::where('status', '!=', 'Closed')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
-
-        $pendingDropshippers = DropShipper::where('status', '0')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
-
-        $pendingSuppliers = Supplier::where('status', '0')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
-
-        $pendingReceivable = Order::where('status', '9')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
-
-
-        $pendingPO = PurchaseOrder::where('status', '0')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
-
-        $supplier = [
-            'total'    => Supplier::count(),
-            'approved' => Supplier::where('status', '1')->count(),
-            'reject' => Supplier::where('status', '2')->count(),
-            'pending'  => Supplier::where('status', '0')->count(),
-        ];
-
-
-        $dropshipper = [
-            'total'    => DropShipper::count(),
-            'approved' => DropShipper::where('status', '1')->count(),
-            'reject' => DropShipper::where('status', '2')->count(),
-            'pending'  => DropShipper::where('status', '0')->count(),
-        ];
-
-        return  [
-            'tickets'             => $tickets,
-            'pendingDropshippers' => $pendingDropshippers,
-            'pendingSuppliers'    => $pendingSuppliers,
-            'pendingReceivable'   => $pendingReceivable,
-            'pendingPO'           => $pendingPO,
-            'supplier'           => $supplier,
-            'dropshippers'        => $dropshipper
-        ];
-    }
 
     private function getApprovedDropshippers($request)
     {

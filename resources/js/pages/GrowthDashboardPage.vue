@@ -214,29 +214,6 @@ export default {
         this.fetchCategoryandTagWiseProducts();
     },
     methods: {
-        fetchCategoryandTagWiseProducts(){
-            let vm = this;
-                axios
-                .get(this.api_url + "users/dashboard/product-wise-count")
-                .then((response) => {
-
-                    const results = response.data.response;
-                    vm.categoryWiseProducts  = results.categoryWiseProducts,
-                    vm.tagWiseProducts       = results.tagWiseProducts
-                })
-        },
-        fetchTicketStatusCounts() {
-            axios.get(this.api_url + 'tickets/status-counts').then((response) => {
-                const data = response.data;
-                this.totalTicketSum.total_tickets = data.total_tickets;
-                this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
-                this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
-                this.totalTicketSum.closed = data.closed;
-                this.totalTicketSum.expired = data.expired;
-                this.totalTicketSum.reviewed = data.reviewed;
-                this.totalTicketSum.in_process = data.in_process;
-            });
-        },
         fetchDropshipperDetails(id) {
             let vm = this;
             axios
@@ -250,33 +227,12 @@ export default {
             let vm = this;
             vm.loader = true;
             axios
-                .post(this.api_url + "users/dashboard", data)
+                .post(this.api_url + "growthdashboard/", data)
                 .then((response) => {
                     const results = response.data.response;
                     vm.approvedDropshipper = results.approvedDropshipper;
-                    vm.activeSeller = results.activeSeller;
-                    vm.liveProduct = results.liveProduct;
-                    vm.orderProcessed = results.orderProcessed;
                     vm.pendingPayouts = results.payOuts;
                     vm.pendingRequests = results.pendingRequests;
-                    vm.allProcessedOrders = results.allProcessedOrders;
-                    vm.processOrders = results.orders;
-                    vm.topFiveDropshippers = results.topFiveDropshippers;
-                    vm.topFiveProduct = results.topFiveSellingProduct;
-                    vm.topFiveSuppliers = results.topFiveSuppliers;
-                    vm.inventoryStatus = results.inventoryStatus;
-                    vm.dropshipperGraph = results.dropshipperGraph;
-                    vm.revenueOrderGraph = results.revenueOrderGraph;
-                    vm.courierPerformance = results.courierPerformance;
-                    const levels = results.levels
-                    vm.levelsWidget = {
-                        level1: levels.filter(level => level.level === 'Level 01').length,
-                        level2: levels.filter(level => level.level === 'Level 02').length,
-                        level3: levels.filter(level => level.level === 'Level 03').length,
-                        topRatedSeller: levels.filter(level => level.level === 'Top Rated Seller').length
-                    };
-                    vm.loader = false;
-
                      // 30 days graphs
                      vm.todaysData = results.todaysData || {};
         
