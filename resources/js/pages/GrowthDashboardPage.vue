@@ -1,27 +1,5 @@
 <template>
     <div>
-        <div class="row">
-            <div class="col-md-12">
-
-                <form @submit.prevent="applyFilter" class="row col-md-12 mb-3">
-
-                    <div class="col-md-4">
-                        <label for="">From</label>
-                        <input type="date" v-model="filter.from" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="">To</label>
-                        <input type="date" v-model="filter.to" class="form-control">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="">Action</label><br>
-                        <button class="btn btn-primary mr-2" @click="applyFilter">Filter</button>
-                        <button class="btn btn-danger" @click="resetFilter">Reset</button>
-                    </div>
-                </form>
-            </div>
-            </div>
-
 
             <div class="card-body table-responsive" v-if="loader">
                 <bullet-list-loader :width="250"> </bullet-list-loader>
