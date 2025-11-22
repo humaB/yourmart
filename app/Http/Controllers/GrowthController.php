@@ -6,10 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
-use App\Models\Inventory\Store\StoreReturnDetail;
 use App\Models\User\DropShipper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\User\GraphController;
+use App\Models\Inventory\Store\StoreIssuance;
+use App\Models\Inventory\Store\StoreIssuanceDetail;
+use App\Models\Inventory\Store\StoreReceivedDetail;
+use App\Models\Inventory\Store\StoreReturn;
+use App\Models\Inventory\Store\StoreReturnDetail;
+use Illuminate\Support\Facades\DB;
 
 class GrowthController extends Controller
 {
@@ -61,44 +66,96 @@ class GrowthController extends Controller
             'todaysRegistrations' => $todaysRegistrations
         ];
     }
-
     private function calculateDailyOrderIssuanceProfit($date)
     {
-        try {
-            // Get orders for the specific date
-            $orders = Order::whereNotIn('status', ['6', '7'])
-                ->whereDate('created_at', $date)
-                ->get();
-
-            if ($orders->isEmpty()) {
-                return 0;
-            }
-
-            $totalProfit = 0;
-
-            foreach ($orders as $order) {
-                // Get order items
-                $orderItems = OrderItem::where('order_id', $order->id)->get();
-                
-                $productCost = 0;
-                $sellingPrice = 0;
-
-                foreach ($orderItems as $item) {
-                    $avgPrice = $item->variation->avg_price ?? 0;
-                    $productCost += $item->quantity * $avgPrice;
-                    $sellingPrice += $item->quantity * $item->price;
+        $orders = StoreIssuance::whereDate('created_at', $date)
+            ->where('order_id', '!=', '0')
+            ->pluck('id');
+    
+        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+            ->whereIn('sin_id', $orders)
+            ->get()->groupBy('product_id');
+    
+        $totalProfit = 0;
+    
+        foreach ($issues as $singleProductGroup) {
+            $quantity = $singleProductGroup->sum('quantity');
+    
+            // Calculate Avg Purchase Price
+            $rate = StoreReceivedDetail::where('created_at', '<=', $date)
+                ->where('product_id', $singleProductGroup[0]->product_id)
+                ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+                ->first();
+    
+            $purchaseRate = $rate->rate ?? 0;
+    
+            // Calculate Avg Issuance Price
+            $issancePrice = $singleProductGroup->sum('total');
+            $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
+    
+            // Get Return quantity
+            $returnQuantity = 0;
+            foreach ($singleProductGroup as $order) {
+                $orderNo = $order->sin->order_id;
+                $productId = $order->product_id;
+    
+                $returned = StoreReturn::where('order_id', $orderNo)->first();
+                if ($returned) {
+                    $returnRecord = StoreReturnDetail::where('product_id', $productId)
+                        ->where('srn_id', $returned->id)
+                        ->first();
+                    $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
                 }
-
-                // Calculate profit for this order
-                $orderProfit = $sellingPrice - $productCost;
-                $totalProfit += $orderProfit;
             }
-
-            return $totalProfit;
-
-        } catch (\Exception $e) {
-            \Log::error('Profit Calculation Error: ' . $e->getMessage());
-            return 0;
+    
+            // Calculate profit
+            $netQuantity = $quantity - $returnQuantity;
+            $netSale = $avgIssuancePrice * $netQuantity;
+            $netPurchase = $netQuantity * $purchaseRate;
+            $profit = $netSale - $netPurchase;
+    
+            $totalProfit += $profit;
         }
+    
+        return $totalProfit;
     }
+    // private function calculateDailyOrderIssuanceProfit($date)
+    // {
+    //     try {
+    //         // Get orders for the specific date
+    //         $orders = Order::whereNotIn('status', ['6', '7'])
+    //             ->whereDate('created_at', $date)
+    //             ->get();
+
+    //         if ($orders->isEmpty()) {
+    //             return 0;
+    //         }
+
+    //         $totalProfit = 0;
+
+    //         foreach ($orders as $order) {
+    //             // Get order items
+    //             $orderItems = OrderItem::where('order_id', $order->id)->get();
+                
+    //             $productCost = 0;
+    //             $sellingPrice = 0;
+
+    //             foreach ($orderItems as $item) {
+    //                 $avgPrice = $item->variation->avg_price ?? 0;
+    //                 $productCost += $item->quantity * $avgPrice;
+    //                 $sellingPrice += $item->quantity * $item->price;
+    //             }
+
+    //             // Calculate profit for this order
+    //             $orderProfit = $sellingPrice - $productCost;
+    //             $totalProfit += $orderProfit;
+    //         }
+
+    //         return $totalProfit;
+
+    //     } catch (\Exception $e) {
+    //         \Log::error('Profit Calculation Error: ' . $e->getMessage());
+    //         return 0;
+    //     }
+    // }
 }

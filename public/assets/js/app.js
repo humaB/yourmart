@@ -9263,10 +9263,6 @@ __webpack_require__.r(__webpack_exports__);
       if (count === 0) return 0; // Correct check to prevent division by zero
       var percentage = Math.round(count / total * 100);
       return percentage;
-    },
-    formatPrice: function formatPrice(price) {
-      var string = parseFloat(price).toString();
-      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
   }
 });
