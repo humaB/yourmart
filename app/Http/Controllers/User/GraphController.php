@@ -155,8 +155,6 @@ class GraphController extends Controller
         return $this->getSampleData();
     }
 }
-
-// NEW METHOD: Same calculation as your Vue component
 private function calculateDailyOrderIssuanceProfit($date)
 {
     $orders = StoreIssuance::whereDate('created_at', $date)

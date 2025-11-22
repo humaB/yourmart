@@ -6,26 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
 use App\Models\Inventory\Order\OrderItem;
-use App\Models\Inventory\Product\Category;
-use App\Models\Inventory\Product\Tag;
-use App\Models\Inventory\Product\Variation\Product;
-use App\Models\Inventory\Product\Variation\ProductVariation;
-use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
-use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReturnDetail;
-use App\Models\Ticket;
-use App\Models\User;
 use App\Models\User\DropShipper;
-use App\Models\User\DropShipperLevel;
-use App\Models\User\DropShipperShop;
-use App\Models\User\Supplier;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\User\GraphController;
 
 class GrowthController extends Controller
 {
-
     public function index()
     {
         return view('growthdashboard');
@@ -33,37 +20,20 @@ class GrowthController extends Controller
 
     public function fetchData(Request $request)
     {
-        $orders = Order::when($request->from, function ($q) use ($request) {
-            $q->whereDate('created_at', '>=', $request->from);
-        })
-        ->when($request->to, function ($q) use ($request) {
-            $q->whereDate('created_at', '<=', $request->to);
-        })->get();
-    
-        $pendingPayouts     = $this->pendingPayouts();
-        $pendingRequests    = $this->pendingRequests($request);
-        $allProcessedOrders = $this->allProcessedOrder($orders, $request);
-        $todaysData = $this->getTodaysData(); // Today's numbers
-    
-        $courierPerformance  = $this->courierPerformance();
-        $levels = DropShipperLevel::where('level', '!=', 'New Seller')->get();
-    
+        // Get today's data
+        $todaysData = $this->getTodaysData();
+
+        // Get graph data from GraphController
+        $graphController = new GraphController();
+        $dashboardGraphs = $graphController->getDashboardGraphs();
+        $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+
         $data = [
-            'orders'  => [
-                'totalOrder'    => $orders->count(),
-                'inProcess'     => $orders->where('type', 'Normal')->whereNotIn('status', [6, 7, 8, 9, 10])->count(),
-                'delivered'     => $orders->where('status', '8')->count(),
-                'returns'       => $orders->whereIn('status', [9, 10])->count(),
-                'returnAmount'  => $orders->whereIn('status', [9, 10])->sum('total_bill'),
-            ],
-            'payOuts'            => $pendingPayouts,
-            'pendingRequests'    => $pendingRequests,
-            'todaysData'         => $todaysData, // Add today's data here
-            'allProcessedOrders' => $allProcessedOrders,
-            'courierPerformance' => $courierPerformance,
-            'levels'             => $levels,
+            'todaysData' => $todaysData,
+            'dashboardGraphs' => $dashboardGraphs,
+            'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
         ];
-    
+
         return (new ResponseCollection($data))
             ->response()
             ->setStatusCode(200);
@@ -76,149 +46,59 @@ class GrowthController extends Controller
         $orders = Order::whereNotIn('status', ['6', '7'])
             ->whereDate('created_at', $today)
             ->get();
-    
+
         $returns = StoreReturnDetail::whereDate('created_at', $today)->count();
         $profit = $this->calculateDailyOrderIssuanceProfit($today);
-    
+        $todaysRegistrations = DropShipper::where('status', '1')
+        ->whereDate('created_at', $today)
+        ->count();
+
         return [
             'orders' => $orders->count(),
-            'sales' => $orders->sum('total_bill'), // Same as orders count
+            'sales' => $orders->sum('total_bill'),
             'profit' => $profit,
-            'returns' => $returns
-        ];
-    }
-    private function pendingPayouts()
-    {
-        $dropshipper = DropShipper::with('general_ledger.dropshipper_shop_ledger.dropshipper_last_paid_voucher')->whereColumn('total_payable', '!=', 'total_paid')->get();
-
-        $totalPayable = DropShipper::sum('total_payable');
-        $totalPayablePaid = DropShipper::sum('total_paid');
-        $totalRemaining   = DropShipper::sum('remaining_amount');
-        $remainingDropshippers = $dropshipper->count();
-
-        return  [
-            'total_payable' => $totalPayable,
-            'total_paid' => $totalPayablePaid,
-            'total_remaining' => $totalRemaining,
-            'remaining_dropshippers' => $remainingDropshippers,
+            'returns' => $returns,
+            'todaysRegistrations' => $todaysRegistrations
         ];
     }
 
-    private function pendingRequests($request)
+    private function calculateDailyOrderIssuanceProfit($date)
     {
-        $from = $request->from;
-        $to = $request->to;
+        try {
+            // Get orders for the specific date
+            $orders = Order::whereNotIn('status', ['6', '7'])
+                ->whereDate('created_at', $date)
+                ->get();
 
-        $tickets = Ticket::where('status', '!=', 'Closed')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
+            if ($orders->isEmpty()) {
+                return 0;
+            }
 
-        $pendingDropshippers = DropShipper::where('status', '0')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
+            $totalProfit = 0;
 
-        $pendingSuppliers = Supplier::where('status', '0')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
+            foreach ($orders as $order) {
+                // Get order items
+                $orderItems = OrderItem::where('order_id', $order->id)->get();
+                
+                $productCost = 0;
+                $sellingPrice = 0;
 
-        $pendingReceivable = Order::where('status', '9')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
+                foreach ($orderItems as $item) {
+                    $avgPrice = $item->variation->avg_price ?? 0;
+                    $productCost += $item->quantity * $avgPrice;
+                    $sellingPrice += $item->quantity * $item->price;
+                }
 
+                // Calculate profit for this order
+                $orderProfit = $sellingPrice - $productCost;
+                $totalProfit += $orderProfit;
+            }
 
-        $pendingPO = PurchaseOrder::where('status', '0')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
+            return $totalProfit;
 
-        $supplier = [
-            'total'    => Supplier::count(),
-            'approved' => Supplier::where('status', '1')->count(),
-            'reject' => Supplier::where('status', '2')->count(),
-            'pending'  => Supplier::where('status', '0')->count(),
-        ];
-
-
-        $dropshipper = [
-            'total'    => DropShipper::count(),
-            'approved' => DropShipper::where('status', '1')->count(),
-            'reject' => DropShipper::where('status', '2')->count(),
-            'pending'  => DropShipper::where('status', '0')->count(),
-        ];
-
-        return  [
-            'tickets'             => $tickets,
-            'pendingDropshippers' => $pendingDropshippers,
-            'pendingSuppliers'    => $pendingSuppliers,
-            'pendingReceivable'   => $pendingReceivable,
-            'pendingPO'           => $pendingPO,
-            'supplier'           => $supplier,
-            'dropshippers'        => $dropshipper
-        ];
-    }
-
-    private function getApprovedDropshippers($request)
-    {
-        $from = $request->from;
-        $to = $request->to;
-
-        $currentCount = DropShipper::where('status', '1')
-            ->when($from, function ($q) use ($from) {
-                $q->whereDate('created_at', '>=', $from);
-            })
-            ->when($to, function ($q) use ($to) {
-                $q->whereDate('created_at', '<=', $to);
-            })
-            ->count();
-
-        // Calculate previous time range
-        $previousFrom = Carbon::parse($from)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
-        $previousTo = Carbon::parse($to)->subDays(Carbon::parse($from)->diffInDays($to))->toDateString();
-
-        $previousCount = DropShipper::where('status', '1')
-            ->whereDate('created_at', '>=', $previousFrom)
-            ->whereDate('created_at', '<=', $previousTo)
-            ->count();
-
-        // Calculate difference and percentage
-        $difference = $currentCount - $previousCount;
-        $percentageChange = $previousCount > 0 ? ($difference / $previousCount) * 100 : null;
-
-        // Determine increase or decrease
-        $trend = $difference > 0 ? 'increase' : ($difference < 0 ? 'decrease' : 'no change');
-
-        return [
-            'current_count' => $currentCount,
-            'previous_count' => $previousCount,
-            'difference' => $difference,
-            'percentage_change' => $percentageChange !== null ? round($percentageChange, 2) . '%' : 'N/A',
-            'trend' => $trend,
-        ];
+        } catch (\Exception $e) {
+            \Log::error('Profit Calculation Error: ' . $e->getMessage());
+            return 0;
+        }
     }
 }
-
-

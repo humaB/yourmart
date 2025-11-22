@@ -15281,38 +15281,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _components_admin_dashboard_CourierStatsGraph_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/admin/dashboard/CourierStatsGraph.vue */ "./resources/js/components/admin/dashboard/CourierStatsGraph.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardDropshipperGraph.vue */ "./resources/js/components/admin/dashboard/DashboardDropshipperGraph.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardRevenueOrderChart.vue */ "./resources/js/components/admin/dashboard/DashboardRevenueOrderChart.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionFour.vue */ "./resources/js/components/admin/dashboard/DashboardSectionFour.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionOne.vue */ "./resources/js/components/admin/dashboard/DashboardSectionOne.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardSectionThree.vue */ "./resources/js/components/admin/dashboard/DashboardSectionThree.vue");
-/* harmony import */ var _components_admin_dashboard_OrdersectionGrowthDashboard_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/admin/dashboard/OrdersectionGrowthDashboard.vue */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveDropshipper.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveDropshipper.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveProduct.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveProduct.vue");
-/* harmony import */ var _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../components/admin/dashboard/DashboardTopFiveSupplier.vue */ "./resources/js/components/admin/dashboard/DashboardTopFiveSupplier.vue");
-/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
-/* harmony import */ var _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../components/graphs/DropshipperApprovedGraph.vue */ "./resources/js/components/graphs/DropshipperApprovedGraph.vue");
-/* harmony import */ var _components_graphs_NewProducts30DaysGraph_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../components/graphs/NewProducts30DaysGraph.vue */ "./resources/js/components/graphs/NewProducts30DaysGraph.vue");
-/* harmony import */ var _components_graphs_GenericBarChart_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../components/graphs/GenericBarChart.vue */ "./resources/js/components/graphs/GenericBarChart.vue");
-/* harmony import */ var _components_graphs_TicketTypesGraph_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../components/graphs/TicketTypesGraph.vue */ "./resources/js/components/graphs/TicketTypesGraph.vue");
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-
-
-
-
-
-
-
-
-
-
-
-
+/* harmony import */ var _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/graphs/DropshipperApprovedGraph.vue */ "./resources/js/components/graphs/DropshipperApprovedGraph.vue");
+/* harmony import */ var _components_graphs_GenericBarChart_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/graphs/GenericBarChart.vue */ "./resources/js/components/graphs/GenericBarChart.vue");
+/* harmony import */ var _components_admin_dashboard_OrdersectionGrowthDashboard_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/admin/dashboard/OrdersectionGrowthDashboard.vue */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 
 
 
@@ -15320,242 +15292,41 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DashboardPage',
   components: {
-    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
-    DashboardSectionOne: _components_admin_dashboard_DashboardSectionOne_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    OrdersectionGrowthDashboard: _components_admin_dashboard_OrdersectionGrowthDashboard_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-    DashboardSectionThree: _components_admin_dashboard_DashboardSectionThree_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    DashboardTopFiveDropshipper: _components_admin_dashboard_DashboardTopFiveDropshipper_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-    DashboardTopFiveProduct: _components_admin_dashboard_DashboardTopFiveProduct_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-    DashboardTopFiveSupplier: _components_admin_dashboard_DashboardTopFiveSupplier_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-    DashboardSectionFour: _components_admin_dashboard_DashboardSectionFour_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
-    DashboardDropshipperGraph: _components_admin_dashboard_DashboardDropshipperGraph_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    DashboardRevenueOrderChart: _components_admin_dashboard_DashboardRevenueOrderChart_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    // 30 days graphs
-    DropshipperApprovedGraph: _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-    NewProducts30DaysGraph: _components_graphs_NewProducts30DaysGraph_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
-    GenericBarChart: _components_graphs_GenericBarChart_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
-    TicketTypesGraph: _components_graphs_TicketTypesGraph_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
-    // 30 days graphs
-    CourierStatsGraph: _components_admin_dashboard_CourierStatsGraph_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_15__.BulletListLoader
+    OrdersectionGrowthDashboard: _components_admin_dashboard_OrdersectionGrowthDashboard_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    DropshipperApprovedGraph: _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    GenericBarChart: _components_graphs_GenericBarChart_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_3__.BulletListLoader
   },
   data: function data() {
-    var _ref;
-    return _ref = {
+    return {
       api_url: "/api/",
-      public_url: window.location.origin + "",
-      filter: {
-        dropshipper: 0,
-        shop: 0,
-        from: new Date().toISOString().substr(0, 10),
-        to: new Date().toISOString().substr(0, 10)
-      },
       loader: true,
-      topTenProducts: [],
-      dropshipper: {},
-      topDropshippers: [],
-      totalOrders: 0,
-      totalTicketSum: {
-        total_tickets: 0,
-        awaiting_your_reply: 0,
-        awaiting_yourmart_reply: 0,
-        closed: 0,
-        expired: 0,
-        reviewed: 0,
-        in_process: 0
-      },
-      dropShipperDetails: {},
-      po: {
-        totalPo: 0,
-        approved: 0,
-        pending: 0,
-        rejected: 0,
-        totalAmount: 0,
-        remaining: 0,
-        paid: 0
-      },
-      orders: {
-        totalOrder: 0,
-        inProcess: 0,
-        outOfDelivery: 0,
-        delivered: 0,
-        returns: 0,
-        normalOrders: 0,
-        darazOrders: 0,
-        cashOrders: 0,
-        grossSales: 0,
-        itemSolds: 0,
-        productCost: 0,
-        packing: 0,
-        packingProfit: 0,
-        courier: 0,
-        courierProfit: 0,
-        costOfGood: 0,
-        grossProfit: 0
-      }
-    }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "dropshipper", {
-      total: 0,
-      paid: 0,
-      remaining: 0,
-      total_sellers: 0
-    }), "inventoryStatus", {}), "categoryWiseProducts", []), "tagWiseProducts", []), "fastMovingProducts", []), "slowMovingProducts", []), "lowStock", []), "highStock", []), "approvedDropshipper", {}), "activeSeller", {}), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "liveProduct", {}), "orderProcessed", {}), "pendingPayouts", {}), "pendingRequests", {
-      dropshippers: {
-        total: 0,
-        pending: 0,
-        approved: 0,
-        reject: 0
-      },
-      supplier: {
-        total: 0,
-        pending: 0,
-        approved: 0,
-        reject: 0
-      }
-    }), "allProcessedOrders", {}), "processOrders", {}), "topFiveDropshippers", []), "topFiveProduct", []), "topFiveSuppliers", []), "dropshipperGraphLast120Days", {}), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "newproducts30daysgraph", {}), "dashboardGraphs", {}), "ticketTypesGraphData", {}), "dropshipperGraph", {}), "revenueOrderGraph", {}), "levelsWidget", {
-      level1: 0,
-      level2: 0,
-      level3: 0,
-      topRatedSeller: 0
-    }), "courierPerformance", []);
+      todaysData: {},
+      dashboardGraphs: {},
+      dropshipperGraphLast120Days: {}
+    };
   },
   created: function created() {
     this.fetchData({
       from: null,
       to: null
     });
-    this.fetchTicketStatusCounts();
-    this.fetchCategoryandTagWiseProducts();
   },
   methods: {
-    fetchCategoryandTagWiseProducts: function fetchCategoryandTagWiseProducts() {
-      var vm = this;
-      axios.get(this.api_url + "users/dashboard/product-wise-count").then(function (response) {
-        var results = response.data.response;
-        vm.categoryWiseProducts = results.categoryWiseProducts, vm.tagWiseProducts = results.tagWiseProducts;
-      });
-    },
-    fetchTicketStatusCounts: function fetchTicketStatusCounts() {
-      var _this = this;
-      axios.get(this.api_url + 'tickets/status-counts').then(function (response) {
-        var data = response.data;
-        _this.totalTicketSum.total_tickets = data.total_tickets;
-        _this.totalTicketSum.awaiting_your_reply = data.awaiting_your_reply;
-        _this.totalTicketSum.awaiting_yourmart_reply = data.awaiting_yourmart_reply;
-        _this.totalTicketSum.closed = data.closed;
-        _this.totalTicketSum.expired = data.expired;
-        _this.totalTicketSum.reviewed = data.reviewed;
-        _this.totalTicketSum.in_process = data.in_process;
-      });
-    },
-    fetchDropshipperDetails: function fetchDropshipperDetails(id) {
-      var vm = this;
-      axios.post(this.api_url + "dropshippers/details", {
-        id: id
-      }).then(function (response) {
-        vm.dropShipperDetails = response.data.response[0];
-      });
-    },
     fetchData: function fetchData(data) {
       var vm = this;
       vm.loader = true;
-      axios.post(this.api_url + "users/dashboard", data).then(function (response) {
+      axios.post(this.api_url + "growthdashboard", data).then(function (response) {
         var results = response.data.response;
-        vm.approvedDropshipper = results.approvedDropshipper;
-        vm.activeSeller = results.activeSeller;
-        vm.liveProduct = results.liveProduct;
-        vm.orderProcessed = results.orderProcessed;
-        vm.pendingPayouts = results.payOuts;
-        vm.pendingRequests = results.pendingRequests;
-        vm.allProcessedOrders = results.allProcessedOrders;
-        vm.processOrders = results.orders;
-        vm.topFiveDropshippers = results.topFiveDropshippers;
-        vm.topFiveProduct = results.topFiveSellingProduct;
-        vm.topFiveSuppliers = results.topFiveSuppliers;
-        vm.inventoryStatus = results.inventoryStatus;
-        vm.dropshipperGraph = results.dropshipperGraph;
-        vm.revenueOrderGraph = results.revenueOrderGraph;
-        vm.courierPerformance = results.courierPerformance;
-        var levels = results.levels;
-        vm.levelsWidget = {
-          level1: levels.filter(function (level) {
-            return level.level === 'Level 01';
-          }).length,
-          level2: levels.filter(function (level) {
-            return level.level === 'Level 02';
-          }).length,
-          level3: levels.filter(function (level) {
-            return level.level === 'Level 03';
-          }).length,
-          topRatedSeller: levels.filter(function (level) {
-            return level.level === 'Top Rated Seller';
-          }).length
-        };
-        vm.loader = false;
 
-        // 30 days graphs
+        // Set the data
         vm.todaysData = results.todaysData || {};
-        vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
         vm.dashboardGraphs = results.dashboardGraphs || {};
-        vm.newproducts30daysgraph = results.newproducts30daysgraph;
-        vm.ticketTypesGraphData = results.ticketTypesGraphData;
-
-        // 30 days graphs
-
-        vm.renderChart();
-      });
-    },
-    applyFilter: function applyFilter() {
-      this.fetchData(this.filter);
-      this.clearDatatable();
-    },
-    resetFilter: function resetFilter() {
-      this.fetchData({
-        from: null,
-        to: null
-      });
-    },
-    formatPrice: function formatPrice(price) {
-      var string = parseFloat(price).toString();
-      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-    },
-    getPercentage: function getPercentage(statusCount) {
-      if (this.totalTicketSum.total_tickets === 0) return 0;
-      return Math.round(statusCount / this.totalTicketSum.total_tickets * 100);
-    },
-    renderChart: function renderChart() {
-      var ctx = document.getElementById("myChart20").getContext('2d');
-      this.chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: this.courierPerformance.labels,
-          datasets: this.courierPerformance.datasets
-        },
-        options: {
-          legend: {
-            display: true
-          },
-          scales: {
-            yAxes: [{
-              gridLines: {
-                drawBorder: false,
-                color: '#f2f2f2'
-              },
-              ticks: {
-                beginAtZero: true,
-                stepSize: 10,
-                fontColor: "#9aa0ac" // Font Color
-              }
-            }],
-            xAxes: [{
-              gridLines: {
-                display: false
-              },
-              ticks: {
-                fontColor: "#9aa0ac" // Font Color
-              }
-            }]
-          }
-        }
+        vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
+        vm.loader = false;
+      })["catch"](function (error) {
+        console.error('API Error:', error);
+        vm.loader = false;
       });
     }
   }
@@ -21996,7 +21767,26 @@ var render = function render() {
     staticClass: "ti-arrow-up text-success"
   }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.profit || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)])])])]);
+  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(4), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.todaysRegistrations || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("New Registrations\n                                    ")])])])])])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -22052,30 +21842,11 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("td", {
-    staticStyle: {
-      width: "20%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_c("div", {
+  return _c("div", {
     staticClass: "card-icon l-bg-cyan"
   }, [_c("i", {
     staticClass: "fas fa-clock"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("New Registrations\n                                    ")])])])])])]);
+  })]);
 }];
 render._withStripped = true;
 
@@ -34764,9 +34535,6 @@ var render = function render() {
     staticClass: "row"
   }, [_c("OrdersectionGrowthDashboard", {
     attrs: {
-      dropshipper: _vm.pendingPayouts,
-      pendingRequests: _vm.pendingRequests,
-      allProcessedOrders: _vm.allProcessedOrders,
       todaysData: _vm.todaysData
     }
   })], 1), _vm._v(" "), _c("hr", {
@@ -34775,7 +34543,7 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_c("h2", [_vm._v(" Orders ")]), _vm._v(" "), _c("GenericBarChart", {
+  }, [_c("h2", [_vm._v("Orders")]), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "orders",
@@ -34783,7 +34551,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("h2", [_vm._v(" Sales ")]), _vm._v(" "), _c("GenericBarChart", {
+  }), _vm._v(" "), _c("h2", [_vm._v("Sales")]), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "sales",
@@ -34792,7 +34560,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("h2", [_vm._v(" Profit ")]), _vm._v(" "), _c("GenericBarChart", {
+  }), _vm._v(" "), _c("h2", [_vm._v("Profit")]), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "profit",
@@ -34801,7 +34569,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("h2", [_vm._v(" Registrations ")]), _vm._v(" "), _c("DropshipperApprovedGraph", {
+  }), _vm._v(" "), _c("h2", [_vm._v("Registrations")]), _vm._v(" "), _c("DropshipperApprovedGraph", {
     attrs: {
       dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
     }
