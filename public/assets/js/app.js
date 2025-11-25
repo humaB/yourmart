@@ -1134,13 +1134,16 @@ __webpack_require__.r(__webpack_exports__);
         if (!grouped[documentId]) {
           grouped[documentId] = {
             document_id: documentId,
-            posting_id: posting_id,
             total_debit: 0,
             attachment: attachment,
+            po: [],
             created_at: payment.created_at
           };
         }
         grouped[documentId].total_debit += parseFloat(payment.debit);
+        grouped[documentId].po.push({
+          number: posting_id
+        });
       });
       return Object.values(grouped);
     }
@@ -15228,7 +15231,11 @@ var render = function render() {
   }, [_vm._m(1), _vm._v(" "), _c("tbody", _vm._l(_vm.groupedData, function (group, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.document_id))]), _vm._v(" "), _c("td", [_vm._v("\n                                    PO-" + _vm._s(group.posting_id) + "\n                                ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.total_debit.toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(group.created_at)))]), _vm._v(" "), group.attachment ? _c("td", [_c("a", {
+    }, [_c("td", [_vm._v(_vm._s(index + 1))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.document_id))]), _vm._v(" "), _c("td", _vm._l(group.po, function (shopOrder, shopIndex) {
+      return _c("span", {
+        key: shopIndex
+      }, [_vm._v("\n                                        PO-" + _vm._s(shopOrder.number) + "\n                                        "), shopIndex < group.po.length - 1 ? _c("br") : _vm._e()]);
+    }), 0), _vm._v(" "), _c("td", [_vm._v(_vm._s(group.total_debit.toFixed(2)))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(group.created_at)))]), _vm._v(" "), group.attachment ? _c("td", [_c("a", {
       attrs: {
         target: "_blank",
         href: "".concat(_vm.public_url, "/public/storage/uploads/dropshipper/payments/").concat(group.attachment)
@@ -29301,7 +29308,9 @@ var render = function render() {
       selectedSupplier: _vm.selectedSupplier
     },
     on: {
-      add: _vm.addPayment
+      add: function add($event) {
+        return _vm.addPayment($event);
+      }
     }
   }), _vm._v(" "), _c("SupplierPaymentHistory", {
     attrs: {

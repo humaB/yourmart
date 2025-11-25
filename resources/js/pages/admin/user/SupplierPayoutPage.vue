@@ -412,7 +412,7 @@
         </form>
 
         <SupplierPayment :orders="orders" :addData="addData" :loader="btnLoader" :details="details"
-            :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment" :selectedSupplier="selectedSupplier"/>
+            :accountCash="accountCash" :accountBanks="accountBanks" @add="addPayment($event)" :selectedSupplier="selectedSupplier"/>
 
         <SupplierPaymentHistory :selectedSupplier="selectedSupplier" :history="paymentHistorys" />
     </div>
