@@ -48,7 +48,7 @@ class GrowthController extends Controller
     {
         //   $from = $request->from;
         // $to = $request->to;
-        $today = now()->format('Y-m-d');
+        $today = now()->subDay()->format('Y-m-d');
         
         $orders = Order::whereNotIn('status', ['6', '7'])
             ->whereDate('created_at', $today)
