@@ -14375,14 +14375,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'SuspectedDuplicateDropshippers',
   props: ['data', 'loader'],
   components: {
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_2__.BulletListLoader,
+    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -14390,6 +14393,10 @@ __webpack_require__.r(__webpack_exports__);
       api_url: window.location.origin + "/api/",
       dataTable: null,
       tableData: [],
+      details: {},
+      // Add this for modal data
+      btnLoader: false,
+      // Add this for modal loader
       expandedGroups: new Set() // Track expanded groups
     };
   },
@@ -14497,6 +14504,8 @@ __webpack_require__.r(__webpack_exports__);
             return data + 1;
           }
         }, {
+          data: 'id'
+        }, {
           data: 'full_name'
         }, {
           data: 'email'
@@ -14517,7 +14526,7 @@ __webpack_require__.r(__webpack_exports__);
           data: null,
           orderable: false,
           render: function render(data, type, row) {
-            return "\n                                <span class=\"badge badge-primary mr-2\">".concat(row.duplicateCount, " duplicates</span>\n                                <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this4.public_url, "/dropshippers/preview?id=").concat(row.id, "&contact=").concat(row.whatsapp_number, "\" target=\"_blank\">\n                                    <i class=\"fa fa-eye\"></i> View\n                                </a>\n                            ");
+            return "\n                            <button class=\"btn btn-primary btn-sm preview-btn\" data-dropshipper-id=\"".concat(row.id, "\" title=\"Preview Details\">\n                <i class=\"fa fa-eye\"></i> Preview\n            </button>\n                                <span class=\"badge badge-primary mr-2\">").concat(row.duplicateCount, " duplicates</span>\n                                <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this4.public_url, "/dropshippers/preview?id=").concat(row.id, "&contact=").concat(row.whatsapp_number, "\" target=\"_blank\">\n                                    <i class=\"fa fa-eye\"></i> View\n                                </a>\n                            ");
           }
         }],
         order: [[1, 'asc']],
@@ -14556,6 +14565,11 @@ __webpack_require__.r(__webpack_exports__);
         var row = _this5.dataTable.row(tr);
         _this5.toggleGroup(row, groupIndex, $btn);
       });
+      $('#duplicate_dropshipper_list').on('click', '.preview-btn', function (event) {
+        event.preventDefault();
+        var dropshipperId = $(event.currentTarget).data('dropshipper-id');
+        _this5.fetchDetail(dropshipperId); // Changed from openPreviewModal to fetchDetail
+      });
     },
     toggleGroup: function toggleGroup(row, groupIndex, $btn) {
       if (this.expandedGroups.has(groupIndex)) {
@@ -14579,7 +14593,7 @@ __webpack_require__.r(__webpack_exports__);
         if (parentData.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
         if (parentData.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
         if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
-        childRowsHtml += "\n                    <tr class=\"child-row alert-danger\">\n                        <td></td>\n                        <td></td>\n                        <td >".concat(child.full_name, "</td>\n                        <td>").concat(child.email, "</td>\n                        <td>").concat(child.whatsapp_number, "</td>\n                        <td>").concat(child.cnic_number, "</td>\n                        <td>").concat(child.account_number, "</td>\n                        <td>").concat(child.account_iban, "</td>\n                        <td>").concat(_this6.formatPrice(child.remaining_amount), "</td>\n                        <td>\n                            ").concat(badges.join(' '), "\n                            <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this6.public_url, "/dropshippers/preview?id=").concat(child.id, "&contact=").concat(child.whatsapp_number, "\" target=\"_blank\">\n                                <i class=\"fa fa-eye\"></i>\n                            </a>\n                        </td>\n                    </tr>\n                ");
+        childRowsHtml += "\n                    <tr class=\"child-row alert-danger\">\n                        <td></td>\n                        <td></td>\n                        <td >".concat(child.full_name, "</td>\n                        <td>").concat(child.email, "</td>\n                        <td>").concat(child.whatsapp_number, "</td>\n                        <td>").concat(child.cnic_number, "</td>\n                        <td>").concat(child.account_number, "</td>\n                        <td>").concat(child.account_iban, "</td>\n                        <td>").concat(_this6.formatPrice(child.remaining_amount), "</td>\n                        <td>\n                            ").concat(badges.join(' '), "\n                            <button class=\"btn btn-primary btn-sm preview-btn\" data-dropshipper-id=\"").concat(child.id, "\" title=\"Preview Details\">\n                <i class=\"fa fa-eye\"></i>\n            </button>\n                            <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this6.public_url, "/dropshippers/preview?id=").concat(child.id, "&contact=").concat(child.whatsapp_number, "\" target=\"_blank\">\n                                <i class=\"fa fa-eye\"></i>\n                            </a>\n                        </td>\n                    </tr>\n                ");
       });
       row.child($("".concat(childRowsHtml))).show();
       $btn.removeClass('btn-info').addClass('btn-secondary');
@@ -14626,6 +14640,73 @@ __webpack_require__.r(__webpack_exports__);
     },
     submitFunction: function submitFunction() {
       this.$emit('DuplicateDropshippersfilter');
+    },
+    fetchDetail: function fetchDetail(id) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "dropshippers/details", {
+        id: id
+      }).then(function (response) {
+        vm.details = response.data.response[0];
+        vm.btnLoader = false;
+
+        // Force modal to front
+        $('#dropShipperDetail').modal('show');
+        $('#dropShipperDetail').css('z-index', '99999');
+        $('.modal-backdrop').css('z-index', '99998');
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        swal({
+          title: "Error",
+          text: 'Failed to fetch dropshipper details',
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    decision: function decision(data) {
+      var vm = this;
+      vm.btnLoader = true;
+      axios.post(this.api_url + "dropshippers/decisions", data).then(function (response) {
+        // Refresh your duplicate data if needed
+        // vm.$emit('DuplicateDropshippersfilter');
+        $(".modal").modal('hide');
+        vm.btnLoader = false;
+        return swal({
+          title: "Success",
+          text: 'Decision Made Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.btnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    updateDropshipperInformation: function updateDropshipperInformation(data) {
+      var vm = this;
+      axios.post(this.api_url + "dropshippers", data).then(function (response) {
+        // Refresh data if needed
+        // vm.$emit('DuplicateDropshippersfilter');
+        return swal({
+          title: "Success",
+          text: 'Information updated successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
     }
   },
   beforeDestroy: function beforeDestroy() {
@@ -21763,7 +21844,26 @@ var render = function render() {
     staticClass: "ti-arrow-up text-success"
   }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.profit || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _vm._m(3), _vm._v(" "), _c("td", {
+  }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _c("td", {
+    staticStyle: {
+      width: "20%",
+      padding: "10px"
+    }
+  }, [_c("div", {
+    staticClass: "card card-statistic-1"
+  }, [_vm._m(3), _vm._v(" "), _c("div", {
+    staticClass: "card-wrap"
+  }, [_c("div", {
+    staticClass: "padding-20"
+  }, [_c("div", {
+    staticClass: "text-right"
+  }, [_c("h3", {
+    staticClass: "font-light mb-0"
+  }, [_c("i", {
+    staticClass: "ti-arrow-up text-success"
+  }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.todaysActiveSellers || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
+    staticClass: "text-muted"
+  }, [_vm._v("Active Sellers")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
       width: "20%",
       padding: "10px"
@@ -21811,30 +21911,11 @@ var staticRenderFns = [function () {
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("td", {
-    staticStyle: {
-      width: "20%",
-      padding: "10px"
-    }
-  }, [_c("div", {
-    staticClass: "card card-statistic-1"
-  }, [_c("div", {
+  return _c("div", {
     staticClass: "card-icon l-bg-green"
   }, [_c("i", {
     staticClass: "fas fa-clock"
-  })]), _vm._v(" "), _c("div", {
-    staticClass: "card-wrap"
-  }, [_c("div", {
-    staticClass: "padding-20"
-  }, [_c("div", {
-    staticClass: "text-right"
-  }, [_c("h3", {
-    staticClass: "font-light mb-0"
-  }, [_c("i", {
-    staticClass: "ti-arrow-up text-success"
-  })]), _vm._v(" "), _c("span", {
-    staticClass: "text-muted"
-  }, [_vm._v("Active Sellers")])])])])])]);
+  })]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -32844,7 +32925,20 @@ var render = function render() {
     }
   })], 1) : _c("div", {
     staticClass: "table-responsive"
-  }, [_vm._m(1)])])])])])]);
+  }, [_vm._m(1)])])])])]), _vm._v(" "), _c("DropshipperDetails", {
+    attrs: {
+      details: _vm.details,
+      loader: _vm.btnLoader
+    },
+    on: {
+      decision: function decision($event) {
+        return _vm.decision($event);
+      },
+      updateDropshipperInformation: function updateDropshipperInformation($event) {
+        return _vm.updateDropshipperInformation($event);
+      }
+    }
+  })], 1);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -34254,43 +34348,7 @@ var render = function render() {
     attrs: {
       revenueOrderGraph: _vm.revenueOrderGraph
     }
-  }), _vm._v(" "), _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_vm._m(0), _vm._v(" "), _c("DropshipperApprovedGraph", {
-    attrs: {
-      dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
-    }
-  }), _vm._v(" "), _c("GenericBarChart", {
-    attrs: {
-      "graph-data": _vm.dashboardGraphs,
-      "graph-type": "orders",
-      title: "Orders"
-    }
-  }), _vm._v(" "), _c("GenericBarChart", {
-    attrs: {
-      "graph-data": _vm.dashboardGraphs,
-      "graph-type": "sales",
-      title: "Sales",
-      "is-currency": true
-    }
-  }), _vm._v(" "), _c("GenericBarChart", {
-    attrs: {
-      "graph-data": _vm.dashboardGraphs,
-      "graph-type": "profit",
-      title: "Profit",
-      "is-currency": true
-    }
-  }), _vm._v(" "), _c("GenericBarChart", {
-    attrs: {
-      "graph-data": _vm.dashboardGraphs,
-      "graph-type": "returns",
-      title: "Returns"
-    }
-  }), _vm._v(" "), _c("NewProducts30DaysGraph", {
-    attrs: {
-      newproducts30daysgraph: _vm.newproducts30daysgraph
-    }
-  })], 1)], 1), _vm._v(" "), _vm.loader ? _c("div", {
+  }), _vm._v(" "), _vm._m(0)], 1), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
@@ -34465,6 +34523,8 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header"
@@ -34477,7 +34537,7 @@ var staticRenderFns = [function () {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "statistic-details mt-1"
-  })])]);
+  })])])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -34539,7 +34599,7 @@ var render = function render() {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_c("h2", [_vm._v("Orders")]), _vm._v(" "), _c("GenericBarChart", {
+  }, [_c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "orders",
@@ -34547,7 +34607,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("h2", [_vm._v("Sales")]), _vm._v(" "), _c("GenericBarChart", {
+  }), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "sales",
@@ -34556,7 +34616,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("h2", [_vm._v("Profit")]), _vm._v(" "), _c("GenericBarChart", {
+  }), _vm._v(" "), _c("GenericBarChart", {
     attrs: {
       "graph-data": _vm.dashboardGraphs,
       "graph-type": "profit",
@@ -34565,7 +34625,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("h2", [_vm._v("Registrations")]), _vm._v(" "), _c("DropshipperApprovedGraph", {
+  }), _vm._v(" "), _c("DropshipperApprovedGraph", {
     attrs: {
       dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
     }
@@ -43027,31 +43087,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.alert-danger[data-v-7ba19df0] {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\nspan.badge[data-v-7ba19df0] {\r\n    margin: 2px;\n}\n.btn-sm[data-v-7ba19df0] {\r\n    margin: 0 2px;\n}\r\n/* tr.shown {\r\n    background-color: #f8f9fa !important;\r\n} */\r\n\r\n/* .child-row td {\r\n    padding-left: 40px !important;\r\n    border-top: 1px solid #dee2e6;\r\n} */\n.dt-control[data-v-7ba19df0] {\r\n    text-align: center;\n}\r\n", ""]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css":
-/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
-// Imports
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, "\r\n/* table.dataTable tbody tr.child-row td {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\r\n} */\r\n/* \r\ntable.dataTable tbody tr.shown td {\r\n    \r\n    background-color: #e3f2fd !important;\r\n} */\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.alert-danger[data-v-7ba19df0] {\r\n    background-color: #f8d7da !important;\r\n    color: #721c24;\n}\nspan.badge[data-v-7ba19df0] {\r\n    margin: 2px;\n}\n.btn-sm[data-v-7ba19df0] {\r\n    margin: 0 2px;\n}\n.dt-control[data-v-7ba19df0] {\r\n    text-align: center;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -82925,36 +82961,6 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css":
-/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_style_index_1_id_7ba19df0_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css");
-
-            
-
-var options = {};
-
-options.insert = "head";
-options.singleton = false;
-
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_style_index_1_id_7ba19df0_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
-
-
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_style_index_1_id_7ba19df0_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
-
-/***/ }),
-
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=style&index=0&id=3dd01ecd&scoped=true&lang=css":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/supplier/SupplierInventoryTab.vue?vue&type=style&index=0&id=3dd01ecd&scoped=true&lang=css ***!
@@ -100702,18 +100708,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0&scoped=true */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=template&id=7ba19df0&scoped=true");
 /* harmony import */ var _SuspectedDuplicateDropshippers_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=script&lang=js");
 /* harmony import */ var _SuspectedDuplicateDropshippers_vue_vue_type_style_index_0_id_7ba19df0_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SuspectedDuplicateDropshippers.vue?vue&type=style&index=0&id=7ba19df0&scoped=true&lang=css */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=0&id=7ba19df0&scoped=true&lang=css");
-/* harmony import */ var _SuspectedDuplicateDropshippers_vue_vue_type_style_index_1_id_7ba19df0_lang_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
 ;
 
 
-
 /* normalize component */
 
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__["default"])(
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _SuspectedDuplicateDropshippers_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"],
   _SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render,
   _SuspectedDuplicateDropshippers_vue_vue_type_template_id_7ba19df0_scoped_true__WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
@@ -100757,19 +100761,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_style_index_0_id_7ba19df0_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SuspectedDuplicateDropshippers.vue?vue&type=style&index=0&id=7ba19df0&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=0&id=7ba19df0&scoped=true&lang=css");
-
-
-/***/ }),
-
-/***/ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css":
-/*!****************************************************************************************************************************!*\
-  !*** ./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css ***!
-  \****************************************************************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_SuspectedDuplicateDropshippers_vue_vue_type_style_index_1_id_7ba19df0_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue?vue&type=style&index=1&id=7ba19df0&lang=css");
 
 
 /***/ }),

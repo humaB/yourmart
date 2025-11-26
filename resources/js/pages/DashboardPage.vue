@@ -55,7 +55,7 @@
                         </div>
                     </div>
      
-                <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
+                <!-- <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
            
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
@@ -84,7 +84,7 @@
                     title="Returns"
                 />
            
-                <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/>
+                <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/> -->
               
 
             

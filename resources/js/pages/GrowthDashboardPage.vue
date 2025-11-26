@@ -14,7 +14,6 @@
         <!-- Charts Section -->
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
-                <h2>Orders</h2>
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="orders"
@@ -22,7 +21,6 @@
                 />
                 
                 <hr class="border border-secondary border-2 opacity-50">
-                <h2>Sales</h2>
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="sales"
@@ -31,7 +29,6 @@
                 />
            
                 <hr class="border border-secondary border-2 opacity-50">
-                <h2>Profit</h2>
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="profit"
@@ -40,7 +37,6 @@
                 />
                 
                 <hr class="border border-secondary border-2 opacity-50">
-                <h2>Registrations</h2>
                 <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
             </div>
         </div>

@@ -539,7 +539,7 @@ public function lowStockProducts(Request $request)
             $sales30Days = $details->sum('quantity');
 
             // Fixed values
-            $desiredDays = 10;
+            $desiredDays = 15;
             $currentStock = (int) $product->variation->stock;
 
             // Handle negative stock - show warning

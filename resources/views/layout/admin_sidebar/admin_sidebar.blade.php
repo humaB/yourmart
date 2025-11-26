@@ -2,7 +2,7 @@
 <li class="dropdown {{ request()->is('growthdashboard') ? 'active' : '' }}">
         <a href="{{ route('growthdashboard') }}" class="nav-link">
             <i class="fa fa-warehouse" aria-hidden="true"></i>
-            <span>Growth Dashboard</span>
+            <span>Growth KPIs</span>
         </a>
     </li>
 

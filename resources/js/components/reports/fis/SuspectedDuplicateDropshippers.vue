@@ -40,11 +40,14 @@
                 </div>
             </div>
         </div>
+        <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)"
+    @updateDropshipperInformation="updateDropshipperInformation($event)" />
     </div>
 </template>
 
 <script>
 import moment from 'moment';
+import DropshipperDetails from "../../../components/admin/request/DropshipperDetails.vue";
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
@@ -52,6 +55,7 @@ export default {
     props: ['data', 'loader'],
     components: {
         BulletListLoader,
+        DropshipperDetails,
     },
     data() {
         return {
@@ -59,6 +63,8 @@ export default {
             api_url: window.location.origin + process.env.MIX_API_URL,
             dataTable: null,
             tableData: [],
+            details: {}, // Add this for modal data
+            btnLoader: false, // Add this for modal loader
             expandedGroups: new Set() // Track expanded groups
         };
     },
@@ -123,7 +129,7 @@ export default {
     methods: {
         prepareTableData(groups) {
             this.tableData = [];
-            
+
             groups.forEach((group, idx) => {
                 // Only add parent rows to main table data
                 // Child rows will be shown via expandable rows
@@ -151,14 +157,14 @@ export default {
                 this.dataTable.destroy();
                 $('#duplicate_dropshipper_list').off('click', '.expand-btn');
             }
-            
+
 
             // Initialize DataTable
             this.dataTable = $('#duplicate_dropshipper_list').DataTable({
                 data: this.tableData,
-                        language: {
-            emptyTable: "" // This replaces the empty colspan row
-        },
+                language: {
+                    emptyTable: "" // This replaces the empty colspan row
+                },
 
                 columns: [
                     {
@@ -178,29 +184,33 @@ export default {
                             `;
                         }
                     },
-                    { 
+                    {
                         data: 'groupIndex',
                         render: (data, type, row) => {
                             return data + 1;
                         }
                     },
+                    { data: 'id' },
                     { data: 'full_name' },
                     { data: 'email' },
                     { data: 'whatsapp_number' },
                     { data: 'cnic_number' },
                     { data: 'account_number' },
                     { data: 'account_iban' },
-                    { 
-                         data: 'remaining_amount',
-    render: (data, type, row) => {
-        return this.formatPrice(data || 0);  // ← This is it!
-    }
+                    {
+                        data: 'remaining_amount',
+                        render: (data, type, row) => {
+                            return this.formatPrice(data || 0);  // ← This is it!
+                        }
                     },
                     {
                         data: null,
-                         orderable: false, 
+                        orderable: false,
                         render: (data, type, row) => {
                             return `
+                            <button class="btn btn-primary btn-sm preview-btn" data-dropshipper-id="${row.id}" title="Preview Details">
+                <i class="fa fa-eye"></i> Preview
+            </button>
                                 <span class="badge badge-primary mr-2">${row.duplicateCount} duplicates</span>
                                 <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${row.id}&contact=${row.whatsapp_number}" target="_blank">
                                     <i class="fa fa-eye"></i> View
@@ -209,7 +219,7 @@ export default {
                         }
                     }
                 ],
-                 order: [[1, 'asc']],
+                order: [[1, 'asc']],
                 paging: true,
                 searching: true,
                 info: true,
@@ -232,19 +242,25 @@ export default {
         attachExpandEvents() {
             // Remove any existing event handlers
             $('#duplicate_dropshipper_list').off('click', '.expand-btn');
-            
+
             // Attach event delegation for expand buttons
             $('#duplicate_dropshipper_list').on('click', '.expand-btn', (event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                
+
                 const $btn = $(event.currentTarget);
                 const groupIndex = parseInt($btn.data('group-index'));
                 const tr = $btn.closest('tr');
                 const row = this.dataTable.row(tr);
-                
+
                 this.toggleGroup(row, groupIndex, $btn);
             });
+
+            $('#duplicate_dropshipper_list').on('click', '.preview-btn', (event) => {
+    event.preventDefault();
+    const dropshipperId = $(event.currentTarget).data('dropshipper-id');
+    this.fetchDetail(dropshipperId); // Changed from openPreviewModal to fetchDetail
+});
         },
 
         toggleGroup(row, groupIndex, $btn) {
@@ -259,10 +275,10 @@ export default {
 
         expandGroup(row, groupIndex, $btn) {
             const parentData = row.data();
-            
+
             // Create child rows HTML
             let childRowsHtml = '';
-            
+
             parentData.children.forEach((child, index) => {
                 const badges = [];
                 if (parentData.duplicateFields.email) badges.push('<span class="badge badge-warning mr-1">Email</span>');
@@ -270,7 +286,7 @@ export default {
                 if (parentData.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
                 if (parentData.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
                 if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
-                
+
                 childRowsHtml += `
                     <tr class="child-row alert-danger">
                         <td></td>
@@ -284,6 +300,9 @@ export default {
                         <td>${this.formatPrice(child.remaining_amount)}</td>
                         <td>
                             ${badges.join(' ')}
+                            <button class="btn btn-primary btn-sm preview-btn" data-dropshipper-id="${child.id}" title="Preview Details">
+                <i class="fa fa-eye"></i>
+            </button>
                             <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${child.id}&contact=${child.whatsapp_number}" target="_blank">
                                 <i class="fa fa-eye"></i>
                             </a>
@@ -298,20 +317,20 @@ export default {
             $btn.removeClass('btn-info').addClass('btn-secondary');
             $btn.find('i').removeClass('fa-chevron-right').addClass('fa-chevron-down');
             $btn.attr('title', 'Collapse');
-            
+
             this.expandedGroups.add(groupIndex);
             row.nodes().to$().addClass('shown');
         },
 
         collapseGroup(row, groupIndex, $btn) {
             row.child.hide();
-            
+
             $btn.removeClass('btn-secondary').addClass('btn-info');
             $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-right');
             $btn.attr('title', 'Expand');
-            
+
             this.expandedGroups.delete(groupIndex);
-            
+
             row.nodes().to$().removeClass('shown');
         },
 
@@ -338,7 +357,86 @@ export default {
 
         submitFunction() {
             this.$emit('DuplicateDropshippersfilter');
-        }
+        },
+
+         fetchDetail(id) {
+         let vm = this;
+        vm.btnLoader = true;
+
+        axios
+            .post(this.api_url + "dropshippers/details", { id })
+            .then((response) => {
+                vm.details = response.data.response[0];
+                vm.btnLoader = false;
+                
+                // Force modal to front
+                $('#dropShipperDetail').modal('show');
+                $('#dropShipperDetail').css('z-index', '99999');
+                $('.modal-backdrop').css('z-index', '99998');
+                
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                swal({
+                    title: "Error",
+                    text: 'Failed to fetch dropshipper details',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+
+    decision(data) {
+        let vm = this;
+        vm.btnLoader = true;
+        
+        axios
+            .post(this.api_url + "dropshippers/decisions", data)
+            .then((response) => {
+                // Refresh your duplicate data if needed
+                // vm.$emit('DuplicateDropshippersfilter');
+                $(".modal").modal('hide');
+                vm.btnLoader = false;
+                return swal({
+                    title: "Success",
+                    text: 'Decision Made Successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            }).catch((err) => {
+                vm.btnLoader = false;
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+
+    updateDropshipperInformation(data) {
+        let vm = this;
+        axios
+            .post(this.api_url + "dropshippers", data)
+            .then((response) => {
+                // Refresh data if needed
+                // vm.$emit('DuplicateDropshippersfilter');
+                return swal({
+                    title: "Success",
+                    text: 'Information updated successfully',
+                    icon: "success",
+                    timer: 3000,
+                });
+            }).catch((err) => {
+                return swal({
+                    title: "Error",
+                    text: err.response.data.response[0],
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+
     },
     beforeDestroy() {
         if (this.dataTable) {
@@ -362,28 +460,8 @@ span.badge {
 .btn-sm {
     margin: 0 2px;
 }
-/* tr.shown {
-    background-color: #f8f9fa !important;
-} */
-
-/* .child-row td {
-    padding-left: 40px !important;
-    border-top: 1px solid #dee2e6;
-} */
 
 .dt-control {
     text-align: center;
 }
-</style>
-
-<style>
-/* table.dataTable tbody tr.child-row td {
-    background-color: #f8d7da !important;
-    color: #721c24;
-} */
-/* 
-table.dataTable tbody tr.shown td {
-    
-    background-color: #e3f2fd !important;
-} */
 </style>

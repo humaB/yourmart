@@ -46,12 +46,16 @@ class GrowthController extends Controller
 
     public function getTodaysData()
     {
+        //   $from = $request->from;
+        // $to = $request->to;
         $today = now()->format('Y-m-d');
         
         $orders = Order::whereNotIn('status', ['6', '7'])
             ->whereDate('created_at', $today)
             ->get();
-
+$orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
+ $todaysActiveSellerIds = DropShipper::where('status', '1')->whereIn('user_id', $orderbelongsto)
+            ->count();
         $returns = StoreReturnDetail::whereDate('created_at', $today)->count();
         $profit = $this->calculateDailyOrderIssuanceProfit($today);
         $todaysRegistrations = DropShipper::where('status', '1')
@@ -63,7 +67,8 @@ class GrowthController extends Controller
             'sales' => $orders->sum('total_bill'),
             'profit' => $profit,
             'returns' => $returns,
-            'todaysRegistrations' => $todaysRegistrations
+            'todaysRegistrations' => $todaysRegistrations,
+            'todaysActiveSellers' => $todaysActiveSellerIds,
         ];
     }
     private function calculateDailyOrderIssuanceProfit($date)
