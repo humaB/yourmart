@@ -29,7 +29,10 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ group.document_id }}</td>
                                     <td>
-                                        PO-{{ group.posting_id }}
+                                        <span v-for="(shopOrder, shopIndex) in group.po" :key="shopIndex">
+                                            PO-{{ shopOrder.number }}
+                                            <br v-if="shopIndex < group.po.length - 1" />
+                                        </span>
                                     </td>
                                     <td>{{ group.total_debit.toFixed(2) }}</td>
                                     <td>{{ formatDate(group.created_at) }}</td>
@@ -53,7 +56,7 @@
                 </div>
             </div>
         </div>
-  
+
     </div>
 </template>
 <script>
@@ -80,13 +83,16 @@ export default {
                 if (!grouped[documentId]) {
                     grouped[documentId] = {
                         document_id: documentId,
-                        posting_id: posting_id,
                         total_debit: 0,
                         attachment: attachment,
+                        po : [],
                         created_at: payment.created_at,
                     };
                 }
                 grouped[documentId].total_debit += parseFloat(payment.debit);
+                 grouped[documentId].po.push({
+                    number: posting_id,
+                });
             });
             return Object.values(grouped);
         },

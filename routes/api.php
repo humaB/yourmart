@@ -76,7 +76,6 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
 
     Route::get('/role',  [ UserController::class , 'role']);
 
-
     Route::group(['prefix' => 'dashboard'], function(){
         Route::post('/',  [ DashboardController::class , 'fetchData']);
         Route::get('/top-selling-products',  [ DashboardController::class , 'topSellingProduct']);
@@ -249,7 +248,7 @@ Route::group(['prefix' => 'reports','middleware' => 'auth:sanctum'], function(){
         Route::get('/supplier-wise-stock-report',  [FisReportController::class , 'supplierWiseStock']);
         Route::get('/suspected-duplicate-dropshippers', [FisReportController::class, 'suspectedDuplicateDropshippers']);
         Route::get('/low-stock-products', [FisReportController::class, 'lowStockProducts']);
-     
+
 
     });
 });

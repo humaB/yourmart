@@ -1029,7 +1029,7 @@ class SupplierController extends Controller
 
         $supplier = Supplier::where('id', $request->id)->first();
 
-        $orders = PurchaseOrder::where('supplier_id', $supplier->id)
+       $orders = PurchaseOrder::where('supplier_id', $supplier->id)
             ->where('remaining_amount', '>', '0')
             ->where('status', '1')
             ->where('supplier_stock', $request->inventoryType)
@@ -1042,7 +1042,7 @@ class SupplierController extends Controller
         $document = $ledger->voucherType($request->type);
 
         $attachment = $request->attachment ? $this->attachment($request->attachment) : null;
-        $addedAmount = 0;
+
         foreach ($orders as $order) {
 
             // Checks account if or not they are open
@@ -1104,7 +1104,7 @@ class SupplierController extends Controller
         $ledger = AccountHead::where('name', $name)->first();
 
         $transactions = AccountTransaction::with('po')
-            ->where('posting_type', 'po')
+            ->where('posting_type', 'PO')
             ->where('account_head_id', $ledger->id)
             ->where(function ($query) {
                 $query->where('type', 'BP')
