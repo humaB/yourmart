@@ -40,14 +40,12 @@
                 </div>
             </div>
         </div>
-        <DropshipperDetails :details="details" :loader="btnLoader" @decision="decision($event)"
-    @updateDropshipperInformation="updateDropshipperInformation($event)" />
     </div>
 </template>
 
 <script>
 import moment from 'moment';
-import DropshipperDetails from "../../../components/admin/request/DropshipperDetails.vue";
+
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
@@ -55,7 +53,7 @@ export default {
     props: ['data', 'loader'],
     components: {
         BulletListLoader,
-        DropshipperDetails,
+       
     },
     data() {
         return {
@@ -63,8 +61,7 @@ export default {
             api_url: window.location.origin + process.env.MIX_API_URL,
             dataTable: null,
             tableData: [],
-            details: {}, // Add this for modal data
-            btnLoader: false, // Add this for modal loader
+            
             expandedGroups: new Set() // Track expanded groups
         };
     },
@@ -190,7 +187,6 @@ export default {
                             return data + 1;
                         }
                     },
-                    { data: 'id' },
                     { data: 'full_name' },
                     { data: 'email' },
                     { data: 'whatsapp_number' },
@@ -208,13 +204,11 @@ export default {
                         orderable: false,
                         render: (data, type, row) => {
                             return `
-                            <button class="btn btn-primary btn-sm preview-btn" data-dropshipper-id="${row.id}" title="Preview Details">
+                        <button class="btn btn-info btn-sm preview-btn" data-dropshipper-id="${row.id}" data-toggle="modal" data-target="#dropShipperDetail" title="Preview Details">
                 <i class="fa fa-eye"></i> Preview
             </button>
-                                <span class="badge badge-primary mr-2">${row.duplicateCount} duplicates</span>
-                                <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${row.id}&contact=${row.whatsapp_number}" target="_blank">
-                                    <i class="fa fa-eye"></i> View
-                                </a>
+                                <span class="badge badge-danger mr-2">${row.duplicateCount} duplicates</span>
+                                
                             `;
                         }
                     }
@@ -257,7 +251,7 @@ export default {
             });
 
             $('#duplicate_dropshipper_list').on('click', '.preview-btn', (event) => {
-    event.preventDefault();
+    // Remove event.preventDefault() - it's preventing Bootstrap from showing the modal
     const dropshipperId = $(event.currentTarget).data('dropshipper-id');
     this.fetchDetail(dropshipperId); // Changed from openPreviewModal to fetchDetail
 });
@@ -300,12 +294,10 @@ export default {
                         <td>${this.formatPrice(child.remaining_amount)}</td>
                         <td>
                             ${badges.join(' ')}
-                            <button class="btn btn-primary btn-sm preview-btn" data-dropshipper-id="${child.id}" title="Preview Details">
+                            <button class="btn btn-info btn-sm preview-btn" data-dropshipper-id="${child.id}" title="Preview Details">
                 <i class="fa fa-eye"></i>
             </button>
-                            <a class="btn btn-primary btn-sm" href="${this.public_url}/dropshippers/preview?id=${child.id}&contact=${child.whatsapp_number}" target="_blank">
-                                <i class="fa fa-eye"></i>
-                            </a>
+                        
                         </td>
                     </tr>
                 `;
@@ -358,79 +350,22 @@ export default {
         submitFunction() {
             this.$emit('DuplicateDropshippersfilter');
         },
-
-         fetchDetail(id) {
-         let vm = this;
+        fetchDetail(id) {
+        let vm = this;
         vm.btnLoader = true;
 
         axios
             .post(this.api_url + "dropshippers/details", { id })
             .then((response) => {
-                vm.details = response.data.response[0];
                 vm.btnLoader = false;
-                
-                // Force modal to front
-                $('#dropShipperDetail').modal('show');
-                $('#dropShipperDetail').css('z-index', '99999');
-                $('.modal-backdrop').css('z-index', '99998');
-                
+                // Emit to parent instead of handling modal here
+                this.$emit('openDropshipperModal', response.data.response[0]);
             })
             .catch((err) => {
                 vm.btnLoader = false;
                 swal({
                     title: "Error",
                     text: 'Failed to fetch dropshipper details',
-                    icon: "error",
-                    timer: 3000,
-                });
-            });
-    },
-
-    decision(data) {
-        let vm = this;
-        vm.btnLoader = true;
-        
-        axios
-            .post(this.api_url + "dropshippers/decisions", data)
-            .then((response) => {
-                // Refresh your duplicate data if needed
-                // vm.$emit('DuplicateDropshippersfilter');
-                $(".modal").modal('hide');
-                vm.btnLoader = false;
-                return swal({
-                    title: "Success",
-                    text: 'Decision Made Successfully',
-                    icon: "success",
-                    timer: 3000,
-                });
-            }).catch((err) => {
-                vm.btnLoader = false;
-                return swal({
-                    title: "Error",
-                    text: err.response.data.response[0],
-                    icon: "error",
-                    timer: 3000,
-                });
-            });
-    },
-
-    updateDropshipperInformation(data) {
-        let vm = this;
-        axios
-            .post(this.api_url + "dropshippers", data)
-            .then((response) => {
-                // Refresh data if needed
-                // vm.$emit('DuplicateDropshippersfilter');
-                return swal({
-                    title: "Success",
-                    text: 'Information updated successfully',
-                    icon: "success",
-                    timer: 3000,
-                });
-            }).catch((err) => {
-                return swal({
-                    title: "Error",
-                    text: err.response.data.response[0],
                     icon: "error",
                     timer: 3000,
                 });

@@ -14375,17 +14375,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
-/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
-
+/* harmony import */ var vue_content_loader__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-content-loader */ "./node_modules/vue-content-loader/dist/vue-content-loader.es.js");
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'SuspectedDuplicateDropshippers',
   props: ['data', 'loader'],
   components: {
-    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_2__.BulletListLoader,
-    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_1__.BulletListLoader
   },
   data: function data() {
     return {
@@ -14393,10 +14390,6 @@ __webpack_require__.r(__webpack_exports__);
       api_url: window.location.origin + "/api/",
       dataTable: null,
       tableData: [],
-      details: {},
-      // Add this for modal data
-      btnLoader: false,
-      // Add this for modal loader
       expandedGroups: new Set() // Track expanded groups
     };
   },
@@ -14504,8 +14497,6 @@ __webpack_require__.r(__webpack_exports__);
             return data + 1;
           }
         }, {
-          data: 'id'
-        }, {
           data: 'full_name'
         }, {
           data: 'email'
@@ -14526,7 +14517,7 @@ __webpack_require__.r(__webpack_exports__);
           data: null,
           orderable: false,
           render: function render(data, type, row) {
-            return "\n                            <button class=\"btn btn-primary btn-sm preview-btn\" data-dropshipper-id=\"".concat(row.id, "\" title=\"Preview Details\">\n                <i class=\"fa fa-eye\"></i> Preview\n            </button>\n                                <span class=\"badge badge-primary mr-2\">").concat(row.duplicateCount, " duplicates</span>\n                                <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this4.public_url, "/dropshippers/preview?id=").concat(row.id, "&contact=").concat(row.whatsapp_number, "\" target=\"_blank\">\n                                    <i class=\"fa fa-eye\"></i> View\n                                </a>\n                            ");
+            return "\n                        <button class=\"btn btn-info btn-sm preview-btn\" data-dropshipper-id=\"".concat(row.id, "\" data-toggle=\"modal\" data-target=\"#dropShipperDetail\" title=\"Preview Details\">\n                <i class=\"fa fa-eye\"></i> Preview\n            </button>\n                                <span class=\"badge badge-danger mr-2\">").concat(row.duplicateCount, " duplicates</span>\n                                \n                            ");
           }
         }],
         order: [[1, 'asc']],
@@ -14566,7 +14557,7 @@ __webpack_require__.r(__webpack_exports__);
         _this5.toggleGroup(row, groupIndex, $btn);
       });
       $('#duplicate_dropshipper_list').on('click', '.preview-btn', function (event) {
-        event.preventDefault();
+        // Remove event.preventDefault() - it's preventing Bootstrap from showing the modal
         var dropshipperId = $(event.currentTarget).data('dropshipper-id');
         _this5.fetchDetail(dropshipperId); // Changed from openPreviewModal to fetchDetail
       });
@@ -14593,7 +14584,7 @@ __webpack_require__.r(__webpack_exports__);
         if (parentData.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
         if (parentData.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
         if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
-        childRowsHtml += "\n                    <tr class=\"child-row alert-danger\">\n                        <td></td>\n                        <td></td>\n                        <td >".concat(child.full_name, "</td>\n                        <td>").concat(child.email, "</td>\n                        <td>").concat(child.whatsapp_number, "</td>\n                        <td>").concat(child.cnic_number, "</td>\n                        <td>").concat(child.account_number, "</td>\n                        <td>").concat(child.account_iban, "</td>\n                        <td>").concat(_this6.formatPrice(child.remaining_amount), "</td>\n                        <td>\n                            ").concat(badges.join(' '), "\n                            <button class=\"btn btn-primary btn-sm preview-btn\" data-dropshipper-id=\"").concat(child.id, "\" title=\"Preview Details\">\n                <i class=\"fa fa-eye\"></i>\n            </button>\n                            <a class=\"btn btn-primary btn-sm\" href=\"").concat(_this6.public_url, "/dropshippers/preview?id=").concat(child.id, "&contact=").concat(child.whatsapp_number, "\" target=\"_blank\">\n                                <i class=\"fa fa-eye\"></i>\n                            </a>\n                        </td>\n                    </tr>\n                ");
+        childRowsHtml += "\n                    <tr class=\"child-row alert-danger\">\n                        <td></td>\n                        <td></td>\n                        <td >".concat(child.full_name, "</td>\n                        <td>").concat(child.email, "</td>\n                        <td>").concat(child.whatsapp_number, "</td>\n                        <td>").concat(child.cnic_number, "</td>\n                        <td>").concat(child.account_number, "</td>\n                        <td>").concat(child.account_iban, "</td>\n                        <td>").concat(_this6.formatPrice(child.remaining_amount), "</td>\n                        <td>\n                            ").concat(badges.join(' '), "\n                            <button class=\"btn btn-info btn-sm preview-btn\" data-dropshipper-id=\"").concat(child.id, "\" title=\"Preview Details\">\n                <i class=\"fa fa-eye\"></i>\n            </button>\n                        \n                        </td>\n                    </tr>\n                ");
       });
       row.child($("".concat(childRowsHtml))).show();
       $btn.removeClass('btn-info').addClass('btn-secondary');
@@ -14642,67 +14633,20 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('DuplicateDropshippersfilter');
     },
     fetchDetail: function fetchDetail(id) {
+      var _this7 = this;
       var vm = this;
       vm.btnLoader = true;
       axios.post(this.api_url + "dropshippers/details", {
         id: id
       }).then(function (response) {
-        vm.details = response.data.response[0];
         vm.btnLoader = false;
-
-        // Force modal to front
-        $('#dropShipperDetail').modal('show');
-        $('#dropShipperDetail').css('z-index', '99999');
-        $('.modal-backdrop').css('z-index', '99998');
+        // Emit to parent instead of handling modal here
+        _this7.$emit('openDropshipperModal', response.data.response[0]);
       })["catch"](function (err) {
         vm.btnLoader = false;
         swal({
           title: "Error",
           text: 'Failed to fetch dropshipper details',
-          icon: "error",
-          timer: 3000
-        });
-      });
-    },
-    decision: function decision(data) {
-      var vm = this;
-      vm.btnLoader = true;
-      axios.post(this.api_url + "dropshippers/decisions", data).then(function (response) {
-        // Refresh your duplicate data if needed
-        // vm.$emit('DuplicateDropshippersfilter');
-        $(".modal").modal('hide');
-        vm.btnLoader = false;
-        return swal({
-          title: "Success",
-          text: 'Decision Made Successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        vm.btnLoader = false;
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
-          icon: "error",
-          timer: 3000
-        });
-      });
-    },
-    updateDropshipperInformation: function updateDropshipperInformation(data) {
-      var vm = this;
-      axios.post(this.api_url + "dropshippers", data).then(function (response) {
-        // Refresh data if needed
-        // vm.$emit('DuplicateDropshippersfilter');
-        return swal({
-          title: "Success",
-          text: 'Information updated successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
           icon: "error",
           timer: 3000
         });
@@ -19134,7 +19078,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_reports_fis_TopSellingProduct_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../../components/reports/fis/TopSellingProduct.vue */ "./resources/js/components/reports/fis/TopSellingProduct.vue");
 /* harmony import */ var _components_reports_fis_SuspectedDuplicateDropshippers_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../components/reports/fis/SuspectedDuplicateDropshippers.vue */ "./resources/js/components/reports/fis/SuspectedDuplicateDropshippers.vue");
 /* harmony import */ var _components_reports_fis_LowStockReport_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../components/reports/fis/LowStockReport.vue */ "./resources/js/components/reports/fis/LowStockReport.vue");
-/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+/* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
+/* harmony import */ var _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../components/table/TableHeaderComponent.vue */ "./resources/js/components/table/TableHeaderComponent.vue");
+var _methods;
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
@@ -19157,10 +19103,11 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 
 
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'FisReportsPage',
   components: {
-    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_17__["default"],
+    TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
     InventoryControlRegisterReport: _components_reports_fis_InventoryControlRegisterReport_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
     InventoryGoodReceivedReport: _components_reports_fis_InventoryGoodReceivedReport_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
     InventoryGoodIssuanceReport: _components_reports_fis_InventoryGoodIssuanceReport_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
@@ -19177,7 +19124,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     DropshipperListReport: _components_reports_fis_DropshipperListReport_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     SupplierWiseStock: _components_reports_fis_SupplierWiseStock_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
     SuspectedDuplicateDropshippers: _components_reports_fis_SuspectedDuplicateDropshippers_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
-    LowStockReport: _components_reports_fis_LowStockReport_vue__WEBPACK_IMPORTED_MODULE_16__["default"]
+    LowStockReport: _components_reports_fis_LowStockReport_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
+    DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_17__["default"]
   },
   data: function data() {
     return _defineProperty({
@@ -19212,20 +19160,79 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       supplierStockData: [],
       suspectedDuplicateDropshippersData: [],
       lowStockData: [],
-      lowStockLoader: false
+      lowStockLoader: false,
+      dropshipperDetails: {},
+      dropshipperBtnLoader: false
     }, "role", "");
   },
   created: function created() {
     this.fetchProducts();
     this.fetchRole();
   },
-  methods: {
+  methods: (_methods = {
     fetchRole: function fetchRole() {
       var vm = this;
       axios.get(this.api_url + "users/role").then(function (response) {
         vm.role = response.data.role;
       });
     },
+    // detail modal
+    openDropshipperModal: function openDropshipperModal(details) {
+      // Add this simple log
+      console.log("📊 Data received in parent:", details);
+
+      // Set the data
+      this.dropshipperDetails = details;
+      this.dropshipperBtnLoader = false;
+
+      // Show modal
+      $('#dropShipperDetail').modal('show');
+    },
+    handleDecision: function handleDecision(data) {
+      var vm = this;
+      vm.dropshipperBtnLoader = true;
+      axios.post(this.api_url + "dropshippers/decisions", data).then(function (response) {
+        // Refresh the duplicate dropshippers data
+        vm.DuplicateDropshippersfilter();
+        $(".modal").modal('hide');
+        vm.dropshipperBtnLoader = false;
+        return swal({
+          title: "Success",
+          text: 'Decision Made Successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        vm.dropshipperBtnLoader = false;
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    handleUpdateDropshipperInformation: function handleUpdateDropshipperInformation(data) {
+      var vm = this;
+      axios.post(this.api_url + "dropshippers", data).then(function (response) {
+        // Refresh the duplicate dropshippers data
+        vm.DuplicateDropshippersfilter();
+        return swal({
+          title: "Success",
+          text: 'Information updated successfully',
+          icon: "success",
+          timer: 3000
+        });
+      })["catch"](function (err) {
+        return swal({
+          title: "Error",
+          text: err.response.data.response[0],
+          icon: "error",
+          timer: 3000
+        });
+      });
+    },
+    // detail modal
     supplierStock: function supplierStock() {
       this.report = 'supplier-stock-report';
     },
@@ -19252,227 +19259,200 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     duplicateDropshipperslist: function duplicateDropshipperslist() {
       this.report = 'suspected-duplicate-dropshippers';
-    },
-    DuplicateDropshippersfilter: function DuplicateDropshippersfilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.get(vm.api_url + 'reports/fis/suspected-duplicate-dropshippers').then(function (res) {
-        var results = res.data.response;
-        vm.suspectedDuplicateDropshippersData = results;
-        vm.loader = false;
-      })["catch"](function (error) {
-        console.error('Error fetching duplicate dropshippers:', error);
-        vm.loader = false;
-      });
-    },
-    lowStocklist: function lowStocklist() {
-      this.report = 'low-stock-products';
-    },
-    lowStockfilter: function lowStockfilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.get(vm.api_url + 'reports/fis/low-stock-products').then(function (res) {
-        var results = res.data.response;
-        vm.lowStockData = results;
-        vm.loader = false;
-      })["catch"](function (error) {
-        console.error('Error fetching low stock products:', error);
-        vm.loader = false;
-      });
-    },
-    closingReport: function closingReport() {
-      this.report = 'closing-report';
-    },
-    closingReportFilter: function closingReportFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/closing-report', data).then(function (res) {
-        var results = res.data.response;
-        vm.closingReportData = results;
-        vm.loader = false;
-      });
-    },
-    shopListPostEx: function shopListPostEx() {
-      this.report = 'shop-list-postex';
-    },
-    shopListPostExFilter: function shopListPostExFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.get(vm.api_url + 'reports/fis/shop-list-for-postex', data).then(function (res) {
-        var results = res.data.response;
-        vm.shopListPostExData = results;
-        vm.loader = false;
-      });
-    },
-    lowStockProduct: function lowStockProduct() {
-      this.report = 'low-stock-report';
-    },
-    lowStockProductFilter: function lowStockProductFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.get(vm.api_url + 'reports/fis/product-wise-count', data).then(function (res) {
-        var results = res.data.response;
-        vm.lowStockProductData = results.lowStock;
-        vm.loader = false;
-      });
-    },
-    highStockProduct: function highStockProduct() {
-      this.report = 'high-stock-report';
-    },
-    highStockProductFilter: function highStockProductFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.get(vm.api_url + 'reports/fis/product-wise-count', data).then(function (res) {
-        var results = res.data.response;
-        vm.highStockProductData = results.highStock;
-        vm.loader = false;
-      });
-    },
-    top10Dropshipper: function top10Dropshipper() {
-      this.report = 'top-10-dropshipper';
-    },
-    top10DropshipperFilter: function top10DropshipperFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/top-10-dropshippers', data).then(function (res) {
-        var results = res.data.response;
-        vm.top10DropshipperData = results.dropshippers;
-        vm.loader = false;
-      });
-    },
-    topSellingProducts: function topSellingProducts() {
-      this.report = 'top-selling-products';
-    },
-    topSellingProductsFilter: function topSellingProductsFilter() {
-      var vm = this;
-      vm.loader = true;
-      axios.get(vm.api_url + 'reports/fis/top-selling-products').then(function (res) {
-        var results = res.data.response;
-        vm.topSellingProductData = results;
-        vm.loader = false;
-      });
-    },
-    orderIssuanceReport: function orderIssuanceReport() {
-      this.report = 'order-issuance-report';
-    },
-    orderIssuanceReportFilter: function orderIssuanceReportFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/order-issuances', data).then(function (res) {
-        var results = res.data.response;
-        vm.orderIssuanceReportData = results;
-        vm.loader = false;
-      });
-    },
-    leopardReturnReceived: function leopardReturnReceived() {
-      this.report = 'leopard-return-received';
-    },
-    leopardReturnReceivedFilter: function leopardReturnReceivedFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/leopard-return-receiveds', data).then(function (res) {
-        var results = res.data.response;
-        vm.leopardReturnReceivedData = results;
-        vm.loader = false;
-      });
-    },
-    deliveredOrder: function deliveredOrder() {
-      this.report = 'delivered-order-report';
-    },
-    deliveredOrderFilter: function deliveredOrderFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/delivered-order-details', data).then(function (res) {
-        var results = res.data.response;
-        vm.deliveredOrderData = results;
-        vm.loader = false;
-      });
-    },
-    deleteGRNConfirmation: function deleteGRNConfirmation() {
-      var _this = this;
-      var vm = this;
-      vm.deleteLoader = true;
-      axios.post(this.api_url + "reports/fis/good-received/delete", this.grnDetails).then(function (response) {
-        vm.deleteLoader = false;
-        $('#deleteGRN').modal('hide');
-        _this.$emit('GRNdeleted', true);
-        return swal({
-          title: "Success",
-          text: 'Deleted Successfully',
-          icon: "success",
-          timer: 3000
-        });
-      })["catch"](function (err) {
-        vm.deleteLoader = false;
-        return swal({
-          title: "Error",
-          text: err.response.data.response[0],
-          icon: "error",
-          timer: 3000
-        });
-      });
-    },
-    deleteGRN: function deleteGRN(data) {
-      this.grnDetails = data;
-    },
-    fetchProducts: function fetchProducts() {
-      var vm = this;
-      axios.get(this.api_url + "inventory/products/complete-drop-down").then(function (response) {
-        vm.products = response.data.response;
-      })["catch"](function (err) {
-        vm.fetchProducts();
-      });
-    },
-    goodReturn: function goodReturn() {
-      this.report = 'good-return-report';
-    },
-    inventoryGoodReturnFilter: function inventoryGoodReturnFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/good-returns', data).then(function (res) {
-        var results = res.data.response;
-        vm.goodReturnData = results;
-        vm.loader = false;
-      });
-    },
-    goodIssued: function goodIssued() {
-      this.report = 'good-issued-report';
-    },
-    inventoryGoodIssuedFilter: function inventoryGoodIssuedFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/good-issued', data).then(function (res) {
-        var results = res.data.response;
-        vm.goodIssuedData = results;
-        vm.loader = false;
-      });
-    },
-    goodReceived: function goodReceived() {
-      this.report = 'good-received-report';
-    },
-    inventoryGoodReceivedilter: function inventoryGoodReceivedilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/good-received', data).then(function (res) {
-        var results = res.data.response;
-        vm.goodReceivedData = results.goods;
-        vm.role = results.role;
-        vm.loader = false;
-      });
-    },
-    controlRegister: function controlRegister() {
-      this.report = 'control-register-report';
-    },
-    inventoryControlregisterReportFilter: function inventoryControlregisterReportFilter(data) {
-      var vm = this;
-      vm.loader = true;
-      axios.post(vm.api_url + 'reports/fis/inventory-control-register', data).then(function (res) {
-        var results = res.data.response;
-        vm.controlRegisterData = results;
-        vm.loader = false;
-      });
     }
-  }
+  }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_methods, "fetchRole", function fetchRole() {
+    var vm = this;
+    axios.get(this.api_url + "users/role").then(function (response) {
+      vm.role = response.data.role;
+    });
+  }), "DuplicateDropshippersfilter", function DuplicateDropshippersfilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.get(vm.api_url + 'reports/fis/suspected-duplicate-dropshippers').then(function (res) {
+      var results = res.data.response;
+      vm.suspectedDuplicateDropshippersData = results;
+      vm.loader = false;
+    })["catch"](function (error) {
+      console.error('Error fetching duplicate dropshippers:', error);
+      vm.loader = false;
+    });
+  }), "lowStocklist", function lowStocklist() {
+    this.report = 'low-stock-products';
+  }), "lowStockfilter", function lowStockfilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.get(vm.api_url + 'reports/fis/low-stock-products').then(function (res) {
+      var results = res.data.response;
+      vm.lowStockData = results;
+      vm.loader = false;
+    })["catch"](function (error) {
+      console.error('Error fetching low stock products:', error);
+      vm.loader = false;
+    });
+  }), "closingReport", function closingReport() {
+    this.report = 'closing-report';
+  }), "closingReportFilter", function closingReportFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/closing-report', data).then(function (res) {
+      var results = res.data.response;
+      vm.closingReportData = results;
+      vm.loader = false;
+    });
+  }), "shopListPostEx", function shopListPostEx() {
+    this.report = 'shop-list-postex';
+  }), "shopListPostExFilter", function shopListPostExFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.get(vm.api_url + 'reports/fis/shop-list-for-postex', data).then(function (res) {
+      var results = res.data.response;
+      vm.shopListPostExData = results;
+      vm.loader = false;
+    });
+  }), "lowStockProduct", function lowStockProduct() {
+    this.report = 'low-stock-report';
+  }), "lowStockProductFilter", function lowStockProductFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.get(vm.api_url + 'reports/fis/product-wise-count', data).then(function (res) {
+      var results = res.data.response;
+      vm.lowStockProductData = results.lowStock;
+      vm.loader = false;
+    });
+  }), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_methods, "highStockProduct", function highStockProduct() {
+    this.report = 'high-stock-report';
+  }), "highStockProductFilter", function highStockProductFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.get(vm.api_url + 'reports/fis/product-wise-count', data).then(function (res) {
+      var results = res.data.response;
+      vm.highStockProductData = results.highStock;
+      vm.loader = false;
+    });
+  }), "top10Dropshipper", function top10Dropshipper() {
+    this.report = 'top-10-dropshipper';
+  }), "top10DropshipperFilter", function top10DropshipperFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/top-10-dropshippers', data).then(function (res) {
+      var results = res.data.response;
+      vm.top10DropshipperData = results.dropshippers;
+      vm.loader = false;
+    });
+  }), "topSellingProducts", function topSellingProducts() {
+    this.report = 'top-selling-products';
+  }), "topSellingProductsFilter", function topSellingProductsFilter() {
+    var vm = this;
+    vm.loader = true;
+    axios.get(vm.api_url + 'reports/fis/top-selling-products').then(function (res) {
+      var results = res.data.response;
+      vm.topSellingProductData = results;
+      vm.loader = false;
+    });
+  }), "orderIssuanceReport", function orderIssuanceReport() {
+    this.report = 'order-issuance-report';
+  }), "orderIssuanceReportFilter", function orderIssuanceReportFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/order-issuances', data).then(function (res) {
+      var results = res.data.response;
+      vm.orderIssuanceReportData = results;
+      vm.loader = false;
+    });
+  }), "leopardReturnReceived", function leopardReturnReceived() {
+    this.report = 'leopard-return-received';
+  }), "leopardReturnReceivedFilter", function leopardReturnReceivedFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/leopard-return-receiveds', data).then(function (res) {
+      var results = res.data.response;
+      vm.leopardReturnReceivedData = results;
+      vm.loader = false;
+    });
+  }), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_methods, "deliveredOrder", function deliveredOrder() {
+    this.report = 'delivered-order-report';
+  }), "deliveredOrderFilter", function deliveredOrderFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/delivered-order-details', data).then(function (res) {
+      var results = res.data.response;
+      vm.deliveredOrderData = results;
+      vm.loader = false;
+    });
+  }), "deleteGRNConfirmation", function deleteGRNConfirmation() {
+    var _this = this;
+    var vm = this;
+    vm.deleteLoader = true;
+    axios.post(this.api_url + "reports/fis/good-received/delete", this.grnDetails).then(function (response) {
+      vm.deleteLoader = false;
+      $('#deleteGRN').modal('hide');
+      _this.$emit('GRNdeleted', true);
+      return swal({
+        title: "Success",
+        text: 'Deleted Successfully',
+        icon: "success",
+        timer: 3000
+      });
+    })["catch"](function (err) {
+      vm.deleteLoader = false;
+      return swal({
+        title: "Error",
+        text: err.response.data.response[0],
+        icon: "error",
+        timer: 3000
+      });
+    });
+  }), "deleteGRN", function deleteGRN(data) {
+    this.grnDetails = data;
+  }), "fetchProducts", function fetchProducts() {
+    var vm = this;
+    axios.get(this.api_url + "inventory/products/complete-drop-down").then(function (response) {
+      vm.products = response.data.response;
+    })["catch"](function (err) {
+      vm.fetchProducts();
+    });
+  }), "goodReturn", function goodReturn() {
+    this.report = 'good-return-report';
+  }), "inventoryGoodReturnFilter", function inventoryGoodReturnFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/good-returns', data).then(function (res) {
+      var results = res.data.response;
+      vm.goodReturnData = results;
+      vm.loader = false;
+    });
+  }), "goodIssued", function goodIssued() {
+    this.report = 'good-issued-report';
+  }), "inventoryGoodIssuedFilter", function inventoryGoodIssuedFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/good-issued', data).then(function (res) {
+      var results = res.data.response;
+      vm.goodIssuedData = results;
+      vm.loader = false;
+    });
+  }), "goodReceived", function goodReceived() {
+    this.report = 'good-received-report';
+  }), _defineProperty(_defineProperty(_defineProperty(_methods, "inventoryGoodReceivedilter", function inventoryGoodReceivedilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/good-received', data).then(function (res) {
+      var results = res.data.response;
+      vm.goodReceivedData = results.goods;
+      vm.role = results.role;
+      vm.loader = false;
+    });
+  }), "controlRegister", function controlRegister() {
+    this.report = 'control-register-report';
+  }), "inventoryControlregisterReportFilter", function inventoryControlregisterReportFilter(data) {
+    var vm = this;
+    vm.loader = true;
+    axios.post(vm.api_url + 'reports/fis/inventory-control-register', data).then(function (res) {
+      var results = res.data.response;
+      vm.controlRegisterData = results;
+      vm.loader = false;
+    });
+  }))
 });
 
 /***/ }),
@@ -32925,20 +32905,7 @@ var render = function render() {
     }
   })], 1) : _c("div", {
     staticClass: "table-responsive"
-  }, [_vm._m(1)])])])])]), _vm._v(" "), _c("DropshipperDetails", {
-    attrs: {
-      details: _vm.details,
-      loader: _vm.btnLoader
-    },
-    on: {
-      decision: function decision($event) {
-        return _vm.decision($event);
-      },
-      updateDropshipperInformation: function updateDropshipperInformation($event) {
-        return _vm.updateDropshipperInformation($event);
-      }
-    }
-  })], 1);
+  }, [_vm._m(1)])])])])])]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -34348,7 +34315,19 @@ var render = function render() {
     attrs: {
       revenueOrderGraph: _vm.revenueOrderGraph
     }
-  }), _vm._v(" "), _vm._m(0)], 1), _vm._v(" "), _vm.loader ? _c("div", {
+  }), _vm._v(" "), _c("div", {
+    staticClass: "col-12 col-sm-12 col-lg-12"
+  }, [_vm._m(0), _vm._v(" "), _c("GenericBarChart", {
+    attrs: {
+      "graph-data": _vm.dashboardGraphs,
+      "graph-type": "returns",
+      title: "Returns"
+    }
+  }), _vm._v(" "), _c("NewProducts30DaysGraph", {
+    attrs: {
+      newproducts30daysgraph: _vm.newproducts30daysgraph
+    }
+  })], 1)], 1), _vm._v(" "), _vm.loader ? _c("div", {
     staticClass: "card-body table-responsive"
   }, [_c("bullet-list-loader", {
     attrs: {
@@ -34523,8 +34502,6 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "col-12 col-sm-12 col-lg-12"
-  }, [_c("div", {
     staticClass: "card"
   }, [_c("div", {
     staticClass: "card-header"
@@ -34537,7 +34514,7 @@ var staticRenderFns = [function () {
     }
   }), _vm._v(" "), _c("div", {
     staticClass: "statistic-details mt-1"
-  })])])]);
+  })])]);
 }, function () {
   var _vm = this,
     _c = _vm._self._c;
@@ -40551,7 +40528,20 @@ var render = function render() {
         return _vm.supplierStockFilter($event);
       }
     }
-  }) : _vm._e(), _vm._v(" "), _vm.report == "suspected-duplicate-dropshippers" ? _c("SuspectedDuplicateDropshippers", {
+  }) : _vm._e(), _vm._v(" "), _c("DropshipperDetails", {
+    attrs: {
+      details: _vm.dropshipperDetails,
+      loader: _vm.dropshipperBtnLoader
+    },
+    on: {
+      decision: function decision($event) {
+        return _vm.handleDecision($event);
+      },
+      updateDropshipperInformation: function updateDropshipperInformation($event) {
+        return _vm.handleUpdateDropshipperInformation($event);
+      }
+    }
+  }), _vm._v(" "), _vm.report == "suspected-duplicate-dropshippers" ? _c("SuspectedDuplicateDropshippers", {
     attrs: {
       data: _vm.suspectedDuplicateDropshippersData,
       loader: _vm.loader
@@ -40559,6 +40549,9 @@ var render = function render() {
     on: {
       DuplicateDropshippersfilter: function DuplicateDropshippersfilter($event) {
         return _vm.DuplicateDropshippersfilter($event);
+      },
+      openDropshipperModal: function openDropshipperModal($event) {
+        return _vm.openDropshipperModal($event);
       }
     }
   }) : _vm._e(), _vm._v(" "), _vm.report == "low-stock-products" ? _c("LowStockReport", {

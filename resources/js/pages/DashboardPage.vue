@@ -76,7 +76,7 @@
                     graph-type="profit"
                     title="Profit"
                     :is-currency="true"
-                />
+                />-->
            
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
@@ -84,7 +84,7 @@
                     title="Returns"
                 />
            
-                <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/> -->
+                <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/> 
               
 
             

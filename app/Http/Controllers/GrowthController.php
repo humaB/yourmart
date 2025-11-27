@@ -122,7 +122,7 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
             $totalProfit += $profit;
         }
     
-        return $totalProfit;
+        return round($totalProfit, 2);
     }
     // private function calculateDailyOrderIssuanceProfit($date)
     // {
