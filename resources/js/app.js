@@ -25,7 +25,7 @@ Vue.component("v-select", vSelect);
 
 Vue.component('dashboard-page', require('./pages/DashboardPage.vue').default );
 Vue.component('users-page', require('./pages/admin/user/UserPage.vue').default );
-
+Vue.component('growthdashboard-page', require('./pages/GrowthDashboardPage.vue').default);
 Vue.component('dropshipper-requests', require('./pages/admin/request/DropShipperRequestPage.vue').default );
 Vue.component('dropshipper-order-page', require('./pages/admin/user/DropShipperOrderPage.vue').default );
 Vue.component('dropshipper-payouts-page', require('./pages/admin/user/DropShipperPayOutPage.vue').default );

@@ -22,6 +22,7 @@ use App\Http\Controllers\Pages\LibraryPageController;
 use App\Http\Controllers\Pages\HelpCenterPageController;
 use App\Http\Controllers\User\DropShipperController;
 use App\Http\Controllers\User\SupplierController;
+use App\Http\Controllers\GrowthController;
 use App\Http\Controllers\Account\AccountController;
 use App\Http\Controllers\Account\AccountHeadController;
 use App\Http\Controllers\Account\BankTransactionController;
@@ -82,6 +83,14 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
 
         Route::get('/product-wise-count',  [ DashboardController::class , 'categoryTagWiseProduct']);
     });
+});
+
+
+Route::group(['prefix' => 'growthdashboard'], function(){
+    Route::post('/', [GrowthController::class, 'fetchData']);
+    Route::get('/top-selling-products',  [ GrowthController::class , 'topSellingProduct']);
+    Route::post('/top-10-dropshippers',  [ GrowthController::class , 'topTenDropshipper']);
+    Route::post('/product-wise-count',  [ GrowthController::class , 'topTenDropshipper']);
 });
 
 Route::group(['prefix' => 'tickets'], function(){

@@ -21,8 +21,9 @@
                 </form>
             </div>
             </div>
+            <Divider type="solid" />
 
-            <div class="card-body table-responsive" v-if="loader">
+            <!-- <div class="card-body table-responsive" v-if="loader">
                 <bullet-list-loader :width="250"> </bullet-list-loader>
             </div>
 
@@ -55,8 +56,8 @@
                         </div>
                     </div>
      
-                <!-- <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
-           
+                <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
+                -->
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
                     graph-type="orders"
@@ -76,7 +77,7 @@
                     graph-type="profit"
                     title="Profit"
                     :is-currency="true"
-                />-->
+                />
            
                 <GenericBarChart 
                     :graph-data="dashboardGraphs"
@@ -84,14 +85,14 @@
                     title="Returns"
                 />
            
-                <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/> 
+                <!-- <NewProducts30DaysGraph :newproducts30daysgraph="newproducts30daysgraph"/> -->
               
 
             
 </div>
 
                 
-            </div>
+            <!-- </div>  -->
 
         
             <div class="card-body table-responsive" v-if="loader">
@@ -103,7 +104,7 @@
             <DashboardSectionTwo :dropshipper="pendingPayouts" :pendingRequests="pendingRequests"
                 :allProcessedOrders="allProcessedOrders" />
 
-            <DashboardSectionThree :allProcessedOrders="allProcessedOrders" :processOrders="processOrders" />
+            <!-- <DashboardSectionThree :allProcessedOrders="allProcessedOrders" :processOrders="processOrders" />
 
             <DashboardTopFiveDropshipper :topFiveDropshippers='topFiveDropshippers' />
 
@@ -111,9 +112,9 @@
 
             <DashboardTopFiveSupplier :topFiveSuppliers='topFiveSuppliers' />
 
-            <DashboardSectionFour :inventoryStatus="inventoryStatus" />
+            <DashboardSectionFour :inventoryStatus="inventoryStatus" /> -->
  
-            <div class="col-md-12">
+            <!-- <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Tickets Status</h4>
@@ -243,9 +244,9 @@
                         </ul>
                     </div>
                 </div>
-            </div>
-        </div>
-        <DropshipperDetails :details="dropShipperDetails" />
+            </div> -->
+        <!-- </div> -->
+        <!-- <DropshipperDetails :details="dropShipperDetails" /> -->
     </div>
 </template>
 

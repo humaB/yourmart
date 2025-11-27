@@ -119,7 +119,7 @@
     <div class="col-md-4 col-6" v-if="role == 'admin'">
     <h6>
         17.
-        <a href="#" @click="lowStocklist()"><i class="fas fa-fax"></i> Low stock report</a>
+        <a href="#" @click="lowStocklist()"><i class="fas fa-fax"></i> Stock Report</a>
     </h6>
 </div>
                         </div>
@@ -176,8 +176,17 @@
         <SupplierWiseStock v-if="report == 'supplier-stock-report'" :data="supplierStockData"
             :loader="loader" @supplierStockFilter="supplierStockFilter($event)" />
 
+            <!-- dropshipper detail modal  -->
+            <DropshipperDetails 
+            :details="dropshipperDetails" 
+            :loader="dropshipperBtnLoader" 
+            @decision="handleDecision($event)"
+            @updateDropshipperInformation="handleUpdateDropshipperInformation($event)" 
+        />
+
+
         <SuspectedDuplicateDropshippers v-if="report == 'suspected-duplicate-dropshippers'" :data="suspectedDuplicateDropshippersData"
-            :loader="loader" @DuplicateDropshippersfilter="DuplicateDropshippersfilter($event)" />
+            :loader="loader" @DuplicateDropshippersfilter="DuplicateDropshippersfilter($event)" @openDropshipperModal="openDropshipperModal($event)" />
 
             <LowStockReport v-if="report == 'low-stock-products'" :data="lowStockData" :loader="loader"  @lowStockfilter="lowStockfilter" />
 
@@ -236,6 +245,7 @@ import Top10DropshipperReport from '../../components/reports/fis/Top10Dropshippe
 import TopSellingProduct from '../../components/reports/fis/TopSellingProduct.vue';
 import SuspectedDuplicateDropshippers from '../../components/reports/fis/SuspectedDuplicateDropshippers.vue';
 import LowStockReport from '../../components/reports/fis/LowStockReport.vue';
+import DropshipperDetails from "../../components/admin/request/DropshipperDetails.vue";
 
 import TableHeader from '../../components/table/TableHeaderComponent.vue';
 
@@ -259,7 +269,8 @@ export default {
         DropshipperListReport,
         SupplierWiseStock,
         SuspectedDuplicateDropshippers,
-        LowStockReport
+        LowStockReport,
+        DropshipperDetails
     },
     data() {
         return {
@@ -295,6 +306,8 @@ export default {
             suspectedDuplicateDropshippersData: [],
             lowStockData: [], 
             lowStockLoader: false,
+            dropshipperDetails: {},
+            dropshipperBtnLoader: false,
             role : ""
         }
     },
@@ -311,6 +324,69 @@ export default {
                     vm.role = response.data.role;
                 })
         },
+// detail modal
+openDropshipperModal(details) {
+        // Add this simple log
+        console.log("📊 Data received in parent:", details);
+        
+        // Set the data
+        this.dropshipperDetails = details;
+        this.dropshipperBtnLoader = false;
+        
+        // Show modal
+        $('#dropShipperDetail').modal('show');
+    },
+        handleDecision(data) {
+            let vm = this;
+            vm.dropshipperBtnLoader = true;
+            
+            axios
+                .post(this.api_url + "dropshippers/decisions", data)
+                .then((response) => {
+                    // Refresh the duplicate dropshippers data
+                    vm.DuplicateDropshippersfilter();
+                    $(".modal").modal('hide');
+                    vm.dropshipperBtnLoader = false;
+                    return swal({
+                        title: "Success",
+                        text: 'Decision Made Successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }).catch((err) => {
+                    vm.dropshipperBtnLoader = false;
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        
+        handleUpdateDropshipperInformation(data) {
+            let vm = this;
+            axios
+                .post(this.api_url + "dropshippers", data)
+                .then((response) => {
+                    // Refresh the duplicate dropshippers data
+                    vm.DuplicateDropshippersfilter();
+                    return swal({
+                        title: "Success",
+                        text: 'Information updated successfully',
+                        icon: "success",
+                        timer: 3000,
+                    });
+                }).catch((err) => {
+                    return swal({
+                        title: "Error",
+                        text: err.response.data.response[0],
+                        icon: "error",
+                        timer: 3000,
+                    });
+                });
+        },
+        // detail modal
         supplierStock() {
             this.report = 'supplier-stock-report'
         },
@@ -340,6 +416,14 @@ export default {
 
          duplicateDropshipperslist() {
             this.report = 'suspected-duplicate-dropshippers'
+        },
+        fetchRole(){
+            let vm = this;
+            axios
+                .get(this.api_url + "users/role")
+                .then((response) => {
+                    vm.role = response.data.role;
+                })
         },
         DuplicateDropshippersfilter(data) {
             let vm = this;

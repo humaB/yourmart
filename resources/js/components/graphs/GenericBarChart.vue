@@ -43,7 +43,6 @@
             return `${this.graphType}Graph`;
         },
         dataset() {
-            // Handle both new structure (datasets) and old structure (series)
             if (this.graphData.datasets && this.graphData.datasets[this.graphType]) {
                 return this.graphData.datasets[this.graphType];
             } else if (this.graphData.series && this.graphData.series[0]) {
@@ -59,13 +58,13 @@
         },
         formattedTotal() {
             if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                return 'Rs. ' + (this.stats.total || 0).toLocaleString();
+                return (this.stats.total || 0).toLocaleString();
             }
             return (this.stats.total || 0).toLocaleString();
         },
         formattedAverage() {
             if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                return 'Rs. ' + (this.stats.average || 0).toLocaleString();
+                return (this.stats.average || 0).toLocaleString();
             }
             return (this.stats.average || 0).toLocaleString();
         },
@@ -99,6 +98,9 @@
                     height: 300,
                     type: "bar",
                 },
+                toolbar: {
+                    show: false,
+                },
                 plotOptions: {
                     bar: {
                         dataLabels: {
@@ -110,7 +112,7 @@
                     enabled: true,
                     formatter: (val) => {
                         if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                            return 'Rs. ' + val.toLocaleString();
+                            return val.toLocaleString();
                         }
                         return val.toString();
                     },
@@ -169,11 +171,14 @@
                         stops: [0, 100]
                     }
                 },
+                toolbar: {
+                    show: false,
+                },
                 tooltip: {
                     y: {
                         formatter: (val) => {
                             if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                                return 'Rs.' + val.toLocaleString();
+                                return val.toLocaleString();
                             }
                             return val.toString();
                         }

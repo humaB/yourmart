@@ -1,59 +1,38 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-12 col-sm-12 col-lg-12">
+            <div class="col-12">
                 <div class="card">
                     <div class="card-header">
                         <h5>Duplicate Dropshipper Accounts</h5>
                     </div>
-                    <div class="card-body row">
-                        <div class="col-md-12">
-                            <form @submit.prevent="submitFunction">
-                                <div class="row">
-                                    <div class="col-md-12 form-group pt-4">
-                                        <button class="btn btn-block btn-primary">Fetch Suspected Duplicates</button>
-                                    </div>
-                                </div>
-                            </form>
+                    <div class="card-body">
+                        <form @submit.prevent="submitFunction" class="mb-3">
+                            <button class="btn btn-primary btn-block">Fetch Suspected Duplicates</button>
+                        </form>
+
+                        <div v-if="loader" class="text-center py-4">
+                            <bullet-list-loader :width="250"></bullet-list-loader>
                         </div>
-                        <div class="col-md-12">
-                            <div class="card-body table-responsive" v-if="loader">
-                                <bullet-list-loader :width="250">
-                                </bullet-list-loader>
-                            </div>
-                            <table class="table table-bordered" id="duplicate_dropshipper_list" v-else>
+
+                        <div v-else class="table-responsive">
+                            <table class="table table-striped dataTable no-footer" id="duplicate_dropshipper_list">
                                 <thead>
                                     <tr>
-                                        <th>Sr #</th>
+                                        <th></th> <!-- Expand/Collapse column -->
+                                        <th>#</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Contact #</th>
                                         <th>CNIC</th>
                                         <th>Account Number</th>
-                                        <th>IBAN</th> 
+                                        <th>IBAN</th>
                                         <th>Remaining Amount</th>
                                         <th>Reason/Similarity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(item, index) in data" :key="item.id">
-                                        <td>{{ index + 1 }}</td>
-                                        <td>{{ item.full_name }}</td>
-                                        <td>{{ item.email }}</td>
-                                        <td>{{ item.whatsapp_number }}</td>
-                                        <td>{{ item.cnic_number }}</td>
-                                        <td>{{ item.account_number }}</td>
-                                        <td>{{ item.account_iban }}</td>
-                                        <td>{{ formatPrice(item.remaining_amount) }}</td>
-                                        
-                                        <td>
-                                            <span class="custom-badge badge badge-warning" v-if="isEmailDuplicate(item)">Duplicate Email</span>
-                                            <span class="custom-badge badge badge-primary" v-if="isPhoneDuplicate(item)">Duplicate Phone</span>
-                                            <span class="custom-badge badge badge-success" v-if="isCNICDuplicate(item)">Duplicate CNIC</span>
-                                            <span class="custom-badge badge badge-danger" v-if="isAcoountDuplicate(item)">Duplicate Account</span>
-                                            <span class="custom-badge badge badge-warning" v-if="isIBANDuplicate(item)">Duplicate IBAN</span>
-                                        </td>
-                                    </tr>
+                                    <!-- DataTables will populate this automatically -->
                                 </tbody>
                             </table>
                         </div>
@@ -66,88 +45,358 @@
 
 <script>
 import moment from 'moment';
+
 import { BulletListLoader } from 'vue-content-loader';
 
 export default {
     name: 'SuspectedDuplicateDropshippers',
     props: ['data', 'loader'],
     components: {
-        BulletListLoader
+        BulletListLoader,
+       
     },
     data() {
         return {
             public_url: window.location.origin + process.env.MIX_FOLDER_PATH,
-        }
+            api_url: window.location.origin + process.env.MIX_API_URL,
+            dataTable: null,
+            tableData: [],
+            
+            expandedGroups: new Set() // Track expanded groups
+        };
     },
-    methods: {
-        formatDate(date) {
-            return date ? moment(date).format('DD-MMM-YYYY') : '';
-        },
-        formatPrice: function formatPrice(price) {
-            const value = parseFloat(price).toFixed(2)
-            var string = value.toString();
-            return string
-                .replace(/,/g, "")
-                .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
-        },
-        submitFunction() {
-            this.$emit('DuplicateDropshippersfilter');
-        },
-        clearDataTable() {
-            const table = $('#duplicate_dropshipper_list').DataTable();
-            if (table) {
-                table.destroy();
-            }
-        },
-        isEmailDuplicate(item) {
-            return this.data.filter(d => d.email === item.email && d.email).length > 1;
-        },
-        isCNICDuplicate(item) {
-            return this.data.filter(d => d.cnic_number === item.cnic_number && d.cnic_number).length > 1;
-        },
-        isPhoneDuplicate(item) {
-            return this.data.filter(d => d.whatsapp_number === item.whatsapp_number && d.whatsapp_number).length > 1;
-        },
-        isAcoountDuplicate(item) {
-            return this.data.filter(d => d.account_number === item.account_number && d.account_number).length > 1;
-        },
-        isIBANDuplicate(item) {
-            return this.data.filter(d => d.account_iban === item.account_iban && d.account_iban).length > 1;
+    computed: {
+        groupedData() {
+            if (!this.data || !this.data.length) return [];
+            const groups = [];
+            const processedIds = new Set();
+
+            this.data.forEach(item => {
+                if (processedIds.has(item.id)) return;
+
+                const duplicates = this.data.filter(other => {
+                    if (other.id === item.id || processedIds.has(other.id)) return false;
+
+                    const emailA = (item.email || '').toString().trim().toLowerCase();
+                    const emailB = (other.email || '').toString().trim().toLowerCase();
+                    const phoneA = (item.whatsapp_number || '').toString().trim();
+                    const phoneB = (other.whatsapp_number || '').toString().trim();
+                    const cnicA = (item.cnic_number || '').toString().trim();
+                    const cnicB = (other.cnic_number || '').toString().trim();
+                    const accA = (item.account_number || '').toString().trim();
+                    const accB = (other.account_number || '').toString().trim();
+                    const ibanA = (item.account_iban || '').toString().trim();
+                    const ibanB = (other.account_iban || '').toString().trim();
+
+                    return (
+                        (emailA && emailA === emailB) ||
+                        (phoneA && phoneA === phoneB) ||
+                        (cnicA && cnicA === cnicB) ||
+                        (accA && accA === accB) ||
+                        (ibanA && ibanA === ibanB)
+                    );
+                });
+
+                if (duplicates.length > 0) {
+                    groups.push({
+                        parent: item,
+                        children: duplicates,
+                        duplicateFields: this.getDuplicateFields(item, duplicates),
+                        groupIndex: groups.length
+                    });
+                    processedIds.add(item.id);
+                    duplicates.forEach(d => processedIds.add(d.id));
+                }
+            });
+
+            return groups;
         }
     },
     watch: {
-        data(newData) {
-            this.$nextTick(() => {
-                setTimeout(() => {
-                    this.clearDataTable();
-                    $('#duplicate_dropshipper_list').DataTable({
-                        "bSort": false,
-                        dom: 'Bfrtip',
-                        buttons: [
-                            {
-                                extend: 'copy',
-                                title: 'Suspected Duplicate Dropshipper Accounts',
-                            }, 
-                            'csv', 
-                            {
-                                extend: 'excel',
-                                title: 'Suspected Duplicate Dropshipper Accounts',
-                            }
-                        ]
-                    });
-                }, 300);
-            });
+        groupedData: {
+            handler(newGroups) {
+                this.prepareTableData(newGroups);
+                this.$nextTick(() => {
+                    this.initDataTable();
+                });
+            },
+            immediate: true
         }
     },
+    methods: {
+        prepareTableData(groups) {
+            this.tableData = [];
+
+            groups.forEach((group, idx) => {
+                // Only add parent rows to main table data
+                // Child rows will be shown via expandable rows
+                this.tableData.push({
+                    id: group.parent.id,
+                    full_name: group.parent.full_name,
+                    email: group.parent.email,
+                    whatsapp_number: group.parent.whatsapp_number,
+                    cnic_number: group.parent.cnic_number,
+                    account_number: group.parent.account_number,
+                    account_iban: group.parent.account_iban,
+                    remaining_amount: group.parent.remaining_amount,
+                    groupIndex: idx,
+                    isParent: true,
+                    duplicateCount: group.children.length,
+                    children: group.children,
+                    duplicateFields: group.duplicateFields
+                });
+            });
+        },
+
+        initDataTable() {
+            // Destroy existing DataTable if it exists
+            if (this.dataTable) {
+                this.dataTable.destroy();
+                $('#duplicate_dropshipper_list').off('click', '.expand-btn');
+            }
+
+
+            // Initialize DataTable
+            this.dataTable = $('#duplicate_dropshipper_list').DataTable({
+                data: this.tableData,
+                language: {
+                    emptyTable: "" // This replaces the empty colspan row
+                },
+
+                columns: [
+                    {
+                        // Expand/Collapse button column
+                        data: null,
+                        className: 'dt-control',
+                        orderable: false,
+                        defaultContent: '',
+                        render: (data, type, row) => {
+                            const isExpanded = this.expandedGroups.has(row.groupIndex);
+                            return `
+                                <button class="btn btn-sm expand-btn ${isExpanded ? 'btn-secondary' : 'btn-info'}" 
+                                        data-group-index="${row.groupIndex}"
+                                        title="${isExpanded ? 'Collapse' : 'Expand'}">
+                                    <i class="fa ${isExpanded ? 'fa-chevron-down' : 'fa-chevron-right'}"></i>
+                                </button>
+                            `;
+                        }
+                    },
+                    {
+                        data: 'groupIndex',
+                        render: (data, type, row) => {
+                            return data + 1;
+                        }
+                    },
+                    { data: 'full_name' },
+                    { data: 'email' },
+                    { data: 'whatsapp_number' },
+                    { data: 'cnic_number' },
+                    { data: 'account_number' },
+                    { data: 'account_iban' },
+                    {
+                        data: 'remaining_amount',
+                        render: (data, type, row) => {
+                            return this.formatPrice(data || 0);  // ← This is it!
+                        }
+                    },
+                    {
+                        data: null,
+                        orderable: false,
+                        render: (data, type, row) => {
+                            return `
+                        <button class="btn btn-info btn-sm preview-btn" data-dropshipper-id="${row.id}" data-toggle="modal" data-target="#dropShipperDetail" title="Preview Details">
+                <i class="fa fa-eye"></i> Preview
+            </button>
+                                <span class="badge badge-danger mr-2">${row.duplicateCount} duplicates</span>
+                                
+                            `;
+                        }
+                    }
+                ],
+                order: [[1, 'asc']],
+                paging: true,
+                searching: true,
+                info: true,
+                autoWidth: false,
+                dom: 'Bfrtip',
+                buttons: [
+                    { extend: 'copy', title: 'Suspected Duplicate Dropshipper Accounts' },
+                    'csv',
+                    { extend: 'excel', title: 'Suspected Duplicate Dropshipper Accounts' }
+                ],
+                drawCallback: () => {
+                    this.attachExpandEvents();
+                },
+                initComplete: () => {
+                    this.attachExpandEvents();
+                }
+            });
+        },
+
+        attachExpandEvents() {
+            // Remove any existing event handlers
+            $('#duplicate_dropshipper_list').off('click', '.expand-btn');
+
+            // Attach event delegation for expand buttons
+            $('#duplicate_dropshipper_list').on('click', '.expand-btn', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+
+                const $btn = $(event.currentTarget);
+                const groupIndex = parseInt($btn.data('group-index'));
+                const tr = $btn.closest('tr');
+                const row = this.dataTable.row(tr);
+
+                this.toggleGroup(row, groupIndex, $btn);
+            });
+
+            $('#duplicate_dropshipper_list').on('click', '.preview-btn', (event) => {
+    // Remove event.preventDefault() - it's preventing Bootstrap from showing the modal
+    const dropshipperId = $(event.currentTarget).data('dropshipper-id');
+    this.fetchDetail(dropshipperId); // Changed from openPreviewModal to fetchDetail
+});
+        },
+
+        toggleGroup(row, groupIndex, $btn) {
+            if (this.expandedGroups.has(groupIndex)) {
+                // Collapse the group
+                this.collapseGroup(row, groupIndex, $btn);
+            } else {
+                // Expand the group
+                this.expandGroup(row, groupIndex, $btn);
+            }
+        },
+
+        expandGroup(row, groupIndex, $btn) {
+            const parentData = row.data();
+
+            // Create child rows HTML
+            let childRowsHtml = '';
+
+            parentData.children.forEach((child, index) => {
+                const badges = [];
+                if (parentData.duplicateFields.email) badges.push('<span class="badge badge-warning mr-1">Email</span>');
+                if (parentData.duplicateFields.phone) badges.push('<span class="badge badge-primary mr-1">Phone</span>');
+                if (parentData.duplicateFields.cnic) badges.push('<span class="badge badge-success mr-1">CNIC</span>');
+                if (parentData.duplicateFields.account) badges.push('<span class="badge badge-danger mr-1">Account</span>');
+                if (parentData.duplicateFields.iban) badges.push('<span class="badge badge-info mr-1">IBAN</span>');
+
+                childRowsHtml += `
+                    <tr class="child-row alert-danger">
+                        <td></td>
+                        <td></td>
+                        <td >${child.full_name}</td>
+                        <td>${child.email}</td>
+                        <td>${child.whatsapp_number}</td>
+                        <td>${child.cnic_number}</td>
+                        <td>${child.account_number}</td>
+                        <td>${child.account_iban}</td>
+                        <td>${this.formatPrice(child.remaining_amount)}</td>
+                        <td>
+                            ${badges.join(' ')}
+                            <button class="btn btn-info btn-sm preview-btn" data-dropshipper-id="${child.id}" title="Preview Details">
+                <i class="fa fa-eye"></i>
+            </button>
+                        
+                        </td>
+                    </tr>
+                `;
+            });
+
+            row.child(
+                $(`${childRowsHtml}`)
+            ).show();
+            $btn.removeClass('btn-info').addClass('btn-secondary');
+            $btn.find('i').removeClass('fa-chevron-right').addClass('fa-chevron-down');
+            $btn.attr('title', 'Collapse');
+
+            this.expandedGroups.add(groupIndex);
+            row.nodes().to$().addClass('shown');
+        },
+
+        collapseGroup(row, groupIndex, $btn) {
+            row.child.hide();
+
+            $btn.removeClass('btn-secondary').addClass('btn-info');
+            $btn.find('i').removeClass('fa-chevron-down').addClass('fa-chevron-right');
+            $btn.attr('title', 'Expand');
+
+            this.expandedGroups.delete(groupIndex);
+
+            row.nodes().to$().removeClass('shown');
+        },
+
+        getDuplicateFields(parent, children) {
+            const pEmail = (parent.email || '').toString().trim().toLowerCase();
+            const pPhone = (parent.whatsapp_number || '').toString().trim();
+            const pCnic = (parent.cnic_number || '').toString().trim();
+            const pAcc = (parent.account_number || '').toString().trim();
+            const pIban = (parent.account_iban || '').toString().trim();
+
+            return {
+                email: !!pEmail && children.some(c => (c.email || '').toString().trim().toLowerCase() === pEmail),
+                phone: !!pPhone && children.some(c => (c.whatsapp_number || '').toString().trim() === pPhone),
+                cnic: !!pCnic && children.some(c => (c.cnic_number || '').toString().trim() === pCnic),
+                account: !!pAcc && children.some(c => (c.account_number || '').toString().trim() === pAcc),
+                iban: !!pIban && children.some(c => (c.account_iban || '').toString().trim() === pIban)
+            };
+        },
+
+        formatPrice(price) {
+            const val = parseFloat(price || 0).toFixed(2);
+            return val.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        },
+
+        submitFunction() {
+            this.$emit('DuplicateDropshippersfilter');
+        },
+        fetchDetail(id) {
+        let vm = this;
+        vm.btnLoader = true;
+
+        axios
+            .post(this.api_url + "dropshippers/details", { id })
+            .then((response) => {
+                vm.btnLoader = false;
+                // Emit to parent instead of handling modal here
+                this.$emit('openDropshipperModal', response.data.response[0]);
+            })
+            .catch((err) => {
+                vm.btnLoader = false;
+                swal({
+                    title: "Error",
+                    text: 'Failed to fetch dropshipper details',
+                    icon: "error",
+                    timer: 3000,
+                });
+            });
+    },
+
+    },
     beforeDestroy() {
-        this.clearDataTable();
+        if (this.dataTable) {
+            this.dataTable.destroy();
+            $('#duplicate_dropshipper_list').off('click', '.expand-btn');
+        }
     }
-}
+};
 </script>
 
 <style scoped>
-.custom-badge{
-    margin-top: 5px;;
-    margin-bottom: 5px;;
+.alert-danger {
+    background-color: #f8d7da !important;
+    color: #721c24;
+}
+
+span.badge {
+    margin: 2px;
+}
+
+.btn-sm {
+    margin: 0 2px;
+}
+
+.dt-control {
+    text-align: center;
 }
 </style>
