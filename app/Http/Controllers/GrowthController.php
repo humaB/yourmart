@@ -89,7 +89,6 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
         foreach ($issues as $singleProductGroup) {
             $quantity = $singleProductGroup->sum('quantity');
     
-            // Calculate Avg Purchase Price
             $rate = StoreReceivedDetail::where('created_at', '<=', $date)
                 ->where('product_id', $singleProductGroup[0]->product_id)
                 ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
