@@ -203,12 +203,12 @@
             const colors = {
                 'orders': '#9a56ff',     
                 'sales': '#23bdb8',      
-                'profit': '#f48665',
-                'returns': '#EF4444',   
-                'newproducts': '#F59E0B',    
-                'graph1': '#4F46E5',     
-                'graph2': '#10B981',     
-                'graph3': '#8B5CF6' 
+                'profit': '#f48665'
+                // 'returns': '#EF4444',   
+                // 'newproducts': '#F59E0B',    
+                // 'graph1': '#4F46E5',     
+                // 'graph2': '#10B981',     
+                // 'graph3': '#8B5CF6' 
                 
             };
             return colors[this.graphType] || '#7367F0';
@@ -216,14 +216,14 @@
   
         getGradientColor(baseColor) {
             const gradients = {
-                '#9a56ff': '#e36cd9', 
-                '#23bdb8': '#43e794', 
-                '#f48665': '#fddb77', 
-        '#4F46E5': '#4338CA',
-        '#10B981': '#059669',
-        '#8B5CF6': '#7C3AED',
-        '#EF4444': '#DC2626',
-        '#F59E0B': '#D97706'
+        '#9a56ff': '#e36cd9', 
+        '#23bdb8': '#43e794', 
+        '#f48665': '#fddb77'
+        // '#4F46E5': '#4338CA',
+        // '#10B981': '#059669',
+        // '#8B5CF6': '#7C3AED',
+        // '#EF4444': '#DC2626',
+        // '#F59E0B': '#D97706'
             };
             return gradients[baseColor] || baseColor;
         }
@@ -248,10 +248,6 @@
   </script>
   
   <style scoped>
-  .graph-stats {
-    background-color: #f8f9fa;
-    border-radius: 0.375rem;
-  }
   .stat-item {
     padding: 0.5rem;
   }
@@ -259,8 +255,5 @@
     font-size: 0.75rem;
     margin-bottom: 0.25rem;
   }
-  .stat-value {
-    font-size: 1.25rem;
-    font-weight: 600;
-  }
+  
   </style>

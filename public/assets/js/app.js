@@ -10860,12 +10860,12 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var colors = {
         'orders': '#9a56ff',
         'sales': '#23bdb8',
-        'profit': '#f48665',
-        'returns': '#EF4444',
-        'newproducts': '#F59E0B',
-        'graph1': '#4F46E5',
-        'graph2': '#10B981',
-        'graph3': '#8B5CF6'
+        'profit': '#f48665'
+        // 'returns': '#EF4444',   
+        // 'newproducts': '#F59E0B',    
+        // 'graph1': '#4F46E5',     
+        // 'graph2': '#10B981',     
+        // 'graph3': '#8B5CF6' 
       };
       return colors[this.graphType] || '#7367F0';
     },
@@ -10873,12 +10873,12 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var gradients = {
         '#9a56ff': '#e36cd9',
         '#23bdb8': '#43e794',
-        '#f48665': '#fddb77',
-        '#4F46E5': '#4338CA',
-        '#10B981': '#059669',
-        '#8B5CF6': '#7C3AED',
-        '#EF4444': '#DC2626',
-        '#F59E0B': '#D97706'
+        '#f48665': '#fddb77'
+        // '#4F46E5': '#4338CA',
+        // '#10B981': '#059669',
+        // '#8B5CF6': '#7C3AED',
+        // '#EF4444': '#DC2626',
+        // '#F59E0B': '#D97706'
       };
       return gradients[baseColor] || baseColor;
     }
@@ -43241,7 +43241,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.graph-stats[data-v-00694943] {\n  background-color: #f8f9fa;\n  border-radius: 0.375rem;\n}\n.stat-item[data-v-00694943] {\n  padding: 0.5rem;\n}\n.stat-label[data-v-00694943] {\n  font-size: 0.75rem;\n  margin-bottom: 0.25rem;\n}\n.stat-value[data-v-00694943] {\n  font-size: 1.25rem;\n  font-weight: 600;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.stat-item[data-v-00694943] {\n  padding: 0.5rem;\n}\n.stat-label[data-v-00694943] {\n  font-size: 0.75rem;\n  margin-bottom: 0.25rem;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
