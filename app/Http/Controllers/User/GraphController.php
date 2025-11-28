@@ -155,7 +155,6 @@ class GraphController extends Controller
             return $this->getSampleData();
         }
     }
-    
     // NEW METHOD: Same calculation as your Vue component
     private function calculateDailyOrderIssuanceProfit($date)
     {
@@ -300,7 +299,50 @@ class GraphController extends Controller
     
     ];
     }
-    
+
+    // Add this method to your GraphController
+public function activeSellersMonthly()
+{
+    $days = collect(range(0, 29))->map(function ($i) {
+        return [
+            'date' => now()->subDays($i)->format('Y-m-d'),
+            'label' => now()->subDays($i)->format('M d'),
+        ];
+    })->reverse();
+
+    $activeSellersMonthly = $days->map(function ($day) {
+        $date = $day['date'];
+        
+        $orders = Order::whereNotIn('status', ['6', '7'])
+            ->whereDate('created_at', $date)
+            ->get();
+            
+        $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
+        
+        return DropShipper::where('status', '1')
+            ->whereIn('user_id', $orderbelongsto)
+            ->count();
+    });
+
+    // Convert to array properly
+    $dataArray = $activeSellersMonthly->values()->toArray();
+
+    $stats = [
+        'total' => $activeSellersMonthly->sum(),
+        'average' => round($activeSellersMonthly->avg(), 1),
+    ];
+
+    return [
+        'categories' => $days->pluck('label')->toArray(),
+        'series' => [
+            [
+                'name' => 'Daily Active Sellers (Last 30 Days)',
+                'data' => $dataArray, // ✅ Use the converted array
+                'stats' => $stats,
+            ],
+        ],
+    ];
+}
     public function ticketTypesGraphData()
     {
         // Get ticket counts by type for last 30 days, only where count > 0

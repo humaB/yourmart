@@ -35,8 +35,11 @@
                     title="Profit"
                     :is-currency="true"
                 />
+                <hr class="border border-secondary border-2 opacity-50">
+                <ActiveSellersMonthly :activeSellersMonthly="activeSellersMonthly"/>
                 
                 <hr class="border border-secondary border-2 opacity-50">
+
                 <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
             </div>
         </div>
@@ -45,6 +48,7 @@
 
 <script>
 import DropshipperApprovedGraph from '../components/graphs/DropshipperApprovedGraph.vue';
+import ActiveSellersMonthly from '../components/graphs/ActiveSellersMonthly.vue';
 import GenericBarChart from '../components/graphs/GenericBarChart.vue';
 import OrdersectionGrowthDashboard from '../components/admin/dashboard/OrdersectionGrowthDashboard.vue';
 import { BulletListLoader } from "vue-content-loader";
@@ -54,6 +58,7 @@ export default {
     components: {
         OrdersectionGrowthDashboard,
         DropshipperApprovedGraph,
+        ActiveSellersMonthly,
         GenericBarChart,
         BulletListLoader
     },
@@ -64,6 +69,7 @@ export default {
             todaysData: {},
             dashboardGraphs: {},
             dropshipperGraphLast120Days: {},
+            activeSellersMonthly:{},
         };
     },
     created() {
@@ -82,6 +88,7 @@ export default {
                     vm.todaysData = results.todaysData || {};
                     vm.dashboardGraphs = results.dashboardGraphs || {};
                     vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
+                    ;vm.activeSellersMonthly=results.activeSellersMonthly || {};
                     
                     vm.loader = false;
                 })

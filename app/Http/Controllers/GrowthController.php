@@ -32,11 +32,14 @@ class GrowthController extends Controller
         $graphController = new GraphController();
         $dashboardGraphs = $graphController->getDashboardGraphs();
         $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+        $activeSellersMonthly = $graphController->activeSellersMonthly();
+        
 
         $data = [
             'todaysData' => $todaysData,
             'dashboardGraphs' => $dashboardGraphs,
             'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
+            'activeSellersMonthly' => $activeSellersMonthly,
         ];
 
         return (new ResponseCollection($data))
@@ -48,7 +51,7 @@ class GrowthController extends Controller
     {
         //   $from = $request->from;
         // $to = $request->to;
-        $today = now()->subDay()->format('Y-m-d');
+        $today = now()->format('Y-m-d');
         
         $orders = Order::whereNotIn('status', ['6', '7'])
             ->whereDate('created_at', $today)
@@ -112,8 +115,6 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
                     $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
                 }
             }
-    
-            // Calculate profit
             $netQuantity = $quantity - $returnQuantity;
             $netSale = $avgIssuancePrice * $netQuantity;
             $netPurchase = $netQuantity * $purchaseRate;
@@ -124,43 +125,5 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
     
         return round($totalProfit, 2);
     }
-    // private function calculateDailyOrderIssuanceProfit($date)
-    // {
-    //     try {
-    //         // Get orders for the specific date
-    //         $orders = Order::whereNotIn('status', ['6', '7'])
-    //             ->whereDate('created_at', $date)
-    //             ->get();
-
-    //         if ($orders->isEmpty()) {
-    //             return 0;
-    //         }
-
-    //         $totalProfit = 0;
-
-    //         foreach ($orders as $order) {
-    //             // Get order items
-    //             $orderItems = OrderItem::where('order_id', $order->id)->get();
-                
-    //             $productCost = 0;
-    //             $sellingPrice = 0;
-
-    //             foreach ($orderItems as $item) {
-    //                 $avgPrice = $item->variation->avg_price ?? 0;
-    //                 $productCost += $item->quantity * $avgPrice;
-    //                 $sellingPrice += $item->quantity * $item->price;
-    //             }
-
-    //             // Calculate profit for this order
-    //             $orderProfit = $sellingPrice - $productCost;
-    //             $totalProfit += $orderProfit;
-    //         }
-
-    //         return $totalProfit;
-
-    //     } catch (\Exception $e) {
-    //         \Log::error('Profit Calculation Error: ' . $e->getMessage());
-    //         return 0;
-    //     }
-    // }
+    
 }
