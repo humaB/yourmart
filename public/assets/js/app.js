@@ -10453,6 +10453,20 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           style: {
             color: "#9aa0ac"
           }
+        },
+        colors: ['#6366F1'],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 0.5,
+            gradientToColors: ['#A855F7'],
+            inverseColors: false,
+            opacityFrom: 1,
+            opacityTo: 0.8,
+            stops: [0, 100]
+          }
         }
       };
       if (this.chart) {
@@ -10844,16 +10858,22 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     getDefaultColor: function getDefaultColor() {
       var colors = {
-        'orders': '#4F46E5',
-        'sales': '#10B981',
-        'profit': '#8B5CF6',
+        'orders': '#9a56ff',
+        'sales': '#23bdb8',
+        'profit': '#f48665',
         'returns': '#EF4444',
-        'newproducts': '#F59E0B'
+        'newproducts': '#F59E0B',
+        'graph1': '#4F46E5',
+        'graph2': '#10B981',
+        'graph3': '#8B5CF6'
       };
       return colors[this.graphType] || '#7367F0';
     },
     getGradientColor: function getGradientColor(baseColor) {
       var gradients = {
+        '#9a56ff': '#e36cd9',
+        '#23bdb8': '#43e794',
+        '#f48665': '#fddb77',
         '#4F46E5': '#4338CA',
         '#10B981': '#059669',
         '#8B5CF6': '#7C3AED',
