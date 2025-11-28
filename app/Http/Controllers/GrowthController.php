@@ -123,7 +123,7 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
             $totalProfit += $profit;
         }
     
-        return round($totalProfit, 2);
+        return (int) round($totalProfit);
     }
     
 }

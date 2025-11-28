@@ -82,7 +82,7 @@
                     </td>
                     <td style="width: 20%;padding : 10px">
                         <div class="card card-statistic-1">
-                            <div class="card-icon l-bg-cyan">
+                            <div class="card-icon new_regis_dkpis">
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="card-wrap">
@@ -123,3 +123,11 @@
         }
     }
 </script>
+<style scooped>
+
+.new_regis_dkpis {
+    background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
+    color: #fff;
+}
+
+</style>
