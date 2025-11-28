@@ -202,8 +202,8 @@
         getDefaultColor() {
             const colors = {
                 'orders': '#9a56ff',     
-                'sales': '#23bdb8',      
-                'profit': '#F59E0B',
+                'sales': '#F59E0B',      
+                'profit': '#9a56ff',
                 'returns': '#EF4444'  
                 // 'newproducts': '#F59E0B',    
                 // 'graph1': '#4F46E5',     
@@ -216,6 +216,7 @@
   
         getGradientColor(baseColor) {
             const gradients = {
+                '#289cf5': '#84c0ec',
         '#9a56ff': '#e36cd9', 
         '#23bdb8': '#43e794', 
         '#F59E0B': '#D97706',

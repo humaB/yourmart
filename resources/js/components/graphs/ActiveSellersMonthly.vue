@@ -129,15 +129,15 @@ if (!series) {
                     color: "#9aa0ac",
                 },
             },
-            
-            colors: ['#6366F1'], 
+        
+            colors: ['#23bdb8'], 
         fill: {
             type: 'gradient',
             gradient: {
                 shade: 'light',
                 type: "vertical",
                 shadeIntensity: 0.5,
-                gradientToColors: ['#A855F7'],
+                gradientToColors: ['#43e794'],
                 inverseColors: false,
                 opacityFrom: 1,
                 opacityTo: 0.8,

@@ -10454,14 +10454,14 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
             color: "#9aa0ac"
           }
         },
-        colors: ['#6366F1'],
+        colors: ['#23bdb8'],
         fill: {
           type: 'gradient',
           gradient: {
             shade: 'light',
             type: "vertical",
             shadeIntensity: 0.5,
-            gradientToColors: ['#A855F7'],
+            gradientToColors: ['#43e794'],
             inverseColors: false,
             opacityFrom: 1,
             opacityTo: 0.8,
@@ -10619,6 +10619,20 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
           align: "center",
           style: {
             color: "#9aa0ac"
+          }
+        },
+        colors: ['#090979'],
+        fill: {
+          type: 'gradient',
+          gradient: {
+            shade: 'light',
+            type: "vertical",
+            shadeIntensity: 0.5,
+            gradientToColors: ['#00D4FF'],
+            inverseColors: false,
+            opacityFrom: 1,
+            opacityTo: 0.8,
+            stops: [0, 100]
           }
         }
       };
@@ -10859,8 +10873,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     getDefaultColor: function getDefaultColor() {
       var colors = {
         'orders': '#9a56ff',
-        'sales': '#23bdb8',
-        'profit': '#F59E0B',
+        'sales': '#F59E0B',
+        'profit': '#9a56ff',
         'returns': '#EF4444'
         // 'newproducts': '#F59E0B',    
         // 'graph1': '#4F46E5',     
@@ -10871,6 +10885,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     getGradientColor: function getGradientColor(baseColor) {
       var gradients = {
+        '#289cf5': '#84c0ec',
         '#9a56ff': '#e36cd9',
         '#23bdb8': '#43e794',
         '#F59E0B': '#D97706',

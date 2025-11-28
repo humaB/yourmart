@@ -129,6 +129,20 @@
                         color: "#9aa0ac",
                     },
                 },
+                colors: ['#090979'], 
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "vertical",
+                shadeIntensity: 0.5,
+                gradientToColors: ['#00D4FF'],
+                inverseColors: false,
+                opacityFrom: 1,
+                opacityTo: 0.8,
+                stops: [0, 100]
+            }
+        },
             };
   
             if (this.chart) {
