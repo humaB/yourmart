@@ -45,17 +45,11 @@ class GraphController extends Controller
             $dates = [];
             foreach ($days as $day) {
                 $currentDate = $day['date'];
-    
-                // Match exactly with your closingReport logic
                 $orders = Order::whereNotIn('status', ['6', '7'])
                     ->whereDate('created_at', $currentDate)
                     ->get();
-    
-                // Sales count (matching closingReport)
                 $salesCount = $orders->count();
                 $salesAmount = $orders->sum('total_bill');
-    
-                // Returns count (matching closingReport)
                 $postExReturns = StoreReturnDetail::with('srn.order')
                     ->whereDate('created_at', $currentDate)
                     ->whereHas('srn.order', function ($q) {
@@ -69,21 +63,16 @@ class GraphController extends Controller
                         $q->where('courier_service_id', '1');
                     })
                     ->count();
-    
                 $returnsCount = $postExReturns + $leopardReturns;
-    
-                // NEW: Calculate Order Issuance Profit (same as your Vue calculation)
                 $orderIssuanceProfit = $this->calculateDailyOrderIssuanceProfit($currentDate);
     
                 $dates[$currentDate] = [
                     'sales_count' => $salesCount,
                     'sales_amount' => $salesAmount,
                     'returns_count' => $returnsCount,
-                    'profit' => $orderIssuanceProfit // Use order issuance profit instead
+                    'profit' => $orderIssuanceProfit 
                 ];
             }
-    
-            // Build datasets (rest remains the same)
             $ordersData = $days->map(function ($day) use ($dates) {
                 return (int) ($dates[$day['date']]['sales_count'] ?? 0);
             });
@@ -99,8 +88,6 @@ class GraphController extends Controller
             $returnsData = $days->map(function ($day) use ($dates) {
                 return (int) ($dates[$day['date']]['returns_count'] ?? 0);
             });
-    
-            // Calculate statistics
             $stats = [
                 'orders' => [
                     'total' => $ordersData->sum(),
@@ -126,25 +113,21 @@ class GraphController extends Controller
                     'orders' => [
                         'name' => 'Daily Orders',
                         'data' => $ordersData->values()->toArray(),
-                        'color' => '#7367F0',
                         'stats' => $stats['orders'],
                     ],
                     'sales' => [
                         'name' => 'Daily Sales',
                         'data' => $salesData->values()->toArray(),
-                        'color' => '#28C76F',
                         'stats' => $stats['sales'],
                     ],
                     'profit' => [
                         'name' => 'Daily Profit',
                         'data' => $profitData->values()->toArray(),
-                        'color' => '#00E396',
                         'stats' => $stats['profit'],
                     ],
                     'returns' => [
                         'name' => 'Daily Returns',
                         'data' => $returnsData->values()->toArray(),
-                        'color' => '#EA5455',
                         'stats' => $stats['returns'],
                     ],
                 ],
