@@ -10860,7 +10860,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var colors = {
         'orders': '#9a56ff',
         'sales': '#23bdb8',
-        'profit': '#f48665'
+        'profit': '#F59E0B'
         // 'returns': '#EF4444',   
         // 'newproducts': '#F59E0B',    
         // 'graph1': '#4F46E5',     
@@ -10873,7 +10873,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       var gradients = {
         '#9a56ff': '#e36cd9',
         '#23bdb8': '#43e794',
-        '#f48665': '#fddb77'
+        '#F59E0B': '#D97706'
         // '#4F46E5': '#4338CA',
         // '#10B981': '#059669',
         // '#8B5CF6': '#7C3AED',
