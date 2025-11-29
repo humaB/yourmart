@@ -54,7 +54,7 @@
                                     <div class="text-right">
                                         <h3 class="font-light mb-0">
                                             <i class="ti-arrow-up text-success"></i>
-                                            {{ todaysData.profit || 0 }}
+                                            {{ formatPrice(todaysData.profit) || 0 }}
                                         </h3>
                                         <span class="text-muted">Est. Profit</span>
                                     </div>
@@ -119,6 +119,14 @@
                 const percentage = Math.round((count / total) * 100);
                 return percentage;
             },
+
+            formatPrice(price) {
+            const value = parseFloat(price);
+            var string = value.toString();
+            return string
+                .replace(/,/g, "")
+                .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        }
            
         }
     }

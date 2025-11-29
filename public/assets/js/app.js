@@ -9263,6 +9263,11 @@ __webpack_require__.r(__webpack_exports__);
       if (count === 0) return 0; // Correct check to prevent division by zero
       var percentage = Math.round(count / total * 100);
       return percentage;
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
   }
 });
@@ -22019,7 +22024,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.profit || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.todaysData.profit) || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {

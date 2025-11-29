@@ -64,11 +64,10 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
         $todaysRegistrations = DropShipper::where('status', '1')
         ->whereDate('created_at', $today)
         ->count();
-
         return [
             'orders' => $orders->count(),
             'sales' => $orders->sum('total_bill'),
-            'profit' => $profit,
+            'profit' => (int) $profit,
             'returns' => $returns,
             'todaysRegistrations' => $todaysRegistrations,
             'todaysActiveSellers' => $todaysActiveSellerIds,
@@ -101,6 +100,7 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
             $issancePrice = $singleProductGroup->sum('total');
             $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
     
+            // Get Return quantity
             $returnQuantity = 0;
             foreach ($singleProductGroup as $order) {
                 $orderNo = $order->sin->order_id;
@@ -122,7 +122,7 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
             $totalProfit += $profit;
         }
     
-        return (int) round($totalProfit);
+        return round($totalProfit, 2);
     }
     
 }
