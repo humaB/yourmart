@@ -111,10 +111,15 @@
                 dataLabels: {
                     enabled: true,
                     formatter: (val) => {
+                        // if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
+                        //     return val.toLocaleString();
+                        // }
+                        // return val.toString();
                         if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                            return val.toLocaleString();
-                        }
-                        return val.toString();
+                // Remove decimals completely
+                return Math.round(val).toLocaleString();
+            }
+            return val.toString();
                     },
                     offsetY: -20,
                     style: {

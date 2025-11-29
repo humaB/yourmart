@@ -10784,8 +10784,13 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         dataLabels: {
           enabled: true,
           formatter: function formatter(val) {
+            // if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
+            //     return val.toLocaleString();
+            // }
+            // return val.toString();
             if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
-              return val.toLocaleString();
+              // Remove decimals completely
+              return Math.round(val).toLocaleString();
             }
             return val.toString();
           },
