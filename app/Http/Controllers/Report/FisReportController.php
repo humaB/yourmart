@@ -536,7 +536,27 @@ public function lowStockProducts(Request $request)
             $details = $issuanceDetails[$product->id] ?? collect([]);
 
             // Total sales in last 30 days
+            // $sales30Days = $details->sum('quantity');
             $sales30Days = $details->sum('quantity');
+
+            // NEW: Calculate returns for this product
+            $returnQuantity = 0;
+            foreach ($details as $order) {
+                $orderNo = $order->sin->order_id;
+                $productId = $order->product_id;
+
+                $returned = StoreReturn::where('order_id', $orderNo)->first();
+                if ($returned) {
+                    $returnRecord = StoreReturnDetail::where('product_id', $productId)
+                        ->where('srn_id', $returned->id)
+                        ->first();
+                    $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
+                }
+            }
+
+            // NEW: Net quantity (like Vue: totalIssuanceQuantity - totalReturnQuantity)
+            $netQuantity = $sales30Days - $returnQuantity;
+
 
             // Fixed values
             $desiredDays = 15;
@@ -578,7 +598,7 @@ public function lowStockProducts(Request $request)
                 'sku' => $product->variation->sku,
                 'name' => $product->slug,
                 'image' => $product->hero_image,
-                'sales_30_days' => $sales30Days,
+                'sales_30_days' => $netQuantity,
                 'avg_daily_sales' => round($avgDailySales, 2),
                 'desired_days' => $desiredDays,
                 'stock_required' => round($stockRequired, 2),

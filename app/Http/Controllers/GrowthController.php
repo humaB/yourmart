@@ -101,7 +101,6 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
             $issancePrice = $singleProductGroup->sum('total');
             $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
     
-            // Get Return quantity
             $returnQuantity = 0;
             foreach ($singleProductGroup as $order) {
                 $orderNo = $order->sin->order_id;
