@@ -730,19 +730,32 @@ public function lowStockProducts(Request $request)
                                 'restock_warning' => $restockWarning,
                                 'last_updated' => $product->variation->updated_at->format('Y-m-d'),
             ];
-        });
+        })->toArray();
 
-        return response()->json([
-            'status' => true,
-            'data' => $stockData
-        ], 200);
+        if ($request->status && $request->status !== 'all') {
+                        $stockData = array_values(array_filter($stockData, fn ($i) =>
+                            $i['status'] === $request->status
+                        ));
+                    }
+            
+                    return (new ResponseCollection($stockData))->response()->setStatusCode(200);
+            
+                } catch (\Exception $e) {
+                    \Log::error('Low Stock Report Error: '.$e->getMessage());
+                    return (new ResponseCollection([]))->response()->setStatusCode(500);
+                }
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => false,
-            'message' => $e->getMessage()
-        ], 500);
-    }
+//         return response()->json([
+//             'status' => true,
+//             'data' => $stockData
+//         ], 200);
+
+//     } catch (\Exception $e) {
+//         return response()->json([
+//             'status' => false,
+//             'message' => $e->getMessage()
+//         ], 500);
+//     }
 }
 
 

@@ -126,7 +126,7 @@ export default {
             if (!imageId) {
                 return this.public_url + 'assets/img/blank_image.jpg';
             }
-            return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+            return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
         },
         getStockClass(currentStock, status) {
             if (status === 'Negative Stock') return 'text-danger font-weight-bold bg-light-danger';
