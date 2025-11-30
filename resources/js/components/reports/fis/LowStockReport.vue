@@ -126,28 +126,13 @@ export default {
             if (!imageId) {
                 return this.public_url + 'assets/img/blank_image.jpg';
             }
-            return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
+            return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
         },
         getStockClass(currentStock, status) {
             if (status === 'Negative Stock') return 'text-danger font-weight-bold bg-light-danger';
             if (status === 'Out of Stock') return 'text-danger font-weight-bold';
             if (status === 'Low Stock') return 'text-warning font-weight-bold';
             return 'text-success';
-        },
-        totalIssuanceQuantity() {
-            return Object.values(this.data).reduce((total, item) => {
-                return total + item.quantity;
-            }, 0);
-        },
-        totalIssuancePurchased() {
-            return Object.values(this.data).reduce((total, item) => {
-                return total + (parseFloat(item.quantity) * parseFloat(item.purchase_rate));
-            }, 0);
-        },
-        totalReturnQuantity() {
-            return Object.values(this.data).reduce((total, item) => {
-                return total + item.returned;
-            }, 0);
         },
         getStatusBadgeClass(status) {
             switch (status) {
