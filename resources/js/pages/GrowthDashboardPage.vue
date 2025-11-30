@@ -6,7 +6,7 @@
 
         <div class="row" v-else>
             <!-- Today's Data Cards -->
-            <OrdersectionGrowthDashboard :todaysData="todaysData" />
+            <OrdersectionGrowthDashboard :todaysData="todaysData"/>
         </div>
 
         <hr class="border border-secondary border-2 opacity-50">
@@ -97,9 +97,6 @@ export default {
                     vm.loader = false;
                 });
         }
-
-        
-    
     },
 };
 </script>
