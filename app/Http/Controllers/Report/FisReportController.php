@@ -615,7 +615,7 @@ public function lowStockProducts(Request $request)
 
         // Last 30 days date
         $last30 = Carbon::now()->subDays(30);
-
+        $desiredDays = 15;
         // All issuance IDs for orders (only real orders)
         $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
             ->where('created_at', '>=', $last30)
