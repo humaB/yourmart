@@ -615,7 +615,7 @@ public function lowStockProducts(Request $request)
 
         // Last 30 days date
         $last30 = Carbon::now()->subDays(30);
-        $desiredDays = 15;
+        
         // All issuance IDs for orders (only real orders)
         $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
             ->where('created_at', '>=', $last30)
@@ -660,7 +660,7 @@ public function lowStockProducts(Request $request)
 
             // 3️⃣ Net Quantity (same as quantity - returned)
             $netQty = $issuedQty - $returnedQty;
-
+            $desiredDays = 15;
             // Current stock from variation
             $currentStock = (int) $product->variation->stock;
 
@@ -722,7 +722,7 @@ public function lowStockProducts(Request $request)
                                 'sales_30_days' => $netQty,
                                 'avg_daily_sales' => round($avgDailySales, 2),
                                 'desired_days' => $desiredDays,
-                                'stock_required' => round($stockRequired, 2),
+                                'stock_required' => round($requiredStock, 2),
                                 'current_stock' => $currentStock,
                                 'has_negative_stock' => $hasNegativeStock,
                                 'status' => $status,
