@@ -63,7 +63,7 @@
                                                 {{ product.name }}
                                             </a>
                                         </td>
-                                        <td>{{ product.sales_30_days }}</td>
+                                        <td>{{ product.net_quantity }}</td>
                                         <td>{{ product.avg_daily_sales }}</td>
                                         <td>{{ product.desired_days }}</td>
                                         <td>{{ product.stock_required }}</td>
