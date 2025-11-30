@@ -14200,13 +14200,28 @@ __webpack_require__.r(__webpack_exports__);
       if (!imageId) {
         return this.public_url + 'assets/img/blank_image.jpg';
       }
-      return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
+      return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
     },
     getStockClass: function getStockClass(currentStock, status) {
       if (status === 'Negative Stock') return 'text-danger font-weight-bold bg-light-danger';
       if (status === 'Out of Stock') return 'text-danger font-weight-bold';
       if (status === 'Low Stock') return 'text-warning font-weight-bold';
       return 'text-success';
+    },
+    totalIssuanceQuantity: function totalIssuanceQuantity() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + item.quantity;
+      }, 0);
+    },
+    totalIssuancePurchased: function totalIssuancePurchased() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + parseFloat(item.quantity) * parseFloat(item.purchase_rate);
+      }, 0);
+    },
+    totalReturnQuantity: function totalReturnQuantity() {
+      return Object.values(this.data).reduce(function (total, item) {
+        return total + item.returned;
+      }, 0);
     },
     getStatusBadgeClass: function getStatusBadgeClass(status) {
       switch (status) {
@@ -15536,11 +15551,11 @@ __webpack_require__.r(__webpack_exports__);
         var results = response.data.response;
 
         // Set the data
-        vm.todaysData = results.todaysData || {};
+        // vm.todaysData = results.todaysData || {};
         vm.dashboardGraphs = results.dashboardGraphs || {};
-        vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
-        ;
-        vm.activeSellersMonthly = results.activeSellersMonthly || {};
+        // vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
+        // ;vm.activeSellersMonthly=results.activeSellersMonthly || {};
+
         vm.loader = false;
       })["catch"](function (error) {
         console.error('API Error:', error);
@@ -32521,7 +32536,7 @@ var render = function render() {
         href: "https://yourmart.pk/products/" + product.name,
         target: "_blank"
       }
-    }, [_vm._v("\n                                            " + _vm._s(product.name) + "\n                                        ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sales_30_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.desired_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock_required))]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                                            " + _vm._s(product.name) + "\n                                        ")])]), _vm._v(" "), _c("td", [_vm._v(" " + _vm._s(_vm.totalIssuanceQuantity - _vm.totalReturnQuantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.desired_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock_required))]), _vm._v(" "), _c("td", {
       "class": _vm.getStockClass(product.current_stock, product.status)
     }, [_vm._v("\n                                        " + _vm._s(product.current_stock) + "\n                                        "), product.has_negative_stock ? _c("span", {
       staticClass: "badge badge-danger badge-sm ml-1"
@@ -34806,11 +34821,7 @@ var render = function render() {
     }
   })], 1) : _c("div", {
     staticClass: "row"
-  }, [_c("OrdersectionGrowthDashboard", {
-    attrs: {
-      todaysData: _vm.todaysData
-    }
-  })], 1), _vm._v(" "), _c("hr", {
+  }), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
   }), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -34839,18 +34850,6 @@ var render = function render() {
       "graph-type": "profit",
       title: "Profit",
       "is-currency": true
-    }
-  }), _vm._v(" "), _c("hr", {
-    staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("ActiveSellersMonthly", {
-    attrs: {
-      activeSellersMonthly: _vm.activeSellersMonthly
-    }
-  }), _vm._v(" "), _c("hr", {
-    staticClass: "border border-secondary border-2 opacity-50"
-  }), _vm._v(" "), _c("DropshipperApprovedGraph", {
-    attrs: {
-      dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
     }
   })], 1)])]);
 };

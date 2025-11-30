@@ -88,9 +88,7 @@ Route::group(['prefix' => 'users','middleware' => 'auth:sanctum'], function(){
 
 Route::group(['prefix' => 'growthdashboard'], function(){
     Route::post('/', [GrowthController::class, 'fetchData']);
-    Route::get('/top-selling-products',  [ GrowthController::class , 'topSellingProduct']);
-    Route::post('/top-10-dropshippers',  [ GrowthController::class , 'topTenDropshipper']);
-    Route::post('/product-wise-count',  [ GrowthController::class , 'topTenDropshipper']);
+    // Route::get('/top-selling-products',  [ GrowthController::class , 'topSellingProduct']);
 });
 
 Route::group(['prefix' => 'tickets'], function(){

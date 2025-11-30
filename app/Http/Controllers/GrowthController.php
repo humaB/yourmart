@@ -26,20 +26,23 @@ class GrowthController extends Controller
     public function fetchData(Request $request)
     {
         // Get today's data
+        set_time_limit(300); // 5 minutes
+        ini_set('memory_limit', '512M');
         $todaysData = $this->getTodaysData();
 
         // Get graph data from GraphController
         $graphController = new GraphController();
         $dashboardGraphs = $graphController->getDashboardGraphs();
-        $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
-        $activeSellersMonthly = $graphController->activeSellersMonthly();
+        // $dashboardGraphs = $this->getDashboardGraphs();
+        // $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+        // $activeSellersMonthly = $graphController->activeSellersMonthly();
         
 
         $data = [
             'todaysData' => $todaysData,
             'dashboardGraphs' => $dashboardGraphs,
-            'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
-            'activeSellersMonthly' => $activeSellersMonthly,
+            // 'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
+            // 'activeSellersMonthly' => $activeSellersMonthly,
         ];
 
         return (new ResponseCollection($data))
@@ -60,7 +63,7 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
  $todaysActiveSellerIds = DropShipper::where('status', '1')->whereIn('user_id', $orderbelongsto)
             ->count();
         $returns = StoreReturnDetail::whereDate('created_at', $today)->count();
-        $profit = $this->calculateDailyOrderIssuanceProfit($today);
+        $profit =  $this->calculateOrderIssuanceProfit($today, $today);
         $todaysRegistrations = DropShipper::where('status', '1')
         ->whereDate('created_at', $today)
         ->count();
@@ -74,56 +77,118 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
             'todaysActiveSellers' => $todaysActiveSellerIds,
         ];
     }
-    private function calculateDailyOrderIssuanceProfit($date)
-    {
-        $orders = StoreIssuance::whereDate('created_at', $date)
-            ->where('order_id', '!=', '0')
-            ->pluck('id');
-    
-        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-            ->whereIn('sin_id', $orders)
-            ->get()->groupBy('product_id');
-    
-        $totalProfit = 0;
-    
-        foreach ($issues as $singleProductGroup) {
-            $quantity = $singleProductGroup->sum('quantity');
-    
-            // Calculate Avg Purchase Price
-            $rate = StoreReceivedDetail::where('created_at', '<=', $date)
-                ->where('product_id', $singleProductGroup[0]->product_id)
-                ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+
+    public function calculateOrderIssuanceProfit($from, $to)
+{
+    $orders = StoreIssuance::whereDate('created_at', '>=', $from)
+        ->whereDate('created_at', '<=', $to)
+        ->where('order_id', '!=', '0')
+        ->pluck('id');
+
+    $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+        ->whereIn('sin_id', $orders)
+        ->get()
+        ->groupBy('product_id');
+
+    $totalProfit = 0;
+
+    foreach ($issues as $singleProductGroup) {
+
+        $productId = $singleProductGroup[0]->product_id;
+
+        $issuedQty = $singleProductGroup->sum('quantity');
+        $issuedAmount = $singleProductGroup->sum('total');
+
+        $avgIssuanceRate = $issuedQty > 0 ? ($issuedAmount / $issuedQty) : 0;
+
+        // Purchase Rate
+        $rate = StoreReceivedDetail::where('created_at', '<=', $to)
+            ->where('product_id', $productId)
+            ->select(DB::raw("SUM(total) as total_cost"), DB::raw("SUM(quantity) as total_qty"))
+            ->first();
+
+        $purchaseRate = ($rate && $rate->total_qty > 0)
+            ? ($rate->total_cost / $rate->total_qty)
+            : 0;
+
+        // Returns
+        $returnQty = 0;
+
+        $orderIds = $singleProductGroup->pluck('sin.order_id')->unique();
+
+        $returns = StoreReturn::whereIn('order_id', $orderIds)->get();
+
+        foreach ($returns as $return) {
+            $r = StoreReturnDetail::where('srn_id', $return->id)
+                ->where('product_id', $productId)
                 ->first();
-    
-            $purchaseRate = $rate->rate ?? 0;
-    
-            // Calculate Avg Issuance Price
-            $issancePrice = $singleProductGroup->sum('total');
-            $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
-    
-            // Get Return quantity
-            $returnQuantity = 0;
-            foreach ($singleProductGroup as $order) {
-                $orderNo = $order->sin->order_id;
-                $productId = $order->product_id;
-    
-                $returned = StoreReturn::where('order_id', $orderNo)->first();
-                if ($returned) {
-                    $returnRecord = StoreReturnDetail::where('product_id', $productId)
-                        ->where('srn_id', $returned->id)
-                        ->first();
-                    $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
-                }
+
+            if ($r) {
+                $returnQty += $r->quantity;
             }
-            $netQuantity = $quantity - $returnQuantity;
-            $netSale = $avgIssuancePrice * $netQuantity;
-            $netPurchase = $netQuantity * $purchaseRate;
-            $profit = $netSale - $netPurchase;
-    
-            $totalProfit += $profit;
         }
-    
-        return (int) round($totalProfit);
+
+        $netQty = $issuedQty - $returnQty;
+
+        $netSale = $netQty * $avgIssuanceRate;
+        $netPurchase = $netQty * $purchaseRate;
+
+        $totalProfit += ($netSale - $netPurchase);
     }
+
+    return round($totalProfit);
+}
+    // private function calculateDailyOrderIssuanceProfit($date)
+    // {
+    
+    //     $orders = StoreIssuance::whereDate('created_at', $date)
+    //         ->where('order_id', '!=', '0')
+    //         ->pluck('id');
+    
+    //     $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+    //         ->whereIn('sin_id', $orders)
+    //         ->get()->groupBy('product_id');
+    
+    //     $totalProfit = 0;
+    
+    //     foreach ($issues as $singleProductGroup) {
+    //         $quantity = $singleProductGroup->sum('quantity');
+    
+    //         // Calculate Avg Purchase Price
+    //         $rate = StoreReceivedDetail::where('created_at', '<=', $date)
+    //             ->where('product_id', $singleProductGroup[0]->product_id)
+    //             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+    //             ->first();
+    
+    //         $purchaseRate = $rate->rate ?? 0;
+    
+    //         // Calculate Avg Issuance Price
+    //         $issancePrice = $singleProductGroup->sum('total');
+    //         $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
+    
+    //         // Get Return quantity
+    //         $returnQuantity = 0;
+    //         foreach ($singleProductGroup as $order) {
+    //             $orderNo = $order->sin->order_id;
+    //             $productId = $order->product_id;
+    
+    //             $returned = StoreReturn::where('order_id', $orderNo)->first();
+    //             if ($returned) {
+    //                 $returnRecord = StoreReturnDetail::where('product_id', $productId)
+    //                     ->where('srn_id', $returned->id)
+    //                     ->first();
+    //                 $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
+    //             }
+    //         }
+    //         $netQuantity = $quantity - $returnQuantity;
+    //         $netSale = $avgIssuancePrice * $netQuantity;
+    //         $netPurchase = $netQuantity * $purchaseRate;
+    //         $profit = $netSale - $netPurchase;
+    
+    //         $totalProfit += $profit;
+    //     }
+    
+    //     return (int) round($totalProfit);
+    // }
     
 }

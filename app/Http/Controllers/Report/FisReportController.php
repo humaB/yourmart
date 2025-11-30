@@ -519,36 +519,162 @@ class FisReportController extends Controller
     }
 
 
+// public function lowStockProducts(Request $request)
+// {
+//    try {
+//         $products = Product::with(['variation'])->get();
+//         $last30 = Carbon::now()->subDays(30);
+//         $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
+//             ->where('created_at', '>=', $last30)
+//             ->pluck('id');
+//         $issuanceDetails = StoreIssuanceDetail::whereIn('sin_id', $orderIssuances)
+//             ->where('created_at', '>=', $last30)
+//             ->get()
+//             ->groupBy('product_id');
+
+//         $stockData = $products->map(function ($product) use ($issuanceDetails) {
+//             $details = $issuanceDetails[$product->id] ?? collect([]);
+//             $sales30Days = $details->sum('quantity');
+
+//             // NEW: Calculate returns for this product
+//             $returnQuantity = 0;
+//             foreach ($details as $order) {
+//                 $orderNo = $order->sin->order_id;
+//                 $productId = $order->product_id;
+
+//                 $returned = StoreReturn::where('order_id', $orderNo)->first();
+//                 if ($returned) {
+//                     $returnRecord = StoreReturnDetail::where('product_id', $productId)
+//                         ->where('srn_id', $returned->id)
+//                         ->first();
+//                     $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
+//                 }
+//             }
+
+//             // NEW: Net quantity (like Vue: totalIssuanceQuantity - totalReturnQuantity)
+//             $netQuantity = $sales30Days - $returnQuantity;
+
+
+//             // Fixed values
+//             $desiredDays = 15;
+//             $currentStock = (int) $product->variation->stock;
+
+//             // Handle negative stock - show warning
+//             $hasNegativeStock = $currentStock < 0;
+
+//             // Avg Daily Sales = 30 Days Sales / 30
+//             $avgDailySales = $sales30Days > 0 ? ($sales30Days / 30) : 0;
+
+//             // Stock Required = Avg Daily Sales × Desired Days
+//             $stockRequired = $avgDailySales * $desiredDays;
+
+//             // Determine status
+//             if ($hasNegativeStock) {
+//                 $status = 'Negative Stock';
+//             } elseif ($currentStock <= 0) {
+//                 $status = 'Out of Stock';
+//             } elseif ($currentStock <= $stockRequired) {
+//                 $status = 'Low Stock';
+//             } else {
+//                 $status = 'Sufficient';
+//             }
+
+//             // Restock Quantity = Stock Required - Current Stock
+//             $restockQty = 0;
+//             $restockWarning = '';
+            
+//             if ($hasNegativeStock) {
+//                 $restockWarning = 'Stock Adjustment Needed';
+//                 $restockQty = 0; // Don't calculate reorder for negative stock
+//             } elseif ($status !== 'Sufficient') {
+//                 $restockQty = $stockRequired - $currentStock;
+//                 $restockQty = max(0, ceil($restockQty)); // Ensure not negative
+//             }
+
+//             return [
+//                 'sku' => $product->variation->sku,
+//                 'name' => $product->slug,
+//                 'image' => $product->hero_image,
+//                 'sales_30_days' => $netQuantity,
+//                 'avg_daily_sales' => round($avgDailySales, 2),
+//                 'desired_days' => $desiredDays,
+//                 'stock_required' => round($stockRequired, 2),
+//                 'current_stock' => $currentStock,
+//                 'has_negative_stock' => $hasNegativeStock,
+//                 'status' => $status,
+//                 'restock_qty' => (int) $restockQty,
+//                 'restock_warning' => $restockWarning,
+//                 'last_updated' => $product->variation->updated_at->format('Y-m-d'),
+//             ];
+//         })->toArray();
+
+//         // Filter
+//         if ($request->status && $request->status !== 'all') {
+//             $stockData = array_values(array_filter($stockData, fn ($i) =>
+//                 $i['status'] === $request->status
+//             ));
+//         }
+
+//         return (new ResponseCollection($stockData))->response()->setStatusCode(200);
+
+//     } catch (\Exception $e) {
+//         \Log::error('Low Stock Report Error: '.$e->getMessage());
+//         return (new ResponseCollection([]))->response()->setStatusCode(500);
+//     }
+// }
+
 public function lowStockProducts(Request $request)
 {
    try {
         $products = Product::with(['variation'])->get();
         $last30 = Carbon::now()->subDays(30);
-        $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
-            ->where('created_at', '>=', $last30)
+        
+        // EXACTLY same logic as orderIssuance but with date filter
+        $orders = StoreIssuance::when($request->from, function ($q) use ($request) {
+                $q->whereDate('created_at', '>=', $request->from);
+            })
+            ->when($request->to, function ($q) use ($request) {
+                $q->whereDate('created_at', '<=', $request->to);
+            })
+            ->where('order_id', '!=','0')
+            ->where('created_at', '>=', $last30) // Last 30 days filter
             ->pluck('id');
-        $issuanceDetails = StoreIssuanceDetail::whereIn('sin_id', $orderIssuances)
-            ->where('created_at', '>=', $last30)
-            ->get()
-            ->groupBy('product_id');
 
-        $stockData = $products->map(function ($product) use ($issuanceDetails) {
-            $details = $issuanceDetails[$product->id] ?? collect([]);
+        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+            ->whereIn('sin_id', $orders)
+            ->get()->groupBy('product_id');
 
-            // Total sales in last 30 days
-            $sales30Days = $details->sum('quantity');
+        $productNetQuantities = [];
+        
+        foreach($issues as $singleProductGroup) {
+            $productId = $singleProductGroup[0]->product_id;
+            $quantity = $singleProductGroup->sum('quantity');
 
-            // Fixed values
-            $desiredDays = 15;
+            // Calculate returns EXACTLY like orderIssuance method
+            $return_quantity = 0;
+            foreach($singleProductGroup as $order) {
+                $order_no = $order->sin->order_id;
+                $product_id = $order->product_id;
+
+                $returned = StoreReturn::where('order_id', $order_no)->first();
+                if($returned) {
+                    $return_record = StoreReturnDetail::where('product_id', $product_id)
+                        ->where('srn_id', $returned->id)->first();
+                    $return_quantity += $return_record ? $return_record->quantity : 0;
+                }
+            }
+            
+            $productNetQuantities[$productId] = $quantity - $return_quantity;
+        }
+
+        // Prepare final stock data
+        $stockData = $products->map(function ($product) use ($productNetQuantities) {
+            $netQuantity = $productNetQuantities[$product->id] ?? 0;
             $currentStock = (int) $product->variation->stock;
-
-            // Handle negative stock - show warning
+            $desiredDays = 15;
             $hasNegativeStock = $currentStock < 0;
 
-            // Avg Daily Sales = 30 Days Sales / 30
-            $avgDailySales = $sales30Days > 0 ? ($sales30Days / 30) : 0;
-
-            // Stock Required = Avg Daily Sales × Desired Days
+            $avgDailySales = $netQuantity > 0 ? ($netQuantity / 30) : 0;
             $stockRequired = $avgDailySales * $desiredDays;
 
             // Determine status
@@ -562,23 +688,21 @@ public function lowStockProducts(Request $request)
                 $status = 'Sufficient';
             }
 
-            // Restock Quantity = Stock Required - Current Stock
+            // Restock calculation
             $restockQty = 0;
             $restockWarning = '';
             
             if ($hasNegativeStock) {
                 $restockWarning = 'Stock Adjustment Needed';
-                $restockQty = 0; // Don't calculate reorder for negative stock
             } elseif ($status !== 'Sufficient') {
-                $restockQty = $stockRequired - $currentStock;
-                $restockQty = max(0, ceil($restockQty)); // Ensure not negative
+                $restockQty = max(0, ceil($stockRequired - $currentStock));
             }
 
             return [
                 'sku' => $product->variation->sku,
                 'name' => $product->slug,
                 'image' => $product->hero_image,
-                'sales_30_days' => $sales30Days,
+                'sales_30_days' => $netQuantity, // This is NET quantity (issuance - returns)
                 'avg_daily_sales' => round($avgDailySales, 2),
                 'desired_days' => $desiredDays,
                 'stock_required' => round($stockRequired, 2),
@@ -606,5 +730,5 @@ public function lowStockProducts(Request $request)
     }
 }
 
-   
+
 }

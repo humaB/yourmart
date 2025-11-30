@@ -6,7 +6,7 @@
 
         <div class="row" v-else>
             <!-- Today's Data Cards -->
-            <OrdersectionGrowthDashboard :todaysData="todaysData"/>
+            <!-- <OrdersectionGrowthDashboard :todaysData="todaysData"/> -->
         </div>
 
         <hr class="border border-secondary border-2 opacity-50">
@@ -35,13 +35,13 @@
                     title="Profit"
                     :is-currency="true"
                 />
-                <hr class="border border-secondary border-2 opacity-50">
+                <!-- <hr class="border border-secondary border-2 opacity-50">
                 <ActiveSellersMonthly :activeSellersMonthly="activeSellersMonthly"/>
                 
                 <hr class="border border-secondary border-2 opacity-50">
 
-                <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/>
-            </div>
+                <DropshipperApprovedGraph :dropshipperGraphLast120Days="dropshipperGraphLast120Days"/> -->
+            </div> 
         </div>
     </div>
 </template>
@@ -85,10 +85,10 @@ export default {
                     const results = response.data.response;
                     
                     // Set the data
-                    vm.todaysData = results.todaysData || {};
+                    // vm.todaysData = results.todaysData || {};
                     vm.dashboardGraphs = results.dashboardGraphs || {};
-                    vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
-                    ;vm.activeSellersMonthly=results.activeSellersMonthly || {};
+                    // vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
+                    // ;vm.activeSellersMonthly=results.activeSellersMonthly || {};
                     
                     vm.loader = false;
                 })
