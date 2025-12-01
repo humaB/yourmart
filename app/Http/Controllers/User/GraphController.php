@@ -138,7 +138,6 @@ class GraphController extends Controller
             return $this->getSampleData();
         }
     }
-    // NEW METHOD: Same calculation as your Vue component
 
     private function calculateDailyOrderIssuanceProfit($date)
 {
@@ -198,59 +197,6 @@ class GraphController extends Controller
     return (int) $totalProfit;
 }
 
-    // private function calculateDailyOrderIssuanceProfit($date)
-    // {
-    //     $orders = StoreIssuance::whereDate('created_at', $date)
-    //         ->where('order_id', '!=', '0')
-    //         ->pluck('id');
-    
-    //     $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-    //         ->whereIn('sin_id', $orders)
-    //         ->get()->groupBy('product_id');
-    
-    //     $totalProfit = 0;
-    
-    //     foreach ($issues as $singleProductGroup) {
-    //         $quantity = $singleProductGroup->sum('quantity');
-    
-    //         // Calculate Avg Purchase Price
-    //         $rate = StoreReceivedDetail::where('created_at', '<=', $date)
-    //             ->where('product_id', $singleProductGroup[0]->product_id)
-    //             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
-    //             ->first();
-    
-    //         $purchaseRate = $rate->rate ?? 0;
-    
-    //         // Calculate Avg Issuance Price
-    //         $issancePrice = $singleProductGroup->sum('total');
-    //         $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
-    
-    //         // Get Return quantity
-    //         $returnQuantity = 0;
-    //         foreach ($singleProductGroup as $order) {
-    //             $orderNo = $order->sin->order_id;
-    //             $productId = $order->product_id;
-    
-    //             $returned = StoreReturn::where('order_id', $orderNo)->first();
-    //             if ($returned) {
-    //                 $returnRecord = StoreReturnDetail::where('product_id', $productId)
-    //                     ->where('srn_id', $returned->id)
-    //                     ->first();
-    //                 $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
-    //             }
-    //         }
-    
-    //         // Calculate profit (SAME AS YOUR VUE CALCULATION)
-    //         $netQuantity = $quantity - $returnQuantity;
-    //         $netSale = $avgIssuancePrice * $netQuantity;
-    //         $netPurchase = $netQuantity * $purchaseRate;
-    //         $profit = $netSale - $netPurchase;
-    
-    //         $totalProfit += $profit;
-    //     }
-    
-    //     return $totalProfit;
-    // }
 
     public function newproducts30daysgraph()
     {
