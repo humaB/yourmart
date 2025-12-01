@@ -187,9 +187,9 @@ public function getTodaysData()
     // Method 1: Direct calculation
     $directProfit = $this->calculateDailyOrderIssuanceProfit($today);
     \Log::info('Direct calculation profit: ' . $directProfit);
-    
+    $graphController = new GraphController();
     // Method 2: From dashboard graphs
-    $dashboardData = $this->getDashboardGraphs();
+    $dashboardData = $graphController->getDashboardGraphs();
     $dashboardProfit = end($dashboardData['datasets']['profit']['data']);
     \Log::info('Dashboard profit: ' . $dashboardProfit);
     
