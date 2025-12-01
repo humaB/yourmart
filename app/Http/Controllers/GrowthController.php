@@ -25,24 +25,21 @@ class GrowthController extends Controller
 
     public function fetchData(Request $request)
     {
-        // Get today's data
-        set_time_limit(300); // 5 minutes
-        ini_set('memory_limit', '512M');
         $todaysData = $this->getTodaysData();
 
         // Get graph data from GraphController
         $graphController = new GraphController();
         $dashboardGraphs = $graphController->getDashboardGraphs();
-        // $dashboardGraphs = $this->getDashboardGraphs();
-        // $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
-        // $activeSellersMonthly = $graphController->activeSellersMonthly();
+        $dashboardGraphs = $this->getDashboardGraphs();
+        $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+        $activeSellersMonthly = $graphController->activeSellersMonthly();
         
 
         $data = [
             'todaysData' => $todaysData,
             'dashboardGraphs' => $dashboardGraphs,
-            // 'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
-            // 'activeSellersMonthly' => $activeSellersMonthly,
+            'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
+            'activeSellersMonthly' => $activeSellersMonthly,
         ];
 
         return (new ResponseCollection($data))
