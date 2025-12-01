@@ -82,7 +82,7 @@
                     </td>
                     <td style="width: 20%;padding : 10px">
                         <div class="card card-statistic-1">
-                            <div class="card-icon l-bg-cyan">
+                            <div class="card-icon l-bg-indigo">
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="card-wrap">
@@ -131,3 +131,9 @@
         }
     }
 </script>
+<style>
+
+.l-bg-indigo{
+background: linear-gradient(135deg, #090979, #00D4FF) !important;
+}
+</style>
