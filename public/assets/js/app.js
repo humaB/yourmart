@@ -32536,7 +32536,7 @@ var render = function render() {
         href: "https://yourmart.pk/products/" + product.name,
         target: "_blank"
       }
-    }, [_vm._v("\n                                            " + _vm._s(product.name) + "\n                                        ")])]), _vm._v(" "), _c("td", [_vm._v(" " + _vm._s(_vm.totalIssuanceQuantity - _vm.totalReturnQuantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.desired_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock_required))]), _vm._v(" "), _c("td", {
+    }, [_vm._v("\n                                            " + _vm._s(product.name) + "\n                                        ")])]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.sales_30_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.avg_daily_sales))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.desired_days))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(product.stock_required))]), _vm._v(" "), _c("td", {
       "class": _vm.getStockClass(product.current_stock, product.status)
     }, [_vm._v("\n                                        " + _vm._s(product.current_stock) + "\n                                        "), product.has_negative_stock ? _c("span", {
       staticClass: "badge badge-danger badge-sm ml-1"
