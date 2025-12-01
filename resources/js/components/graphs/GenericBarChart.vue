@@ -111,10 +111,15 @@
                 dataLabels: {
                     enabled: true,
                     formatter: (val) => {
+                        // if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
+                        //     return val.toLocaleString();
+                        // }
+                        // return val.toString();
                         if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                            return val.toLocaleString();
-                        }
-                        return val.toString();
+                // Remove decimals completely
+                return Math.round(val).toLocaleString();
+            }
+            return val.toString();
                     },
                     offsetY: -20,
                     style: {
@@ -198,10 +203,9 @@
                 }
             });
         },
-  
         getDefaultColor() {
             const colors = {
-                'orders': '#9a56ff',     
+                'orders': '#289cf5',     
                 'sales': '#F59E0B',      
                 'profit': '#9a56ff',
                 'returns': '#EF4444'  

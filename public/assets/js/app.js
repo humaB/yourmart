@@ -9263,6 +9263,11 @@ __webpack_require__.r(__webpack_exports__);
       if (count === 0) return 0; // Correct check to prevent division by zero
       var percentage = Math.round(count / total * 100);
       return percentage;
+    },
+    formatPrice: function formatPrice(price) {
+      var value = parseFloat(price);
+      var string = value.toString();
+      return string.replace(/,/g, "").replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
     }
   }
 });
@@ -10779,8 +10784,13 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         dataLabels: {
           enabled: true,
           formatter: function formatter(val) {
+            // if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
+            //     return val.toLocaleString();
+            // }
+            // return val.toString();
             if (_this.isCurrency || _this.graphType === 'sales' || _this.graphType === 'profit') {
-              return val.toLocaleString();
+              // Remove decimals completely
+              return Math.round(val).toLocaleString();
             }
             return val.toString();
           },
@@ -10872,7 +10882,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     getDefaultColor: function getDefaultColor() {
       var colors = {
-        'orders': '#9a56ff',
+        'orders': '#289cf5',
         'sales': '#F59E0B',
         'profit': '#9a56ff',
         'returns': '#EF4444'
@@ -14208,21 +14218,6 @@ __webpack_require__.r(__webpack_exports__);
       if (status === 'Low Stock') return 'text-warning font-weight-bold';
       return 'text-success';
     },
-    totalIssuanceQuantity: function totalIssuanceQuantity() {
-      return Object.values(this.data).reduce(function (total, item) {
-        return total + item.quantity;
-      }, 0);
-    },
-    totalIssuancePurchased: function totalIssuancePurchased() {
-      return Object.values(this.data).reduce(function (total, item) {
-        return total + parseFloat(item.quantity) * parseFloat(item.purchase_rate);
-      }, 0);
-    },
-    totalReturnQuantity: function totalReturnQuantity() {
-      return Object.values(this.data).reduce(function (total, item) {
-        return total + item.returned;
-      }, 0);
-    },
     getStatusBadgeClass: function getStatusBadgeClass(status) {
       switch (status) {
         case 'Negative Stock':
@@ -15551,11 +15546,11 @@ __webpack_require__.r(__webpack_exports__);
         var results = response.data.response;
 
         // Set the data
-        // vm.todaysData = results.todaysData || {};
+        vm.todaysData = results.todaysData || {};
         vm.dashboardGraphs = results.dashboardGraphs || {};
-        // vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
-        // ;vm.activeSellersMonthly=results.activeSellersMonthly || {};
-
+        vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days || {};
+        ;
+        vm.activeSellersMonthly = results.activeSellersMonthly || {};
         vm.loader = false;
       })["catch"](function (error) {
         console.error('API Error:', error);
@@ -22034,7 +22029,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v("\n                                        " + _vm._s(_vm.todaysData.profit || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
+  }), _vm._v("\n                                        " + _vm._s(_vm.formatPrice(_vm.todaysData.profit) || 0) + "\n                                    ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Est. Profit")])])])])])]), _vm._v(" "), _c("td", {
     staticStyle: {
@@ -22112,7 +22107,7 @@ var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
   return _c("div", {
-    staticClass: "card-icon new_regis_dkpis"
+    staticClass: "card-icon l-bg-indigo"
   }, [_c("i", {
     staticClass: "fas fa-clock"
   })]);
@@ -34821,7 +34816,11 @@ var render = function render() {
     }
   })], 1) : _c("div", {
     staticClass: "row"
-  }), _vm._v(" "), _c("hr", {
+  }, [_c("OrdersectionGrowthDashboard", {
+    attrs: {
+      todaysData: _vm.todaysData
+    }
+  })], 1), _vm._v(" "), _c("hr", {
     staticClass: "border border-secondary border-2 opacity-50"
   }), _vm._v(" "), _c("div", {
     staticClass: "row"
@@ -34850,6 +34849,18 @@ var render = function render() {
       "graph-type": "profit",
       title: "Profit",
       "is-currency": true
+    }
+  }), _vm._v(" "), _c("hr", {
+    staticClass: "border border-secondary border-2 opacity-50"
+  }), _vm._v(" "), _c("ActiveSellersMonthly", {
+    attrs: {
+      activeSellersMonthly: _vm.activeSellersMonthly
+    }
+  }), _vm._v(" "), _c("hr", {
+    staticClass: "border border-secondary border-2 opacity-50"
+  }), _vm._v(" "), _c("DropshipperApprovedGraph", {
+    attrs: {
+      dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
     }
   })], 1)])]);
 };
@@ -43070,10 +43081,10 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":host,:root{--vs-colors--lightest:rgba
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -43087,7 +43098,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.new_regis_dkpis {\r\n    background: linear-gradient(135deg, #289cf5, #84c0ec) !important;\r\n    color: #fff;\n}\r\n\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.l-bg-indigo{\r\nbackground: linear-gradient(135deg, #090979, #00D4FF) !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -82919,10 +82930,10 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css":
-/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css ***!
-  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -82932,7 +82943,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_scooped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css");
 
             
 
@@ -82941,11 +82952,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_scooped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_scooped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -97036,7 +97047,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _OrdersectionGrowthDashboard_vue_vue_type_template_id_b05bb540__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540 */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=template&id=b05bb540");
 /* harmony import */ var _OrdersectionGrowthDashboard_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./OrdersectionGrowthDashboard.vue?vue&type=script&lang=js */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=script&lang=js");
-/* harmony import */ var _OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_scooped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css");
+/* harmony import */ var _OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css */ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -97081,15 +97092,15 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css":
-/*!******************************************************************************************************************************************!*\
-  !*** ./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css ***!
-  \******************************************************************************************************************************************/
+/***/ "./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css":
+/*!*****************************************************************************************************************************!*\
+  !*** ./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css ***!
+  \*****************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_scooped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&scooped=true&lang=css");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_OrdersectionGrowthDashboard_vue_vue_type_style_index_0_id_b05bb540_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/admin/dashboard/OrdersectionGrowthDashboard.vue?vue&type=style&index=0&id=b05bb540&lang=css");
 
 
 /***/ }),

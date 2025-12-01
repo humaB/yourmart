@@ -518,216 +518,107 @@ class FisReportController extends Controller
             ->setStatusCode(200);
     }
 
-
-// public function lowStockProducts(Request $request)
-// {
-//    try {
-//         $products = Product::with(['variation'])->get();
-//         $last30 = Carbon::now()->subDays(30);
-//         $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
-//             ->where('created_at', '>=', $last30)
-//             ->pluck('id');
-//         $issuanceDetails = StoreIssuanceDetail::whereIn('sin_id', $orderIssuances)
-//             ->where('created_at', '>=', $last30)
-//             ->get()
-//             ->groupBy('product_id');
-
-//         $stockData = $products->map(function ($product) use ($issuanceDetails) {
-//             $details = $issuanceDetails[$product->id] ?? collect([]);
-//             $sales30Days = $details->sum('quantity');
-
-//             // NEW: Calculate returns for this product
-//             $returnQuantity = 0;
-//             foreach ($details as $order) {
-//                 $orderNo = $order->sin->order_id;
-//                 $productId = $order->product_id;
-
-//                 $returned = StoreReturn::where('order_id', $orderNo)->first();
-//                 if ($returned) {
-//                     $returnRecord = StoreReturnDetail::where('product_id', $productId)
-//                         ->where('srn_id', $returned->id)
-//                         ->first();
-//                     $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
-//                 }
-//             }
-
-//             // NEW: Net quantity (like Vue: totalIssuanceQuantity - totalReturnQuantity)
-//             $netQuantity = $sales30Days - $returnQuantity;
-
-
-//             // Fixed values
-//             $desiredDays = 15;
-//             $currentStock = (int) $product->variation->stock;
-
-//             // Handle negative stock - show warning
-//             $hasNegativeStock = $currentStock < 0;
-
-//             // Avg Daily Sales = 30 Days Sales / 30
-//             $avgDailySales = $sales30Days > 0 ? ($sales30Days / 30) : 0;
-
-//             // Stock Required = Avg Daily Sales × Desired Days
-//             $stockRequired = $avgDailySales * $desiredDays;
-
-//             // Determine status
-//             if ($hasNegativeStock) {
-//                 $status = 'Negative Stock';
-//             } elseif ($currentStock <= 0) {
-//                 $status = 'Out of Stock';
-//             } elseif ($currentStock <= $stockRequired) {
-//                 $status = 'Low Stock';
-//             } else {
-//                 $status = 'Sufficient';
-//             }
-
-//             // Restock Quantity = Stock Required - Current Stock
-//             $restockQty = 0;
-//             $restockWarning = '';
-            
-//             if ($hasNegativeStock) {
-//                 $restockWarning = 'Stock Adjustment Needed';
-//                 $restockQty = 0; // Don't calculate reorder for negative stock
-//             } elseif ($status !== 'Sufficient') {
-//                 $restockQty = $stockRequired - $currentStock;
-//                 $restockQty = max(0, ceil($restockQty)); // Ensure not negative
-//             }
-
-//             return [
-//                 'sku' => $product->variation->sku,
-//                 'name' => $product->slug,
-//                 'image' => $product->hero_image,
-//                 'sales_30_days' => $netQuantity,
-//                 'avg_daily_sales' => round($avgDailySales, 2),
-//                 'desired_days' => $desiredDays,
-//                 'stock_required' => round($stockRequired, 2),
-//                 'current_stock' => $currentStock,
-//                 'has_negative_stock' => $hasNegativeStock,
-//                 'status' => $status,
-//                 'restock_qty' => (int) $restockQty,
-//                 'restock_warning' => $restockWarning,
-//                 'last_updated' => $product->variation->updated_at->format('Y-m-d'),
-//             ];
-//         })->toArray();
-
-//         // Filter
-//         if ($request->status && $request->status !== 'all') {
-//             $stockData = array_values(array_filter($stockData, fn ($i) =>
-//                 $i['status'] === $request->status
-//             ));
-//         }
-
-//         return (new ResponseCollection($stockData))->response()->setStatusCode(200);
-
-//     } catch (\Exception $e) {
-//         \Log::error('Low Stock Report Error: '.$e->getMessage());
-//         return (new ResponseCollection([]))->response()->setStatusCode(500);
-//     }
-// }
-
 public function lowStockProducts(Request $request)
 {
-   try {
+    try {
+
+        // Load all products with variation stock
         $products = Product::with(['variation'])->get();
+
+        // Last 30 days date
         $last30 = Carbon::now()->subDays(30);
         
-        // EXACTLY same logic as orderIssuance but with date filter
-        $orders = StoreIssuance::when($request->from, function ($q) use ($request) {
-                $q->whereDate('created_at', '>=', $request->from);
-            })
-            ->when($request->to, function ($q) use ($request) {
-                $q->whereDate('created_at', '<=', $request->to);
-            })
-            ->where('order_id', '!=','0')
-            ->where('created_at', '>=', $last30) // Last 30 days filter
+        // All issuance IDs for orders (only real orders)
+        $orderIssuances = StoreIssuance::where('order_id', '!=', '0')
+            ->where('created_at', '>=', $last30)
             ->pluck('id');
 
-        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-            ->whereIn('sin_id', $orders)
-            ->get()->groupBy('product_id');
+        // Load issuance details grouped by product
+        $issuanceDetails = StoreIssuanceDetail::with('sin')
+            ->whereIn('sin_id', $orderIssuances)
+            ->where('created_at', '>=', $last30)
+            ->get()
+            ->groupBy('product_id');
+        $stockData = $products->map(function ($product) use ($issuanceDetails) {
 
-        $productNetQuantities = [];
-        
-        foreach($issues as $singleProductGroup) {
-            $productId = $singleProductGroup[0]->product_id;
-            $quantity = $singleProductGroup->sum('quantity');
+            $details = $issuanceDetails[$product->id] ?? collect([]);
+            $issuedQty = $details->sum('quantity');
+            $returnedQty = 0;
 
-            // Calculate returns EXACTLY like orderIssuance method
-            $return_quantity = 0;
-            foreach($singleProductGroup as $order) {
-                $order_no = $order->sin->order_id;
-                $product_id = $order->product_id;
+            foreach ($details as $order) {
 
-                $returned = StoreReturn::where('order_id', $order_no)->first();
-                if($returned) {
-                    $return_record = StoreReturnDetail::where('product_id', $product_id)
-                        ->where('srn_id', $returned->id)->first();
-                    $return_quantity += $return_record ? $return_record->quantity : 0;
+                $orderNo = $order->sin->order_id;  
+                $productId = $order->product_id;
+
+                $returned = StoreReturn::where('order_id', $orderNo)->first();
+
+                if ($returned) {
+                    $returnRecord = StoreReturnDetail::where('product_id', $productId)
+                        ->where('srn_id', $returned->id)
+                        ->first();
+
+                    if ($returnRecord) {
+                        $returnedQty += $returnRecord->quantity;
+                    }
                 }
             }
-            
-            $productNetQuantities[$productId] = $quantity - $return_quantity;
-        }
-
-        // Prepare final stock data
-        $stockData = $products->map(function ($product) use ($productNetQuantities) {
-            $netQuantity = $productNetQuantities[$product->id] ?? 0;
-            $currentStock = (int) $product->variation->stock;
+            $netQty = $issuedQty - $returnedQty;
             $desiredDays = 15;
+            $currentStock = (int) $product->variation->stock;
             $hasNegativeStock = $currentStock < 0;
-
-            $avgDailySales = $netQuantity > 0 ? ($netQuantity / 30) : 0;
-            $stockRequired = $avgDailySales * $desiredDays;
-
-            // Determine status
+            $avgDailySales = $issuedQty > 0 ? ($issuedQty / 30) : 0;
+            $requiredStock = ceil($avgDailySales * 15);
             if ($hasNegativeStock) {
                 $status = 'Negative Stock';
             } elseif ($currentStock <= 0) {
                 $status = 'Out of Stock';
-            } elseif ($currentStock <= $stockRequired) {
+            } elseif ($currentStock <= $requiredStock) {
                 $status = 'Low Stock';
             } else {
                 $status = 'Sufficient';
             }
 
-            // Restock calculation
             $restockQty = 0;
             $restockWarning = '';
-            
+
             if ($hasNegativeStock) {
-                $restockWarning = 'Stock Adjustment Needed';
+                $restockWarning = "Stock Adjustment Needed";
             } elseif ($status !== 'Sufficient') {
-                $restockQty = max(0, ceil($stockRequired - $currentStock));
+                $restockQty = max(0, $requiredStock - $currentStock);
             }
 
             return [
+
                 'sku' => $product->variation->sku,
-                'name' => $product->slug,
-                'image' => $product->hero_image,
-                'sales_30_days' => $netQuantity, // This is NET quantity (issuance - returns)
-                'avg_daily_sales' => round($avgDailySales, 2),
-                'desired_days' => $desiredDays,
-                'stock_required' => round($stockRequired, 2),
-                'current_stock' => $currentStock,
-                'has_negative_stock' => $hasNegativeStock,
-                'status' => $status,
-                'restock_qty' => (int) $restockQty,
-                'restock_warning' => $restockWarning,
-                'last_updated' => $product->variation->updated_at->format('Y-m-d'),
+                                'name' => $product->slug,
+                                'image' => $product->hero_image,
+                                'issued_quantity'     => $issuedQty,
+                                'returned_quantity'   => $returnedQty,
+                                'sales_30_days' => $netQty,
+                                'avg_daily_sales' => round($avgDailySales, 2),
+                                'desired_days' => $desiredDays,
+                                'stock_required' => round($requiredStock, 2),
+                                'current_stock' => $currentStock,
+                                'has_negative_stock' => $hasNegativeStock,
+                                'status' => $status,
+                                'restock_qty' => (int) $restockQty,
+                                'restock_warning' => $restockWarning,
+                                'last_updated' => $product->variation->updated_at->format('Y-m-d'),
             ];
         })->toArray();
 
-        // Filter
         if ($request->status && $request->status !== 'all') {
-            $stockData = array_values(array_filter($stockData, fn ($i) =>
-                $i['status'] === $request->status
-            ));
-        }
-
-        return (new ResponseCollection($stockData))->response()->setStatusCode(200);
-
-    } catch (\Exception $e) {
-        \Log::error('Low Stock Report Error: '.$e->getMessage());
-        return (new ResponseCollection([]))->response()->setStatusCode(500);
-    }
+                        $stockData = array_values(array_filter($stockData, fn ($i) =>
+                            $i['status'] === $request->status
+                        ));
+                    }
+            
+                    return (new ResponseCollection($stockData))->response()->setStatusCode(200);
+            
+                } catch (\Exception $e) {
+                    \Log::error('Low Stock Report Error: '.$e->getMessage());
+                    return (new ResponseCollection([]))->response()->setStatusCode(500);
+                }
 }
 
 

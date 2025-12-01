@@ -139,59 +139,64 @@ class GraphController extends Controller
         }
     }
     // NEW METHOD: Same calculation as your Vue component
+
     private function calculateDailyOrderIssuanceProfit($date)
-    {
-        $orders = StoreIssuance::whereDate('created_at', $date)
-            ->where('order_id', '!=', '0')
-            ->pluck('id');
-    
-        $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-            ->whereIn('sin_id', $orders)
-            ->get()->groupBy('product_id');
-    
-        $totalProfit = 0;
-    
-        foreach ($issues as $singleProductGroup) {
-            $quantity = $singleProductGroup->sum('quantity');
-    
-            // Calculate Avg Purchase Price
-            $rate = StoreReceivedDetail::where('created_at', '<=', $date)
-                ->where('product_id', $singleProductGroup[0]->product_id)
-                ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
-                ->first();
-    
-            $purchaseRate = $rate->rate ?? 0;
-    
-            // Calculate Avg Issuance Price
-            $issancePrice = $singleProductGroup->sum('total');
-            $avgIssuancePrice = $quantity > 0 ? ($issancePrice / $quantity) : 0;
-    
-            // Get Return quantity
-            $returnQuantity = 0;
-            foreach ($singleProductGroup as $order) {
-                $orderNo = $order->sin->order_id;
-                $productId = $order->product_id;
-    
-                $returned = StoreReturn::where('order_id', $orderNo)->first();
-                if ($returned) {
-                    $returnRecord = StoreReturnDetail::where('product_id', $productId)
-                        ->where('srn_id', $returned->id)
-                        ->first();
-                    $returnQuantity += $returnRecord ? $returnRecord->quantity : 0;
-                }
+{
+    $orders = StoreIssuance::whereDate('created_at', $date)
+        ->where('order_id', '!=', '0')
+        ->pluck('id');
+
+    $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+        ->whereIn('sin_id', $orders)
+        ->get()
+        ->groupBy('product_id');
+
+    $totalProfit = 0;
+
+    foreach ($issues as $group) {
+
+        $quantity = $group->sum('quantity');
+        $productId = $group[0]->product_id;
+
+        // Purchase Rate (same as report)
+        $purchase = StoreReceivedDetail::where('created_at', '<=', $date)
+            ->where('product_id', $productId)
+            ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+            ->first();
+
+        $purchaseRate = round($purchase->rate ?? 0);
+
+        // Issuance (same as report)
+        $totalIssuance = $group->sum('total');
+        $avgIssuancePrice = $quantity > 0 ? round($totalIssuance / $quantity) : 0;
+
+        // Returns (same as report)
+        $returnedQty = 0;
+        foreach ($group as $item) {
+            $orderNo = $item->sin->order_id;
+
+            $returned = StoreReturn::where('order_id', $orderNo)->first();
+            if ($returned) {
+                $r = StoreReturnDetail::where('product_id', $productId)
+                    ->where('srn_id', $returned->id)
+                    ->first();
+                $returnedQty += $r ? $r->quantity : 0;
             }
-    
-            // Calculate profit (SAME AS YOUR VUE CALCULATION)
-            $netQuantity = $quantity - $returnQuantity;
-            $netSale = $avgIssuancePrice * $netQuantity;
-            $netPurchase = $netQuantity * $purchaseRate;
-            $profit = $netSale - $netPurchase;
-    
-            $totalProfit += $profit;
         }
-    
-        return $totalProfit;
+
+        // EXACT SAME FORMULA AS VUE
+        $netQuantity = $quantity - $returnedQty;
+
+        $netSale = $netQuantity * $avgIssuancePrice;
+        $netPurchase = $netQuantity * $purchaseRate;
+
+        $profit = $netSale - $netPurchase;
+
+        $totalProfit += $profit;
     }
+
+    return (int) $totalProfit;
+}
 
     public function newproducts30daysgraph()
     {

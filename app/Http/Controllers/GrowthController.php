@@ -64,11 +64,10 @@ $orderbelongsto = $orders->pluck('belongs_to')->unique()->values();
         $todaysRegistrations = DropShipper::where('status', '1')
         ->whereDate('created_at', $today)
         ->count();
-
         return [
             'orders' => $orders->count(),
             'sales' => $orders->sum('total_bill'),
-            'profit' => $profit,
+            'profit' => (int) $profit,
             'returns' => $returns,
             'todaysRegistrations' => $todaysRegistrations,
             'todaysActiveSellers' => $todaysActiveSellerIds,

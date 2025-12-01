@@ -54,7 +54,7 @@
                                     <div class="text-right">
                                         <h3 class="font-light mb-0">
                                             <i class="ti-arrow-up text-success"></i>
-                                            {{ todaysData.profit || 0 }}
+                                            {{ formatPrice(todaysData.profit) || 0 }}
                                         </h3>
                                         <span class="text-muted">Est. Profit</span>
                                     </div>
@@ -82,7 +82,7 @@
                     </td>
                     <td style="width: 20%;padding : 10px">
                         <div class="card card-statistic-1">
-                            <div class="card-icon new_regis_dkpis">
+                            <div class="card-icon l-bg-indigo">
                                 <i class="fas fa-clock"></i>
                             </div>
                             <div class="card-wrap">
@@ -119,15 +119,21 @@
                 const percentage = Math.round((count / total) * 100);
                 return percentage;
             },
+
+            formatPrice(price) {
+            const value = parseFloat(price);
+            var string = value.toString();
+            return string
+                .replace(/,/g, "")
+                .replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+        }
            
         }
     }
 </script>
-<style scooped>
+<style>
 
-.new_regis_dkpis {
-    background: linear-gradient(135deg, #289cf5, #84c0ec) !important;
-    color: #fff;
+.l-bg-indigo{
+background: linear-gradient(135deg, #090979, #00D4FF) !important;
 }
-
 </style>
