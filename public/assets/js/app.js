@@ -10882,7 +10882,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     },
     getDefaultColor: function getDefaultColor() {
       var colors = {
-        'orders': '#9a56ff',
+        'orders': '#289cf5',
         'sales': '#F59E0B',
         'profit': '#9a56ff',
         'returns': '#EF4444'

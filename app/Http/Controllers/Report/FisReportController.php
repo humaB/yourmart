@@ -695,25 +695,6 @@ public function lowStockProducts(Request $request)
             }
 
             return [
-                // 'sku' => $product->variation->sku,
-                // 'name' => $product->title,
-                // 'image' => $product->hero_image,
-
-                // SAME AS ORDER ISSUANCE REPORT
-                // 'issued_quantity'     => $issuedQty,
-                // 'returned_quantity'   => $returnedQty,
-                // 'net_quantity'        => $netQty,
-
-                // // Stock calculations
-                // 'current_stock'       => $currentStock,
-                // 'avg_daily_sales'     => round($avgDailySales, 2),
-                // 'required_stock'      => $requiredStock,
-
-                // // Statuses
-                // 'status'              => $status,
-                // 'restock_qty'         => $restockQty,
-                // 'warning'             => $restockWarning,
-
                 'sku' => $product->variation->sku,
                                 'name' => $product->slug,
                                 'image' => $product->hero_image,
