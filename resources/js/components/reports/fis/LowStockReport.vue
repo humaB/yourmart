@@ -116,6 +116,8 @@ export default {
     },
     data() {
         return {
+            public_url: window.location.origin + process.env.MIX_FOLDER_PATH + '/',
+            api_url: window.location.origin + process.env.MIX_API_URL,
             filter: {
                 status: 'all'
             }
@@ -123,10 +125,11 @@ export default {
     },
     methods: {
         getImageUrl(imageId) {
-            if (!imageId) {
-                return this.public_url + 'assets/img/blank_image.jpg';
-            }
-            return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
+             // Check if the image is null
+        if (!imageId) {
+            return this.public_url + 'assets/img/blank_image.jpg';
+        }
+        return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
         },
         getStockClass(currentStock, status) {
             if (status === 'Negative Stock') return 'text-danger font-weight-bold bg-light-danger';

@@ -14200,6 +14200,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      public_url: window.location.origin + "" + '/',
+      api_url: window.location.origin + "/api/",
       filter: {
         status: 'all'
       }
@@ -14207,10 +14209,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     getImageUrl: function getImageUrl(imageId) {
+      // Check if the image is null
       if (!imageId) {
         return this.public_url + 'assets/img/blank_image.jpg';
       }
-      return this.public_url + '/storage/uploads/inventory/products/media/' + imageId;
+      return this.public_url + 'storage/uploads/inventory/products/media/' + imageId;
     },
     getStockClass: function getStockClass(currentStock, status) {
       if (status === 'Negative Stock') return 'text-danger font-weight-bold bg-light-danger';
