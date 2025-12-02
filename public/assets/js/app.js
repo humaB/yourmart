@@ -15938,32 +15938,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperDetails.vue */ "./resources/js/components/admin/request/DropshipperDetails.vue");
 /* harmony import */ var _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperPayment.vue */ "./resources/js/components/admin/request/DropshipperPayment.vue");
 /* harmony import */ var _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../components/admin/request/DropshipperPaymentHistory.vue */ "./resources/js/components/admin/request/DropshipperPaymentHistory.vue");
-/* harmony import */ var _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../components/graphs/DropshipperApprovedGraph.vue */ "./resources/js/components/graphs/DropshipperApprovedGraph.vue");
 
 
 
 
 
-
-//  30 day graph 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'DropShipperRequestPage',
   components: {
-    //  30 day graph 
     TableHeader: _components_table_TableHeaderComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
     BulletListLoader: vue_content_loader__WEBPACK_IMPORTED_MODULE_0__.BulletListLoader,
     DropshipperDetails: _components_admin_request_DropshipperDetails_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     DropshipperPayment: _components_admin_request_DropshipperPayment_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    DropshipperPaymentHistory: _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
-    DropshipperApprovedGraph: _components_graphs_DropshipperApprovedGraph_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+    DropshipperPaymentHistory: _components_admin_request_DropshipperPaymentHistory_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
       public_url: window.location.origin + "",
       api_url: window.location.origin + "/api/",
-      // api_url: process.env.MIX_API_URL,
-
       tableHeader: {
         heading: "Dropshipper Request's"
       },
@@ -16012,8 +16005,8 @@ __webpack_require__.r(__webpack_exports__);
       selectedDropshipper: '',
       paymentHistorys: [],
       pagination: {},
-      page: 1,
-      dropshipperGraphLast120Days: {}
+      page: 1
+      // dropshipperGraphLast120Days: {}, 
     };
   },
   computed: {
@@ -16171,29 +16164,13 @@ __webpack_require__.r(__webpack_exports__);
           incentive: vm.filter.incentive
         }
       }).then(function (response) {
-        var _graphData$categories, _graphData$series, _graphData$series2;
         vm.records = response.data.response.dropshippers.data;
         vm.pagination = response.data.response.pagination;
-
-        // Calculate request statistics
         var results = response.data.response.statuses;
         vm.totalRequest = results.totalRequests;
         vm.pendingRequest = results.totalPending;
         vm.approvedRequest = results.totalApproved;
-        vm.dropshipperGraphLast120Days = results.dropshipperGraphLast120Days;
         vm.rejectedRequest = results.totalRejected;
-
-        // 30 days 
-        // Get graph data from API response
-        vm.dropshipperGraphLast120Days = response.data.response.dropshipperGraphLast120Days;
-
-        // DEBUG: Check actual data values for dropshipper chart
-        var graphData = JSON.parse(JSON.stringify(vm.dropshipperGraphLast120Days));
-        console.log('ðŸ“Š Dropshipper graph data structure:', {
-          categories: graphData === null || graphData === void 0 || (_graphData$categories = graphData.categories) === null || _graphData$categories === void 0 ? void 0 : _graphData$categories.slice(0, 5),
-          seriesData: graphData === null || graphData === void 0 || (_graphData$series = graphData.series) === null || _graphData$series === void 0 || (_graphData$series = _graphData$series[0]) === null || _graphData$series === void 0 || (_graphData$series = _graphData$series.data) === null || _graphData$series === void 0 ? void 0 : _graphData$series.slice(0, 5),
-          totalPoints: graphData === null || graphData === void 0 || (_graphData$series2 = graphData.series) === null || _graphData$series2 === void 0 || (_graphData$series2 = _graphData$series2[0]) === null || _graphData$series2 === void 0 || (_graphData$series2 = _graphData$series2.data) === null || _graphData$series2 === void 0 ? void 0 : _graphData$series2.length
-        });
         vm.loader = false;
         _this2.dataTable();
       });
@@ -35682,7 +35659,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.totalRequest) + "\n                                           ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.totalRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Total Request's")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
@@ -35698,7 +35675,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.pendingRequest) + "\n                                           ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.pendingRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Pending")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
@@ -35714,7 +35691,7 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.approvedRequest) + "\n                                           ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.approvedRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
   }, [_vm._v("Approved")])])])])])]), _vm._v(" "), _c("div", {
     staticClass: "col-lg-3 col-md-6 col-sm-6 col-12"
@@ -35730,15 +35707,9 @@ var render = function render() {
     staticClass: "font-light mb-0"
   }, [_c("i", {
     staticClass: "ti-arrow-up text-success"
-  }), _vm._v(" " + _vm._s(_vm.rejectedRequest) + "\n                                           ")]), _vm._v(" "), _c("span", {
+  }), _vm._v(" " + _vm._s(_vm.rejectedRequest) + "\n                                        ")]), _vm._v(" "), _c("span", {
     staticClass: "text-muted"
-  }, [_vm._v("Rejected")])])])])])]), _vm._v(" "), _c("div", {
-    staticClass: "col-12"
-  }, [_c("DropshipperApprovedGraph", {
-    attrs: {
-      dropshipperGraphLast120Days: _vm.dropshipperGraphLast120Days
-    }
-  })], 1), _vm._v(" "), _c("form", {
+  }, [_vm._v("Rejected")])])])])])]), _vm._v(" "), _c("form", {
     staticClass: "row col-md-12",
     on: {
       submit: function submit($event) {
@@ -36021,7 +35992,7 @@ var render = function render() {
       staticClass: "badge badge-danger"
     }, [_vm._v("Rejected")]) : _vm._e(), _vm._v(" "), item.status == 3 ? _c("span", {
       staticClass: "badge badge-danger"
-    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v("\n                                                           " + _vm._s(item.seller_level) + "\n                                                       ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                           " + _vm._s((item === null || item === void 0 || (_item$level = item.level) === null || _item$level === void 0 ? void 0 : _item$level.is_completed) == "1" ? "Completed" : "Pending") + "\n                                                       ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
+    }, [_vm._v("Deactivated")]) : _vm._e()]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s(item.seller_level) + "\n                                                    ")]), _vm._v(" "), _c("td", [_vm._v("\n                                                        " + _vm._s((item === null || item === void 0 || (_item$level = item.level) === null || _item$level === void 0 ? void 0 : _item$level.is_completed) == "1" ? "Completed" : "Pending") + "\n                                                    ")]), _vm._v(" "), _c("td", [_vm._v(_vm._s(_vm.formatDate(item.created_at)))]), _vm._v(" "), _c("td", {
       attrs: {
         width: "20%"
       }
@@ -36095,7 +36066,7 @@ var render = function render() {
           return _vm.fetchRecord(n.page);
         }
       }
-    }, [_vm._v("\n                                                       " + _vm._s(n.page) + "\n                                                     ")]) : _c("span", {
+    }, [_vm._v("\n                                                    " + _vm._s(n.page) + "\n                                                  ")]) : _c("span", {
       staticClass: "page-link"
     }, [_vm._v("...")])]);
   }), _vm._v(" "), _c("li", {

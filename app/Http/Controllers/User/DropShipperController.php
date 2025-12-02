@@ -340,7 +340,6 @@ class DropShipperController extends Controller
 
     {
 
-        $GraphController= new GraphController();
 
         $status = $request->query('status');
 
@@ -355,9 +354,6 @@ class DropShipperController extends Controller
         $name = $request->query('name');
 
         $email = $request->query('email');
-
-        $dropshipperGraphLast120Days = $GraphController->dropshipperGraphLast120Days();
-
 
 
         $selectDropshippers = [];
@@ -483,7 +479,6 @@ class DropShipperController extends Controller
 
             ],
 
-'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days,
 
             'statuses' => $statuses ,
 
