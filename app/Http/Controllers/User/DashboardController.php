@@ -50,8 +50,8 @@ class DashboardController extends Controller
             })->get();
 
              $graphController = new GraphController($this->profitService);
-            // $dashboardGraphs = $graphController->getDashboardGraphs();
-            // $newproducts30daysgraph = $graphController->newproducts30daysgraph();
+            $dashboardGraphs = $graphController->getDashboardGraphs();
+            $newproducts30daysgraph = $graphController->newproducts30daysgraph();
             // $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
             $ticketTypesGraphData = $graphController->ticketTypesGraphData();
 
@@ -104,8 +104,8 @@ class DashboardController extends Controller
             // 30 days graphs
 
            // 'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days, // Use old name temporarily
-            //'newproducts30daysgraph' => $newproducts30daysgraph,
-            //'dashboardGraphs' => $dashboardGraphs,
+            'newproducts30daysgraph' => $newproducts30daysgraph,
+            'dashboardGraphs' => $dashboardGraphs,
             'ticketTypesGraphData' => $ticketTypesGraphData ,
 
             // 30 days graphs
