@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Services\ProfitService;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
@@ -23,8 +24,19 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class DashboardController extends Controller
 {
+
+    protected $profitService;
+    
+    // Add constructor
+    public function __construct(ProfitService $profitService)
+    {
+        $this->profitService = $profitService;
+    }
+
+
     public function fetchData(Request $request)
     {
         set_time_limit(300); // 5 minutes
@@ -37,10 +49,10 @@ class DashboardController extends Controller
                 $q->whereDate('created_at', '<=', $request->to);
             })->get();
 
-            $graphController = new GraphController();
-            $dashboardGraphs = $graphController->getDashboardGraphs();
-            $newproducts30daysgraph = $graphController->newproducts30daysgraph();
-            $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+            $graphController = new GraphController($this->profitService);
+            // $dashboardGraphs = $graphController->getDashboardGraphs();
+            // $newproducts30daysgraph = $graphController->newproducts30daysgraph();
+            // $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
             $ticketTypesGraphData = $graphController->ticketTypesGraphData();
 
 
