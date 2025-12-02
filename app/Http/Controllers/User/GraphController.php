@@ -2,35 +2,55 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Services\ProfitService;
+// use App\Http\Controllers\Controller;
+// use App\Http\Resources\ResponseCollection;
+// use App\Models\Inventory\Order\Order;
+// use App\Models\Inventory\Order\OrderItem;
+// use App\Models\Inventory\Product\Category;
+// use App\Models\Inventory\Product\Tag;
+// use App\Models\Inventory\Product\Variation\Product;
+// use App\Models\Inventory\Product\Variation\ProductVariation;
+// use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
+// use App\Models\Inventory\Store\StoreIssuance;
+// use App\Models\Inventory\Store\StoreIssuanceDetail;
+// use App\Models\Inventory\Store\StoreReceivedDetail;
+// use App\Models\Inventory\Store\StoreReturn;
+// use App\Models\Inventory\Store\StoreReturnDetail;
+// // use App\Http\Controllers\Helpers\NotificationHelper;
+// use App\Models\Ticket;
+// use App\Models\TicketMessage;
+// // use App\Models\User;
+// use App\Models\User\DropShipper;
+// // use App\Models\User\DropShipperLevel;
+// // use App\Models\User\DropShipperShop;
+// // use App\Models\User\Supplier;
+// use Carbon\Carbon;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\DB;
+
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ResponseCollection;
 use App\Models\Inventory\Order\Order;
-use App\Models\Inventory\Order\OrderItem;
-use App\Models\Inventory\Product\Category;
-use App\Models\Inventory\Product\Tag;
 use App\Models\Inventory\Product\Variation\Product;
-use App\Models\Inventory\Product\Variation\ProductVariation;
-use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
 use App\Models\Inventory\Store\StoreIssuance;
 use App\Models\Inventory\Store\StoreIssuanceDetail;
 use App\Models\Inventory\Store\StoreReceivedDetail;
 use App\Models\Inventory\Store\StoreReturn;
 use App\Models\Inventory\Store\StoreReturnDetail;
-use App\Http\Controllers\Helpers\NotificationHelper;
 use App\Models\Ticket;
-use App\Models\TicketMessage;
-use App\Models\User;
 use App\Models\User\DropShipper;
-use App\Models\User\DropShipperLevel;
-use App\Models\User\DropShipperShop;
-use App\Models\User\Supplier;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class GraphController extends Controller
 {
    
+    protected $profitService;
+
+    public function __construct(ProfitService $profitService)
+    {
+        $this->profitService = $profitService;
+    }
+
     public function getDashboardGraphs()
     {
         try {
@@ -64,7 +84,8 @@ class GraphController extends Controller
                     })
                     ->count();
                 $returnsCount = $postExReturns + $leopardReturns;
-                $orderIssuanceProfit = $this->calculateDailyOrderIssuanceProfit($currentDate);
+                // $orderIssuanceProfit = $this->calculateDailyOrderIssuanceProfit($currentDate);
+                $orderIssuanceProfit = ProfitService::calculateDailyOrderIssuanceProfit($today);
     
                 $dates[$currentDate] = [
                     'sales_count' => $salesCount,
@@ -139,63 +160,63 @@ class GraphController extends Controller
         }
     }
 
-    private function calculateDailyOrderIssuanceProfit($date)
-{
-    $orders = StoreIssuance::whereDate('created_at', $date)
-        ->where('order_id', '!=', '0')
-        ->pluck('id');
+//     private function calculateDailyOrderIssuanceProfit($date)
+// {
+//     $orders = StoreIssuance::whereDate('created_at', $date)
+//         ->where('order_id', '!=', '0')
+//         ->pluck('id');
 
-    $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-        ->whereIn('sin_id', $orders)
-        ->get()
-        ->groupBy('product_id');
+//     $issues = StoreIssuanceDetail::with('product.variation', 'sin')
+//         ->whereIn('sin_id', $orders)
+//         ->get()
+//         ->groupBy('product_id');
 
-    $totalProfit = 0;
+//     $totalProfit = 0;
 
-    foreach ($issues as $group) {
+//     foreach ($issues as $group) {
 
-        $quantity = $group->sum('quantity');
-        $productId = $group[0]->product_id;
+//         $quantity = $group->sum('quantity');
+//         $productId = $group[0]->product_id;
 
-        // Purchase Rate (same as report)
-        $purchase = StoreReceivedDetail::where('created_at', '<=', $date)
-            ->where('product_id', $productId)
-            ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
-            ->first();
+//         // Purchase Rate (same as report)
+//         $purchase = StoreReceivedDetail::where('created_at', '<=', $date)
+//             ->where('product_id', $productId)
+//             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
+//             ->first();
 
-        $purchaseRate = round($purchase->rate ?? 0);
+//         $purchaseRate = round($purchase->rate ?? 0);
 
-        // Issuance (same as report)
-        $totalIssuance = $group->sum('total');
-        $avgIssuancePrice = $quantity > 0 ? round($totalIssuance / $quantity) : 0;
+//         // Issuance (same as report)
+//         $totalIssuance = $group->sum('total');
+//         $avgIssuancePrice = $quantity > 0 ? round($totalIssuance / $quantity) : 0;
 
-        // Returns (same as report)
-        $returnedQty = 0;
-        foreach ($group as $item) {
-            $orderNo = $item->sin->order_id;
+//         // Returns (same as report)
+//         $returnedQty = 0;
+//         foreach ($group as $item) {
+//             $orderNo = $item->sin->order_id;
 
-            $returned = StoreReturn::where('order_id', $orderNo)->first();
-            if ($returned) {
-                $r = StoreReturnDetail::where('product_id', $productId)
-                    ->where('srn_id', $returned->id)
-                    ->first();
-                $returnedQty += $r ? $r->quantity : 0;
-            }
-        }
+//             $returned = StoreReturn::where('order_id', $orderNo)->first();
+//             if ($returned) {
+//                 $r = StoreReturnDetail::where('product_id', $productId)
+//                     ->where('srn_id', $returned->id)
+//                     ->first();
+//                 $returnedQty += $r ? $r->quantity : 0;
+//             }
+//         }
 
-        // EXACT SAME FORMULA AS VUE
-        $netQuantity = $quantity - $returnedQty;
+//         // EXACT SAME FORMULA AS VUE
+//         $netQuantity = $quantity - $returnedQty;
 
-        $netSale = $netQuantity * $avgIssuancePrice;
-        $netPurchase = $netQuantity * $purchaseRate;
+//         $netSale = $netQuantity * $avgIssuancePrice;
+//         $netPurchase = $netQuantity * $purchaseRate;
 
-        $profit = $netSale - $netPurchase;
+//         $profit = $netSale - $netPurchase;
 
-        $totalProfit += $profit;
-    }
+//         $totalProfit += $profit;
+//     }
 
-    return (int) $totalProfit;
-}
+//     return (int) $totalProfit;
+// }
 
 
     public function newproducts30daysgraph()
