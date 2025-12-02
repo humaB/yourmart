@@ -29,8 +29,7 @@ class DashboardController extends Controller
 {
 
     protected $profitService;
-    
-    // Add constructor
+ 
     public function __construct(ProfitService $profitService)
     {
         $this->profitService = $profitService;
@@ -39,8 +38,6 @@ class DashboardController extends Controller
 
     public function fetchData(Request $request)
     {
-        set_time_limit(300); // 5 minutes
-        ini_set('memory_limit', '512M');
 
         $orders = Order::when($request->from, function ($q) use ($request) {
             $q->whereDate('created_at', '>=', $request->from);
@@ -52,7 +49,6 @@ class DashboardController extends Controller
              $graphController = new GraphController($this->profitService);
             $dashboardGraphs = $graphController->getDashboardGraphs();
             $newproducts30daysgraph = $graphController->newproducts30daysgraph();
-            // $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
             $ticketTypesGraphData = $graphController->ticketTypesGraphData();
 
 
@@ -70,11 +66,7 @@ class DashboardController extends Controller
         $inventoryStatus    = $this->inventoryStatus($request);
         $dropshipperGraph   = $this->dropshipperGraph();
         $revenueOrderGraph  = $this->revenueOrderGraph();
-        // 30 days graphs
-
-        // $dropshipperGraphLast120Days = (new DropShipperController())->dropshipperGraphLast120Days();
-           // 30 days graphs
-
+          
         $courierPerformance  = $this->courierPerformance();
         $levels = DropShipperLevel::where('level', '!=', 'New Seller')->get();
 
@@ -100,15 +92,9 @@ class DashboardController extends Controller
             'inventoryStatus'       => $inventoryStatus,
             'dropshipperGraph'      => $dropshipperGraph,
             'revenueOrderGraph'     => $revenueOrderGraph,
-
-            // 30 days graphs
-
-           // 'dropshipperGraphLast120Days' => $dropshipperGraphLast120Days, // Use old name temporarily
             'newproducts30daysgraph' => $newproducts30daysgraph,
             'dashboardGraphs' => $dashboardGraphs,
             'ticketTypesGraphData' => $ticketTypesGraphData ,
-
-            // 30 days graphs
 
             'levels'                => $levels,
 

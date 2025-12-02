@@ -59,7 +59,6 @@ class GraphController extends Controller
                     })
                     ->count();
                 $returnsCount = $postExReturns + $leopardReturns;
-                // $orderIssuanceProfit = $this->calculateDailyOrderIssuanceProfit($currentDate);
                 $orderIssuanceProfit = $this->profitService->calculateDailyOrderIssuanceProfit($currentDate);
     
                 $dates[$currentDate] = [
