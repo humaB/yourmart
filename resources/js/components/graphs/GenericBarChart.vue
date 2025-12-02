@@ -111,12 +111,8 @@
                 dataLabels: {
                     enabled: true,
                     formatter: (val) => {
-                        // if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                        //     return val.toLocaleString();
-                        // }
-                        // return val.toString();
                         if (this.isCurrency || this.graphType === 'sales' || this.graphType === 'profit') {
-                // Remove decimals completely
+                
                 return Math.round(val).toLocaleString();
             }
             return val.toString();
@@ -209,11 +205,7 @@
                 'orders': '#289cf5',     
                 'sales': '#F59E0B',      
                 'profit': '#9a56ff',
-                'returns': '#EF4444'  
-                // 'newproducts': '#F59E0B',    
-                // 'graph1': '#4F46E5',     
-                // 'graph2': '#10B981',     
-                // 'graph3': '#8B5CF6' 
+                'returns': '#EF4444' 
                 
             };
             return colors[this.graphType] || '#7367F0';
@@ -226,10 +218,6 @@
         '#23bdb8': '#43e794', 
         '#F59E0B': '#D97706',
         '#4F46E5': '#4338CA'
-        // '#10B981': '#059669',
-        // '#8B5CF6': '#7C3AED',
-        // '#EF4444': '#DC2626',
-        // '#F59E0B': '#D97706'
             };
             return gradients[baseColor] || baseColor;
         }

@@ -5,13 +5,12 @@
         </div>
 
         <div class="row" v-else>
-            <!-- Today's Data Cards -->
+           
             <OrdersectionGrowthDashboard :todaysData="todaysData"/>
         </div>
 
         <hr class="border border-secondary border-2 opacity-50">
 
-        <!-- Charts Section -->
         <div class="row">
             <div class="col-12 col-sm-12 col-lg-12">
                 <GenericBarChart 

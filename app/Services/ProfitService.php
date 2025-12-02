@@ -30,7 +30,6 @@ class ProfitService
         $quantity = $group->sum('quantity');
         $productId = $group[0]->product_id;
 
-        // Purchase Rate (same as report)
         $purchase = StoreReceivedDetail::where('created_at', '<=', $date)
             ->where('product_id', $productId)
             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
@@ -38,11 +37,8 @@ class ProfitService
 
         $purchaseRate = round($purchase->rate ?? 0);
 
-        // Issuance (same as report)
         $totalIssuance = $group->sum('total');
         $avgIssuancePrice = $quantity > 0 ? round($totalIssuance / $quantity) : 0;
-
-        // Returns (same as report)
         $returnedQty = 0;
         foreach ($group as $item) {
             $orderNo = $item->sin->order_id;
@@ -56,7 +52,6 @@ class ProfitService
             }
         }
 
-        // EXACT SAME FORMULA AS VUE
         $netQuantity = $quantity - $returnedQty;
 
         $netSale = $netQuantity * $avgIssuancePrice;

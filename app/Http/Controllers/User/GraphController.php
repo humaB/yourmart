@@ -3,31 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Services\ProfitService;
-// use App\Http\Controllers\Controller;
-// use App\Http\Resources\ResponseCollection;
-// use App\Models\Inventory\Order\Order;
-// use App\Models\Inventory\Order\OrderItem;
-// use App\Models\Inventory\Product\Category;
-// use App\Models\Inventory\Product\Tag;
-// use App\Models\Inventory\Product\Variation\Product;
-// use App\Models\Inventory\Product\Variation\ProductVariation;
-// use App\Models\Inventory\PurchaseOrder\PurchaseOrder;
-// use App\Models\Inventory\Store\StoreIssuance;
-// use App\Models\Inventory\Store\StoreIssuanceDetail;
-// use App\Models\Inventory\Store\StoreReceivedDetail;
-// use App\Models\Inventory\Store\StoreReturn;
-// use App\Models\Inventory\Store\StoreReturnDetail;
-// // use App\Http\Controllers\Helpers\NotificationHelper;
-// use App\Models\Ticket;
-// use App\Models\TicketMessage;
-// // use App\Models\User;
-// use App\Models\User\DropShipper;
-// // use App\Models\User\DropShipperLevel;
-// // use App\Models\User\DropShipperShop;
-// // use App\Models\User\Supplier;
-// use Carbon\Carbon;
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory\Order\Order;
@@ -54,7 +29,7 @@ class GraphController extends Controller
     public function getDashboardGraphs()
     {
         try {
-            // Generate last 30 days
+            
             $days = collect(range(0, 29))->map(function ($i) {
                 return [
                     'date' => now()->subDays($i)->format('Y-m-d'),
@@ -160,65 +135,6 @@ class GraphController extends Controller
         }
     }
 
-//     private function calculateDailyOrderIssuanceProfit($date)
-// {
-//     $orders = StoreIssuance::whereDate('created_at', $date)
-//         ->where('order_id', '!=', '0')
-//         ->pluck('id');
-
-//     $issues = StoreIssuanceDetail::with('product.variation', 'sin')
-//         ->whereIn('sin_id', $orders)
-//         ->get()
-//         ->groupBy('product_id');
-
-//     $totalProfit = 0;
-
-//     foreach ($issues as $group) {
-
-//         $quantity = $group->sum('quantity');
-//         $productId = $group[0]->product_id;
-
-//         // Purchase Rate (same as report)
-//         $purchase = StoreReceivedDetail::where('created_at', '<=', $date)
-//             ->where('product_id', $productId)
-//             ->select(DB::raw("SUM(total) / SUM(quantity) as rate"))
-//             ->first();
-
-//         $purchaseRate = round($purchase->rate ?? 0);
-
-//         // Issuance (same as report)
-//         $totalIssuance = $group->sum('total');
-//         $avgIssuancePrice = $quantity > 0 ? round($totalIssuance / $quantity) : 0;
-
-//         // Returns (same as report)
-//         $returnedQty = 0;
-//         foreach ($group as $item) {
-//             $orderNo = $item->sin->order_id;
-
-//             $returned = StoreReturn::where('order_id', $orderNo)->first();
-//             if ($returned) {
-//                 $r = StoreReturnDetail::where('product_id', $productId)
-//                     ->where('srn_id', $returned->id)
-//                     ->first();
-//                 $returnedQty += $r ? $r->quantity : 0;
-//             }
-//         }
-
-//         // EXACT SAME FORMULA AS VUE
-//         $netQuantity = $quantity - $returnedQty;
-
-//         $netSale = $netQuantity * $avgIssuancePrice;
-//         $netPurchase = $netQuantity * $purchaseRate;
-
-//         $profit = $netSale - $netPurchase;
-
-//         $totalProfit += $profit;
-//     }
-
-//     return (int) $totalProfit;
-// }
-
-
     public function newproducts30daysgraph()
     {
         // Generate last 30 days
@@ -309,7 +225,6 @@ class GraphController extends Controller
     ];
     }
 
-    // Add this method to your GraphController
 public function activeSellersMonthly()
 {
     $days = collect(range(0, 29))->map(function ($i) {
@@ -333,7 +248,6 @@ public function activeSellersMonthly()
             ->count();
     });
 
-    // Convert to array properly
     $dataArray = $activeSellersMonthly->values()->toArray();
 
     $stats = [
@@ -346,7 +260,7 @@ public function activeSellersMonthly()
         'series' => [
             [
                 'name' => 'Daily Active Sellers (Last 30 Days)',
-                'data' => $dataArray, // ✅ Use the converted array
+                'data' => $dataArray, 
                 'stats' => $stats,
             ],
         ],
@@ -354,15 +268,13 @@ public function activeSellersMonthly()
 }
     public function ticketTypesGraphData()
     {
-        // Get ticket counts by type for last 30 days, only where count > 0
+        
         $ticketTypes = Ticket::where('created_at', '>=', now()->subDays(30))
             ->selectRaw('ticket_type, COUNT(*) as count')
             ->groupBy('ticket_type')
             ->having('count', '>', 0)
             ->orderBy('count', 'DESC')
             ->get();
-    
-        // If no tickets found, return sample data for demonstration
         if ($ticketTypes->isEmpty()) {
             return [
                 'categories' => [
@@ -388,7 +300,6 @@ public function activeSellersMonthly()
     
         $totalTickets = $ticketTypes->sum('count');
     
-        // Format for ApexCharts
         $categories = $ticketTypes->pluck('ticket_type');
         $seriesData = $ticketTypes->pluck('count');
     
