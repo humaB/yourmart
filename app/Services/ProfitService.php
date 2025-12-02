@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class ProfitService
 {
 
-    private function calculateDailyOrderIssuanceProfit($date)
+    public static function calculateDailyOrderIssuanceProfit($date)
 {
     $orders = StoreIssuance::whereDate('created_at', $date)
         ->where('order_id', '!=', '0')

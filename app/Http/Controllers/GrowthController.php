@@ -32,10 +32,12 @@ use Illuminate\Support\Facades\DB;
 
 class GrowthController extends Controller
 {
+    protected $graphController;
     protected $profitService;
 
-    public function __construct(ProfitService $profitService)
+    public function __construct(GraphController $graphController, ProfitService $profitService)
     {
+        $this->graphController = $graphController;
         $this->profitService = $profitService;
     }
 
@@ -50,10 +52,14 @@ class GrowthController extends Controller
         $todaysData = $this->getTodaysData();
 
         // Get graph data from GraphController
-        $graphController = new GraphController();
-        $dashboardGraphs = $graphController->getDashboardGraphs();
-        $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
-        $activeSellersMonthly = $graphController->activeSellersMonthly();
+        // $graphController = new GraphController();
+        // $dashboardGraphs = $graphController->getDashboardGraphs();
+        // $dropshipperGraphLast120Days = $graphController->dropshipperGraphLast120Days();
+        // $activeSellersMonthly = $graphController->activeSellersMonthly();
+
+        $dashboardGraphs = $this->graphController->getDashboardGraphs();
+        $dropshipperGraphLast120Days = $this->graphController->dropshipperGraphLast120Days();
+        $activeSellersMonthly = $this->graphController->activeSellersMonthly();
         
 
         $data = [
@@ -101,7 +107,7 @@ class GrowthController extends Controller
     
     // Calculate profit
     // $profit = $this->calculateDailyOrderIssuanceProfit($today);
-    $profit = ProfitService::calculateDailyOrderIssuanceProfit($today);
+    $profit = $this->profitService->calculateDailyOrderIssuanceProfit($today);
     
     return [
         'orders' => $orders->count(),

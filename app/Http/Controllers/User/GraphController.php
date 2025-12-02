@@ -85,7 +85,7 @@ class GraphController extends Controller
                     ->count();
                 $returnsCount = $postExReturns + $leopardReturns;
                 // $orderIssuanceProfit = $this->calculateDailyOrderIssuanceProfit($currentDate);
-                $orderIssuanceProfit = ProfitService::calculateDailyOrderIssuanceProfit($today);
+                $orderIssuanceProfit = $this->profitService->calculateDailyOrderIssuanceProfit($today);
     
                 $dates[$currentDate] = [
                     'sales_count' => $salesCount,
@@ -156,7 +156,7 @@ class GraphController extends Controller
     
         } catch (\Exception $e) {
             \Log::error('Dashboard Graphs Error: ' . $e->getMessage());
-            return $this->getSampleData();
+            return "error";
         }
     }
 
